@@ -79,9 +79,9 @@ public class Editor extends JFrame {
 	/**
 	 * Public static constants
 	 */
-	public static final String APPLICATION_NAME  = "XEAD Editor 0.7";
-	public static final String FULL_VERSION  = "V0.R7.M18";
-	public static final String FORMAT_VERSION  = "0.7";
+	public static final String APPLICATION_NAME  = "XEAD Editor 1.0";
+	public static final String FULL_VERSION  = "V1.R0.M00";
+	public static final String FORMAT_VERSION  = "1.0";
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2011 DBC,Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
@@ -1913,7 +1913,7 @@ public class Editor extends JFrame {
 		///////////////////////////////////////
 		// Use these steps for quick testing //
 		///////////////////////////////////////
-		currentFileName = "C:/XeadFramework/SalesOrosi/SalesOrosi.xeaf";
+		//currentFileName = "C:/XeadFramework/SalesOrosi/SalesOrosi.xeaf";
 		//currentFileName = "C:/XeadFramework/Skeleton/Skeleton.xeaf";
 		//
 		String strWrk = System.getProperty("java.class.path");
