@@ -335,6 +335,7 @@ public class DialogCreateTable extends JDialog {
 		int lastPosOfBracketClose = 0;
 		int bracketClose = 0;
 		tableAttributes = tableAttributes.replace("\n", "");
+		tableAttributes = tableAttributes.replace("\t", " ");
 		int posStartFrom = 0;
 		for (int pos = 0; pos < tableAttributes.length(); pos++) {
 			if (tableAttributes.substring(pos, pos+1).equals(",")) {

@@ -71,23 +71,18 @@ import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 public class Editor extends JFrame {
 	/**
-	 * Private static constants
+	 * Static constants
 	 */
 	private static final long serialVersionUID = 1L;
 	private static ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
-
-	/**
-	 * Public static constants
-	 */
 	public static final String APPLICATION_NAME  = "XEAD Editor 1.0";
-	public static final String FULL_VERSION  = "V1.R0.M00";
+	public static final String FULL_VERSION  = "V1.R0.M01";
 	public static final String FORMAT_VERSION  = "1.0";
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2011 DBC,Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
 	public static final String DEFAULT_UPDATE_COUNTER = "UPDCOUNTER";
 	public static final String LANGUAGE = Locale.getDefault().getLanguage();
-	//
     public static final Color ERROR_COLOR = new Color(238,187,203);
     public static final Color ACTIVE_COLOR = SystemColor.white;
     public static final Color INACTIVE_COLOR = SystemColor.control;
@@ -297,7 +292,6 @@ public class Editor extends JFrame {
 	private Editor_KanjiTextArea jTextAreaSystemRemarks = new Editor_KanjiTextArea();
 	//
 	private JPanel jPanelSystemConfig = new JPanel();
-	//private JPanel jPanelSystemConfigTop = new JPanel();
 	private JLabel jLabelSystemDBName = new JLabel();
 	private JTextField jTextFieldSystemDBName = new JTextField();
 	private JLabel jLabelSystemDBUser = new JLabel();
@@ -553,9 +547,6 @@ public class Editor extends JFrame {
 	private JTextArea jTextAreaTableScriptNotes = new JTextArea();
 	private JScrollPane jScrollPaneTableScriptNotes = new JScrollPane();
 	private JPanel jPanelTableScriptTop = new JPanel();
-	//private JLabel jLabelTableScriptFunction = new JLabel();
-	//private JTextField jTextFieldTableScriptFunctionID = new JTextField();
-	//private JTextField jTextFieldTableScriptFunctionName = new JTextField();
 	private JLabel jLabelTableScriptEvent = new JLabel();
 	private JCheckBox jCheckBoxTableScriptEventPrimaryBR = new JCheckBox();
 	private JCheckBox jCheckBoxTableScriptEventPrimaryBC = new JCheckBox();
@@ -1909,13 +1900,6 @@ public class Editor extends JFrame {
 	void processContentsFile(String nameOfFile) throws Exception  {
 		//
 		currentFileName = nameOfFile;
-		//
-		///////////////////////////////////////
-		// Use these steps for quick testing //
-		///////////////////////////////////////
-		//currentFileName = "C:/XeadFramework/SalesOrosi/SalesOrosi.xeaf";
-		//currentFileName = "C:/XeadFramework/Skeleton/Skeleton.xeaf";
-		//
 		String strWrk = System.getProperty("java.class.path");
 		fileSeparator = System.getProperty("file.separator");
 		int pos = strWrk.lastIndexOf(fileSeparator);
@@ -38163,7 +38147,6 @@ class Editor_jTextAreaFunction010Script_caretAdapter implements javax.swing.even
 	}
 }
 
-@SuppressWarnings("unchecked")
 class Editor_NumberEditorFormatter extends InternationalFormatter {
 	private static final long serialVersionUID = 1L;
 	private final SpinnerNumberModel model;
@@ -38174,15 +38157,19 @@ class Editor_NumberEditorFormatter extends InternationalFormatter {
 		setValueClass(model.getValue().getClass());
 	}
 
+	@SuppressWarnings("rawtypes")
 	public Comparable getMaximum() {
 		return model.getMaximum();
 	}
+	@SuppressWarnings("rawtypes")
 	public Comparable getMinimum() {
 		return model.getMinimum();
 	}
+	@SuppressWarnings("rawtypes")
 	public void setMaximum(Comparable max) {
 		model.setMaximum(max);
 	}
+	@SuppressWarnings("rawtypes")
 	public void setMinimum(Comparable min) {
 		model.setMinimum(min);
 	}
