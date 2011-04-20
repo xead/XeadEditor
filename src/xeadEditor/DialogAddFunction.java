@@ -52,7 +52,7 @@ public class DialogAddFunction extends JDialog {
 	private JButton jButtonCancel = new JButton();
 	private Editor frame_;
 	private JLabel jLabelID = new JLabel();
-	private JTextField jTextFieldID = new JTextField();
+	private LimitSizeTextField jTextFieldID = new LimitSizeTextField();
 	private JLabel jLabelType = new JLabel();
 	private JComboBox jComboBoxType = new JComboBox();
 	private JTextField jTextFieldType = new JTextField();
@@ -131,8 +131,9 @@ public class DialogAddFunction extends JDialog {
 		jLabelID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelID.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelID.setBounds(new Rectangle(11, 12, 89, 15));
+		jTextFieldID.setMaxLength(10);
 		jTextFieldID.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldID.setBounds(new Rectangle(105, 9, 70, 21));
+		jTextFieldID.setBounds(new Rectangle(105, 9, 80, 21));
 		selectionColor = jTextFieldID.getSelectionColor();
 		jLabelType.setText(res.getString("FunctionType"));
 		jLabelType.setFont(new java.awt.Font("Dialog", 0, 12));
@@ -146,11 +147,11 @@ public class DialogAddFunction extends JDialog {
         DefaultComboBoxModel model = new DefaultComboBoxModel();
         model.addElement(new ComboBoxItem("", res.getString("SelectFromList"), null));
 		model.addElement(new ComboBoxItem("XF000", res.getString("FunctionTypeXF000"), new ImageIcon(xeadEditor.Editor.class.getResource("ifnc000.png"))));
-		model.addElement(new ComboBoxItem("XF010", res.getString("FunctionTypeXF010"), new ImageIcon(xeadEditor.Editor.class.getResource("ifnc010.png"))));
+		//model.addElement(new ComboBoxItem("XF010", res.getString("FunctionTypeXF010"), new ImageIcon(xeadEditor.Editor.class.getResource("ifnc010.png"))));
 		model.addElement(new ComboBoxItem("XF100", res.getString("FunctionTypeXF100"), new ImageIcon(xeadEditor.Editor.class.getResource("ifnc100.png"))));
 		model.addElement(new ComboBoxItem("XF110", res.getString("FunctionTypeXF110"), new ImageIcon(xeadEditor.Editor.class.getResource("ifnc110.png"))));
 		model.addElement(new ComboBoxItem("XF200", res.getString("FunctionTypeXF200"), new ImageIcon(xeadEditor.Editor.class.getResource("ifnc200.png"))));
-		model.addElement(new ComboBoxItem("XF210", res.getString("FunctionTypeXF210"), new ImageIcon(xeadEditor.Editor.class.getResource("ifnc210.png"))));
+		//model.addElement(new ComboBoxItem("XF210", res.getString("FunctionTypeXF210"), new ImageIcon(xeadEditor.Editor.class.getResource("ifnc210.png"))));
 		model.addElement(new ComboBoxItem("XF290", res.getString("FunctionTypeXF290"), new ImageIcon(xeadEditor.Editor.class.getResource("ifnc290.png"))));
 		model.addElement(new ComboBoxItem("XF300", res.getString("FunctionTypeXF300"), new ImageIcon(xeadEditor.Editor.class.getResource("ifnc300.png"))));
 		model.addElement(new ComboBoxItem("XF310", res.getString("FunctionTypeXF310"), new ImageIcon(xeadEditor.Editor.class.getResource("ifnc310.png"))));

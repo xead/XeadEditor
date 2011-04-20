@@ -69,7 +69,6 @@ public class DialogSynchTableModule extends JDialog {
 	private ArrayList<String> addingSKList = new ArrayList<String>();
 	private ArrayList<String> addingXKList = new ArrayList<String>();
 	private ArrayList<String> indexListToBeDropped = new ArrayList<String>();
-	//private ArrayList<String> uniqueKeyListToBeDropped = new ArrayList<String>();
 	private boolean isDifferentPK;
 	private boolean isWithoutModule;
 	private org.w3c.dom.Element tableElement;
@@ -711,7 +710,7 @@ public class DialogSynchTableModule extends JDialog {
 				//
 				Statement statement = connection_.createStatement();
 				//
-				// Alter column as nullable //
+				// Alter column as null-allowed //
 				for (int i = 0; i < fieldListToBeNullable.size(); i++) {
 					buf = new StringBuffer();
 					buf.append("ALTER TABLE ");
@@ -775,15 +774,9 @@ public class DialogSynchTableModule extends JDialog {
 									buf.append(element.getAttribute("Size"));
 									buf.append(")");
 									buf.append(" DEFAULT ''");
-//									if (element.getAttribute("Nullable").contains("F")) {
-//										buf.append(" NOT NULL");
-//									}
 								} else {
 									if (getBasicTypeOf(element.getAttribute("Type")).equals("INTEGER")) {
 										buf.append(" DEFAULT 0");
-//										if (element.getAttribute("Nullable").contains("F")) {
-//											buf.append(" NOT NULL");
-//										}
 									} else {
 										if (getBasicTypeOf(element.getAttribute("Type")).equals("FLOAT")) {
 											if (element.getAttribute("Type").equals("DECIMAL") || element.getAttribute("Type").equals("NUMERIC")) {
@@ -794,13 +787,10 @@ public class DialogSynchTableModule extends JDialog {
 												buf.append(")");
 											}
 											buf.append(" DEFAULT 0.0");
-//											if (element.getAttribute("Nullable").contains("F")) {
-//												buf.append(" NOT NULL");
-//											}
 										}
 									}
 								}
-								if (element.getAttribute("Nullable").contains("F")) {
+								if (element.getAttribute("Nullable").contains("F") && !element.getAttribute("Type").equals("DATE")) {
 									buf.append(" NOT NULL");
 								}
 								statement.executeUpdate(buf.toString());
@@ -809,16 +799,6 @@ public class DialogSynchTableModule extends JDialog {
 						}
 					}
 				}
-//				//
-//				// Drop index //
-//				if (fieldListToBeDropped.size() == 0) {
-//					for (int i = 0; i < indexListToBeDropped.size(); i++) {
-//						buf = new StringBuffer();
-//						buf.append("DROP INDEX ");
-//						buf.append(indexListToBeDropped.get(i));
-//						statement.executeUpdate(buf.toString());
-//					}
-//				}
 				//
 				// Add Secondary Key //
 				for (int i = 0; i < addingSKList.size(); i++) {

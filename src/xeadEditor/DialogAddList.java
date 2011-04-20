@@ -33,6 +33,11 @@ package xeadEditor;
 
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.PlainDocument;
+import javax.swing.text.StyleConstants;
 
 import xeadEditor.Editor.TableRowNumber;
 
@@ -52,39 +57,39 @@ public class DialogAddList extends JDialog {
 	JLabel jLabelHeadID = new JLabel();
 	JLabel jLabelHeadName = new JLabel();
 	Editor_KanjiTextField jTextFieldName1 = new Editor_KanjiTextField();
-	JTextField jTextFieldID1 = new JTextField();
+	LimitSizeTextField jTextFieldID1 = new LimitSizeTextField();
 	JLabel jLabelNo1 = new JLabel();
 	Editor_KanjiTextField jTextFieldName2 = new Editor_KanjiTextField();
-	JTextField jTextFieldID2 = new JTextField();
+	LimitSizeTextField jTextFieldID2 = new LimitSizeTextField();
 	JLabel jLabelNo2 = new JLabel();
 	Editor_KanjiTextField jTextFieldName3 = new Editor_KanjiTextField();
-	JTextField jTextFieldID3 = new JTextField();
+	LimitSizeTextField jTextFieldID3 = new LimitSizeTextField();
 	JLabel jLabelNo3 = new JLabel();
 	Editor_KanjiTextField jTextFieldName4 = new Editor_KanjiTextField();
-	JTextField jTextFieldID4 = new JTextField();
+	LimitSizeTextField jTextFieldID4 = new LimitSizeTextField();
 	JLabel jLabelNo4 = new JLabel();
 	Editor_KanjiTextField jTextFieldName5 = new Editor_KanjiTextField();
-	JTextField jTextFieldID5 = new JTextField();
+	LimitSizeTextField jTextFieldID5 = new LimitSizeTextField();
 	JLabel jLabelNo5 = new JLabel();
 	Editor_KanjiTextField jTextFieldName6 = new Editor_KanjiTextField();
-	JTextField jTextFieldID6 = new JTextField();
+	LimitSizeTextField jTextFieldID6 = new LimitSizeTextField();
 	JLabel jLabelNo6 = new JLabel();
 	Editor_KanjiTextField jTextFieldName7 = new Editor_KanjiTextField();
-	JTextField jTextFieldID7 = new JTextField();
+	LimitSizeTextField jTextFieldID7 = new LimitSizeTextField();
 	JLabel jLabelNo7 = new JLabel();
 	Editor_KanjiTextField jTextFieldName8 = new Editor_KanjiTextField();
-	JTextField jTextFieldID8 = new JTextField();
+	LimitSizeTextField jTextFieldID8 = new LimitSizeTextField();
 	JLabel jLabelNo8 = new JLabel();
 	Editor_KanjiTextField jTextFieldName9 = new Editor_KanjiTextField();
-	JTextField jTextFieldID9 = new JTextField();
+	LimitSizeTextField jTextFieldID9 = new LimitSizeTextField();
 	JLabel jLabelNo9 = new JLabel();
 	Editor_KanjiTextField jTextFieldName10 = new Editor_KanjiTextField();
-	JTextField jTextFieldID10 = new JTextField();
+	LimitSizeTextField jTextFieldID10 = new LimitSizeTextField();
 	JLabel jLabelNo10 = new JLabel();
 	BorderLayout borderLayout1 = new BorderLayout();
 	JPanel jPanelButtons = new JPanel();
 	ArrayList<JLabel> labelList = new ArrayList<JLabel>();
-	ArrayList<JTextField> idList = new ArrayList<JTextField>();
+	ArrayList<LimitSizeTextField> idList = new ArrayList<LimitSizeTextField>();
 	ArrayList<Editor_KanjiTextField> nameList = new ArrayList<Editor_KanjiTextField>();
 
 	public DialogAddList(Editor frame) {
@@ -155,7 +160,6 @@ public class DialogAddList extends JDialog {
 		jButtonCancel.addActionListener(new DialogAddList_jButtonCancel_actionAdapter(this));
 		//
 		jLabelHeadID.setFont(new java.awt.Font("Dialog", 0, 12));
-		jLabelHeadID.setText("ID");
 		jLabelHeadID.setBounds(new Rectangle(46, 11, 70, 15));
 		jLabelHeadName.setFont(new java.awt.Font("Dialog", 0, 12));
 		jLabelHeadName.setBounds(new Rectangle(142, 10, 150, 15));
@@ -248,26 +252,50 @@ public class DialogAddList extends JDialog {
 		reply = 0;
 		parentType_ = parentType;
 		//
-		for (int i = 0; i < 10; i++) {
-			idList.get(i).setText("");
-			nameList.get(i).setText("");
-		}
+		//for (int i = 0; i < 10; i++) {
+		//	idList.get(i).setText("");
+		//	nameList.get(i).setText("");
+		//}
 		//
 		if (parentType_.equals("MenuList")) {
 			this.setTitle(res.getString("AddNewMenus"));
+			jLabelHeadID.setText("ID(Max10)");
 			jLabelHeadName.setText(res.getString("MenuName"));
+			for (int i = 0; i < 10; i++) {
+				idList.get(i).setText("");
+				idList.get(i).setMaxLength(10);
+				nameList.get(i).setText("");
+			}
 		}
 		if (parentType_.equals("SubsystemList")) {
 			this.setTitle(res.getString("AddNewSubsystems"));
+			jLabelHeadID.setText("ID(Max10)");
 			jLabelHeadName.setText(res.getString("SubsystemName"));
+			for (int i = 0; i < 10; i++) {
+				idList.get(i).setText("");
+				idList.get(i).setMaxLength(10);
+				nameList.get(i).setText("");
+			}
 		}
 		if (parentType_.equals("TableList")) {
 			this.setTitle(res.getString("AddNewTables"));
+			jLabelHeadID.setText("ID(Max20)");
 			jLabelHeadName.setText(res.getString("TableName"));
+			for (int i = 0; i < 10; i++) {
+				idList.get(i).setText("");
+				idList.get(i).setMaxLength(20);
+				nameList.get(i).setText("");
+			}
 		}
 		if (parentType_.equals("TableFieldList")) {
 			this.setTitle(res.getString("AddNewFields"));
+			jLabelHeadID.setText("ID(Max40)");
 			jLabelHeadName.setText(res.getString("FieldName"));
+			for (int i = 0; i < 10; i++) {
+				idList.get(i).setText("");
+				idList.get(i).setMaxLength(40);
+				nameList.get(i).setText("");
+			}
 		}
 		//
 		jTextFieldID1.requestFocus();
