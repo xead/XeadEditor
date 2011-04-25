@@ -75,9 +75,9 @@ public class Editor extends JFrame {
 	 * Static constants
 	 */
 	private static final long serialVersionUID = 1L;
-	private static ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
+	private static final ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
 	public static final String APPLICATION_NAME  = "XEAD Editor 1.0";
-	public static final String FULL_VERSION  = "V1.R0.M2";
+	public static final String FULL_VERSION  = "V1.R0.M3";
 	public static final String FORMAT_VERSION  = "1.0";
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2011 DBC,Ltd.";
@@ -150,6 +150,7 @@ public class Editor extends JFrame {
 	private JMenu jMenuTool = new JMenu();
 	private JMenuItem jMenuItemToolCreateTable = new JMenuItem();
 	private JMenuItem jMenuItemToolSQL = new JMenuItem();
+	private JMenuItem jMenuItemToolCheckFunctionsCalled = new JMenuItem();
 	private JMenu jMenuHelp = new JMenu();
 	private JMenuItem jMenuItemHelpHelp = new JMenuItem();
 	private Desktop desktop = Desktop.getDesktop();
@@ -1830,6 +1831,7 @@ public class Editor extends JFrame {
 	private DialogSynchTableModule dialogSynchTableModule = new DialogSynchTableModule(this);
 	private DialogCreateTable dialogCreateTable = new DialogCreateTable(this);
 	private DialogSQL dialogSQL = new DialogSQL(this);
+	private DialogCheckFunctionsCalled dialogCheckFunctionsCalled = new DialogCheckFunctionsCalled(this);
 	private DialogEditScript dialogEditScript = new DialogEditScript(this);
 	private DialogListLog dialogListLog = new DialogListLog(this);
 	private DialogAbout dialogAbout = new DialogAbout(this);
@@ -2382,6 +2384,7 @@ public class Editor extends JFrame {
 		jMenuItemFileSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,ActionEvent.CTRL_MASK));
 		jMenuItemFileSave.addActionListener(new Editor_jMenuItemFileSave_actionAdapter(this));
 		jMenuItemFileSaveAs.setText(res.getString("SaveAs"));
+		jMenuItemFileSaveAs.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W,ActionEvent.CTRL_MASK));
 		jMenuItemFileSaveAs.addActionListener(new Editor_jMenuItemFileSaveAs_actionAdapter(this));
 		jMenuItemFileRun.setText(res.getString("Launch"));
 		jMenuItemFileRun.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0));
@@ -2464,6 +2467,9 @@ public class Editor extends JFrame {
 		jMenuItemToolSQL.setText(res.getString("SqlConsole"));
 		jMenuItemToolSQL.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
 		jMenuItemToolSQL.addActionListener(new Editor_jMenuItemToolSQL_actionAdapter(this));
+		jMenuItemToolCheckFunctionsCalled.setText(res.getString("CheckFunctionsCalled"));
+		jMenuItemToolCheckFunctionsCalled.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K,ActionEvent.CTRL_MASK));
+		jMenuItemToolCheckFunctionsCalled.addActionListener(new Editor_jMenuItemToolCheckFunctionsCalled_actionAdapter(this));
 		jMenuHelp.setText(res.getString("Help"));
 		jMenuItemHelpHelp.setText(res.getString("BrowseHelp"));
 		jMenuItemHelpHelp.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
@@ -2503,6 +2509,7 @@ public class Editor extends JFrame {
 		jMenuJumpBookmark.add(jMenuItemJumpBookmark9);
 		jMenuTool.add(jMenuItemToolCreateTable);
 		jMenuTool.add(jMenuItemToolSQL);
+		jMenuTool.add(jMenuItemToolCheckFunctionsCalled);
 		jMenuHelp.add(jMenuItemHelpAbout);
 		jMenuHelp.add(jMenuItemHelpHelp);
 		jMenuHelp.addSeparator();
@@ -2860,11 +2867,11 @@ public class Editor extends JFrame {
 		jSplitPaneSystemPrintFont.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneSystemPrintFont.add(jScrollPaneSystemPrintFontList, JSplitPane.TOP);
 		jSplitPaneSystemPrintFont.add(jPanelSystemPrintFont, JSplitPane.BOTTOM);
-		if (screenHeight > 768) {
+		//if (screenHeight > 768) {
 			jSplitPaneSystemPrintFont.setDividerLocation(screenHeight - 498);
-		} else {
-			jSplitPaneSystemPrintFont.setDividerLocation(270);
-		}
+		//} else {
+		//	jSplitPaneSystemPrintFont.setDividerLocation(270);
+		//}
 		jPanelSystemOutputConfigTop.add(jTextFieldSystemOutputFolder);
 		jPanelSystemOutputConfigTop.add(jLabelSystemOutputFolder);
 		jPanelSystemOutputConfigTop.add(jComboBoxSystemDateFormat);
@@ -3524,11 +3531,11 @@ public class Editor extends JFrame {
 		jSplitPaneTableField.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneTableField.add(jScrollPaneTableFieldList, JSplitPane.TOP);
 		jSplitPaneTableField.add(jPanelTableField, JSplitPane.BOTTOM);
-		if (screenHeight > 768) {
-			jSplitPaneTableField.setDividerLocation(screenHeight - 596);
-		} else {
-			jSplitPaneTableField.setDividerLocation(172);
-		}
+		//if (screenHeight > 768) {
+			jSplitPaneTableField.setDividerLocation(screenHeight - 568);
+		//} else {
+		//	jSplitPaneTableField.setDividerLocation(172);
+		//}
 		jPanelTableField.setLayout(new BorderLayout());
 		jPanelTableFieldTop.setBorder(BorderFactory.createEtchedBorder());
 		jPanelTableFieldTop.setPreferredSize(new Dimension(10, 189));
@@ -3760,11 +3767,12 @@ public class Editor extends JFrame {
 		jSplitPaneTableKey.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneTableKey.add(jScrollPaneTableKeyList, JSplitPane.TOP);
 		jSplitPaneTableKey.add(jPanelTableKey, JSplitPane.BOTTOM);
-		if (screenHeight > 768) {
-			jSplitPaneTableKey.setDividerLocation(screenHeight - 646);
-		} else {
-			jSplitPaneTableKey.setDividerLocation(122);
-		}
+		jSplitPaneTableKey.setDividerLocation(110);
+		//if (screenHeight > 768) {
+		//	jSplitPaneTableKey.setDividerLocation(screenHeight - 646);
+		//} else {
+		//	jSplitPaneTableKey.setDividerLocation(122);
+		//}
 		jPanelTableKeyTop.setBorder(BorderFactory.createEtchedBorder());
 		jPanelTableKeyTop.setLayout(null);
 		jPanelTableKeyTop.setPreferredSize(new Dimension(400, 68));
@@ -3839,11 +3847,11 @@ public class Editor extends JFrame {
 		jSplitPaneTableRefer.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneTableRefer.add(jScrollPaneTableReferList, JSplitPane.TOP);
 		jSplitPaneTableRefer.add(jPanelTableRefer, JSplitPane.BOTTOM);
-		if (screenHeight > 768) {
-			jSplitPaneTableRefer.setDividerLocation(screenHeight - 468);
-		} else {
-			jSplitPaneTableRefer.setDividerLocation(300);
-		}
+		//if (screenHeight > 768) {
+			jSplitPaneTableRefer.setDividerLocation(screenHeight - 478);
+		//} else {
+		//	jSplitPaneTableRefer.setDividerLocation(300);
+		//}
 		jPanelTableRefer.setBorder(BorderFactory.createEtchedBorder());
 		jPanelTableRefer.setLayout(null);
 		//
@@ -3939,11 +3947,12 @@ public class Editor extends JFrame {
 		jSplitPaneTableScript.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneTableScript.add(jScrollPaneTableScriptList, JSplitPane.TOP);
 		jSplitPaneTableScript.add(jPanelTableScript, JSplitPane.BOTTOM);
-		if (screenHeight > 768) {
-			jSplitPaneTableScript.setDividerLocation(screenHeight - 696);
-		} else {
-			jSplitPaneTableScript.setDividerLocation(92);
-		}
+		jSplitPaneTableScript.setDividerLocation(110);
+		//if (screenHeight > 768) {
+		//	jSplitPaneTableScript.setDividerLocation(screenHeight - 696);
+		//} else {
+		//	jSplitPaneTableScript.setDividerLocation(92);
+		//}
 		jTextAreaTableScriptNotes.setBorder(BorderFactory.createEmptyBorder());
 		jTextAreaTableScriptNotes.setBackground(jPanelTableScriptTop.getBackground());
 		jTextAreaTableScriptNotes.setFont(new java.awt.Font("SansSerif", 0, 12));
@@ -4074,11 +4083,11 @@ public class Editor extends JFrame {
 		jSplitPaneTableData.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneTableData.add(jSplitPaneTableDataTop, JSplitPane.TOP);
 		jSplitPaneTableData.add(jPanelTableDataMessages, JSplitPane.BOTTOM);
-		if (screenHeight > 768) {
+		//if (screenHeight > 768) {
 			jSplitPaneTableData.setDividerLocation(screenHeight - 336);
-		} else {
-			jSplitPaneTableData.setDividerLocation(422);
-		}
+		//} else {
+		//	jSplitPaneTableData.setDividerLocation(422);
+		//}
 		jSplitPaneTableDataTop.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneTableDataTop.add(jPanelTableDataList, JSplitPane.TOP);
 		jSplitPaneTableDataTop.add(jPanelTableDataFieldsEdit, JSplitPane.BOTTOM);
@@ -4276,9 +4285,9 @@ public class Editor extends JFrame {
 		jLabelFunction000Name.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction000Name.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction000Name.setText(res.getString("FunctionName"));
-		jLabelFunction000Name.setBounds(new Rectangle(469, 12, 76, 15));
+		jLabelFunction000Name.setBounds(new Rectangle(469, 12, 86, 15));
 		jTextFieldFunction000Name.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction000Name.setBounds(new Rectangle(553, 9, 250, 22));
+		jTextFieldFunction000Name.setBounds(new Rectangle(563, 9, 250, 22));
 		//
 		jLabelFunction000TimerOption.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction000TimerOption.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -4320,7 +4329,7 @@ public class Editor extends JFrame {
 		jLabelFunction000TimerMessage.setText(res.getString("TimerMessage"));
 		jLabelFunction000TimerMessage.setBounds(new Rectangle(11, 68, 96, 15));
 		jTextFieldFunction000TimerMessage.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction000TimerMessage.setBounds(new Rectangle(115, 65, 688, 22));
+		jTextFieldFunction000TimerMessage.setBounds(new Rectangle(115, 65, 698, 22));
 		//
 		jPanelFunction000Top.add(jLabelFunction000ID);
 		jPanelFunction000Top.add(jTextFieldFunction000ID);
@@ -4345,7 +4354,7 @@ public class Editor extends JFrame {
 		jTabbedPaneFunction000.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTabbedPaneFunction000.add(res.getString("Script"), jScrollPaneFunction000Script);
 		jTabbedPaneFunction000.setIconAt(0, imageIconScript);
-		jTabbedPaneFunction000.add(res.getString("FunctionWhereUsed"), jScrollPaneFunction000UsageList);
+		jTabbedPaneFunction000.add(res.getString("FunctionsWhereUsed"), jScrollPaneFunction000UsageList);
 		jTabbedPaneFunction000.setIconAt(1, imageIconFunctionUsage);
 		//
 		//jScrollPaneFunction000Script.getViewport().setLayout(new BorderLayout());
@@ -4396,7 +4405,7 @@ public class Editor extends JFrame {
 		jTableFunction000UsageList.addFocusListener(new Editor_FocusListener());
 		jTableFunction000UsageList.addMouseListener(new Editor_jTableFunction000UsageList_mouseAdapter(this));
 		tableModelFunction000UsageList.addColumn("NO.");
-		tableModelFunction000UsageList.addColumn(res.getString("FunctionWhereUsed"));
+		tableModelFunction000UsageList.addColumn(res.getString("FunctionsWhereUsed"));
 		tableModelFunction000UsageList.addColumn(res.getString("Type"));
 		tableModelFunction000UsageList.addColumn(res.getString("WhereUsedForm"));
 		column0 = jTableFunction000UsageList.getColumnModel().getColumn(0);
@@ -4499,7 +4508,7 @@ public class Editor extends JFrame {
 		jTabbedPaneFunction010.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTabbedPaneFunction010.add(res.getString("Script"), jScrollPaneFunction010Script);
 		jTabbedPaneFunction010.setIconAt(0, imageIconScript);
-		jTabbedPaneFunction010.add(res.getString("FunctionWhereUsed"), jScrollPaneFunction010UsageList);
+		jTabbedPaneFunction010.add(res.getString("FunctionsWhereUsed"), jScrollPaneFunction010UsageList);
 		jTabbedPaneFunction010.setIconAt(1, imageIconFunctionUsage);
 		//
 		jScrollPaneFunction010FieldList.setBorder(null);
@@ -4580,7 +4589,7 @@ public class Editor extends JFrame {
 		jTableFunction010UsageList.addFocusListener(new Editor_FocusListener());
 		jTableFunction010UsageList.addMouseListener(new Editor_jTableFunction010UsageList_mouseAdapter(this));
 		tableModelFunction010UsageList.addColumn("NO.");
-		tableModelFunction010UsageList.addColumn(res.getString("FunctionWhereUsed"));
+		tableModelFunction010UsageList.addColumn(res.getString("FunctionsWhereUsed"));
 		tableModelFunction010UsageList.addColumn(res.getString("Type"));
 		tableModelFunction010UsageList.addColumn(res.getString("WhereUsedForm"));
 		column0 = jTableFunction010UsageList.getColumnModel().getColumn(0);
@@ -4792,7 +4801,7 @@ public class Editor extends JFrame {
 		jTabbedPaneFunction100.setIconAt(1, imageIconFunctionFilter);
 		jTabbedPaneFunction100.add(res.getString("FunctionKeys"), jSplitPaneFunction100ButtonList);
 		jTabbedPaneFunction100.setIconAt(2, imageIconFunctionButton);
-		jTabbedPaneFunction100.add(res.getString("FunctionWhereUsed"), jScrollPaneFunction100UsageList);
+		jTabbedPaneFunction100.add(res.getString("FunctionsWhereUsed"), jScrollPaneFunction100UsageList);
 		jTabbedPaneFunction100.setIconAt(3, imageIconFunctionUsage);
 		//
 		jScrollPaneFunction100ColumnList.setBorder(null);
@@ -4830,11 +4839,11 @@ public class Editor extends JFrame {
 		jSplitPaneFunction100ColumnList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction100ColumnList.add(jScrollPaneFunction100ColumnList, JSplitPane.TOP);
 		jSplitPaneFunction100ColumnList.add(jPanelFunction100ColumnList, JSplitPane.BOTTOM);
-		if (screenHeight > 768) {
-			jSplitPaneFunction100ColumnList.setDividerLocation(screenHeight - 457);
-		} else {
-			jSplitPaneFunction100ColumnList.setDividerLocation(311);
-		}
+		//if (screenHeight > 768) {
+			jSplitPaneFunction100ColumnList.setDividerLocation(screenHeight - 467);
+		//} else {
+		//	jSplitPaneFunction100ColumnList.setDividerLocation(311);
+		//}
 		jLabelFunction100Table.setEnabled(false);
 		jLabelFunction100Table.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction100Table.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -4955,11 +4964,11 @@ public class Editor extends JFrame {
 		jSplitPaneFunction100FilterList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction100FilterList.add(jScrollPaneFunction100FilterList, JSplitPane.TOP);
 		jSplitPaneFunction100FilterList.add(jPanelFunction100FilterList, JSplitPane.BOTTOM);
-		if (screenHeight > 768) {
-			jSplitPaneFunction100FilterList.setDividerLocation(screenHeight - 511);
-		} else {
-			jSplitPaneFunction100FilterList.setDividerLocation(257);
-		}
+		//if (screenHeight > 768) {
+			jSplitPaneFunction100FilterList.setDividerLocation(screenHeight - 521);
+		//} else {
+		//	jSplitPaneFunction100FilterList.setDividerLocation(257);
+		//}
 		jLabelFunction100FilterTable.setEnabled(false);
 		jLabelFunction100FilterTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction100FilterTable.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -5186,11 +5195,11 @@ public class Editor extends JFrame {
 		jSplitPaneFunction100ButtonList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction100ButtonList.add(jScrollPaneFunction100ButtonList, JSplitPane.TOP);
 		jSplitPaneFunction100ButtonList.add(jPanelFunction100ButtonList, JSplitPane.BOTTOM);
-		if (screenHeight > 768) {
-			jSplitPaneFunction100ButtonList.setDividerLocation(screenHeight - 482);
-		} else {
-			jSplitPaneFunction100ButtonList.setDividerLocation(286);
-		}
+		//if (screenHeight > 768) {
+			jSplitPaneFunction100ButtonList.setDividerLocation(screenHeight - 493);
+		//} else {
+		//	jSplitPaneFunction100ButtonList.setDividerLocation(285);
+		//}
 		jLabelFunction100ButtonPosition.setEnabled(false);
 		jLabelFunction100ButtonPosition.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction100ButtonPosition.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -5277,7 +5286,7 @@ public class Editor extends JFrame {
 		jTableFunction100UsageList.addFocusListener(new Editor_FocusListener());
 		jTableFunction100UsageList.addMouseListener(new Editor_jTableFunction100UsageList_mouseAdapter(this));
 		tableModelFunction100UsageList.addColumn("NO.");
-		tableModelFunction100UsageList.addColumn(res.getString("FunctionWhereUsed"));
+		tableModelFunction100UsageList.addColumn(res.getString("FunctionsWhereUsed"));
 		tableModelFunction100UsageList.addColumn(res.getString("Type"));
 		tableModelFunction100UsageList.addColumn(res.getString("WhereUsedForm"));
 		column0 = jTableFunction100UsageList.getColumnModel().getColumn(0);
@@ -5439,7 +5448,7 @@ public class Editor extends JFrame {
 		jTabbedPaneFunction110.setIconAt(2, imageIconRefer);
 		jTabbedPaneFunction110.add(res.getString("FunctionKeys"), jSplitPaneFunction110ButtonList);
 		jTabbedPaneFunction110.setIconAt(3, imageIconFunctionButton);
-		jTabbedPaneFunction110.add(res.getString("FunctionWhereUsed"), jScrollPaneFunction110UsageList);
+		jTabbedPaneFunction110.add(res.getString("FunctionsWhereUsed"), jScrollPaneFunction110UsageList);
 		jTabbedPaneFunction110.setIconAt(4, imageIconFunctionUsage);
 		//
 		jScrollPaneFunction110ColumnList.setBorder(null);
@@ -5477,11 +5486,11 @@ public class Editor extends JFrame {
 		jSplitPaneFunction110ColumnList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction110ColumnList.add(jScrollPaneFunction110ColumnList, JSplitPane.TOP);
 		jSplitPaneFunction110ColumnList.add(jPanelFunction110ColumnList, JSplitPane.BOTTOM);
-		if (screenHeight > 768) {
-			jSplitPaneFunction110ColumnList.setDividerLocation(screenHeight - 456);
-		} else {
-			jSplitPaneFunction110ColumnList.setDividerLocation(312);
-		}
+		//if (screenHeight > 768) {
+			jSplitPaneFunction110ColumnList.setDividerLocation(screenHeight - 466);
+		//} else {
+		//	jSplitPaneFunction110ColumnList.setDividerLocation(312);
+		//}
 		jLabelFunction110Table.setEnabled(false);
 		jLabelFunction110Table.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction110Table.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -5671,11 +5680,11 @@ public class Editor extends JFrame {
 		jSplitPaneFunction110FilterList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction110FilterList.add(jScrollPaneFunction110FilterList, JSplitPane.TOP);
 		jSplitPaneFunction110FilterList.add(jPanelFunction110FilterList, JSplitPane.BOTTOM);
-		if (screenHeight > 768) {
-			jSplitPaneFunction110FilterList.setDividerLocation(screenHeight - 455);
-		} else {
-			jSplitPaneFunction110FilterList.setDividerLocation(313);
-		}
+		//if (screenHeight > 768) {
+			jSplitPaneFunction110FilterList.setDividerLocation(screenHeight - 465);
+		//} else {
+		//	jSplitPaneFunction110FilterList.setDividerLocation(313);
+		//}
 		jLabelFunction110FilterTable.setEnabled(false);
 		jLabelFunction110FilterTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction110FilterTable.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -5946,11 +5955,11 @@ public class Editor extends JFrame {
 		jSplitPaneFunction110BatchFieldList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction110BatchFieldList.add(jScrollPaneFunction110BatchFieldList, JSplitPane.TOP);
 		jSplitPaneFunction110BatchFieldList.add(jPanelFunction110BatchFieldList, JSplitPane.BOTTOM);
-		if (screenHeight > 768) {
-			jSplitPaneFunction110BatchFieldList.setDividerLocation(screenHeight - 578);
-		} else {
-			jSplitPaneFunction110BatchFieldList.setDividerLocation(190);
-		}
+		//if (screenHeight > 768) {
+			jSplitPaneFunction110BatchFieldList.setDividerLocation(screenHeight - 588);
+		//} else {
+		//	jSplitPaneFunction110BatchFieldList.setDividerLocation(190);
+		//}
 		jLabelFunction110BatchFieldTable.setEnabled(false);
 		jLabelFunction110BatchFieldTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction110BatchFieldTable.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -6177,11 +6186,11 @@ public class Editor extends JFrame {
 		jSplitPaneFunction110ButtonList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction110ButtonList.add(jScrollPaneFunction110ButtonList, JSplitPane.TOP);
 		jSplitPaneFunction110ButtonList.add(jPanelFunction110ButtonList, JSplitPane.BOTTOM);
-		if (screenHeight > 768) {
-			jSplitPaneFunction110ButtonList.setDividerLocation(screenHeight - 398);
-		} else {
-			jSplitPaneFunction110ButtonList.setDividerLocation(370);
-		}
+		//if (screenHeight > 768) {
+			jSplitPaneFunction110ButtonList.setDividerLocation(screenHeight - 409);
+		//} else {
+		//	jSplitPaneFunction110ButtonList.setDividerLocation(369);
+		//}
 		jLabelFunction110ButtonPosition.setEnabled(false);
 		jLabelFunction110ButtonPosition.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction110ButtonPosition.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -6251,7 +6260,7 @@ public class Editor extends JFrame {
 		jTableFunction110UsageList.addFocusListener(new Editor_FocusListener());
 		jTableFunction110UsageList.addMouseListener(new Editor_jTableFunction110UsageList_mouseAdapter(this));
 		tableModelFunction110UsageList.addColumn("NO.");
-		tableModelFunction110UsageList.addColumn(res.getString("FunctionWhereUsed"));
+		tableModelFunction110UsageList.addColumn(res.getString("FunctionsWhereUsed"));
 		tableModelFunction110UsageList.addColumn(res.getString("Type"));
 		tableModelFunction110UsageList.addColumn(res.getString("WhereUsedForm"));
 		column0 = jTableFunction110UsageList.getColumnModel().getColumn(0);
@@ -6457,11 +6466,11 @@ public class Editor extends JFrame {
 		jSplitPaneFunction200FieldList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction200FieldList.add(jScrollPaneFunction200FieldList, JSplitPane.TOP);
 		jSplitPaneFunction200FieldList.add(jPanelFunction200FieldList, JSplitPane.BOTTOM);
-		if (screenHeight > 768) {
-			jSplitPaneFunction200FieldList.setDividerLocation(screenHeight - 483);
-		} else {
-			jSplitPaneFunction200FieldList.setDividerLocation(285);
-		}
+		//if (screenHeight > 768) {
+			jSplitPaneFunction200FieldList.setDividerLocation(screenHeight - 493);
+		//} else {
+		//	jSplitPaneFunction200FieldList.setDividerLocation(285);
+		//}
 		jLabelFunction200Table.setEnabled(false);
 		jLabelFunction200Table.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction200Table.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -6686,11 +6695,11 @@ public class Editor extends JFrame {
 		jSplitPaneFunction200ButtonList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction200ButtonList.add(jScrollPaneFunction200ButtonList, JSplitPane.TOP);
 		jSplitPaneFunction200ButtonList.add(jPanelFunction200ButtonList, JSplitPane.BOTTOM);
-		if (screenHeight > 768) {
-			jSplitPaneFunction200ButtonList.setDividerLocation(screenHeight - 427);
-		} else {
-			jSplitPaneFunction200ButtonList.setDividerLocation(341);
-		}
+		//if (screenHeight > 768) {
+			jSplitPaneFunction200ButtonList.setDividerLocation(screenHeight - 437);
+		//} else {
+		//	jSplitPaneFunction200ButtonList.setDividerLocation(341);
+		//}
 		jLabelFunction200ButtonPosition.setEnabled(false);
 		jLabelFunction200ButtonPosition.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction200ButtonPosition.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -6786,7 +6795,7 @@ public class Editor extends JFrame {
 		jTableFunction200UsageList.addFocusListener(new Editor_FocusListener());
 		jTableFunction200UsageList.addMouseListener(new Editor_jTableFunction200UsageList_mouseAdapter(this));
 		tableModelFunction200UsageList.addColumn("NO.");
-		tableModelFunction200UsageList.addColumn(res.getString("FunctionWhereUsed"));
+		tableModelFunction200UsageList.addColumn(res.getString("FunctionsWhereUsed"));
 		tableModelFunction200UsageList.addColumn(res.getString("Type"));
 		tableModelFunction200UsageList.addColumn(res.getString("WhereUsedForm"));
 		column0 = jTableFunction200UsageList.getColumnModel().getColumn(0);
@@ -6956,11 +6965,11 @@ public class Editor extends JFrame {
 		jSplitPaneFunction210FieldList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction210FieldList.add(jScrollPaneFunction210FieldList, JSplitPane.TOP);
 		jSplitPaneFunction210FieldList.add(jPanelFunction210FieldList, JSplitPane.BOTTOM);
-		if (screenHeight > 768) {
-			jSplitPaneFunction210FieldList.setDividerLocation(screenHeight - 455);
-		} else {
-			jSplitPaneFunction210FieldList.setDividerLocation(313);
-		}
+		//if (screenHeight > 768) {
+			jSplitPaneFunction210FieldList.setDividerLocation(screenHeight - 465);
+		//} else {
+		//	jSplitPaneFunction210FieldList.setDividerLocation(313);
+		//}
 		jLabelFunction210Table.setEnabled(false);
 		jLabelFunction210Table.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction210Table.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -7185,11 +7194,11 @@ public class Editor extends JFrame {
 		jSplitPaneFunction210ButtonList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction210ButtonList.add(jScrollPaneFunction210ButtonList, JSplitPane.TOP);
 		jSplitPaneFunction210ButtonList.add(jPanelFunction210ButtonList, JSplitPane.BOTTOM);
-		if (screenHeight > 768) {
-			jSplitPaneFunction210ButtonList.setDividerLocation(screenHeight - 371);
-		} else {
-			jSplitPaneFunction210ButtonList.setDividerLocation(397);
-		}
+		//if (screenHeight > 768) {
+			jSplitPaneFunction210ButtonList.setDividerLocation(screenHeight - 381);
+		//} else {
+		//	jSplitPaneFunction210ButtonList.setDividerLocation(397);
+		//}
 		jLabelFunction210ButtonPosition.setEnabled(false);
 		jLabelFunction210ButtonPosition.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction210ButtonPosition.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -7265,7 +7274,7 @@ public class Editor extends JFrame {
 		jTableFunction210UsageList.addFocusListener(new Editor_FocusListener());
 		jTableFunction210UsageList.addMouseListener(new Editor_jTableFunction210UsageList_mouseAdapter(this));
 		tableModelFunction210UsageList.addColumn("NO.");
-		tableModelFunction210UsageList.addColumn(res.getString("FunctionWhereUsed"));
+		tableModelFunction210UsageList.addColumn(res.getString("FunctionsWhereUsed"));
 		tableModelFunction210UsageList.addColumn(res.getString("Type"));
 		tableModelFunction210UsageList.addColumn(res.getString("WhereUsedForm"));
 		column0 = jTableFunction210UsageList.getColumnModel().getColumn(0);
@@ -7453,11 +7462,11 @@ public class Editor extends JFrame {
 		jSplitPaneFunction290PhraseList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction290PhraseList.add(jScrollPaneFunction290PhraseList, JSplitPane.TOP);
 		jSplitPaneFunction290PhraseList.add(jPanelFunction290PhraseList, JSplitPane.BOTTOM);
-		if (screenHeight > 768) {
-			jSplitPaneFunction290PhraseList.setDividerLocation(screenHeight - 361);
-		} else {
-			jSplitPaneFunction290PhraseList.setDividerLocation(407);
-		}
+		//if (screenHeight > 768) {
+			jSplitPaneFunction290PhraseList.setDividerLocation(screenHeight - 371);
+		//} else {
+		//	jSplitPaneFunction290PhraseList.setDividerLocation(407);
+		//}
 		jLabelFunction290PhraseBlockType.setEnabled(false);
 		jLabelFunction290PhraseBlockType.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction290PhraseBlockType.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -7598,7 +7607,7 @@ public class Editor extends JFrame {
 		jTableFunction290UsageList.addFocusListener(new Editor_FocusListener());
 		jTableFunction290UsageList.addMouseListener(new Editor_jTableFunction290UsageList_mouseAdapter(this));
 		tableModelFunction290UsageList.addColumn("NO.");
-		tableModelFunction290UsageList.addColumn(res.getString("FunctionWhereUsed"));
+		tableModelFunction290UsageList.addColumn(res.getString("FunctionsWhereUsed"));
 		tableModelFunction290UsageList.addColumn(res.getString("Type"));
 		tableModelFunction290UsageList.addColumn(res.getString("WhereUsedForm"));
 		column0 = jTableFunction290UsageList.getColumnModel().getColumn(0);
@@ -7767,11 +7776,11 @@ public class Editor extends JFrame {
 		jSplitPaneFunction300HeaderFieldList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction300HeaderFieldList.add(jScrollPaneFunction300HeaderFieldList, JSplitPane.TOP);
 		jSplitPaneFunction300HeaderFieldList.add(jPanelFunction300HeaderFieldList, JSplitPane.BOTTOM);
-		if (screenHeight > 768) {
-			jSplitPaneFunction300HeaderFieldList.setDividerLocation(screenHeight - 427);
-		} else {
-			jSplitPaneFunction300HeaderFieldList.setDividerLocation(341);
-		}
+		//if (screenHeight > 768) {
+			jSplitPaneFunction300HeaderFieldList.setDividerLocation(screenHeight - 437);
+		//} else {
+		//	jSplitPaneFunction300HeaderFieldList.setDividerLocation(341);
+		//}
 		jLabelFunction300HeaderTable.setEnabled(false);
 		jLabelFunction300HeaderTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction300HeaderTable.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -8039,11 +8048,11 @@ public class Editor extends JFrame {
 		jSplitPaneFunction300DetailList.add(jScrollPaneFunction300DetailList, JSplitPane.TOP);
 		jSplitPaneFunction300DetailList.add(jPanelFunction300DetailList, JSplitPane.BOTTOM);
 		int wrkForDividerLocation = 0;
-		if (screenHeight > 768) {
+		//if (screenHeight > 768) {
 			wrkForDividerLocation = (screenHeight -556) / 3;
-		} else {
-			wrkForDividerLocation = 70;
-		}
+		//} else {
+		//	wrkForDividerLocation = 70;
+		//}
 		jSplitPaneFunction300DetailList.setDividerLocation(wrkForDividerLocation);
 		//
 		jScrollPaneFunction300DetailFieldList.setBorder(null);
@@ -8081,7 +8090,8 @@ public class Editor extends JFrame {
 		jSplitPaneFunction300DetailFieldList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction300DetailFieldList.add(jScrollPaneFunction300DetailFieldList, JSplitPane.TOP);
 		jSplitPaneFunction300DetailFieldList.add(jPanelFunction300DetailFieldList, JSplitPane.BOTTOM);
-		jSplitPaneFunction300DetailFieldList.setDividerLocation(wrkForDividerLocation * 2);
+		//jSplitPaneFunction300DetailFieldList.setDividerLocation(wrkForDividerLocation * 2);
+		jSplitPaneFunction300DetailFieldList.setDividerLocation(screenHeight - wrkForDividerLocation - 568);
 		jLabelFunction300DetailTable.setEnabled(false);
 		jLabelFunction300DetailTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction300DetailTable.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -8202,11 +8212,11 @@ public class Editor extends JFrame {
 		jSplitPaneFunction300DetailFilterList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction300DetailFilterList.add(jScrollPaneFunction300DetailFilterList, JSplitPane.TOP);
 		jSplitPaneFunction300DetailFilterList.add(jPanelFunction300DetailFilterList, JSplitPane.BOTTOM);
-		if (screenHeight > 768) {
-			jSplitPaneFunction300DetailFilterList.setDividerLocation(screenHeight - wrkForDividerLocation - 609);
-		} else {
-			jSplitPaneFunction300DetailFilterList.setDividerLocation(84);
-		}
+		//if (screenHeight > 768) {
+			jSplitPaneFunction300DetailFilterList.setDividerLocation(screenHeight - wrkForDividerLocation - 624);
+		//} else {
+		//	jSplitPaneFunction300DetailFilterList.setDividerLocation(84);
+		//}
 		jLabelFunction300DetailFilterTable.setEnabled(false);
 		jLabelFunction300DetailFilterTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction300DetailFilterTable.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -8433,11 +8443,11 @@ public class Editor extends JFrame {
 		jSplitPaneFunction300DetailButtonList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction300DetailButtonList.add(jScrollPaneFunction300DetailButtonList, JSplitPane.TOP);
 		jSplitPaneFunction300DetailButtonList.add(jPanelFunction300DetailButtonList, JSplitPane.BOTTOM);
-		if (screenHeight > 768) {
-			jSplitPaneFunction300DetailButtonList.setDividerLocation(screenHeight - wrkForDividerLocation - 581);
-		} else {
-			jSplitPaneFunction300DetailButtonList.setDividerLocation(112);
-		}
+		//if (screenHeight > 768) {
+			jSplitPaneFunction300DetailButtonList.setDividerLocation(screenHeight - wrkForDividerLocation - 596);
+		//} else {
+		//	jSplitPaneFunction300DetailButtonList.setDividerLocation(108);
+		//}
 		jLabelFunction300DetailButtonPosition.setEnabled(false);
 		jLabelFunction300DetailButtonPosition.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction300DetailButtonPosition.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -8733,11 +8743,11 @@ public class Editor extends JFrame {
 		jSplitPaneFunction310HeaderFieldList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction310HeaderFieldList.add(jScrollPaneFunction310HeaderFieldList, JSplitPane.TOP);
 		jSplitPaneFunction310HeaderFieldList.add(jPanelFunction310HeaderFieldList, JSplitPane.BOTTOM);
-		if (screenHeight > 768) {
-			jSplitPaneFunction310HeaderFieldList.setDividerLocation(screenHeight - 541);
-		} else {
-			jSplitPaneFunction310HeaderFieldList.setDividerLocation(227);
-		}
+		//if (screenHeight > 768) {
+			jSplitPaneFunction310HeaderFieldList.setDividerLocation(screenHeight - 551);
+		//} else {
+		//	jSplitPaneFunction310HeaderFieldList.setDividerLocation(227);
+		//}
 		jLabelFunction310HeaderTable.setEnabled(false);
 		jLabelFunction310HeaderTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction310HeaderTable.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -8964,11 +8974,11 @@ public class Editor extends JFrame {
 		jSplitPaneFunction310DetailFieldList.add(jScrollPaneFunction310DetailFieldList, JSplitPane.TOP);
 		jSplitPaneFunction310DetailFieldList.add(jPanelFunction310DetailFieldList, JSplitPane.BOTTOM);
 		jSplitPaneFunction310DetailFieldList.setDividerLocation(286);
-		if (screenHeight > 768) {
-			jSplitPaneFunction310DetailFieldList.setDividerLocation(screenHeight - 482);
-		} else {
-			jSplitPaneFunction310DetailFieldList.setDividerLocation(286);
-		}
+		//if (screenHeight > 768) {
+			jSplitPaneFunction310DetailFieldList.setDividerLocation(screenHeight - 492);
+		//} else {
+		//	jSplitPaneFunction310DetailFieldList.setDividerLocation(286);
+		//}
 		jLabelFunction310DetailTable.setEnabled(false);
 		jLabelFunction310DetailTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction310DetailTable.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -9210,11 +9220,11 @@ public class Editor extends JFrame {
 		jSplitPaneFunction310AddRowListColumnList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction310AddRowListColumnList.add(jScrollPaneFunction310AddRowListColumnList, JSplitPane.TOP);
 		jSplitPaneFunction310AddRowListColumnList.add(jPanelFunction310AddRowListColumnList, JSplitPane.BOTTOM);
-		if (screenHeight > 768) {
-			jSplitPaneFunction310AddRowListColumnList.setDividerLocation(screenHeight - 632);
-		} else {
-			jSplitPaneFunction310AddRowListColumnList.setDividerLocation(136);
-		}
+		//if (screenHeight > 768) {
+			jSplitPaneFunction310AddRowListColumnList.setDividerLocation(screenHeight - 642);
+		//} else {
+		//	jSplitPaneFunction310AddRowListColumnList.setDividerLocation(136);
+		//}
 		jLabelFunction310AddRowListColumnTable.setEnabled(false);
 		jLabelFunction310AddRowListColumnTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction310AddRowListColumnTable.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -9333,11 +9343,11 @@ public class Editor extends JFrame {
 		jSplitPaneFunction310AddRowListButtonList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction310AddRowListButtonList.add(jScrollPaneFunction310AddRowListButtonList, JSplitPane.TOP);
 		jSplitPaneFunction310AddRowListButtonList.add(jPanelFunction310AddRowListButtonList, JSplitPane.BOTTOM);
-		if (screenHeight > 768) {
-			jSplitPaneFunction310AddRowListButtonList.setDividerLocation(screenHeight - 663);
-		} else {
-			jSplitPaneFunction310AddRowListButtonList.setDividerLocation(105);
-		}
+		//if (screenHeight > 768) {
+			jSplitPaneFunction310AddRowListButtonList.setDividerLocation(screenHeight - 673);
+		//} else {
+		//	jSplitPaneFunction310AddRowListButtonList.setDividerLocation(105);
+		//}
 		jLabelFunction310AddRowListButtonPosition.setEnabled(false);
 		jLabelFunction310AddRowListButtonPosition.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction310AddRowListButtonPosition.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -9446,11 +9456,11 @@ public class Editor extends JFrame {
 		jSplitPaneFunction310ButtonList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction310ButtonList.add(jScrollPaneFunction310ButtonList, JSplitPane.TOP);
 		jSplitPaneFunction310ButtonList.add(jPanelFunction310ButtonList, JSplitPane.BOTTOM);
-		if (screenHeight > 768) {
-			jSplitPaneFunction310ButtonList.setDividerLocation(screenHeight - 455);
-		} else {
-			jSplitPaneFunction310ButtonList.setDividerLocation(313);
-		}
+		//if (screenHeight > 768) {
+			jSplitPaneFunction310ButtonList.setDividerLocation(screenHeight - 465);
+		//} else {
+		//	jSplitPaneFunction310ButtonList.setDividerLocation(313);
+		//}
 		jLabelFunction310ButtonPosition.setEnabled(false);
 		jLabelFunction310ButtonPosition.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction310ButtonPosition.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -9532,7 +9542,7 @@ public class Editor extends JFrame {
 		jTableFunction310UsageList.addFocusListener(new Editor_FocusListener());
 		jTableFunction310UsageList.addMouseListener(new Editor_jTableFunction310UsageList_mouseAdapter(this));
 		tableModelFunction310UsageList.addColumn("NO.");
-		tableModelFunction310UsageList.addColumn(res.getString("FunctionWhereUsed"));
+		tableModelFunction310UsageList.addColumn(res.getString("FunctionsWhereUsed"));
 		tableModelFunction310UsageList.addColumn(res.getString("Type"));
 		tableModelFunction310UsageList.addColumn(res.getString("WhereUsedForm"));
 		column0 = jTableFunction310UsageList.getColumnModel().getColumn(0);
@@ -9772,11 +9782,11 @@ public class Editor extends JFrame {
 		jSplitPaneFunction390HeaderPhraseList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction390HeaderPhraseList.add(jScrollPaneFunction390HeaderPhraseList, JSplitPane.TOP);
 		jSplitPaneFunction390HeaderPhraseList.add(jPanelFunction390HeaderPhraseList, JSplitPane.BOTTOM);
-		if (screenHeight > 768) {
-			jSplitPaneFunction390HeaderPhraseList.setDividerLocation(screenHeight - 473);
-		} else {
-			jSplitPaneFunction390HeaderPhraseList.setDividerLocation(295);
-		}
+		//if (screenHeight > 768) {
+			jSplitPaneFunction390HeaderPhraseList.setDividerLocation(screenHeight - 483);
+		//} else {
+		//	jSplitPaneFunction390HeaderPhraseList.setDividerLocation(295);
+		//}
 		jLabelFunction390HeaderPhraseBlockType.setEnabled(false);
 		jLabelFunction390HeaderPhraseBlockType.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction390HeaderPhraseBlockType.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -9944,11 +9954,11 @@ public class Editor extends JFrame {
 		jSplitPaneFunction390DetailFieldList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction390DetailFieldList.add(jScrollPaneFunction390DetailFieldList, JSplitPane.TOP);
 		jSplitPaneFunction390DetailFieldList.add(jPanelFunction390DetailFieldList, JSplitPane.BOTTOM);
-		if (screenHeight > 768) {
-			jSplitPaneFunction390DetailFieldList.setDividerLocation(screenHeight - 457);
-		} else {
-			jSplitPaneFunction390DetailFieldList.setDividerLocation(311);
-		}
+		//if (screenHeight > 768) {
+			jSplitPaneFunction390DetailFieldList.setDividerLocation(screenHeight - 467);
+		//} else {
+		//	jSplitPaneFunction390DetailFieldList.setDividerLocation(311);
+		//}
 		jLabelFunction390DetailTable.setEnabled(false);
 		jLabelFunction390DetailTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction390DetailTable.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -10089,7 +10099,7 @@ public class Editor extends JFrame {
 		jTableFunction390UsageList.addFocusListener(new Editor_FocusListener());
 		jTableFunction390UsageList.addMouseListener(new Editor_jTableFunction390UsageList_mouseAdapter(this));
 		tableModelFunction390UsageList.addColumn("NO.");
-		tableModelFunction390UsageList.addColumn(res.getString("FunctionWhereUsed"));
+		tableModelFunction390UsageList.addColumn(res.getString("FunctionsWhereUsed"));
 		tableModelFunction390UsageList.addColumn(res.getString("Type"));
 		tableModelFunction390UsageList.addColumn(res.getString("WhereUsedForm"));
 		column0 = jTableFunction390UsageList.getColumnModel().getColumn(0);
@@ -10328,7 +10338,7 @@ public class Editor extends JFrame {
 		}
 	}
 
-	private String getFunctionUsageInTableScript(org.w3c.dom.Element element, String functionID) {
+	public String getFunctionUsageInTableScript(org.w3c.dom.Element element, String functionID) {
 		org.w3c.dom.Element workElement;
 		NodeList nodeList1;
 		String wrkStr, scriptName = "";
@@ -10337,8 +10347,9 @@ public class Editor extends JFrame {
 	    for (int j = 0; j < nodeList1.getLength(); j++) {
 	    	workElement = (org.w3c.dom.Element)nodeList1.item(j);
 			wrkStr = substringLinesWithTokenOfEOL(workElement.getAttribute("Text"), "\n");
-			wrkStr = removeCommentsFromScriptText(wrkStr);
-			if (wrkStr.contains("instance.callFunction('" + functionID + "')")) {
+			wrkStr = removeCommentsFromScriptText(wrkStr).replace(" ", "");
+			if (wrkStr.contains("instance.callFunction('" + functionID + "')")
+				|| wrkStr.contains("instance.functionID=='" + functionID + "'")) {
 				if (!scriptName.equals("")) {
 					scriptName = scriptName + res.getString("Comma");
 				}
@@ -10350,7 +10361,7 @@ public class Editor extends JFrame {
 	}
 	
 	
-	private String getFunctionUsageInFunction(org.w3c.dom.Element element, String functionID) {
+	public String getFunctionUsageInFunction(org.w3c.dom.Element element, String functionID) {
 		org.w3c.dom.Element workElement;
 		NodeList nodeList;
 		int pos1,pos2;
@@ -10359,7 +10370,7 @@ public class Editor extends JFrame {
 		//
 		if (element.getAttribute("Type").equals("XF000") || element.getAttribute("Type").equals("XF010")) {
 			wrkStr = substringLinesWithTokenOfEOL(element.getAttribute("Script"), "\n");
-			wrkStr = removeCommentsFromScriptText(wrkStr);
+			wrkStr = removeCommentsFromScriptText(wrkStr).replace(" ", "");
 			if (wrkStr.contains("instance.callFunction('" + functionID + "')")) {
 				usage = res.getString("UsageLaunchedInScript");
 			}
@@ -13093,9 +13104,11 @@ public class Editor extends JFrame {
 		    int pos1, pos2;
 		    NodeList nodeList1;
 		    boolean isAlreadyAdded;
+		    String wrkStr;
 			//
-			if (domNode_.getAttribute("Type").equals("XF000") || domNode_.getAttribute("Type").equals("XF010")) {
-				String wrkStr = domNode_.getAttribute("Script");
+			if (domNode_.getAttribute("Type").equals("XF000")) {
+				wrkStr = substringLinesWithTokenOfEOL(domNode_.getAttribute("Script"), "\n");
+				wrkStr = removeCommentsFromScriptText(wrkStr).replace(" ", "");
 				pos1 = -1;
 				while (pos1 < wrkStr.length()) {
 					pos1 = wrkStr.indexOf("instance.callFunction('", pos1 + 1);
@@ -14591,8 +14604,6 @@ public class Editor extends JFrame {
 			//
 			jTextAreaFunction000Script.setText(substringLinesWithTokenOfEOL(domNode_.getAttribute("Script"), "\n"));
 			jTextAreaFunction000Script.setCaretPosition(0);
-			//int width = jScrollPaneFunction000Script.getViewport().getWidth();
-			//jPanelFunction000ScriptEditTool.setBounds(new Rectangle(width - 200, 0, 180, 22));
 			//
 			//Function Usage List//
 		    int rowNumber = 1;
@@ -22949,6 +22960,25 @@ public class Editor extends JFrame {
 					}
 				}
 			}
+		}
+	}
+	/**
+	 * [Tool|Check Functions Called]
+	 * @param e :Action Event
+	 */
+	void jMenuItemToolCheckFunctionsCalled_actionPerformed(ActionEvent e) {
+		int count = 0;
+		currentMainTreeNode.updateFields();
+		try {
+			setCursor(new Cursor(Cursor.WAIT_CURSOR));
+			count = dialogCheckFunctionsCalled.numberOfInvalidCalls();
+		} finally {
+			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		}
+		if (count == 0) {
+			JOptionPane.showMessageDialog(this, res.getString("CheckFunctionsCalledMessage1"));
+		} else {
+			dialogCheckFunctionsCalled.request();
 		}
 	}
 	/**
@@ -37676,6 +37706,16 @@ class Editor_jMenuItemToolSQL_actionAdapter implements java.awt.event.ActionList
 	}
 }
 
+class Editor_jMenuItemToolCheckFunctionsCalled_actionAdapter implements java.awt.event.ActionListener {
+	Editor adaptee;
+	Editor_jMenuItemToolCheckFunctionsCalled_actionAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jMenuItemToolCheckFunctionsCalled_actionPerformed(e);
+	}
+}
+
 class Editor_jMenuItemFileRun_actionAdapter implements java.awt.event.ActionListener {
 	Editor adaptee;
 	Editor_jMenuItemFileRun_actionAdapter(Editor adaptee) {
@@ -38351,7 +38391,6 @@ class Editor_NumberEditorFormatter extends InternationalFormatter {
 			} else {
 				throw e;
 			}
-
 			if (getMaximum().compareTo(num) < 0) {
 				return getMaximum();
 			} else if (getMinimum().compareTo(num) > 0) {
