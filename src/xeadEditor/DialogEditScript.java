@@ -213,7 +213,10 @@ public class DialogEditScript extends JDialog {
 		actionMap.put("REDO", redoAction);
 		//
 		this.setResizable(true);
-		this.setPreferredSize(Toolkit.getDefaultToolkit().getScreenSize());
+        Rectangle screenRect = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
+		int screenWidth = (int)screenRect.getWidth();
+		int screenHeight = (int)screenRect.getHeight();
+		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
 		this.getContentPane().add(jSplitPane,  BorderLayout.CENTER);
 	}
 
