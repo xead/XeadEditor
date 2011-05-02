@@ -77,7 +77,7 @@ public class Editor extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private static final ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
 	public static final String APPLICATION_NAME  = "XEAD Editor 1.0";
-	public static final String FULL_VERSION  = "V1.R0.M3";
+	public static final String FULL_VERSION  = "V1.R0.M4";
 	public static final String FORMAT_VERSION  = "1.0";
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2011 DBC,Ltd.";
@@ -27283,7 +27283,7 @@ public class Editor extends JFrame {
 	        		Cell[0] = new TableRowNumber(countOfUsageRows, element1);
 	        		Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
 	        		Cell[2] = element1.getAttribute("Type");
-	        		Cell[3] = res.getString("TableUsageInScript4");
+	        		Cell[3] = res.getString("TableUsageInScript4") + wrkStr + res.getString("TableUsageInScript3");
 	        		tableModelTableUsageList.addRow(Cell);
 	        	}
 	        }

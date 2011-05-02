@@ -179,6 +179,11 @@ public class DialogSynchTableModule extends JDialog {
 		ArrayList<String> indexFieldsList = new ArrayList<String>();
 		ArrayList<String> indexAscDescList = new ArrayList<String>();
 		ArrayList<String> indexNotUniqueList = new ArrayList<String>();
+		ArrayList<String> foreignKeyNameList = new ArrayList<String>();
+		ArrayList<String> foreignKeyTableList = new ArrayList<String>();
+		ArrayList<String> foreignKeyFieldList = new ArrayList<String>();
+		ArrayList<String> nativeFieldList = new ArrayList<String>();
+
 		int workIndex, count1, count2, wrkInt;
 		//
 		try {
@@ -607,6 +612,30 @@ public class DialogSynchTableModule extends JDialog {
 						}
 					}
 				}
+				//
+				// Collect foreign key constraints of module //
+				foreignKeyNameList.clear();
+				foreignKeyTableList.clear();
+				foreignKeyFieldList.clear();
+				ResultSet rs7 = connection_.getMetaData().getImportedKeys(null, null, tableElement.getAttribute("ID"));
+				while (rs7.next()) {
+					//
+					workIndex = foreignKeyNameList.indexOf(rs7.getString("FK_NAME"));
+					if (workIndex == -1) {
+						workIndex = 0;
+						foreignKeyNameList.add(rs7.getString("FK_NAME"));
+						foreignKeyTableList.add(rs7.getString("FKTABLE_NAME"));
+						foreignKeyFieldList.add(rs7.getString("FKCOLUMN_NAME"));
+						nativeFieldList.add(rs7.getString("PKCOLUMN_NAME"));
+					} else {
+						foreignKeyFieldList.set(workIndex, foreignKeyFieldList.get(workIndex) + "," + rs7.getString("FKCOLUMN_NAME"));
+						nativeFieldList.set(workIndex, nativeFieldList.get(workIndex) + "," + rs7.getString("PKCOLUMN_NAME"));
+					}
+				}
+				rs7.close();
+				for (int i = 0; i < foreignKeyNameList.size(); i++) {
+					moduleBuf.append(",\nConstraint " + foreignKeyNameList.get(i) + " Foreign key (" + foreignKeyFieldList.get(i) + ") References " + foreignKeyTableList.get(i) + " (" + nativeFieldList.get(i) + ")");
+				}
 				moduleBuf.append("\n)");
 				//
 				// Check PK from module to definition //
@@ -682,7 +711,11 @@ public class DialogSynchTableModule extends JDialog {
 					if (requestType.equals("ALTER")) {
 						jTextAreaMessage.setText(res.getString("ModuleCheckMessage44") + "\n\n< Data Descriptions >\n" + moduleBuf.toString());
 					} else {
-						jTextAreaMessage.setText(res.getString("ModuleCheckMessage35") + "\n\n< Data Descriptions >\n" + moduleBuf.toString());
+						if (foreignKeyNameList.size() > 0) {
+							jTextAreaMessage.setText(res.getString("ModuleCheckMessage45") + "\n\n< Data Descriptions >\n" + moduleBuf.toString());
+						} else {
+							jTextAreaMessage.setText(res.getString("ModuleCheckMessage35") + "\n\n< Data Descriptions >\n" + moduleBuf.toString());
+						}
 					}
 				}
 				jTextAreaMessage.setCaretPosition(0);
