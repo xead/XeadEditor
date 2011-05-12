@@ -736,6 +736,7 @@ public class Res_ja extends java.util.ListResourceBundle {
 		{ "Update", "更新" },
 		{ "UpdateCounter", "更新排他制御" },
 		{ "UpdateList", "更新リスト" },
+		{ "UpdateMessage", "更新前メッセージ" },
 		{ "UsageBatchFieldPrompter", "バッチフィールドプロンプタ" },
 		{ "UsageColumnPrompter", "明細フィールドプロンプタ" },
 		{ "UsageDTLFunction", "明細呼出機能" },

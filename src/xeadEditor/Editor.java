@@ -77,7 +77,7 @@ public class Editor extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private static final ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
 	public static final String APPLICATION_NAME  = "XEAD Editor 1.0";
-	public static final String FULL_VERSION  = "V1.R0.M4";
+	public static final String FULL_VERSION  = "V1.R0.M5";
 	public static final String FORMAT_VERSION  = "1.0";
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2011 DBC,Ltd.";
@@ -5409,8 +5409,8 @@ public class Editor extends JFrame {
 		jLabelFunction110InitialMsg.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction110InitialMsg.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110InitialMsg.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction110InitialMsg.setText(res.getString("InitialMessage"));
-		jLabelFunction110InitialMsg.setBounds(new Rectangle(11, 152, 96, 15));
+		jLabelFunction110InitialMsg.setText(res.getString("UpdateMessage"));
+		jLabelFunction110InitialMsg.setBounds(new Rectangle(5, 152, 102, 15));
 		jTextFieldFunction110InitialMsg.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldFunction110InitialMsg.setBounds(new Rectangle(115, 149, 600, 22));
 		//

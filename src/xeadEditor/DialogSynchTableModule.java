@@ -293,6 +293,13 @@ public class DialogSynchTableModule extends JDialog {
 										buf.append("(" + countOfErrors + ") " + res.getString("ModuleCheckMessage1") + element.getAttribute("ID") + "(" + element.getAttribute("Name") +")" + res.getString("ModuleCheckMessage2") + typeDescriptionsOfDefinitionField + res.getString("ModuleCheckMessage3") + typeDescriptionsOfModuleField + res.getString("ModuleCheckMessage4"));
 									}
 								}
+								if (element.getAttribute("Type").equals("VARCHAR")
+										&& sizeOfDefinitionField != sizeOfModuleField) {
+									countOfErrors++;
+									fieldListToBeDropped.add(element.getAttribute("ID"));
+									fieldListToBeAdded.add(element.getAttribute("ID"));
+									buf.append("(" + countOfErrors + ") " + res.getString("ModuleCheckMessage1") + element.getAttribute("ID") + "(" + element.getAttribute("Name") +")" + res.getString("ModuleCheckMessage2") + typeDescriptionsOfDefinitionField + res.getString("ModuleCheckMessage3") + typeDescriptionsOfModuleField + "(" + sizeOfModuleField + ")" + res.getString("ModuleCheckMessage4"));
+								}
 							} else {
 								countOfErrors++;
 								fieldListToBeDropped.add(element.getAttribute("ID"));
