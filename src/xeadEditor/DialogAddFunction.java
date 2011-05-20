@@ -383,10 +383,12 @@ public class DialogAddFunction extends JDialog {
 								|| functionType.equals("XF310")
 								|| functionType.equals("XF390")) {
 							jTextFieldHeaderTableID.setText("");
+							jLabelHeaderTableName.setText("");
 							jTextFieldHeaderTableKeys.setText("*Keys");
 							headerTableNode = null;
 							headerTableKeys = "";
 							jTextFieldDetailTableID.setText("");
+							jLabelDetailTableName.setText("");
 							jTextFieldDetailTableKeys.setText("*Keys");
 							detailTableNode = null;
 							detailTableKeys = "";
@@ -741,7 +743,7 @@ public class DialogAddFunction extends JDialog {
 				if (noErrors) {
 					element.setAttribute("HeaderTable", jTextFieldHeaderTableID.getText());
 					element.setAttribute("HeaderKeyFields", "");
-					element.setAttribute("HeaderFunction", "xxxxxx");
+					element.setAttribute("HeaderFunction", "");
 					element.setAttribute("Size", "");
 					//
 					NodeList nodeList = headerTableNode.getElement().getElementsByTagName("Field");

@@ -169,6 +169,7 @@ public class Res_ja extends java.util.ListResourceBundle {
 		{ "Data", "データ" },
 		{ "Database", "データベース" },
 		{ "DataMessages", "必要に応じてWhere条件とOrderByを指定したうえで、検索ボタンを押してください。" },
+		{ "DataName", "データ名" },
 		{ "DataOutput", "EXCEL出力" },
 		{ "DataSource", "データソース" },
 		{ "DataUtilityMessage1", "必要に応じて値を入力して「コミット」を押してください。" },

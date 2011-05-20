@@ -169,6 +169,7 @@ public class Res extends java.util.ListResourceBundle {
 		{ "Data", "Data" },
 		{ "Database", "Database" },
 		{ "DataMessages", "Specify 'Where' and 'OrderBy' criteria as neccessary." },
+		{ "DataName", "Data Name" },
 		{ "DataOutput", "With EXCEL" },
 		{ "DataSource", "Data Source" },
 		{ "DataUtilityMessage1", "Input values and push 'Commit' button." },
