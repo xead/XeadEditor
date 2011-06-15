@@ -77,7 +77,7 @@ public class Editor extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private static final ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
 	public static final String APPLICATION_NAME  = "XEAD Editor 1.0";
-	public static final String FULL_VERSION  = "V1.R0.M6";
+	public static final String FULL_VERSION  = "V1.R0.M7";
 	public static final String FORMAT_VERSION  = "1.0";
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2011 DBC,Ltd.";
@@ -4357,6 +4357,7 @@ public class Editor extends JFrame {
 		jPanelFunction000Top.add(jTextFieldFunction000TimerMessage);
 		//
 		jPanelFunction000.add(jSplitPaneFunction000, BorderLayout.CENTER);
+		jSplitPaneFunction000.setBorder(null);
 		jSplitPaneFunction000.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction000.add(jPanelFunction000Top, JSplitPane.TOP);
 		jSplitPaneFunction000.add(jTabbedPaneFunction000, JSplitPane.BOTTOM);
@@ -17705,7 +17706,6 @@ public class Editor extends JFrame {
 				//
 				if (valueOfFieldsChanged) {
 					element.setAttribute("TypeOptions", options.toString());
-					//wrkStr = getDescriptionsOfTypeOptions(element, false, "", null);
 					wrkStr = getDescriptionsOfTypeOptions(element, false, null);
 					tableModelTableFieldList.setValueAt(wrkStr, selectedRow_jTableTableFieldList, 4);
 				}
@@ -17714,6 +17714,7 @@ public class Editor extends JFrame {
 				if (!element.getAttribute("Remarks").equals(wrkStr)) {
 					valueOfFieldsChanged = true;
 					element.setAttribute("Remarks", wrkStr);
+					tableModelTableFieldList.setValueAt(getFirstParagraph(wrkStr), selectedRow_jTableTableFieldList, 5);
 				}
 				//
 			}
@@ -27596,7 +27597,6 @@ public class Editor extends JFrame {
 				}
 				//
 				nodeList2 = element1.getElementsByTagName("Key");
-				sortingList = getSortedListModel(nodeList1, "Type");
 			    for (int j = 0; j < nodeList2.getLength(); j++) {
 			        element2 = (org.w3c.dom.Element)nodeList2.item(j);
 					workTokenizer = new StringTokenizer(element2.getAttribute("Fields"), ";");
@@ -27624,9 +27624,9 @@ public class Editor extends JFrame {
 				}
 			}
 			//
-			nodeList1 = element1.getElementsByTagName("Refer");
-			for (int k = 0; k < nodeList1.getLength(); k++) {
-				element2 = (org.w3c.dom.Element)nodeList1.item(k);
+			nodeList2 = element1.getElementsByTagName("Refer");
+			for (int k = 0; k < nodeList2.getLength(); k++) {
+				element2 = (org.w3c.dom.Element)nodeList2.item(k);
 				if (element1.getAttribute("ID").equals(tableID)) {
 					workTokenizer = new StringTokenizer(element2.getAttribute("WithKeyFields"), ";");
 					while (workTokenizer.hasMoreTokens()) {
@@ -27694,9 +27694,9 @@ public class Editor extends JFrame {
 				}
 			}
 			//
-		    nodeList1 = element1.getElementsByTagName("Script");
-		    for (int j = 0; j < nodeList1.getLength(); j++) {
-		    	element2 = (org.w3c.dom.Element)nodeList1.item(j);
+		    nodeList2 = element1.getElementsByTagName("Script");
+		    for (int j = 0; j < nodeList2.getLength(); j++) {
+		    	element2 = (org.w3c.dom.Element)nodeList2.item(j);
 				wrkStr = substringLinesWithTokenOfEOL(element2.getAttribute("Text"), "\n");
 				wrkStr = removeCommentsFromScriptText(wrkStr);
 				if (wrkStr.contains(fieldExpInScript)) {
@@ -28709,24 +28709,27 @@ public class Editor extends JFrame {
 			element = (org.w3c.dom.Element)sortingList.getElementAt(i);
 			workTokenizer = new StringTokenizer(element.getAttribute("Fields"), ";" );
 			while (workTokenizer.hasMoreTokens()) {
-				buf.append("\n");
 				wrkStr = workTokenizer.nextToken();
 				fieldElement = getSpecificFieldElement(element.getAttribute("ToTable"), wrkStr);
-				if (getOptionList(fieldElement.getAttribute("TypeOptions")).contains("VIRTUAL")) {
-					buf.append(res.getString("ScriptNotesVFMark"));
+				if (fieldElement != null) {
+					buf.append("\n");
+					//
+					if (getOptionList(fieldElement.getAttribute("TypeOptions")).contains("VIRTUAL")) {
+						buf.append(res.getString("ScriptNotesVFMark"));
+					}
+					//
+					if (element.getAttribute("TableAlias").equals("")) {
+						buf.append(element.getAttribute("ToTable"));
+					} else {
+						buf.append(element.getAttribute("TableAlias"));
+					}
+					buf.append("_");
+					buf.append(wrkStr);
+					buf.append(".value ");
+					buf.append(fieldElement.getAttribute("Name"));
+					buf.append(" ");
+					buf.append(getDescriptionsOfTypeAndSize(fieldElement.getAttribute("Type"), fieldElement.getAttribute("Size"), fieldElement.getAttribute("Decimal")));
 				}
-				//
-				if (element.getAttribute("TableAlias").equals("")) {
-					buf.append(element.getAttribute("ToTable"));
-				} else {
-					buf.append(element.getAttribute("TableAlias"));
-				}
-				buf.append("_");
-				buf.append(wrkStr);
-				buf.append(".value ");
-				buf.append(fieldElement.getAttribute("Name"));
-				buf.append(" ");
-				buf.append(getDescriptionsOfTypeAndSize(fieldElement.getAttribute("Type"), fieldElement.getAttribute("Size"), fieldElement.getAttribute("Decimal")));
 			}
 		}
 		//
