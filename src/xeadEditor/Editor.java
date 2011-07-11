@@ -77,7 +77,7 @@ public class Editor extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private static final ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
 	public static final String APPLICATION_NAME  = "XEAD Editor 1.0";
-	public static final String FULL_VERSION  = "V1.R0.M7";
+	public static final String FULL_VERSION  = "V1.R0.M8";
 	public static final String FORMAT_VERSION  = "1.0";
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2011 DBC,Ltd.";
@@ -319,10 +319,10 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldSystemTaxTable = new JTextField();
 	private JLabel jLabelSystemCalendarTable = new JLabel();
 	private JTextField jTextFieldSystemCalendarTable = new JTextField();
-	private JLabel jLabelSystemCurrencyTable = new JLabel();
-	private JTextField jTextFieldSystemCurrencyTable = new JTextField();
-	private JLabel jLabelSystemCurrencyDetailTable = new JLabel();
-	private JTextField jTextFieldSystemCurrencyDetailTable = new JTextField();
+	private JLabel jLabelSystemExchangeRateAnnualTable = new JLabel();
+	private JTextField jTextFieldSystemExchangeRateAnnualTable = new JTextField();
+	private JLabel jLabelSystemExchangeRateMonthlyTable = new JLabel();
+	private JTextField jTextFieldSystemExchangeRateMonthlyTable = new JTextField();
 	private JLabel jLabelSystemImageFileFolder = new JLabel();
 	private JTextField jTextFieldSystemImageFileFolder = new JTextField();
 	private JLabel jLabelSystemWelcomePageURL = new JLabel();
@@ -2769,20 +2769,20 @@ public class Editor extends JFrame {
 		jLabelSystemCalendarTable.setBounds(new Rectangle(11, 444, 86, 15));
 		jTextFieldSystemCalendarTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldSystemCalendarTable.setBounds(new Rectangle(105, 441, 80, 22));
-		jLabelSystemCurrencyTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelSystemCurrencyTable.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelSystemCurrencyTable.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelSystemCurrencyTable.setText(res.getString("SystemCurrency"));
-		jLabelSystemCurrencyTable.setBounds(new Rectangle(11, 472, 86, 15));
-		jTextFieldSystemCurrencyTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemCurrencyTable.setBounds(new Rectangle(105, 469, 80, 22));
-		jLabelSystemCurrencyDetailTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelSystemCurrencyDetailTable.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelSystemCurrencyDetailTable.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelSystemCurrencyDetailTable.setText(res.getString("SystemCurrencyDetail"));
-		jLabelSystemCurrencyDetailTable.setBounds(new Rectangle(11, 500, 86, 15));
-		jTextFieldSystemCurrencyDetailTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemCurrencyDetailTable.setBounds(new Rectangle(105, 497, 80, 22));
+		jLabelSystemExchangeRateAnnualTable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemExchangeRateAnnualTable.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelSystemExchangeRateAnnualTable.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelSystemExchangeRateAnnualTable.setText(res.getString("SystemExchangeRateAnnual"));
+		jLabelSystemExchangeRateAnnualTable.setBounds(new Rectangle(11, 472, 86, 15));
+		jTextFieldSystemExchangeRateAnnualTable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldSystemExchangeRateAnnualTable.setBounds(new Rectangle(105, 469, 80, 22));
+		jLabelSystemExchangeRateMonthlyTable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemExchangeRateMonthlyTable.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelSystemExchangeRateMonthlyTable.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelSystemExchangeRateMonthlyTable.setText(res.getString("SystemExchangeRateMonthly"));
+		jLabelSystemExchangeRateMonthlyTable.setBounds(new Rectangle(11, 500, 86, 15));
+		jTextFieldSystemExchangeRateMonthlyTable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldSystemExchangeRateMonthlyTable.setBounds(new Rectangle(105, 497, 80, 22));
 		jPanelSystemConfig.add(jLabelSystemDBName);
 		jPanelSystemConfig.add(jTextFieldSystemDBName);
 		jPanelSystemConfig.add(jLabelSystemDBUser);
@@ -2812,10 +2812,10 @@ public class Editor extends JFrame {
 		jPanelSystemConfig.add(jTextFieldSystemTaxTable);
 		jPanelSystemConfig.add(jLabelSystemCalendarTable);
 		jPanelSystemConfig.add(jTextFieldSystemCalendarTable);
-		jPanelSystemConfig.add(jLabelSystemCurrencyTable);
-		jPanelSystemConfig.add(jTextFieldSystemCurrencyTable);
-		jPanelSystemConfig.add(jLabelSystemCurrencyDetailTable);
-		jPanelSystemConfig.add(jTextFieldSystemCurrencyDetailTable);
+		jPanelSystemConfig.add(jLabelSystemExchangeRateAnnualTable);
+		jPanelSystemConfig.add(jTextFieldSystemExchangeRateAnnualTable);
+		jPanelSystemConfig.add(jLabelSystemExchangeRateMonthlyTable);
+		jPanelSystemConfig.add(jTextFieldSystemExchangeRateMonthlyTable);
 		jTabbedPaneSystem.addTab(res.getString("SystemConfig"), jPanelSystemConfig);
 		jTabbedPaneSystem.setIconAt(1, imageIconTable);
 		//
@@ -12078,10 +12078,12 @@ public class Editor extends JFrame {
 	    if (e.getComponent().equals(jScrollPaneSystemPrintFontList)) {
 	    	componentType_jPopupMenuComponent = "SystemPrintFontList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    }
 	    if (e.getComponent().equals(jTableSystemPrintFontList)) {
 	    	componentType_jPopupMenuComponent = "SystemPrintFontList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    	jPopupMenuComponent.addSeparator();
 	    	jPopupMenuComponent.add(jMenuItemComponentToDelete);
 	    }
@@ -12181,6 +12183,7 @@ public class Editor extends JFrame {
 	    if (e.getComponent().equals(jTableTableUsageList)) {
 	    	componentType_jPopupMenuComponent = "TableUsageList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToJump);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    }
 	    //
 	    if (e.getComponent().equals(jScrollPaneTableFieldList)) {
@@ -12211,16 +12214,19 @@ public class Editor extends JFrame {
 	    if (e.getComponent().equals(jTableTableFieldUsageList)) {
 	    	componentType_jPopupMenuComponent = "TableFieldUsageList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToJump);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    }
 	    //
 	    if (e.getComponent().equals(jScrollPaneTableKeyList)) {
 	    	componentType_jPopupMenuComponent = "TableKeyList";
 	    	jPopupMenuComponent.add(jMenuComponentToAddKey);
 	    	jMenuItemComponentToAddPK.setEnabled(isLackOfPK());
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    }
 	    if (e.getComponent().equals(jTableTableKeyList)) {
 	    	componentType_jPopupMenuComponent = "TableKeyList";
 	    	jPopupMenuComponent.add(jMenuComponentToAddKey);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    	jPopupMenuComponent.addSeparator();
 	    	jPopupMenuComponent.add(jMenuItemComponentToDelete);
 	    	jMenuItemComponentToAddPK.setEnabled(isLackOfPK());
@@ -12228,15 +12234,18 @@ public class Editor extends JFrame {
 	    if (e.getComponent().equals(jTableTableKeyRelationshipList)) {
 	    	componentType_jPopupMenuComponent = "TableKeyRelationshipList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToJump);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    }
 	    //
 	    if (e.getComponent().equals(jScrollPaneTableReferList)) {
 	    	componentType_jPopupMenuComponent = "TableReferList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    }
 	    if (e.getComponent().equals(jTableTableReferList)) {
 	    	componentType_jPopupMenuComponent = "TableReferList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    	jPopupMenuComponent.addSeparator();
 	    	jPopupMenuComponent.add(jMenuItemComponentToDelete);
 	    }
@@ -12250,6 +12259,7 @@ public class Editor extends JFrame {
 	    			jMenuItemComponentToPaste.setEnabled(true);
 	    		}
 	    	}
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    }
 	    if (e.getComponent().equals(jTableTableScriptList)) {
 	    	componentType_jPopupMenuComponent = "TableScriptList";
@@ -12261,12 +12271,20 @@ public class Editor extends JFrame {
 	    		}
 	    	}
 	    	jPopupMenuComponent.add(jMenuItemComponentToCopy);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    	jPopupMenuComponent.addSeparator();
 	    	jPopupMenuComponent.add(jMenuItemComponentToDelete);
 	    }
 	    //
+	    if (e.getComponent().equals(jScrollPaneTableDataList)) {
+	    	componentType_jPopupMenuComponent = "TableDataList";
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
+	    }
+	    //
 	    if (e.getComponent().equals(jTableTableDataList)) {
 	    	componentType_jPopupMenuComponent = "TableDataList";
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
+	    	jPopupMenuComponent.addSeparator();
 	    	jPopupMenuComponent.add(jMenuItemComponentToDelete);
 	    }
 	    //
@@ -12303,6 +12321,7 @@ public class Editor extends JFrame {
 	    if (e.getComponent().equals(jTableFunction000UsageList)) {
 	    	componentType_jPopupMenuComponent = "Function000UsageList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToJump);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    }
 	    //
 	    if (e.getComponent().equals(jScrollPaneFunction010FieldList)) {
@@ -12324,10 +12343,12 @@ public class Editor extends JFrame {
 	    if (e.getComponent().equals(jScrollPaneFunction100ColumnList)) {
 	    	componentType_jPopupMenuComponent = "Function100ColumnList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    }
 	    if (e.getComponent().equals(jTableFunction100ColumnList)) {
 	    	componentType_jPopupMenuComponent = "Function100ColumnList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    	jPopupMenuComponent.addSeparator();
 	    	jPopupMenuComponent.add(jMenuItemComponentToDelete);
 	    }
@@ -12335,10 +12356,12 @@ public class Editor extends JFrame {
 	    if (e.getComponent().equals(jScrollPaneFunction100FilterList)) {
 	    	componentType_jPopupMenuComponent = "Function100FilterList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    }
 	    if (e.getComponent().equals(jTableFunction100FilterList)) {
 	    	componentType_jPopupMenuComponent = "Function100FilterList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    	jPopupMenuComponent.addSeparator();
 	    	jPopupMenuComponent.add(jMenuItemComponentToDelete);
 	    }
@@ -12351,10 +12374,12 @@ public class Editor extends JFrame {
 			} else {
 				jMenuItemComponentToAdd.setEnabled(false);
 			}
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    }
 	    if (e.getComponent().equals(jTableFunction100ButtonList)) {
 	    	componentType_jPopupMenuComponent = "Function100ButtonList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    	jPopupMenuComponent.addSeparator();
 	    	jPopupMenuComponent.add(jMenuItemComponentToDelete);
 			if (tableModelFunction100ButtonList.getRowCount() < 7) {
@@ -12367,15 +12392,18 @@ public class Editor extends JFrame {
 	    if (e.getComponent().equals(jTableFunction100UsageList)) {
 	    	componentType_jPopupMenuComponent = "Function100UsageList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToJump);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    }
 	    //
 	    if (e.getComponent().equals(jScrollPaneFunction110ColumnList)) {
 	    	componentType_jPopupMenuComponent = "Function110ColumnList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    }
 	    if (e.getComponent().equals(jTableFunction110ColumnList)) {
 	    	componentType_jPopupMenuComponent = "Function110ColumnList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    	jPopupMenuComponent.addSeparator();
 	    	jPopupMenuComponent.add(jMenuItemComponentToDelete);
 	    }
@@ -12383,10 +12411,12 @@ public class Editor extends JFrame {
 	    if (e.getComponent().equals(jScrollPaneFunction110FilterList)) {
 	    	componentType_jPopupMenuComponent = "Function110FilterList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    }
 	    if (e.getComponent().equals(jTableFunction110FilterList)) {
 	    	componentType_jPopupMenuComponent = "Function110FilterList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    	jPopupMenuComponent.addSeparator();
 	    	jPopupMenuComponent.add(jMenuItemComponentToDelete);
 	    }
@@ -12395,11 +12425,13 @@ public class Editor extends JFrame {
 	    	if (!function110BatchTableID.equals("")) {
 	    		componentType_jPopupMenuComponent = "Function110BatchFieldList";
 	    		jPopupMenuComponent.add(jMenuItemComponentToAdd);
+		    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    	}
 	    }
 	    if (e.getComponent().equals(jTableFunction110BatchFieldList)) {
 	    	componentType_jPopupMenuComponent = "Function110BatchFieldList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    	jPopupMenuComponent.addSeparator();
 	    	jPopupMenuComponent.add(jMenuItemComponentToDelete);
 	    }
@@ -12412,10 +12444,12 @@ public class Editor extends JFrame {
 			} else {
 				jMenuItemComponentToAdd.setEnabled(false);
 			}
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    }
 	    if (e.getComponent().equals(jTableFunction110ButtonList)) {
 	    	componentType_jPopupMenuComponent = "Function110ButtonList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    	jPopupMenuComponent.addSeparator();
 	    	jPopupMenuComponent.add(jMenuItemComponentToDelete);
 			if (tableModelFunction110ButtonList.getRowCount() < 5) {
@@ -12428,15 +12462,18 @@ public class Editor extends JFrame {
 	    if (e.getComponent().equals(jTableFunction110UsageList)) {
 	    	componentType_jPopupMenuComponent = "Function110UsageList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToJump);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    }
 	    //
 	    if (e.getComponent().equals(jScrollPaneFunction200FieldList)) {
 	    	componentType_jPopupMenuComponent = "Function200FieldList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    }
 	    if (e.getComponent().equals(jTableFunction200FieldList)) {
 	    	componentType_jPopupMenuComponent = "Function200FieldList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    	jPopupMenuComponent.addSeparator();
 	    	jPopupMenuComponent.add(jMenuItemComponentToDelete);
 	    }
@@ -13986,8 +14023,8 @@ public class Editor extends JFrame {
 			jTextFieldSystemSessionDetailTable.setText(domNode_.getAttribute("SessionDetailTable"));
 			jTextFieldSystemTaxTable.setText(domNode_.getAttribute("TaxTable"));
 			jTextFieldSystemCalendarTable.setText(domNode_.getAttribute("CalendarTable"));
-			jTextFieldSystemCurrencyTable.setText(domNode_.getAttribute("CurrencyTable"));
-			jTextFieldSystemCurrencyDetailTable.setText(domNode_.getAttribute("CurrencyDetailTable"));
+			jTextFieldSystemExchangeRateAnnualTable.setText(domNode_.getAttribute("ExchangeRateAnnualTable"));
+			jTextFieldSystemExchangeRateMonthlyTable.setText(domNode_.getAttribute("ExchangeRateMonthlyTable"));
 			jTextFieldSystemImageFileFolder.setText(domNode_.getAttribute("ImageFileFolder"));
 			if (domNode_.getAttribute("OutputFolder").equals("")) {
 				jTextFieldSystemOutputFolder.setText("*Delete");
@@ -17115,10 +17152,10 @@ public class Editor extends JFrame {
 			if (!domNode_.getAttribute("CalendarTable").equals(jTextFieldSystemCalendarTable.getText())) {
 				valueOfFieldsChanged = true;
 			}
-			if (!domNode_.getAttribute("CurrencyTable").equals(jTextFieldSystemCurrencyTable.getText())) {
+			if (!domNode_.getAttribute("ExchangeRateAnnualTable").equals(jTextFieldSystemExchangeRateAnnualTable.getText())) {
 				valueOfFieldsChanged = true;
 			}
-			if (!domNode_.getAttribute("CurrencyDetailTable").equals(jTextFieldSystemCurrencyDetailTable.getText())) {
+			if (!domNode_.getAttribute("ExchangeRateMonthlyTable").equals(jTextFieldSystemExchangeRateMonthlyTable.getText())) {
 				valueOfFieldsChanged = true;
 			}
 			if (!domNode_.getAttribute("ImageFileFolder").equals(jTextFieldSystemImageFileFolder.getText())) {
@@ -17171,8 +17208,8 @@ public class Editor extends JFrame {
 				domNode_.setAttribute("SessionDetailTable", jTextFieldSystemSessionDetailTable.getText());
 				domNode_.setAttribute("TaxTable", jTextFieldSystemTaxTable.getText());
 				domNode_.setAttribute("CalendarTable", jTextFieldSystemCalendarTable.getText());
-				domNode_.setAttribute("CurrencyTable", jTextFieldSystemCurrencyTable.getText());
-				domNode_.setAttribute("CurrencyDetailTable", jTextFieldSystemCurrencyDetailTable.getText());
+				domNode_.setAttribute("ExchangeRateAnnualTable", jTextFieldSystemExchangeRateAnnualTable.getText());
+				domNode_.setAttribute("ExchangeRateMonthlyTable", jTextFieldSystemExchangeRateMonthlyTable.getText());
 				//
 				domNode_.setAttribute("ImageFileFolder", jTextFieldSystemImageFileFolder.getText());
 				if (jTextFieldSystemOutputFolder.getText().equals("") || jTextFieldSystemOutputFolder.getText().equals("*Delete")) {
@@ -17360,7 +17397,7 @@ public class Editor extends JFrame {
 			} else {
 				if (!domNode_.getAttribute("DeleteOperation").equals(jTextFieldTableDeleteOperation.getText())) {
 					valueOfFieldsChanged = true;
-					domNode_.setAttribute("ADeleteOperation", jTextFieldTableDeleteOperation.getText());
+					domNode_.setAttribute("DeleteOperation", jTextFieldTableDeleteOperation.getText());
 				}
 			}
 			if (jTextFieldTableActiveWhere.getText().equals("*None") || jTextFieldTableActiveWhere.getText().equals("*NONE") || jTextFieldTableActiveWhere.getText().equals("")) {
@@ -24241,6 +24278,10 @@ public class Editor extends JFrame {
 			tableModel = tableModelTableFieldList;
 		}
 		//
+		if (componentType_jPopupMenuComponent.equals("TableFieldUsageList")) {
+			tableModel = tableModelTableFieldUsageList;
+		}
+		//
 		if (componentType_jPopupMenuComponent.equals("FunctionList")) {
 			tableModel = tableModelFunctionList;
 		}
@@ -27567,6 +27608,7 @@ public class Editor extends JFrame {
 		String fieldExpInScript = tableID + "_" + fieldID + ".";
 		String targetTableID, targetFieldID;
 		String primaryTableID = "";
+		String subTableID = "";
 		org.w3c.dom.Element element1, element2, element3;
 		MainTreeNode workNode;
 		NodeList nodeList1, nodeList2, nodeList3;
@@ -27934,29 +27976,8 @@ public class Editor extends JFrame {
 						tableModelTableFieldUsageList.addRow(Cell);
 						break;
 					}
-				}
-				//
-				nodeList2 = element1.getElementsByTagName("BatchField");
-				for (int j = 0; j < nodeList2.getLength(); j++) {
-					element2 = (org.w3c.dom.Element)nodeList2.item(j);
-					wrkStr = element2.getAttribute("DataSource");
-					pos1 = wrkStr.indexOf(".");
-					targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
-					targetFieldID = wrkStr.substring(pos1+1);
-					if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
-						countOfUsageRows++;
-						Object[] Cell = new Object[4];
-						Cell[0] = new TableRowNumber(countOfUsageRows, element1);
-						Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
-						Cell[2] = element1.getAttribute("Type");
-						Cell[3] = res.getString("BatchField");
-						tableModelTableFieldUsageList.addRow(Cell);
-						break;
-					}
-				}
-				//
-				if (!element1.getAttribute("BatchWithKeyFields").equals("")) {
-					workTokenizer = new StringTokenizer(element1.getAttribute("BatchWithKeyFields"), ";" );
+					//
+					workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "PROMPT_CALL_TO_PUT"), ";" );
 					while (workTokenizer.hasMoreTokens()) {
 						wrkStr = workTokenizer.nextToken();
 						pos1 = wrkStr.indexOf(".");
@@ -27968,27 +27989,127 @@ public class Editor extends JFrame {
 							Cell[0] = new TableRowNumber(countOfUsageRows, element1);
 							Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
 							Cell[2] = element1.getAttribute("Type");
-							Cell[3] = res.getString("BatchWithKeyField");
+							Cell[3] = res.getString("PrompterFunctionExchange");
 							tableModelTableFieldUsageList.addRow(Cell);
 							break;
 						}
 					}
-				}
-				//
-				if (!element1.getAttribute("BatchKeyFields").equals("")) {
-					workTokenizer = new StringTokenizer(element1.getAttribute("BatchKeyFields"), ";" );
+					//
+					workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "PROMPT_CALL_TO_GET_TO"), ";" );
 					while (workTokenizer.hasMoreTokens()) {
-						targetTableID = element1.getAttribute("BatchTable"); 
-						targetFieldID = workTokenizer.nextToken();
+						wrkStr = workTokenizer.nextToken();
+						pos1 = wrkStr.indexOf(".");
+						targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+						targetFieldID = wrkStr.substring(pos1+1);
 						if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
 							countOfUsageRows++;
 							Object[] Cell = new Object[4];
 							Cell[0] = new TableRowNumber(countOfUsageRows, element1);
 							Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
 							Cell[2] = element1.getAttribute("Type");
-							Cell[3] = res.getString("BatchKeyField");
+							Cell[3] = res.getString("PrompterFunctionExchange");
 							tableModelTableFieldUsageList.addRow(Cell);
 							break;
+						}
+					}
+				}
+				//
+				subTableID = element1.getAttribute("BatchTable");
+				workNode = getSpecificXETreeNode("Table", subTableID);
+				element2 = workNode.getElement();
+				referList1 = element2.getElementsByTagName("Refer");
+				//
+				if (!subTableID.equals("")) {
+					nodeList2 = element1.getElementsByTagName("BatchField");
+					for (int j = 0; j < nodeList2.getLength(); j++) {
+						element2 = (org.w3c.dom.Element)nodeList2.item(j);
+						wrkStr = element2.getAttribute("DataSource");
+						pos1 = wrkStr.indexOf(".");
+						targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+						targetFieldID = wrkStr.substring(pos1+1);
+						if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+							countOfUsageRows++;
+							Object[] Cell = new Object[4];
+							Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+							Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+							Cell[2] = element1.getAttribute("Type");
+							Cell[3] = res.getString("BatchField");
+							tableModelTableFieldUsageList.addRow(Cell);
+							break;
+						}
+						//
+						workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "PROMPT_CALL_TO_PUT"), ";" );
+						while (workTokenizer.hasMoreTokens()) {
+							wrkStr = workTokenizer.nextToken();
+							pos1 = wrkStr.indexOf(".");
+							targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+							targetFieldID = wrkStr.substring(pos1+1);
+							if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+								countOfUsageRows++;
+								Object[] Cell = new Object[4];
+								Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+								Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+								Cell[2] = element1.getAttribute("Type");
+								Cell[3] = res.getString("PrompterFunctionExchange");
+								tableModelTableFieldUsageList.addRow(Cell);
+								break;
+							}
+						}
+						//
+						workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "PROMPT_CALL_TO_GET_TO"), ";" );
+						while (workTokenizer.hasMoreTokens()) {
+							wrkStr = workTokenizer.nextToken();
+							pos1 = wrkStr.indexOf(".");
+							targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+							targetFieldID = wrkStr.substring(pos1+1);
+							if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+								countOfUsageRows++;
+								Object[] Cell = new Object[4];
+								Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+								Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+								Cell[2] = element1.getAttribute("Type");
+								Cell[3] = res.getString("PrompterFunctionExchange");
+								tableModelTableFieldUsageList.addRow(Cell);
+								break;
+							}
+						}
+					}
+					//
+					if (!element1.getAttribute("BatchWithKeyFields").equals("")) {
+						workTokenizer = new StringTokenizer(element1.getAttribute("BatchWithKeyFields"), ";" );
+						while (workTokenizer.hasMoreTokens()) {
+							wrkStr = workTokenizer.nextToken();
+							pos1 = wrkStr.indexOf(".");
+							targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+							targetFieldID = wrkStr.substring(pos1+1);
+							if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+								countOfUsageRows++;
+								Object[] Cell = new Object[4];
+								Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+								Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+								Cell[2] = element1.getAttribute("Type");
+								Cell[3] = res.getString("BatchWithKeyField");
+								tableModelTableFieldUsageList.addRow(Cell);
+								break;
+							}
+						}
+					}
+					//
+					if (!element1.getAttribute("BatchKeyFields").equals("")) {
+						workTokenizer = new StringTokenizer(element1.getAttribute("BatchKeyFields"), ";" );
+						while (workTokenizer.hasMoreTokens()) {
+							targetTableID = element1.getAttribute("BatchTable"); 
+							targetFieldID = workTokenizer.nextToken();
+							if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+								countOfUsageRows++;
+								Object[] Cell = new Object[4];
+								Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+								Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+								Cell[2] = element1.getAttribute("Type");
+								Cell[3] = res.getString("BatchKeyField");
+								tableModelTableFieldUsageList.addRow(Cell);
+								break;
+							}
 						}
 					}
 				}
@@ -28060,6 +28181,42 @@ public class Editor extends JFrame {
 							Cell[3] = res.getString("DTLField");
 							tableModelTableFieldUsageList.addRow(Cell);
 							break;
+						}
+						//
+						workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "PROMPT_CALL_TO_PUT"), ";" );
+						while (workTokenizer.hasMoreTokens()) {
+							wrkStr = workTokenizer.nextToken();
+							pos1 = wrkStr.indexOf(".");
+							targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+							targetFieldID = wrkStr.substring(pos1+1);
+							if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+								countOfUsageRows++;
+								Object[] Cell = new Object[4];
+								Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+								Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+								Cell[2] = element1.getAttribute("Type");
+								Cell[3] = res.getString("PrompterFunctionExchange");
+								tableModelTableFieldUsageList.addRow(Cell);
+								break;
+							}
+						}
+						//
+						workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "PROMPT_CALL_TO_GET_TO"), ";" );
+						while (workTokenizer.hasMoreTokens()) {
+							wrkStr = workTokenizer.nextToken();
+							pos1 = wrkStr.indexOf(".");
+							targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+							targetFieldID = wrkStr.substring(pos1+1);
+							if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+								countOfUsageRows++;
+								Object[] Cell = new Object[4];
+								Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+								Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+								Cell[2] = element1.getAttribute("Type");
+								Cell[3] = res.getString("PrompterFunctionExchange");
+								tableModelTableFieldUsageList.addRow(Cell);
+								break;
+							}
 						}
 					}
 				}
@@ -28311,6 +28468,42 @@ public class Editor extends JFrame {
 						tableModelTableFieldUsageList.addRow(Cell);
 						break;
 					}
+					//
+					workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "PROMPT_CALL_TO_PUT"), ";" );
+					while (workTokenizer.hasMoreTokens()) {
+						wrkStr = workTokenizer.nextToken();
+						pos1 = wrkStr.indexOf(".");
+						targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+						targetFieldID = wrkStr.substring(pos1+1);
+						if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+							countOfUsageRows++;
+							Object[] Cell = new Object[4];
+							Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+							Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+							Cell[2] = element1.getAttribute("Type");
+							Cell[3] = res.getString("PrompterFunctionExchange");
+							tableModelTableFieldUsageList.addRow(Cell);
+							break;
+						}
+					}
+					//
+					workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "PROMPT_CALL_TO_GET_TO"), ";" );
+					while (workTokenizer.hasMoreTokens()) {
+						wrkStr = workTokenizer.nextToken();
+						pos1 = wrkStr.indexOf(".");
+						targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+						targetFieldID = wrkStr.substring(pos1+1);
+						if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+							countOfUsageRows++;
+							Object[] Cell = new Object[4];
+							Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+							Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+							Cell[2] = element1.getAttribute("Type");
+							Cell[3] = res.getString("PrompterFunctionExchange");
+							tableModelTableFieldUsageList.addRow(Cell);
+							break;
+						}
+					}
 				}
 				//
 				workNode = getSpecificXETreeNode("Table", element1.getAttribute("DetailTable"));
@@ -28392,6 +28585,42 @@ public class Editor extends JFrame {
 						Cell[3] = res.getString("DTLField");
 						tableModelTableFieldUsageList.addRow(Cell);
 						break;
+					}
+					//
+					workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element3.getAttribute("FieldOptions"), "PROMPT_CALL_TO_PUT"), ";" );
+					while (workTokenizer.hasMoreTokens()) {
+						wrkStr = workTokenizer.nextToken();
+						pos1 = wrkStr.indexOf(".");
+						targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, referList2); 
+						targetFieldID = wrkStr.substring(pos1+1);
+						if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+							countOfUsageRows++;
+							Object[] Cell = new Object[4];
+							Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+							Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+							Cell[2] = element1.getAttribute("Type");
+							Cell[3] = res.getString("PrompterFunctionExchange");
+							tableModelTableFieldUsageList.addRow(Cell);
+							break;
+						}
+					}
+					//
+					workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element3.getAttribute("FieldOptions"), "PROMPT_CALL_TO_GET_TO"), ";" );
+					while (workTokenizer.hasMoreTokens()) {
+						wrkStr = workTokenizer.nextToken();
+						pos1 = wrkStr.indexOf(".");
+						targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, referList2);
+						targetFieldID = wrkStr.substring(pos1+1);
+						if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+							countOfUsageRows++;
+							Object[] Cell = new Object[4];
+							Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+							Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+							Cell[2] = element1.getAttribute("Type");
+							Cell[3] = res.getString("PrompterFunctionExchange");
+							tableModelTableFieldUsageList.addRow(Cell);
+							break;
+						}
 					}
 				}
 				//
@@ -33514,9 +33743,9 @@ class Editor_KanjiTextField extends JTextField {
 		if (lang.equals("ja")) {
 			subsets = new Character.Subset[] {java.awt.im.InputSubset.KANJI};
 		}
-		if (lang.equals("ko")) {
-			subsets = new Character.Subset[] {java.awt.im.InputSubset.HANJA};
-		}
+		//if (lang.equals("ko")) {
+		//	subsets = new Character.Subset[] {java.awt.im.InputSubset.HANJA};
+		//}
 		if (lang.equals("zh")) {
 			subsets = new Character.Subset[] {java.awt.im.InputSubset.TRADITIONAL_HANZI};
 		}
@@ -33551,9 +33780,9 @@ class Editor_KanjiTextArea extends JTextArea {
 		if (lang.equals("ja")) {
 			subsets = new Character.Subset[] {java.awt.im.InputSubset.KANJI};
 		}
-		if (lang.equals("ko")) {
-			subsets = new Character.Subset[] {java.awt.im.InputSubset.HANJA};
-		}
+		//if (lang.equals("ko")) {
+		//	subsets = new Character.Subset[] {java.awt.im.InputSubset.HANJA};
+		//}
 		if (lang.equals("zh")) {
 			subsets = new Character.Subset[] {java.awt.im.InputSubset.TRADITIONAL_HANZI};
 		}
