@@ -33,14 +33,7 @@ package xeadEditor;
 
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.PlainDocument;
-import javax.swing.text.StyleConstants;
-
 import xeadEditor.Editor.TableRowNumber;
-
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.ResourceBundle;

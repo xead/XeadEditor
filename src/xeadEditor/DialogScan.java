@@ -1356,7 +1356,8 @@ public class DialogScan extends JDialog {
 		FileOutputStream fileOutputStream = null;
 		//
 		HSSFWorkbook workBook = new HSSFWorkbook();
-		HSSFSheet workSheet = workBook.createSheet(jTextFieldScan.getText());
+		//HSSFSheet workSheet = workBook.createSheet(jTextFieldScan.getText());
+		HSSFSheet workSheet = workBook.createSheet("Sheet1");
 		workSheet.setDefaultRowHeight( (short) 300);
 		HSSFFooter workSheetFooter = workSheet.getFooter();
 		workSheetFooter.setRight(jTextFieldScan.getText() + "  Page " + HSSFFooter.page() + " / " + HSSFFooter.numPages() );

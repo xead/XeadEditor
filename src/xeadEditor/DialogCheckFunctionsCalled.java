@@ -396,7 +396,7 @@ public class DialogCheckFunctionsCalled extends JDialog {
 				nodeList1 = element1.getElementsByTagName("Detail");
 				for (int j = 0; j < nodeList1.getLength(); j++) {
 					element2 = (org.w3c.dom.Element)nodeList1.item(j);
-					if (!element2.getAttribute("DetailFunction").equals("")) {
+					if (!element2.getAttribute("DetailFunction").equals("") && !element2.getAttribute("DetailFunction").equals("NONE")) {
 						node = frame_.getSpecificXETreeNode("Function", element2.getAttribute("DetailFunction"));
 						if (node == null) {
 							numberOfInvalidCalls++;

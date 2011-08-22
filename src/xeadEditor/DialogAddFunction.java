@@ -700,11 +700,8 @@ public class DialogAddFunction extends JDialog {
 				String defaultFontID = "";
 				NodeList fontList = frame_.getDomDocument().getElementsByTagName("PrintFont");
 				sortingList = frame_.getSortedListModel(fontList, "FontName");
-				for (int i = 0; i < sortingList.getSize(); i++) {
-					fontElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
-					defaultFontID = fontElement.getAttribute("ID");
-					break;
-				}
+				fontElement = (org.w3c.dom.Element)sortingList.getElementAt(0);
+				defaultFontID = fontElement.getAttribute("ID");
 				//
 				childElement = frame_.getDomDocument().createElement("Phrase");
 				childElement.setAttribute("Order", "0000");
@@ -766,7 +763,7 @@ public class DialogAddFunction extends JDialog {
 					childElement.setAttribute("Table", jTextFieldDetailTableID.getText());
 					childElement.setAttribute("HeaderKeyFields", headerTableKeys);
 					childElement.setAttribute("KeyFields", detailTableKeys);
-					childElement.setAttribute("DetailFunction", "XXXXX");
+					childElement.setAttribute("DetailFunction", "NONE");
 					childElement.setAttribute("Caption", detailTableNode.getElement().getAttribute("Name"));
 					childElement.setAttribute("InitialMsg", "");
 					element.appendChild(childElement);
@@ -926,11 +923,8 @@ public class DialogAddFunction extends JDialog {
 					String defaultFontID = "";
 					NodeList fontList = frame_.getDomDocument().getElementsByTagName("PrintFont");
 					sortingList = frame_.getSortedListModel(fontList, "FontName");
-					for (int i = 0; i < sortingList.getSize(); i++) {
-						fontElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
-						defaultFontID = fontElement.getAttribute("ID");
-						break;
-					}
+					fontElement = (org.w3c.dom.Element)sortingList.getElementAt(0);
+					defaultFontID = fontElement.getAttribute("ID");
 					//
 					element.setAttribute("HeaderTable", jTextFieldHeaderTableID.getText());
 					element.setAttribute("HeaderKeyFields", headerTableKeys);

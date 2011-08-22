@@ -32,13 +32,8 @@ package xeadEditor;
  */
 
 import java.awt.*;
-
 import javax.swing.*;
-
 import org.w3c.dom.NodeList;
-
-import xeadEditor.Editor.SortableDomElementListModel;
-import xeadEditor.Editor.MainTreeNode;
 import java.awt.event.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -46,10 +41,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-//import java.util.ResourceBundle;
 import java.util.StringTokenizer;
+import xeadEditor.Editor.SortableDomElementListModel;
+import xeadEditor.Editor.MainTreeNode;
 
-public class DialogSynchTableModule extends JDialog {
+public class DialogCheckTableModule extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private static ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
 	private static String DEFAULT_UPDATE_COUNTER = "UPDCOUNTER";
@@ -62,8 +58,18 @@ public class DialogSynchTableModule extends JDialog {
 	private Editor frame_;
 	private JPanel jPanelButtons = new JPanel();
 	private String errorStatus = "";
+	private ArrayList<String> keyFieldList = new ArrayList<String>();
+	private ArrayList<String> keyFieldTypeList = new ArrayList<String>();
 	private ArrayList<String> fieldListToBeAdded = new ArrayList<String>();
 	private ArrayList<String> fieldListToBeDropped = new ArrayList<String>();
+	private ArrayList<String> fieldListToBeConverted = new ArrayList<String>();
+	private ArrayList<String> fieldTypeListToBeConverted = new ArrayList<String>();
+	private ArrayList<Integer> fieldSizeListToBeConvertedOld = new ArrayList<Integer>();
+	private ArrayList<Integer> fieldSizeListToBeConvertedNew = new ArrayList<Integer>();
+	private ArrayList<Integer> fieldDecimalListToBeConvertedOld = new ArrayList<Integer>();
+	private ArrayList<Integer> fieldDecimalListToBeConvertedNew = new ArrayList<Integer>();
+	private ArrayList<ArrayList<Object>> keyValueList = new ArrayList<ArrayList<Object>>();
+	private ArrayList<ArrayList<Object>> fieldValueList = new ArrayList<ArrayList<Object>>();
 	private ArrayList<String> fieldListToBeNullable = new ArrayList<String>();
 	private ArrayList<String> fieldListToBeNotNull = new ArrayList<String>();
 	private ArrayList<String> addingSKList = new ArrayList<String>();
@@ -75,7 +81,7 @@ public class DialogSynchTableModule extends JDialog {
 	private Connection connection_;
 	private String updateCounterID;
 	
-	public DialogSynchTableModule(Editor frame) {
+	public DialogCheckTableModule(Editor frame) {
 		super(frame, "", true);
 		frame_ = frame;
 		try {
@@ -102,19 +108,19 @@ public class DialogSynchTableModule extends JDialog {
 		jButtonClose.setText(res.getString("Close"));
 		jButtonClose.setBounds(new Rectangle(30, 8, 80, 25));
 		jButtonClose.setFont(new java.awt.Font("Dialog", 0, 12));
-		jButtonClose.addActionListener(new DialogSynchTableModule_jButtonClose_actionAdapter(this));
+		jButtonClose.addActionListener(new DialogCheckTableModule_jButtonClose_actionAdapter(this));
 		jButtonAlter.setText(res.getString("ModuleModify"));
 		jButtonAlter.setBounds(new Rectangle(140, 8, 130, 25));
 		jButtonAlter.setFont(new java.awt.Font("Dialog", 0, 12));
-		jButtonAlter.addActionListener(new DialogSynchTableModule_jButtonAlter_actionAdapter(this));
+		jButtonAlter.addActionListener(new DialogCheckTableModule_jButtonAlter_actionAdapter(this));
 		jButtonCreate.setText(res.getString("ModuleCreate"));
 		jButtonCreate.setBounds(new Rectangle(300, 8, 130, 25));
 		jButtonCreate.setFont(new java.awt.Font("Dialog", 0, 12));
-		jButtonCreate.addActionListener(new DialogSynchTableModule_jButtonCreate_actionAdapter(this));
+		jButtonCreate.addActionListener(new DialogCheckTableModule_jButtonCreate_actionAdapter(this));
 		jButtonDelete.setText(res.getString("ModuleDelete"));
 		jButtonDelete.setBounds(new Rectangle(460, 8, 130, 25));
 		jButtonDelete.setFont(new java.awt.Font("Dialog", 0, 12));
-		jButtonDelete.addActionListener(new DialogSynchTableModule_jButtonDelete_actionAdapter(this));
+		jButtonDelete.addActionListener(new DialogCheckTableModule_jButtonDelete_actionAdapter(this));
 		jPanelButtons.setBorder(BorderFactory.createEtchedBorder());
 		jPanelButtons.setPreferredSize(new Dimension(400, 41));
 		jPanelButtons.setLayout(null);
@@ -183,14 +189,21 @@ public class DialogSynchTableModule extends JDialog {
 		ArrayList<String> foreignKeyTableList = new ArrayList<String>();
 		ArrayList<String> foreignKeyFieldList = new ArrayList<String>();
 		ArrayList<String> nativeFieldList = new ArrayList<String>();
-
 		int workIndex, count1, count2, wrkInt;
 		//
 		try {
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			//
+			keyFieldList.clear();
+			keyFieldTypeList.clear();
 			fieldListToBeAdded.clear();
 			fieldListToBeDropped.clear();
+			fieldListToBeConverted.clear();
+			fieldTypeListToBeConverted.clear();
+			fieldSizeListToBeConvertedOld.clear();
+			fieldSizeListToBeConvertedNew.clear();
+			fieldDecimalListToBeConvertedOld.clear();
+			fieldDecimalListToBeConvertedNew.clear();
 			fieldListToBeNullable.clear();
 			fieldListToBeNotNull.clear();
 			addingSKList.clear();
@@ -204,7 +217,9 @@ public class DialogSynchTableModule extends JDialog {
 				//
 				moduleBuf.append("Create table " + tableElement.getAttribute("ID") + " (\n");
 				//
+				///////////////////////////////////////////
 				// Field check from definition to module //
+				///////////////////////////////////////////
 				NodeList fieldList = tableElement.getElementsByTagName("Field");
 				SortableDomElementListModel sortingList = frame_.getSortedListModel(fieldList, "Order");
 			    for (int i = 0; i < sortingList.getSize(); i++) {
@@ -290,15 +305,28 @@ public class DialogSynchTableModule extends JDialog {
 										countOfErrors++;
 										fieldListToBeDropped.add(element.getAttribute("ID"));
 										fieldListToBeAdded.add(element.getAttribute("ID"));
+										fieldListToBeConverted.add(element.getAttribute("ID"));
+										fieldTypeListToBeConverted.add(element.getAttribute("Type"));
+										fieldSizeListToBeConvertedOld.add(sizeOfModuleField);
+										fieldSizeListToBeConvertedNew.add(sizeOfDefinitionField);
+										fieldDecimalListToBeConvertedOld.add(decimalOfModuleField);
+										fieldDecimalListToBeConvertedNew.add(decimalOfDefinitionField);
 										buf.append("(" + countOfErrors + ") " + res.getString("ModuleCheckMessage1") + element.getAttribute("ID") + "(" + element.getAttribute("Name") +")" + res.getString("ModuleCheckMessage2") + typeDescriptionsOfDefinitionField + res.getString("ModuleCheckMessage3") + typeDescriptionsOfModuleField + res.getString("ModuleCheckMessage4"));
 									}
 								}
-								if (element.getAttribute("Type").equals("VARCHAR")
-										&& sizeOfDefinitionField != sizeOfModuleField) {
-									countOfErrors++;
-									fieldListToBeDropped.add(element.getAttribute("ID"));
-									fieldListToBeAdded.add(element.getAttribute("ID"));
-									buf.append("(" + countOfErrors + ") " + res.getString("ModuleCheckMessage1") + element.getAttribute("ID") + "(" + element.getAttribute("Name") +")" + res.getString("ModuleCheckMessage2") + typeDescriptionsOfDefinitionField + res.getString("ModuleCheckMessage3") + typeDescriptionsOfModuleField + "(" + sizeOfModuleField + ")" + res.getString("ModuleCheckMessage4"));
+								if (element.getAttribute("Type").equals("VARCHAR")) {
+									if (sizeOfDefinitionField != sizeOfModuleField) {
+										countOfErrors++;
+										fieldListToBeDropped.add(element.getAttribute("ID"));
+										fieldListToBeAdded.add(element.getAttribute("ID"));
+										fieldListToBeConverted.add(element.getAttribute("ID"));
+										fieldTypeListToBeConverted.add(element.getAttribute("Type"));
+										fieldSizeListToBeConvertedOld.add(sizeOfModuleField);
+										fieldSizeListToBeConvertedNew.add(sizeOfDefinitionField);
+										fieldDecimalListToBeConvertedOld.add(0);
+										fieldDecimalListToBeConvertedNew.add(0);
+										buf.append("(" + countOfErrors + ") " + res.getString("ModuleCheckMessage1") + element.getAttribute("ID") + "(" + element.getAttribute("Name") +")" + res.getString("ModuleCheckMessage2") + typeDescriptionsOfDefinitionField + res.getString("ModuleCheckMessage3") + typeDescriptionsOfModuleField + "(" + sizeOfModuleField + ")" + res.getString("ModuleCheckMessage4"));
+									}
 								}
 							} else {
 								countOfErrors++;
@@ -325,7 +353,9 @@ public class DialogSynchTableModule extends JDialog {
 					}
 				}
 			    //
+				//////////////////////////
 			    // Check update counter //
+				//////////////////////////
 				ResultSet rs2 = connection_.getMetaData().getColumns(null, null, tableElement.getAttribute("ID"), updateCounterID);
 				if (rs2.next()) {
 					if (!rs2.getString("TYPE_NAME").equals("INTEGER")) {
@@ -343,7 +373,9 @@ public class DialogSynchTableModule extends JDialog {
 				//
 				int columnCounter = 0;
 				//
+				///////////////////////////////////////////
 				// Field check from module to definition //
+				///////////////////////////////////////////
 				ResultSet rs3 = connection_.getMetaData().getColumns(null, null, tableElement.getAttribute("ID"), null);
 				while (rs3.next()) {
 					//
@@ -388,7 +420,9 @@ public class DialogSynchTableModule extends JDialog {
 				}
 				rs3.close();
 				//
+				////////////////////////////////////////////////////////
 				// Collect unique key and index information of module //
+				////////////////////////////////////////////////////////
 				indexNameList.clear();
 				indexFieldsList.clear();
 				indexAscDescList.clear();
@@ -425,7 +459,9 @@ public class DialogSynchTableModule extends JDialog {
 				}
 				rs4.close();
 				//
+				/////////////////////////////////////////
 				// Key check from module to definition //
+				/////////////////////////////////////////
 				NodeList keyList = tableElement.getElementsByTagName("Key");
 				for (int i = 0; i < indexNameList.size(); i++) {
 					exist = false;
@@ -504,7 +540,9 @@ public class DialogSynchTableModule extends JDialog {
 					}
 				}
 				//
+				/////////////////////////////////////////
 				// Key check from definition to module //
+				/////////////////////////////////////////
 				int countOfKey = 0;
 				int countOfSK = 0;
 				boolean isWithoutPKDefined = true;
@@ -517,10 +555,19 @@ public class DialogSynchTableModule extends JDialog {
 						moduleBuf.append(element.getAttribute("Fields").replace(";", ", ") + ")");
 						//
 						isWithoutPKDefined = false;
-						fieldList1.clear();
+						//fieldList1.clear();
 						workTokenizer = new StringTokenizer(element.getAttribute("Fields"), ";");
 						while (workTokenizer.hasMoreTokens()) {
-							fieldList1.add(workTokenizer.nextToken());
+							keyFieldList.add(workTokenizer.nextToken());
+						}
+						for (int j = 0; j < keyFieldList.size(); j++) {
+							for (int k = 0; k < fieldList.getLength(); k++) {
+								element = (org.w3c.dom.Element)fieldList.item(k);
+								if (element.getAttribute("ID").equals(keyFieldList.get(j))) {
+									keyFieldTypeList.add(element.getAttribute("Type"));
+									break;
+								}
+							}
 						}
 						//
 						count1 = 0;
@@ -530,7 +577,7 @@ public class DialogSynchTableModule extends JDialog {
 						ResultSet rs5 = connection_.getMetaData().getPrimaryKeys(null, null, tableElement.getAttribute("ID"));
 						while (rs5.next()) {
 							count1++;
-							if (fieldList1.contains(rs5.getString("COLUMN_NAME"))) {
+							if (keyFieldList.contains(rs5.getString("COLUMN_NAME"))) {
 								count2++;
 							}
 							if (wrkStr.equals("")) {
@@ -542,6 +589,7 @@ public class DialogSynchTableModule extends JDialog {
 						rs5.close();
 						//
 						if (count1 != count2) {
+							keyFieldList.clear();
 							countOfErrors++;
 							isDifferentPK = true;
 							buf.append("(" + countOfErrors + ") "+ res.getString("ModuleCheckMessage22") + element.getAttribute("Fields") + res.getString("ModuleCheckMessage23") + wrkStr + res.getString("ModuleCheckMessage24"));
@@ -620,7 +668,9 @@ public class DialogSynchTableModule extends JDialog {
 					}
 				}
 				//
+				///////////////////////////////////////////////
 				// Collect foreign key constraints of module //
+				///////////////////////////////////////////////
 				foreignKeyNameList.clear();
 				foreignKeyTableList.clear();
 				foreignKeyFieldList.clear();
@@ -645,7 +695,9 @@ public class DialogSynchTableModule extends JDialog {
 				}
 				moduleBuf.append("\n)");
 				//
+				////////////////////////////////////////
 				// Check PK from module to definition //
+				////////////////////////////////////////
 				if (isWithoutPKDefined) {
 					//
 					wrkStr = "";
@@ -741,6 +793,7 @@ public class DialogSynchTableModule extends JDialog {
 		int wrkCount;
 		StringTokenizer workTokenizer;
 		String wrkStr;
+		boolean firstField = true;
 		//
 		Object[] bts = {res.getString("Cancel"), res.getString("Execute")};
 		int rtn = JOptionPane.showOptionDialog(this, res.getString("ModuleCheckMessage36"), res.getString("ModuleModify") + " " + tableElement.getAttribute("ID") + " " + tableElement.getAttribute("Name"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
@@ -750,7 +803,9 @@ public class DialogSynchTableModule extends JDialog {
 				//
 				Statement statement = connection_.createStatement();
 				//
-				// Alter column as null-allowed //
+				//////////////////////////////////
+				// Alter column as NULL-allowed //
+				//////////////////////////////////
 				for (int i = 0; i < fieldListToBeNullable.size(); i++) {
 					buf = new StringBuffer();
 					buf.append("ALTER TABLE ");
@@ -761,7 +816,9 @@ public class DialogSynchTableModule extends JDialog {
 					statement.executeUpdate(buf.toString());
 				}
 				//
-				// Alter column as not null //
+				//////////////////////////////
+				// Alter column as NOT NULL //
+				//////////////////////////////
 				for (int i = 0; i < fieldListToBeNotNull.size(); i++) {
 					buf = new StringBuffer();
 					buf.append("ALTER TABLE ");
@@ -772,7 +829,9 @@ public class DialogSynchTableModule extends JDialog {
 					statement.executeUpdate(buf.toString());
 				}
 				//
+				////////////////
 				// Drop index //
+				////////////////
 				for (int i = 0; i < indexListToBeDropped.size(); i++) {
 					buf = new StringBuffer();
 					buf.append("DROP INDEX ");
@@ -780,7 +839,31 @@ public class DialogSynchTableModule extends JDialog {
 					statement.executeUpdate(buf.toString());
 				}
 				//
+				///////////////////////////////////////////////////////
+				// Save values of fields which size is being changed //
+				///////////////////////////////////////////////////////
+				if (fieldListToBeConverted.size() > 0 && keyFieldList.size() > 0) {
+					Object value;
+					ResultSet rs1 = statement.executeQuery("SELECT * FROM " + tableElement.getAttribute("ID"));
+					while (rs1.next()) {
+						ArrayList<Object> keyValues = new ArrayList<Object>();
+						for (int i = 0; i < keyFieldList.size(); i++) {
+							value = rs1.getObject(keyFieldList.get(i));
+							keyValues.add(value);
+						}
+						keyValueList.add(keyValues);
+						ArrayList<Object> fieldValues = new ArrayList<Object>();
+						for (int i = 0; i < fieldListToBeConverted.size(); i++) {
+							value = rs1.getObject(fieldListToBeConverted.get(i));
+							fieldValues.add(value);
+						}
+						fieldValueList.add(fieldValues);
+					}
+				}
+				//
+				/////////////////
 				// Drop column //
+				/////////////////
 				for (int i = 0; i < fieldListToBeDropped.size(); i++) {
 					buf = new StringBuffer();
 					buf.append("ALTER TABLE ");
@@ -790,7 +873,9 @@ public class DialogSynchTableModule extends JDialog {
 					statement.executeUpdate(buf.toString());
 				}
 				//
+				////////////////
 				// Add column //
+				////////////////
 				NodeList fieldList = tableElement.getElementsByTagName("Field");
 				for (int i = 0; i < fieldListToBeAdded.size(); i++) {
 					buf = new StringBuffer();
@@ -840,7 +925,58 @@ public class DialogSynchTableModule extends JDialog {
 					}
 				}
 				//
+				////////////////////////////////////////////////////
+				// Restore values of fields which size is changed //
+				////////////////////////////////////////////////////
+				if (fieldListToBeConverted.size() > 0 && keyFieldList.size() > 0) {
+					for (int i = 0; i < keyValueList.size(); i++) {
+						buf = new StringBuffer();
+						buf.append("update ");
+						buf.append(tableElement.getAttribute("ID"));
+						buf.append(" set ");
+						//
+						firstField = true;
+						for (int j = 0; j < fieldListToBeConverted.size(); j++) {
+							if (!firstField) {
+								buf.append(", ") ;
+							}
+							buf.append(fieldListToBeConverted.get(j)) ;
+							buf.append("=") ;
+							buf.append(getTableOperationValue(fieldValueList.get(i).get(j), fieldTypeListToBeConverted.get(j), fieldSizeListToBeConvertedOld.get(j), fieldSizeListToBeConvertedNew.get(j), fieldDecimalListToBeConvertedOld.get(j), fieldDecimalListToBeConvertedNew.get(j)));
+							firstField = false;
+						}
+						//
+						buf.append(" where ") ;
+						//
+						firstField = true;
+						for (int j = 0; j < keyFieldList.size(); j++) {
+							if (!firstField) {
+								buf.append(" and ") ;
+							}
+							buf.append(keyFieldList.get(j)) ;
+							buf.append("=") ;
+							buf.append(getTableOperationValue(keyValueList.get(i).get(j), keyFieldTypeList.get(j), 0, 0, 0, 0));
+							firstField = false;
+						}
+						//
+						int recordCount = statement.executeUpdate(buf.toString());
+						if (recordCount == 1) {
+							connection_.commit();
+						} else {
+							try {
+								connection_.rollback();
+							} catch (SQLException e6) {
+								e6.printStackTrace();
+							}
+						}
+					}
+					keyValueList.clear();
+					fieldValueList.clear();
+				}
+				//
+				///////////////////////
 				// Add Secondary Key //
+				///////////////////////
 				for (int i = 0; i < addingSKList.size(); i++) {
 					buf = new StringBuffer();
 					buf.append("CREATE UNIQUE INDEX UniqueIndexOf");
@@ -871,7 +1007,9 @@ public class DialogSynchTableModule extends JDialog {
 					statement.executeUpdate(buf.toString());
 				}
 				//
+				///////////////
 				// Add Index //
+				///////////////
 				for (int i = 0; i < addingXKList.size(); i++) {
 					buf = new StringBuffer();
 					buf.append("CREATE INDEX Index");
@@ -914,10 +1052,14 @@ public class DialogSynchTableModule extends JDialog {
 					statement.executeUpdate(buf.toString());
 				}
 				//
+				//////////////////////////////////
 				// Commit all changes to module //
+				//////////////////////////////////
 				connection_.commit();
 				//
+				///////////////////////////////////////////
 				// Check module and refresh error status //
+				///////////////////////////////////////////
 				checkTableModule("ALTER");
 				//
 			} catch (SQLException ex1) {
@@ -933,6 +1075,74 @@ public class DialogSynchTableModule extends JDialog {
 		}
 	}
 
+	public Object getTableOperationValue(Object value, String type, int sizeOld, int sizeNew, int decimalOld, int decimalNew){
+		Object returnValue = "";
+		String wrkStr1, wrkStr2;
+		String basicType = frame_.getBasicTypeOf(type);
+		//
+		if (basicType.equals("INTEGER")) {
+			returnValue = Long.parseLong(value.toString());
+		}
+		if (basicType.equals("FLOAT")) {
+			wrkStr1 = value.toString();
+			returnValue = Double.parseDouble(wrkStr1);
+			if (sizeNew < sizeOld || decimalNew < decimalOld) {
+				wrkStr2 = "0";
+				StringTokenizer workTokenizer = new StringTokenizer(wrkStr1, ".");
+				if (workTokenizer.countTokens() >= 1) {
+					wrkStr1 = workTokenizer.nextToken();
+					if (wrkStr1.length() > (sizeNew-decimalNew)) {
+						wrkStr1 = wrkStr1.substring(wrkStr1.length()-(sizeNew-decimalNew), wrkStr1.length());
+					}
+				} else {
+					wrkStr1 = "0";
+				}
+				if (decimalNew > 0) {
+					if (workTokenizer.countTokens() == 1) {
+						wrkStr2 = workTokenizer.nextToken();
+						if (wrkStr2.length() > decimalNew) {
+							wrkStr2 = wrkStr2.substring(0, decimalNew);
+						}
+					}
+					returnValue = Double.parseDouble(wrkStr1 + "." + wrkStr2);
+				} else {
+					returnValue = Double.parseDouble(wrkStr1);
+				}
+			}
+		}
+		if (basicType.equals("STRING")) {
+			wrkStr1 = value.toString().trim();
+			returnValue = "'" + wrkStr1 + "'";
+			if (sizeNew < sizeOld) {
+				if (wrkStr1.length() > sizeNew) {
+					returnValue = "'" + wrkStr1.substring(0, sizeNew) + "'";
+				}
+			}
+		}
+		if (basicType.equals("DATE")) {
+			String strDate = (String)value;
+			if (strDate == null || strDate.equals("")) {
+				returnValue = "NULL";
+			} else {
+				returnValue = "'" + strDate + "'";
+			}
+		}
+		if (basicType.equals("DATETIME")) {
+			String timeDate = (String)value;
+			if (timeDate == null || timeDate.equals("")) {
+				returnValue = "NULL";
+			} else {
+				if (timeDate.equals("CURRENT_TIMESTAMP")) {
+					returnValue = timeDate;
+				} else {
+					timeDate = timeDate.replace("/", "-");
+					returnValue = "'" + timeDate + "'";
+				}
+			}
+		}
+		return returnValue;
+	}
+	
 	void jButtonCreate_actionPerformed(ActionEvent e) {
 		int countOfPhysicalFields = 0;
 		org.w3c.dom.Element element;
@@ -1152,9 +1362,9 @@ public class DialogSynchTableModule extends JDialog {
 	}
 }
 
-class DialogSynchTableModule_jButtonAlter_actionAdapter implements java.awt.event.ActionListener {
-	DialogSynchTableModule adaptee;
-	DialogSynchTableModule_jButtonAlter_actionAdapter(DialogSynchTableModule adaptee) {
+class DialogCheckTableModule_jButtonAlter_actionAdapter implements java.awt.event.ActionListener {
+	DialogCheckTableModule adaptee;
+	DialogCheckTableModule_jButtonAlter_actionAdapter(DialogCheckTableModule adaptee) {
 		this.adaptee = adaptee;
 	}
 	public void actionPerformed(ActionEvent e) {
@@ -1162,9 +1372,9 @@ class DialogSynchTableModule_jButtonAlter_actionAdapter implements java.awt.even
 	}
 }
 
-class DialogSynchTableModule_jButtonCreate_actionAdapter implements java.awt.event.ActionListener {
-	DialogSynchTableModule adaptee;
-	DialogSynchTableModule_jButtonCreate_actionAdapter(DialogSynchTableModule adaptee) {
+class DialogCheckTableModule_jButtonCreate_actionAdapter implements java.awt.event.ActionListener {
+	DialogCheckTableModule adaptee;
+	DialogCheckTableModule_jButtonCreate_actionAdapter(DialogCheckTableModule adaptee) {
 		this.adaptee = adaptee;
 	}
 	public void actionPerformed(ActionEvent e) {
@@ -1172,9 +1382,9 @@ class DialogSynchTableModule_jButtonCreate_actionAdapter implements java.awt.eve
 	}
 }
 
-class DialogSynchTableModule_jButtonDelete_actionAdapter implements java.awt.event.ActionListener {
-	DialogSynchTableModule adaptee;
-	DialogSynchTableModule_jButtonDelete_actionAdapter(DialogSynchTableModule adaptee) {
+class DialogCheckTableModule_jButtonDelete_actionAdapter implements java.awt.event.ActionListener {
+	DialogCheckTableModule adaptee;
+	DialogCheckTableModule_jButtonDelete_actionAdapter(DialogCheckTableModule adaptee) {
 		this.adaptee = adaptee;
 	}
 	public void actionPerformed(ActionEvent e) {
@@ -1182,9 +1392,9 @@ class DialogSynchTableModule_jButtonDelete_actionAdapter implements java.awt.eve
 	}
 }
 
-class DialogSynchTableModule_jButtonClose_actionAdapter implements java.awt.event.ActionListener {
-	DialogSynchTableModule adaptee;
-	DialogSynchTableModule_jButtonClose_actionAdapter(DialogSynchTableModule adaptee) {
+class DialogCheckTableModule_jButtonClose_actionAdapter implements java.awt.event.ActionListener {
+	DialogCheckTableModule adaptee;
+	DialogCheckTableModule_jButtonClose_actionAdapter(DialogCheckTableModule adaptee) {
 		this.adaptee = adaptee;
 	}
 	public void actionPerformed(ActionEvent e) {
