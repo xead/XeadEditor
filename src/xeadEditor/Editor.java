@@ -77,7 +77,7 @@ public class Editor extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private static final ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
 	public static final String APPLICATION_NAME  = "XEAD Editor 1.0";
-	public static final String FULL_VERSION  = "V1.R0.M10";
+	public static final String FULL_VERSION  = "V1.R0.M11";
 	public static final String FORMAT_VERSION  = "1.0";
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2011 DBC,Ltd.";
@@ -118,6 +118,7 @@ public class Editor extends JFrame {
 	private JMenuBar jMenuBar = new JMenuBar();
 	private JMenu jMenuFile = new JMenu();
 	private JMenuItem jMenuItemFileOpen = new JMenuItem();
+	private JMenuItem jMenuItemFileImport = new JMenuItem();
 	private JMenuItem jMenuItemFileExit = new JMenuItem();
 	private JMenuItem jMenuItemFileSave = new JMenuItem();
 	private JMenuItem jMenuItemFileSaveAs = new JMenuItem();
@@ -635,10 +636,11 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldFunction000Name = new JTextField();
 	private JLabel jLabelFunction000Type = new JLabel();
 	private JTextField jTextFieldFunction000Type = new JTextField();
-	private JLabel jLabelFunction000TimerOption = new JLabel();
-	private JRadioButton jRadioButtonFunction000TimerOptionNo = new JRadioButton();
-	private JRadioButton jRadioButtonFunction000TimerOptionYes = new JRadioButton();
-	private ButtonGroup buttonGroupFunction000TimerOption = new ButtonGroup();
+	private JLabel jLabelFunction000ConsoleOption = new JLabel();
+	private JRadioButton jRadioButtonFunction000ConsoleOptionNo = new JRadioButton();
+	private JRadioButton jRadioButtonFunction000ConsoleOptionYes = new JRadioButton();
+	private JRadioButton jRadioButtonFunction000ConsoleOptionTimer = new JRadioButton();
+	private ButtonGroup buttonGroupFunction000ConsoleOption = new ButtonGroup();
 	private JLabel jLabelFunction000TimerDefault = new JLabel();
 	private SpinnerNumberModel spinnerNumberModelHour = new SpinnerNumberModel(00, 00, 24, 1);
 	private JSpinner jSpinnerFunction000TimerDefaultHour = new JSpinner(spinnerNumberModelHour);
@@ -1831,6 +1833,7 @@ public class Editor extends JFrame {
 	 * Definition of Dialogs
 	 */
 	private Editor_DialogPromptOptionCallFunctionExchangeEdit dialogPromptOptionCallFunctionExchangeEdit = new Editor_DialogPromptOptionCallFunctionExchangeEdit(this);
+	private DialogImport dialogImport = new DialogImport(this);
 	private DialogScan dialogScan = new DialogScan(this);
 	private DialogAddList dialogAddList = new DialogAddList(this);
 	private DialogAddReferTable dialogAddReferTable = new DialogAddReferTable(this);
@@ -2389,6 +2392,9 @@ public class Editor extends JFrame {
 		jMenuItemFileOpen.setText(res.getString("Open"));
 		jMenuItemFileOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,ActionEvent.CTRL_MASK));
 		jMenuItemFileOpen.addActionListener(new Editor_jMenuItemFileOpen_actionAdapter(this));
+		jMenuItemFileImport.setText(res.getString("Import"));
+		jMenuItemFileImport.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P,ActionEvent.CTRL_MASK));
+		jMenuItemFileImport.addActionListener(new Editor_jMenuItemFileImport_actionAdapter(this));
 		jMenuItemFileExit.setText(res.getString("Exit"));
 		jMenuItemFileSave.setText(res.getString("Save"));
 		jMenuItemFileSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,ActionEvent.CTRL_MASK));
@@ -2411,7 +2417,7 @@ public class Editor extends JFrame {
 		jMenuItemEditRedo.setEnabled(false);
 		jMenuScan.setText(res.getString("Scan"));
 		jMenuItemScan.setText(res.getString("ScanReplace"));
-		jMenuItemScan.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_R,ActionEvent.CTRL_MASK));
+		jMenuItemScan.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F,ActionEvent.CTRL_MASK));
 		jMenuItemScan.addActionListener(new Editor_jMenuItemScan_actionAdapter(this));
 		jMenuSetBookmark.setText(res.getString("Bookmark"));
 		jMenuItemSetBookmark1.setText("[1]");
@@ -2487,6 +2493,8 @@ public class Editor extends JFrame {
 		jMenuItemHelpAbout.setText(res.getString("About"));
 		jMenuItemHelpAbout.addActionListener(new Editor_jMenuItemHelpAbout_actionAdapter(this));
 		jMenuFile.add(jMenuItemFileOpen);
+		jMenuFile.addSeparator();
+		jMenuFile.add(jMenuItemFileImport);
 		jMenuFile.addSeparator();
 		jMenuFile.add(jMenuItemFileSave);
 		jMenuFile.add(jMenuItemFileSaveAs);
@@ -2643,12 +2651,12 @@ public class Editor extends JFrame {
 		jLabelSystemVersion.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemVersion.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemVersion.setText(res.getString("SystemVersion"));
-		jLabelSystemVersion.setBounds(new Rectangle(374, 12, 86, 15));
+		jLabelSystemVersion.setBounds(new Rectangle(374, 12, 96, 15));
 		jTextFieldSystemVersion.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemVersion.setBounds(new Rectangle(462, 9, 105, 22));
+		jTextFieldSystemVersion.setBounds(new Rectangle(477, 9, 105, 22));
 		jButtonSystemRun.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jButtonSystemRun.setText(res.getString("Launch") + "  F9");
-		jButtonSystemRun.setBounds(new Rectangle(610, 7, 140, 25));
+		jButtonSystemRun.setBounds(new Rectangle(620, 7, 140, 25));
 		jButtonSystemRun.addActionListener(new Editor_jMenuItemFileRun_actionAdapter(this));
 		jPanelSystem.add(jPanelSystemTop, BorderLayout.NORTH);
 		jPanelSystemTop.add(jLabelSystemName);
@@ -2659,6 +2667,7 @@ public class Editor extends JFrame {
 		jPanelSystem.add(jTabbedPaneSystem,  BorderLayout.CENTER);
 		jTextAreaSystemRemarks.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextAreaSystemRemarks.setLineWrap(true);
+		jTextAreaSystemRemarks.setWrapStyleWord(true);
 		jScrollPaneSystemRemarks.getViewport().add(jTextAreaSystemRemarks, null);
 		jTabbedPaneSystem.add(res.getString("SystemRemarks"), jScrollPaneSystemRemarks);
 		jTabbedPaneSystem.setIconAt(0, imageIconSystem);
@@ -3210,6 +3219,7 @@ public class Editor extends JFrame {
 		jPanelSubsystemLabelMargin.add(jLabelSubsystemRemarks);
 		jTextAreaSubsystemRemarks.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextAreaSubsystemRemarks.setLineWrap(true);
+		jTextAreaSubsystemRemarks.setWrapStyleWord(true);
 		jScrollPaneSubsystemRemarks.getViewport().add(jTextAreaSubsystemRemarks, null);
 		jPanelSubsystemCenter.add(jPanelSubsystemLabelMargin,  BorderLayout.NORTH);
 		jPanelSubsystemCenter.add(jScrollPaneSubsystemRemarks,  BorderLayout.CENTER);
@@ -3335,6 +3345,8 @@ public class Editor extends JFrame {
 		jLabelTableRemarks.setText(res.getString("Remarks"));
 		jLabelTableRemarks.setBounds(new Rectangle(11, 124, 96, 15));
 		jTextAreaTableRemarks.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextAreaTableRemarks.setLineWrap(true);
+		jTextAreaTableRemarks.setWrapStyleWord(true);
 		jScrollPaneTableRemarks.getViewport().add(jTextAreaTableRemarks, null);
 		jScrollPaneTableRemarks.setBounds(new Rectangle(115, 121, 710, 40));
 		jPanelTable.add(jPanelTableTop, BorderLayout.NORTH);
@@ -3708,6 +3720,8 @@ public class Editor extends JFrame {
 		jLabelTableFieldRemarks.setText(res.getString("Remarks"));
 		jLabelTableFieldRemarks.setBounds(new Rectangle(11, 143, 96, 15));
 		jTextAreaTableFieldRemarks.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextAreaTableFieldRemarks.setLineWrap(true);
+		jTextAreaTableFieldRemarks.setWrapStyleWord(true);
 		jScrollPaneTableFieldRemarks.getViewport().add(jTextAreaTableFieldRemarks, null);
 		jScrollPaneTableFieldRemarks.setBounds(new Rectangle(115, 140, 710, 40));
 		//
@@ -4217,6 +4231,7 @@ public class Editor extends JFrame {
 		jTextAreaTableDataMessages.setBorder(BorderFactory.createEtchedBorder());
 		jTextAreaTableDataMessages.setEditable(false);
 		jTextAreaTableDataMessages.setLineWrap(true);
+		jTextAreaTableDataMessages.setWrapStyleWord(true);
 	}
 	/**
 	 * Initialize component for node of FunctionList
@@ -4303,35 +4318,40 @@ public class Editor extends JFrame {
 		jTextFieldFunction000Name.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldFunction000Name.setBounds(new Rectangle(563, 9, 250, 22));
 		//
-		jLabelFunction000TimerOption.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelFunction000TimerOption.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction000TimerOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction000TimerOption.setText(res.getString("TimerOption"));
-		jLabelFunction000TimerOption.setBounds(new Rectangle(11, 40, 96, 15));
-		jRadioButtonFunction000TimerOptionNo.setText(res.getString("None"));
-		jRadioButtonFunction000TimerOptionNo.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction000TimerOptionNo.setBounds(new Rectangle(115, 37, 80, 22));
-		jRadioButtonFunction000TimerOptionNo.addChangeListener(new Editor_jRadioButtonFunction000TimerOption_changeAdapter(this));
-		jRadioButtonFunction000TimerOptionYes.setText(res.getString("TimerOptionYes"));
-		jRadioButtonFunction000TimerOptionYes.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction000TimerOptionYes.setBounds(new Rectangle(205, 37, 110, 22));
-		jRadioButtonFunction000TimerOptionYes.addChangeListener(new Editor_jRadioButtonFunction000TimerOption_changeAdapter(this));
-		buttonGroupFunction000TimerOption.add(jRadioButtonFunction000TimerOptionNo);
-		buttonGroupFunction000TimerOption.add(jRadioButtonFunction000TimerOptionYes);
+		jLabelFunction000ConsoleOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction000ConsoleOption.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction000ConsoleOption.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction000ConsoleOption.setText(res.getString("ConsoleOption"));
+		jLabelFunction000ConsoleOption.setBounds(new Rectangle(11, 40, 96, 15));
+		jRadioButtonFunction000ConsoleOptionNo.setText(res.getString("None"));
+		jRadioButtonFunction000ConsoleOptionNo.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction000ConsoleOptionNo.setBounds(new Rectangle(115, 37, 90, 22));
+		jRadioButtonFunction000ConsoleOptionNo.addChangeListener(new Editor_jRadioButtonFunction000ConsoleOption_changeAdapter(this));
+		jRadioButtonFunction000ConsoleOptionYes.setText(res.getString("ConsoleOptionYes"));
+		jRadioButtonFunction000ConsoleOptionYes.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction000ConsoleOptionYes.setBounds(new Rectangle(210, 37, 90, 22));
+		jRadioButtonFunction000ConsoleOptionYes.addChangeListener(new Editor_jRadioButtonFunction000ConsoleOption_changeAdapter(this));
+		jRadioButtonFunction000ConsoleOptionTimer.setText(res.getString("ConsoleOptionTimer"));
+		jRadioButtonFunction000ConsoleOptionTimer.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction000ConsoleOptionTimer.setBounds(new Rectangle(305, 37, 90, 22));
+		jRadioButtonFunction000ConsoleOptionTimer.addChangeListener(new Editor_jRadioButtonFunction000ConsoleOption_changeAdapter(this));
+		buttonGroupFunction000ConsoleOption.add(jRadioButtonFunction000ConsoleOptionNo);
+		buttonGroupFunction000ConsoleOption.add(jRadioButtonFunction000ConsoleOptionYes);
+		buttonGroupFunction000ConsoleOption.add(jRadioButtonFunction000ConsoleOptionTimer);
 		jLabelFunction000TimerDefault.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction000TimerDefault.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction000TimerDefault.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction000TimerDefault.setText(res.getString("TimerDefault"));
-		jLabelFunction000TimerDefault.setBounds(new Rectangle(319, 40, 76, 15));
+		jLabelFunction000TimerDefault.setBounds(new Rectangle(469, 40, 86, 15));
 		jSpinnerFunction000TimerDefaultHour.setFont(new java.awt.Font("SansSerif", 0, 14));
-		jSpinnerFunction000TimerDefaultHour.setBounds(new Rectangle(403, 39, 40, 18));
+		jSpinnerFunction000TimerDefaultHour.setBounds(new Rectangle(563, 39, 40, 18));
 	    JSpinner.NumberEditor editorHour = new JSpinner.NumberEditor(jSpinnerFunction000TimerDefaultHour, "00");
 	    jSpinnerFunction000TimerDefaultHour.setEditor(editorHour);
 	    JFormattedTextField ftextHour = editorHour.getTextField();
 	    ftextHour.setEditable(false);
 		ftextHour.setBackground(Color.white);
 		jSpinnerFunction000TimerDefaultMinuite.setFont(new java.awt.Font("SansSerif", 0, 14));
-		jSpinnerFunction000TimerDefaultMinuite.setBounds(new Rectangle(443, 39, 40, 18));
+		jSpinnerFunction000TimerDefaultMinuite.setBounds(new Rectangle(603, 39, 40, 18));
 	    JSpinner.NumberEditor editorMin = new JSpinner.NumberEditor(jSpinnerFunction000TimerDefaultMinuite, "00");
 	    jSpinnerFunction000TimerDefaultMinuite.setEditor(editorMin);
 	    JFormattedTextField ftextMin = editorMin.getTextField();
@@ -4351,9 +4371,10 @@ public class Editor extends JFrame {
 		jPanelFunction000Top.add(jTextFieldFunction000Name);
 		jPanelFunction000Top.add(jLabelFunction000Type);
 		jPanelFunction000Top.add(jTextFieldFunction000Type);
-		jPanelFunction000Top.add(jLabelFunction000TimerOption);
-		jPanelFunction000Top.add(jRadioButtonFunction000TimerOptionNo);
-		jPanelFunction000Top.add(jRadioButtonFunction000TimerOptionYes);
+		jPanelFunction000Top.add(jLabelFunction000ConsoleOption);
+		jPanelFunction000Top.add(jRadioButtonFunction000ConsoleOptionNo);
+		jPanelFunction000Top.add(jRadioButtonFunction000ConsoleOptionYes);
+		jPanelFunction000Top.add(jRadioButtonFunction000ConsoleOptionTimer);
 		jPanelFunction000Top.add(jLabelFunction000TimerDefault);
 		jPanelFunction000Top.add(jSpinnerFunction000TimerDefaultHour);
 		jPanelFunction000Top.add(jSpinnerFunction000TimerDefaultMinuite);
@@ -14684,7 +14705,7 @@ public class Editor extends JFrame {
 			jTextFieldFunction000Name.setText(domNode_.getAttribute("Name"));
 			//
 			if (domNode_.getAttribute("TimerOption").equals("")) {
-	        	jRadioButtonFunction000TimerOptionNo.setSelected(true);
+	        	jRadioButtonFunction000ConsoleOptionNo.setSelected(true);
 	        	jLabelFunction000TimerDefault.setEnabled(false);
 	    		jSpinnerFunction000TimerDefaultHour.setEnabled(false);
 	    		jSpinnerFunction000TimerDefaultMinuite.setEnabled(false);
@@ -14694,28 +14715,42 @@ public class Editor extends JFrame {
 				jTextFieldFunction000TimerMessage.setEnabled(false);
 				jTextFieldFunction000TimerMessage.setText("*Default");
 			} else {
-				jRadioButtonFunction000TimerOptionYes.setSelected(true);
-	        	jLabelFunction000TimerDefault.setEnabled(true);
-				jSpinnerFunction000TimerDefaultHour.setEnabled(true);
-				jSpinnerFunction000TimerDefaultMinuite.setEnabled(true);
-				hour = 0;
-				minuite = 0;
 				if (domNode_.getAttribute("TimerOption").contains(":")) {
-					workTokenizer = new StringTokenizer(domNode_.getAttribute("TimerOption"), ":" );
-					try {
-						hour = Integer.parseInt(workTokenizer.nextToken());
-						minuite = Integer.parseInt(workTokenizer.nextToken());
-					} catch (NumberFormatException e) {
+					jRadioButtonFunction000ConsoleOptionTimer.setSelected(true);
+					jLabelFunction000TimerDefault.setEnabled(true);
+					jSpinnerFunction000TimerDefaultHour.setEnabled(true);
+					jSpinnerFunction000TimerDefaultMinuite.setEnabled(true);
+					hour = 0;
+					minuite = 0;
+					if (domNode_.getAttribute("TimerOption").contains(":")) {
+						workTokenizer = new StringTokenizer(domNode_.getAttribute("TimerOption"), ":" );
+						try {
+							hour = Integer.parseInt(workTokenizer.nextToken());
+							minuite = Integer.parseInt(workTokenizer.nextToken());
+						} catch (NumberFormatException e) {
+						}
 					}
-				}
-				jSpinnerFunction000TimerDefaultHour.setValue(hour);
-				jSpinnerFunction000TimerDefaultMinuite.setValue(minuite);
-	        	jLabelFunction000TimerMessage.setEnabled(true);
-				jTextFieldFunction000TimerMessage.setEnabled(true);
-				if (domNode_.getAttribute("TimerMessage").equals("")) {
-					jTextFieldFunction000TimerMessage.setText("*Default");
+					jSpinnerFunction000TimerDefaultHour.setValue(hour);
+					jSpinnerFunction000TimerDefaultMinuite.setValue(minuite);
+					jLabelFunction000TimerMessage.setEnabled(true);
+					jTextFieldFunction000TimerMessage.setEnabled(true);
+					if (domNode_.getAttribute("TimerMessage").equals("")) {
+						jTextFieldFunction000TimerMessage.setText("*Default");
+					} else {
+						jTextFieldFunction000TimerMessage.setText(domNode_.getAttribute("TimerMessage"));
+					}
 				} else {
-					jTextFieldFunction000TimerMessage.setText(domNode_.getAttribute("TimerMessage"));
+					if (domNode_.getAttribute("TimerOption").equals("CONSOLE")) {
+			        	jRadioButtonFunction000ConsoleOptionYes.setSelected(true);
+			        	jLabelFunction000TimerDefault.setEnabled(false);
+			    		jSpinnerFunction000TimerDefaultHour.setEnabled(false);
+			    		jSpinnerFunction000TimerDefaultMinuite.setEnabled(false);
+			    		jSpinnerFunction000TimerDefaultHour.setValue(0);
+			    		jSpinnerFunction000TimerDefaultMinuite.setValue(0);
+			        	jLabelFunction000TimerMessage.setEnabled(false);
+						jTextFieldFunction000TimerMessage.setEnabled(false);
+						jTextFieldFunction000TimerMessage.setText("*Default");
+					}
 				}
 			}
 			//
@@ -15018,7 +15053,6 @@ public class Editor extends JFrame {
 		        } else {
 					Cell[1] = tableAlias + "." + fieldElement.getAttribute("Name");
 		        }
-		        //wrkStr = getDescriptionsOfTypeOptions(fieldElement, true, element.getAttribute("DataSource"), function100TableElement);
 		        wrkStr = getDescriptionsOfTypeOptions(fieldElement, true, function100TableElement);
 				Cell[2] = getDescriptionsOfTypeAndSize(fieldElement.getAttribute("Type"), fieldElement.getAttribute("Size"), fieldElement.getAttribute("Decimal")) + wrkStr;
 				Cell[3] = getDescriptionsOfColumnOptions(element.getAttribute("FieldOptions"));
@@ -17970,19 +18004,48 @@ public class Editor extends JFrame {
 			}
 			//
 			if (domNode_.getAttribute("TimerOption").equals("")) {
-				if (jRadioButtonFunction000TimerOptionYes.isSelected()) {
+				if (jRadioButtonFunction000ConsoleOptionTimer.isSelected()) {
 					valueOfFieldsChanged = true;
 					wrkStr = jSpinnerFunction000TimerDefaultHour.getValue() + ":" + jSpinnerFunction000TimerDefaultMinuite.getValue(); 
 					domNode_.setAttribute("TimerOption", wrkStr);
 				}
-			} else {
-				if (jRadioButtonFunction000TimerOptionNo.isSelected()) {
+				if (jRadioButtonFunction000ConsoleOptionYes.isSelected()) {
 					valueOfFieldsChanged = true;
-					domNode_.setAttribute("TimerOption", "");
+					domNode_.setAttribute("TimerOption", "CONSOLE");
+				}
+			} else {
+				if (domNode_.getAttribute("TimerOption").contains(":")) {
+					if (jRadioButtonFunction000ConsoleOptionNo.isSelected()) {
+						valueOfFieldsChanged = true;
+						domNode_.setAttribute("TimerOption", "");
+					}
+					if (jRadioButtonFunction000ConsoleOptionYes.isSelected()) {
+						valueOfFieldsChanged = true;
+						domNode_.setAttribute("TimerOption", "CONSOLE");
+					}
+					if (jRadioButtonFunction000ConsoleOptionTimer.isSelected()) {
+						wrkStr = jSpinnerFunction000TimerDefaultHour.getValue() + ":" + jSpinnerFunction000TimerDefaultMinuite.getValue(); 
+						if (!domNode_.getAttribute("TimerOption").equals(wrkStr)) {
+							valueOfFieldsChanged = true;
+							domNode_.setAttribute("TimerOption", wrkStr);
+						}
+					}
+				} else {
+					if (domNode_.getAttribute("TimerOption").equals("CONSOLE")) {
+						if (jRadioButtonFunction000ConsoleOptionNo.isSelected()) {
+							valueOfFieldsChanged = true;
+							domNode_.setAttribute("TimerOption", "");
+						}
+						if (jRadioButtonFunction000ConsoleOptionTimer.isSelected()) {
+							valueOfFieldsChanged = true;
+							wrkStr = jSpinnerFunction000TimerDefaultHour.getValue() + ":" + jSpinnerFunction000TimerDefaultMinuite.getValue(); 
+							domNode_.setAttribute("TimerOption", wrkStr);
+						}
+					}
 				}
 			}
 			//
-			if (jRadioButtonFunction000TimerOptionYes.isSelected()) {
+			if (jRadioButtonFunction000ConsoleOptionTimer.isSelected()) {
 				if (jTextFieldFunction000TimerMessage.getText().equals("") || jTextFieldFunction000TimerMessage.getText().equals("*Default")) {
 					if (!domNode_.getAttribute("TimerMessage").equals("")) {
 						valueOfFieldsChanged = true;
@@ -22738,71 +22801,70 @@ public class Editor extends JFrame {
 		}
 	}
 
-//	/**
-//	 * [File|Import CreateTable Statements]
-//	 * @param e :Action Event
-//	 */
-//	void jMenuItemImportSQL_actionPerformed(ActionEvent e) {
-//		//NodeList xmlnodelist1, xmlnodelist2;
-//		//org.w3c.dom.Element element1,element2;
-//		int rtn1 = 0;
-//		//int rtn2 = 0;
-//		//
-//		currentMainTreeNode.updateFields();
-//		if (changeState.isChanged()) {
-//			Object[] bts = {res.getString("S1111"), res.getString("S1100")} ;
-//			rtn1 = JOptionPane.showOptionDialog(this, res.getString("S1116"),
-//					res.getString("S1118"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
-//			if (rtn1 == 0) {
-//				saveFileWithCurrentFileName();
-//				undoManager.resetLog();
-//				changeState.setChanged(false);
-//			}
-//		}
-//		if (rtn1 == 0) {
-//			String name = specifyNameOfExistingFile(res.getString("S1121"), "txt,sql");
-//			if (!name.equals("")) {
-////				String importResult = dialogImportSQL.request(name);
-////				if (!importResult.equals("")) {
-////					Object[] bts = {res.getString("S1111"), res.getString("S1112"), res.getString("S1113")} ;
-////					rtn2 = JOptionPane.showOptionDialog(this, importResult + res.getString("S1110"),
-////							res.getString("S1108"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
-////					//
-////					//Save changes//
-////					//
-////					if (rtn2 == 0) {
-////						saveFileWithCurrentFileName();
-////						xEUndoManager.resetLog();
-////						changeState.setChanged(false);
-////					}
-////					//
-////					//Save changes as other name//
-////					//
-////					if (rtn2 == 1) {
-////						name = specifyNameOfNewFile(res.getString("S788"),res.getString("S1125"), currentFileName);
-////						if (!name.equals("")) {
-////							currentFileName = name;
-////							this.setTitle(APPLICATION_NAME + " - [" + currentFileName + "] - " + systemName);
-////							saveFileWithCurrentFileName();
-////							changeState.setChanged(false);
-////							xEUndoManager.resetLog();
-////						}
-////					}
-////					//
-////					//Setup MainTreeNode//
-////					//
-////					if (rtn2 == 0 || rtn2 == 1) {
-////						try {
-////							setupMainTreeModelWithCurrentFileName();
-////						}
-////						catch(Exception exception) {
-////							exception.printStackTrace();
-////						}
-////					}
-////				}
-//			}
-//		}
-//	}
+	void jMenuItemFileImport_actionPerformed(ActionEvent e) {
+		int rtn1 = 0;
+		int rtn2 = 0;
+		//
+		currentMainTreeNode.updateFields();
+		if (changeState.isChanged()) {
+			Object[] bts = {res.getString("SaveChanges"), res.getString("BackToEdit")} ;
+			rtn1 = JOptionPane.showOptionDialog(this, res.getString("ScanMessage"),
+					res.getString("SaveChangesTitle"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
+			if (rtn1 == 0) {
+				try{
+					setCursor(new Cursor(Cursor.WAIT_CURSOR));
+					saveFileWithCurrentFileName();
+					undoManager.resetLog();
+					changeState.setChanged(false);
+				} finally {
+					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				}
+			}
+		}
+		//
+		if (rtn1 == 0) {
+			String name = specifyNameOfExistingFile(res.getString("ChooseXeafFile"), "xeaf");
+			if (!name.equals("")) {
+				boolean importedAndUpdated = dialogImport.request(name);
+				if (importedAndUpdated) {
+					Object[] bts = {res.getString("SaveChanges"), res.getString("SaveAs"), res.getString("CancelChanges")} ;
+					rtn2 = JOptionPane.showOptionDialog(this, res.getString("ReplaceSaveMessage"),
+							res.getString("ReplaceSaveTitle"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
+					//
+					try{
+						setCursor(new Cursor(Cursor.WAIT_CURSOR));
+						//
+						//Save changes//
+						if (rtn2 == 0) {
+							saveFileWithCurrentFileName();
+							undoManager.resetLog();
+							changeState.setChanged(false);
+						}
+						//
+						//Save changes as other name//
+						if (rtn2 == 1) {
+							name = specifyNameOfNewFile(res.getString("NameDialogTitle"),res.getString("SaveAsThis"), currentFileName);
+							if (!name.equals("")) {
+								currentFileName = name;
+								this.setTitle(APPLICATION_NAME + " - [" + currentFileName + "] - " + systemName);
+								saveFileWithCurrentFileName();
+								changeState.setChanged(false);
+								undoManager.resetLog();
+							}
+						}
+						//
+						//Setup MainTreeNode//
+						setupMainTreeModelWithCurrentFileName();
+						//
+					} catch(Exception exception) {
+						exception.printStackTrace();
+					} finally {
+						setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+					}
+				}
+			}
+		}
+	}
 
 	void jMenuItemScan_actionPerformed(ActionEvent e) {
 		int rtn1 = 0;
@@ -22814,9 +22876,14 @@ public class Editor extends JFrame {
 			rtn1 = JOptionPane.showOptionDialog(this, res.getString("ScanMessage"),
 					res.getString("SaveChangesTitle"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
 			if (rtn1 == 0) {
-				saveFileWithCurrentFileName();
-				undoManager.resetLog();
-				changeState.setChanged(false);
+				try{
+					setCursor(new Cursor(Cursor.WAIT_CURSOR));
+					saveFileWithCurrentFileName();
+					undoManager.resetLog();
+					changeState.setChanged(false);
+				} finally {
+					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				}
 			}
 		}
 		//
@@ -22826,32 +22893,35 @@ public class Editor extends JFrame {
 				Object[] bts = {res.getString("SaveChanges"), res.getString("SaveAs"), res.getString("CancelChanges")} ;
 				rtn2 = JOptionPane.showOptionDialog(this, res.getString("ReplaceSaveMessage"),
 						res.getString("ReplaceSaveTitle"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
-				//
-				//Save changes//
-				if (rtn2 == 0) {
-					saveFileWithCurrentFileName();
-					undoManager.resetLog();
-					changeState.setChanged(false);
-				}
-				//
-				//Save changes as other name//
-				if (rtn2 == 1) {
-					String name = specifyNameOfNewFile(res.getString("NameDialogTitle"),res.getString("SaveAsThis"), currentFileName);
-					if (!name.equals("")) {
-						currentFileName = name;
-						this.setTitle(APPLICATION_NAME + " - [" + currentFileName + "] - " + systemName);
-						saveFileWithCurrentFileName();
-						changeState.setChanged(false);
-						undoManager.resetLog();
-					}
-				}
-				//
-				//Setup MainTreeNode//
 				try {
+					setCursor(new Cursor(Cursor.WAIT_CURSOR));
+					//
+					//Save changes//
+					if (rtn2 == 0) {
+						saveFileWithCurrentFileName();
+						undoManager.resetLog();
+						changeState.setChanged(false);
+					}
+					//
+					//Save changes as other name//
+					if (rtn2 == 1) {
+						String name = specifyNameOfNewFile(res.getString("NameDialogTitle"),res.getString("SaveAsThis"), currentFileName);
+						if (!name.equals("")) {
+							currentFileName = name;
+							this.setTitle(APPLICATION_NAME + " - [" + currentFileName + "] - " + systemName);
+							saveFileWithCurrentFileName();
+							changeState.setChanged(false);
+							undoManager.resetLog();
+						}
+					}
+					//
+					//Setup MainTreeNode//
 					setupMainTreeModelWithCurrentFileName();
-				}
-				catch(Exception exception) {
+					//
+				} catch(Exception exception) {
 					exception.printStackTrace();
+				} finally {
+					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 				}
 			}
 		}
@@ -23051,11 +23121,16 @@ public class Editor extends JFrame {
 	 * @param e :Action Event
 	 */
 	void jMenuItemFileSave_actionPerformed(ActionEvent e) {
-		currentMainTreeNode.updateFields();
-		saveFileWithCurrentFileName();
-		changeState.setChanged(false);
-		undoManager.resetLog();
-		informationOnThisPageChanged = false;
+		try {
+			setCursor(new Cursor(Cursor.WAIT_CURSOR));
+			currentMainTreeNode.updateFields();
+			saveFileWithCurrentFileName();
+			changeState.setChanged(false);
+			undoManager.resetLog();
+			informationOnThisPageChanged = false;
+		} finally {
+			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		}
 	}
 	/**
 	 * [File|SaveAs]
@@ -23064,11 +23139,16 @@ public class Editor extends JFrame {
 	void jMenuItemFileSaveAs_actionPerformed(ActionEvent e) {
 		String name = specifyNameOfNewFile(res.getString("NameDialogTitle"),res.getString("SaveAsThis"), currentFileName);
 		if (!name.equals("")) {
-			currentFileName = name;
-			this.setTitle(APPLICATION_NAME + " - [" + currentFileName + "] - " + systemName);
-			saveFileWithCurrentFileName();
-			changeState.setChanged(false);
-			undoManager.resetLog();
+			try {
+				setCursor(new Cursor(Cursor.WAIT_CURSOR));
+				currentFileName = name;
+				this.setTitle(APPLICATION_NAME + " - [" + currentFileName + "] - " + systemName);
+				saveFileWithCurrentFileName();
+				changeState.setChanged(false);
+				undoManager.resetLog();
+			} finally {
+				setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			}
 		}
 	}
 	/**
@@ -23087,9 +23167,14 @@ public class Editor extends JFrame {
 				rtn1 = JOptionPane.showOptionDialog(this, res.getString("LaunchSystemTitle"),
 						res.getString("SaveChanges"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
 				if (rtn1 == 0) {
-					saveFileWithCurrentFileName();
-					undoManager.resetLog();
-					changeState.setChanged(false);
+					try {
+						setCursor(new Cursor(Cursor.WAIT_CURSOR));
+						saveFileWithCurrentFileName();
+						undoManager.resetLog();
+						changeState.setChanged(false);
+					} finally {
+						setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+					}
 				}
 			}
 			if (rtn1 == 0) {
@@ -23239,7 +23324,7 @@ public class Editor extends JFrame {
 	 */
 	void saveFileWithCurrentFileName() {
 		try{
-			setCursor(new Cursor(Cursor.WAIT_CURSOR));
+			//setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			//
 			arrangeOrderOfDomElement();
 			//
@@ -23254,8 +23339,8 @@ public class Editor extends JFrame {
 		} catch(Exception ex){
 			JOptionPane.showMessageDialog(this, res.getString("ErrorMessage28"));
 			ex.printStackTrace();
-		 } finally {
-			 setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		//} finally {
+		//	 setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
 	}
 	
@@ -33542,8 +33627,8 @@ public class Editor extends JFrame {
 		}
 	}
 	
-	void jRadioButtonFunction000TimerOption_stateChanged(ChangeEvent e) {
-		if (jRadioButtonFunction000TimerOptionNo.isSelected()) {
+	void jRadioButtonFunction000ConsoleOption_stateChanged(ChangeEvent e) {
+		if (jRadioButtonFunction000ConsoleOptionNo.isSelected() || jRadioButtonFunction000ConsoleOptionYes.isSelected()) {
         	jLabelFunction000TimerDefault.setEnabled(false);
 			jSpinnerFunction000TimerDefaultHour.setEnabled(false);
 			jSpinnerFunction000TimerDefaultMinuite.setEnabled(false);
@@ -36331,13 +36416,13 @@ class Editor_jRadioButtonFieldTypeOptionVALUES_changeAdapter implements ChangeLi
 	}
 }
 
-class Editor_jRadioButtonFunction000TimerOption_changeAdapter implements ChangeListener {
+class Editor_jRadioButtonFunction000ConsoleOption_changeAdapter implements ChangeListener {
 	Editor adaptee;
-	Editor_jRadioButtonFunction000TimerOption_changeAdapter(Editor adaptee) {
+	Editor_jRadioButtonFunction000ConsoleOption_changeAdapter(Editor adaptee) {
 		this.adaptee = adaptee;
 	}
 	public void stateChanged(ChangeEvent e) {
-		adaptee.jRadioButtonFunction000TimerOption_stateChanged(e);
+		adaptee.jRadioButtonFunction000ConsoleOption_stateChanged(e);
 	}
 }
 
@@ -38199,15 +38284,15 @@ class Editor_jMenuItemFileOpen_actionAdapter implements java.awt.event.ActionLis
 	}
 }
 
-//class Editor_jMenuItemFileNew_actionAdapter implements java.awt.event.ActionListener {
-//	Editor adaptee;
-//	Editor_jMenuItemFileNew_actionAdapter(Editor adaptee) {
-//		this.adaptee = adaptee;
-//	}
-//	public void actionPerformed(ActionEvent e) {
-//		adaptee.jMenuItemFileNew_actionPerformed(e);
-//	}
-//}
+class Editor_jMenuItemFileImport_actionAdapter implements java.awt.event.ActionListener {
+	Editor adaptee;
+	Editor_jMenuItemFileImport_actionAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jMenuItemFileImport_actionPerformed(e);
+	}
+}
 
 class Editor_jMenuItemFileSave_actionAdapter implements java.awt.event.ActionListener {
 	Editor adaptee;

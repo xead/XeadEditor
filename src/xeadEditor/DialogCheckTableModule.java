@@ -568,6 +568,11 @@ public class DialogCheckTableModule extends JDialog {
 									break;
 								}
 							}
+							if (fieldListToBeDropped.contains(keyFieldList.get(j))) {
+								countOfErrors++;
+								isDifferentPK = true;
+								buf.append("(" + countOfErrors + ") "+ res.getString("ModuleCheckMessage46"));
+							}
 						}
 						//
 						count1 = 0;
