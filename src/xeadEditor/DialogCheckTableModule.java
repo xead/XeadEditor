@@ -77,6 +77,7 @@ public class DialogCheckTableModule extends JDialog {
 	private ArrayList<String> indexListToBeDropped = new ArrayList<String>();
 	private boolean isDifferentPK;
 	private boolean isWithoutModule;
+	private boolean isWithoutPK;
 	private org.w3c.dom.Element tableElement;
 	private Connection connection_;
 	private String updateCounterID;
@@ -211,6 +212,7 @@ public class DialogCheckTableModule extends JDialog {
 			indexListToBeDropped.clear();
 			isDifferentPK = false;
 			isWithoutModule = false;
+			isWithoutPK = true;
 			//
 			ResultSet rs1 = connection_.getMetaData().getColumns(null, null, tableElement.getAttribute("ID"), null);
 			if (rs1.next()) {
@@ -735,6 +737,19 @@ public class DialogCheckTableModule extends JDialog {
 				countOfErrors++;
 				buf.append("(" + countOfErrors + ") "+ res.getString("ModuleCheckMessage31"));
 				//
+				NodeList keyList = tableElement.getElementsByTagName("Key");
+				for (int i = 0; i < keyList.getLength(); i++) {
+					element = (org.w3c.dom.Element)keyList.item(i);
+					if (element.getAttribute("Type").equals("PK") && !element.getAttribute("Fields").equals("")) {
+						isWithoutPK = false;
+						break;
+					}
+				}
+				if (isWithoutPK) {
+					countOfErrors++;
+					buf.append("\n(" + countOfErrors + ") "+ res.getString("ModuleCheckMessage38"));
+				}
+				//
 				errorStatus = "ER1";
 			}
 			rs1.close();
@@ -748,8 +763,10 @@ public class DialogCheckTableModule extends JDialog {
 				//
 				if (isWithoutModule) {
 					//
-					jButtonCreate.setEnabled(true);
-					buf.append(res.getString("ModuleCheckMessage32"));
+					if (!isWithoutPK) {
+						jButtonCreate.setEnabled(true);
+						buf.append(res.getString("ModuleCheckMessage32"));
+					}
 					//
 				} else {
 					//
@@ -768,7 +785,6 @@ public class DialogCheckTableModule extends JDialog {
 				//
 			} else {
 				jButtonDelete.setEnabled(true);
-				//jTextAreaMessage.setText(moduleBuf.toString() + res.getString("ModuleCheckMessage35"));
 				if (requestType.equals("CREATE")) {
 					jTextAreaMessage.setText(res.getString("ModuleCheckMessage43") + "\n\n< Data Descriptions >\n" + moduleBuf.toString());
 				} else {
@@ -1161,9 +1177,9 @@ public class DialogCheckTableModule extends JDialog {
 			}
 		}
 		//
-		if (countOfPhysicalFields == 0) {
-			JOptionPane.showMessageDialog(this, res.getString("ModuleCheckMessage38"));
-		} else {
+		//if (countOfPhysicalFields == 0) {
+		//	JOptionPane.showMessageDialog(this, res.getString("ModuleCheckMessage38"));
+		//} else {
 			Object[] bts = {res.getString("Execute"), res.getString("Cancel")};
 			int rtn = JOptionPane.showOptionDialog(this, res.getString("ModuleCheckMessage39"), res.getString("ModuleCreate") + " " + tableElement.getAttribute("ID") + " " + tableElement.getAttribute("Name"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[1]);
 			if (rtn == 0) {
@@ -1189,7 +1205,7 @@ public class DialogCheckTableModule extends JDialog {
 					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 				}
 			}
-		}
+		//}
 	}
 
 	void jButtonDelete_actionPerformed(ActionEvent e) {

@@ -36,10 +36,16 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
+import javax.swing.text.TabSet;
+import javax.swing.text.TabStop;
+
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
@@ -89,7 +95,8 @@ public class DialogScan extends JDialog {
 	DefaultTableCellRenderer rendererAlignmentCenter = new DefaultTableCellRenderer();
 	DefaultTableCellRenderer rendererAlignmentRight = new DefaultTableCellRenderer();
 	DefaultTableCellRenderer rendererAlignmentLeft = new DefaultTableCellRenderer();
-	JTextArea jTextAreaScanDetail = new JTextArea();
+	//JTextArea jTextAreaScanDetail = new JTextArea();
+	JTextPane jTextPaneScanDetail = new JTextPane();
 	JButton jButtonStartScan = new JButton();
 	JProgressBar jProgressBar = new JProgressBar();
 	JButton jButtonCloseDialog = new JButton();
@@ -103,6 +110,9 @@ public class DialogScan extends JDialog {
 	JOptionPane jOptionPane = new JOptionPane();
 	String stringToBeScanned = "";
 	String stringToBeReplaced = "";
+	SimpleAttributeSet attrs = new SimpleAttributeSet();
+	StyledDocument doc = null;
+	Style style = null;
 
 	public DialogScan(Editor frame, String title, boolean modal) {
 		super(frame, title, modal);
@@ -262,12 +272,24 @@ public class DialogScan extends JDialog {
 		rendererTableHeader = (DefaultTableCellRenderer)jTableScanResult.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(2); //LEFT//
 		jScrollPaneScanResult.getViewport().add(jTableScanResult, null);
-		jTextAreaScanDetail.setFont(new java.awt.Font("SansSerif", 0, 14));
-		jTextAreaScanDetail.setLineWrap(true);
-		jTextAreaScanDetail.setEditable(false);
-		jTextAreaScanDetail.setEditable(false);
-		jTextAreaScanDetail.setBackground(SystemColor.control);
-		jScrollPaneScanDetail.getViewport().add(jTextAreaScanDetail, null);
+		jTextPaneScanDetail.setFont(new Font("monospaced", Font.PLAIN, 14));
+		//jTextPaneScanDetail.setTabSize(4);
+		FontMetrics fm = jTextPaneScanDetail.getFontMetrics(jTextPaneScanDetail.getFont());
+		int charWidth = fm.charWidth('m');
+		int tabLength = charWidth * 4;
+		TabStop[] tabs = new TabStop[20];
+		for(int j=0;j<tabs.length;j++) {
+			tabs[j] = new TabStop((j+1)*tabLength);
+		}
+		TabSet tabSet = new TabSet(tabs);
+		StyleConstants.setTabSet(attrs, tabSet);
+		//jTextPaneScanDetail.setLineWrap(true);
+		jTextPaneScanDetail.setEditable(false);
+		jTextPaneScanDetail.setBackground(SystemColor.control);
+		jScrollPaneScanDetail.getViewport().add(jTextPaneScanDetail, null);
+		doc = jTextPaneScanDetail.getStyledDocument();
+		style = doc.addStyle("style1",null);
+		StyleConstants.setBackground(style, Color.cyan);
 		//
 		//jPanelSouth and objects on it
 		jPanelSouth.setBorder(BorderFactory.createEtchedBorder());
@@ -291,7 +313,7 @@ public class DialogScan extends JDialog {
 		jPanelSouth.add(jButtonCloseDialog);
 		//
 		//DialogScan
-		this.setResizable(false);
+		//this.setResizable(false);
 		this.setTitle(res.getString("ScanDialogTitle"));
 		this.getContentPane().add(panelMain);
 		Dimension scrSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -321,7 +343,7 @@ public class DialogScan extends JDialog {
 			int rowCount = tableModelScanResult.getRowCount();
 			for (int i = 0; i < rowCount; i++) {tableModelScanResult.removeRow(0);}
 		}
-		jTextAreaScanDetail.setText(res.getString("ScanDialogComment1"));
+		jTextPaneScanDetail.setText(res.getString("ScanDialogComment1"));
 		checkBoxHeaderRenderer.setSelected(false);
 		//
 		jButtonReplaceAllSelected.setEnabled(false);
@@ -366,7 +388,7 @@ public class DialogScan extends JDialog {
 			//Clear previous scan result//
 			countOfRows = 0;
 			countOfStrings = 0;
-			jTextAreaScanDetail.setText("");
+			jTextPaneScanDetail.setText("");
 			if (tableModelScanResult.getRowCount() > 0) {
 				int rowCount = tableModelScanResult.getRowCount();
 				for (int i = 0; i < rowCount; i++) {tableModelScanResult.removeRow(0);}
@@ -442,6 +464,8 @@ public class DialogScan extends JDialog {
 				workElement = (org.w3c.dom.Element)systemList.item(0);
 				scanAttribute(workElement, "System", res.getString("System"), "Name", res.getString("Name"));
 				scanAttribute(workElement, "System", res.getString("System"), "Descriptions", res.getString("Remarks"));
+				scanAttribute(workElement, "System", res.getString("System"), "LoginScript", res.getString("LoginScript"));
+				scanAttribute(workElement, "System", res.getString("System"), "ScriptFunctions", res.getString("ScriptFunctions"));
 			}
 			//
 			//Scan Menu elements//
@@ -596,6 +620,19 @@ public class DialogScan extends JDialog {
 								scanAttribute(workElement1, "FunctionField", res.getString("Function/Field"), "FieldOptions_COMMENT", res.getString("Comment"));
 							}
 							//
+							workList1 = workElement.getElementsByTagName("Tab");
+							for (int j = 0; j < workList1.getLength(); j++) {
+								workElement1 = (org.w3c.dom.Element)workList1.item(j);
+								scanAttribute(workElement1, "Function200Tab", res.getString("Function/FieldTab"), "Caption", res.getString("Caption"));
+								//
+								workList2 = workElement1.getElementsByTagName("TabField");
+								for (int k = 0; k < workList2.getLength(); k++) {
+									workElement2 = (org.w3c.dom.Element)workList2.item(k);
+									scanAttribute(workElement2, "Function200TabField", res.getString("Function/Field"), "FieldOptions_CAPTION", res.getString("Caption"));
+									scanAttribute(workElement2, "Function200TabField", res.getString("Function/Field"), "FieldOptions_COMMENT", res.getString("Comment"));
+								}
+							}
+							//
 							workList1 = workElement.getElementsByTagName("Button");
 							for (int j = 0; j < workList1.getLength(); j++) {
 								workElement1 = (org.w3c.dom.Element)workList1.item(j);
@@ -725,10 +762,10 @@ public class DialogScan extends JDialog {
 			}
 			//
 			if (countOfRows > 0) {
-				jTextAreaScanDetail.setText(countOfRows + res.getString("ScanDialogComment2") + countOfStrings + res.getString("ScanDialogComment3"));
+				jTextPaneScanDetail.setText(countOfRows + res.getString("ScanDialogComment2") + countOfStrings + res.getString("ScanDialogComment3"));
 				jButtonGenerateListData.setEnabled(true);
 			} else {
-				jTextAreaScanDetail.setText(res.getString("ScanDialogComment4"));
+				jTextPaneScanDetail.setText(res.getString("ScanDialogComment4"));
 				jButtonReplaceAllSelected.setEnabled(false);
 				jButtonGenerateListData.setEnabled(false);
 			}
@@ -976,6 +1013,52 @@ public class DialogScan extends JDialog {
 			}
 		}
 		//
+		if (elementType.equals("Function200Tab")) {
+			workElement1 = (org.w3c.dom.Element)element.getParentNode();
+			//
+			workList = frame_.getDomDocument().getElementsByTagName("Subsystem");
+			for (int m = 0; m < workList.getLength(); m++) {
+				workElement2 = (org.w3c.dom.Element)workList.item(m);
+				if (workElement1.getAttribute("SubsystemID").equals(workElement2.getAttribute("ID"))) {
+					itemName = workElement2.getAttribute("ID") + " " + workElement2.getAttribute("Name") + " + "
+					+ workElement1.getAttribute("ID") + " " + workElement1.getAttribute("Name") + " + "
+					+ element.getAttribute("Caption");
+					break;
+				}
+			}
+		}
+		//
+		if (elementType.equals("Function200TabField")) {
+			workElement1 = (org.w3c.dom.Element)element.getParentNode();
+			workElement2 = (org.w3c.dom.Element)workElement1.getParentNode();
+			//
+			MainTreeNode tableNode = frame_.getSpecificXETreeNode("Table", workElement2.getAttribute("PrimaryTable"));
+			if (tableNode != null) {
+				NodeList referList = tableNode.getElement().getElementsByTagName("Refer");
+				wrkStr = element.getAttribute("DataSource");
+				int pos1 = wrkStr.indexOf(".");
+				String tableAlias = wrkStr.substring(0, pos1);
+				String fieldID = wrkStr.substring(pos1+1, wrkStr.length());
+				org.w3c.dom.Element tableElement = tableNode.getElement();
+				String tableID = frame_.getTableIDOfTableAlias(tableAlias, referList, null);
+				String tableName = tableID + " " + tableElement.getAttribute("Name");
+				org.w3c.dom.Element fieldElement = frame_.getSpecificFieldElement(tableID, fieldID);
+				String fieldName = fieldID + " " + fieldElement.getAttribute("Name");
+				//
+				workList = frame_.getDomDocument().getElementsByTagName("Subsystem");
+				for (int m = 0; m < workList.getLength(); m++) {
+					workElement3 = (org.w3c.dom.Element)workList.item(m);
+					if (workElement2.getAttribute("SubsystemID").equals(workElement3.getAttribute("ID"))) {
+						itemName = workElement3.getAttribute("ID") + " " + workElement3.getAttribute("Name") + " + "
+						+ workElement2.getAttribute("ID") + " " + workElement2.getAttribute("Name") + " + "
+						+ workElement1.getAttribute("Caption") + " + "
+						+ tableName + " + " + fieldName;
+						break;
+					}
+				}
+			}
+		}
+		//
 		if (elementType.equals("FunctionHeaderField")) {
 			workElement1 = (org.w3c.dom.Element)element.getParentNode();
 			//
@@ -1160,7 +1243,7 @@ public class DialogScan extends JDialog {
 			if (jTableScanResult.getSelectedRow() > -1) {
 				setSelectedRowValueToTextPane();
 			} else {
-				jTextAreaScanDetail.setText("");
+				jTextPaneScanDetail.setText("");
 			}
 		}
 	}
@@ -1252,7 +1335,7 @@ public class DialogScan extends JDialog {
 						}
 					}
 					//
-					tableModelScanResult.setValueAt("0", i, 6);
+					//tableModelScanResult.setValueAt("0", i, 6);
 				}
 			}
 		}
@@ -1295,7 +1378,7 @@ public class DialogScan extends JDialog {
 		int pos2 = 0;
 		while (pos2 > -1) {
 			pos2 = caseProcessedOriginalString.indexOf(caseProcessedStringToBeScanned, pos1);
-			if (pos2 > pos1) {
+			if (pos2 >= pos1) {
 				buf.append(originalString.substring(pos1, pos2));
 				buf.append(stringToBeReplaced);
 				pos1 = pos2 + caseProcessedStringToBeScanned.length();
@@ -1327,7 +1410,9 @@ public class DialogScan extends JDialog {
 					if (attrType.equals("Descriptions")
 							|| attrType.equals("Remarks")
 							|| attrType.equals("Text")
-							|| attrType.equals("Script")) {
+							|| attrType.equals("Script")
+							|| attrType.equals("LoginScript")
+							|| attrType.equals("ScriptFunctions")) {
 						imageText = frame_.substringLinesWithTokenOfEOL(element.getAttribute(attrType), "\n");
 					} else {
 						imageText = element.getAttribute(attrType);
@@ -1335,8 +1420,46 @@ public class DialogScan extends JDialog {
 				}
 			}
 			//
-			jTextAreaScanDetail.setText(imageText);
-			jTextAreaScanDetail.setCaretPosition(0);
+			String workString = imageText;
+			if (!jCheckBoxCaseSensitive.isSelected()) {
+				workString = imageText.toUpperCase();
+			}
+			jTextPaneScanDetail.removeStyle("style1");
+			jTextPaneScanDetail.setText(imageText);
+			StyledDocument styledDocument = jTextPaneScanDetail.getStyledDocument();
+			Style style1 = styledDocument.addStyle("style1", null);
+			StyleConstants.setForeground(style1, Color.BLACK);
+			styledDocument.setCharacterAttributes(0, 9999, style1, false);
+			int scanningPosFrom = 0;
+			int workInt = 0;
+			if (attrType.equals("TypeOptions")
+					|| attrType.equals("FieldOptions_CAPTION")
+					|| attrType.equals("FieldOptions_COMMENT")
+					|| attrType.equals("FieldOptions_VALUE")) {
+				do {
+					workInt = workString.indexOf(stringToBeScanned, scanningPosFrom);
+					if (workInt == -1) {
+						scanningPosFrom = -1;
+					} else {
+						if (imageText.indexOf(stringToBeScanned + "(", workInt) == -1) {
+							doc.setCharacterAttributes(workInt, stringToBeScanned.length(), style, false);
+							scanningPosFrom = workInt + stringToBeScanned.length();
+						}
+					}
+				} while(scanningPosFrom != -1);
+			} else {
+				do {
+					workInt = workString.indexOf(stringToBeScanned, scanningPosFrom);
+					if (workInt == -1) {
+						scanningPosFrom = -1;
+					} else {
+						doc.setCharacterAttributes(workInt, stringToBeScanned.length(), style, false);
+						scanningPosFrom = workInt + stringToBeScanned.length();
+					}
+				} while(scanningPosFrom != -1);
+			}
+			doc.setParagraphAttributes(0, jTextPaneScanDetail.getDocument().getLength(), attrs, false); 
+			jTextPaneScanDetail.setCaretPosition(0);
 		}
 	}
 
@@ -1511,7 +1634,9 @@ public class DialogScan extends JDialog {
 
 	void jTextFieldReplace_keyReleased(KeyEvent e) {
 		jButtonReplaceAllSelected.setEnabled(false);
-		if (!stringToBeScanned.equals(jTextFieldReplace.getText())) {
+		//if (!stringToBeScanned.equals(jTextFieldReplace.getText())) {
+		if (!stringToBeScanned.equals(jTextFieldReplace.getText().toUpperCase()) && !jCheckBoxCaseSensitive.isSelected()
+				|| !stringToBeScanned.equals(jTextFieldReplace.getText()) && jCheckBoxCaseSensitive.isSelected()) {
 			for (int i = 0; i < tableModelScanResult.getRowCount(); i++) {
 				if (((Boolean)tableModelScanResult.getValueAt(i, 1)).booleanValue()) {
 					jButtonReplaceAllSelected.setEnabled(true);
@@ -1523,7 +1648,8 @@ public class DialogScan extends JDialog {
 
 	void jTableScanResult_mouseClicked(MouseEvent e) {
 		jButtonReplaceAllSelected.setEnabled(false);
-		if (!stringToBeScanned.equals(jTextFieldReplace.getText())) {
+		if (!stringToBeScanned.equals(jTextFieldReplace.getText().toUpperCase()) && !jCheckBoxCaseSensitive.isSelected()
+				|| !stringToBeScanned.equals(jTextFieldReplace.getText()) && jCheckBoxCaseSensitive.isSelected()) {
 			for (int i = 0; i < tableModelScanResult.getRowCount(); i++) {
 				if (((Boolean)tableModelScanResult.getValueAt(i, 1)).booleanValue()) {
 					jButtonReplaceAllSelected.setEnabled(true);
@@ -1544,7 +1670,9 @@ public class DialogScan extends JDialog {
 					for (int i = 0; i < tableModelScanResult.getRowCount(); i++) {
 						tableModelScanResult.setValueAt(Boolean.TRUE, i, 1);
 					}
-					if (!stringToBeScanned.equals(jTextFieldReplace.getText())) {
+					//if (!stringToBeScanned.equals(jTextFieldReplace.getText())) {
+					if (!stringToBeScanned.equals(jTextFieldReplace.getText().toUpperCase()) && !jCheckBoxCaseSensitive.isSelected()
+							|| !stringToBeScanned.equals(jTextFieldReplace.getText()) && jCheckBoxCaseSensitive.isSelected()) {
 						jButtonReplaceAllSelected.setEnabled(true);
 					}
 				} else {

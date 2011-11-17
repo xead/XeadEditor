@@ -165,9 +165,9 @@ public class DialogSQL extends JDialog {
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			//
 			Statement statement = connection_.createStatement();
-			sql = " " + jTextAreaStatement.getText().toUpperCase().trim();
+			sql = jTextAreaStatement.getText().toUpperCase().trim().replace("\n", " ");
 			if (sql.length() > 1) {
-				if (sql.contains("SELECT ") || sql.contains("select ")) {
+				if (sql.contains("SELECT ")) {
 					int seq = 0;
 					resultSet = statement.executeQuery(sql);
 					resultSetMetaData = resultSet.getMetaData();
@@ -204,7 +204,7 @@ public class DialogSQL extends JDialog {
 					jTextAreaMessage.setText(bf.toString());
 				} else {
 					statement.executeUpdate(sql);
-					connection_.commit();
+					//connection_.commit();
 					bf.append(jTextAreaMessage.getText());
 					bf.append("\n> ");
 					bf.append(sql);
@@ -216,6 +216,7 @@ public class DialogSQL extends JDialog {
 					jTextAreaMessage.setText(bf.toString());
 				}
 				sqlExecuted = true;
+				connection_.commit();
 			}
 			//
 		} catch (SQLException ex1) {
