@@ -77,7 +77,7 @@ public class Editor extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private static final ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
 	public static final String APPLICATION_NAME  = "XEAD Editor 1.0";
-	public static final String FULL_VERSION  = "V1.R0.M12";
+	public static final String FULL_VERSION  = "V1.R0.M13";
 	public static final String FORMAT_VERSION  = "1.0";
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2011 DBC,Ltd.";
@@ -105,7 +105,7 @@ public class Editor extends JFrame {
 	private Border borderOriginal1;
 	private JPanel jPanelContentsPane = new JPanel();
 	private CardLayout cardLayoutContentsPane = new CardLayout();
-	private String currentFileName, systemName;
+	private String currentFileName, systemName, systemVersion;
 	private String currentFileFolder = "";
 	private String applicationFolder;
 	private String fileSeparator = "";
@@ -295,6 +295,8 @@ public class Editor extends JFrame {
 	private Editor_KanjiTextArea jTextAreaSystemRemarks = new Editor_KanjiTextArea();
 	//
 	private JPanel jPanelSystemConfig = new JPanel();
+	private JLabel jLabelSystemAppServerName = new JLabel();
+	private JTextField jTextFieldSystemAppServerName = new JTextField();
 	private JLabel jLabelSystemDBName = new JLabel();
 	private JTextField jTextFieldSystemDBName = new JTextField();
 	private JLabel jLabelSystemDBUser = new JLabel();
@@ -388,6 +390,17 @@ public class Editor extends JFrame {
 			}
 		}
 	};
+	private Action actionScanSystemLoginScript = new AbstractAction(){
+		private static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			scanStringInTextArea(jTextAreaSystemLoginScript, jTextFieldSystemLoginScriptEditToolScan.getText(), jCheckBoxSystemLoginScriptEditToolScanCase.isSelected());
+		}
+	};
+	private JPanel jPanelSystemLoginScriptEditTool = new JPanel();
+	private JLabel jLabelSystemLoginScriptEditToolScan = new JLabel();
+	private JTextField jTextFieldSystemLoginScriptEditToolScan = new JTextField();
+	private JCheckBox jCheckBoxSystemLoginScriptEditToolScanCase = new JCheckBox();
+	private JLabel jLabelSystemLoginScriptEditToolCursorPos = new JLabel();
 	//
 	private JScrollPane jScrollPaneSystemScriptFunctions = new JScrollPane();
 	private JTextArea jTextAreaSystemScriptFunctions = new JTextArea();
@@ -420,6 +433,17 @@ public class Editor extends JFrame {
 			}
 		}
 	};
+	private Action actionScanSystemScriptFunctions = new AbstractAction(){
+		private static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			scanStringInTextArea(jTextAreaSystemScriptFunctions, jTextFieldSystemScriptFunctionsEditToolScan.getText(), jCheckBoxSystemScriptFunctionsEditToolScanCase.isSelected());
+		}
+	};
+	private JPanel jPanelSystemScriptFunctionsEditTool = new JPanel();
+	private JLabel jLabelSystemScriptFunctionsEditToolScan = new JLabel();
+	private JTextField jTextFieldSystemScriptFunctionsEditToolScan = new JTextField();
+	private JCheckBox jCheckBoxSystemScriptFunctionsEditToolScanCase = new JCheckBox();
+	private JLabel jLabelSystemScriptFunctionsEditToolCursorPos = new JLabel();
 	/**
 	 * Definition components on jPanelMenuList
 	 */
@@ -2335,6 +2359,7 @@ public class Editor extends JFrame {
 			systemNode = new MainTreeNode("System", element1, this);
 			treeModel = new DefaultTreeModel(systemNode);
 			systemName = systemNode.getElement().getAttribute("Name");
+			systemVersion = systemNode.getElement().getAttribute("Version");
 			//
 			// Add Node of "MenuList"//
 			menuListNode = new MainTreeNode("MenuList", null, this);
@@ -2849,9 +2874,13 @@ public class Editor extends JFrame {
 		//(System Configurations)//
 		jPanelSystemConfig.setBorder(BorderFactory.createEtchedBorder());
 		jPanelSystemConfig.setLayout(null);
-		jCheckBoxSystemAutoConnectToEdit.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jCheckBoxSystemAutoConnectToEdit.setBounds(new Rectangle(105, 9, 250, 22));
-		jCheckBoxSystemAutoConnectToEdit.setText(res.getString("AutoConnect"));
+		jLabelSystemAppServerName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemAppServerName.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelSystemAppServerName.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelSystemAppServerName.setText(res.getString("AppServerName"));
+		jLabelSystemAppServerName.setBounds(new Rectangle(11, 12, 86, 15));
+		jTextFieldSystemAppServerName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldSystemAppServerName.setBounds(new Rectangle(105, 9, 105, 22));
 		jLabelSystemDBName.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemDBName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemDBName.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -2859,6 +2888,9 @@ public class Editor extends JFrame {
 		jLabelSystemDBName.setBounds(new Rectangle(11, 40, 86, 15));
 		jTextFieldSystemDBName.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldSystemDBName.setBounds(new Rectangle(105, 37, 300, 22));
+		jCheckBoxSystemAutoConnectToEdit.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jCheckBoxSystemAutoConnectToEdit.setBounds(new Rectangle(440, 37, 250, 22));
+		jCheckBoxSystemAutoConnectToEdit.setText(res.getString("AutoConnect"));
 		jLabelSystemDBUser.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemDBUser.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemDBUser.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -2984,15 +3016,17 @@ public class Editor extends JFrame {
 		jTextFieldSystemEditorUserPassword.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldSystemEditorUserPassword.setBounds(new Rectangle(255, 296, 120, 22));
 		//
+		jPanelSystemConfig.add(jLabelSystemAppServerName);
+		jPanelSystemConfig.add(jTextFieldSystemAppServerName);
 		jPanelSystemConfig.add(jLabelSystemDBName);
 		jPanelSystemConfig.add(jTextFieldSystemDBName);
+		jPanelSystemConfig.add(jCheckBoxSystemAutoConnectToEdit);
 		jPanelSystemConfig.add(jLabelSystemDBUser);
 		jPanelSystemConfig.add(jTextFieldSystemDBUser);
 		jPanelSystemConfig.add(jLabelSystemDBPassword);
 		jPanelSystemConfig.add(jTextFieldSystemDBPassword);
 		jPanelSystemConfig.add(jLabelSystemDBDisconnect);
 		jPanelSystemConfig.add(jTextFieldSystemDBDisconnect);
-		jPanelSystemConfig.add(jCheckBoxSystemAutoConnectToEdit);
 		jPanelSystemConfig.add(jLabelSystemImageFileFolder);
 		jPanelSystemConfig.add(jTextFieldSystemImageFileFolder);
 		jPanelSystemConfig.add(jLabelSystemWelcomePageURL);
@@ -3173,11 +3207,13 @@ public class Editor extends JFrame {
 		jTabbedPaneSystem.setIconAt(3, imageIconScript);
 		jTextAreaSystemLoginScript.setFont(new java.awt.Font("Monospaced", 0, 14));
 		jTextAreaSystemLoginScript.setTabSize(4);
-		jTextAreaSystemLoginScript.setLineWrap(true);
+		//jTextAreaSystemLoginScript.setLineWrap(true);
+		jTextAreaSystemLoginScript.addCaretListener(new Editor_jTextAreaSystemLoginScript_caretAdapter(this));
 		jTextAreaSystemLoginScript.getDocument().addUndoableEditListener(jTextAreaSystemLoginScriptUndoManager);
 		ActionMap actionMap = jTextAreaSystemLoginScript.getActionMap();
 		actionMap.put(DefaultEditorKit.pasteAction, actionPasteSystemLoginScript);
 		jScrollPaneSystemLoginScript.getViewport().add(jTextAreaSystemLoginScript, null);
+		jScrollPaneSystemLoginScript.getViewport().addChangeListener(new JScrollPaneSystemLoginScriptChangeListener());
 		InputMap inputMap = jScrollPaneSystemLoginScript.getInputMap(JSplitPane.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 		inputMap.clear();
 		actionMap = jScrollPaneSystemLoginScript.getActionMap();
@@ -3188,16 +3224,38 @@ public class Editor extends JFrame {
 		actionMap.put("UNDO", actionUndoSystemLoginScript);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_DOWN_MASK), "REDO");
 		actionMap.put("REDO", actionRedoSystemLoginScript);
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), "SCAN");
+		actionMap.put("SCAN", actionScanSystemLoginScript);
+		jPanelSystemLoginScriptEditTool.setBorder(BorderFactory.createLineBorder(Color.gray));
+		jPanelSystemLoginScriptEditTool.setLayout(null);
+		jLabelSystemLoginScriptEditToolScan.setText(res.getString("F3ToScan"));
+		jLabelSystemLoginScriptEditToolScan.setHorizontalAlignment(SwingConstants.CENTER);
+		jLabelSystemLoginScriptEditToolScan.setBounds(new Rectangle(0, 0, 50, 22));
+		jLabelSystemLoginScriptEditToolScan.setForeground(Color.darkGray);
+		jTextFieldSystemLoginScriptEditToolScan.setBounds(new Rectangle(50, 0, 80, 22));
+		jTextFieldSystemLoginScriptEditToolScan.setForeground(Color.darkGray);
+		jCheckBoxSystemLoginScriptEditToolScanCase.setBounds(new Rectangle(130, 1, 22, 20));
+		jCheckBoxSystemLoginScriptEditToolScanCase.setBackground(Color.lightGray);
+		jLabelSystemLoginScriptEditToolCursorPos.setBounds(new Rectangle(153, 0, 50, 22));
+		jLabelSystemLoginScriptEditToolCursorPos.setHorizontalAlignment(SwingConstants.CENTER);
+		jLabelSystemLoginScriptEditToolCursorPos.setForeground(Color.darkGray);
+		jPanelSystemLoginScriptEditTool.add(jLabelSystemLoginScriptEditToolScan);
+		jPanelSystemLoginScriptEditTool.add(jTextFieldSystemLoginScriptEditToolScan);
+		jPanelSystemLoginScriptEditTool.add(jCheckBoxSystemLoginScriptEditToolScanCase);
+		jPanelSystemLoginScriptEditTool.add(jLabelSystemLoginScriptEditToolCursorPos);
+		jTextAreaSystemLoginScript.add(jPanelSystemLoginScriptEditTool);
 		//
 		jTabbedPaneSystem.addTab(res.getString("ScriptFunctions"), jScrollPaneSystemScriptFunctions);
 		jTabbedPaneSystem.setIconAt(4, imageIconScript);
 		jTextAreaSystemScriptFunctions.setFont(new java.awt.Font("Monospaced", 0, 14));
 		jTextAreaSystemScriptFunctions.setTabSize(4);
-		jTextAreaSystemScriptFunctions.setLineWrap(true);
+		//jTextAreaSystemScriptFunctions.setLineWrap(true);
+		jTextAreaSystemScriptFunctions.addCaretListener(new Editor_jTextAreaSystemScriptFunctions_caretAdapter(this));
 		jTextAreaSystemScriptFunctions.getDocument().addUndoableEditListener(jTextAreaSystemScriptFunctionsUndoManager);
 		actionMap = jTextAreaSystemScriptFunctions.getActionMap();
 		actionMap.put(DefaultEditorKit.pasteAction, actionPasteSystemScriptFunctions);
 		jScrollPaneSystemScriptFunctions.getViewport().add(jTextAreaSystemScriptFunctions, null);
+		jScrollPaneSystemScriptFunctions.getViewport().addChangeListener(new JScrollPaneSystemScriptFunctionsChangeListener());
 		inputMap = jScrollPaneSystemScriptFunctions.getInputMap(JSplitPane.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 		inputMap.clear();
 		actionMap = jScrollPaneSystemScriptFunctions.getActionMap();
@@ -3208,6 +3266,40 @@ public class Editor extends JFrame {
 		actionMap.put("UNDO", actionUndoSystemScriptFunctions);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_DOWN_MASK), "REDO");
 		actionMap.put("REDO", actionRedoSystemScriptFunctions);
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), "SCAN");
+		actionMap.put("SCAN", actionScanSystemScriptFunctions);
+		jPanelSystemScriptFunctionsEditTool.setBorder(BorderFactory.createLineBorder(Color.gray));
+		jPanelSystemScriptFunctionsEditTool.setLayout(null);
+		jLabelSystemScriptFunctionsEditToolScan.setText(res.getString("F3ToScan"));
+		jLabelSystemScriptFunctionsEditToolScan.setHorizontalAlignment(SwingConstants.CENTER);
+		jLabelSystemScriptFunctionsEditToolScan.setBounds(new Rectangle(0, 0, 50, 22));
+		jLabelSystemScriptFunctionsEditToolScan.setForeground(Color.darkGray);
+		jTextFieldSystemScriptFunctionsEditToolScan.setBounds(new Rectangle(50, 0, 80, 22));
+		jTextFieldSystemScriptFunctionsEditToolScan.setForeground(Color.darkGray);
+		jCheckBoxSystemScriptFunctionsEditToolScanCase.setBounds(new Rectangle(130, 1, 22, 20));
+		jCheckBoxSystemScriptFunctionsEditToolScanCase.setBackground(Color.lightGray);
+		jLabelSystemScriptFunctionsEditToolCursorPos.setBounds(new Rectangle(153, 0, 50, 22));
+		jLabelSystemScriptFunctionsEditToolCursorPos.setHorizontalAlignment(SwingConstants.CENTER);
+		jLabelSystemScriptFunctionsEditToolCursorPos.setForeground(Color.darkGray);
+		jPanelSystemScriptFunctionsEditTool.add(jLabelSystemScriptFunctionsEditToolScan);
+		jPanelSystemScriptFunctionsEditTool.add(jTextFieldSystemScriptFunctionsEditToolScan);
+		jPanelSystemScriptFunctionsEditTool.add(jCheckBoxSystemScriptFunctionsEditToolScanCase);
+		jPanelSystemScriptFunctionsEditTool.add(jLabelSystemScriptFunctionsEditToolCursorPos);
+		jTextAreaSystemScriptFunctions.add(jPanelSystemScriptFunctionsEditTool);
+	}
+	class JScrollPaneSystemLoginScriptChangeListener implements javax.swing.event.ChangeListener {
+		public void stateChanged(javax.swing.event.ChangeEvent event) {
+			int width = jScrollPaneSystemLoginScript.getViewport().getWidth();
+			Point point = jScrollPaneSystemLoginScript.getViewport().getViewPosition();
+			jPanelSystemLoginScriptEditTool.setBounds(new Rectangle(width - 203 + point.x, point.y, 203, 22));
+		}
+	}
+	class JScrollPaneSystemScriptFunctionsChangeListener implements javax.swing.event.ChangeListener {
+		public void stateChanged(javax.swing.event.ChangeEvent event) {
+			int width = jScrollPaneSystemScriptFunctions.getViewport().getWidth();
+			Point point = jScrollPaneSystemScriptFunctions.getViewport().getViewPosition();
+			jPanelSystemScriptFunctionsEditTool.setBounds(new Rectangle(width - 203 + point.x, point.y, 203, 22));
+		}
 	}
 
 	/**
@@ -10871,11 +10963,19 @@ public class Editor extends JFrame {
 		String fieldID, wrkStr, extension;
 		org.w3c.dom.Element element;
 		boolean abended = false;
+		ArrayList<String> fieldIDList = new ArrayList<String>();
 		int pos1;
 		//
 		StringTokenizer workTokenizer = new StringTokenizer(fieldIDs, ";" );
 		while (workTokenizer.hasMoreTokens()) {
 			fieldID = workTokenizer.nextToken();
+			if (fieldIDList.contains(fieldID)) {
+				JOptionPane.showMessageDialog(this, res.getString("ErrorMessage8"));
+				abended = true;
+				break;
+			} else {
+				fieldIDList.add(fieldID);
+			}
 			//
 			extension = "";
 			if (isOrderBy) {
@@ -11267,7 +11367,7 @@ public class Editor extends JFrame {
 	String getRangeFieldNames(String tableID, String fieldIDs) {
 		StringBuffer sb = new StringBuffer();
 		String fieldFrom, fieldThru, wrkType, wrkSize;
-		org.w3c.dom.Element tableElement, fieldElement;
+		org.w3c.dom.Element tablePKElement, fieldElement;
 		boolean abended = false;
 		//
 		StringTokenizer workTokenizer1 = new StringTokenizer(fieldIDs, ";" );
@@ -11277,46 +11377,51 @@ public class Editor extends JFrame {
 			JOptionPane.showMessageDialog(null, res.getString("ErrorMessage6"));
 			abended = true;
 		} else {
-			tableElement = getSpecificPKElement(tableID);
-			StringTokenizer workTokenizer2 = new StringTokenizer(tableElement.getAttribute("Fields"), ";" );
-			boolean okay = false; 
-			while (workTokenizer2.hasMoreTokens()) {
-				if (workTokenizer2.nextToken().equals(fieldFrom)) {
-					okay = true;
-					break;
-				}
-			}
-			if (okay) {
-				sb.append(fieldElement.getAttribute("Name"));
-				wrkType = fieldElement.getAttribute("Type");
-				wrkSize = fieldElement.getAttribute("Size");
-				if (workTokenizer1.hasMoreTokens()) {
-					fieldThru =workTokenizer1.nextToken();
-					if (fieldThru.equals(fieldFrom)) {
-						JOptionPane.showMessageDialog(null, res.getString("ErrorMessage8"));
-						abended = true;
-					} else {
-						fieldElement = getSpecificFieldElement(tableID, fieldThru);
-						if (fieldElement == null) {
-							JOptionPane.showMessageDialog(null, res.getString("ErrorMessage7"));
-							abended = true;
-						} else {
-							if (wrkType.equals(fieldElement.getAttribute("Type")) && wrkSize.equals(fieldElement.getAttribute("Size"))) {
-								sb.append("`");
-								sb.append(fieldElement.getAttribute("Name"));
-							} else {
-								JOptionPane.showMessageDialog(null, res.getString("ErrorMessage9"));
-								abended = true;
-							}
-						}
-					}
-				} else {
-					JOptionPane.showMessageDialog(null, res.getString("ErrorMessage7"));
-					abended = true;
-				}
-			} else {
+			tablePKElement = getSpecificPKElement(tableID);
+			if (tablePKElement == null) {
 				JOptionPane.showMessageDialog(null, res.getString("ErrorMessage10"));
 				abended = true;
+			} else {
+				StringTokenizer workTokenizer2 = new StringTokenizer(tablePKElement.getAttribute("Fields"), ";" );
+				boolean okay = false; 
+				while (workTokenizer2.hasMoreTokens()) {
+					if (workTokenizer2.nextToken().equals(fieldFrom)) {
+						okay = true;
+						break;
+					}
+				}
+				if (okay) {
+					sb.append(fieldElement.getAttribute("Name"));
+					wrkType = fieldElement.getAttribute("Type");
+					wrkSize = fieldElement.getAttribute("Size");
+					if (workTokenizer1.hasMoreTokens()) {
+						fieldThru =workTokenizer1.nextToken();
+						if (fieldThru.equals(fieldFrom)) {
+							JOptionPane.showMessageDialog(null, res.getString("ErrorMessage8"));
+							abended = true;
+						} else {
+							fieldElement = getSpecificFieldElement(tableID, fieldThru);
+							if (fieldElement == null) {
+								JOptionPane.showMessageDialog(null, res.getString("ErrorMessage7"));
+								abended = true;
+							} else {
+								if (wrkType.equals(fieldElement.getAttribute("Type")) && wrkSize.equals(fieldElement.getAttribute("Size"))) {
+									sb.append("`");
+									sb.append(fieldElement.getAttribute("Name"));
+								} else {
+									JOptionPane.showMessageDialog(null, res.getString("ErrorMessage9"));
+									abended = true;
+								}
+							}
+						}
+					} else {
+						JOptionPane.showMessageDialog(null, res.getString("ErrorMessage7"));
+						abended = true;
+					}
+				} else {
+					JOptionPane.showMessageDialog(null, res.getString("ErrorMessage10"));
+					abended = true;
+				}
 			}
 		}
 		//
@@ -12577,7 +12682,7 @@ public class Editor extends JFrame {
 			}
 			//
 			//Setup frame title//
-			this.setTitle(APPLICATION_NAME + " - [" + currentFileName + "] - " + systemName);
+			this.setTitle(APPLICATION_NAME + " - [" + currentFileName + "] - " + systemName + " " + systemVersion);
 			//
 			//Reset cursor//
 		} finally {
@@ -14604,6 +14709,11 @@ public class Editor extends JFrame {
 			//
 			jTextAreaSystemRemarks.setText(substringLinesWithTokenOfEOL(domNode_.getAttribute("Remarks"), "\n"));
 			//
+			if (domNode_.getAttribute("AppServerName").equals("")) {
+				jTextFieldSystemAppServerName.setText("*None");
+			} else {
+				jTextFieldSystemAppServerName.setText(domNode_.getAttribute("AppServerName"));
+			}
 			jTextFieldSystemDBName.setText(domNode_.getAttribute("DatabaseName"));
 			jTextFieldSystemDBUser.setText(domNode_.getAttribute("DatabaseUser"));
 			jTextFieldSystemDBPassword.setText(domNode_.getAttribute("DatabasePassword"));
@@ -14640,24 +14750,6 @@ public class Editor extends JFrame {
 				jComboBoxSystemDateFormat.setSelectedIndex(index);
 			}
 			//
-//			String hint = "";
-//			if (connection == null) {
-//				jTextFieldSystemDBName.setEditable(true);
-//				jTextFieldSystemDBUser.setEditable(true);
-//				jTextFieldSystemDBPassword.setEditable(true);
-//				jTextFieldSystemDBDisconnect.setEditable(true);
-//			} else {
-//				hint = res.getString("DBConnectMessage4");
-//				jTextFieldSystemDBName.setEditable(false);
-//				jTextFieldSystemDBUser.setEditable(false);
-//				jTextFieldSystemDBPassword.setEditable(false);
-//				jTextFieldSystemDBDisconnect.setEditable(false);
-//			}
-//			jTextFieldSystemDBName.setToolTipText(hint);
-//			jTextFieldSystemDBUser.setToolTipText(hint);
-//			jTextFieldSystemDBPassword.setToolTipText(hint);
-//			jTextFieldSystemDBDisconnect.setToolTipText(hint);
-			//
 			//Print Font List//
 			if (tableModelSystemPrintFontList.getRowCount() > 0) {
 				int rowCount = tableModelSystemPrintFontList.getRowCount();
@@ -14685,9 +14777,13 @@ public class Editor extends JFrame {
 			//
 			jTextAreaSystemLoginScript.setText(substringLinesWithTokenOfEOL(domNode_.getAttribute("LoginScript"), "\n"));
 			jTextAreaSystemLoginScriptUndoManager.discardAllEdits();
+			jTextAreaSystemLoginScript.setCaretPosition(0);
+			jLabelSystemLoginScriptEditToolCursorPos.setText("1 : 0");
 			//
 			jTextAreaSystemScriptFunctions.setText(substringLinesWithTokenOfEOL(domNode_.getAttribute("ScriptFunctions"), "\n"));
 			jTextAreaSystemScriptFunctionsUndoManager.discardAllEdits();
+			jTextAreaSystemScriptFunctions.setCaretPosition(0);
+			jLabelSystemScriptFunctionsEditToolCursorPos.setText("1 : 0");
 			//
 			//Return name of the page to be shown//
 			return "jPanelSystem";
@@ -17777,6 +17873,16 @@ public class Editor extends JFrame {
 				valueOfFieldsChanged = true;
 			}
 			//
+			if (jTextFieldSystemAppServerName.getText().equals("")
+					|| jTextFieldSystemAppServerName.getText().toUpperCase().equals("*NONE")) {
+				if (!domNode_.getAttribute("AppServerName").equals("")) {
+					valueOfFieldsChanged = true;
+				}
+			} else {
+				if (!domNode_.getAttribute("AppServerName").equals(jTextFieldSystemAppServerName.getText())) {
+					valueOfFieldsChanged = true;
+				}
+			}
 			if (!domNode_.getAttribute("DatabaseName").equals(jTextFieldSystemDBName.getText())) {
 				valueOfFieldsChanged = true;
 			}
@@ -17867,12 +17973,19 @@ public class Editor extends JFrame {
 			//
 			if (valueOfFieldsChanged) {
 				//
-				//Update DOM element//
 				systemName = jTextFieldSystemName.getText(); //variant for frame title//
 				domNode_.setAttribute("Name", systemName);
-				domNode_.setAttribute("Version", jTextFieldSystemVersion.getText());
+				systemVersion = jTextFieldSystemVersion.getText(); //variant for frame title//
+				domNode_.setAttribute("Version", systemVersion);
+				setTitle(APPLICATION_NAME + " - [" + currentFileName + "] - " + systemName + " " + systemVersion);
+				//
 				domNode_.setAttribute("Remarks", concatLinesWithTokenOfEOL(jTextAreaSystemRemarks.getText()));
 				//
+				if (jTextFieldSystemAppServerName.getText().equals("") || jTextFieldSystemAppServerName.getText().toUpperCase().equals("*NONE")) {
+					domNode_.setAttribute("AppServerName", "");
+				} else {
+					domNode_.setAttribute("AppServerName", jTextFieldSystemAppServerName.getText());
+				}
 				domNode_.setAttribute("DatabaseName", jTextFieldSystemDBName.getText());
 				domNode_.setAttribute("DatabaseUser", jTextFieldSystemDBUser.getText());
 				domNode_.setAttribute("DatabasePassword", jTextFieldSystemDBPassword.getText());
@@ -18138,6 +18251,7 @@ public class Editor extends JFrame {
 			String wrkStr;
 			StringBuffer options = new StringBuffer();
 			boolean optionsNotNull = false;
+			StringTokenizer tokenizer;
 			//
 			if (selectedRow_jTableTableFieldList > -1) {
 				//
@@ -18369,7 +18483,8 @@ public class Editor extends JFrame {
 				//
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("TypeOptions"), "AUTO_NUMBER");
 				if (wrkStr.equals("")) {
-					if (jRadioButtonFieldTypeOptionAUTO_NUMBER.isSelected()) {
+					if (jRadioButtonFieldTypeOptionAUTO_NUMBER.isSelected()
+							&& !jTextFieldTableFieldTypeOptionAUTO_NUMBER.getText().equals("")) {
 						valueOfFieldsChanged = true;
 						if (optionsNotNull) {
 							options.append(",");
@@ -18378,7 +18493,8 @@ public class Editor extends JFrame {
 						optionsNotNull = true;
 					}
 				} else {
-					if (jRadioButtonFieldTypeOptionAUTO_NUMBER.isSelected()) {
+					if (jRadioButtonFieldTypeOptionAUTO_NUMBER.isSelected()
+							&& !jTextFieldTableFieldTypeOptionAUTO_NUMBER.getText().equals("")) {
 						if (!jTextFieldTableFieldTypeOptionAUTO_NUMBER.getText().equals(wrkStr)) {
 							valueOfFieldsChanged = true;
 						}
@@ -18394,7 +18510,8 @@ public class Editor extends JFrame {
 				//
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("TypeOptions"), "KUBUN");
 				if (wrkStr.equals("")) {
-					if (jRadioButtonFieldTypeOptionKUBUN.isSelected()) {
+					if (jRadioButtonFieldTypeOptionKUBUN.isSelected()
+							&& !jTextFieldTableFieldTypeOptionKUBUN.getText().equals("")) {
 						valueOfFieldsChanged = true;
 						if (optionsNotNull) {
 							options.append(",");
@@ -18403,7 +18520,8 @@ public class Editor extends JFrame {
 						optionsNotNull = true;
 					}
 				} else {
-					if (jRadioButtonFieldTypeOptionKUBUN.isSelected()) {
+					if (jRadioButtonFieldTypeOptionKUBUN.isSelected()
+							&& !jTextFieldTableFieldTypeOptionKUBUN.getText().equals("")) {
 						if (!jTextFieldTableFieldTypeOptionKUBUN.getText().equals(wrkStr)) {
 							valueOfFieldsChanged = true;
 						}
@@ -18420,23 +18538,29 @@ public class Editor extends JFrame {
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("TypeOptions"), "BOOLEAN");
 				if (wrkStr.equals("")) {
 					if (jRadioButtonFieldTypeOptionBOOLEAN.isSelected()) {
-						valueOfFieldsChanged = true;
-						if (optionsNotNull) {
-							options.append(",");
+						tokenizer = new StringTokenizer(jTextFieldTableFieldTypeOptionBOOLEAN.getText(), ";");
+						if (tokenizer.countTokens() == 2) {
+							valueOfFieldsChanged = true;
+							if (optionsNotNull) {
+								options.append(",");
+							}
+							options.append("BOOLEAN(" + jTextFieldTableFieldTypeOptionBOOLEAN.getText() + ")");
+							optionsNotNull = true;
 						}
-						options.append("BOOLEAN(" + jTextFieldTableFieldTypeOptionBOOLEAN.getText() + ")");
-						optionsNotNull = true;
 					}
 				} else {
 					if (jRadioButtonFieldTypeOptionBOOLEAN.isSelected()) {
-						if (!jTextFieldTableFieldTypeOptionBOOLEAN.getText().equals(wrkStr)) {
-							valueOfFieldsChanged = true;
+						tokenizer = new StringTokenizer(jTextFieldTableFieldTypeOptionBOOLEAN.getText(), ";");
+						if (tokenizer.countTokens() == 2) {
+							if (!jTextFieldTableFieldTypeOptionBOOLEAN.getText().equals(wrkStr)) {
+								valueOfFieldsChanged = true;
+							}
+							if (optionsNotNull) {
+								options.append(",");
+							}
+							options.append("BOOLEAN(" + jTextFieldTableFieldTypeOptionBOOLEAN.getText() + ")");
+							optionsNotNull = true;
 						}
-						if (optionsNotNull) {
-							options.append(",");
-						}
-						options.append("BOOLEAN(" + jTextFieldTableFieldTypeOptionBOOLEAN.getText() + ")");
-						optionsNotNull = true;
 					} else {
 						valueOfFieldsChanged = true;
 					}
@@ -18445,23 +18569,29 @@ public class Editor extends JFrame {
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("TypeOptions"), "VALUES");
 				if (wrkStr.equals("")) {
 					if (jRadioButtonFieldTypeOptionVALUES.isSelected()) {
-						valueOfFieldsChanged = true;
-						if (optionsNotNull) {
-							options.append(",");
+						tokenizer = new StringTokenizer(jTextFieldTableFieldTypeOptionVALUES.getText(), ";");
+						if (tokenizer.countTokens() > 1) {
+							valueOfFieldsChanged = true;
+							if (optionsNotNull) {
+								options.append(",");
+							}
+							options.append("VALUES(" + jTextFieldTableFieldTypeOptionVALUES.getText() + ")");
+							optionsNotNull = true;
 						}
-						options.append("VALUES(" + jTextFieldTableFieldTypeOptionVALUES.getText() + ")");
-						optionsNotNull = true;
 					}
 				} else {
 					if (jRadioButtonFieldTypeOptionVALUES.isSelected()) {
-						if (!jTextFieldTableFieldTypeOptionVALUES.getText().equals(wrkStr)) {
-							valueOfFieldsChanged = true;
+						tokenizer = new StringTokenizer(jTextFieldTableFieldTypeOptionVALUES.getText(), ";");
+						if (tokenizer.countTokens() > 1) {
+							if (!jTextFieldTableFieldTypeOptionVALUES.getText().equals(wrkStr)) {
+								valueOfFieldsChanged = true;
+							}
+							if (optionsNotNull) {
+								options.append(",");
+							}
+							options.append("VALUES(" + jTextFieldTableFieldTypeOptionVALUES.getText() + ")");
+							optionsNotNull = true;
 						}
-						if (optionsNotNull) {
-							options.append(",");
-						}
-						options.append("VALUES(" + jTextFieldTableFieldTypeOptionVALUES.getText() + ")");
-						optionsNotNull = true;
 					} else {
 						valueOfFieldsChanged = true;
 					}
@@ -25032,7 +25162,8 @@ public class Editor extends JFrame {
 					if (tableRowNumber.getElement().getAttribute("Type").equals("PK")) {
 						if (tableModelTableKeyRelationshipList.getRowCount() > 0
 								|| tableModelTableReferList.getRowCount() > 0
-								|| tableModelTableUsageList.getRowCount() > 0) {
+								|| tableModelTableUsageList.getRowCount() > 0
+								|| !tableRangeKeyFields.equals("")) {
 							errorMsg = res.getString("ErrorMessage31");
 						}
 					}
@@ -29554,11 +29685,10 @@ public class Editor extends JFrame {
 				}
 				//
 				subTableID = element1.getAttribute("BatchTable");
-				workNode = getSpecificXETreeNode("Table", subTableID);
-				element2 = workNode.getElement();
-				referList1 = element2.getElementsByTagName("Refer");
-				//
 				if (!subTableID.equals("")) {
+					workNode = getSpecificXETreeNode("Table", subTableID);
+					element2 = workNode.getElement();
+					referList1 = element2.getElementsByTagName("Refer");
 					nodeList2 = element1.getElementsByTagName("BatchField");
 					for (int j = 0; j < nodeList2.getLength(); j++) {
 						element2 = (org.w3c.dom.Element)nodeList2.item(j);
@@ -31673,6 +31803,16 @@ public class Editor extends JFrame {
 	void jTextAreaTableScriptText_caretUpdate(CaretEvent e) {
 	    Point pos = getCaretPositionInText(jTextAreaTableScriptText);
 	    jLabelTableScriptCursorPos.setText(pos.x + " : " + pos.y);
+	}
+
+	void jTextAreaSystemLoginScript_caretUpdate(CaretEvent e) {
+	    Point pos = getCaretPositionInText(jTextAreaSystemLoginScript);
+	    jLabelSystemLoginScriptEditToolCursorPos.setText(pos.x + " : " + pos.y);
+	}
+
+	void jTextAreaSystemScriptFunctions_caretUpdate(CaretEvent e) {
+	    Point pos = getCaretPositionInText(jTextAreaSystemScriptFunctions);
+	    jLabelSystemScriptFunctionsEditToolCursorPos.setText(pos.x + " : " + pos.y);
 	}
 
 	void jTextAreaFunction000Script_caretUpdate(CaretEvent e) {
@@ -34176,6 +34316,7 @@ public class Editor extends JFrame {
 		String currentValue = tableRangeKeyFields;
 		String answer = JOptionPane.showInputDialog(this.getContentPane(), res.getString("EditRangeKeyMessage"), currentValue);
 		if (answer != null) {
+			answer = answer.toUpperCase();
 			if (!answer.equals(tableRangeKeyFields)) {
 				informationOnThisPageChanged = true;
 			}
@@ -40749,6 +40890,26 @@ class Editor_jTextAreaTableScriptText_caretAdapter implements javax.swing.event.
 	}
 	public void caretUpdate(CaretEvent e) {
 		adaptee.jTextAreaTableScriptText_caretUpdate(e);
+	}
+}
+
+class Editor_jTextAreaSystemLoginScript_caretAdapter implements javax.swing.event.CaretListener {
+	Editor adaptee;
+	Editor_jTextAreaSystemLoginScript_caretAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void caretUpdate(CaretEvent e) {
+		adaptee.jTextAreaSystemLoginScript_caretUpdate(e);
+	}
+}
+
+class Editor_jTextAreaSystemScriptFunctions_caretAdapter implements javax.swing.event.CaretListener {
+	Editor adaptee;
+	Editor_jTextAreaSystemScriptFunctions_caretAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void caretUpdate(CaretEvent e) {
+		adaptee.jTextAreaSystemScriptFunctions_caretUpdate(e);
 	}
 }
 
