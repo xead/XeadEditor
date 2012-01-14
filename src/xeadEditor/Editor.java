@@ -48,6 +48,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.*;
+import java.util.regex.Pattern;
+
 import javax.swing.*;
 import javax.swing.JFormattedTextField.AbstractFormatter;
 import javax.swing.border.*;
@@ -77,10 +79,10 @@ public class Editor extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private static final ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
 	public static final String APPLICATION_NAME  = "XEAD Editor 1.0";
-	public static final String FULL_VERSION  = "V1.R0.M13";
+	public static final String FULL_VERSION  = "V1.R0.M14";
 	public static final String FORMAT_VERSION  = "1.0";
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
-	public static final String COPYRIGHT = "Copyright 2011 DBC,Ltd.";
+	public static final String COPYRIGHT = "Copyright 2012 DBC,Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
 	public static final String DEFAULT_UPDATE_COUNTER = "UPDCOUNTER";
 	public static final String LANGUAGE = Locale.getDefault().getLanguage();
@@ -303,8 +305,8 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldSystemDBUser = new JTextField();
 	private JLabel jLabelSystemDBPassword = new JLabel();
 	private JTextField jTextFieldSystemDBPassword = new JTextField();
-	private JLabel jLabelSystemDBDisconnect = new JLabel();
-	private JTextField jTextFieldSystemDBDisconnect = new JTextField();
+	//private JLabel jLabelSystemDBDisconnect = new JLabel();
+	//private JTextField jTextFieldSystemDBDisconnect = new JTextField();
 	private JCheckBox jCheckBoxSystemAutoConnectToEdit = new JCheckBox();
 	private JLabel jLabelSystemVariantsTable = new JLabel();
 	private JTextField jTextFieldSystemVariantsTable = new JTextField();
@@ -335,8 +337,8 @@ public class Editor extends JFrame {
 	private JLabel jLabelSystemEditorUserPassword = new JLabel();
 	private JTextField jTextFieldSystemEditorUserPassword = new JTextField();
 	//
-	private JPanel jPanelSystemOutputConfig = new JPanel();
-	private JPanel jPanelSystemOutputConfigTop = new JPanel();
+	private JPanel jPanelSystemOtherConfig = new JPanel();
+	private JPanel jPanelSystemOtherConfigTop = new JPanel();
 	private JLabel jLabelSystemOutputFolder = new JLabel();
 	private JTextField jTextFieldSystemOutputFolder = new JTextField();
 	private JLabel jLabelSystemDateFormat = new JLabel();
@@ -721,6 +723,7 @@ public class Editor extends JFrame {
 	private JButton jButtonTableDataFieldsToDelete = new JButton();
 	private JButton jButtonTableDataFieldsToCompress = new JButton();
 	private JButton jButtonTableDataFieldsToListLog = new JButton();
+	private JButton jButtonTableDataFieldsToImport = new JButton();
 	private JPanel jPanelTableDataMessages = new JPanel();
 	private JLabel jLabelTableDataMessages = new JLabel();
 	private JScrollPane jScrollPaneTableDataMessages = new JScrollPane();
@@ -2871,150 +2874,134 @@ public class Editor extends JFrame {
 		jTabbedPaneSystem.add(res.getString("SystemRemarks"), jScrollPaneSystemRemarks);
 		jTabbedPaneSystem.setIconAt(0, imageIconSystem);
 		//
-		//(System Configurations)//
+		//(System DB Configurations)//
 		jPanelSystemConfig.setBorder(BorderFactory.createEtchedBorder());
 		jPanelSystemConfig.setLayout(null);
-		jLabelSystemAppServerName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelSystemAppServerName.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelSystemAppServerName.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelSystemAppServerName.setText(res.getString("AppServerName"));
-		jLabelSystemAppServerName.setBounds(new Rectangle(11, 12, 86, 15));
-		jTextFieldSystemAppServerName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemAppServerName.setBounds(new Rectangle(105, 9, 105, 22));
 		jLabelSystemDBName.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemDBName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemDBName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemDBName.setText(res.getString("DatabaseMain"));
-		jLabelSystemDBName.setBounds(new Rectangle(11, 40, 86, 15));
+		jLabelSystemDBName.setBounds(new Rectangle(11, 12, 86, 15));
 		jTextFieldSystemDBName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemDBName.setBounds(new Rectangle(105, 37, 300, 22));
-		jCheckBoxSystemAutoConnectToEdit.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jCheckBoxSystemAutoConnectToEdit.setBounds(new Rectangle(440, 37, 250, 22));
-		jCheckBoxSystemAutoConnectToEdit.setText(res.getString("AutoConnect"));
+		jTextFieldSystemDBName.setBounds(new Rectangle(105, 9, 320, 22));
 		jLabelSystemDBUser.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemDBUser.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemDBUser.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemDBUser.setText(res.getString("User"));
-		jLabelSystemDBUser.setBounds(new Rectangle(11, 68, 86, 15));
+		jLabelSystemDBUser.setBounds(new Rectangle(11, 40, 86, 15));
 		jTextFieldSystemDBUser.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemDBUser.setBounds(new Rectangle(105, 65, 105, 22));
+		jTextFieldSystemDBUser.setBounds(new Rectangle(105, 37, 105, 22));
 		jLabelSystemDBPassword.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemDBPassword.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemDBPassword.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemDBPassword.setText(res.getString("Password"));
-		jLabelSystemDBPassword.setBounds(new Rectangle(211, 68, 86, 15));
+		jLabelSystemDBPassword.setBounds(new Rectangle(211, 40, 86, 15));
 		jTextFieldSystemDBPassword.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemDBPassword.setBounds(new Rectangle(305, 65, 120, 22));
-		jLabelSystemDBDisconnect.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelSystemDBDisconnect.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelSystemDBDisconnect.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelSystemDBDisconnect.setText(res.getString("DisconnectCmd"));
-		jLabelSystemDBDisconnect.setBounds(new Rectangle(431, 68, 86, 15));
-		jTextFieldSystemDBDisconnect.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemDBDisconnect.setBounds(new Rectangle(525, 65, 200, 22));
-		//(Folder and URL)//
-		jLabelSystemImageFileFolder.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelSystemImageFileFolder.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelSystemImageFileFolder.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelSystemImageFileFolder.setText(res.getString("ImageFolder"));
-		jLabelSystemImageFileFolder.setBounds(new Rectangle(11, 116, 86, 15));
-		jTextFieldSystemImageFileFolder.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemImageFileFolder.setBounds(new Rectangle(105, 113, 400, 22));
-		jLabelSystemWelcomePageURL.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelSystemWelcomePageURL.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelSystemWelcomePageURL.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelSystemWelcomePageURL.setText(res.getString("WelcomePageURL"));
-		jLabelSystemWelcomePageURL.setBounds(new Rectangle(11, 144, 86, 15));
-		jTextFieldSystemWelcomePageURL.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemWelcomePageURL.setBounds(new Rectangle(105, 141, 400, 22));
+		jTextFieldSystemDBPassword.setBounds(new Rectangle(305, 37, 120, 22));
+		jCheckBoxSystemAutoConnectToEdit.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jCheckBoxSystemAutoConnectToEdit.setBounds(new Rectangle(451, 37, 250, 22));
+		jCheckBoxSystemAutoConnectToEdit.setText(res.getString("AutoConnect"));
+		//jLabelSystemDBDisconnect.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//jLabelSystemDBDisconnect.setHorizontalAlignment(SwingConstants.RIGHT);
+		//jLabelSystemDBDisconnect.setHorizontalTextPosition(SwingConstants.LEADING);
+		//jLabelSystemDBDisconnect.setText(res.getString("DisconnectCmd"));
+		//jLabelSystemDBDisconnect.setBounds(new Rectangle(431, 68, 86, 15));
+		//jTextFieldSystemDBDisconnect.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//jTextFieldSystemDBDisconnect.setBounds(new Rectangle(525, 65, 200, 22));
+		jLabelSystemAppServerName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemAppServerName.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelSystemAppServerName.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelSystemAppServerName.setText(res.getString("AppServerName"));
+		jLabelSystemAppServerName.setBounds(new Rectangle(11, 68, 86, 15));
+		jTextFieldSystemAppServerName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldSystemAppServerName.setBounds(new Rectangle(105, 65, 105, 22));
+		jLabelSystemEditorUser.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemEditorUser.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelSystemEditorUser.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelSystemEditorUser.setText(res.getString("EditorUser"));
+		jLabelSystemEditorUser.setBounds(new Rectangle(211, 68, 86, 15));
+		jTextFieldSystemEditorUser.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldSystemEditorUser.setBounds(new Rectangle(305, 65, 55, 22));
+		jLabelSystemEditorUserPassword.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemEditorUserPassword.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelSystemEditorUserPassword.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelSystemEditorUserPassword.setText(res.getString("Password"));
+		jLabelSystemEditorUserPassword.setBounds(new Rectangle(361, 68, 86, 15));
+		jTextFieldSystemEditorUserPassword.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldSystemEditorUserPassword.setBounds(new Rectangle(455, 65, 120, 22));
 		//(System Control Tables)//
 		jLabelSystemVariantsTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemVariantsTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemVariantsTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemVariantsTable.setText(res.getString("SystemVariants"));
-		jLabelSystemVariantsTable.setBounds(new Rectangle(11, 192, 86, 15));
+		jLabelSystemVariantsTable.setBounds(new Rectangle(11, 116, 86, 15));
 		jTextFieldSystemVariantsTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemVariantsTable.setBounds(new Rectangle(105, 189, 80, 22));
+		jTextFieldSystemVariantsTable.setBounds(new Rectangle(105, 113, 80, 22));
 		jLabelSystemUserTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemUserTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemUserTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemUserTable.setText(res.getString("SystemUser"));
-		jLabelSystemUserTable.setBounds(new Rectangle(191, 192, 86, 15));
+		jLabelSystemUserTable.setBounds(new Rectangle(191, 116, 86, 15));
 		jTextFieldSystemUserTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemUserTable.setBounds(new Rectangle(285, 189, 80, 22));
+		jTextFieldSystemUserTable.setBounds(new Rectangle(285, 113, 80, 22));
 		jLabelSystemNumberingTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemNumberingTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemNumberingTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemNumberingTable.setText(res.getString("SystemNumbering"));
-		jLabelSystemNumberingTable.setBounds(new Rectangle(371, 192, 86, 15));
+		jLabelSystemNumberingTable.setBounds(new Rectangle(371, 116, 86, 15));
 		jTextFieldSystemNumberingTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemNumberingTable.setBounds(new Rectangle(465, 189, 80, 22));
+		jTextFieldSystemNumberingTable.setBounds(new Rectangle(465, 113, 80, 22));
 		jLabelSystemUserVariantsTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemUserVariantsTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemUserVariantsTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemUserVariantsTable.setText(res.getString("SystemUserVariants"));
-		jLabelSystemUserVariantsTable.setBounds(new Rectangle(551, 192, 86, 15));
+		jLabelSystemUserVariantsTable.setBounds(new Rectangle(551, 116, 86, 15));
 		jTextFieldSystemUserVariantsTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemUserVariantsTable.setBounds(new Rectangle(645, 189, 80, 22));
+		jTextFieldSystemUserVariantsTable.setBounds(new Rectangle(645, 113, 80, 22));
 		//
 		jLabelSystemSessionTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemSessionTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSessionTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemSessionTable.setText(res.getString("SystemSession"));
-		jLabelSystemSessionTable.setBounds(new Rectangle(11, 220, 86, 15));
+		jLabelSystemSessionTable.setBounds(new Rectangle(11, 144, 86, 15));
 		jTextFieldSystemSessionTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemSessionTable.setBounds(new Rectangle(105, 217, 80, 22));
+		jTextFieldSystemSessionTable.setBounds(new Rectangle(105, 141, 80, 22));
 		jLabelSystemSessionDetailTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemSessionDetailTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSessionDetailTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemSessionDetailTable.setText(res.getString("SystemSessionDetail"));
-		jLabelSystemSessionDetailTable.setBounds(new Rectangle(191, 220, 86, 15));
+		jLabelSystemSessionDetailTable.setBounds(new Rectangle(191, 144, 86, 15));
 		jTextFieldSystemSessionDetailTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemSessionDetailTable.setBounds(new Rectangle(285, 217, 80, 22));
+		jTextFieldSystemSessionDetailTable.setBounds(new Rectangle(285, 141, 80, 22));
 		jLabelSystemTaxTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemTaxTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemTaxTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemTaxTable.setText(res.getString("SystemTax"));
-		jLabelSystemTaxTable.setBounds(new Rectangle(371, 220, 86, 15));
+		jLabelSystemTaxTable.setBounds(new Rectangle(371, 144, 86, 15));
 		jTextFieldSystemTaxTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemTaxTable.setBounds(new Rectangle(465, 217, 80, 22));
+		jTextFieldSystemTaxTable.setBounds(new Rectangle(465, 141, 80, 22));
 		jLabelSystemCalendarTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemCalendarTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemCalendarTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemCalendarTable.setText(res.getString("SystemCalendar"));
-		jLabelSystemCalendarTable.setBounds(new Rectangle(551, 220, 86, 15));
+		jLabelSystemCalendarTable.setBounds(new Rectangle(551, 144, 86, 15));
 		jTextFieldSystemCalendarTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemCalendarTable.setBounds(new Rectangle(645, 217, 80, 22));
+		jTextFieldSystemCalendarTable.setBounds(new Rectangle(645, 141, 80, 22));
 		//
 		jLabelSystemExchangeRateAnnualTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemExchangeRateAnnualTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemExchangeRateAnnualTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemExchangeRateAnnualTable.setText(res.getString("SystemExchangeRateAnnual"));
-		jLabelSystemExchangeRateAnnualTable.setBounds(new Rectangle(11, 248, 86, 15));
+		jLabelSystemExchangeRateAnnualTable.setBounds(new Rectangle(11, 172, 86, 15));
 		jTextFieldSystemExchangeRateAnnualTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemExchangeRateAnnualTable.setBounds(new Rectangle(105, 245, 80, 22));
+		jTextFieldSystemExchangeRateAnnualTable.setBounds(new Rectangle(105, 169, 80, 22));
 		jLabelSystemExchangeRateMonthlyTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemExchangeRateMonthlyTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemExchangeRateMonthlyTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemExchangeRateMonthlyTable.setText(res.getString("SystemExchangeRateMonthly"));
-		jLabelSystemExchangeRateMonthlyTable.setBounds(new Rectangle(191, 248, 86, 15));
+		jLabelSystemExchangeRateMonthlyTable.setBounds(new Rectangle(191, 172, 86, 15));
 		jTextFieldSystemExchangeRateMonthlyTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemExchangeRateMonthlyTable.setBounds(new Rectangle(285, 245, 80, 22));
-		//
-		jLabelSystemEditorUser.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelSystemEditorUser.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelSystemEditorUser.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelSystemEditorUser.setText(res.getString("EditorUser"));
-		jLabelSystemEditorUser.setBounds(new Rectangle(11, 299, 86, 15));
-		jTextFieldSystemEditorUser.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemEditorUser.setBounds(new Rectangle(105, 296, 55, 22));
-		jLabelSystemEditorUserPassword.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelSystemEditorUserPassword.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelSystemEditorUserPassword.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelSystemEditorUserPassword.setText(res.getString("Password"));
-		jLabelSystemEditorUserPassword.setBounds(new Rectangle(161, 299, 86, 15));
-		jTextFieldSystemEditorUserPassword.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemEditorUserPassword.setBounds(new Rectangle(255, 296, 120, 22));
+		jTextFieldSystemExchangeRateMonthlyTable.setBounds(new Rectangle(285, 169, 80, 22));
 		//
 		jPanelSystemConfig.add(jLabelSystemAppServerName);
 		jPanelSystemConfig.add(jTextFieldSystemAppServerName);
@@ -3025,12 +3012,8 @@ public class Editor extends JFrame {
 		jPanelSystemConfig.add(jTextFieldSystemDBUser);
 		jPanelSystemConfig.add(jLabelSystemDBPassword);
 		jPanelSystemConfig.add(jTextFieldSystemDBPassword);
-		jPanelSystemConfig.add(jLabelSystemDBDisconnect);
-		jPanelSystemConfig.add(jTextFieldSystemDBDisconnect);
-		jPanelSystemConfig.add(jLabelSystemImageFileFolder);
-		jPanelSystemConfig.add(jTextFieldSystemImageFileFolder);
-		jPanelSystemConfig.add(jLabelSystemWelcomePageURL);
-		jPanelSystemConfig.add(jTextFieldSystemWelcomePageURL);
+		//jPanelSystemConfig.add(jLabelSystemDBDisconnect);
+		//jPanelSystemConfig.add(jTextFieldSystemDBDisconnect);
 		jPanelSystemConfig.add(jLabelSystemVariantsTable);
 		jPanelSystemConfig.add(jTextFieldSystemVariantsTable);
 		jPanelSystemConfig.add(jLabelSystemUserTable);
@@ -3055,31 +3038,129 @@ public class Editor extends JFrame {
 		jPanelSystemConfig.add(jTextFieldSystemEditorUser);
 		jPanelSystemConfig.add(jLabelSystemEditorUserPassword);
 		jPanelSystemConfig.add(jTextFieldSystemEditorUserPassword);
-		jTabbedPaneSystem.addTab(res.getString("SystemConfig"), jPanelSystemConfig);
+		jTabbedPaneSystem.addTab(res.getString("SystemDatabaseConfig"), jPanelSystemConfig);
 		jTabbedPaneSystem.setIconAt(1, imageIconTable);
 		//
-		//(System Output Configurations)//
-		jTabbedPaneSystem.addTab(res.getString("OutputConfig"), jPanelSystemOutputConfig);
-		jTabbedPaneSystem.setIconAt(2, imageIconFunction290);
-		jPanelSystemOutputConfig.setBorder(null);
-		jPanelSystemOutputConfig.setLayout(new BorderLayout());
-		jPanelSystemOutputConfigTop.setBorder(BorderFactory.createEtchedBorder());
-		jPanelSystemOutputConfigTop.setLayout(null);
-		jPanelSystemOutputConfigTop.setPreferredSize(new Dimension(10, 68));
+		jTabbedPaneSystem.addTab(res.getString("LoginScript"), jScrollPaneSystemLoginScript);
+		jTabbedPaneSystem.setIconAt(2, imageIconScript);
+		jTextAreaSystemLoginScript.setFont(new java.awt.Font("Monospaced", 0, 14));
+		jTextAreaSystemLoginScript.setTabSize(4);
+		//jTextAreaSystemLoginScript.setLineWrap(true);
+		jTextAreaSystemLoginScript.addCaretListener(new Editor_jTextAreaSystemLoginScript_caretAdapter(this));
+		jTextAreaSystemLoginScript.getDocument().addUndoableEditListener(jTextAreaSystemLoginScriptUndoManager);
+		ActionMap actionMap = jTextAreaSystemLoginScript.getActionMap();
+		actionMap.put(DefaultEditorKit.pasteAction, actionPasteSystemLoginScript);
+		jScrollPaneSystemLoginScript.getViewport().add(jTextAreaSystemLoginScript, null);
+		jScrollPaneSystemLoginScript.getViewport().addChangeListener(new JScrollPaneSystemLoginScriptChangeListener());
+		InputMap inputMap = jScrollPaneSystemLoginScript.getInputMap(JSplitPane.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		inputMap.clear();
+		actionMap = jScrollPaneSystemLoginScript.getActionMap();
+		actionMap.clear();
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_DOWN_MASK), "INDENT");
+		actionMap.put("INDENT", actionIndentSystemLoginScript);
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_DOWN_MASK), "UNDO");
+		actionMap.put("UNDO", actionUndoSystemLoginScript);
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_DOWN_MASK), "REDO");
+		actionMap.put("REDO", actionRedoSystemLoginScript);
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), "SCAN");
+		actionMap.put("SCAN", actionScanSystemLoginScript);
+		jPanelSystemLoginScriptEditTool.setBorder(BorderFactory.createLineBorder(Color.gray));
+		jPanelSystemLoginScriptEditTool.setLayout(null);
+		jLabelSystemLoginScriptEditToolScan.setText(res.getString("F3ToScan"));
+		jLabelSystemLoginScriptEditToolScan.setHorizontalAlignment(SwingConstants.CENTER);
+		jLabelSystemLoginScriptEditToolScan.setBounds(new Rectangle(0, 0, 50, 22));
+		jLabelSystemLoginScriptEditToolScan.setForeground(Color.darkGray);
+		jTextFieldSystemLoginScriptEditToolScan.setBounds(new Rectangle(50, 0, 80, 22));
+		jTextFieldSystemLoginScriptEditToolScan.setForeground(Color.darkGray);
+		jCheckBoxSystemLoginScriptEditToolScanCase.setBounds(new Rectangle(130, 1, 22, 20));
+		jCheckBoxSystemLoginScriptEditToolScanCase.setBackground(Color.lightGray);
+		jLabelSystemLoginScriptEditToolCursorPos.setBounds(new Rectangle(153, 0, 50, 22));
+		jLabelSystemLoginScriptEditToolCursorPos.setHorizontalAlignment(SwingConstants.CENTER);
+		jLabelSystemLoginScriptEditToolCursorPos.setForeground(Color.darkGray);
+		jPanelSystemLoginScriptEditTool.add(jLabelSystemLoginScriptEditToolScan);
+		jPanelSystemLoginScriptEditTool.add(jTextFieldSystemLoginScriptEditToolScan);
+		jPanelSystemLoginScriptEditTool.add(jCheckBoxSystemLoginScriptEditToolScanCase);
+		jPanelSystemLoginScriptEditTool.add(jLabelSystemLoginScriptEditToolCursorPos);
+		jTextAreaSystemLoginScript.add(jPanelSystemLoginScriptEditTool);
+		//
+		jTabbedPaneSystem.addTab(res.getString("ScriptFunctions"), jScrollPaneSystemScriptFunctions);
+		jTabbedPaneSystem.setIconAt(3, imageIconScript);
+		jTextAreaSystemScriptFunctions.setFont(new java.awt.Font("Monospaced", 0, 14));
+		jTextAreaSystemScriptFunctions.setTabSize(4);
+		//jTextAreaSystemScriptFunctions.setLineWrap(true);
+		jTextAreaSystemScriptFunctions.addCaretListener(new Editor_jTextAreaSystemScriptFunctions_caretAdapter(this));
+		jTextAreaSystemScriptFunctions.getDocument().addUndoableEditListener(jTextAreaSystemScriptFunctionsUndoManager);
+		actionMap = jTextAreaSystemScriptFunctions.getActionMap();
+		actionMap.put(DefaultEditorKit.pasteAction, actionPasteSystemScriptFunctions);
+		jScrollPaneSystemScriptFunctions.getViewport().add(jTextAreaSystemScriptFunctions, null);
+		jScrollPaneSystemScriptFunctions.getViewport().addChangeListener(new JScrollPaneSystemScriptFunctionsChangeListener());
+		inputMap = jScrollPaneSystemScriptFunctions.getInputMap(JSplitPane.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		inputMap.clear();
+		actionMap = jScrollPaneSystemScriptFunctions.getActionMap();
+		actionMap.clear();
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_DOWN_MASK), "INDENT");
+		actionMap.put("INDENT", actionIndentSystemScriptFunctions);
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_DOWN_MASK), "UNDO");
+		actionMap.put("UNDO", actionUndoSystemScriptFunctions);
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_DOWN_MASK), "REDO");
+		actionMap.put("REDO", actionRedoSystemScriptFunctions);
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), "SCAN");
+		actionMap.put("SCAN", actionScanSystemScriptFunctions);
+		jPanelSystemScriptFunctionsEditTool.setBorder(BorderFactory.createLineBorder(Color.gray));
+		jPanelSystemScriptFunctionsEditTool.setLayout(null);
+		jLabelSystemScriptFunctionsEditToolScan.setText(res.getString("F3ToScan"));
+		jLabelSystemScriptFunctionsEditToolScan.setHorizontalAlignment(SwingConstants.CENTER);
+		jLabelSystemScriptFunctionsEditToolScan.setBounds(new Rectangle(0, 0, 50, 22));
+		jLabelSystemScriptFunctionsEditToolScan.setForeground(Color.darkGray);
+		jTextFieldSystemScriptFunctionsEditToolScan.setBounds(new Rectangle(50, 0, 80, 22));
+		jTextFieldSystemScriptFunctionsEditToolScan.setForeground(Color.darkGray);
+		jCheckBoxSystemScriptFunctionsEditToolScanCase.setBounds(new Rectangle(130, 1, 22, 20));
+		jCheckBoxSystemScriptFunctionsEditToolScanCase.setBackground(Color.lightGray);
+		jLabelSystemScriptFunctionsEditToolCursorPos.setBounds(new Rectangle(153, 0, 50, 22));
+		jLabelSystemScriptFunctionsEditToolCursorPos.setHorizontalAlignment(SwingConstants.CENTER);
+		jLabelSystemScriptFunctionsEditToolCursorPos.setForeground(Color.darkGray);
+		jPanelSystemScriptFunctionsEditTool.add(jLabelSystemScriptFunctionsEditToolScan);
+		jPanelSystemScriptFunctionsEditTool.add(jTextFieldSystemScriptFunctionsEditToolScan);
+		jPanelSystemScriptFunctionsEditTool.add(jCheckBoxSystemScriptFunctionsEditToolScanCase);
+		jPanelSystemScriptFunctionsEditTool.add(jLabelSystemScriptFunctionsEditToolCursorPos);
+		jTextAreaSystemScriptFunctions.add(jPanelSystemScriptFunctionsEditTool);
+		//
+		//(System Other Configurations)//
+		jTabbedPaneSystem.addTab(res.getString("SystemOtherConfig"), jPanelSystemOtherConfig);
+		jTabbedPaneSystem.setIconAt(4, imageIconFunction290);
+		jPanelSystemOtherConfig.setBorder(null);
+		jPanelSystemOtherConfig.setLayout(new BorderLayout());
+		jPanelSystemOtherConfigTop.setBorder(BorderFactory.createEtchedBorder());
+		jPanelSystemOtherConfigTop.setLayout(null);
+		jPanelSystemOtherConfigTop.setPreferredSize(new Dimension(10, 126));
+		jLabelSystemImageFileFolder.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemImageFileFolder.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelSystemImageFileFolder.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelSystemImageFileFolder.setText(res.getString("ImageFolder"));
+		jLabelSystemImageFileFolder.setBounds(new Rectangle(11, 12, 86, 15));
+		jTextFieldSystemImageFileFolder.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldSystemImageFileFolder.setBounds(new Rectangle(105, 9, 400, 22));
+		jLabelSystemWelcomePageURL.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemWelcomePageURL.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelSystemWelcomePageURL.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelSystemWelcomePageURL.setText(res.getString("WelcomePageURL"));
+		jLabelSystemWelcomePageURL.setBounds(new Rectangle(11, 40, 86, 15));
+		jTextFieldSystemWelcomePageURL.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldSystemWelcomePageURL.setBounds(new Rectangle(105, 37, 400, 22));
 		jLabelSystemOutputFolder.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemOutputFolder.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemOutputFolder.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemOutputFolder.setText(res.getString("OutputFolder"));
-		jLabelSystemOutputFolder.setBounds(new Rectangle(11, 12, 86, 15));
+		jLabelSystemOutputFolder.setBounds(new Rectangle(11, 68, 86, 15));
 		jTextFieldSystemOutputFolder.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemOutputFolder.setBounds(new Rectangle(105, 9, 400, 22));
+		jTextFieldSystemOutputFolder.setBounds(new Rectangle(105, 65, 400, 22));
 		jLabelSystemDateFormat.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemDateFormat.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemDateFormat.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemDateFormat.setText(res.getString("DateFormat"));
-		jLabelSystemDateFormat.setBounds(new Rectangle(11, 40, 86, 15));
+		jLabelSystemDateFormat.setBounds(new Rectangle(11, 96, 86, 15));
 		jComboBoxSystemDateFormat.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxSystemDateFormat.setBounds(new Rectangle(105, 37, 180, 22));
+		jComboBoxSystemDateFormat.setBounds(new Rectangle(105, 93, 180, 22));
 		jComboBoxSystemDateFormat.setEditable(false);
 		jComboBoxSystemDateFormat.addItem("en00 06/17/10");
 		jComboBoxSystemDateFormat.addItem("en01 Thur,06/17/01");
@@ -3117,16 +3198,21 @@ public class Editor extends JFrame {
 		jSplitPaneSystemPrintFont.add(jScrollPaneSystemPrintFontList, JSplitPane.TOP);
 		jSplitPaneSystemPrintFont.add(jPanelSystemPrintFont, JSplitPane.BOTTOM);
 		//if (screenHeight > 768) {
-			jSplitPaneSystemPrintFont.setDividerLocation(screenHeight - 498);
+		//	jSplitPaneSystemPrintFont.setDividerLocation(screenHeight - 498);
 		//} else {
 		//	jSplitPaneSystemPrintFont.setDividerLocation(270);
 		//}
-		jPanelSystemOutputConfigTop.add(jTextFieldSystemOutputFolder);
-		jPanelSystemOutputConfigTop.add(jLabelSystemOutputFolder);
-		jPanelSystemOutputConfigTop.add(jComboBoxSystemDateFormat);
-		jPanelSystemOutputConfigTop.add(jLabelSystemDateFormat);
-		jPanelSystemOutputConfig.add(jPanelSystemOutputConfigTop, BorderLayout.NORTH);
-		jPanelSystemOutputConfig.add(jSplitPaneSystemPrintFont, BorderLayout.CENTER);
+		jSplitPaneSystemPrintFont.setDividerLocation(200);
+		jPanelSystemOtherConfigTop.add(jLabelSystemImageFileFolder);
+		jPanelSystemOtherConfigTop.add(jTextFieldSystemImageFileFolder);
+		jPanelSystemOtherConfigTop.add(jLabelSystemWelcomePageURL);
+		jPanelSystemOtherConfigTop.add(jTextFieldSystemWelcomePageURL);
+		jPanelSystemOtherConfigTop.add(jTextFieldSystemOutputFolder);
+		jPanelSystemOtherConfigTop.add(jLabelSystemOutputFolder);
+		jPanelSystemOtherConfigTop.add(jComboBoxSystemDateFormat);
+		jPanelSystemOtherConfigTop.add(jLabelSystemDateFormat);
+		jPanelSystemOtherConfig.add(jPanelSystemOtherConfigTop, BorderLayout.NORTH);
+		jPanelSystemOtherConfig.add(jSplitPaneSystemPrintFont, BorderLayout.CENTER);
 		//(Print Font List)//
 		jScrollPaneSystemPrintFontList.setBorder(null);
 		jScrollPaneSystemPrintFontList.getViewport().add(jTableSystemPrintFontList, null);
@@ -3202,90 +3288,6 @@ public class Editor extends JFrame {
 		jPanelSystemPrintFont.add(jTextFieldSystemPrintPDFFontName);
 		jPanelSystemPrintFont.add(jLabelSystemPrintPDFEncoding);
 		jPanelSystemPrintFont.add(jTextFieldSystemPrintPDFEncoding);
-		//
-		jTabbedPaneSystem.addTab(res.getString("LoginScript"), jScrollPaneSystemLoginScript);
-		jTabbedPaneSystem.setIconAt(3, imageIconScript);
-		jTextAreaSystemLoginScript.setFont(new java.awt.Font("Monospaced", 0, 14));
-		jTextAreaSystemLoginScript.setTabSize(4);
-		//jTextAreaSystemLoginScript.setLineWrap(true);
-		jTextAreaSystemLoginScript.addCaretListener(new Editor_jTextAreaSystemLoginScript_caretAdapter(this));
-		jTextAreaSystemLoginScript.getDocument().addUndoableEditListener(jTextAreaSystemLoginScriptUndoManager);
-		ActionMap actionMap = jTextAreaSystemLoginScript.getActionMap();
-		actionMap.put(DefaultEditorKit.pasteAction, actionPasteSystemLoginScript);
-		jScrollPaneSystemLoginScript.getViewport().add(jTextAreaSystemLoginScript, null);
-		jScrollPaneSystemLoginScript.getViewport().addChangeListener(new JScrollPaneSystemLoginScriptChangeListener());
-		InputMap inputMap = jScrollPaneSystemLoginScript.getInputMap(JSplitPane.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-		inputMap.clear();
-		actionMap = jScrollPaneSystemLoginScript.getActionMap();
-		actionMap.clear();
-		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_DOWN_MASK), "INDENT");
-		actionMap.put("INDENT", actionIndentSystemLoginScript);
-		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_DOWN_MASK), "UNDO");
-		actionMap.put("UNDO", actionUndoSystemLoginScript);
-		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_DOWN_MASK), "REDO");
-		actionMap.put("REDO", actionRedoSystemLoginScript);
-		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), "SCAN");
-		actionMap.put("SCAN", actionScanSystemLoginScript);
-		jPanelSystemLoginScriptEditTool.setBorder(BorderFactory.createLineBorder(Color.gray));
-		jPanelSystemLoginScriptEditTool.setLayout(null);
-		jLabelSystemLoginScriptEditToolScan.setText(res.getString("F3ToScan"));
-		jLabelSystemLoginScriptEditToolScan.setHorizontalAlignment(SwingConstants.CENTER);
-		jLabelSystemLoginScriptEditToolScan.setBounds(new Rectangle(0, 0, 50, 22));
-		jLabelSystemLoginScriptEditToolScan.setForeground(Color.darkGray);
-		jTextFieldSystemLoginScriptEditToolScan.setBounds(new Rectangle(50, 0, 80, 22));
-		jTextFieldSystemLoginScriptEditToolScan.setForeground(Color.darkGray);
-		jCheckBoxSystemLoginScriptEditToolScanCase.setBounds(new Rectangle(130, 1, 22, 20));
-		jCheckBoxSystemLoginScriptEditToolScanCase.setBackground(Color.lightGray);
-		jLabelSystemLoginScriptEditToolCursorPos.setBounds(new Rectangle(153, 0, 50, 22));
-		jLabelSystemLoginScriptEditToolCursorPos.setHorizontalAlignment(SwingConstants.CENTER);
-		jLabelSystemLoginScriptEditToolCursorPos.setForeground(Color.darkGray);
-		jPanelSystemLoginScriptEditTool.add(jLabelSystemLoginScriptEditToolScan);
-		jPanelSystemLoginScriptEditTool.add(jTextFieldSystemLoginScriptEditToolScan);
-		jPanelSystemLoginScriptEditTool.add(jCheckBoxSystemLoginScriptEditToolScanCase);
-		jPanelSystemLoginScriptEditTool.add(jLabelSystemLoginScriptEditToolCursorPos);
-		jTextAreaSystemLoginScript.add(jPanelSystemLoginScriptEditTool);
-		//
-		jTabbedPaneSystem.addTab(res.getString("ScriptFunctions"), jScrollPaneSystemScriptFunctions);
-		jTabbedPaneSystem.setIconAt(4, imageIconScript);
-		jTextAreaSystemScriptFunctions.setFont(new java.awt.Font("Monospaced", 0, 14));
-		jTextAreaSystemScriptFunctions.setTabSize(4);
-		//jTextAreaSystemScriptFunctions.setLineWrap(true);
-		jTextAreaSystemScriptFunctions.addCaretListener(new Editor_jTextAreaSystemScriptFunctions_caretAdapter(this));
-		jTextAreaSystemScriptFunctions.getDocument().addUndoableEditListener(jTextAreaSystemScriptFunctionsUndoManager);
-		actionMap = jTextAreaSystemScriptFunctions.getActionMap();
-		actionMap.put(DefaultEditorKit.pasteAction, actionPasteSystemScriptFunctions);
-		jScrollPaneSystemScriptFunctions.getViewport().add(jTextAreaSystemScriptFunctions, null);
-		jScrollPaneSystemScriptFunctions.getViewport().addChangeListener(new JScrollPaneSystemScriptFunctionsChangeListener());
-		inputMap = jScrollPaneSystemScriptFunctions.getInputMap(JSplitPane.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-		inputMap.clear();
-		actionMap = jScrollPaneSystemScriptFunctions.getActionMap();
-		actionMap.clear();
-		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_DOWN_MASK), "INDENT");
-		actionMap.put("INDENT", actionIndentSystemScriptFunctions);
-		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_DOWN_MASK), "UNDO");
-		actionMap.put("UNDO", actionUndoSystemScriptFunctions);
-		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_DOWN_MASK), "REDO");
-		actionMap.put("REDO", actionRedoSystemScriptFunctions);
-		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), "SCAN");
-		actionMap.put("SCAN", actionScanSystemScriptFunctions);
-		jPanelSystemScriptFunctionsEditTool.setBorder(BorderFactory.createLineBorder(Color.gray));
-		jPanelSystemScriptFunctionsEditTool.setLayout(null);
-		jLabelSystemScriptFunctionsEditToolScan.setText(res.getString("F3ToScan"));
-		jLabelSystemScriptFunctionsEditToolScan.setHorizontalAlignment(SwingConstants.CENTER);
-		jLabelSystemScriptFunctionsEditToolScan.setBounds(new Rectangle(0, 0, 50, 22));
-		jLabelSystemScriptFunctionsEditToolScan.setForeground(Color.darkGray);
-		jTextFieldSystemScriptFunctionsEditToolScan.setBounds(new Rectangle(50, 0, 80, 22));
-		jTextFieldSystemScriptFunctionsEditToolScan.setForeground(Color.darkGray);
-		jCheckBoxSystemScriptFunctionsEditToolScanCase.setBounds(new Rectangle(130, 1, 22, 20));
-		jCheckBoxSystemScriptFunctionsEditToolScanCase.setBackground(Color.lightGray);
-		jLabelSystemScriptFunctionsEditToolCursorPos.setBounds(new Rectangle(153, 0, 50, 22));
-		jLabelSystemScriptFunctionsEditToolCursorPos.setHorizontalAlignment(SwingConstants.CENTER);
-		jLabelSystemScriptFunctionsEditToolCursorPos.setForeground(Color.darkGray);
-		jPanelSystemScriptFunctionsEditTool.add(jLabelSystemScriptFunctionsEditToolScan);
-		jPanelSystemScriptFunctionsEditTool.add(jTextFieldSystemScriptFunctionsEditToolScan);
-		jPanelSystemScriptFunctionsEditTool.add(jCheckBoxSystemScriptFunctionsEditToolScanCase);
-		jPanelSystemScriptFunctionsEditTool.add(jLabelSystemScriptFunctionsEditToolCursorPos);
-		jTextAreaSystemScriptFunctions.add(jPanelSystemScriptFunctionsEditTool);
 	}
 	class JScrollPaneSystemLoginScriptChangeListener implements javax.swing.event.ChangeListener {
 		public void stateChanged(javax.swing.event.ChangeEvent event) {
@@ -4555,6 +4557,10 @@ public class Editor extends JFrame {
 		jButtonTableDataFieldsToListLog.setText(res.getString("ListLog"));
 		jButtonTableDataFieldsToListLog.setBounds(new Rectangle(790, 8, 100, 23));
 		jButtonTableDataFieldsToListLog.addActionListener(new Editor_jButtonTableDataFieldsToListLog_actionAdapter(this));
+		jButtonTableDataFieldsToImport.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jButtonTableDataFieldsToImport.setText(res.getString("Import"));
+		jButtonTableDataFieldsToImport.setBounds(new Rectangle(900, 8, 100, 23));
+		jButtonTableDataFieldsToImport.addActionListener(new Editor_jButtonTableDataFieldsToImport_actionAdapter(this));
 		jPanelTableDataFieldsEditButtons.add(jButtonTableDataFieldsToChangeLabel);
 		jPanelTableDataFieldsEditButtons.add(jButtonTableDataFieldsToAddMode);
 		jPanelTableDataFieldsEditButtons.add(jButtonTableDataFieldsToEditMode);
@@ -4563,6 +4569,7 @@ public class Editor extends JFrame {
 		jPanelTableDataFieldsEditButtons.add(jButtonTableDataFieldsToDelete);
 		jPanelTableDataFieldsEditButtons.add(jButtonTableDataFieldsToCompress);
 		jPanelTableDataFieldsEditButtons.add(jButtonTableDataFieldsToListLog);
+		jPanelTableDataFieldsEditButtons.add(jButtonTableDataFieldsToImport);
 		jPanelTableDataMessages.setLayout(new BorderLayout());
 		jPanelTableDataMessages.add(jLabelTableDataMessages, BorderLayout.NORTH);
 		jPanelTableDataMessages.add(jScrollPaneTableDataMessages, BorderLayout.CENTER);
@@ -14673,6 +14680,12 @@ public class Editor extends JFrame {
 			//
 			if (nodeType_.equals("System")) {
 				element = (org.w3c.dom.Element)domNode_.cloneNode(false);
+				NodeList fontList = this.getElement().getElementsByTagName("PrintFont");
+				int rowNumber = fontList.getLength();
+				for (int i = 0; i < rowNumber; i++) {
+					element.appendChild(fontList.item(i).cloneNode(true));
+				}
+
 			} else {
 				element = (org.w3c.dom.Element)domNode_.cloneNode(true);
 			}
@@ -14717,7 +14730,7 @@ public class Editor extends JFrame {
 			jTextFieldSystemDBName.setText(domNode_.getAttribute("DatabaseName"));
 			jTextFieldSystemDBUser.setText(domNode_.getAttribute("DatabaseUser"));
 			jTextFieldSystemDBPassword.setText(domNode_.getAttribute("DatabasePassword"));
-			jTextFieldSystemDBDisconnect.setText(domNode_.getAttribute("DatabaseDisconnect"));
+			//jTextFieldSystemDBDisconnect.setText(domNode_.getAttribute("DatabaseDisconnect"));
 			if (domNode_.getAttribute("AutoConnectToEdit").equals("T")) {
 				jCheckBoxSystemAutoConnectToEdit.setSelected(true);
 			} else {
@@ -15242,6 +15255,11 @@ public class Editor extends JFrame {
 			//Table Data List//
 			if (isTableDataEditable) {
 				jCheckBoxTableDataOutput.setSelected(false);
+				if (jTextFieldSystemDBName.getText().contains("jdbc:derby")) {
+					jButtonTableDataFieldsToCompress.setEnabled(true);
+				} else {
+					jButtonTableDataFieldsToCompress.setEnabled(false);
+				}
 				jPanelTableDataFieldsList.setPreferredSize(new Dimension(100, posY));
 				for(int i=0; i < jTableTableDataList.getColumnModel().getColumnCount(); i++) { 
 					TableColumn col = jTableTableDataList.getColumnModel().getColumn(i);
@@ -17642,11 +17660,14 @@ public class Editor extends JFrame {
 				domNode_.setAttribute("Name", oldElement.getAttribute("Name"));
 				domNode_.setAttribute("Version", oldElement.getAttribute("Version"));
 				domNode_.setAttribute("Remarks", oldElement.getAttribute("Remarks"));
+				domNode_.setAttribute("AppServerName", oldElement.getAttribute("AppServerName"));
 				domNode_.setAttribute("DatabaseName", oldElement.getAttribute("DatabaseName"));
 				domNode_.setAttribute("DatabaseUser", oldElement.getAttribute("DatabaseUser"));
 				domNode_.setAttribute("DatabasePassword", oldElement.getAttribute("DatabasePassword"));
-				domNode_.setAttribute("DatabaseDisconnect", oldElement.getAttribute("DatabaseDisconnect"));
+				//domNode_.setAttribute("DatabaseDisconnect", oldElement.getAttribute("DatabaseDisconnect"));
 				domNode_.setAttribute("AutoConnectToEdit", oldElement.getAttribute("AutoConnectToEdit"));
+				domNode_.setAttribute("EditorUser", oldElement.getAttribute("EditorUser"));
+				domNode_.setAttribute("EditorUserPassword", oldElement.getAttribute("EditorUserPassword"));
 				domNode_.setAttribute("VariantsTable", oldElement.getAttribute("VariantsTable"));
 				domNode_.setAttribute("UserTable", oldElement.getAttribute("UserTable"));
 				domNode_.setAttribute("NumberingTable", oldElement.getAttribute("NumberingTable"));
@@ -17657,11 +17678,24 @@ public class Editor extends JFrame {
 				domNode_.setAttribute("CalendarTable", oldElement.getAttribute("CalendarTable"));
 				domNode_.setAttribute("CurrencyTable", oldElement.getAttribute("CurrencyTable"));
 				domNode_.setAttribute("CurrencyDetailTable", oldElement.getAttribute("CurrencyDetailTable"));
+				domNode_.setAttribute("LoginScript", oldElement.getAttribute("LoginScript"));
 				domNode_.setAttribute("ScriptFunctions", oldElement.getAttribute("ScriptFunctions"));
 				domNode_.setAttribute("ImageFileFolder", oldElement.getAttribute("ImageFileFolder"));
 				domNode_.setAttribute("OutputFolder", oldElement.getAttribute("OutputFolder"));
 				domNode_.setAttribute("WelcomePageURL", oldElement.getAttribute("WelcomePageURL"));
 				domNode_.setAttribute("DateFormat", oldElement.getAttribute("DateFormat"));
+				 //
+				 //Replace Print-Font data//
+				NodeList currentFontList = systemNode.getElement().getElementsByTagName("PrintFont");
+				int rowNumber = currentFontList.getLength();
+				for (int i = 0; i < rowNumber; i++) {
+					systemNode.getElement().removeChild(currentFontList.item(0));
+				}
+				NodeList fontList = oldElement.getElementsByTagName("PrintFont");
+				rowNumber = fontList.getLength();
+				for (int i = 0; i < rowNumber; i++) {
+					systemNode.getElement().appendChild(fontList.item(i).cloneNode(true));
+				}
 			}
 			//
 			if (nodeType_.equals("Menu") || nodeType_.equals("Subsystem")) {
@@ -17892,9 +17926,9 @@ public class Editor extends JFrame {
 			if (!domNode_.getAttribute("DatabasePassword").equals(jTextFieldSystemDBPassword.getText())) {
 				valueOfFieldsChanged = true;
 			}
-			if (!domNode_.getAttribute("DatabaseDisconnect").equals(jTextFieldSystemDBDisconnect.getText())) {
-				valueOfFieldsChanged = true;
-			}
+			//if (!domNode_.getAttribute("DatabaseDisconnect").equals(jTextFieldSystemDBDisconnect.getText())) {
+			//	valueOfFieldsChanged = true;
+			//}
 			if (domNode_.getAttribute("AutoConnectToEdit").equals("T")) {
 				if (!jCheckBoxSystemAutoConnectToEdit.isSelected()) {
 					valueOfFieldsChanged = true;
@@ -17989,7 +18023,7 @@ public class Editor extends JFrame {
 				domNode_.setAttribute("DatabaseName", jTextFieldSystemDBName.getText());
 				domNode_.setAttribute("DatabaseUser", jTextFieldSystemDBUser.getText());
 				domNode_.setAttribute("DatabasePassword", jTextFieldSystemDBPassword.getText());
-				domNode_.setAttribute("DatabaseDisconnect", jTextFieldSystemDBDisconnect.getText());
+				//domNode_.setAttribute("DatabaseDisconnect", jTextFieldSystemDBDisconnect.getText());
 				if (jCheckBoxSystemAutoConnectToEdit.isSelected()) {
 					domNode_.setAttribute("AutoConnectToEdit", "T");
 				} else {
@@ -34150,7 +34184,7 @@ public class Editor extends JFrame {
 		return con;
 	}
 	
-	public String getDataBaseName() {
+	public String getDatabaseName() {
 		return databaseName;
 	}
 	
@@ -34165,12 +34199,17 @@ public class Editor extends JFrame {
 				connection.commit();
 				connection.close();
 				//
-				if (!systemNode.getElement().getAttribute("DatabaseDisconnect").equals("")) {
-					DriverManager.getConnection(systemNode.getElement().getAttribute("DatabaseDisconnect"));
+				//if (!systemNode.getElement().getAttribute("DatabaseDisconnect").equals("")) {
+				//	DriverManager.getConnection(systemNode.getElement().getAttribute("DatabaseDisconnect"));
+				//}
+				if (jTextFieldSystemDBName.getText().contains("jdbc:derby")) {
+					DriverManager.getConnection("jdbc:derby:;shutdown=true");
 				}
 				//
 			} catch (SQLException ex) {
-				if (ex.getSQLState() != null && !ex.getSQLState().equals("XJ015")) {
+				if (jTextFieldSystemDBName.getText().contains("jdbc:derby")
+						&& ex.getSQLState() != null
+						&& !ex.getSQLState().equals("XJ015")) {
 					ex.printStackTrace();
 				}
 			}
@@ -34606,7 +34645,6 @@ public class Editor extends JFrame {
 				buf1.append(" where IDUSERKUBUN = '");
 				buf1.append(jTextFieldTableFieldTypeOptionKUBUN.getText());
 				buf1.append("' order by SQLIST");
-				//
 				statement = connection.createStatement();
 				result = statement.executeQuery(buf1.toString());
 				while (result.next()) {
@@ -34619,7 +34657,12 @@ public class Editor extends JFrame {
 					count++;
 				}
 				//
-				jTextAreaTableFieldTypeOptionKUBUN.setText(buf2.toString());
+				String wrkStr = buf2.toString();
+				if (wrkStr.equals("")) {
+					jTextAreaTableFieldTypeOptionKUBUN.setText("N/A");
+				} else {
+					jTextAreaTableFieldTypeOptionKUBUN.setText(wrkStr);
+				}
 				jTextAreaTableFieldTypeOptionKUBUN.setCaretPosition(0);
 			}
 		} catch (SQLException ex) {
@@ -35001,7 +35044,6 @@ public class Editor extends JFrame {
 					statementBuf.append("insert into ");
 					statementBuf.append(jTextFieldTableID.getText());
 					statementBuf.append(" (");
-					//
 					firstField = true;
 					for (int i = 0; i < editableTableFieldList.size(); i++) {
 						if (!firstField) {
@@ -35010,9 +35052,7 @@ public class Editor extends JFrame {
 						statementBuf.append(editableTableFieldList.get(i).getFieldID()) ;
 						firstField = false;
 					}
-					//
 					statementBuf.append(") values(") ;
-					//
 					firstField = true;
 					for (int i = 0; i < editableTableFieldList.size(); i++) {
 						if (!firstField) {
@@ -35021,7 +35061,6 @@ public class Editor extends JFrame {
 						statementBuf.append(editableTableFieldList.get(i).getTableOperationValue()) ;
 						firstField = false;
 					}
-					//
 					statementBuf.append(")") ;
 					//
 					int recordCount = statement.executeUpdate(statementBuf.toString());
@@ -35138,6 +35177,163 @@ public class Editor extends JFrame {
 			TableDataRowNumber tableRowNumber = (TableDataRowNumber)tableModelTableDataList.getValueAt(jTableTableDataList.getSelectedRow(), 0);
 			HashMap<String, Object> columnMap = tableRowNumber.getColumnMap();
 			dialogListLog.request(currentMainTreeNode.getElement(), columnMap, isCaptionWithName);
+		}
+	}
+	
+	void jButtonTableDataFieldsToImport_actionPerformed(ActionEvent e) {
+		int totalLineNumber = 0;
+		int numberOfSkipped = 0;
+		int numberOfInserted = 0;
+		BufferedReader br = null;
+		ArrayList<String> fieldIDList = new ArrayList<String>();
+		ArrayList<String> fieldValueList = new ArrayList<String>();
+		StringBuffer statementBuf = null;
+		String line;
+		boolean noErrors = false;
+		Pattern pattern = Pattern.compile(",");
+		String[] values;
+	    //
+		String csvFileName = specifyNameOfExistingFile(res.getString("ImportCsv"), "csv");
+		if (!csvFileName.equals("")) {
+			try {
+				setCursor(new Cursor(Cursor.WAIT_CURSOR));
+				//
+				br = new BufferedReader(new FileReader(csvFileName));
+				while ((line = br.readLine()) != null) {
+					values = pattern.split(line);
+					//
+					totalLineNumber++;
+					if (totalLineNumber == 1) {
+				        for (int i=0; i < values.length; i++) {
+							fieldIDList.add(values[i]);
+				        }
+				     } else {
+						fieldValueList.clear();
+				        for (int i=0; i < values.length; i++) {
+							fieldValueList.add(values[i]);
+				        }
+						if (fieldIDList.size() > fieldValueList.size()) {
+							fieldValueList.add("");
+						}
+						//
+						statementBuf = new StringBuffer();
+						statementBuf.append("select *  from ");
+						statementBuf.append(jTextFieldTableID.getText());
+						statementBuf.append(" where ") ;
+						boolean firstField = true;
+						for (int i = 0; i < editableTableFieldList.size(); i++) {
+							if (editableTableFieldList.get(i).isKey()) {
+								if (!firstField) {
+									statementBuf.append(" and ") ;
+								}
+								statementBuf.append(editableTableFieldList.get(i).getFieldID()) ;
+								statementBuf.append("=");
+								if (fieldIDList.indexOf(editableTableFieldList.get(i).getFieldID()) >= 0) {
+									if (editableTableFieldList.get(i).getBasicType().equals("INTEGER")
+											|| editableTableFieldList.get(i).getBasicType().equals("FLOAT")) {
+										statementBuf.append(fieldValueList.get(fieldIDList.indexOf(editableTableFieldList.get(i).getFieldID()))) ;
+									} else {
+										statementBuf.append("'") ;
+										statementBuf.append(fieldValueList.get(fieldIDList.indexOf(editableTableFieldList.get(i).getFieldID()))) ;
+										statementBuf.append("'") ;
+									}
+								} else {
+									throw new Exception(res.getString("ImportCsvMessage4"));
+								}
+								firstField = false;
+							}
+						}
+						Statement statement = connection.createStatement();
+						ResultSet result = statement.executeQuery(statementBuf.toString());
+						if (result.next()) {
+							numberOfSkipped++;
+						} else {
+							statementBuf = new StringBuffer();
+							statementBuf.append("insert into ");
+							statementBuf.append(jTextFieldTableID.getText());
+							statementBuf.append(" (");
+							firstField = true;
+							for (int i = 0; i < editableTableFieldList.size(); i++) {
+								if (!firstField) {
+									statementBuf.append(", ") ;
+								}
+								statementBuf.append(editableTableFieldList.get(i).getFieldID()) ;
+								firstField = false;
+							}
+							statementBuf.append(") values(") ;
+							firstField = true;
+							for (int i = 0; i < editableTableFieldList.size(); i++) {
+								if (!firstField) {
+									statementBuf.append(", ");
+								}
+								if (fieldIDList.indexOf(editableTableFieldList.get(i).getFieldID()) >= 0) {
+									if (editableTableFieldList.get(i).getBasicType().equals("INTEGER")
+											|| editableTableFieldList.get(i).getBasicType().equals("FLOAT")) {
+										statementBuf.append(fieldValueList.get(fieldIDList.indexOf(editableTableFieldList.get(i).getFieldID()))) ;
+									} else {
+										if (editableTableFieldList.get(i).getBasicType().equals("DATE")
+												|| editableTableFieldList.get(i).getBasicType().equals("DATETIME")) {
+											if (fieldValueList.get(fieldIDList.indexOf(editableTableFieldList.get(i).getFieldID())).equals("")) {
+												statementBuf.append("NULL");
+											} else {
+												statementBuf.append("'");
+												statementBuf.append(fieldValueList.get(fieldIDList.indexOf(editableTableFieldList.get(i).getFieldID()))) ;
+												statementBuf.append("'");
+											}
+										} else {
+											statementBuf.append("'");
+											statementBuf.append(fieldValueList.get(fieldIDList.indexOf(editableTableFieldList.get(i).getFieldID()))) ;
+											statementBuf.append("'");
+										}
+									}
+								} else {
+									throw new Exception(res.getString("ImportCsvMessage4"));
+								}
+								firstField = false;
+							}
+							statementBuf.append(")") ;
+							//
+							int recordCount = statement.executeUpdate(statementBuf.toString());
+							if (recordCount == 1) {
+								numberOfInserted++;
+							}
+						}
+						result.close();
+					}
+				}
+				connection.commit();
+				noErrors = true;
+				jButtonTableDataSelect.doClick();
+			} catch (SQLException ex) {
+				try {
+					if (statementBuf.toString() == null) {
+						jTextAreaTableDataMessages.setText(ex.getMessage());
+					} else {
+						jTextAreaTableDataMessages.setText(ex.getMessage() + "\n" + statementBuf.toString());
+					}
+					connection.rollback();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			} catch (Exception ex) {
+				try {
+					jTextAreaTableDataMessages.setText(ex.getMessage());
+					connection.rollback();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			} finally {
+				try {
+					if (br != null) {
+					br.close();
+					}
+				} catch (IOException e1) {
+				}
+				if (noErrors) {
+					jTextAreaTableDataMessages.setText(res.getString("ImportCsvMessage1") + numberOfInserted + res.getString("ImportCsvMessage2") + numberOfSkipped + res.getString("ImportCsvMessage3"));
+				}
+				setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			}
 		}
 	}
 	
@@ -38785,6 +38981,16 @@ class Editor_jButtonTableDataFieldsToListLog_actionAdapter implements java.awt.e
 	}
 	public void actionPerformed(ActionEvent e) {
 		adaptee.jButtonTableDataFieldsToListLog_actionPerformed(e);
+	}
+}
+
+class Editor_jButtonTableDataFieldsToImport_actionAdapter implements java.awt.event.ActionListener {
+	Editor adaptee;
+	Editor_jButtonTableDataFieldsToImport_actionAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jButtonTableDataFieldsToImport_actionPerformed(e);
 	}
 }
 

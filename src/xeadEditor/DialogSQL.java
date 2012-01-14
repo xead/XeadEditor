@@ -142,7 +142,7 @@ public class DialogSQL extends JDialog {
 		sqlExecuted = false;
 		//
 		if (connection != null) {
-			this.setTitle(res.getString("SqlConsole") + " - " + frame_.getDataBaseName());
+			this.setTitle(res.getString("SqlConsole") + " - " + frame_.getDatabaseName());
 			connection_ = connection;
 			jPanelButtons.getRootPane().setDefaultButton(jButtonClose);
 			Dimension dlgSize = this.getPreferredSize();

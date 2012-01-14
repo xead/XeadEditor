@@ -139,7 +139,7 @@ public class DialogCheckTableModule extends JDialog {
 
 	public String request(Connection connection, MainTreeNode tableNode, boolean isShowDialog) {
 		//
-		errorStatus = "";
+		errorStatus = tableNode.getErrorStatus();
 		//
 		if (connection != null && tableNode.getType().equals("Table")) {
 			//
@@ -168,7 +168,7 @@ public class DialogCheckTableModule extends JDialog {
 
 	void checkTableModule(String requestType) {
 		org.w3c.dom.Element element;
-		String wrkStr;
+		String wrkStr, tableID, fieldID;
 		StringBuffer buf = new StringBuffer();
 		StringBuffer moduleBuf = new StringBuffer();
 		int sizeOfModuleField, sizeOfDefinitionField;
@@ -214,7 +214,11 @@ public class DialogCheckTableModule extends JDialog {
 			isWithoutModule = false;
 			isWithoutPK = true;
 			//
-			ResultSet rs1 = connection_.getMetaData().getColumns(null, null, tableElement.getAttribute("ID"), null);
+			tableID = tableElement.getAttribute("ID");
+			if (frame_.getDatabaseName().contains("jdbc:postgresql")) {
+				tableID = tableID.toLowerCase();
+			}
+			ResultSet rs1 = connection_.getMetaData().getColumns(null, null, tableID, null);
 			if (rs1.next()) {
 				//
 				moduleBuf.append("Create table " + tableElement.getAttribute("ID") + " (\n");
@@ -235,7 +239,7 @@ public class DialogCheckTableModule extends JDialog {
 							decimalOfDefinitionField = Integer.parseInt(element.getAttribute("Decimal"));
 						}
 						if (frame_.isWithDecimal(element.getAttribute("Type"))) {
-							typeDescriptionsOfDefinitionField = element.getAttribute("Type") + "(" + element.getAttribute("Size") + "." + decimalOfDefinitionField + ")";
+							typeDescriptionsOfDefinitionField = element.getAttribute("Type") + "(" + element.getAttribute("Size") + "," + decimalOfDefinitionField + ")";
 						} else {
 							typeDescriptionsOfDefinitionField = element.getAttribute("Type") + "(" + element.getAttribute("Size") + ")";
 						}
@@ -267,12 +271,18 @@ public class DialogCheckTableModule extends JDialog {
 								}
 							}
 						}
-						if (!element.getAttribute("Nullable").equals("T")) {
-							moduleBuf.append(" not_null");
+						if (element.getAttribute("Nullable").equals("T")) {
+							moduleBuf.append(" null");
+						} else {
+							moduleBuf.append("");
 						}
 						moduleBuf.append(" Comment '" + element.getAttribute("Name") + "',\n");
 						//
-						ResultSet rs2 = connection_.getMetaData().getColumns(null, null, tableElement.getAttribute("ID"), element.getAttribute("ID"));
+						fieldID = element.getAttribute("ID");
+						if (frame_.getDatabaseName().contains("jdbc:postgresql")) {
+							fieldID = fieldID.toLowerCase();
+						}
+						ResultSet rs2 = connection_.getMetaData().getColumns(null, null, tableID, fieldID);
 						if (rs2.next()) {
 							//
 							sizeOfModuleField = Integer.parseInt(rs2.getString("COLUMN_SIZE"));
@@ -299,7 +309,7 @@ public class DialogCheckTableModule extends JDialog {
 								isNullableOfModuleField = false;
 							}
 							//
-							if (element.getAttribute("Type").equals(rs2.getString("TYPE_NAME"))) {
+							if (isEquivalentDataType(element.getAttribute("Type"), rs2.getString("TYPE_NAME"))) {
 								if (element.getAttribute("Type").equals("CHAR")
 										|| element.getAttribute("Type").equals("DECIMAL")
 										|| element.getAttribute("Type").equals("NUMERIC")) {
@@ -358,9 +368,14 @@ public class DialogCheckTableModule extends JDialog {
 				//////////////////////////
 			    // Check update counter //
 				//////////////////////////
-				ResultSet rs2 = connection_.getMetaData().getColumns(null, null, tableElement.getAttribute("ID"), updateCounterID);
+				fieldID = updateCounterID;
+				if (frame_.getDatabaseName().contains("jdbc:postgresql")) {
+					fieldID = fieldID.toLowerCase();
+				}
+			    ResultSet rs2 = connection_.getMetaData().getColumns(null, null, tableID, fieldID);
 				if (rs2.next()) {
-					if (!rs2.getString("TYPE_NAME").equals("INTEGER")) {
+					//if (!rs2.getString("TYPE_NAME").equals("INTEGER") && !rs2.getString("TYPE_NAME").equals("INT")) {
+					if (!isEquivalentDataType("INTEGER", rs2.getString("TYPE_NAME"))) {
 						countOfErrors++;
 						fieldListToBeDropped.add(updateCounterID);
 						fieldListToBeAdded.add(updateCounterID);
@@ -378,19 +393,18 @@ public class DialogCheckTableModule extends JDialog {
 				///////////////////////////////////////////
 				// Field check from module to definition //
 				///////////////////////////////////////////
-				ResultSet rs3 = connection_.getMetaData().getColumns(null, null, tableElement.getAttribute("ID"), null);
+				ResultSet rs3 = connection_.getMetaData().getColumns(null, null, tableID, null);
 				while (rs3.next()) {
 					//
 					columnCounter++;
 					//
 					exist = false;
-					if (updateCounterID.equals(rs3.getString("COLUMN_NAME"))) {
+					if (updateCounterID.equals(rs3.getString("COLUMN_NAME").toUpperCase())) {
 						exist = true;
-						//break;
 					} else {
 						for (int i = 0; i < fieldList.getLength(); i++) {
 							element = (org.w3c.dom.Element)fieldList.item(i);
-							if (element.getAttribute("ID").equals(rs3.getString("COLUMN_NAME"))
+							if (element.getAttribute("ID").equals(rs3.getString("COLUMN_NAME").toUpperCase())
 									&& !frame_.getOptionList(element.getAttribute("TypeOptions")).contains("VIRTUAL")) {
 								exist = true;
 								break;
@@ -416,8 +430,8 @@ public class DialogCheckTableModule extends JDialog {
 						}
 						//
 						countOfErrors++;
-						fieldListToBeDropped.add(rs3.getString("COLUMN_NAME"));
-						buf.append("(" + countOfErrors + ") "+ res.getString("ModuleCheckMessage16") + rs3.getString("COLUMN_NAME") + " [" + typeDescriptionsOfModuleField + "]" + res.getString("ModuleCheckMessage17"));
+						fieldListToBeDropped.add(rs3.getString("COLUMN_NAME").toUpperCase());
+						buf.append("(" + countOfErrors + ") "+ res.getString("ModuleCheckMessage16") + rs3.getString("COLUMN_NAME").toUpperCase() + " [" + typeDescriptionsOfModuleField + "]" + res.getString("ModuleCheckMessage17"));
 					}
 				}
 				rs3.close();
@@ -429,7 +443,7 @@ public class DialogCheckTableModule extends JDialog {
 				indexFieldsList.clear();
 				indexAscDescList.clear();
 				indexNotUniqueList.clear();
-				ResultSet rs4 = connection_.getMetaData().getIndexInfo(null, null, tableElement.getAttribute("ID"), false, true);
+				ResultSet rs4 = connection_.getMetaData().getIndexInfo(null, null, tableID, false, true);
 				while (rs4.next()) {
 					//
 					workIndex = indexNameList.indexOf(rs4.getString("INDEX_NAME"));
@@ -438,12 +452,21 @@ public class DialogCheckTableModule extends JDialog {
 						workIndex = indexNameList.size() - 1;
 						indexFieldsList.add("");
 						indexAscDescList.add("");
-						indexNotUniqueList.add(rs4.getString("NON_UNIQUE"));
+						if (rs4.getString("NON_UNIQUE").equals("0")
+								|| rs4.getString("NON_UNIQUE").equals("f")
+								|| rs4.getString("NON_UNIQUE").equals("false")) {
+							indexNotUniqueList.add("false");
+						}
+						if (rs4.getString("NON_UNIQUE").equals("1")
+								|| rs4.getString("NON_UNIQUE").equals("t")
+								|| rs4.getString("NON_UNIQUE").equals("true")) {
+							indexNotUniqueList.add("true");
+						}
 					}
 					if (indexFieldsList.get(workIndex).equals("")) {
-						indexFieldsList.set(workIndex, rs4.getString("COLUMN_NAME"));
+						indexFieldsList.set(workIndex, rs4.getString("COLUMN_NAME").toUpperCase());
 					} else {
-						indexFieldsList.set(workIndex, indexFieldsList.get(workIndex) + ";" + rs4.getString("COLUMN_NAME"));
+						indexFieldsList.set(workIndex, indexFieldsList.get(workIndex) + ";" + rs4.getString("COLUMN_NAME").toUpperCase());
 					}
 					if (indexAscDescList.get(workIndex).equals("")) {
 						if (rs4.getString("ASC_OR_DESC").equals("D")) {
@@ -483,8 +506,8 @@ public class DialogCheckTableModule extends JDialog {
 								ascDescList1.add("D");
 							}
 						}
-						if (((indexNotUniqueList.get(i).equals("0") || indexNotUniqueList.get(i).equals("false")) && (element.getAttribute("Type").equals("SK") || element.getAttribute("Type").equals("PK"))) ||
-								((indexNotUniqueList.get(i).equals("1") || indexNotUniqueList.get(i).equals("true")) && element.getAttribute("Type").equals("XK"))) {
+						if ((indexNotUniqueList.get(i).equals("false") && (element.getAttribute("Type").equals("SK") || element.getAttribute("Type").equals("PK"))) ||
+								(indexNotUniqueList.get(i).equals("true") && element.getAttribute("Type").equals("XK"))) {
 							//
 							count1 = 0;
 							count2 = 0;
@@ -514,12 +537,12 @@ public class DialogCheckTableModule extends JDialog {
 							}
 						}
 					}
-					if (!exist && (indexNotUniqueList.get(i).equals("0") || indexNotUniqueList.get(i).equals("false"))) {
+					if (!exist && indexNotUniqueList.get(i).equals("false")) {
 						countOfErrors++;
 						indexListToBeDropped.add(indexNameList.get(i));
 						buf.append("(" + countOfErrors + ") " + res.getString("ModuleCheckMessage18") + indexFieldsList.get(i) + res.getString("ModuleCheckMessage19"));
 					}
-					if (!exist && (indexNotUniqueList.get(i).equals("1") || indexNotUniqueList.get(i).equals("true"))) {
+					if (!exist && indexNotUniqueList.get(i).equals("true")) {
 						countOfErrors++;
 						indexListToBeDropped.add(indexNameList.get(i));
 						//
@@ -557,7 +580,6 @@ public class DialogCheckTableModule extends JDialog {
 						moduleBuf.append(element.getAttribute("Fields").replace(";", ", ") + ")");
 						//
 						isWithoutPKDefined = false;
-						//fieldList1.clear();
 						workTokenizer = new StringTokenizer(element.getAttribute("Fields"), ";");
 						while (workTokenizer.hasMoreTokens()) {
 							keyFieldList.add(workTokenizer.nextToken());
@@ -581,16 +603,16 @@ public class DialogCheckTableModule extends JDialog {
 						count2 = 0;
 						wrkStr = "";
 						//
-						ResultSet rs5 = connection_.getMetaData().getPrimaryKeys(null, null, tableElement.getAttribute("ID"));
+						ResultSet rs5 = connection_.getMetaData().getPrimaryKeys(null, null, tableID);
 						while (rs5.next()) {
 							count1++;
-							if (keyFieldList.contains(rs5.getString("COLUMN_NAME"))) {
+							if (keyFieldList.contains(rs5.getString("COLUMN_NAME").toUpperCase())) {
 								count2++;
 							}
 							if (wrkStr.equals("")) {
-								wrkStr = wrkStr + rs5.getString("COLUMN_NAME");
+								wrkStr = wrkStr + rs5.getString("COLUMN_NAME").toUpperCase();
 							} else {
-								wrkStr = wrkStr + ";" + rs5.getString("COLUMN_NAME");
+								wrkStr = wrkStr + ";" + rs5.getString("COLUMN_NAME").toUpperCase();
 							}
 						}
 						rs5.close();
@@ -631,8 +653,8 @@ public class DialogCheckTableModule extends JDialog {
 							}
 						}
 						for (int j = 0; j < indexNameList.size(); j++) {
-							if (((indexNotUniqueList.get(j).equals("0") || indexNotUniqueList.get(j).equals("false")) && element.getAttribute("Type").equals("SK")) ||
-									((indexNotUniqueList.get(j).equals("1") || indexNotUniqueList.get(j).equals("true")) && element.getAttribute("Type").equals("XK"))) {
+							if ((indexNotUniqueList.get(j).equals("false") && element.getAttribute("Type").equals("SK")) ||
+								(indexNotUniqueList.get(j).equals("true") && element.getAttribute("Type").equals("XK"))) {
 								//
 								count1 = 0;
 								count2 = 0;
@@ -681,19 +703,19 @@ public class DialogCheckTableModule extends JDialog {
 				foreignKeyNameList.clear();
 				foreignKeyTableList.clear();
 				foreignKeyFieldList.clear();
-				ResultSet rs7 = connection_.getMetaData().getImportedKeys(null, null, tableElement.getAttribute("ID"));
+				ResultSet rs7 = connection_.getMetaData().getImportedKeys(null, null, tableID);
 				while (rs7.next()) {
 					//
 					workIndex = foreignKeyNameList.indexOf(rs7.getString("FK_NAME"));
 					if (workIndex == -1) {
 						workIndex = 0;
 						foreignKeyNameList.add(rs7.getString("FK_NAME"));
-						foreignKeyTableList.add(rs7.getString("FKTABLE_NAME"));
-						foreignKeyFieldList.add(rs7.getString("FKCOLUMN_NAME"));
-						nativeFieldList.add(rs7.getString("PKCOLUMN_NAME"));
+						foreignKeyTableList.add(rs7.getString("FKTABLE_NAME").toUpperCase());
+						foreignKeyFieldList.add(rs7.getString("FKCOLUMN_NAME").toUpperCase());
+						nativeFieldList.add(rs7.getString("PKCOLUMN_NAME").toUpperCase());
 					} else {
-						foreignKeyFieldList.set(workIndex, foreignKeyFieldList.get(workIndex) + "," + rs7.getString("FKCOLUMN_NAME"));
-						nativeFieldList.set(workIndex, nativeFieldList.get(workIndex) + "," + rs7.getString("PKCOLUMN_NAME"));
+						foreignKeyFieldList.set(workIndex, foreignKeyFieldList.get(workIndex) + "," + rs7.getString("FKCOLUMN_NAME").toUpperCase());
+						nativeFieldList.set(workIndex, nativeFieldList.get(workIndex) + "," + rs7.getString("PKCOLUMN_NAME").toUpperCase());
 					}
 				}
 				rs7.close();
@@ -708,12 +730,12 @@ public class DialogCheckTableModule extends JDialog {
 				if (isWithoutPKDefined) {
 					//
 					wrkStr = "";
-					ResultSet rs6 = connection_.getMetaData().getPrimaryKeys(null, null, tableElement.getAttribute("ID"));
+					ResultSet rs6 = connection_.getMetaData().getPrimaryKeys(null, null, tableID);
 					while (rs6.next()) {
 						if (wrkStr.equals("")) {
-							wrkStr = wrkStr + rs6.getString("COLUMN_NAME");
+							wrkStr = wrkStr + rs6.getString("COLUMN_NAME").toUpperCase();
 						} else {
-							wrkStr = wrkStr + ";" + rs6.getString("COLUMN_NAME");
+							wrkStr = wrkStr + ";" + rs6.getString("COLUMN_NAME").toUpperCase();
 						}
 					}
 					rs6.close();
@@ -734,6 +756,7 @@ public class DialogCheckTableModule extends JDialog {
 			} else {
 				//
 				isWithoutModule = true;
+				//
 				countOfErrors++;
 				buf.append("(" + countOfErrors + ") "+ res.getString("ModuleCheckMessage31"));
 				//
@@ -785,16 +808,17 @@ public class DialogCheckTableModule extends JDialog {
 				//
 			} else {
 				jButtonDelete.setEnabled(true);
+				String sql = moduleBuf.toString();
 				if (requestType.equals("CREATE")) {
-					jTextAreaMessage.setText(res.getString("ModuleCheckMessage43") + "\n\n< Data Descriptions >\n" + moduleBuf.toString());
+					jTextAreaMessage.setText(res.getString("ModuleCheckMessage43") + "\n\n< Data Descriptions >\n" + sql);
 				} else {
 					if (requestType.equals("ALTER")) {
-						jTextAreaMessage.setText(res.getString("ModuleCheckMessage44") + "\n\n< Data Descriptions >\n" + moduleBuf.toString());
+						jTextAreaMessage.setText(res.getString("ModuleCheckMessage44") + "\n\n< Data Descriptions >\n" + sql);
 					} else {
 						if (foreignKeyNameList.size() > 0) {
-							jTextAreaMessage.setText(res.getString("ModuleCheckMessage45") + "\n\n< Data Descriptions >\n" + moduleBuf.toString());
+							jTextAreaMessage.setText(res.getString("ModuleCheckMessage45") + "\n\n< Data Descriptions >\n" + sql);
 						} else {
-							jTextAreaMessage.setText(res.getString("ModuleCheckMessage35") + "\n\n< Data Descriptions >\n" + moduleBuf.toString());
+							jTextAreaMessage.setText(res.getString("ModuleCheckMessage35") + "\n\n< Data Descriptions >\n" + sql);
 						}
 					}
 				}
@@ -802,10 +826,66 @@ public class DialogCheckTableModule extends JDialog {
 			}
 			//
 		} catch (SQLException e) {
+			jTextAreaMessage.setText(e.getMessage());
 			e.printStackTrace();
 		} finally {
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
+	}
+	
+	boolean isEquivalentDataType(String dataTypeDefiition, String dataTypeModule) {
+		boolean isEquivalent = false;
+		if (dataTypeDefiition.equals(dataTypeModule)) {
+			isEquivalent = true;
+		} else {
+			if (dataTypeDefiition.equals(dataTypeModule.toUpperCase())) {
+				isEquivalent = true;
+			} else {
+				if (dataTypeDefiition.equals("SMALLINT")) {
+					if (dataTypeModule.equals("int2")) {
+						isEquivalent = true;
+					}
+				}
+				if (dataTypeDefiition.equals("INTEGER")) {
+					if (dataTypeModule.equals("INT")) {
+						isEquivalent = true;
+					}
+					if (dataTypeModule.equals("int")
+							|| dataTypeModule.equals("int4")) {
+						isEquivalent = true;
+					}
+				}
+				if (dataTypeDefiition.equals("BIGINT")) {
+					if (dataTypeModule.equals("int8")) {
+						isEquivalent = true;
+					}
+				}
+				if (dataTypeDefiition.equals("NUMERIC")) {
+					if (dataTypeModule.equals("DECIMAL")) {
+						isEquivalent = true;
+					}
+				}
+				if (dataTypeDefiition.equals("DECIMAL")) {
+					if (dataTypeModule.equals("numeric")) {
+						isEquivalent = true;
+					}
+				}
+				if (dataTypeDefiition.equals("CHAR")) {
+					if (dataTypeModule.equals("bpchar")) {
+						isEquivalent = true;
+					}
+				}
+				if (dataTypeDefiition.equals("LONG VARCHAR")) {
+					if (dataTypeModule.equals("MEDIUMTEXT")) {
+						isEquivalent = true;
+					}
+					if (dataTypeModule.equals("text")) {
+						isEquivalent = true;
+					}
+				}
+			}
+		}
+		return isEquivalent;
 	}
 
 	void jButtonAlter_actionPerformed(ActionEvent e) {
@@ -817,7 +897,7 @@ public class DialogCheckTableModule extends JDialog {
 		boolean firstField = true;
 		//
 		Object[] bts = {res.getString("Cancel"), res.getString("Execute")};
-		int rtn = JOptionPane.showOptionDialog(this, res.getString("ModuleCheckMessage36"), res.getString("ModuleModify") + " " + tableElement.getAttribute("ID") + " " + tableElement.getAttribute("Name"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
+		int rtn = JOptionPane.showOptionDialog(this, res.getString("ModuleCheckMessage36"), res.getString("ModuleModify") + " " + tableElement.getAttribute("ID") + " " + tableElement.getAttribute("Name"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[1]);
 		if (rtn == 1) {
 			try {
 				setCursor(new Cursor(Cursor.WAIT_CURSOR));
@@ -959,10 +1039,10 @@ public class DialogCheckTableModule extends JDialog {
 						firstField = true;
 						for (int j = 0; j < fieldListToBeConverted.size(); j++) {
 							if (!firstField) {
-								buf.append(", ") ;
+								buf.append(", ");
 							}
 							buf.append(fieldListToBeConverted.get(j)) ;
-							buf.append("=") ;
+							buf.append("=");
 							buf.append(getTableOperationValue(fieldValueList.get(i).get(j), fieldTypeListToBeConverted.get(j), fieldSizeListToBeConvertedOld.get(j), fieldSizeListToBeConvertedNew.get(j), fieldDecimalListToBeConvertedOld.get(j), fieldDecimalListToBeConvertedNew.get(j)));
 							firstField = false;
 						}
@@ -1064,10 +1144,8 @@ public class DialogCheckTableModule extends JDialog {
 						wrkStr = workTokenizer.nextToken();
 						if (wrkStr.contains("(D)")) {
 							wrkStr = wrkStr.replace("(D)", " DESC");
-							buf.append(wrkStr);
-						} else {
-							buf.append(wrkStr);
 						}
+						buf.append(wrkStr);
 					}
 					buf.append(")");
 					statement.executeUpdate(buf.toString());
@@ -1177,12 +1255,12 @@ public class DialogCheckTableModule extends JDialog {
 			}
 		}
 		//
-		//if (countOfPhysicalFields == 0) {
-		//	JOptionPane.showMessageDialog(this, res.getString("ModuleCheckMessage38"));
-		//} else {
-			Object[] bts = {res.getString("Execute"), res.getString("Cancel")};
+		if (countOfPhysicalFields == 0) {
+			JOptionPane.showMessageDialog(this, res.getString("ModuleCheckMessage38"));
+		} else {
+			Object[] bts = {res.getString("Cancel"), res.getString("Execute")};
 			int rtn = JOptionPane.showOptionDialog(this, res.getString("ModuleCheckMessage39"), res.getString("ModuleCreate") + " " + tableElement.getAttribute("ID") + " " + tableElement.getAttribute("Name"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[1]);
-			if (rtn == 0) {
+			if (rtn == 1) {
 				try {
 					setCursor(new Cursor(Cursor.WAIT_CURSOR));
 					//
@@ -1205,14 +1283,18 @@ public class DialogCheckTableModule extends JDialog {
 					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 				}
 			}
-		//}
+		}
 	}
 
 	void jButtonDelete_actionPerformed(ActionEvent e) {
-		Object[] bts = {res.getString("Execute"), res.getString("Cancel")};
-		int rtn = JOptionPane.showOptionDialog(this, res.getString("ModuleCheckMessage41"), res.getString("ModuleDelete") + " " + tableElement.getAttribute("ID") + " " + tableElement.getAttribute("Name"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[1]);
-		if (rtn == 0) {
-			deleteTable(connection_, tableElement.getAttribute("ID"));
+		Object[] bts = {res.getString("Cancel"), res.getString("Execute")};
+		int rtn = JOptionPane.showOptionDialog(this, res.getString("ModuleCheckMessage41"), res.getString("ModuleDelete") + " " + tableElement.getAttribute("ID") + " " + tableElement.getAttribute("Name"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
+		if (rtn == 1) {
+			String tableID = tableElement.getAttribute("ID");
+			if (frame_.getDatabaseName().contains("jdbc:postgresql")) {
+				tableID = tableID.toLowerCase();
+			}
+			deleteTable(connection_, tableID);
 		}
 	}
 
@@ -1267,14 +1349,17 @@ public class DialogCheckTableModule extends JDialog {
 				buf.append("     ");
 				buf.append(element.getAttribute("ID"));
 				buf.append(" ");
-				buf.append(element.getAttribute("Type"));
+				if (frame_.getDatabaseName().contains("jdbc:postgresql") && element.getAttribute("Type").equals("LONG VARCHAR")) {
+					buf.append("text");
+				} else {
+					buf.append(element.getAttribute("Type"));
+				}
 				if (getBasicTypeOf(element.getAttribute("Type")).equals("STRING")) {
 					if (element.getAttribute("Type").equals("CHAR") || element.getAttribute("Type").equals("VARCHAR")) {
 						buf.append("(");
 						buf.append(element.getAttribute("Size"));
 						buf.append(")");
 					}
-					buf.append(" DEFAULT ''");
 				} else {
 					if (getBasicTypeOf(element.getAttribute("Type")).equals("INTEGER")) {
 						buf.append(" DEFAULT 0");
@@ -1291,7 +1376,9 @@ public class DialogCheckTableModule extends JDialog {
 						}
 					}
 				}
-				if (element.getAttribute("Nullable").contains("F")) {
+				if (element.getAttribute("Nullable").equals("T")) {
+					buf.append(" NULL");
+				} else {
 					buf.append(" NOT NULL");
 				}
 			}
@@ -1303,7 +1390,6 @@ public class DialogCheckTableModule extends JDialog {
 		int wrkCount1 = -1;
 		int wrkCount2 = -1;
 		int countOfSK = 0;
-		//int countOfXK = 0;
 		NodeList keyList = tableElement.getElementsByTagName("Key");
 		sortingList = frame_.getSortedListModel(keyList, "Type");
 	    for (int i = 0; i < sortingList.getSize(); i++) {

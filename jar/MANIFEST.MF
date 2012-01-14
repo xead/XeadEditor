@@ -1,5 +1,5 @@
 Manifest-Version: 1.0 
 Sealed: true 
 Main-Class: xeadEditor.Application
-Class-Path: ./derby.jar ./derbyclient.jar ./xercesImpl.jar ./poi-3.2-FINAL-20081019.jar
+Class-Path: ./xercesImpl.jar ./derby.jar ./derbyclient.jar ./mysql-connector-java-5.1.18-bin.jar ./postgresql-9.1-901.jdbc3.jar ./poi-3.2-FINAL-20081019.jar
 
