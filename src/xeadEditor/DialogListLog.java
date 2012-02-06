@@ -37,6 +37,7 @@ import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
 import java.awt.event.*;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -57,6 +58,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.w3c.dom.*;
 
+import xeadEditor.Editor.MainTreeNode;
 import xeadEditor.Editor.SortableDomElementListModel;
 
 import java.io.*;
@@ -390,8 +392,19 @@ public class DialogListLog extends JDialog {
 			String logString;
 			StringTokenizer workTokenizer;
 			ResultSet resultHeader, resultDetail;
-			Statement statementHeader = frame_.getConnectionToDatabase().createStatement();
-			Statement statementDetail = frame_.getConnectionToDatabase().createStatement();
+			String tableID;
+			MainTreeNode tableNode;
+			Connection connection;
+			//
+			tableID = frame_.getSystemNode().getElement().getAttribute("SessionTable");
+			tableNode = frame_.getSpecificXETreeNode("Table", tableID);
+			connection = frame_.getDatabaseConnList().get(frame_.getDatabaseIDList().indexOf(tableNode.getElement().getAttribute("DB")));
+			Statement statementHeader = connection.createStatement();
+			//
+			tableID = frame_.getSystemNode().getElement().getAttribute("SessionDetailTable");
+			tableNode = frame_.getSpecificXETreeNode("Table", tableID);
+			connection = frame_.getDatabaseConnList().get(frame_.getDatabaseIDList().indexOf(tableNode.getElement().getAttribute("DB")));
+			Statement statementDetail = connection.createStatement();
 			//
 			StringBuffer buf = new StringBuffer();
 			buf.append("select * from ");

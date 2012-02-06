@@ -32,9 +32,7 @@ package xeadEditor;
  */
 
 import java.awt.*;
-
 import javax.swing.*;
-
 import java.awt.event.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -50,7 +48,11 @@ public class DialogSQL extends JDialog {
 	static ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
 	private JButton jButtonCommit = new JButton();
 	private JButton jButtonClose = new JButton();
+	private JPanel jPanelStatement = new JPanel();
+	private JPanel jPanelStatementTop = new JPanel();
 	private JPanel jPanelMessage = new JPanel();
+	private JLabel jLabelConnection = new JLabel();
+	private JComboBox jComboBoxConnection = new JComboBox();
 	private JScrollPane jScrollPaneStatement = new JScrollPane();
 	private JTextArea jTextAreaStatement = new JTextArea();
 	private JLabel jLabelMessage = new JLabel();
@@ -60,7 +62,7 @@ public class DialogSQL extends JDialog {
 	private Editor frame_;
 	private JPanel jPanelButtons = new JPanel();
 	private boolean sqlExecuted;
-	private Connection connection_;
+	//private Connection connection_;
 	private Calendar calendar;
 	private SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss.SSS");
 	private Action commitAction = new AbstractAction(){
@@ -93,6 +95,22 @@ public class DialogSQL extends JDialog {
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0), "RUN");
 		actionMap.put("RUN", commitAction);
 		//
+		jLabelConnection.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelConnection.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelConnection.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelConnection.setText(res.getString("Connection"));
+		jLabelConnection.setPreferredSize(new Dimension(100, 17));
+		jLabelConnection.setBounds(new Rectangle(11, 12, 96, 15));
+		jComboBoxConnection.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jComboBoxConnection.setBounds(new Rectangle(115, 9, 400, 22));
+		jPanelStatementTop.setLayout(null);
+		jPanelStatementTop.setPreferredSize(new Dimension(10, 40));
+		jPanelStatementTop.add(jLabelConnection);
+		jPanelStatementTop.add(jComboBoxConnection);
+		jPanelStatement.setLayout(new BorderLayout());
+		jPanelStatement.add(jPanelStatementTop, BorderLayout.NORTH);
+		jPanelStatement.add(jScrollPaneStatement, BorderLayout.CENTER);
+		//
 		jTextAreaStatement.setFont(new java.awt.Font("Dialog", 0, 12));
 		jTextAreaStatement.setEditable(true);
 		jTextAreaStatement.setOpaque(true);
@@ -114,7 +132,7 @@ public class DialogSQL extends JDialog {
 		//
 		jSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPane.setDividerLocation(150);
-		jSplitPane.add(jScrollPaneStatement, JSplitPane.TOP);
+		jSplitPane.add(jPanelStatement, JSplitPane.TOP);
 		jSplitPane.add(jPanelMessage, JSplitPane.BOTTOM);
 		//
 		jButtonClose.setText(res.getString("Close"));
@@ -131,6 +149,7 @@ public class DialogSQL extends JDialog {
 		jPanelButtons.add(jButtonClose, null);
 		jPanelButtons.add(jButtonCommit, null);
 		//
+		this.setTitle(res.getString("SqlConsole"));
 		this.getContentPane().add(jPanelButtons,  BorderLayout.SOUTH);
 		this.setResizable(false);
 		this.setPreferredSize(new Dimension(900, 600));
@@ -141,16 +160,17 @@ public class DialogSQL extends JDialog {
 		//
 		sqlExecuted = false;
 		//
-		if (connection != null) {
-			this.setTitle(res.getString("SqlConsole") + " - " + frame_.getDatabaseName());
-			connection_ = connection;
-			jPanelButtons.getRootPane().setDefaultButton(jButtonClose);
-			Dimension dlgSize = this.getPreferredSize();
-			Dimension frmSize = frame_.getSize();
-			Point loc = frame_.getLocation();
-			this.setLocation((frmSize.width - dlgSize.width) / 2 + loc.x, (frmSize.height - dlgSize.height) / 2 + loc.y);
-			super.setVisible(true);
+		jComboBoxConnection.removeAllItems();
+		for (int i = 0; i < frame_.getDatabaseNameList().size(); i++) {
+			jComboBoxConnection.addItem(frame_.getDatabaseNameList().get(i));
 		}
+		jTextAreaStatement.requestFocus();
+		jPanelButtons.getRootPane().setDefaultButton(jButtonClose);
+		Dimension dlgSize = this.getPreferredSize();
+		Dimension frmSize = frame_.getSize();
+		Point loc = frame_.getLocation();
+		this.setLocation((frmSize.width - dlgSize.width) / 2 + loc.x, (frmSize.height - dlgSize.height) / 2 + loc.y);
+		super.setVisible(true);
 		//
 		return sqlExecuted;
 	}
@@ -164,7 +184,8 @@ public class DialogSQL extends JDialog {
 		try {
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			//
-			Statement statement = connection_.createStatement();
+			Connection connection = frame_.getDatabaseConnList().get(jComboBoxConnection.getSelectedIndex());
+			Statement statement = connection.createStatement();
 			sql = jTextAreaStatement.getText().toUpperCase().trim().replace("\n", " ");
 			if (sql.length() > 1) {
 				if (sql.contains("SELECT ")) {
@@ -216,7 +237,7 @@ public class DialogSQL extends JDialog {
 					jTextAreaMessage.setText(bf.toString());
 				}
 				sqlExecuted = true;
-				connection_.commit();
+				//connection_.commit();
 			}
 			//
 		} catch (SQLException ex1) {
@@ -231,11 +252,11 @@ public class DialogSQL extends JDialog {
 			bf.append(formatter.format(calendar.getTime()));
 			bf.append(")\n");
 			jTextAreaMessage.setText(bf.toString());
-			try {
-				connection_.rollback();
-			} catch (SQLException ex2) {
-				ex2.printStackTrace();
-			}
+			//try {
+			//	connection_.rollback();
+			//} catch (SQLException ex2) {
+			//	ex2.printStackTrace();
+			//}
 		} finally {
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}

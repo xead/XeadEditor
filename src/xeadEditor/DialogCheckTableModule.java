@@ -81,6 +81,7 @@ public class DialogCheckTableModule extends JDialog {
 	private org.w3c.dom.Element tableElement;
 	private Connection connection_;
 	private String updateCounterID;
+	private String databaseName;
 	
 	public DialogCheckTableModule(Editor frame) {
 		super(frame, "", true);
@@ -137,30 +138,33 @@ public class DialogCheckTableModule extends JDialog {
 		this.getContentPane().add(jScrollPaneMessage,  BorderLayout.CENTER);
 	}
 
-	public String request(Connection connection, MainTreeNode tableNode, boolean isShowDialog) {
+	public String request(MainTreeNode tableNode, boolean isShowDialog) {
 		//
-		errorStatus = tableNode.getErrorStatus();
-		//
-		if (connection != null && tableNode.getType().equals("Table")) {
+		if (frame_.getSystemNode().getElement().getAttribute("AutoConnectToEdit").equals("T")) {
 			//
-			connection_ = connection;
+			errorStatus = tableNode.getErrorStatus();
 			tableElement = tableNode.getElement();
 			//
-		    updateCounterID = tableElement.getAttribute("UpdateCounter");
-		    if (updateCounterID.equals("")) {
-		    	updateCounterID = DEFAULT_UPDATE_COUNTER;
-		    }
+			connection_ = frame_.getDatabaseConnection(tableElement.getAttribute("DB"));
+			databaseName = frame_.getDatabaseName(tableElement.getAttribute("DB"));
 			//
-			checkTableModule("");
-			//
-			if (isShowDialog) {
-				jPanelButtons.getRootPane().setDefaultButton(jButtonClose);
-				Dimension dlgSize = this.getPreferredSize();
-				Dimension frmSize = frame_.getSize();
-				Point loc = frame_.getLocation();
-				this.setLocation((frmSize.width - dlgSize.width) / 2 + loc.x, (frmSize.height - dlgSize.height) / 2 + loc.y);
-				super.setVisible(true);
+			if (connection_ == null) {
+				errorStatus = "ER1";
+			} else {
+				if (tableNode.getType().equals("Table")) {
+					checkTableModule("");
+					if (isShowDialog) {
+						jPanelButtons.getRootPane().setDefaultButton(jButtonClose);
+						Dimension dlgSize = this.getPreferredSize();
+						Dimension frmSize = frame_.getSize();
+						Point loc = frame_.getLocation();
+						this.setLocation((frmSize.width - dlgSize.width) / 2 + loc.x, (frmSize.height - dlgSize.height) / 2 + loc.y);
+						super.setVisible(true);
+					}
+				}
 			}
+		} else {
+			errorStatus = "ER1";
 		}
 		//
 		return errorStatus;
@@ -214,8 +218,13 @@ public class DialogCheckTableModule extends JDialog {
 			isWithoutModule = false;
 			isWithoutPK = true;
 			//
+			updateCounterID = tableElement.getAttribute("UpdateCounter");
+			if (updateCounterID.equals("")) {
+				updateCounterID = DEFAULT_UPDATE_COUNTER;
+			}
+			//
 			tableID = tableElement.getAttribute("ID");
-			if (frame_.getDatabaseName().contains("jdbc:postgresql")) {
+			if (databaseName.contains("jdbc:postgresql")) {
 				tableID = tableID.toLowerCase();
 			}
 			ResultSet rs1 = connection_.getMetaData().getColumns(null, null, tableID, null);
@@ -279,7 +288,7 @@ public class DialogCheckTableModule extends JDialog {
 						moduleBuf.append(" Comment '" + element.getAttribute("Name") + "',\n");
 						//
 						fieldID = element.getAttribute("ID");
-						if (frame_.getDatabaseName().contains("jdbc:postgresql")) {
+						if (databaseName.contains("jdbc:postgresql")) {
 							fieldID = fieldID.toLowerCase();
 						}
 						ResultSet rs2 = connection_.getMetaData().getColumns(null, null, tableID, fieldID);
@@ -369,7 +378,7 @@ public class DialogCheckTableModule extends JDialog {
 			    // Check update counter //
 				//////////////////////////
 				fieldID = updateCounterID;
-				if (frame_.getDatabaseName().contains("jdbc:postgresql")) {
+				if (databaseName.contains("jdbc:postgresql")) {
 					fieldID = fieldID.toLowerCase();
 				}
 			    ResultSet rs2 = connection_.getMetaData().getColumns(null, null, tableID, fieldID);
@@ -1060,16 +1069,17 @@ public class DialogCheckTableModule extends JDialog {
 							firstField = false;
 						}
 						//
-						int recordCount = statement.executeUpdate(buf.toString());
-						if (recordCount == 1) {
-							connection_.commit();
-						} else {
-							try {
-								connection_.rollback();
-							} catch (SQLException e6) {
-								e6.printStackTrace();
-							}
-						}
+						statement.executeUpdate(buf.toString());
+//						int recordCount = statement.executeUpdate(buf.toString());
+//						if (recordCount == 1) {
+//							connection_.commit();
+//						} else {
+//							try {
+//								connection_.rollback();
+//							} catch (SQLException e6) {
+//								e6.printStackTrace();
+//							}
+//						}
 					}
 					keyValueList.clear();
 					fieldValueList.clear();
@@ -1154,7 +1164,7 @@ public class DialogCheckTableModule extends JDialog {
 				//////////////////////////////////
 				// Commit all changes to module //
 				//////////////////////////////////
-				connection_.commit();
+				//connection_.commit();
 				//
 				///////////////////////////////////////////
 				// Check module and refresh error status //
@@ -1163,11 +1173,11 @@ public class DialogCheckTableModule extends JDialog {
 				//
 			} catch (SQLException ex1) {
 				JOptionPane.showMessageDialog(this, res.getString("ModuleCheckMessage37") + buf .toString() + "\n" + ex1.getMessage());
-				try {
-					connection_.rollback();
-				} catch (SQLException ex2) {
-					ex2.printStackTrace();
-				}
+//				try {
+//					connection_.rollback();
+//				} catch (SQLException ex2) {
+//					ex2.printStackTrace();
+//				}
 			} finally {
 				setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			}
@@ -1267,18 +1277,18 @@ public class DialogCheckTableModule extends JDialog {
 					Statement statement = connection_.createStatement();
 					sqlText = getSqlToCreateTable();
 					statement.executeUpdate(sqlText);
-					connection_.commit();
+					//connection_.commit();
 					//
 					checkTableModule("CREATE");
 					//
 				} catch (SQLException ex1) {
 					ex1.printStackTrace();
 					JOptionPane.showMessageDialog(this, res.getString("ModuleCheckMessage40") + sqlText + "\n" + ex1.getMessage());
-					try {
-						connection_.rollback();
-					} catch (SQLException ex2) {
-						ex2.printStackTrace();
-					}
+//					try {
+//						connection_.rollback();
+//					} catch (SQLException ex2) {
+//						ex2.printStackTrace();
+//					}
 				} finally {
 					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 				}
@@ -1291,7 +1301,7 @@ public class DialogCheckTableModule extends JDialog {
 		int rtn = JOptionPane.showOptionDialog(this, res.getString("ModuleCheckMessage41"), res.getString("ModuleDelete") + " " + tableElement.getAttribute("ID") + " " + tableElement.getAttribute("Name"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
 		if (rtn == 1) {
 			String tableID = tableElement.getAttribute("ID");
-			if (frame_.getDatabaseName().contains("jdbc:postgresql")) {
+			if (databaseName.contains("jdbc:postgresql")) {
 				tableID = tableID.toLowerCase();
 			}
 			deleteTable(connection_, tableID);
@@ -1304,18 +1314,18 @@ public class DialogCheckTableModule extends JDialog {
 			//
 			Statement statement = connection.createStatement();
 			statement.executeUpdate("DROP TABLE " + tableID);
-			connection.commit();
+			//connection.commit();
 			//
 			checkTableModule("DROP");
 			//
 		} catch (SQLException ex1) {
 			ex1.printStackTrace();
 			JOptionPane.showMessageDialog(this, res.getString("ModuleCheckMessage42"));
-			try {
-				connection.rollback();
-			} catch (SQLException ex2) {
-				ex2.printStackTrace();
-			}
+			//try {
+			//	connection.rollback();
+			//} catch (SQLException ex2) {
+			//	ex2.printStackTrace();
+			//}
 		} finally {
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
@@ -1349,7 +1359,7 @@ public class DialogCheckTableModule extends JDialog {
 				buf.append("     ");
 				buf.append(element.getAttribute("ID"));
 				buf.append(" ");
-				if (frame_.getDatabaseName().contains("jdbc:postgresql") && element.getAttribute("Type").equals("LONG VARCHAR")) {
+				if (databaseName.contains("jdbc:postgresql") && element.getAttribute("Type").equals("LONG VARCHAR")) {
 					buf.append("text");
 				} else {
 					buf.append(element.getAttribute("Type"));

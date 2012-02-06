@@ -527,55 +527,59 @@ public class DialogImport extends JDialog {
 		org.w3c.dom.Element workElement, workElement2;
 		NodeList nodeList, nodeList2;
 		//
-		if (currentElement == null) {
-			isTheSamePK = true;
+		if (!isValidDatabaseID(newElement.getAttribute("DB"))) {
+			error = res.getString("ImportMessage33");
 		} else {
-			nodeList = newElement.getElementsByTagName("Key");
-			for (int i = 0; i < nodeList.getLength(); i++) {
-				workElement = (org.w3c.dom.Element)nodeList.item(i);
-				if (workElement.getAttribute("Type").equals("PK")) {
-					nodeList2 = currentElement.getElementsByTagName("Key");
-					for (int j = 0; j < nodeList2.getLength(); j++) {
-						workElement2 = (org.w3c.dom.Element)nodeList2.item(j);
-						if (workElement2.getAttribute("Type").equals("PK")) {
-							if (workElement.getAttribute("Fields").equals(workElement2.getAttribute("Fields"))) {
-								isTheSamePK = true;
-								break;
+			if (currentElement == null) {
+				isTheSamePK = true;
+			} else {
+				nodeList = newElement.getElementsByTagName("Key");
+				for (int i = 0; i < nodeList.getLength(); i++) {
+					workElement = (org.w3c.dom.Element)nodeList.item(i);
+					if (workElement.getAttribute("Type").equals("PK")) {
+						nodeList2 = currentElement.getElementsByTagName("Key");
+						for (int j = 0; j < nodeList2.getLength(); j++) {
+							workElement2 = (org.w3c.dom.Element)nodeList2.item(j);
+							if (workElement2.getAttribute("Type").equals("PK")) {
+								if (workElement.getAttribute("Fields").equals(workElement2.getAttribute("Fields"))) {
+									isTheSamePK = true;
+									break;
+								}
 							}
 						}
+						break;
 					}
-					break;
 				}
 			}
+			//
+			if (isTheSamePK) {
+				nodeList = newElement.getElementsByTagName("Refer");
+				for (int i = 0; i < nodeList.getLength(); i++) {
+					workElement = (org.w3c.dom.Element)nodeList.item(i);
+					if (error.equals("") && !isValidTableID(workElement.getAttribute("ToTable"))) {
+						error = res.getString("ImportMessage7");
+						break;
+					}
+					if (error.equals("") && !workElement.getAttribute("ToKeyFields").equals("")) {
+						if (!isValidFields(workElement.getAttribute("ToTable"), workElement.getAttribute("ToKeyFields"))) {
+							error = res.getString("ImportMessage8");
+							break;
+						}
+					}
+					if (error.equals("") && !workElement.getAttribute("Fields").equals("")) {
+						if (!isValidFields(workElement.getAttribute("ToTable"), workElement.getAttribute("Fields"))) {
+							error = res.getString("ImportMessage9");
+							break;
+						}
+					}
+					if (!error.equals("")) {
+						break;
+					}
+				}
+			} else {
+				error = res.getString("ImportMessage10");
+			}
 		}
-    	//
-    	if (isTheSamePK) {
-        	nodeList = newElement.getElementsByTagName("Refer");
-        	for (int i = 0; i < nodeList.getLength(); i++) {
-        		workElement = (org.w3c.dom.Element)nodeList.item(i);
-    			if (error.equals("") && !isValidTableID(workElement.getAttribute("ToTable"))) {
-					error = res.getString("ImportMessage7");
-    				break;
-    			}
-    			if (error.equals("") && !workElement.getAttribute("ToKeyFields").equals("")) {
-    				if (!isValidFields(workElement.getAttribute("ToTable"), workElement.getAttribute("ToKeyFields"))) {
-    					error = res.getString("ImportMessage8");
-        				break;
-    				}
-    			}
-    			if (error.equals("") && !workElement.getAttribute("Fields").equals("")) {
-    				if (!isValidFields(workElement.getAttribute("ToTable"), workElement.getAttribute("Fields"))) {
-    					error = res.getString("ImportMessage9");
-        				break;
-    				}
-    			}
-    			if (!error.equals("")) {
-       				break;
-    			}
-        	}
-    	} else {
-    		error = res.getString("ImportMessage10");
-    	}
 		//
 		return error;
 	}
@@ -871,6 +875,16 @@ public class DialogImport extends JDialog {
 					error = res.getString("ImportMessage12");
 				}
 			}
+			if (error.equals("")) {
+				nodeList = element.getElementsByTagName("Phrase");
+				for (int i = 0; i < nodeList.getLength(); i++) {
+					workElement = (org.w3c.dom.Element)nodeList.item(i);
+					if (!isValidFontID(workElement.getAttribute("FontID"))) {
+						error = res.getString("ImportMessage31");
+						break;
+					}
+				}
+			}
 		}
 		//
 		if (functionType.equals("XF300")) {
@@ -1084,6 +1098,21 @@ public class DialogImport extends JDialog {
 				}
 			}
 			if (error.equals("")) {
+				if (!isValidFontID(element.getAttribute("TableFontID"))) {
+					error = res.getString("ImportMessage32");
+				}
+			}
+			if (error.equals("")) {
+				nodeList = element.getElementsByTagName("HeaderPhrase");
+				for (int i = 0; i < nodeList.getLength(); i++) {
+					workElement = (org.w3c.dom.Element)nodeList.item(i);
+					if (!isValidFontID(workElement.getAttribute("FontID"))) {
+						error = res.getString("ImportMessage31");
+						break;
+					}
+				}
+			}
+			if (error.equals("")) {
 				nodeList = element.getElementsByTagName("Column");
 				for (int i = 0; i < nodeList.getLength(); i++) {
 					workElement = (org.w3c.dom.Element)nodeList.item(i);
@@ -1100,6 +1129,38 @@ public class DialogImport extends JDialog {
 		}
 		//
 		return error;
+	}
+	
+	private boolean isValidFontID(String id) {
+		boolean isValid = false;
+		org.w3c.dom.Element element;
+		NodeList nodeList = frame_.getDomDocument().getElementsByTagName("PrintFont");
+		for (int i = 0; i < nodeList.getLength(); i++) {
+			element = (org.w3c.dom.Element)nodeList.item(i);
+			if (element.getAttribute("ID").equals(id)) {
+				isValid = true;
+				break;
+			}
+		}
+		return isValid;
+	}
+	
+	private boolean isValidDatabaseID(String id) {
+		boolean isValid = false;
+		org.w3c.dom.Element element;
+		if (id.equals("")) {
+			isValid = true;
+		} else {
+			NodeList nodeList = frame_.getDomDocument().getElementsByTagName("SubDB");
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				element = (org.w3c.dom.Element)nodeList.item(i);
+				if (element.getAttribute("ID").equals(id)) {
+					isValid = true;
+					break;
+				}
+			}
+		}
+		return isValid;
 	}
 	
 	private boolean isValidTableID(String id) {
