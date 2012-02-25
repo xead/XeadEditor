@@ -959,6 +959,31 @@ public class DialogImport extends JDialog {
 		    		}
 		    	}
 		    }
+		    if (error.equals("") && !element.getAttribute("StructureTable").equals("")) {
+			    if (!isValidTableID(element.getAttribute("StructureTable"))) {
+			    	error = res.getString("ImportMessage34");
+			    }
+				if (error.equals("") && !element.getAttribute("StructureTableKeys").equals("")) {
+					if (!isValidFields(element.getAttribute("StructureTable"), element.getAttribute("StructureTableKeys"))) {
+						error = res.getString("ImportMessage34");
+					}
+				}
+				if (error.equals("") && !element.getAttribute("StructureChildKeys").equals("")) {
+					if (!isValidFields(element.getAttribute("StructureTable"), element.getAttribute("StructureChildKeys"))) {
+						error = res.getString("ImportMessage34");
+					}
+				}
+				if (error.equals("") && !element.getAttribute("StructureNodeText").equals("")) {
+					if (!isValidFields(element.getAttribute("StructureTable"), element.getAttribute("StructureNodeText"))) {
+						error = res.getString("ImportMessage35");
+					}
+				}
+				if (error.equals("") && !element.getAttribute("StructureNodeIconsField").equals("")) {
+					if (!isValidFields(element.getAttribute("StructureTable"), element.getAttribute("StructureNodeIconsField"))) {
+						error = res.getString("ImportMessage36");
+					}
+				}
+		    }
 		}
 		//
 		if (functionType.equals("XF310")) {
