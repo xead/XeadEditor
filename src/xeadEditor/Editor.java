@@ -79,7 +79,7 @@ public class Editor extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private static final ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
 	public static final String APPLICATION_NAME  = "XEAD Editor 1.1";
-	public static final String FULL_VERSION  = "V1.R1.M1";
+	public static final String FULL_VERSION  = "V1.R1.M2";
 	public static final String FORMAT_VERSION  = "1.1";
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2012 DBC,Ltd.";
@@ -276,7 +276,7 @@ public class Editor extends JFrame {
 	private DefaultTableCellRenderer rendererTableHeader = null;
 	private DefaultCellEditor cellEditorLeft;
 	private DefaultCellEditor editorMenuOptionIndex;
-	private TableColumn column0, column1, column2, column3, column4, column5;
+	private TableColumn column0, column1, column2, column3, column4, column5, column6;
 	private boolean tableRowsAreBeingSetup;
 	private int dragObjectRow = 0;
 	private int dragTargetRow = 0;
@@ -1521,8 +1521,9 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction290PhraseAlignment = new JLabel();
 	private JComboBox jComboBoxFunction290PhraseAlignment = new JComboBox();
 	//private JTextField jTextFieldFunction290PhraseAlignment = new JTextField();
-	private JLabel jLabelFunction290PhraseAlignmentMargin = new JLabel();
-	private JTextField jTextFieldFunction290PhraseAlignmentMargin = new JTextField();
+	private JLabel jLabelFunction290PhraseMargin = new JLabel();
+	private JTextField jTextFieldFunction290PhraseMarginLeft = new JTextField();
+	private JTextField jTextFieldFunction290PhraseMarginRight = new JTextField();
 	private JLabel jLabelFunction290PhraseSpacingAfter = new JLabel();
 	private JTextField jTextFieldFunction290PhraseSpacingAfter = new JTextField();
 	private JLabel jLabelFunction290PhraseValue = new JLabel();
@@ -2029,8 +2030,9 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction390HeaderPhraseAlignment = new JLabel();
 	private JComboBox jComboBoxFunction390HeaderPhraseAlignment = new JComboBox();
 	//private JTextField jTextFieldFunction390HeaderPhraseAlignment = new JTextField();
-	private JLabel jLabelFunction390HeaderPhraseAlignmentMargin = new JLabel();
-	private JTextField jTextFieldFunction390HeaderPhraseAlignmentMargin = new JTextField();
+	private JLabel jLabelFunction390HeaderPhraseMargin = new JLabel();
+	private JTextField jTextFieldFunction390HeaderPhraseMarginLeft = new JTextField();
+	private JTextField jTextFieldFunction390HeaderPhraseMarginRight = new JTextField();
 	private JLabel jLabelFunction390HeaderPhraseValue = new JLabel();
 	private JTextField jTextFieldFunction390HeaderPhraseValue = new JTextField();
 	private JLabel jLabelFunction390HeaderPhraseValueKeywords = new JLabel();
@@ -3106,7 +3108,7 @@ public class Editor extends JFrame {
 		jTableSystemSubDBList.addFocusListener(new Editor_FocusListener());
 		jTableSystemSubDBList.addMouseListener(new Editor_jTableSystemSubDBList_mouseAdapter(this));
 		tableModelSystemSubDBList.addColumn("NO.");
-		tableModelSystemSubDBList.addColumn(res.getString("DatabaseSub"));
+		tableModelSystemSubDBList.addColumn(res.getString("DatabaseSubReadOnly"));
 		tableModelSystemSubDBList.addColumn(res.getString("Descriptions"));
 		column0 = jTableSystemSubDBList.getColumnModel().getColumn(0);
 		column1 = jTableSystemSubDBList.getColumnModel().getColumn(1);
@@ -8310,7 +8312,8 @@ public class Editor extends JFrame {
 		tableModelFunction290PhraseList.addColumn("NO.");
 		tableModelFunction290PhraseList.addColumn("B");
 		tableModelFunction290PhraseList.addColumn(res.getString("PhraseFormula"));
-		tableModelFunction290PhraseList.addColumn(res.getString("Alignment"));
+		tableModelFunction290PhraseList.addColumn("Align");
+		tableModelFunction290PhraseList.addColumn("Margins");
 		tableModelFunction290PhraseList.addColumn("After");
 		tableModelFunction290PhraseList.addColumn(res.getString("Font"));
 		column0 = jTableFunction290PhraseList.getColumnModel().getColumn(0);
@@ -8319,18 +8322,21 @@ public class Editor extends JFrame {
 		column3 = jTableFunction290PhraseList.getColumnModel().getColumn(3);
 		column4 = jTableFunction290PhraseList.getColumnModel().getColumn(4);
 		column5 = jTableFunction290PhraseList.getColumnModel().getColumn(5);
+		column6 = jTableFunction290PhraseList.getColumnModel().getColumn(6);
 		column0.setPreferredWidth(37);
 		column1.setPreferredWidth(30);
-		column2.setPreferredWidth(480);
-		column3.setPreferredWidth(100);
-		column4.setPreferredWidth(40);
-		column5.setPreferredWidth(130);
+		column2.setPreferredWidth(550);
+		column3.setPreferredWidth(60);
+		column4.setPreferredWidth(60);
+		column5.setPreferredWidth(40);
+		column6.setPreferredWidth(130);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentCenterControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		column4.setCellRenderer(rendererAlignmentRightControlColor);
-		column5.setCellRenderer(rendererAlignmentLeftControlColor);
+		column4.setCellRenderer(rendererAlignmentCenterControlColor);
+		column5.setCellRenderer(rendererAlignmentRightControlColor);
+		column6.setCellRenderer(rendererAlignmentLeftControlColor);
 //		tableModelFunction290PhraseList.addColumn(res.getString("Font"));
 //		column0 = jTableFunction290PhraseList.getColumnModel().getColumn(0);
 //		column1 = jTableFunction290PhraseList.getColumnModel().getColumn(1);
@@ -8367,6 +8373,7 @@ public class Editor extends JFrame {
 		jComboBoxFunction290PhraseBlockType.setEditable(false);
 		jComboBoxFunction290PhraseBlockType.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jComboBoxFunction290PhraseBlockType.setBounds(new Rectangle(115, 9, 110, 22));
+		jComboBoxFunction290PhraseBlockType.addActionListener(new Editor_jComboBoxFunction290PhraseBlockType_actionAdapter(this));
 		jComboBoxFunction290PhraseBlockType.addItem("HEADER");
 		jComboBoxFunction290PhraseBlockType.addItem("PARAGRAPH");
 		//jComboBoxFunction290PhraseBlockType.addItem("PHRASE");
@@ -8387,22 +8394,24 @@ public class Editor extends JFrame {
 //		jTextFieldFunction290PhraseAlignment.setFont(new java.awt.Font("SansSerif", 0, 12));
 //		jTextFieldFunction290PhraseAlignment.setBounds(new Rectangle(365, 9, 90, 22));
 //		jTextFieldFunction290PhraseAlignment.setText("*Prev");
-		jLabelFunction290PhraseAlignmentMargin.setEnabled(false);
-		jLabelFunction290PhraseAlignmentMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelFunction290PhraseAlignmentMargin.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction290PhraseAlignmentMargin.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction290PhraseAlignmentMargin.setText(res.getString("AlignmentMargin"));
-		jLabelFunction290PhraseAlignmentMargin.setBounds(new Rectangle(491, 12, 96, 15));
-		jTextFieldFunction290PhraseAlignmentMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction290PhraseAlignmentMargin.setBounds(new Rectangle(595, 9, 40, 22));
+		jLabelFunction290PhraseMargin.setEnabled(false);
+		jLabelFunction290PhraseMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction290PhraseMargin.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction290PhraseMargin.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction290PhraseMargin.setText(res.getString("Margin"));
+		jLabelFunction290PhraseMargin.setBounds(new Rectangle(491, 12, 96, 15));
+		jTextFieldFunction290PhraseMarginLeft.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldFunction290PhraseMarginLeft.setBounds(new Rectangle(595, 9, 40, 22));
+		jTextFieldFunction290PhraseMarginRight.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldFunction290PhraseMarginRight.setBounds(new Rectangle(645, 9, 40, 22));
 		jLabelFunction290PhraseSpacingAfter.setEnabled(false);
 		jLabelFunction290PhraseSpacingAfter.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction290PhraseSpacingAfter.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction290PhraseSpacingAfter.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction290PhraseSpacingAfter.setText(res.getString("PhraseSpacingAfter"));
-		jLabelFunction290PhraseSpacingAfter.setBounds(new Rectangle(642, 12, 96, 15));
+		jLabelFunction290PhraseSpacingAfter.setBounds(new Rectangle(692, 12, 96, 15));
 		jTextFieldFunction290PhraseSpacingAfter.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction290PhraseSpacingAfter.setBounds(new Rectangle(746, 9, 60, 22));
+		jTextFieldFunction290PhraseSpacingAfter.setBounds(new Rectangle(796, 9, 60, 22));
 		jLabelFunction290PhraseValue.setEnabled(false);
 		jLabelFunction290PhraseValue.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction290PhraseValue.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -8410,7 +8419,7 @@ public class Editor extends JFrame {
 		jLabelFunction290PhraseValue.setText(res.getString("PhraseFormula"));
 		jLabelFunction290PhraseValue.setBounds(new Rectangle(11, 40, 96, 15));
 		jTextFieldFunction290PhraseValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction290PhraseValue.setBounds(new Rectangle(115, 37, 691, 22));
+		jTextFieldFunction290PhraseValue.setBounds(new Rectangle(115, 37, 741, 22));
 		jLabelFunction290PhraseValueKeywords.setEnabled(false);
 		jLabelFunction290PhraseValueKeywords.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction290PhraseValueKeywords.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -8418,10 +8427,10 @@ public class Editor extends JFrame {
 		jLabelFunction290PhraseValueKeywords.setText(res.getString("KeywordList"));
 		jLabelFunction290PhraseValueKeywords.setBounds(new Rectangle(11, 68, 96, 15));
 		jTextAreaFunction290PhraseValueKeywords.setFont(new java.awt.Font("Monospaced", 0, 12));
-		jTextAreaFunction290PhraseValueKeywords.setBounds(new Rectangle(115, 65, 691, 38));
+		jTextAreaFunction290PhraseValueKeywords.setBounds(new Rectangle(115, 65, 741, 38));
 		jTextAreaFunction290PhraseValueKeywords.setEditable(false);
 		jTextAreaFunction290PhraseValueKeywords.setBorder(BorderFactory.createLineBorder(Color.gray));
-		jTextAreaFunction290PhraseValueKeywords.setText(" &Text(text)   &DataSource(name;format)   &Image(name;x;y;width)   &Line(x1;y1;x2;y2)   &Rect(x1;y1;x2;y2)\n &SystemVariant(id)   &Date(format)   &DateTime(format)   &Logo(x;y;width)   &Barcode(name;type)");
+		jTextAreaFunction290PhraseValueKeywords.setText(" &Text(text)   &DataSource(name;format)   &DataSourceImage(name;x;y;w;h)   &Line(x1;y1;x2;y2)   &Rect(x1;y1;x2;y2)\n &SystemVariant(id)   &Date(format)   &DateTime(format)   &Image(name;x;y;w;h)   &Barcode(name;type)");
 		jTextAreaFunction290PhraseValueKeywords.setOpaque(false);
 		jLabelFunction290PhraseFontName.setEnabled(false);
 		jLabelFunction290PhraseFontName.setFont(new java.awt.Font("SansSerif", 0, 12));
@@ -8466,8 +8475,9 @@ public class Editor extends JFrame {
 		jPanelFunction290PhraseList.add(jLabelFunction290PhraseAlignment);
 		//jPanelFunction290PhraseList.add(jTextFieldFunction290PhraseAlignment);
 		jPanelFunction290PhraseList.add(jComboBoxFunction290PhraseAlignment);
-		jPanelFunction290PhraseList.add(jLabelFunction290PhraseAlignmentMargin);
-		jPanelFunction290PhraseList.add(jTextFieldFunction290PhraseAlignmentMargin);
+		jPanelFunction290PhraseList.add(jLabelFunction290PhraseMargin);
+		jPanelFunction290PhraseList.add(jTextFieldFunction290PhraseMarginLeft);
+		jPanelFunction290PhraseList.add(jTextFieldFunction290PhraseMarginRight);
 		jPanelFunction290PhraseList.add(jLabelFunction290PhraseSpacingAfter);
 		jPanelFunction290PhraseList.add(jTextFieldFunction290PhraseSpacingAfter);
 		jPanelFunction290PhraseList.add(jLabelFunction290PhraseValue);
@@ -10746,7 +10756,8 @@ public class Editor extends JFrame {
 		tableModelFunction390HeaderPhraseList.addColumn("NO.");
 		tableModelFunction390HeaderPhraseList.addColumn("B");
 		tableModelFunction390HeaderPhraseList.addColumn(res.getString("PhraseFormula"));
-		tableModelFunction390HeaderPhraseList.addColumn(res.getString("Alignment"));
+		tableModelFunction390HeaderPhraseList.addColumn("Align");
+		tableModelFunction390HeaderPhraseList.addColumn("Margins");
 		tableModelFunction390HeaderPhraseList.addColumn("After");
 		tableModelFunction390HeaderPhraseList.addColumn(res.getString("Font"));
 		column0 = jTableFunction390HeaderPhraseList.getColumnModel().getColumn(0);
@@ -10755,18 +10766,21 @@ public class Editor extends JFrame {
 		column3 = jTableFunction390HeaderPhraseList.getColumnModel().getColumn(3);
 		column4 = jTableFunction390HeaderPhraseList.getColumnModel().getColumn(4);
 		column5 = jTableFunction390HeaderPhraseList.getColumnModel().getColumn(5);
+		column6 = jTableFunction390HeaderPhraseList.getColumnModel().getColumn(6);
 		column0.setPreferredWidth(37);
 		column1.setPreferredWidth(30);
-		column2.setPreferredWidth(480);
-		column3.setPreferredWidth(100);
-		column4.setPreferredWidth(40);
-		column5.setPreferredWidth(130);
+		column2.setPreferredWidth(550);
+		column3.setPreferredWidth(60);
+		column4.setPreferredWidth(60);
+		column5.setPreferredWidth(40);
+		column6.setPreferredWidth(130);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentCenterControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		column4.setCellRenderer(rendererAlignmentRightControlColor);
-		column5.setCellRenderer(rendererAlignmentLeftControlColor);
+		column4.setCellRenderer(rendererAlignmentCenterControlColor);
+		column5.setCellRenderer(rendererAlignmentRightControlColor);
+		column6.setCellRenderer(rendererAlignmentLeftControlColor);
 		jTableFunction390HeaderPhraseList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction390HeaderPhraseList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
@@ -10787,6 +10801,7 @@ public class Editor extends JFrame {
 		jComboBoxFunction390HeaderPhraseBlockType.setEditable(false);
 		jComboBoxFunction390HeaderPhraseBlockType.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jComboBoxFunction390HeaderPhraseBlockType.setBounds(new Rectangle(115, 9, 110, 22));
+		jComboBoxFunction390HeaderPhraseBlockType.addActionListener(new Editor_jComboBoxFunction390HeaderPhraseBlockType_actionAdapter(this));
 		jComboBoxFunction390HeaderPhraseBlockType.addItem("HEADER");
 		jComboBoxFunction390HeaderPhraseBlockType.addItem("PARAGRAPH");
 		//jComboBoxFunction390HeaderPhraseBlockType.addItem("PHRASE");
@@ -10808,22 +10823,24 @@ public class Editor extends JFrame {
 		//jTextFieldFunction390HeaderPhraseAlignment.setFont(new java.awt.Font("SansSerif", 0, 12));
 		//jTextFieldFunction390HeaderPhraseAlignment.setBounds(new Rectangle(365, 9, 90, 22));
 		//jTextFieldFunction390HeaderPhraseAlignment.setText("*Prev");
-		jLabelFunction390HeaderPhraseAlignmentMargin.setEnabled(false);
-		jLabelFunction390HeaderPhraseAlignmentMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelFunction390HeaderPhraseAlignmentMargin.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction390HeaderPhraseAlignmentMargin.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction390HeaderPhraseAlignmentMargin.setText(res.getString("AlignmentMargin"));
-		jLabelFunction390HeaderPhraseAlignmentMargin.setBounds(new Rectangle(491, 12, 96, 15));
-		jTextFieldFunction390HeaderPhraseAlignmentMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction390HeaderPhraseAlignmentMargin.setBounds(new Rectangle(595, 9, 40, 22));
+		jLabelFunction390HeaderPhraseMargin.setEnabled(false);
+		jLabelFunction390HeaderPhraseMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390HeaderPhraseMargin.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction390HeaderPhraseMargin.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction390HeaderPhraseMargin.setText(res.getString("Margin"));
+		jLabelFunction390HeaderPhraseMargin.setBounds(new Rectangle(491, 12, 96, 15));
+		jTextFieldFunction390HeaderPhraseMarginLeft.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldFunction390HeaderPhraseMarginLeft.setBounds(new Rectangle(595, 9, 40, 22));
+		jTextFieldFunction390HeaderPhraseMarginRight.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldFunction390HeaderPhraseMarginRight.setBounds(new Rectangle(645, 9, 40, 22));
 		jLabelFunction390HeaderPhraseSpacingAfter.setEnabled(false);
 		jLabelFunction390HeaderPhraseSpacingAfter.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction390HeaderPhraseSpacingAfter.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390HeaderPhraseSpacingAfter.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390HeaderPhraseSpacingAfter.setText(res.getString("PhraseSpacingAfter"));
-		jLabelFunction390HeaderPhraseSpacingAfter.setBounds(new Rectangle(642, 12, 96, 15));
+		jLabelFunction390HeaderPhraseSpacingAfter.setBounds(new Rectangle(692, 12, 96, 15));
 		jTextFieldFunction390HeaderPhraseSpacingAfter.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction390HeaderPhraseSpacingAfter.setBounds(new Rectangle(746, 9, 60, 22));
+		jTextFieldFunction390HeaderPhraseSpacingAfter.setBounds(new Rectangle(796, 9, 60, 22));
 		jLabelFunction390HeaderPhraseValue.setEnabled(false);
 		jLabelFunction390HeaderPhraseValue.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction390HeaderPhraseValue.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -10831,7 +10848,7 @@ public class Editor extends JFrame {
 		jLabelFunction390HeaderPhraseValue.setText(res.getString("PhraseFormula"));
 		jLabelFunction390HeaderPhraseValue.setBounds(new Rectangle(11, 40, 96, 15));
 		jTextFieldFunction390HeaderPhraseValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction390HeaderPhraseValue.setBounds(new Rectangle(115, 37, 691, 22));
+		jTextFieldFunction390HeaderPhraseValue.setBounds(new Rectangle(115, 37, 741, 22));
 		jLabelFunction390HeaderPhraseValueKeywords.setEnabled(false);
 		jLabelFunction390HeaderPhraseValueKeywords.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction390HeaderPhraseValueKeywords.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -10839,10 +10856,10 @@ public class Editor extends JFrame {
 		jLabelFunction390HeaderPhraseValueKeywords.setText(res.getString("KeywordList"));
 		jLabelFunction390HeaderPhraseValueKeywords.setBounds(new Rectangle(11, 68, 96, 15));
 		jTextAreaFunction390HeaderPhraseValueKeywords.setFont(new java.awt.Font("Monospaced", 0, 12));
-		jTextAreaFunction390HeaderPhraseValueKeywords.setBounds(new Rectangle(115, 65, 691, 38));
+		jTextAreaFunction390HeaderPhraseValueKeywords.setBounds(new Rectangle(115, 65, 741, 38));
 		jTextAreaFunction390HeaderPhraseValueKeywords.setEditable(false);
 		jTextAreaFunction390HeaderPhraseValueKeywords.setBorder(BorderFactory.createLineBorder(Color.gray));
-		jTextAreaFunction390HeaderPhraseValueKeywords.setText(" &Text(text)   &DataSource(name;format)   &Image(name;x;y;width)   &Line(x1;y1;x2;y2)   &Rect(x1;y1;x2;y2)\n &SystemVariant(id)   &Date(format)   &DateTime(format)   &Logo(x;y;width)   &Barcode(name;type)");
+		jTextAreaFunction390HeaderPhraseValueKeywords.setText(" &Text(text)   &DataSource(name;format)   &DataSourceImage(name;x;y;w;h)   &Line(x1;y1;x2;y2)   &Rect(x1;y1;x2;y2)\n &SystemVariant(id)   &Date(format)   &DateTime(format)   &Image(name;x;y;w;h)   &Barcode(name;type)");
 		jTextAreaFunction390HeaderPhraseValueKeywords.setOpaque(false);
 		jLabelFunction390HeaderPhraseFontName.setEnabled(false);
 		jLabelFunction390HeaderPhraseFontName.setFont(new java.awt.Font("SansSerif", 0, 12));
@@ -10887,8 +10904,9 @@ public class Editor extends JFrame {
 		jPanelFunction390HeaderPhraseList.add(jLabelFunction390HeaderPhraseAlignment);
 		//jPanelFunction390HeaderPhraseList.add(jTextFieldFunction390HeaderPhraseAlignment);
 		jPanelFunction390HeaderPhraseList.add(jComboBoxFunction390HeaderPhraseAlignment);
-		jPanelFunction390HeaderPhraseList.add(jLabelFunction390HeaderPhraseAlignmentMargin);
-		jPanelFunction390HeaderPhraseList.add(jTextFieldFunction390HeaderPhraseAlignmentMargin);
+		jPanelFunction390HeaderPhraseList.add(jLabelFunction390HeaderPhraseMargin);
+		jPanelFunction390HeaderPhraseList.add(jTextFieldFunction390HeaderPhraseMarginLeft);
+		jPanelFunction390HeaderPhraseList.add(jTextFieldFunction390HeaderPhraseMarginRight);
 		jPanelFunction390HeaderPhraseList.add(jLabelFunction390HeaderPhraseValue);
 		jPanelFunction390HeaderPhraseList.add(jTextFieldFunction390HeaderPhraseValue);
 		jPanelFunction390HeaderPhraseList.add(jLabelFunction390HeaderPhraseValueKeywords);
@@ -12314,10 +12332,6 @@ public class Editor extends JFrame {
 		StringTokenizer workTokenizer, workTokenizer2;
 		org.w3c.dom.Element fieldElement, referElement;
 		//
-		/////////////////////////////////////////////////////////////////////////
-		// Valid Keywords:&DataSource(Alias.FieldID),&SystemVariant(VariantID) //
-		//               &Text(text),&Date,&DateTime,&Logo                     //
-		/////////////////////////////////////////////////////////////////////////
 		int pos1 = value.indexOf("&", 0);
 		int pos2;
 		while (pos1 > -1) {
@@ -12338,9 +12352,9 @@ public class Editor extends JFrame {
 				pos1 = keywordList.get(i).indexOf(")", 0);
 				wrkStr = keywordList.get(i).substring(12, pos1);
 			}
-			if (keywordList.get(i).contains("&Image(")) {
+			if (keywordList.get(i).contains("&DataSourceImage(")) {
 				pos1 = keywordList.get(i).indexOf(")", 0);
-				wrkStr = keywordList.get(i).substring(7, pos1);
+				wrkStr = keywordList.get(i).substring(17, pos1);
 			}
 			if (keywordList.get(i).contains("&Barcode(")) {
 				pos1 = keywordList.get(i).indexOf(")", 0);
@@ -12423,9 +12437,9 @@ public class Editor extends JFrame {
 				pos1 = keywordList.get(i).indexOf(")", 0);
 				wrkStr = keywordList.get(i).substring(12, pos1);
 			}
-			if (keywordList.get(i).contains("&Image(")) {
+			if (keywordList.get(i).contains("&DataSourceImage(")) {
 				pos1 = keywordList.get(i).indexOf(")", 0);
-				wrkStr = keywordList.get(i).substring(7, pos1);
+				wrkStr = keywordList.get(i).substring(17, pos1);
 			}
 			if (keywordList.get(i).contains("&Barcode(")) {
 				pos1 = keywordList.get(i).indexOf(")", 0);
@@ -14908,6 +14922,7 @@ public class Editor extends JFrame {
 							JOptionPane.showMessageDialog(null, res.getString("ErrorMessage105"));
 							ready = true;
 						} else {
+							answer = answer.toUpperCase();
 							duplicated = false;
 							for (int i = 0; i < subsystemListNode.getChildCount(); i++) {
 								for (int j = 0; j < subsystemListNode.getChildAt(i).getChildAt(0).getChildCount(); j++) {
@@ -17048,7 +17063,7 @@ public class Editor extends JFrame {
 			NodeList nodeList1, nodeList2;
 			MainTreeNode tableNode;
 			org.w3c.dom.Element element, tablePKElement;
-			String wrkStr;
+			String wrkStr, marginLeft, marginRight;
 			String functionUsage;
 			//
 		    tableRowsAreBeingSetup = true;
@@ -17107,30 +17122,33 @@ public class Editor extends JFrame {
 			NodeList fieldList = domNode_.getElementsByTagName("Phrase");
 			sortingList = getSortedListModel(fieldList, "Order");
 		    for (int i = 0; i < sortingList.getSize(); i++) {
-		    	//
 		        element = (org.w3c.dom.Element)sortingList.getElementAt(i);
-		        //
-				Object[] Cell = new Object[6];
+				Object[] Cell = new Object[7];
 				Cell[0] = new TableRowNumber(i+1, element);
-				//
 				Cell[1] = element.getAttribute("Block").substring(0,1);
 				Cell[2] = getDescriptionsOfPhraseValue(element.getAttribute("Value"), domNode_.getAttribute("PrimaryTable"), function290ReferList);
-				//if (element.getAttribute("Block").equals("PHRASE")) {
-				//	Cell[3] = "*Prev";
-				//} else {
-					if (element.getAttribute("AlignmentMargin").equals("") || element.getAttribute("AlignmentMargin").equals("0")) {
-						Cell[3] = element.getAttribute("Alignment");
-					} else {
-						Cell[3] = element.getAttribute("Alignment") + "(" + element.getAttribute("AlignmentMargin") + ")";
+				Cell[3] = element.getAttribute("Alignment");
+				if (element.getAttribute("Block").equals("PARAGRAPH")) {
+					marginLeft = (String)element.getAttribute("MarginLeft"); 
+					if (marginLeft.equals("")) {
+						marginLeft = "0";
 					}
-				//}
-				if (element.getAttribute("SpacingAfter").equals("")) {
-					Cell[4] = "0";
+					marginRight = (String)element.getAttribute("MarginRight"); 
+					if (marginRight.equals("")) {
+						marginRight = "0";
+					}
+					Cell[4] = marginLeft + " - " + marginRight;
+					if (element.getAttribute("SpacingAfter").equals("")) {
+						Cell[5] = "0";
+					} else {
+						Cell[5] = element.getAttribute("SpacingAfter");
+					}
 				} else {
-					Cell[4] = element.getAttribute("SpacingAfter");
+					Cell[4] = "";
+					Cell[5] = "";
 				}
 				wrkStr = (String)jComboBoxFunction290PhraseFontName.getItemAt(systemPrintFontIDList.indexOf(element.getAttribute("FontID")));
-				Cell[5] = getDescriptionsOfPrintFont(wrkStr, element.getAttribute("FontSize"), element.getAttribute("FontStyle"));
+				Cell[6] = getDescriptionsOfPrintFont(wrkStr, element.getAttribute("FontSize"), element.getAttribute("FontStyle"));
 				//
 				tableModelFunction290PhraseList.addRow(Cell);
 			}
@@ -17637,7 +17655,8 @@ public class Editor extends JFrame {
 				wrkStr = element.getAttribute("DataSource");
 				wrkInt = wrkStr.indexOf(".");
 				tableAlias = wrkStr.substring(0, wrkInt);
-				tableID = getTableIDOfTableAlias(tableAlias, function310DetailReferList, function310HeaderReferList);
+				//tableID = getTableIDOfTableAlias(tableAlias, function310DetailReferList, function310HeaderReferList);
+				tableID = getTableIDOfTableAlias(tableAlias, function310AddRowListTableReferList, null);
 				fieldID = wrkStr.substring(wrkInt+1, wrkStr.length());
 		        fieldElement = getSpecificFieldElement(tableID, fieldID);
 		        if (fieldElement.getAttribute("Name").equals("")) {
@@ -17782,6 +17801,8 @@ public class Editor extends JFrame {
 			String functionUsage;
 			String tableID, tableAlias, fieldID, wrkStr;
 			int wrkInt = 0;
+			String marginLeft = "";
+			String marginRight = "";
 			//
 		    tableRowsAreBeingSetup = true;
 			selectedRow_jTableFunction390HeaderPhraseList = -1;
@@ -17872,30 +17893,33 @@ public class Editor extends JFrame {
 			NodeList fieldList = domNode_.getElementsByTagName("HeaderPhrase");
 			sortingList = getSortedListModel(fieldList, "Order");
 		    for (int i = 0; i < sortingList.getSize(); i++) {
-		    	//
 		        element = (org.w3c.dom.Element)sortingList.getElementAt(i);
-		        //
-				Object[] Cell = new Object[6];
+				Object[] Cell = new Object[7];
 				Cell[0] = new TableRowNumber(i+1, element);
-				//
 				Cell[1] = element.getAttribute("Block").substring(0, 1);
 				Cell[2] = getDescriptionsOfPhraseValue(element.getAttribute("Value"), domNode_.getAttribute("HeaderTable"), function390HeaderReferList);
-				//if (element.getAttribute("Block").equals("PHRASE")) {
-				//	Cell[3] = "*Prev";
-				//} else {
-					if (element.getAttribute("AlignmentMargin").equals("") || element.getAttribute("AlignmentMargin").equals("0")) {
-						Cell[3] = element.getAttribute("Alignment");
-					} else {
-						Cell[3] = element.getAttribute("Alignment") + "(" + element.getAttribute("AlignmentMargin") + ")";
+				Cell[3] = element.getAttribute("Alignment");
+				if (element.getAttribute("Block").equals("PARAGRAPH")) {
+					marginLeft = (String)element.getAttribute("MarginLeft"); 
+					if (marginLeft.equals("")) {
+						marginLeft = "0";
 					}
-				//}
-				if (element.getAttribute("SpacingAfter").equals("")) {
-					Cell[4] = "0";
+					marginRight = (String)element.getAttribute("MarginRight"); 
+					if (marginRight.equals("")) {
+						marginRight = "0";
+					}
+					Cell[4] = marginLeft + " - " + marginRight;
+					if (element.getAttribute("SpacingAfter").equals("")) {
+						Cell[5] = "0";
+					} else {
+						Cell[5] = element.getAttribute("SpacingAfter");
+					}
 				} else {
-					Cell[4] = element.getAttribute("SpacingAfter");
+					Cell[4] = "";
+					Cell[5] = "";
 				}
 				wrkStr = (String)jComboBoxFunction390HeaderPhraseFontName.getItemAt(systemPrintFontIDList.indexOf(element.getAttribute("FontID")));
-				Cell[5] = getDescriptionsOfPrintFont(wrkStr, element.getAttribute("FontSize"), element.getAttribute("FontStyle"));
+				Cell[6] = getDescriptionsOfPrintFont(wrkStr, element.getAttribute("FontSize"), element.getAttribute("FontStyle"));
 				//
 				tableModelFunction390HeaderPhraseList.addRow(Cell);
 			}
@@ -22070,10 +22094,24 @@ public class Editor extends JFrame {
 					valueOfFieldsChanged = true;
 					element.setAttribute("Alignment", wrkStr);
 				}
-				wrkStr = jTextFieldFunction290PhraseAlignmentMargin.getText();
-				if (!wrkStr.equals(element.getAttribute("AlignmentMargin"))) {
+				wrkStr = jTextFieldFunction290PhraseMarginLeft.getText();
+				if (wrkStr.equals("")) {
+					wrkStr = "0";
+				}
+				if (!wrkStr.equals(element.getAttribute("MarginLeft"))) {
 					valueOfFieldsChanged = true;
-					element.setAttribute("AlignmentMargin", wrkStr);
+					element.setAttribute("MarginLeft", wrkStr);
+				}
+				wrkStr = jTextFieldFunction290PhraseMarginRight.getText();
+				if (wrkStr.equals("")) {
+					wrkStr = "0";
+				}
+				if (!wrkStr.equals(element.getAttribute("MarginRight"))) {
+					valueOfFieldsChanged = true;
+					element.setAttribute("MarginRight", wrkStr);
+				}
+				if (!element.getAttribute("AlignmentMargin").equals("")) {
+					element.setAttribute("AlignmentMargin", "");
 				}
 				//
 				if (jTextFieldFunction290PhraseSpacingAfter.getText().equals("")) {
@@ -22125,14 +22163,16 @@ public class Editor extends JFrame {
 				if (valueOfFieldsChanged) {
 					tableModelFunction290PhraseList.setValueAt(element.getAttribute("Block").substring(0, 1), selectedRow_jTableFunction290PhraseList, 1);
 					tableModelFunction290PhraseList.setValueAt(getDescriptionsOfPhraseValue(element.getAttribute("Value"), domNode_.getAttribute("PrimaryTable"), function290ReferList), selectedRow_jTableFunction290PhraseList, 2);
-					if (jTextFieldFunction290PhraseAlignmentMargin.getText().equals("") || jTextFieldFunction290PhraseAlignmentMargin.getText().equals("0")) {
-						tableModelFunction290PhraseList.setValueAt(element.getAttribute("Alignment"), selectedRow_jTableFunction290PhraseList, 3);
+					tableModelFunction290PhraseList.setValueAt(element.getAttribute("Alignment"), selectedRow_jTableFunction290PhraseList, 3);
+					if (element.getAttribute("Block").equals("PARAGRAPH")) {
+						tableModelFunction290PhraseList.setValueAt(element.getAttribute("MarginLeft") + " - " + element.getAttribute("MarginRight"), selectedRow_jTableFunction290PhraseList, 4);
+						tableModelFunction290PhraseList.setValueAt(element.getAttribute("SpacingAfter"), selectedRow_jTableFunction290PhraseList, 5);
 					} else {
-						tableModelFunction290PhraseList.setValueAt(element.getAttribute("Alignment") + "(" + element.getAttribute("AlignmentMargin") + ")", selectedRow_jTableFunction290PhraseList, 3);
+						tableModelFunction290PhraseList.setValueAt("", selectedRow_jTableFunction290PhraseList, 4);
+						tableModelFunction290PhraseList.setValueAt("", selectedRow_jTableFunction290PhraseList, 5);
 					}
-					tableModelFunction290PhraseList.setValueAt(element.getAttribute("SpacingAfter"), selectedRow_jTableFunction290PhraseList, 4);
 					wrkStr = getDescriptionsOfPrintFont(jComboBoxFunction290PhraseFontName.getSelectedItem().toString(), element.getAttribute("FontSize"), element.getAttribute("FontStyle"));
-					tableModelFunction290PhraseList.setValueAt(wrkStr, selectedRow_jTableFunction290PhraseList, 5);
+					tableModelFunction290PhraseList.setValueAt(wrkStr, selectedRow_jTableFunction290PhraseList, 6);
 				}
 			}
 			//
@@ -23790,10 +23830,28 @@ public class Editor extends JFrame {
 					valueOfFieldsChanged = true;
 					element.setAttribute("Alignment", wrkStr);
 				}
-				wrkStr = jTextFieldFunction390HeaderPhraseAlignmentMargin.getText();
-				if (!wrkStr.equals(element.getAttribute("AlignmentMargin"))) {
+				if (jTextFieldFunction390HeaderPhraseMarginLeft.getText().equals("")) {
+					jTextFieldFunction390HeaderPhraseMarginLeft.setText("0");
+				}
+				//
+				wrkStr = jTextFieldFunction390HeaderPhraseMarginLeft.getText();
+				if (wrkStr.equals("")) {
+					wrkStr = "0";
+				}
+				if (!wrkStr.equals(element.getAttribute("MarginLeft"))) {
 					valueOfFieldsChanged = true;
-					element.setAttribute("AlignmentMargin", wrkStr);
+					element.setAttribute("MarginLeft", wrkStr);
+				}
+				wrkStr = jTextFieldFunction390HeaderPhraseMarginRight.getText();
+				if (wrkStr.equals("")) {
+					wrkStr = "0";
+				}
+				if (!wrkStr.equals(element.getAttribute("MarginRight"))) {
+					valueOfFieldsChanged = true;
+					element.setAttribute("MarginRight", wrkStr);
+				}
+				if (!element.getAttribute("AlignmentMargin").equals("")) {
+					element.setAttribute("AlignmentMargin", "");
 				}
 				//
 				if (jTextFieldFunction390HeaderPhraseSpacingAfter.getText().equals("")) {
@@ -23845,14 +23903,16 @@ public class Editor extends JFrame {
 				if (valueOfFieldsChanged) {
 					tableModelFunction390HeaderPhraseList.setValueAt(element.getAttribute("Block").substring(0, 1), selectedRow_jTableFunction390HeaderPhraseList, 1);
 					tableModelFunction390HeaderPhraseList.setValueAt(getDescriptionsOfPhraseValue(element.getAttribute("Value"), domNode_.getAttribute("HeaderTable"), function390HeaderReferList), selectedRow_jTableFunction390HeaderPhraseList, 2);
-					if (jTextFieldFunction390HeaderPhraseAlignmentMargin.getText().equals("") || jTextFieldFunction390HeaderPhraseAlignmentMargin.getText().equals("0")) {
-						tableModelFunction390HeaderPhraseList.setValueAt(element.getAttribute("Alignment"), selectedRow_jTableFunction390HeaderPhraseList, 3);
+					tableModelFunction390HeaderPhraseList.setValueAt(element.getAttribute("Alignment"), selectedRow_jTableFunction390HeaderPhraseList, 3);
+					if (element.getAttribute("Block").equals("PARAGRAPH")) {
+						tableModelFunction390HeaderPhraseList.setValueAt(element.getAttribute("MarginLeft") + " - " + element.getAttribute("MarginRight"), selectedRow_jTableFunction390HeaderPhraseList, 4);
+						tableModelFunction390HeaderPhraseList.setValueAt(element.getAttribute("SpacingAfter"), selectedRow_jTableFunction390HeaderPhraseList, 5);
 					} else {
-						tableModelFunction390HeaderPhraseList.setValueAt(element.getAttribute("Alignment") + "(" + element.getAttribute("AlignmentMargin") + ")", selectedRow_jTableFunction390HeaderPhraseList, 3);
+						tableModelFunction390HeaderPhraseList.setValueAt("", selectedRow_jTableFunction390HeaderPhraseList, 4);
+						tableModelFunction390HeaderPhraseList.setValueAt("", selectedRow_jTableFunction390HeaderPhraseList, 5);
 					}
-					tableModelFunction390HeaderPhraseList.setValueAt(element.getAttribute("SpacingAfter"), selectedRow_jTableFunction390HeaderPhraseList, 4);
 					wrkStr = getDescriptionsOfPrintFont(jComboBoxFunction390HeaderPhraseFontName.getSelectedItem().toString(), element.getAttribute("FontSize"), element.getAttribute("FontStyle"));
-					tableModelFunction390HeaderPhraseList.setValueAt(wrkStr, selectedRow_jTableFunction390HeaderPhraseList, 5);
+					tableModelFunction390HeaderPhraseList.setValueAt(wrkStr, selectedRow_jTableFunction390HeaderPhraseList, 6);
 				}
 			}
 			//
@@ -28330,11 +28390,16 @@ public class Editor extends JFrame {
 	}
 	
 	void setupValuesToStartDraggingTableRow(MouseEvent e, JTable table) {
-		tableRowsAreBeingSetup = true;
-		if ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
-			dragObjectRow = table.rowAtPoint(e.getPoint());
-			dragTargetRow = dragObjectRow;
-			table.setRowSelectionInterval(dragObjectRow, dragObjectRow);
+		try {
+			tableRowsAreBeingSetup = true;
+			if ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
+				dragObjectRow = table.rowAtPoint(e.getPoint());
+				dragTargetRow = dragObjectRow;
+				table.setRowSelectionInterval(dragObjectRow, dragObjectRow);
+			}
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(null, e1.getMessage());
+			e1.printStackTrace();
 		}
 	}
 	
@@ -29590,7 +29655,7 @@ public class Editor extends JFrame {
 				//
 				jLabelFunction290PhraseBlockType.setEnabled(false);
 				jLabelFunction290PhraseAlignment.setEnabled(false);
-				jLabelFunction290PhraseAlignmentMargin.setEnabled(false);
+				jLabelFunction290PhraseMargin.setEnabled(false);
 				jLabelFunction290PhraseSpacingAfter.setEnabled(false);
 				jLabelFunction290PhraseValue.setEnabled(false);
 				jLabelFunction290PhraseValueKeywords.setEnabled(false);
@@ -29599,8 +29664,10 @@ public class Editor extends JFrame {
 				jLabelFunction290PhraseFontStyle.setEnabled(false);
 				jComboBoxFunction290PhraseBlockType.setEnabled(false);
 				jComboBoxFunction290PhraseAlignment.setEnabled(false);
-				jTextFieldFunction290PhraseAlignmentMargin.setText("");
-				jTextFieldFunction290PhraseAlignmentMargin.setEnabled(false);
+				jTextFieldFunction290PhraseMarginLeft.setText("");
+				jTextFieldFunction290PhraseMarginLeft.setEnabled(false);
+				jTextFieldFunction290PhraseMarginRight.setText("");
+				jTextFieldFunction290PhraseMarginRight.setEnabled(false);
 				jTextFieldFunction290PhraseSpacingAfter.setText("");
 				jTextFieldFunction290PhraseSpacingAfter.setEnabled(false);
 				jTextFieldFunction290PhraseValue.setText("");
@@ -29617,7 +29684,7 @@ public class Editor extends JFrame {
 					//
 					jLabelFunction290PhraseBlockType.setEnabled(true);
 					jLabelFunction290PhraseAlignment.setEnabled(true);
-					jLabelFunction290PhraseAlignmentMargin.setEnabled(true);
+					jLabelFunction290PhraseMargin.setEnabled(true);
 					jLabelFunction290PhraseSpacingAfter.setEnabled(true);
 					jLabelFunction290PhraseValue.setEnabled(true);
 					jLabelFunction290PhraseValueKeywords.setEnabled(true);
@@ -29626,7 +29693,8 @@ public class Editor extends JFrame {
 					jLabelFunction290PhraseFontStyle.setEnabled(true);
 					jComboBoxFunction290PhraseBlockType.setEnabled(true);
 					jComboBoxFunction290PhraseAlignment.setEnabled(true);
-					jTextFieldFunction290PhraseAlignmentMargin.setEnabled(true);
+					jTextFieldFunction290PhraseMarginLeft.setEnabled(true);
+					jTextFieldFunction290PhraseMarginRight.setEnabled(true);
 					jTextFieldFunction290PhraseSpacingAfter.setEnabled(true);
 					jTextFieldFunction290PhraseValue.setEnabled(true);
 					jTextAreaFunction290PhraseValueKeywords.setEnabled(true);
@@ -29637,11 +29705,29 @@ public class Editor extends JFrame {
 					//
 					jComboBoxFunction290PhraseBlockType.setSelectedItem(element.getAttribute("Block"));
 					jComboBoxFunction290PhraseAlignment.setSelectedItem(element.getAttribute("Alignment"));
-					jTextFieldFunction290PhraseAlignmentMargin.setText(element.getAttribute("AlignmentMargin"));
-					if (element.getAttribute("SpacingAfter").equals("")) {
-						jTextFieldFunction290PhraseSpacingAfter.setText("0");
+					if (element.getAttribute("Block").equals("PARAGRAPH")) {
+						if (element.getAttribute("AlignmentMargin").equals("")) {
+							jTextFieldFunction290PhraseMarginLeft.setText(element.getAttribute("MarginLeft"));
+							jTextFieldFunction290PhraseMarginRight.setText(element.getAttribute("MarginRight"));
+						} else {
+							if (element.getAttribute("Alignment").equals("LEFT")) {
+								jTextFieldFunction290PhraseMarginLeft.setText(element.getAttribute("AlignmentMargin"));
+								jTextFieldFunction290PhraseMarginRight.setText(element.getAttribute("0"));
+							}
+							if (element.getAttribute("Alignment").equals("RIGHT")) {
+								jTextFieldFunction290PhraseMarginLeft.setText(element.getAttribute("0"));
+								jTextFieldFunction290PhraseMarginRight.setText(element.getAttribute("AlignmentMargin"));
+							}
+						}
+						if (element.getAttribute("SpacingAfter").equals("")) {
+							jTextFieldFunction290PhraseSpacingAfter.setText("0");
+						} else {
+							jTextFieldFunction290PhraseSpacingAfter.setText(element.getAttribute("SpacingAfter"));
+						}
 					} else {
-						jTextFieldFunction290PhraseSpacingAfter.setText(element.getAttribute("SpacingAfter"));
+						jTextFieldFunction290PhraseMarginLeft.setText("");
+						jTextFieldFunction290PhraseMarginRight.setText("");
+						jTextFieldFunction290PhraseSpacingAfter.setText("");
 					}
 					jTextFieldFunction290PhraseValue.setText(element.getAttribute("Value"));
 					jComboBoxFunction290PhraseFontName.setSelectedIndex(systemPrintFontIDList.indexOf(element.getAttribute("FontID")));
@@ -29679,7 +29765,7 @@ public class Editor extends JFrame {
 				//
 				jLabelFunction390HeaderPhraseBlockType.setEnabled(false);
 				jLabelFunction390HeaderPhraseAlignment.setEnabled(false);
-				jLabelFunction390HeaderPhraseAlignmentMargin.setEnabled(false);
+				jLabelFunction390HeaderPhraseMargin.setEnabled(false);
 				jLabelFunction390HeaderPhraseValue.setEnabled(false);
 				jLabelFunction390HeaderPhraseValueKeywords.setEnabled(false);
 				jLabelFunction390HeaderPhraseFontName.setEnabled(false);
@@ -29688,8 +29774,10 @@ public class Editor extends JFrame {
 				jLabelFunction390HeaderPhraseSpacingAfter.setEnabled(false);
 				jComboBoxFunction390HeaderPhraseBlockType.setEnabled(false);
 				jComboBoxFunction390HeaderPhraseAlignment.setEnabled(false);
-				jTextFieldFunction390HeaderPhraseAlignmentMargin.setText("");
-				jTextFieldFunction390HeaderPhraseAlignmentMargin.setEnabled(false);
+				jTextFieldFunction390HeaderPhraseMarginLeft.setText("");
+				jTextFieldFunction390HeaderPhraseMarginLeft.setEnabled(false);
+				jTextFieldFunction390HeaderPhraseMarginRight.setText("");
+				jTextFieldFunction390HeaderPhraseMarginRight.setEnabled(false);
 				jTextFieldFunction390HeaderPhraseSpacingAfter.setText("");
 				jTextFieldFunction390HeaderPhraseSpacingAfter.setEnabled(false);
 				jTextFieldFunction390HeaderPhraseValue.setText("");
@@ -29706,7 +29794,7 @@ public class Editor extends JFrame {
 					//
 					jLabelFunction390HeaderPhraseBlockType.setEnabled(true);
 					jLabelFunction390HeaderPhraseAlignment.setEnabled(true);
-					jLabelFunction390HeaderPhraseAlignmentMargin.setEnabled(true);
+					jLabelFunction390HeaderPhraseMargin.setEnabled(true);
 					jLabelFunction390HeaderPhraseValue.setEnabled(true);
 					jLabelFunction390HeaderPhraseValueKeywords.setEnabled(true);
 					jLabelFunction390HeaderPhraseFontName.setEnabled(true);
@@ -29715,7 +29803,8 @@ public class Editor extends JFrame {
 					jLabelFunction390HeaderPhraseSpacingAfter.setEnabled(true);
 					jComboBoxFunction390HeaderPhraseBlockType.setEnabled(true);
 					jComboBoxFunction390HeaderPhraseAlignment.setEnabled(true);
-					jTextFieldFunction390HeaderPhraseAlignmentMargin.setEnabled(true);
+					jTextFieldFunction390HeaderPhraseMarginLeft.setEnabled(true);
+					jTextFieldFunction390HeaderPhraseMarginRight.setEnabled(true);
 					jTextFieldFunction390HeaderPhraseValue.setEnabled(true);
 					jTextAreaFunction390HeaderPhraseValueKeywords.setEnabled(true);
 					jSpinnerFunction390HeaderPhraseFontSize.setEnabled(true);
@@ -29726,11 +29815,29 @@ public class Editor extends JFrame {
 					//
 					jComboBoxFunction390HeaderPhraseBlockType.setSelectedItem(element.getAttribute("Block"));
 					jComboBoxFunction390HeaderPhraseAlignment.setSelectedItem(element.getAttribute("Alignment"));
-					jTextFieldFunction390HeaderPhraseAlignmentMargin.setText(element.getAttribute("AlignmentMargin"));
-					if (element.getAttribute("SpacingAfter").equals("")) {
-						jTextFieldFunction390HeaderPhraseSpacingAfter.setText("0");
+					if (element.getAttribute("Block").equals("PARAGRAPH")) {
+						if (element.getAttribute("AlignmentMargin").equals("")) {
+							jTextFieldFunction390HeaderPhraseMarginLeft.setText(element.getAttribute("MarginLeft"));
+							jTextFieldFunction390HeaderPhraseMarginRight.setText(element.getAttribute("MarginRight"));
+						} else {
+							if (element.getAttribute("Alignment").equals("LEFT")) {
+								jTextFieldFunction390HeaderPhraseMarginLeft.setText(element.getAttribute("AlignmentMargin"));
+								jTextFieldFunction390HeaderPhraseMarginRight.setText(element.getAttribute("0"));
+							}
+							if (element.getAttribute("Alignment").equals("RIGHT")) {
+								jTextFieldFunction390HeaderPhraseMarginLeft.setText(element.getAttribute("0"));
+								jTextFieldFunction390HeaderPhraseMarginRight.setText(element.getAttribute("AlignmentMargin"));
+							}
+						}
+						if (element.getAttribute("SpacingAfter").equals("")) {
+							jTextFieldFunction390HeaderPhraseSpacingAfter.setText("0");
+						} else {
+							jTextFieldFunction390HeaderPhraseSpacingAfter.setText(element.getAttribute("SpacingAfter"));
+						}
 					} else {
-						jTextFieldFunction390HeaderPhraseSpacingAfter.setText(element.getAttribute("SpacingAfter"));
+						jTextFieldFunction390HeaderPhraseMarginLeft.setText("");
+						jTextFieldFunction390HeaderPhraseMarginRight.setText("");
+						jTextFieldFunction390HeaderPhraseSpacingAfter.setText("");
 					}
 					jTextFieldFunction390HeaderPhraseValue.setText(element.getAttribute("Value"));
 					jComboBoxFunction390HeaderPhraseFontName.setSelectedIndex(systemPrintFontIDList.indexOf(element.getAttribute("FontID")));
@@ -32605,9 +32712,9 @@ public class Editor extends JFrame {
 				pos1 = keywordList.get(i).indexOf(")", 0);
 				wrkStr = keywordList.get(i).substring(12, pos1);
 			}
-			if (keywordList.get(i).contains("&Image(")) {
+			if (keywordList.get(i).contains("&DataSourceImage(")) {
 				pos1 = keywordList.get(i).indexOf(")", 0);
-				wrkStr = keywordList.get(i).substring(7, pos1);
+				wrkStr = keywordList.get(i).substring(17, pos1);
 			}
 			if (keywordList.get(i).contains("&Barcode(")) {
 				pos1 = keywordList.get(i).indexOf(")", 0);
@@ -35474,6 +35581,7 @@ public class Editor extends JFrame {
 					jTextFieldTableKeyFields.setText("*None");
 					tableKeyFields = "";
 				} else {
+					answer = answer.toUpperCase();
 					if (tableKeyType.equals("PK") || tableKeyType.equals("SK")) {
 						names = getFieldNames(jTextFieldTableID.getText(), answer, " + ", false);
 					}
@@ -36684,6 +36792,34 @@ public class Editor extends JFrame {
 		}
 	}
 	
+	void jComboBoxFunction290PhraseBlockType_actionPerformed(ActionEvent e) {
+		if (jComboBoxFunction290PhraseBlockType.getSelectedItem().equals("PARAGRAPH")) {
+			jLabelFunction290PhraseMargin.setEnabled(true);
+			jTextFieldFunction290PhraseMarginLeft.setEnabled(true);
+			jTextFieldFunction290PhraseMarginRight.setEnabled(true);
+			if (jTextFieldFunction290PhraseMarginLeft.getText().equals("")) {
+				jTextFieldFunction290PhraseMarginLeft.setText("0");
+			}
+			if (jTextFieldFunction290PhraseMarginRight.getText().equals("")) {
+				jTextFieldFunction290PhraseMarginRight.setText("0");
+			}
+			jLabelFunction290PhraseSpacingAfter.setEnabled(true);
+			jTextFieldFunction290PhraseSpacingAfter.setEnabled(true);
+			if (jTextFieldFunction290PhraseSpacingAfter.getText().equals("")) {
+				jTextFieldFunction290PhraseSpacingAfter.setText("0");
+			}
+		} else {
+			jLabelFunction290PhraseMargin.setEnabled(false);
+			jTextFieldFunction290PhraseMarginLeft.setEnabled(false);
+			jTextFieldFunction290PhraseMarginLeft.setText("");
+			jTextFieldFunction290PhraseMarginRight.setEnabled(false);
+			jTextFieldFunction290PhraseMarginRight.setText("");
+			jLabelFunction290PhraseSpacingAfter.setEnabled(false);
+			jTextFieldFunction290PhraseSpacingAfter.setEnabled(false);
+			jTextFieldFunction290PhraseSpacingAfter.setText("");
+		}
+	}
+	
 	void jComboBoxFunction300DetailButtonAction_actionPerformed(ActionEvent e) {
 		if (jComboBoxFunction300DetailButtonAction.getSelectedIndex() == 4) {
 			jLabelFunction300DetailButtonActionCallFunction.setEnabled(true);
@@ -36701,6 +36837,34 @@ public class Editor extends JFrame {
 		} else {
 			jLabelFunction310AddRowListButtonActionCallFunction.setEnabled(false);
 			jTextFieldFunction310AddRowListButtonActionCallFunctionID.setEnabled(false);
+		}
+	}
+	
+	void jComboBoxFunction390HeaderPhraseBlockType_actionPerformed(ActionEvent e) {
+		if (jComboBoxFunction390HeaderPhraseBlockType.getSelectedItem().equals("PARAGRAPH")) {
+			jLabelFunction390HeaderPhraseMargin.setEnabled(true);
+			jTextFieldFunction390HeaderPhraseMarginLeft.setEnabled(true);
+			jTextFieldFunction390HeaderPhraseMarginRight.setEnabled(true);
+			if (jTextFieldFunction390HeaderPhraseMarginLeft.getText().equals("")) {
+				jTextFieldFunction390HeaderPhraseMarginLeft.setText("0");
+			}
+			if (jTextFieldFunction390HeaderPhraseMarginRight.getText().equals("")) {
+				jTextFieldFunction390HeaderPhraseMarginRight.setText("0");
+			}
+			jLabelFunction390HeaderPhraseSpacingAfter.setEnabled(true);
+			jTextFieldFunction390HeaderPhraseSpacingAfter.setEnabled(true);
+			if (jTextFieldFunction390HeaderPhraseSpacingAfter.getText().equals("")) {
+				jTextFieldFunction390HeaderPhraseSpacingAfter.setText("0");
+			}
+		} else {
+			jLabelFunction390HeaderPhraseMargin.setEnabled(false);
+			jTextFieldFunction390HeaderPhraseMarginLeft.setEnabled(false);
+			jTextFieldFunction390HeaderPhraseMarginLeft.setText("");
+			jTextFieldFunction390HeaderPhraseMarginRight.setEnabled(false);
+			jTextFieldFunction390HeaderPhraseMarginRight.setText("");
+			jLabelFunction390HeaderPhraseSpacingAfter.setEnabled(false);
+			jTextFieldFunction390HeaderPhraseSpacingAfter.setEnabled(false);
+			jTextFieldFunction390HeaderPhraseSpacingAfter.setText("");
 		}
 	}
 	
@@ -40861,6 +41025,16 @@ class Editor_jComboBoxFunction200ButtonAction_actionAdapter implements java.awt.
 //	}
 //}
 
+class Editor_jComboBoxFunction290PhraseBlockType_actionAdapter implements java.awt.event.ActionListener {
+	Editor adaptee;
+	Editor_jComboBoxFunction290PhraseBlockType_actionAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jComboBoxFunction290PhraseBlockType_actionPerformed(e);
+	}
+}
+
 class Editor_jComboBoxFunction300DetailButtonAction_actionAdapter implements java.awt.event.ActionListener {
 	Editor adaptee;
 	Editor_jComboBoxFunction300DetailButtonAction_actionAdapter(Editor adaptee) {
@@ -40878,6 +41052,16 @@ class Editor_jComboBoxFunction310AddRowListButtonAction_actionAdapter implements
 	}
 	public void actionPerformed(ActionEvent e) {
 		adaptee.jComboBoxFunction310AddRowListButtonAction_actionPerformed(e);
+	}
+}
+
+class Editor_jComboBoxFunction390HeaderPhraseBlockType_actionAdapter implements java.awt.event.ActionListener {
+	Editor adaptee;
+	Editor_jComboBoxFunction390HeaderPhraseBlockType_actionAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jComboBoxFunction390HeaderPhraseBlockType_actionPerformed(e);
 	}
 }
 

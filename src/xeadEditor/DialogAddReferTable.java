@@ -222,97 +222,113 @@ public class DialogAddReferTable extends JDialog {
 			} else {
 				tableAlias = jTextFieldAlias.getText();
 			}
-			//
-			tableIDList.clear();
-			fieldIDList.clear();
-			dataSourceList.clear();
-			//
-			NodeList fieldList = objectTableElement_.getElementsByTagName("Field");
-		    for (int i = 0; i < fieldList.getLength(); i++) {
-				workElement = (org.w3c.dom.Element)fieldList.item(i);
-				tableIDList.add(objectTableElement_.getAttribute("ID"));
-				fieldIDList.add(workElement.getAttribute("ID"));
-				dataSourceList.add(objectTableElement_.getAttribute("ID") + "." + workElement.getAttribute("ID"));
-			}
-			//
-			NodeList referList = objectTableElement_.getElementsByTagName("Refer");
-			SortableDomElementListModel sortingList = frame_.getSortedListModel(referList, "Order");
-		    for (int i = 0; i < sortingList.getSize(); i++) {
-				workElement = (org.w3c.dom.Element)sortingList.elementAt(i);
-				if (workElement.getAttribute("ToTable").equals(jTextFieldID.getText())) {
-					if (workElement.getAttribute("TableAlias").equals(tableAlias)) {
-						duplicated = true;
-					}
-				}
-				lastOrder = Integer.parseInt(workElement.getAttribute("Order"));
-				workTokenizer = new StringTokenizer(workElement.getAttribute("Fields"), ";");
-				while (workTokenizer.hasMoreTokens()) {
-					wrkStr = workTokenizer.nextToken();
-					fieldIDList.add(wrkStr);
-					tableIDList.add(workElement.getAttribute("ToTable"));
-					if (workElement.getAttribute("TableAlias").equals("")) {
-						dataSourceList.add(workElement.getAttribute("ToTable") + "." + wrkStr);
-					} else {
-						dataSourceList.add(workElement.getAttribute("TableAlias") + "." + wrkStr);
-					}
-				}
-			}
-			//
-			if (duplicated) {
-				JOptionPane.showMessageDialog(this, res.getString("ErrorMessage91"));
-				if (jTextFieldAlias.getText().equals("*TableAlias")) {
-					jTextFieldAlias.setText("");
-				}
+			if (isInvalidAlias(tableAlias)) {
+				JOptionPane.showMessageDialog(this, res.getString("ErrorMessage118"));
 				jTextFieldAlias.requestFocus();
 			} else {
-				jTextFieldID.setEditable(false);
-				jTextFieldID.setFocusable(false);
-				jTextFieldAlias.setEditable(false);
-				jTextFieldAlias.setFocusable(false);
-				jComboBoxToKeyFieldsList.setEnabled(true);
-				jComboBoxToKeyFieldsList.setFocusable(true);
-				jComboBoxToKeyFieldsList.requestFocus();
-				jTextFieldWithKeyFields.setEditable(true);
-				jTextFieldWithKeyFields.setFocusable(true);
-				jTextAreaMessage.setText(res.getString("AddJoinTableMessage2")+ jTextFieldID.getText() + res.getString("AddJoinTableMessage3") + objectTableElement_.getAttribute("ID") + res.getString("AddJoinTableMessage4"));
-				jButtonNext.setVisible(false);
-				jButtonOK.setVisible(true);
-				jPanelButtons.getRootPane().setDefaultButton(jButtonOK);
-				fieldsList.clear();
-				fieldsDefaultValuesList.clear();
+				tableIDList.clear();
+				fieldIDList.clear();
+				dataSourceList.clear();
 				//
-				NodeList keyList = referTableNode.getElement().getElementsByTagName("Key");
-				for (int i = 0; i < keyList.getLength(); i++) {
-					workElement = (org.w3c.dom.Element)keyList.item(i);
-					if (workElement.getAttribute("Type").equals("PK") || workElement.getAttribute("Type").equals("SK")) {
-						//
-						fieldsList.add(workElement.getAttribute("Fields"));
-						//
-						StringBuffer buf = new StringBuffer();
-						int count = 0;
-						workTokenizer = new StringTokenizer(workElement.getAttribute("Fields"), ";");
-						while (workTokenizer.hasMoreTokens()) {
-							if (count > 0) {
-								buf.append(";");
+				NodeList fieldList = objectTableElement_.getElementsByTagName("Field");
+				for (int i = 0; i < fieldList.getLength(); i++) {
+					workElement = (org.w3c.dom.Element)fieldList.item(i);
+					tableIDList.add(objectTableElement_.getAttribute("ID"));
+					fieldIDList.add(workElement.getAttribute("ID"));
+					dataSourceList.add(objectTableElement_.getAttribute("ID") + "." + workElement.getAttribute("ID"));
+				}
+				//
+				NodeList referList = objectTableElement_.getElementsByTagName("Refer");
+				SortableDomElementListModel sortingList = frame_.getSortedListModel(referList, "Order");
+				for (int i = 0; i < sortingList.getSize(); i++) {
+					workElement = (org.w3c.dom.Element)sortingList.elementAt(i);
+					if (workElement.getAttribute("ToTable").equals(jTextFieldID.getText())) {
+						if (workElement.getAttribute("TableAlias").equals(tableAlias)) {
+							duplicated = true;
+							break;
+						}
+					}
+					lastOrder = Integer.parseInt(workElement.getAttribute("Order"));
+					workTokenizer = new StringTokenizer(workElement.getAttribute("Fields"), ";");
+					while (workTokenizer.hasMoreTokens()) {
+						wrkStr = workTokenizer.nextToken();
+						fieldIDList.add(wrkStr);
+						tableIDList.add(workElement.getAttribute("ToTable"));
+						if (workElement.getAttribute("TableAlias").equals("")) {
+							dataSourceList.add(workElement.getAttribute("ToTable") + "." + wrkStr);
+						} else {
+							dataSourceList.add(workElement.getAttribute("TableAlias") + "." + wrkStr);
+						}
+					}
+				}
+				//
+				if (duplicated) {
+					JOptionPane.showMessageDialog(this, res.getString("ErrorMessage91"));
+					if (jTextFieldAlias.getText().equals("*TableAlias")) {
+						jTextFieldAlias.setText("");
+					}
+					jTextFieldAlias.requestFocus();
+				} else {
+					jTextFieldID.setEditable(false);
+					jTextFieldID.setFocusable(false);
+					jTextFieldAlias.setEditable(false);
+					jTextFieldAlias.setFocusable(false);
+					jComboBoxToKeyFieldsList.setEnabled(true);
+					jComboBoxToKeyFieldsList.setFocusable(true);
+					jComboBoxToKeyFieldsList.requestFocus();
+					jTextFieldWithKeyFields.setEditable(true);
+					jTextFieldWithKeyFields.setFocusable(true);
+					jTextAreaMessage.setText(res.getString("AddJoinTableMessage2")+ jTextFieldID.getText() + res.getString("AddJoinTableMessage3") + objectTableElement_.getAttribute("ID") + res.getString("AddJoinTableMessage4"));
+					jButtonNext.setVisible(false);
+					jButtonOK.setVisible(true);
+					jPanelButtons.getRootPane().setDefaultButton(jButtonOK);
+					fieldsList.clear();
+					fieldsDefaultValuesList.clear();
+					//
+					NodeList keyList = referTableNode.getElement().getElementsByTagName("Key");
+					for (int i = 0; i < keyList.getLength(); i++) {
+						workElement = (org.w3c.dom.Element)keyList.item(i);
+						if (workElement.getAttribute("Type").equals("PK") || workElement.getAttribute("Type").equals("SK")) {
+							//
+							fieldsList.add(workElement.getAttribute("Fields"));
+							//
+							StringBuffer buf = new StringBuffer();
+							int count = 0;
+							workTokenizer = new StringTokenizer(workElement.getAttribute("Fields"), ";");
+							while (workTokenizer.hasMoreTokens()) {
+								if (count > 0) {
+									buf.append(";");
+								}
+								buf.append(objectTableElement_.getAttribute("ID") + "." + workTokenizer.nextToken());
+								count++;
 							}
-							buf.append(objectTableElement_.getAttribute("ID") + "." + workTokenizer.nextToken());
-							count++;
-						}
-						fieldsDefaultValuesList.add(buf.toString());
-						//
-						if (workElement.getAttribute("Type").equals("PK")) {
-							jComboBoxToKeyFieldsList.addItem(res.getString("PKey") + "(" + workElement.getAttribute("Fields") + ")");
-							jTextFieldWithKeyFields.requestFocus();
-							jTextFieldWithKeyFields.setText(buf.toString());
-						}
-						//
-						if (workElement.getAttribute("Type").equals("SK")) {
-							jComboBoxToKeyFieldsList.addItem(res.getString("SKey") + "(" + workElement.getAttribute("Fields") + ")");
+							fieldsDefaultValuesList.add(buf.toString());
+							//
+							if (workElement.getAttribute("Type").equals("PK")) {
+								jComboBoxToKeyFieldsList.addItem(res.getString("PKey") + "(" + workElement.getAttribute("Fields") + ")");
+								jTextFieldWithKeyFields.requestFocus();
+								jTextFieldWithKeyFields.setText(buf.toString());
+							}
+							//
+							if (workElement.getAttribute("Type").equals("SK")) {
+								jComboBoxToKeyFieldsList.addItem(res.getString("SKey") + "(" + workElement.getAttribute("Fields") + ")");
+							}
 						}
 					}
 				}
 			}
 		}
+	}
+	
+	boolean isInvalidAlias(String alias) {
+		boolean isInvalid = false;
+		if (!alias.equals(jTextFieldID.getText()) && !alias.equals("")) {
+			MainTreeNode tableNode = frame_.getSpecificXETreeNode("Table", alias);
+			if (tableNode != null) {
+				isInvalid = true;
+			}
+		}
+		return isInvalid;
 	}
 	
 	void jButtonOK_actionPerformed(ActionEvent e) {

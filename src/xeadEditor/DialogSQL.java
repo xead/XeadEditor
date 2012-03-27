@@ -62,7 +62,6 @@ public class DialogSQL extends JDialog {
 	private Editor frame_;
 	private JPanel jPanelButtons = new JPanel();
 	private boolean sqlExecuted;
-	//private Connection connection_;
 	private Calendar calendar;
 	private SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss.SSS");
 	private Action commitAction = new AbstractAction(){
@@ -85,7 +84,6 @@ public class DialogSQL extends JDialog {
 	}
 
 	private void init() throws Exception {
-		//
 		jScrollPaneMessage.setBorder(BorderFactory.createEtchedBorder());
 		this.getContentPane().setLayout(new BorderLayout());
 		InputMap inputMap  = jScrollPaneStatement.getInputMap(JScrollPane.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
@@ -102,7 +100,7 @@ public class DialogSQL extends JDialog {
 		jLabelConnection.setPreferredSize(new Dimension(100, 17));
 		jLabelConnection.setBounds(new Rectangle(11, 12, 96, 15));
 		jComboBoxConnection.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxConnection.setBounds(new Rectangle(115, 9, 400, 22));
+		jComboBoxConnection.setBounds(new Rectangle(115, 9, 730, 22));
 		jPanelStatementTop.setLayout(null);
 		jPanelStatementTop.setPreferredSize(new Dimension(10, 40));
 		jPanelStatementTop.add(jLabelConnection);

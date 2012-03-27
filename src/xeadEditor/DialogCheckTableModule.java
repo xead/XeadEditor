@@ -281,9 +281,9 @@ public class DialogCheckTableModule extends JDialog {
 							}
 						}
 						if (element.getAttribute("Nullable").equals("T")) {
-							moduleBuf.append(" null");
+							//moduleBuf.append(" null");
 						} else {
-							moduleBuf.append("");
+							moduleBuf.append(" Not null");
 						}
 						moduleBuf.append(" Comment '" + element.getAttribute("Name") + "',\n");
 						//
@@ -642,7 +642,8 @@ public class DialogCheckTableModule extends JDialog {
 							}
 							countOfKey++;
 							countOfSK++;
-							moduleBuf.append("Constraint " + tableElement.getAttribute("ID") + "_SK" + countOfSK + " Unique key (");
+							//moduleBuf.append("Constraint " + tableElement.getAttribute("ID") + "_SK" + countOfSK + " Unique key (");
+							moduleBuf.append("Constraint " + tableElement.getAttribute("ID") + "_SK" + countOfSK + " Unique (");
 							moduleBuf.append(element.getAttribute("Fields").replace(";", ", ") + ")");
 						}
 						//
@@ -1277,18 +1278,12 @@ public class DialogCheckTableModule extends JDialog {
 					Statement statement = connection_.createStatement();
 					sqlText = getSqlToCreateTable();
 					statement.executeUpdate(sqlText);
-					//connection_.commit();
 					//
 					checkTableModule("CREATE");
 					//
 				} catch (SQLException ex1) {
 					ex1.printStackTrace();
 					JOptionPane.showMessageDialog(this, res.getString("ModuleCheckMessage40") + sqlText + "\n" + ex1.getMessage());
-//					try {
-//						connection_.rollback();
-//					} catch (SQLException ex2) {
-//						ex2.printStackTrace();
-//					}
 				} finally {
 					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 				}
@@ -1342,7 +1337,7 @@ public class DialogCheckTableModule extends JDialog {
 		String wrkStr;
 		boolean firstField = true;
 		//
-		buf.append("CREATE TABLE ");
+		buf.append("Create table ");
 		buf.append(tableElement.getAttribute("ID"));
 		buf.append(" (\n");
 		//
@@ -1372,7 +1367,7 @@ public class DialogCheckTableModule extends JDialog {
 					}
 				} else {
 					if (getBasicTypeOf(element.getAttribute("Type")).equals("INTEGER")) {
-						buf.append(" DEFAULT 0");
+						buf.append(" Default 0");
 					} else {
 						if (getBasicTypeOf(element.getAttribute("Type")).equals("FLOAT")) {
 							if (element.getAttribute("Type").equals("DECIMAL") || element.getAttribute("Type").equals("NUMERIC")) {
@@ -1382,20 +1377,20 @@ public class DialogCheckTableModule extends JDialog {
 								buf.append(element.getAttribute("Decimal"));
 								buf.append(")");
 							}
-							buf.append(" DEFAULT 0.0");
+							buf.append(" Default 0.0");
 						}
 					}
 				}
 				if (element.getAttribute("Nullable").equals("T")) {
-					buf.append(" NULL");
+					//buf.append(" NULL");
 				} else {
-					buf.append(" NOT NULL");
+					buf.append(" Not null");
 				}
 			}
 		}
 		buf.append(",\n");
 		buf.append(updateCounterID);
-		buf.append(" INTEGER DEFAULT 0,\n");
+		buf.append(" INTEGER Default 0,\n");
 		//
 		int wrkCount1 = -1;
 		int wrkCount2 = -1;
@@ -1410,11 +1405,11 @@ public class DialogCheckTableModule extends JDialog {
 					buf.append("),\n");
 				}
 				if (element.getAttribute("Type").equals("PK")) {
-					buf.append("CONSTRAINT " + tableElement.getAttribute("ID") + "_PK PRIMARY KEY (");
+					buf.append("Constraint " + tableElement.getAttribute("ID") + "_PK Primary key (");
 				}
 				if (element.getAttribute("Type").equals("SK")) {
 					countOfSK++;
-					buf.append("CONSTRAINT " + tableElement.getAttribute("ID") + "_SK" + countOfSK + " UNIQUE (");
+					buf.append("Constraint " + tableElement.getAttribute("ID") + "_SK" + countOfSK + " Unique (");
 				}
 				wrkCount2 = -1;
 				workTokenizer = new StringTokenizer(element.getAttribute("Fields"), ";");
