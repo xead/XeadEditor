@@ -173,7 +173,7 @@ public class DialogCreateTable extends JDialog {
 		this.setPreferredSize(new Dimension(750, 550));
 		this.getContentPane().add(jSplitPane,  BorderLayout.CENTER);
 	}
-	//
+
 	public boolean request() {
 		//
 		executed = false;
@@ -205,7 +205,7 @@ public class DialogCreateTable extends JDialog {
 		//
 		return executed;
 	}
-	//
+
 	void jComboBoxSubsystem_actionPerformed(ActionEvent e) {
 		if (jComboBoxSubsystem.getSelectedIndex() == 0) {
 			jButtonCreate.setEnabled(false);
@@ -213,7 +213,7 @@ public class DialogCreateTable extends JDialog {
 			jButtonCreate.setEnabled(true);
 		}
 	}
-	//
+
 	void jButtonCreate_actionPerformed(ActionEvent e) {
 		String wrkStr;
 		int bracketOpen = 0;
@@ -307,11 +307,11 @@ public class DialogCreateTable extends JDialog {
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
 	}
-	//
+
 	void jButtonClose_actionPerformed(ActionEvent e) {
 		this.setVisible(false);
 	}
-	//
+
 	org.w3c.dom.Element createTableDefinition(MainTreeNode subsystemNode, String tableID, String tableName, String tableAttributes) {
 		ArrayList<String> attrList = new ArrayList<String>();
 		org.w3c.dom.Element fieldElement;
@@ -414,14 +414,13 @@ public class DialogCreateTable extends JDialog {
 			return null;
 		}
 	}
-	//
+
 	org.w3c.dom.Element createFieldDefinition(int sortKey, String fieldAttrString) {
 		String fieldID = "";
 		String nullable = "T";
 		String comment = "";
 		int posStart = 0;
 		int posEnd = 0;
-		//
 		////////////////
 		//Get Field ID//
 		////////////////
@@ -537,7 +536,7 @@ public class DialogCreateTable extends JDialog {
 			return null;
 		}
 	}
-	//
+
 	String getSubstringInOrder(String value, int order) {
 		int namePosFrom = -1;
 		int namePosThru = -1;
@@ -571,7 +570,7 @@ public class DialogCreateTable extends JDialog {
 		//
 		return substring;
 	}
-	//
+
 	String getKeyFieldID(String value) {
 		int pos1, pos2;
 		String wrkStr1, wrkStr2;

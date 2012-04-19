@@ -55,22 +55,22 @@ import java.net.URI;
 
 public class DialogCheckFunctionsCalled extends JDialog {
 	private static final long serialVersionUID = 1L;
-	static ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
-	Editor frame_;
-	BorderLayout borderLayoutMain = new BorderLayout();
-	JPanel panelMain = new JPanel();
-	JPanel jPanelSouth = new JPanel();
-	JScrollPane jScrollPaneCheckResult = new JScrollPane();
-	TableModelReadOnlyList tableModelCheckResult = new TableModelReadOnlyList();
-	JTable jTableCheckResult = new JTable(tableModelCheckResult);
-	TableColumn column0, column1, column2, column3;
-	DefaultTableCellRenderer rendererTableHeader = null;
-	DefaultTableCellRenderer rendererAlignmentCenter = new DefaultTableCellRenderer();
-	DefaultTableCellRenderer rendererAlignmentRight = new DefaultTableCellRenderer();
-	DefaultTableCellRenderer rendererAlignmentLeft = new DefaultTableCellRenderer();
-	JButton jButtonCloseDialog = new JButton();
-	JButton jButtonGenerateListData = new JButton();
-	SortableDomElementListModel functionNodeList1, functionNodeList2, menuNodeList, tableNodeList;
+	private static ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
+	private Editor frame_;
+	private BorderLayout borderLayoutMain = new BorderLayout();
+	private JPanel panelMain = new JPanel();
+	private JPanel jPanelSouth = new JPanel();
+	private JScrollPane jScrollPaneCheckResult = new JScrollPane();
+	private TableModelReadOnlyList tableModelCheckResult = new TableModelReadOnlyList();
+	private JTable jTableCheckResult = new JTable(tableModelCheckResult);
+	private TableColumn column0, column1, column2, column3;
+	private DefaultTableCellRenderer rendererTableHeader = null;
+	private DefaultTableCellRenderer rendererAlignmentCenter = new DefaultTableCellRenderer();
+	private DefaultTableCellRenderer rendererAlignmentRight = new DefaultTableCellRenderer();
+	private DefaultTableCellRenderer rendererAlignmentLeft = new DefaultTableCellRenderer();
+	private JButton jButtonCloseDialog = new JButton();
+	private JButton jButtonGenerateListData = new JButton();
+	private SortableDomElementListModel functionNodeList1, functionNodeList2, menuNodeList, tableNodeList;
 
 	public DialogCheckFunctionsCalled(Editor frame, String title, boolean modal) {
 		super(frame, title, modal);

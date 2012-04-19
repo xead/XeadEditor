@@ -90,7 +90,7 @@ public class DialogAddFunction extends JDialog {
 	private SortableDomElementListModel sortingList;
 	private ArrayList<String> headerKeyList = new ArrayList<String>(); 
 	private ArrayList<String> detailKeyList = new ArrayList<String>(); 
-	private String detailRowNoID = "";
+	//private String detailRowNoID = "";
 	private int returnCode = 0;
 	private Color selectionColor = null;
 
@@ -524,6 +524,19 @@ public class DialogAddFunction extends JDialog {
 					}
 				}
 				//
+				for (int i = 0; i < sortingList.getSize(); i++) {
+					if (i < 3) {
+						workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
+						childElement = frame_.getDomDocument().createElement("Filter");
+						childElement.setAttribute("Order", frame_.getFormatted4ByteString(i * 10));
+						childElement.setAttribute("DataSource", jTextFieldTableID.getText() + "." + workElement.getAttribute("ID")); 
+						childElement.setAttribute("FieldOptions", "");
+						element.appendChild(childElement);
+					} else {
+						break;
+					}
+				}
+				//
 				childElement = frame_.getDomDocument().createElement("Button");
 				childElement.setAttribute("Position", "0");
 				childElement.setAttribute("Number", "3");
@@ -560,6 +573,19 @@ public class DialogAddFunction extends JDialog {
 					if (i < 5) {
 						workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
 						childElement = frame_.getDomDocument().createElement("Column");
+						childElement.setAttribute("Order", frame_.getFormatted4ByteString(i * 10));
+						childElement.setAttribute("DataSource", jTextFieldTableID.getText() + "." + workElement.getAttribute("ID")); 
+						childElement.setAttribute("FieldOptions", "");
+						element.appendChild(childElement);
+					} else {
+						break;
+					}
+				}
+				//
+				for (int i = 0; i < sortingList.getSize(); i++) {
+					if (i < 3) {
+						workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
+						childElement = frame_.getDomDocument().createElement("Filter");
 						childElement.setAttribute("Order", frame_.getFormatted4ByteString(i * 10));
 						childElement.setAttribute("DataSource", jTextFieldTableID.getText() + "." + workElement.getAttribute("ID")); 
 						childElement.setAttribute("FieldOptions", "");
@@ -830,12 +856,12 @@ public class DialogAddFunction extends JDialog {
 					element.setAttribute("HeaderKeyFields", headerTableKeys);
 					element.setAttribute("DetailTable", jTextFieldDetailTableID.getText());
 					element.setAttribute("DetailKeyFields", detailTableKeys);
-					element.setAttribute("DetailRowNo", detailRowNoID);
-					if (detailRowNoID.equals("")) {
-						element.setAttribute("AddBlankRowAllowed", "F");
-					} else {
-						element.setAttribute("AddBlankRowAllowed", "T");
-					}
+//					element.setAttribute("DetailRowNo", detailRowNoID);
+//					if (detailRowNoID.equals("")) {
+//						element.setAttribute("AddBlankRowAllowed", "F");
+//					} else {
+//						element.setAttribute("AddBlankRowAllowed", "T");
+//					}
 					element.setAttribute("Size", "");
 					//
 					NodeList nodeList = headerTableNode.getElement().getElementsByTagName("Field");
@@ -1062,17 +1088,17 @@ public class DialogAddFunction extends JDialog {
 
 			}
 		}
-		//
-		detailRowNoID = "";
-		if (noErrors) {
-			int workInt = detailKeyList.size() - headerKeyList.size();
-			if (workInt == 1) {
-				workElement1 = frame_.getSpecificFieldElement(jTextFieldDetailTableID.getText(), detailKeyList.get(detailKeyList.size() - 1));
-				if (workElement1.getAttribute("Type").equals("INTEGER") || workElement1.getAttribute("Type").equals("SMALLINT")) {
-					detailRowNoID = detailKeyList.get(detailKeyList.size() - 1);			
-				}
-			}
-		}
+//		//
+//		detailRowNoID = "";
+//		if (noErrors) {
+//			int workInt = detailKeyList.size() - headerKeyList.size();
+//			if (workInt == 1) {
+//				workElement1 = frame_.getSpecificFieldElement(jTextFieldDetailTableID.getText(), detailKeyList.get(detailKeyList.size() - 1));
+//				if (workElement1.getAttribute("Type").equals("INTEGER") || workElement1.getAttribute("Type").equals("SMALLINT")) {
+//					detailRowNoID = detailKeyList.get(detailKeyList.size() - 1);			
+//				}
+//			}
+//		}
 		//
 		return noErrors;
 	}

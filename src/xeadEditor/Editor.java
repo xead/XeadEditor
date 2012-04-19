@@ -34,6 +34,7 @@ package xeadEditor;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.*;
 import java.awt.event.*;
@@ -50,6 +51,9 @@ import java.text.ParseException;
 import java.util.*;
 import java.util.regex.Pattern;
 
+import javax.script.Compilable;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import javax.swing.*;
 import javax.swing.JFormattedTextField.AbstractFormatter;
 import javax.swing.border.*;
@@ -79,7 +83,7 @@ public class Editor extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private static final ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
 	public static final String APPLICATION_NAME  = "XEAD Editor 1.1";
-	public static final String FULL_VERSION  = "V1.R1.M2";
+	public static final String FULL_VERSION  = "V1.R1.M3";
 	public static final String FORMAT_VERSION  = "1.1";
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2012 DBC,Ltd.";
@@ -119,7 +123,9 @@ public class Editor extends JFrame {
 	private JMenuBar jMenuBar = new JMenuBar();
 	private JMenu jMenuFile = new JMenu();
 	private JMenuItem jMenuItemFileOpen = new JMenuItem();
-	private JMenuItem jMenuItemFileImport = new JMenuItem();
+	private JMenu jMenuFileImport = new JMenu();
+	private JMenuItem jMenuItemFileImportXEAF = new JMenuItem();
+	private JMenuItem jMenuItemFileImportXEAD = new JMenuItem();
 	private JMenuItem jMenuItemFileExit = new JMenuItem();
 	private JMenuItem jMenuItemFileSave = new JMenuItem();
 	private JMenuItem jMenuItemFileSaveAs = new JMenuItem();
@@ -417,6 +423,12 @@ public class Editor extends JFrame {
 			}
 		}
 	};
+	private Action actionCheckSystemLoginScript = new AbstractAction(){
+		private static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			checkSyntaxError(jTextAreaSystemLoginScript.getText(), true);
+		}
+	};
 	private Action actionScanSystemLoginScript = new AbstractAction(){
 		private static final long serialVersionUID = 1L;
 		public void actionPerformed(ActionEvent e){
@@ -458,6 +470,12 @@ public class Editor extends JFrame {
 			if (jTextAreaSystemScriptFunctionsUndoManager.canRedo()) {
 				jTextAreaSystemScriptFunctionsUndoManager.redo();
 			}
+		}
+	};
+	private Action actionCheckSystemScriptFunctions = new AbstractAction(){
+		private static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			checkSyntaxError(jTextAreaSystemScriptFunctions.getText(), true);
 		}
 	};
 	private Action actionScanSystemScriptFunctions = new AbstractAction(){
@@ -720,6 +738,12 @@ public class Editor extends JFrame {
 			}
 		}
 	};
+	private Action actionCheckTableScript = new AbstractAction(){
+		private static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			checkSyntaxError(jTextAreaTableScriptText.getText(), true);
+		}
+	};
 	//
 	private JSplitPane jSplitPaneTableData = new JSplitPane();
 	private JSplitPane jSplitPaneTableDataTop = new JSplitPane();
@@ -810,6 +834,12 @@ public class Editor extends JFrame {
 		private static final long serialVersionUID = 1L;
 		public void actionPerformed(ActionEvent e){
 			pasteTextToIndent(jScrollPaneFunction000Script);
+		}
+	};
+	private Action actionCheckFunction000Script = new AbstractAction(){
+		private static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			checkSyntaxError(jTextAreaFunction000Script.getText(), true);
 		}
 	};
 	private Action actionScanFunction000Script = new AbstractAction(){
@@ -2085,6 +2115,7 @@ public class Editor extends JFrame {
 	 */
 	private Editor_DialogPromptOptionCallFunctionExchangeEdit dialogPromptOptionCallFunctionExchangeEdit = new Editor_DialogPromptOptionCallFunctionExchangeEdit(this);
 	private DialogImport dialogImport = new DialogImport(this);
+	private DialogImportModel dialogImportModel = new DialogImportModel(this);
 	private DialogScan dialogScan = new DialogScan(this);
 	private DialogAddList dialogAddList = new DialogAddList(this);
 	private DialogAddReferTable dialogAddReferTable = new DialogAddReferTable(this);
@@ -2649,9 +2680,11 @@ public class Editor extends JFrame {
 		jMenuItemFileOpen.setText(res.getString("Open"));
 		jMenuItemFileOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,ActionEvent.CTRL_MASK));
 		jMenuItemFileOpen.addActionListener(new Editor_jMenuItemFileOpen_actionAdapter(this));
-		jMenuItemFileImport.setText(res.getString("Import"));
-		jMenuItemFileImport.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_P,ActionEvent.CTRL_MASK));
-		jMenuItemFileImport.addActionListener(new Editor_jMenuItemFileImport_actionAdapter(this));
+		jMenuFileImport.setText(res.getString("Import"));
+		jMenuItemFileImportXEAD.setText(res.getString("ImportXEAD"));
+		jMenuItemFileImportXEAD.addActionListener(new Editor_jMenuItemFileImportXEAD_actionAdapter(this));
+		jMenuItemFileImportXEAF.setText(res.getString("ImportXEAF"));
+		jMenuItemFileImportXEAF.addActionListener(new Editor_jMenuItemFileImportXEAF_actionAdapter(this));
 		jMenuItemFileExit.setText(res.getString("Exit"));
 		jMenuItemFileExit.addActionListener(new Editor_jMenuItemFileExit_actionAdapter(this));
 		jMenuItemFileSave.setText(res.getString("Save"));
@@ -2752,7 +2785,9 @@ public class Editor extends JFrame {
 		jMenuItemHelpAbout.addActionListener(new Editor_jMenuItemHelpAbout_actionAdapter(this));
 		jMenuFile.add(jMenuItemFileOpen);
 		jMenuFile.addSeparator();
-		jMenuFile.add(jMenuItemFileImport);
+		jMenuFile.add(jMenuFileImport);
+		jMenuFileImport.add(jMenuItemFileImportXEAD);
+		jMenuFileImport.add(jMenuItemFileImportXEAF);
 		jMenuFile.addSeparator();
 		jMenuFile.add(jMenuItemFileSave);
 		jMenuFile.add(jMenuItemFileSaveAs);
@@ -3233,6 +3268,8 @@ public class Editor extends JFrame {
 		actionMap.put("UNDO", actionUndoSystemLoginScript);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_DOWN_MASK), "REDO");
 		actionMap.put("REDO", actionRedoSystemLoginScript);
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0), "CHECK");
+		actionMap.put("CHECK", actionCheckSystemLoginScript);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), "SCAN");
 		actionMap.put("SCAN", actionScanSystemLoginScript);
 		jPanelSystemLoginScriptEditTool.setBorder(BorderFactory.createLineBorder(Color.gray));
@@ -3275,6 +3312,8 @@ public class Editor extends JFrame {
 		actionMap.put("UNDO", actionUndoSystemScriptFunctions);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_DOWN_MASK), "REDO");
 		actionMap.put("REDO", actionRedoSystemScriptFunctions);
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0), "CHECK");
+		actionMap.put("CHECK", actionCheckSystemScriptFunctions);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), "SCAN");
 		actionMap.put("SCAN", actionScanSystemScriptFunctions);
 		jPanelSystemScriptFunctionsEditTool.setBorder(BorderFactory.createLineBorder(Color.gray));
@@ -4607,6 +4646,8 @@ public class Editor extends JFrame {
 		actionMap.put("UNDO", actionUndoTableScript);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_DOWN_MASK), "REDO");
 		actionMap.put("REDO", actionRedoTableScript);
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0), "CHECK");
+		actionMap.put("CHECK", actionCheckTableScript);
 		jPanelTableScriptCenter.setBorder(BorderFactory.createEtchedBorder());
 		jPanelTableScriptCenter.setLayout(new BorderLayout());
 		jLabelTableScript.setEnabled(false);
@@ -4960,6 +5001,8 @@ public class Editor extends JFrame {
 		actionMap.clear();
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_DOWN_MASK), "INDENT");
 		actionMap.put("INDENT", actionIndentFunction000Script);
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0), "CHECK");
+		actionMap.put("CHECK", actionCheckFunction000Script);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), "SCAN");
 		actionMap.put("SCAN", actionScanFunction000Script);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_DOWN_MASK), "UNDO");
@@ -22587,12 +22630,15 @@ public class Editor extends JFrame {
 						tableModelFunction300DetailList.setValueAt(jRadioButtonFunction300DetailRowSelectionActionReturn.getText(), selectedRow_jTableFunction300DetailList, 3);
 					}
 					if (jRadioButtonFunction300DetailRowSelectionActionCall.isSelected()) {
-						if (!element.getAttribute("DetailFunction").equals(jTextFieldFunction300DetailFunctionIDCalled.getText())) { 
-							valueOfFieldsChanged = true;
-							if (jTextFieldFunction300DetailFunctionIDCalled.getText().equals("") || jTextFieldFunction300DetailFunctionIDCalled.getText().equals("*None")) { 
-								element.setAttribute("DetailFunction", "NONE");
-							} else {
-								element.setAttribute("DetailFunction", jTextFieldFunction300DetailFunctionIDCalled.getText());
+						if (element.getAttribute("DetailFunction").equals("NONE") && jTextFieldFunction300DetailFunctionIDCalled.getText().equals("*None")) {
+						} else {
+							if (!element.getAttribute("DetailFunction").equals(jTextFieldFunction300DetailFunctionIDCalled.getText())) { 
+								valueOfFieldsChanged = true;
+								if (jTextFieldFunction300DetailFunctionIDCalled.getText().equals("") || jTextFieldFunction300DetailFunctionIDCalled.getText().equals("*None")) { 
+									element.setAttribute("DetailFunction", "NONE");
+								} else {
+									element.setAttribute("DetailFunction", jTextFieldFunction300DetailFunctionIDCalled.getText());
+								}
 							}
 						}
 						if (jTextFieldFunction300DetailFunctionIDCalled.getText().equals("") || jTextFieldFunction300DetailFunctionIDCalled.getText().equals("*None")) { 
@@ -24727,14 +24773,79 @@ public class Editor extends JFrame {
 		}
 	}
 
-	void jMenuItemFileImport_actionPerformed(ActionEvent e) {
+	void jMenuItemFileImportXEAD_actionPerformed(ActionEvent e) {
 		int rtn1 = 0;
 		int rtn2 = 0;
 		//
 		currentMainTreeNode.updateFields();
 		if (changeState.isChanged()) {
 			Object[] bts = {res.getString("SaveChanges"), res.getString("BackToEdit")} ;
-			rtn1 = JOptionPane.showOptionDialog(this, res.getString("ScanMessage"),
+			rtn1 = JOptionPane.showOptionDialog(this, res.getString("ImportMessage0"),
+					res.getString("SaveChangesTitle"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
+			if (rtn1 == 0) {
+				try{
+					setCursor(new Cursor(Cursor.WAIT_CURSOR));
+					saveFileWithCurrentFileName();
+					undoManager.resetLog();
+					changeState.setChanged(false);
+				} finally {
+					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				}
+			}
+		}
+		//
+		if (rtn1 == 0) {
+			String name = specifyNameOfExistingFile(res.getString("ChooseXeadFile"), "xead");
+			if (!name.equals("")) {
+				boolean anyElementsImported = dialogImportModel.request(name);
+				if (anyElementsImported) {
+					Object[] bts = {res.getString("SaveChanges"), res.getString("SaveAs"), res.getString("CancelChanges")} ;
+					rtn2 = JOptionPane.showOptionDialog(this, res.getString("ImportSaveMessage"),
+							res.getString("ImportSaveTitle"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
+					//
+					try{
+						setCursor(new Cursor(Cursor.WAIT_CURSOR));
+						//
+						//Save changes//
+						if (rtn2 == 0) {
+							saveFileWithCurrentFileName();
+							undoManager.resetLog();
+							changeState.setChanged(false);
+						}
+						//
+						//Save changes as other name//
+						if (rtn2 == 1) {
+							name = specifyNameOfNewFile(res.getString("NameDialogTitle"),res.getString("SaveAsThis"), currentFileName);
+							if (!name.equals("")) {
+								currentFileName = name;
+								this.setTitle(APPLICATION_NAME + " - [" + currentFileName + "] - " + systemName);
+								saveFileWithCurrentFileName();
+								changeState.setChanged(false);
+								undoManager.resetLog();
+							}
+						}
+						//
+						//Setup MainTreeNode//
+						setupMainTreeModelWithCurrentFileName();
+						//
+					} catch(Exception exception) {
+						exception.printStackTrace();
+					} finally {
+						setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+					}
+				}
+			}
+		}
+	}
+
+	void jMenuItemFileImportXEAF_actionPerformed(ActionEvent e) {
+		int rtn1 = 0;
+		int rtn2 = 0;
+		//
+		currentMainTreeNode.updateFields();
+		if (changeState.isChanged()) {
+			Object[] bts = {res.getString("SaveChanges"), res.getString("BackToEdit")} ;
+			rtn1 = JOptionPane.showOptionDialog(this, res.getString("ImportMessage0"),
 					res.getString("SaveChangesTitle"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
 			if (rtn1 == 0) {
 				try{
@@ -24754,8 +24865,8 @@ public class Editor extends JFrame {
 				boolean importedAndUpdated = dialogImport.request(name);
 				if (importedAndUpdated) {
 					Object[] bts = {res.getString("SaveChanges"), res.getString("SaveAs"), res.getString("CancelChanges")} ;
-					rtn2 = JOptionPane.showOptionDialog(this, res.getString("ReplaceSaveMessage"),
-							res.getString("ReplaceSaveTitle"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
+					rtn2 = JOptionPane.showOptionDialog(this, res.getString("ImportSaveMessage"),
+							res.getString("ImportSaveTitle"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
 					//
 					try{
 						setCursor(new Cursor(Cursor.WAIT_CURSOR));
@@ -31460,16 +31571,16 @@ public class Editor extends JFrame {
 					}
 				}
 				//
-				if (element1.getAttribute("DetailTable").equals(tableID) && element1.getAttribute("DetailRowNo").equals(fieldID)) {
-					countOfUsageRows++;
-					Object[] Cell = new Object[4];
-					Cell[0] = new TableRowNumber(countOfUsageRows, element1);
-					Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
-					Cell[2] = element1.getAttribute("Type");
-					Cell[3] = res.getString("AddRowDetailRowNo");
-					tableModelTableFieldUsageList.addRow(Cell);
-					break;
-				}
+//				if (element1.getAttribute("DetailTable").equals(tableID) && element1.getAttribute("DetailRowNo").equals(fieldID)) {
+//					countOfUsageRows++;
+//					Object[] Cell = new Object[4];
+//					Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+//					Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+//					Cell[2] = element1.getAttribute("Type");
+//					Cell[3] = res.getString("AddRowDetailRowNo");
+//					tableModelTableFieldUsageList.addRow(Cell);
+//					break;
+//				}
 				//
 				if (!element1.getAttribute("AddRowListWithHeaderFields").equals("")) {
 					workTokenizer = new StringTokenizer(element1.getAttribute("AddRowListWithHeaderFields"), ";" );
@@ -35196,6 +35307,27 @@ public class Editor extends JFrame {
 			}
 		//}
 	}
+	
+	public String checkSyntaxError(String script, boolean isShowResult) {
+		String message = "";
+		ScriptEngineManager manager = new ScriptEngineManager();
+		Compilable engine = (Compilable)manager.getEngineByName("js");
+		try {
+			engine.compile(script);
+		} catch (ScriptException ex) {
+			message = ex.getMessage().replaceAll("sun.org.mozilla.javascript.internal.EvaluatorException: " , "");
+			message = message.replaceAll("<Unknown Source>" , "");
+		}
+		if (isShowResult) {
+			if (message.equals("")) {
+				JOptionPane.showMessageDialog(null, res.getString("ScriptErrorNotFound"));
+			} else {
+				JOptionPane.showMessageDialog(null, res.getString("ScriptError") + "\n" + message);
+			}
+		}
+		return message;
+	}
+
 	
 	void repaintErrorStatusOfParentNodes(MainTreeNode tableListNode) {
 		MainTreeNode workNode;
@@ -39569,6 +39701,8 @@ class Editor_DialogPromptOptionCallFunctionExchangeEdit extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private static ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
 	private JButton jButtonOK = new JButton();
+	private JButton jButtonPasteToClipboard = new JButton();
+	private JButton jButtonPasteFromClipboard = new JButton();
 	private JButton jButtonCancel = new JButton();
 	private Editor frame_;
 	private JLabel jLabelFieldsToPut = new JLabel();
@@ -39585,6 +39719,9 @@ class Editor_DialogPromptOptionCallFunctionExchangeEdit extends JDialog {
 	private int returnCode;
 	private NodeList referList1_ = null;
 	private NodeList referList2_ = null;
+	private Clipboard clipboard = getToolkit().getSystemClipboard();
+	private String clipboardData = "";
+	private Transferable contentsReceived = null;
 
 	public Editor_DialogPromptOptionCallFunctionExchangeEdit(Editor frame) {
 		super(frame, "", true);
@@ -39597,11 +39734,67 @@ class Editor_DialogPromptOptionCallFunctionExchangeEdit extends JDialog {
 	}
 
 	private void init() throws Exception {
-		//
 		jPanelButtons.setBorder(BorderFactory.createEtchedBorder());
 		jPanelButtons.setPreferredSize(new Dimension(350, 43));
 		jPanelButtons.setLayout(null);
-		jButtonOK.setBounds(new Rectangle(400, 10, 73, 25));
+		//
+		jButtonCancel.setBounds(new Rectangle(34, 10, 73, 25));
+		jButtonCancel.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonCancel.setText(res.getString("Cancel"));
+		jButtonCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+			}
+		});
+		//
+		jButtonPasteToClipboard.setBounds(new Rectangle(140, 10, 100, 25));
+		jButtonPasteToClipboard.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonPasteToClipboard.setText(res.getString("PasteToClipboard"));
+		jButtonPasteToClipboard.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				StringBuffer bf = new StringBuffer();
+				bf.append("CallFunctionExchange");
+				bf.append("\n");
+				bf.append(jTextFieldFieldsToPut.getText());
+				bf.append("\n");
+				bf.append(jTextFieldFieldsToPutTo.getText());
+				bf.append("\n");
+				bf.append(jTextFieldFieldsToGet.getText());
+				bf.append("\n");
+				bf.append(jTextFieldFieldsToGetTo.getText());
+				StringSelection contents = new StringSelection(bf.toString());
+				clipboard.setContents(contents, null);
+			}
+		});
+		//
+		jButtonPasteFromClipboard.setBounds(new Rectangle(270, 10, 100, 25));
+		jButtonPasteFromClipboard.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonPasteFromClipboard.setText(res.getString("PasteFromClipboard"));
+		jButtonPasteFromClipboard.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				contentsReceived = clipboard.getContents(this);
+				clipboardData = "";
+				if (contentsReceived != null) {
+					if (contentsReceived.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+						try {
+							clipboardData = (String)contentsReceived.getTransferData(DataFlavor.stringFlavor);
+						} catch (Exception ex) {}
+					}
+					if (clipboardData.startsWith("CallFunctionExchange")) {
+						StringTokenizer tokenizer = new StringTokenizer(clipboardData, "\n");
+						if (tokenizer.countTokens() == 5) {
+							tokenizer.nextToken();
+							jTextFieldFieldsToPut.setText(tokenizer.nextToken());
+							jTextFieldFieldsToPutTo.setText(tokenizer.nextToken());
+							jTextFieldFieldsToGet.setText(tokenizer.nextToken());
+							jTextFieldFieldsToGetTo.setText(tokenizer.nextToken());
+						}
+					}
+				}
+			}
+		});
+		//
+		jButtonOK.setBounds(new Rectangle(405, 10, 73, 25));
 		jButtonOK.setFont(new java.awt.Font("Dialog", 0, 12));
 		jButtonOK.setText("OK");
 		jButtonOK.addActionListener(new ActionListener() {
@@ -39612,16 +39805,11 @@ class Editor_DialogPromptOptionCallFunctionExchangeEdit extends JDialog {
 				}
 			}
 		});
-		jButtonCancel.setBounds(new Rectangle(44, 10, 73, 25));
-		jButtonCancel.setFont(new java.awt.Font("Dialog", 0, 12));
-		jButtonCancel.setText(res.getString("Cancel"));
-		jButtonCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
-			}
-		});
-		jPanelButtons.add(jButtonOK, null);
+		//
 		jPanelButtons.add(jButtonCancel, null);
+		jPanelButtons.add(jButtonPasteToClipboard, null);
+		jPanelButtons.add(jButtonPasteFromClipboard, null);
+		jPanelButtons.add(jButtonOK, null);
 		//
 		jPanelCenter.setBorder(BorderFactory.createEtchedBorder());
 		jPanelCenter.setLayout(null);
@@ -39706,6 +39894,20 @@ class Editor_DialogPromptOptionCallFunctionExchangeEdit extends JDialog {
 		//
 		returnCode = 0;
 		jTextAreaMessage.setText(res.getString("FieldsToExchangeComment"));
+		//
+		jButtonPasteFromClipboard.setEnabled(false);
+		contentsReceived = clipboard.getContents(this);
+		clipboardData = "";
+		if (contentsReceived != null) {
+			if (contentsReceived.isDataFlavorSupported(DataFlavor.stringFlavor)) {
+				try {
+					clipboardData = (String)contentsReceived.getTransferData(DataFlavor.stringFlavor);
+				} catch (Exception ex) {}
+			}
+			if (clipboardData.startsWith("CallFunctionExchange")) {
+				jButtonPasteFromClipboard.setEnabled(true);
+			}
+		}
 		//
 		this.setSize(new Dimension(520, 265));
 		Dimension dlgSize = this.getSize();
@@ -42459,13 +42661,23 @@ class Editor_jMenuItemFileOpen_actionAdapter implements java.awt.event.ActionLis
 	}
 }
 
-class Editor_jMenuItemFileImport_actionAdapter implements java.awt.event.ActionListener {
+class Editor_jMenuItemFileImportXEAD_actionAdapter implements java.awt.event.ActionListener {
 	Editor adaptee;
-	Editor_jMenuItemFileImport_actionAdapter(Editor adaptee) {
+	Editor_jMenuItemFileImportXEAD_actionAdapter(Editor adaptee) {
 		this.adaptee = adaptee;
 	}
 	public void actionPerformed(ActionEvent e) {
-		adaptee.jMenuItemFileImport_actionPerformed(e);
+		adaptee.jMenuItemFileImportXEAD_actionPerformed(e);
+	}
+}
+
+class Editor_jMenuItemFileImportXEAF_actionAdapter implements java.awt.event.ActionListener {
+	Editor adaptee;
+	Editor_jMenuItemFileImportXEAF_actionAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jMenuItemFileImportXEAF_actionPerformed(e);
 	}
 }
 

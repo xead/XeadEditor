@@ -35,12 +35,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
-//import java.io.BufferedWriter;
-//import java.io.File;
-//import java.io.FileWriter;
-//import java.io.IOException;
 import java.util.ResourceBundle;
-
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.text.DefaultEditorKit;
@@ -54,6 +49,7 @@ public class DialogEditScript extends JDialog {
 	private JLabel jLabelScanText = new JLabel();
 	private JTextField jTextFieldScanText = new JTextField();
 	private JCheckBox jCheckBoxScanText = new JCheckBox();
+	private JLabel jLabelFunctionKeys = new JLabel();
 	private JPanel jPanelStatement = new JPanel();
 	private JPanel jPanelStatementHeader = new JPanel();
 	private JLabel jLabelStatementHeader = new JLabel();
@@ -79,6 +75,12 @@ public class DialogEditScript extends JDialog {
 		private static final long serialVersionUID = 1L;
 		public void actionPerformed(ActionEvent e){
 			frame_.scanStringInTextArea(jTextAreaStatement, jTextFieldScanText.getText(), jCheckBoxScanText.isSelected());
+		}
+	};
+	private Action checkAction = new AbstractAction(){
+		private static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			frame_.checkSyntaxError(jTextAreaStatement.getText(), true);
 		}
 	};
 	private Action indentAction = new AbstractAction(){
@@ -159,19 +161,23 @@ public class DialogEditScript extends JDialog {
 		jPanelStatementHeader.add(jLabelStatementHeader, BorderLayout.WEST);
 		jPanelStatementHeader.add(jPanelStatementFontSizeAndCursorPos, BorderLayout.EAST);
 		//
-		jPanelScan.setPreferredSize(new Dimension(10, 85));
+		jPanelScan.setPreferredSize(new Dimension(10, 100));
 		jPanelScan.setLayout(null);
 		jLabelScanText.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelScanText.setText(res.getString("ScanStringInScript"));
-		jLabelScanText.setBounds(new Rectangle(11, 10, 300, 15));
+		jLabelScanText.setBounds(new Rectangle(11, 10, 200, 15));
 		jTextFieldScanText.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldScanText.setBounds(new Rectangle(11, 28, 300, 22));
+		jTextFieldScanText.setBounds(new Rectangle(11, 28, 400, 22));
 		jCheckBoxScanText.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jCheckBoxScanText.setBounds(new Rectangle(11, 50, 200, 22));
 		jCheckBoxScanText.setText(res.getString("CaseSensitive"));
+		jLabelFunctionKeys.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunctionKeys.setText(res.getString("ScriptEditorFunctionKeys"));
+		jLabelFunctionKeys.setBounds(new Rectangle(11, 78, 400, 15));
 		jPanelScan.add(jLabelScanText);
 		jPanelScan.add(jTextFieldScanText);
 		jPanelScan.add(jCheckBoxScanText);
+		jPanelScan.add(jLabelFunctionKeys);
 		//
 		jPanelInformation.setLayout(new BorderLayout());
 		jPanelInformation.add(jScrollPaneFieldInformation, BorderLayout.CENTER);
@@ -203,6 +209,8 @@ public class DialogEditScript extends JDialog {
 		actionMap.clear();
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), "HELP");
 		actionMap.put("HELP", helpAction);
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0), "CHECK");
+		actionMap.put("CHECK", checkAction);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), "SCAN");
 		actionMap.put("SCAN", scanAction);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_DOWN_MASK), "INDENT");
@@ -243,12 +251,29 @@ public class DialogEditScript extends JDialog {
 
 	protected void processWindowEvent(WindowEvent e) {
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
+			int rtn = 0;
+			String scriptError = frame_.checkSyntaxError(jTextAreaStatement.getText(), false);
+			//
 			if (jTextAreaStatement.getText().equals(originalText)) {
-				super.setVisible(false);
+				if (scriptError.equals("")) {
+					super.setVisible(false);
+				} else {
+					Object[] bts = {res.getString("Close"), res.getString("BackToEdit")};
+					rtn = JOptionPane.showOptionDialog(this, res.getString("ScriptError") + "\n" + scriptError,
+							res.getString("EditTableScriptTitle"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
+					if (rtn == 0) {
+						super.setVisible(false);
+					}
+				}
 			} else {
 				Object[] bts = {res.getString("CloseSaving"), res.getString("CloseNotSaving"), res.getString("BackToEdit")};
-				int rtn = JOptionPane.showOptionDialog(this, res.getString("ScriptChangesMessage"),
-						res.getString("EditTableScriptTitle"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
+				if (scriptError.equals("")) {
+					rtn = JOptionPane.showOptionDialog(this, res.getString("ScriptChangesMessage"),
+							res.getString("EditTableScriptTitle"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
+				} else {
+					rtn = JOptionPane.showOptionDialog(this, res.getString("ScriptError") + "\n" + scriptError + "\n\n" + res.getString("ScriptChangesMessage"),
+							res.getString("EditTableScriptTitle"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
+				}
 				if (rtn == 0) {
 					returnText = jTextAreaStatement.getText();
 					super.setVisible(false);
