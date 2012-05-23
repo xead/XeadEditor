@@ -32,6 +32,7 @@ package xeadEditor;
  */
 
 import java.awt.*;
+
 import javax.swing.*;
 import org.w3c.dom.NodeList;
 import java.awt.event.*;
@@ -141,7 +142,6 @@ public class DialogCheckTableModule extends JDialog {
 	public String request(MainTreeNode tableNode, boolean isShowDialog) {
 		//
 		if (frame_.getSystemNode().getElement().getAttribute("AutoConnectToEdit").equals("T")) {
-			//
 			errorStatus = tableNode.getErrorStatus();
 			tableElement = tableNode.getElement();
 			//
@@ -149,7 +149,7 @@ public class DialogCheckTableModule extends JDialog {
 			databaseName = frame_.getDatabaseName(tableElement.getAttribute("DB"));
 			//
 			if (connection_ == null) {
-				errorStatus = "ER1";
+				//errorStatus = "ER1";
 			} else {
 				if (tableNode.getType().equals("Table")) {
 					checkTableModule("");
@@ -164,7 +164,7 @@ public class DialogCheckTableModule extends JDialog {
 				}
 			}
 		} else {
-			errorStatus = "ER1";
+			//errorStatus = "ER1";
 		}
 		//
 		return errorStatus;
@@ -837,7 +837,6 @@ public class DialogCheckTableModule extends JDialog {
 			//
 		} catch (SQLException e) {
 			jTextAreaMessage.setText(e.getMessage());
-			e.printStackTrace();
 		} finally {
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
@@ -921,8 +920,16 @@ public class DialogCheckTableModule extends JDialog {
 					buf = new StringBuffer();
 					buf.append("ALTER TABLE ");
 					buf.append(tableElement.getAttribute("ID"));
-					buf.append(" ALTER COLUMN ");
+					if (databaseName.contains("jdbc:mysql")) {
+						buf.append(" MODIFY COLUMN ");
+					} else {
+						buf.append(" ALTER COLUMN ");
+					}
 					buf.append(fieldListToBeNullable.get(i));
+					if (databaseName.contains("jdbc:mysql")) {
+						buf.append(" ");
+						buf.append(getDataTypeOfField(fieldListToBeNullable.get(i)));
+					}
 					buf.append(" NULL");
 					statement.executeUpdate(buf.toString());
 				}
@@ -934,8 +941,16 @@ public class DialogCheckTableModule extends JDialog {
 					buf = new StringBuffer();
 					buf.append("ALTER TABLE ");
 					buf.append(tableElement.getAttribute("ID"));
-					buf.append(" ALTER COLUMN ");
+					if (databaseName.contains("jdbc:mysql")) {
+						buf.append(" MODIFY COLUMN ");
+					} else {
+						buf.append(" ALTER COLUMN ");
+					}
 					buf.append(fieldListToBeNotNull.get(i));
+					if (databaseName.contains("jdbc:mysql")) {
+						buf.append(" ");
+						buf.append(getDataTypeOfField(fieldListToBeNotNull.get(i)));
+					}
 					buf.append(" NOT NULL");
 					statement.executeUpdate(buf.toString());
 				}
@@ -1071,16 +1086,6 @@ public class DialogCheckTableModule extends JDialog {
 						}
 						//
 						statement.executeUpdate(buf.toString());
-//						int recordCount = statement.executeUpdate(buf.toString());
-//						if (recordCount == 1) {
-//							connection_.commit();
-//						} else {
-//							try {
-//								connection_.rollback();
-//							} catch (SQLException e6) {
-//								e6.printStackTrace();
-//							}
-//						}
 					}
 					keyValueList.clear();
 					fieldValueList.clear();
@@ -1162,11 +1167,6 @@ public class DialogCheckTableModule extends JDialog {
 					statement.executeUpdate(buf.toString());
 				}
 				//
-				//////////////////////////////////
-				// Commit all changes to module //
-				//////////////////////////////////
-				//connection_.commit();
-				//
 				///////////////////////////////////////////
 				// Check module and refresh error status //
 				///////////////////////////////////////////
@@ -1174,11 +1174,6 @@ public class DialogCheckTableModule extends JDialog {
 				//
 			} catch (SQLException ex1) {
 				JOptionPane.showMessageDialog(this, res.getString("ModuleCheckMessage37") + buf .toString() + "\n" + ex1.getMessage());
-//				try {
-//					connection_.rollback();
-//				} catch (SQLException ex2) {
-//					ex2.printStackTrace();
-//				}
 			} finally {
 				setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			}
@@ -1306,21 +1301,12 @@ public class DialogCheckTableModule extends JDialog {
 	public void deleteTable(Connection connection, String tableID) {
 		try {
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
-			//
 			Statement statement = connection.createStatement();
 			statement.executeUpdate("DROP TABLE " + tableID);
-			//connection.commit();
-			//
 			checkTableModule("DROP");
-			//
 		} catch (SQLException ex1) {
 			ex1.printStackTrace();
 			JOptionPane.showMessageDialog(this, res.getString("ModuleCheckMessage42"));
-			//try {
-			//	connection.rollback();
-			//} catch (SQLException ex2) {
-			//	ex2.printStackTrace();
-			//}
 		} finally {
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
@@ -1328,6 +1314,41 @@ public class DialogCheckTableModule extends JDialog {
 
 	void jButtonClose_actionPerformed(ActionEvent e) {
 		this.setVisible(false);
+	}
+	
+	String getDataTypeOfField(String fieldID) {
+		StringBuffer buf = new StringBuffer();
+		org.w3c.dom.Element element;
+		NodeList fieldList = tableElement.getElementsByTagName("Field");
+	    for (int i = 0; i < fieldList.getLength(); i++) {
+	        element = (org.w3c.dom.Element)fieldList.item(i);
+			if (element.getAttribute("ID").equals(fieldID)) {
+				if (databaseName.contains("jdbc:postgresql") && element.getAttribute("Type").equals("LONG VARCHAR")) {
+					buf.append("text");
+				} else {
+					buf.append(element.getAttribute("Type"));
+				}
+				if (getBasicTypeOf(element.getAttribute("Type")).equals("STRING")) {
+					if (element.getAttribute("Type").equals("CHAR") || element.getAttribute("Type").equals("VARCHAR")) {
+						buf.append("(");
+						buf.append(element.getAttribute("Size"));
+						buf.append(")");
+					}
+				} else {
+						if (getBasicTypeOf(element.getAttribute("Type")).equals("FLOAT")) {
+							if (element.getAttribute("Type").equals("DECIMAL") || element.getAttribute("Type").equals("NUMERIC")) {
+								buf.append("(");
+								buf.append(element.getAttribute("Size"));
+								buf.append(",");
+								buf.append(element.getAttribute("Decimal"));
+								buf.append(")");
+							}
+						}
+				}
+				break;
+			}
+		}
+		return buf.toString();
 	}
 
 	String getSqlToCreateTable() {

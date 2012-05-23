@@ -40,6 +40,8 @@ import java.awt.dnd.*;
 import java.awt.event.*;
 import java.io.*;
 import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -50,7 +52,6 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.*;
 import java.util.regex.Pattern;
-
 import javax.script.Compilable;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -77,17 +78,20 @@ import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
 public class Editor extends JFrame {
-	/**
-	 * Static constants
-	 */
 	private static final long serialVersionUID = 1L;
-	private static final ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
+	/**
+	 * Application Information
+	 */
 	public static final String APPLICATION_NAME  = "XEAD Editor 1.1";
-	public static final String FULL_VERSION  = "V1.R1.M3";
+	public static final String FULL_VERSION  = "V1.R1.M4";
 	public static final String FORMAT_VERSION  = "1.1";
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2012 DBC,Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
+	/**
+	 * Static constants
+	 */
+	private static final ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
 	public static final String DEFAULT_UPDATE_COUNTER = "UPDCOUNTER";
 	public static final String LANGUAGE = Locale.getDefault().getLanguage();
     public static final Color ERROR_COLOR = new Color(238,187,203);
@@ -334,14 +338,6 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldSystemExchangeRateAnnualTable = new JTextField();
 	private JLabel jLabelSystemExchangeRateMonthlyTable = new JLabel();
 	private JTextField jTextFieldSystemExchangeRateMonthlyTable = new JTextField();
-	private JLabel jLabelSystemImageFileFolder = new JLabel();
-	private JTextField jTextFieldSystemImageFileFolder = new JTextField();
-	private JLabel jLabelSystemWelcomePageURL = new JLabel();
-	private JTextField jTextFieldSystemWelcomePageURL = new JTextField();
-	private JLabel jLabelSystemEditorUser = new JLabel();
-	private JTextField jTextFieldSystemEditorUser = new JTextField();
-	private JLabel jLabelSystemEditorUserPassword = new JLabel();
-	private JTextField jTextFieldSystemEditorUserPassword = new JTextField();
 	private JSplitPane jSplitPaneSystemSubDB = new JSplitPane();
 	private TableModelReadOnlyList tableModelSystemSubDBList = new TableModelReadOnlyList();
 	private JTable jTableSystemSubDBList = new JTable(tableModelSystemSubDBList);
@@ -363,11 +359,28 @@ public class Editor extends JFrame {
 	private TableModelReadOnlyList tableModelSystemSubDBUsageList = new TableModelReadOnlyList();
 	private JTable jTableSystemSubDBUsageList = new JTable(tableModelSystemSubDBUsageList);
 	private boolean definitionOfDatabaseEditted;
+	private boolean exitRequested = false;
 	//
 	private JPanel jPanelSystemOtherConfig = new JPanel();
 	private JPanel jPanelSystemOtherConfigTop = new JPanel();
 	private JLabel jLabelSystemOutputFolder = new JLabel();
 	private JTextField jTextFieldSystemOutputFolder = new JTextField();
+	private JLabel jLabelSystemImageFileFolder = new JLabel();
+	private JTextField jTextFieldSystemImageFileFolder = new JTextField();
+	private JLabel jLabelSystemWelcomePageURL = new JLabel();
+	private JTextField jTextFieldSystemWelcomePageURL = new JTextField();
+	private JLabel jLabelSystemEditorUser = new JLabel();
+	private JTextField jTextFieldSystemEditorUser = new JTextField();
+	private JLabel jLabelSystemEditorUserPassword = new JLabel();
+	private JTextField jTextFieldSystemEditorUserPassword = new JTextField();
+	private JLabel jLabelSystemSmtpHost = new JLabel();
+	private JTextField jTextFieldSystemSmtpHost = new JTextField();
+	private JLabel jLabelSystemSmtpPort = new JLabel();
+	private JTextField jTextFieldSystemSmtpPort = new JTextField();
+	private JLabel jLabelSystemSmtpUser = new JLabel();
+	private JTextField jTextFieldSystemSmtpUser = new JTextField();
+	private JLabel jLabelSystemSmtpPassword = new JLabel();
+	private JTextField jTextFieldSystemSmtpPassword = new JTextField();
 	private JLabel jLabelSystemDateFormat = new JLabel();
 	private JComboBox jComboBoxSystemDateFormat = new JComboBox();
 	private ArrayList<String> listSystemDateFormat = new ArrayList<String>();
@@ -2135,22 +2148,33 @@ public class Editor extends JFrame {
 	 */
 	private ByteArrayOutputStream exceptionLog = new ByteArrayOutputStream();
 	private PrintStream exceptionStream = new PrintStream(exceptionLog);
+	/**
+	 * Application instance
+	 */
+	private Application application;
 
 	/**
 	 * Constructor
 	 * @param args :[0]=name of file to be processed
 	 */
-	public Editor(String[] args) {
+	public Editor(String[] args, Application app) {
 		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 		//
 		try {
-			//
-			init();  //Initialize components//
-			//
+			application = app;
 			if (args.length >= 1) {
-				processContentsFile(args[0]);
+				initComponents();
+				currentFileName = args[0];
+				setupMainTreeModelWithCurrentFileName();
+				//processContentsFile(args[0]);
 			} else {
-				processContentsFile("");
+				JOptionPane.showMessageDialog(this, res.getString("ChooseAction"));
+				EventQueue.invokeLater(new Runnable() {
+					@Override public void run() {
+						application.hideSplash();
+					}
+				});
+				System.exit(0);
 			}
 			//
 		} catch (Exception e) {
@@ -2163,32 +2187,6 @@ public class Editor extends JFrame {
 	 * @param e :Window Event
 	 */
 	protected void processWindowEvent(WindowEvent e) {
-//		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-//			if (jMenuItemFileExit_actionPerformed(null)) {
-//				try {
-//					if (!exceptionLog.toString().equals("")) {
-//						File file = new File(currentFileName);
-//						String fileName = file.getParent() + File.separator + "xeadedt_err_" + getStringValueOfDateTime("withTime") + ".log";
-//						FileWriter fileWriter = new FileWriter(fileName);
-//						//
-//						BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-//						bufferedWriter.write(exceptionLog.toString());
-//						bufferedWriter.flush();
-//						bufferedWriter.close();
-//						//
-//						JOptionPane.showMessageDialog(null, res.getString("ErrorLog1") + fileName + res.getString("ErrorLog2"));
-//					}
-//				} catch (IOException e1) {
-//					e1.printStackTrace();
-//					JOptionPane.showMessageDialog(null, e1.getStackTrace());
-//				}
-//				//
-//				super.processWindowEvent(e);
-//				System.exit(0);
-//			}
-//		} else {
-//			super.processWindowEvent(e);
-//		}
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
 			if (jMenuItemFileExit_actionPerformed(null)) {
 				super.processWindowEvent(e);
@@ -2198,50 +2196,85 @@ public class Editor extends JFrame {
 		}
 	}
 
-	/**
-	 * Process specific file
-	 * @param nameOfFile :name of file to be processed
-	 * @throws Exception
-	 */
-	void processContentsFile(String nameOfFile) throws Exception  {
-		//
-		currentFileName = nameOfFile;
-		String strWrk = System.getProperty("java.class.path");
-		fileSeparator = System.getProperty("file.separator");
-		int pos = strWrk.lastIndexOf(fileSeparator);
-		applicationFolder = strWrk.substring(0,pos+1);
-		//
-		// Request fileName if it is null //
-		if (currentFileName == null || currentFileName.equals("")) {
-			do {
-				Object[] bts = {res.getString("SelectFile"), res.getString("Exit")};
-				int rtn = JOptionPane.showOptionDialog(this, res.getString("ChooseAction"),
-						res.getString("SelectContent"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
-				//
-				// Select existing file //
-				if (rtn == 0) {
-					currentFileName = specifyNameOfExistingFile(res.getString("OpenExistintContent"), "xeaf");
-				}
-				//
-				// Exit //
-				if (rtn == 1 || rtn == -1) {
-					System.exit(0);
-				}
-			} while(currentFileName.equals(""));
-		}
-		//
-		// Exit if fileName is null, otherwise, setup treeView //
-		if (currentFileName.equals("")) {
-			System.exit(0);
-		} else {
-			try {
-				setupMainTreeModelWithCurrentFileName();
-			} catch (Exception ex) {
-				JOptionPane.showMessageDialog(this, res.getString("FailedToParse"));
-				System.exit(0);
-			}
-		}
-	}
+//	/**
+//	 * Process specific file
+//	 * @param nameOfFile :name of file to be processed
+//	 * @throws Exception
+//	 */
+//	void processContentsFile(String nameOfFile) throws Exception  {
+//		//
+//		currentFileName = nameOfFile;
+//		String strWrk = System.getProperty("java.class.path");
+//		fileSeparator = System.getProperty("file.separator");
+//		int pos = strWrk.lastIndexOf(fileSeparator);
+//		applicationFolder = strWrk.substring(0,pos+1);
+//		//
+//		try {
+//			setupMainTreeModelWithCurrentFileName();
+//		} catch (Exception ex) {
+//			EventQueue.invokeLater(new Runnable() {
+//				@Override public void run() {
+//					application.hideSplash();
+//				}
+//			});
+//			JOptionPane.showMessageDialog(this, res.getString("FailedToParse"));
+//			System.exit(0);
+//		}
+//	}
+//	void processContentsFile(String nameOfFile) throws Exception  {
+//		//
+//		currentFileName = nameOfFile;
+//		String strWrk = System.getProperty("java.class.path");
+//		fileSeparator = System.getProperty("file.separator");
+//		int pos = strWrk.lastIndexOf(fileSeparator);
+//		applicationFolder = strWrk.substring(0,pos+1);
+//		//
+//		// Request fileName if it is null //
+//		if (currentFileName == null || currentFileName.equals("")) {
+//			do {
+//				Object[] bts = {res.getString("SelectFile"), res.getString("Exit")};
+//				int rtn = JOptionPane.showOptionDialog(this, res.getString("ChooseAction"),
+//						res.getString("SelectContent"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
+//				//
+//				// Select existing file //
+//				if (rtn == 0) {
+//					currentFileName = specifyNameOfExistingFile(res.getString("OpenExistintContent"), "xeaf");
+//				}
+//				//
+//				// Exit //
+//				if (rtn == 1 || rtn == -1) {
+//					EventQueue.invokeLater(new Runnable() {
+//						@Override public void run() {
+//							application.hideSplash();
+//						}
+//					});
+//					System.exit(0);
+//				}
+//			} while(currentFileName.equals(""));
+//		}
+//		//
+//		// Exit if fileName is null, otherwise, setup treeView //
+//		if (currentFileName.equals("")) {
+//			EventQueue.invokeLater(new Runnable() {
+//				@Override public void run() {
+//					application.hideSplash();
+//				}
+//			});
+//			System.exit(0);
+//		} else {
+//			try {
+//				setupMainTreeModelWithCurrentFileName();
+//			} catch (Exception ex) {
+//				EventQueue.invokeLater(new Runnable() {
+//					@Override public void run() {
+//						application.hideSplash();
+//					}
+//				});
+//				JOptionPane.showMessageDialog(this, res.getString("FailedToParse"));
+//				System.exit(0);
+//			}
+//		}
+//	}
 	/**
 	 * Specify existing file in the dialog
 	 * @param dialogTitle :title of the dialog
@@ -2409,6 +2442,12 @@ public class Editor extends JFrame {
 		MainTreeNode xETreeNode1,xETreeNode2;
 		try {
 			//
+			//Set application folder name//
+			String strWrk = System.getProperty("java.class.path");
+			fileSeparator = System.getProperty("file.separator");
+			int pos = strWrk.lastIndexOf(fileSeparator);
+			applicationFolder = strWrk.substring(0,pos+1);
+			//
 			//Clear components//
 			jTreeMain.removeAll();
 			jPanelJumpButtons.removeAll();
@@ -2424,18 +2463,42 @@ public class Editor extends JFrame {
 			currentMainTreeNode = null;
 			previousMainTreeNode = null;
 			//
-			//Check File attributes//
-			File file = new File(currentFileName);
-			if (!file.canWrite()) {
+			application.setTextOnSplash(res.getString("SplashMessage1"));
+			if (currentFileName.startsWith("http:")
+					|| currentFileName.startsWith("https:")
+					|| currentFileName.startsWith("file:")) {
+				//////////////////////////////////////////////////////////////////////////
+				// Set path of content file which is used to process <CURRENT> keyword. //
+				// And display a warning message as it's a real-only content.           //
+				//////////////////////////////////////////////////////////////////////////
+				currentFileFolder = "";
 				JOptionPane.showMessageDialog(this, res.getString("ReadOnlyWarning1") + "\n" + res.getString("ReadOnlyWarning2"));
+				/////////////////////////////////////////////////////////
+				// Parse content file in XML Format and setup Document //
+				/////////////////////////////////////////////////////////
+				URL url = new URL(currentFileName);
+				URLConnection connection = url.openConnection();
+				InputStream inputStream = connection.getInputStream();
+				DOMParser parser = new DOMParser();
+				parser.parse(new InputSource(inputStream));
+				domDocument = parser.getDocument();
+			} else {
+				//////////////////////////////////////////////////////////////////////////
+				// Set path of content file which is used to process <CURRENT> keyword. //
+				// And also check File real-only attribute.                             //
+				//////////////////////////////////////////////////////////////////////////
+				File file = new File(currentFileName);
+				currentFileFolder = file.getParent();
+				if (!file.canWrite()) {
+					JOptionPane.showMessageDialog(this, res.getString("ReadOnlyWarning1") + "\n" + res.getString("ReadOnlyWarning2"));
+				}
+				/////////////////////////////////////////////////////////
+				// Parse content file in XML Format and setup Document //
+				/////////////////////////////////////////////////////////
+				DOMParser parser = new DOMParser();
+				parser.parse(new InputSource(new FileInputStream(currentFileName)));
+				domDocument = parser.getDocument();
 			}
-			currentFileFolder = file.getParent();
-			//
-			//Parse file in XML Format and setup Document//
-			DOMParser parser = new DOMParser();
-			//parser.parse(currentFileName); //IO Error occurs if Japanese char is in currentFileName//
-			parser.parse(new InputSource(new FileInputStream(currentFileName)));
-			domDocument = parser.getDocument();
 			//
 			// Check Format version and add node of "System"//
 			xmlnodelist1 = domDocument.getElementsByTagName("System");
@@ -2489,6 +2552,7 @@ public class Editor extends JFrame {
 			subsystemListNode.sortChildNodes();
 		    //
 		    // Connect to Database to check table module //
+			application.setTextOnSplash(res.getString("SplashMessage2"));
 		    if (systemNode.getElement().getAttribute("AutoConnectToEdit").equals("T")) {
 		    	setupConnectionList(true);
 		    } else {
@@ -2496,9 +2560,15 @@ public class Editor extends JFrame {
 		    }
 			//
 			// Add Node of "Table"//
+			int progressRate = 0;
+			String progressMessage = "";
 			xmlnodelist1 = domDocument.getElementsByTagName("Table");
 			sortingList = getSortedListModel(xmlnodelist1, "ID");
 		    for (int i = 0; i < sortingList.getSize(); i++) {
+		    	progressRate = (i+1) * 100 / sortingList.getSize();
+		    	progressMessage = res.getString("SplashMessage3") + "(" + progressRate + "%)";
+				application.setTextOnSplash(progressMessage);
+				//
 		        element1 = (org.w3c.dom.Element)sortingList.getElementAt(i);
 				xETreeNode1 = getSpecificXETreeNode("Subsystem", element1.getAttribute("SubsystemID"));
 				xETreeNode1 = (MainTreeNode)xETreeNode1.getChildAt(0);
@@ -2508,6 +2578,7 @@ public class Editor extends JFrame {
 			}
 			//
 			// Add Node of "Function"//
+			application.setTextOnSplash(res.getString("SplashMessage4"));
 			xmlnodelist1 = domDocument.getElementsByTagName("Function");
 			sortingList = getSortedListModel(xmlnodelist1, "ID");
 		    for (int i = 0; i < sortingList.getSize(); i++) {
@@ -2518,6 +2589,13 @@ public class Editor extends JFrame {
 				xETreeNode1.add(xETreeNode2);
 			}
 		    //
+		    // Hide Splash Screen //
+			EventQueue.invokeLater(new Runnable() {
+				@Override public void run() {
+					application.hideSplash();
+				}
+			});
+		    //
 		    // Select top node(systemNode) and setup contents pane //
 		    jTreeMain.setModel(treeModel);
 		    jTreeMain.expandRow(0);
@@ -2527,8 +2605,13 @@ public class Editor extends JFrame {
 		    setupContentsPaneForTreeNodeSelected((MainTreeNode)tp.getLastPathComponent(), false);
 		    //
 		} catch(Exception e) {
-			JOptionPane.showMessageDialog(this, "Errors occured while setting up tree nodes.\n\n" + e.getMessage());
-			e.printStackTrace();
+			EventQueue.invokeLater(new Runnable() {
+				@Override public void run() {
+					application.hideSplash();
+				}
+			});
+    		JOptionPane.showMessageDialog(this, "Failed to parse xml format of the file '" + currentFileName + "'.\n\n" + e.getMessage());
+			System.exit(0);
 		}
 	}
 
@@ -2536,7 +2619,7 @@ public class Editor extends JFrame {
 	 * Initialize components properties
 	 * @throws Exception
 	 */
-	void init() throws Exception {
+	void initComponents() throws Exception {
 		//
 		initComponentsAndVariants();
 		//
@@ -3001,23 +3084,9 @@ public class Editor extends JFrame {
 		jLabelSystemAppServerName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemAppServerName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemAppServerName.setText(res.getString("AppServerName"));
-		jLabelSystemAppServerName.setBounds(new Rectangle(11, 68, 86, 15));
+		jLabelSystemAppServerName.setBounds(new Rectangle(1, 68, 96, 15));
 		jTextFieldSystemAppServerName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemAppServerName.setBounds(new Rectangle(105, 65, 105, 22));
-		jLabelSystemEditorUser.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelSystemEditorUser.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelSystemEditorUser.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelSystemEditorUser.setText(res.getString("EditorUser"));
-		jLabelSystemEditorUser.setBounds(new Rectangle(211, 68, 86, 15));
-		jTextFieldSystemEditorUser.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemEditorUser.setBounds(new Rectangle(305, 65, 55, 22));
-		jLabelSystemEditorUserPassword.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelSystemEditorUserPassword.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelSystemEditorUserPassword.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelSystemEditorUserPassword.setText(res.getString("Password"));
-		jLabelSystemEditorUserPassword.setBounds(new Rectangle(361, 68, 86, 15));
-		jTextFieldSystemEditorUserPassword.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemEditorUserPassword.setBounds(new Rectangle(455, 65, 120, 22));
+		jTextFieldSystemAppServerName.setBounds(new Rectangle(105, 65, 320, 22));
 		//(System Control Tables)//
 		jLabelSystemVariantsTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemVariantsTable.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -3119,10 +3188,6 @@ public class Editor extends JFrame {
 		jPanelSystemConfigTop.add(jTextFieldSystemExchangeRateAnnualTable);
 		jPanelSystemConfigTop.add(jLabelSystemExchangeRateMonthlyTable);
 		jPanelSystemConfigTop.add(jTextFieldSystemExchangeRateMonthlyTable);
-		jPanelSystemConfigTop.add(jLabelSystemEditorUser);
-		jPanelSystemConfigTop.add(jTextFieldSystemEditorUser);
-		jPanelSystemConfigTop.add(jLabelSystemEditorUserPassword);
-		jPanelSystemConfigTop.add(jTextFieldSystemEditorUserPassword);
 		jPanelSystemConfig.add(jPanelSystemConfigTop, BorderLayout.NORTH);
 		jPanelSystemConfig.add(jSplitPaneSystemSubDB, BorderLayout.CENTER);
 		jSplitPaneSystemSubDB.setOrientation(JSplitPane.VERTICAL_SPLIT);
@@ -3342,7 +3407,7 @@ public class Editor extends JFrame {
 		jPanelSystemOtherConfig.setLayout(new BorderLayout());
 		jPanelSystemOtherConfigTop.setBorder(BorderFactory.createEtchedBorder());
 		jPanelSystemOtherConfigTop.setLayout(null);
-		jPanelSystemOtherConfigTop.setPreferredSize(new Dimension(10, 126));
+		jPanelSystemOtherConfigTop.setPreferredSize(new Dimension(10, 182));
 		jLabelSystemImageFileFolder.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemImageFileFolder.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemImageFileFolder.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -3404,10 +3469,52 @@ public class Editor extends JFrame {
 		listSystemDateFormat.add("jp41");
 		listSystemDateFormat.add("jp50");
 		listSystemDateFormat.add("jp51");
+		jLabelSystemEditorUser.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemEditorUser.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelSystemEditorUser.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelSystemEditorUser.setText(res.getString("EditorUser"));
+		jLabelSystemEditorUser.setBounds(new Rectangle(11, 124, 86, 15));
+		jTextFieldSystemEditorUser.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldSystemEditorUser.setBounds(new Rectangle(105, 121, 55, 22));
+		jLabelSystemEditorUserPassword.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemEditorUserPassword.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelSystemEditorUserPassword.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelSystemEditorUserPassword.setText(res.getString("Password"));
+		jLabelSystemEditorUserPassword.setBounds(new Rectangle(164, 124, 86, 15));
+		jTextFieldSystemEditorUserPassword.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldSystemEditorUserPassword.setBounds(new Rectangle(258, 121, 120, 22));
+		jLabelSystemSmtpHost.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemSmtpHost.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelSystemSmtpHost.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelSystemSmtpHost.setText(res.getString("SmtpHost"));
+		jLabelSystemSmtpHost.setBounds(new Rectangle(11, 152, 86, 15));
+		jTextFieldSystemSmtpHost.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldSystemSmtpHost.setBounds(new Rectangle(105, 149, 120, 22));
+		jLabelSystemSmtpPort.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemSmtpPort.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelSystemSmtpPort.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelSystemSmtpPort.setText(res.getString("SmtpPort"));
+		jLabelSystemSmtpPort.setBounds(new Rectangle(230, 152, 90, 15));
+		jTextFieldSystemSmtpPort.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldSystemSmtpPort.setBounds(new Rectangle(328, 149, 50, 22));
+		jLabelSystemSmtpUser.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemSmtpUser.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelSystemSmtpUser.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelSystemSmtpUser.setText(res.getString("SmtpUser"));
+		jLabelSystemSmtpUser.setBounds(new Rectangle(380, 152, 90, 15));
+		jTextFieldSystemSmtpUser.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldSystemSmtpUser.setBounds(new Rectangle(478, 149, 80, 22));
+		jLabelSystemSmtpPassword.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemSmtpPassword.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelSystemSmtpPassword.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelSystemSmtpPassword.setText(res.getString("SmtpPassword"));
+		jLabelSystemSmtpPassword.setBounds(new Rectangle(560, 152, 90, 15));
+		jTextFieldSystemSmtpPassword.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldSystemSmtpPassword.setBounds(new Rectangle(658, 149, 100, 22));
 		jSplitPaneSystemPrintFont.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneSystemPrintFont.add(jScrollPaneSystemPrintFontList, JSplitPane.TOP);
 		jSplitPaneSystemPrintFont.add(jPanelSystemPrintFont, JSplitPane.BOTTOM);
-		jSplitPaneSystemPrintFont.setDividerLocation(200);
+		jSplitPaneSystemPrintFont.setDividerLocation(150);
 		jPanelSystemOtherConfigTop.add(jLabelSystemImageFileFolder);
 		jPanelSystemOtherConfigTop.add(jTextFieldSystemImageFileFolder);
 		jPanelSystemOtherConfigTop.add(jLabelSystemWelcomePageURL);
@@ -3416,6 +3523,18 @@ public class Editor extends JFrame {
 		jPanelSystemOtherConfigTop.add(jLabelSystemOutputFolder);
 		jPanelSystemOtherConfigTop.add(jComboBoxSystemDateFormat);
 		jPanelSystemOtherConfigTop.add(jLabelSystemDateFormat);
+		jPanelSystemOtherConfigTop.add(jLabelSystemEditorUser);
+		jPanelSystemOtherConfigTop.add(jTextFieldSystemEditorUser);
+		jPanelSystemOtherConfigTop.add(jLabelSystemEditorUserPassword);
+		jPanelSystemOtherConfigTop.add(jTextFieldSystemEditorUserPassword);
+		jPanelSystemOtherConfigTop.add(jLabelSystemSmtpHost);
+		jPanelSystemOtherConfigTop.add(jTextFieldSystemSmtpHost);
+		jPanelSystemOtherConfigTop.add(jLabelSystemSmtpPort);
+		jPanelSystemOtherConfigTop.add(jTextFieldSystemSmtpPort);
+		jPanelSystemOtherConfigTop.add(jLabelSystemSmtpUser);
+		jPanelSystemOtherConfigTop.add(jTextFieldSystemSmtpUser);
+		jPanelSystemOtherConfigTop.add(jLabelSystemSmtpPassword);
+		jPanelSystemOtherConfigTop.add(jTextFieldSystemSmtpPassword);
 		jPanelSystemOtherConfig.add(jPanelSystemOtherConfigTop, BorderLayout.NORTH);
 		jPanelSystemOtherConfig.add(jSplitPaneSystemPrintFont, BorderLayout.CENTER);
 		//(Print Font List)//
@@ -14614,7 +14733,8 @@ public class Editor extends JFrame {
 				str = domNode_.getAttribute("ID") + " " + domNode_.getAttribute("Name");
 			}
 			if (nodeType_.equals("SubsystemList")) {
-				str = res.getString("SubsystemList");
+				//str = res.getString("SubsystemList");
+				str = res.getString("Application");
 			}
 			if (nodeType_.equals("Subsystem")) {
 				str = domNode_.getAttribute("ID") + " " + domNode_.getAttribute("Name");
@@ -14863,15 +14983,23 @@ public class Editor extends JFrame {
 				if (tableModelTableUsageList.getRowCount() == 0) {
 					Connection connection = databaseConnList.get(databaseIDList.indexOf(domNode_.getAttribute("DB")));
 					if (connection != null && !errorStatus_.equals("ER1")) {
-						Object[] bts = {res.getString("Cancel"), res.getString("DeleteTableDefinitionOnly"), res.getString("DeleteTableDefinitionAndModule")};
-						int rtn = JOptionPane.showOptionDialog(null, res.getString("DeleteTableMessage"),
-								res.getString("DeleteTableModule"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
-						//
-						if (rtn == 2) {
-							dialogCheckTableModule.deleteTable(connection, domNode_.getAttribute("ID"));
-						}
-						if (rtn != 1 && rtn != 2) {
-							errorMessage = res.getString("DeleteCanceled");
+						try {
+							if (!connection.isValid(0)) {
+								setupConnectionList(true);
+								connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
+							}
+							Object[] bts = {res.getString("Cancel"), res.getString("DeleteTableDefinitionOnly"), res.getString("DeleteTableDefinitionAndModule")};
+							int rtn = JOptionPane.showOptionDialog(null, res.getString("DeleteTableMessage"),
+									res.getString("DeleteTableModule"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
+							//
+							if (rtn == 2) {
+								dialogCheckTableModule.deleteTable(connection, domNode_.getAttribute("ID"));
+							}
+							if (rtn != 1 && rtn != 2) {
+								errorMessage = res.getString("DeleteCanceled");
+							}
+						} catch (SQLException e) {
+							errorMessage = res.getString("DeleteCanceled") + "\n" + e.getMessage();
 						}
 					}
 				} else {
@@ -15212,9 +15340,6 @@ public class Editor extends JFrame {
 			jTextFieldSystemExchangeRateAnnualTable.setText(domNode_.getAttribute("ExchangeRateAnnualTable"));
 			jTextFieldSystemExchangeRateMonthlyTable.setText(domNode_.getAttribute("ExchangeRateMonthlyTable"));
 			//
-			jTextFieldSystemEditorUser.setText(domNode_.getAttribute("EditorUser"));
-			jTextFieldSystemEditorUserPassword.setText(domNode_.getAttribute("EditorUserPassword"));
-			//
 			//Sub-DB List//
 			if (tableModelSystemSubDBList.getRowCount() > 0) {
 				int rowCount = tableModelSystemSubDBList.getRowCount();
@@ -15244,6 +15369,12 @@ public class Editor extends JFrame {
 			if (index > -1) {
 				jComboBoxSystemDateFormat.setSelectedIndex(index);
 			}
+			jTextFieldSystemEditorUser.setText(domNode_.getAttribute("EditorUser"));
+			jTextFieldSystemEditorUserPassword.setText(domNode_.getAttribute("EditorUserPassword"));
+			jTextFieldSystemSmtpHost.setText(domNode_.getAttribute("SmtpHost"));
+			jTextFieldSystemSmtpPort.setText(domNode_.getAttribute("SmtpPort"));
+			jTextFieldSystemSmtpUser.setText(domNode_.getAttribute("SmtpUser"));
+			jTextFieldSystemSmtpPassword.setText(domNode_.getAttribute("SmtpPassword"));
 			//
 			//Print Font List//
 			if (tableModelSystemPrintFontList.getRowCount() > 0) {
@@ -18593,13 +18724,6 @@ public class Editor extends JFrame {
 				valueOfFieldsChanged = true;
 			}
 			//
-			if (!domNode_.getAttribute("EditorUser").equals(jTextFieldSystemEditorUser.getText())) {
-				valueOfFieldsChanged = true;
-			}
-			if (!domNode_.getAttribute("EditorUserPassword").equals(jTextFieldSystemEditorUserPassword.getText())) {
-				valueOfFieldsChanged = true;
-			}
-			//
 			if (!domNode_.getAttribute("ImageFileFolder").equals(jTextFieldSystemImageFileFolder.getText())) {
 				valueOfFieldsChanged = true;
 			}
@@ -18617,6 +18741,24 @@ public class Editor extends JFrame {
 			}
 			int index = listSystemDateFormat.indexOf(domNode_.getAttribute("DateFormat"));
 			if (index != jComboBoxSystemDateFormat.getSelectedIndex()) {
+				valueOfFieldsChanged = true;
+			}
+			if (!domNode_.getAttribute("EditorUser").equals(jTextFieldSystemEditorUser.getText())) {
+				valueOfFieldsChanged = true;
+			}
+			if (!domNode_.getAttribute("EditorUserPassword").equals(jTextFieldSystemEditorUserPassword.getText())) {
+				valueOfFieldsChanged = true;
+			}
+			if (!domNode_.getAttribute("SmtpHost").equals(jTextFieldSystemSmtpHost.getText())) {
+				valueOfFieldsChanged = true;
+			}
+			if (!domNode_.getAttribute("SmtpPort").equals(jTextFieldSystemSmtpPort.getText())) {
+				valueOfFieldsChanged = true;
+			}
+			if (!domNode_.getAttribute("SmtpUser").equals(jTextFieldSystemSmtpUser.getText())) {
+				valueOfFieldsChanged = true;
+			}
+			if (!domNode_.getAttribute("SmtpPassword").equals(jTextFieldSystemSmtpPassword.getText())) {
 				valueOfFieldsChanged = true;
 			}
 			//
@@ -18667,6 +18809,11 @@ public class Editor extends JFrame {
 				domNode_.setAttribute("EditorUser", jTextFieldSystemEditorUser.getText());
 				domNode_.setAttribute("EditorUserPassword", jTextFieldSystemEditorUserPassword.getText());
 				//
+				domNode_.setAttribute("SmtpHost", jTextFieldSystemSmtpHost.getText());
+				domNode_.setAttribute("SmtpPort", jTextFieldSystemSmtpPort.getText());
+				domNode_.setAttribute("SmtpUser", jTextFieldSystemSmtpUser.getText());
+				domNode_.setAttribute("SmtpPassword", jTextFieldSystemSmtpPassword.getText());
+				//
 				domNode_.setAttribute("ImageFileFolder", jTextFieldSystemImageFileFolder.getText());
 				if (jTextFieldSystemOutputFolder.getText().equals("") || jTextFieldSystemOutputFolder.getText().equals("*Delete")) {
 					domNode_.setAttribute("OutputFolder", "");
@@ -18694,7 +18841,7 @@ public class Editor extends JFrame {
 				undoManager.addLogAfterModified(this);
 			}
 			//
-			if (definitionOfDatabaseEditted) {
+			if (definitionOfDatabaseEditted && !exitRequested) {
 				if (domNode_.getAttribute("AutoConnectToEdit").equals("T")) {
 					setupConnectionList(true);
 				} else {
@@ -24678,6 +24825,8 @@ public class Editor extends JFrame {
 	boolean jMenuItemFileExit_actionPerformed(ActionEvent e) {
 		boolean repliedToExit = false;
 		//
+		exitRequested = true;
+		//
 		currentMainTreeNode.updateFields();
 		//
 		if (changeState.isChanged()) {
@@ -24699,11 +24848,7 @@ public class Editor extends JFrame {
 		}
 		//
 		if (repliedToExit) {
-			//if (connection != null) {
-			//	disconnectDatabase();
-			//}
 			disconnectDatabase();
-			//
 			try {
 				if (!exceptionLog.toString().equals("")) {
 					File file = new File(currentFileName);
@@ -25193,51 +25338,40 @@ public class Editor extends JFrame {
 	 * @param e :Action Event
 	 */
 	void jMenuItemFileRun_actionPerformed(ActionEvent e) {
-		//if (connection == null) {
-		//	connection = getConnectionToDatabase();
-		//}
-		//if (connection != null) {
-//		boolean allConnReady = true;
-//		for (int i = 0; i < databaseConnList.size(); i++) {
-//			if (databaseConnList.get(i) == null) {
-//				allConnReady = false;
-//			}	
-//		}
-//		if (allConnReady) {
-			currentMainTreeNode.updateFields();
-			int rtn1 = 0;
-			if (changeState.isChanged()) {
-				Object[] bts = {res.getString("SaveChanges"), res.getString("BackToEdit")} ;
-				rtn1 = JOptionPane.showOptionDialog(this, res.getString("LaunchSystemTitle"),
-						res.getString("SaveChanges"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
-				if (rtn1 == 0) {
-					try {
-						setCursor(new Cursor(Cursor.WAIT_CURSOR));
-						saveFileWithCurrentFileName();
-						undoManager.resetLog();
-						changeState.setChanged(false);
-					} finally {
-						setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-					}
-				}
-			}
+		currentMainTreeNode.updateFields();
+		int rtn1 = 0;
+		if (changeState.isChanged()) {
+			Object[] bts = {res.getString("SaveChanges"), res.getString("BackToEdit")} ;
+			rtn1 = JOptionPane.showOptionDialog(this, res.getString("LaunchSystemTitle"),
+					res.getString("SaveChanges"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
 			if (rtn1 == 0) {
-				String command = "";
 				try {
-					Runtime rt = Runtime.getRuntime();
-					command = "javaw -Xmx100m -splash:\"" + applicationFolder + "xeaddrv.png\" -jar \"" + applicationFolder + "xeaddrv.jar\" \"" + currentFileName + "\"";
-					if (!jTextFieldSystemEditorUser.getText().equals("")) {
-						command = command + " \"" + jTextFieldSystemEditorUser.getText() + "\"";
-						if (!jTextFieldSystemEditorUserPassword.getText().equals("")) {
-							command = command + " \"" + jTextFieldSystemEditorUserPassword.getText() + "\"";
-						}
-					}
-					rt.exec(command);
-				} catch (Exception e1) {
-					JOptionPane.showMessageDialog(this, res.getString("ErrorMessage25") + command + res.getString("ErrorMessage26") + e1.getMessage());
+					setCursor(new Cursor(Cursor.WAIT_CURSOR));
+					saveFileWithCurrentFileName();
+					undoManager.resetLog();
+					changeState.setChanged(false);
+				} finally {
+					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 				}
 			}
-//		}
+		}
+		if (rtn1 == 0) {
+			String command = "";
+			try {
+				Runtime rt = Runtime.getRuntime();
+				//command = "javaw -Xmx100m -splash:\"" + applicationFolder + "xeaddrv.png\" -jar \"" + applicationFolder + "xeaddrv.jar\" \"" + currentFileName + "\"";
+				command = "javaw -Xmx100m -jar \"" + applicationFolder + "xeaddrv.jar\" \"" + currentFileName + "\"";
+				if (!jTextFieldSystemEditorUser.getText().equals("")) {
+					command = command + " \"" + jTextFieldSystemEditorUser.getText() + "\"";
+					if (!jTextFieldSystemEditorUserPassword.getText().equals("")) {
+						command = command + " \"" + jTextFieldSystemEditorUserPassword.getText() + "\"";
+					}
+				}
+				rt.exec(command);
+			} catch (Exception e1) {
+				JOptionPane.showMessageDialog(this, res.getString("ErrorMessage25") + command + res.getString("ErrorMessage26") + e1.getMessage());
+			}
+		}
 	}
 	/**
 	 * [Tool|Create Table]
@@ -25266,13 +25400,6 @@ public class Editor extends JFrame {
 	 * @param e :Action Event
 	 */
 	void jMenuItemToolSQL_actionPerformed(ActionEvent e) {
-//		MainTreeNode childNode1, childNode2, childNode3;
-//		int childCount1;
-//		//
-//		if (connection == null) {
-//			connection = getConnectionToDatabase();
-//		}
-//		if (connection != null) {
 		boolean allConnectionReady = true;
 		for (int i = 0; i < databaseConnList.size(); i++) {
 			if (databaseConnList.get(i) == null) {
@@ -25282,15 +25409,6 @@ public class Editor extends JFrame {
 		if (allConnectionReady) {
 			currentMainTreeNode.updateFields();
 			if (dialogSQL.request(null)) {
-//				for (int i = 0; i < subsystemListNode.getChildCount(); i++) {
-//					childNode1 = (MainTreeNode)subsystemListNode.getChildAt(i);
-//					childNode2 = (MainTreeNode)childNode1.getChildAt(0); //SubsystemTableList//
-//					childCount1 = childNode2.getChildCount(); //Number of Subsystem Tables//
-//					for (int j = 0; j < childCount1; j++) {
-//						childNode3 = (MainTreeNode)childNode2.getChildAt(j);
-//						checkTableModule(childNode3, false);
-//					}
-//				}
 				repaintTableNodes();
 			}
 		} else {
@@ -25378,33 +25496,35 @@ public class Editor extends JFrame {
 //			processError(ex);
 //		}
 //	}
-	/**
-	 * Save Current File
-	 */
+	/***************************************
+	 * Save edited content of current file *
+	 ***************************************/
 	void saveFileWithCurrentFileName() {
-		try{
-			//setCursor(new Cursor(Cursor.WAIT_CURSOR));
-			//
-			arrangeOrderOfDomElement();
-			//
-			OutputFormat outputFormat = new OutputFormat(domDocument);
-			outputFormat.setEncoding("UTF-8");
-			FileOutputStream fileOutStream = new FileOutputStream(currentFileName);
-			OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutStream, "UTF-8");
-			Writer writer = new BufferedWriter(outputStreamWriter);
-			XMLSerializer xmlSerializer = new XMLSerializer(writer, outputFormat);
-			xmlSerializer.serialize(domDocument.getDocumentElement());
-			writer.close();
-		} catch(Exception ex){
+		if (currentFileName.startsWith("http:")
+				|| currentFileName.startsWith("https:")
+				|| currentFileName.startsWith("file:")) {
 			JOptionPane.showMessageDialog(this, res.getString("ErrorMessage28"));
-			ex.printStackTrace();
-		//} finally {
-		//	 setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		} else {
+			try{
+				arrangeOrderOfDomElement();
+				OutputFormat outputFormat = new OutputFormat(domDocument);
+				outputFormat.setEncoding("UTF-8");
+				FileOutputStream fileOutputStream = new FileOutputStream(currentFileName);
+				OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, "UTF-8");
+				Writer writer = new BufferedWriter(outputStreamWriter);
+				XMLSerializer xmlSerializer = new XMLSerializer(writer, outputFormat);
+				xmlSerializer.serialize(domDocument.getDocumentElement());
+				writer.close();
+				//
+			} catch(Exception ex){
+				JOptionPane.showMessageDialog(this, res.getString("ErrorMessage28"));
+				ex.printStackTrace();
+			}
 		}
 	}
 	
 	/**
-	 * arrange order of dom elements according to the xeaf-format specifications
+	 * arrange order of DOM elements according to the XEAF-format specifications
 	 */
 	void arrangeOrderOfDomElement() {
 		org.w3c.dom.Element topElement;
@@ -25762,7 +25882,7 @@ public class Editor extends JFrame {
 				newElement.setAttribute("Description", "Sdb0");
 			}
 			///////////////////////////////////////////////////////////////////////////////
-			// String "..." in the name required as it should be skippid to be connected //
+			// String "..." in the name required as it should be skipped to be connected //
 			///////////////////////////////////////////////////////////////////////////////
 			newElement.setAttribute("Name", "jdbc:xxxxx://...");
 			newElement.setAttribute("User", "user");
@@ -34776,9 +34896,6 @@ public class Editor extends JFrame {
 	void jTabbedPaneTable_stateChanged(ChangeEvent e) {
 		if (jTabbedPaneTable.getSelectedIndex() == 5) {
 			if (currentMainTreeNode.getElement().getAttribute("ID").equals(jTextFieldTableID.getText())) {
-//				if (connection == null) {
-//					connection = getConnectionToDatabase();
-//				}
 				Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
 				if (connection != null) {
 					currentMainTreeNode.updateFields();
@@ -35286,26 +35403,17 @@ public class Editor extends JFrame {
 	}
 	
 	void checkTableModule(MainTreeNode tableNode, boolean isShowDialog) {
-		//String errorStatus = "";
-		//
-		//if (connection == null && isShowDialog) {
-		//	connection = getConnectionToDatabase();
-		//}
-		//
-		//Connection connection = databaseConnList.get(databaseIDList.indexOf(tableNode.getElement().getAttribute("DB")));
-		//if (connection != null) {
-			if (isShowDialog) {
-				currentMainTreeNode.updateFields();
-			}
-			String errorStatus = dialogCheckTableModule.request(tableNode, isShowDialog);
-			if (!tableNode.getErrorStatus().equals(errorStatus)) {
-				tableNode.setErrorStatus(errorStatus);
-				repaintErrorStatusOfParentNodes((MainTreeNode)tableNode.getParent());
-			}
-			if (isShowDialog) {
-				currentMainTreeNode.activateContentsPane();
-			}
-		//}
+		if (isShowDialog) {
+			currentMainTreeNode.updateFields();
+		}
+		String errorStatus = dialogCheckTableModule.request(tableNode, isShowDialog);
+		if (!tableNode.getErrorStatus().equals(errorStatus)) {
+			tableNode.setErrorStatus(errorStatus);
+			repaintErrorStatusOfParentNodes((MainTreeNode)tableNode.getParent());
+		}
+		if (isShowDialog) {
+			currentMainTreeNode.activateContentsPane();
+		}
 	}
 	
 	public String checkSyntaxError(String script, boolean isShowResult) {
@@ -35448,11 +35556,9 @@ public class Editor extends JFrame {
 				connection.setAutoCommit(true);
 				reply = 1;
 			} catch (Exception e) {
-				//if (e.getMessage().contains("java.net.ConnectException")) {
-					Object[] bts = {res.getString("DBConnectMessage3"), res.getString("DBConnectMessage4")};
-					reply = JOptionPane.showOptionDialog(this, res.getString("DBConnectMessage1") + dbName + res.getString("DBConnectMessage2"),
-							res.getString("DBConnectMessage0"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
-				//}
+				Object[] bts = {res.getString("DBConnectMessage3"), res.getString("DBConnectMessage4")};
+				reply = JOptionPane.showOptionDialog(this, res.getString("DBConnectMessage1") + dbName + res.getString("DBConnectMessage2"),
+						res.getString("DBConnectMessage0"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
 			}
 		}
 		return connection;
@@ -35479,11 +35585,11 @@ public class Editor extends JFrame {
 	}
 	
 	public Connection getDatabaseConnection(String id) {
-		Connection conn = null;
+		Connection connection = null;
 		if (databaseIDList.indexOf(id) >= 0) {
-			conn = databaseConnList.get(databaseIDList.indexOf(id));
+			connection = databaseConnList.get(databaseIDList.indexOf(id));
 		}
-		return conn;
+		return connection;
 	}
 	
 	public String getDefaultPrintFontID() {
@@ -35969,6 +36075,10 @@ public class Editor extends JFrame {
 			MainTreeNode tableNode = getSpecificXETreeNode("Table", tableID);
 			Connection connection = databaseConnList.get(databaseIDList.indexOf(tableNode.getElement().getAttribute("DB")));
 			if (connection != null && !connection.isClosed()) {
+				if (!connection.isValid(0)) {
+					setupConnectionList(true);
+					connection = databaseConnList.get(databaseIDList.indexOf(tableNode.getElement().getAttribute("DB")));
+				}
 				//
 				jTextAreaTableFieldTypeOptionKUBUN.setText("");
 				//
@@ -36057,6 +36167,10 @@ public class Editor extends JFrame {
 			int blockRows = 0;
 			TableDataRowNumber rowNumber;
 			Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
+			if (!connection.isValid(0)) {
+				setupConnectionList(true);
+				connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
+			}
 			statement = connection.createStatement();
 			result = statement.executeQuery(buf.toString());
 			while (result.next()) {
@@ -36266,14 +36380,14 @@ public class Editor extends JFrame {
 				statementBuf.append(tableRowNumber.getUpdateCounter()) ;
 				//
 				Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
+				if (!connection.isValid(0)) {
+					setupConnectionList(true);
+					connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
+				}
 				Statement statement = connection.createStatement();
 				int recordCount = statement.executeUpdate(statementBuf.toString());
 				if (recordCount == 1) {
-					//
-					//connection.commit();
-					//
 					jTextAreaTableDataMessages.setText(res.getString("DataUtilityMessage2"));
-					//
 					for (int i = 0; i < editableTableFieldList.size(); i++) {
 						basicType = editableTableFieldList.get(i).getBasicType();
 						if (basicType.equals("INTEGER") || basicType.equals("FLOAT")) {
@@ -36363,6 +36477,10 @@ public class Editor extends JFrame {
 				}
 				//
 				Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
+				if (!connection.isValid(0)) {
+					setupConnectionList(true);
+					connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
+				}
 				Statement statement = connection.createStatement();
 				ResultSet result = statement.executeQuery(statementBuf.toString());
 				if (result.next()) {
@@ -36454,19 +36572,17 @@ public class Editor extends JFrame {
 				statementBuf.append(tableRowNumber.getUpdateCounter()) ;
 				//
 				Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
+				if (!connection.isValid(0)) {
+					setupConnectionList(true);
+					connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
+				}
 				Statement statement = connection.createStatement();
 				int recordCount = statement.executeUpdate(statementBuf.toString());
 				if (recordCount == 1) {
-					//
-					//connection.commit();
-					//
 					jTextAreaTableDataMessages.setText(res.getString("DataUtilityMessage6"));
-					//
 				} else {
-					//
 					String errorMessage = res.getString("DataUtilityMessage3");
 					JOptionPane.showMessageDialog(jPanelMain, errorMessage);
-					//
 					try {
 						connection.rollback();
 					} catch (SQLException e6) {
@@ -36498,9 +36614,7 @@ public class Editor extends JFrame {
 			Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
 			Statement statement = connection.createStatement();
 			statement.executeUpdate(statementBuf.toString());
-			//connection.commit();
 			jTextAreaTableDataMessages.setText(res.getString("DataUtilityMessage7"));
-			//
 		} catch (SQLException e1) {
 			jTextAreaTableDataMessages.setText("SQLException : "+ e1.getMessage());
 		} finally {
@@ -36579,7 +36693,6 @@ public class Editor extends JFrame {
 											text = text.replaceAll("\\\\", "\\\\\\\\");
 										}
 										statementBuf.append("'");
-										//statementBuf.append(fieldValueList.get(fieldIDList.indexOf(editableTableFieldList.get(i).getFieldID())));
 										statementBuf.append(text);
 										statementBuf.append("'");
 									}
@@ -36590,6 +36703,10 @@ public class Editor extends JFrame {
 							}
 						}
 						Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
+						if (!connection.isValid(0)) {
+							setupConnectionList(true);
+							connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
+						}
 						Statement statement = connection.createStatement();
 						ResultSet result = statement.executeQuery(statementBuf.toString());
 						if (result.next()) {

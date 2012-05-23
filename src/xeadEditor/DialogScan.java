@@ -461,7 +461,7 @@ public class DialogScan extends JDialog {
 				//
 				workElement = (org.w3c.dom.Element)systemList.item(0);
 				scanAttribute(workElement, "System", res.getString("System"), "Name", res.getString("Name"));
-				scanAttribute(workElement, "System", res.getString("System"), "Descriptions", res.getString("Remarks"));
+				scanAttribute(workElement, "System", res.getString("System"), "Remarks", res.getString("Remarks"));
 				scanAttribute(workElement, "System", res.getString("System"), "LoginScript", res.getString("LoginScript"));
 				scanAttribute(workElement, "System", res.getString("System"), "ScriptFunctions", res.getString("ScriptFunctions"));
 			}
@@ -521,6 +521,7 @@ public class DialogScan extends JDialog {
 							scanAttribute(workElement1, "TableField", res.getString("Table/Field"), "ID", "ID");
 							scanAttribute(workElement1, "TableField", res.getString("Table/Field"), "Name", res.getString("Name"));
 							scanAttribute(workElement1, "TableField", res.getString("Table/Field"), "TypeOptions", res.getString("TypeOptions"));
+							scanAttribute(workElement1, "TableField", res.getString("Table/Field"), "Remarks", res.getString("Remarks"));
 						}
 						//
 						workList1 = workElement.getElementsByTagName("Script");
