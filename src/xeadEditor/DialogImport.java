@@ -362,64 +362,72 @@ public class DialogImport extends JDialog {
 			DOMParser parser = new DOMParser();
 			parser.parse(new InputSource(new FileInputStream(fileName)));
 			domDocumentImportingFrom = parser.getDocument();
+			//
 			NodeList nodeList = domDocumentImportingFrom.getElementsByTagName("System");
 			org.w3c.dom.Element systemElementImportFrom = (org.w3c.dom.Element)nodeList.item(0);
-			jTextFieldSystemNameFrom.setText(systemElementImportFrom.getAttribute("Name"));
-			jTextFieldSystemVersionFrom.setText(systemElementImportFrom.getAttribute("Version"));
-			//
-			jComboBoxSubsystemFrom.removeAllItems();
-			jComboBoxSubsystemFrom.addItem(res.getString("SelectFromList"));
-			subsystemNodeListFrom = new ArrayList<org.w3c.dom.Element>();
-			subsystemNodeListFrom.add(null);
-			//
-			NodeList nodelist = domDocumentImportingFrom.getElementsByTagName("Subsystem");
-			SortableDomElementListModel sortingList = frame_.getSortedListModel(nodelist, "ID");
-			for (int i = 0; i < sortingList.getSize(); i++) {
-				element = (org.w3c.dom.Element)sortingList.get(i);
-				jComboBoxSubsystemFrom.addItem(element.getAttribute("ID") + " " + element.getAttribute("Name"));
-				subsystemNodeListFrom.add(element);
-			}
-			//
-			jComboBoxSubsystemInto.removeAllItems();
-			jComboBoxSubsystemInto.addItem(res.getString("SelectFromList"));
-			subsystemNodeListInto = new ArrayList<org.w3c.dom.Element>();
-			subsystemNodeListInto.add(null);
-			//
-			MainTreeNode subsystemListInto = frame_.getSubsystemListNode();
-			for (int i = 0; i < subsystemListInto.getChildCount(); i++) {
-				node = (MainTreeNode)subsystemListInto.getChildAt(i);
-				jComboBoxSubsystemInto.addItem(node.getElement().getAttribute("ID") + " " + node.getElement().getAttribute("Name"));
-				subsystemNodeListInto.add(node.getElement());
-			}
-			//
-			checkBoxHeaderRendererTableListFrom.setSelected(false);
-			if (tableModelTableListFrom.getRowCount() > 0) {
-				int rowCount = tableModelTableListFrom.getRowCount();
-				for (int i = 0; i < rowCount; i++) {tableModelTableListFrom.removeRow(0);}
-			}
-			if (tableModelTableListInto.getRowCount() > 0) {
-				int rowCount = tableModelTableListInto.getRowCount();
-				for (int i = 0; i < rowCount; i++) {tableModelTableListInto.removeRow(0);}
-			}
-			checkBoxHeaderRendererFunctionListFrom.setSelected(false);
-			if (tableModelFunctionListFrom.getRowCount() > 0) {
-				int rowCount = tableModelFunctionListFrom.getRowCount();
-				for (int i = 0; i < rowCount; i++) {tableModelFunctionListFrom.removeRow(0);}
-			}
-			if (tableModelFunctionListInto.getRowCount() > 0) {
-				int rowCount = tableModelFunctionListInto.getRowCount();
-				for (int i = 0; i < rowCount; i++) {tableModelFunctionListInto.removeRow(0);}
-			}
-			//
-			if (jTextAreaMessage.getText().equals("")) {
-				jTextAreaMessage.setText(res.getString("ImportMessage1") + "\n");
+			float importFileFormat = Float.parseFloat(systemElementImportFrom.getAttribute("FormatVersion"));
+			float appliFormat = Float.parseFloat(frame_.getFormatVersion());
+			if (importFileFormat > appliFormat) {
+				JOptionPane.showMessageDialog(this, res.getString("FormatVersionError1") +
+						systemElementImportFrom.getAttribute("FormatVersion") + res.getString("FormatVersionError2") +
+						frame_.getFormatVersion() + res.getString("FormatVersionError3"));
 			} else {
-				jTextAreaMessage.setText(jTextAreaMessage.getText() + "\n");
+				jTextFieldSystemNameFrom.setText(systemElementImportFrom.getAttribute("Name"));
+				jTextFieldSystemVersionFrom.setText(systemElementImportFrom.getAttribute("Version"));
+				//
+				jComboBoxSubsystemFrom.removeAllItems();
+				jComboBoxSubsystemFrom.addItem(res.getString("SelectFromList"));
+				subsystemNodeListFrom = new ArrayList<org.w3c.dom.Element>();
+				subsystemNodeListFrom.add(null);
+				//
+				NodeList nodelist = domDocumentImportingFrom.getElementsByTagName("Subsystem");
+				SortableDomElementListModel sortingList = frame_.getSortedListModel(nodelist, "ID");
+				for (int i = 0; i < sortingList.getSize(); i++) {
+					element = (org.w3c.dom.Element)sortingList.get(i);
+					jComboBoxSubsystemFrom.addItem(element.getAttribute("ID") + " " + element.getAttribute("Name"));
+					subsystemNodeListFrom.add(element);
+				}
+				//
+				jComboBoxSubsystemInto.removeAllItems();
+				jComboBoxSubsystemInto.addItem(res.getString("SelectFromList"));
+				subsystemNodeListInto = new ArrayList<org.w3c.dom.Element>();
+				subsystemNodeListInto.add(null);
+				//
+				MainTreeNode subsystemListInto = frame_.getSubsystemListNode();
+				for (int i = 0; i < subsystemListInto.getChildCount(); i++) {
+					node = (MainTreeNode)subsystemListInto.getChildAt(i);
+					jComboBoxSubsystemInto.addItem(node.getElement().getAttribute("ID") + " " + node.getElement().getAttribute("Name"));
+					subsystemNodeListInto.add(node.getElement());
+				}
+				//
+				checkBoxHeaderRendererTableListFrom.setSelected(false);
+				if (tableModelTableListFrom.getRowCount() > 0) {
+					int rowCount = tableModelTableListFrom.getRowCount();
+					for (int i = 0; i < rowCount; i++) {tableModelTableListFrom.removeRow(0);}
+				}
+				if (tableModelTableListInto.getRowCount() > 0) {
+					int rowCount = tableModelTableListInto.getRowCount();
+					for (int i = 0; i < rowCount; i++) {tableModelTableListInto.removeRow(0);}
+				}
+				checkBoxHeaderRendererFunctionListFrom.setSelected(false);
+				if (tableModelFunctionListFrom.getRowCount() > 0) {
+					int rowCount = tableModelFunctionListFrom.getRowCount();
+					for (int i = 0; i < rowCount; i++) {tableModelFunctionListFrom.removeRow(0);}
+				}
+				if (tableModelFunctionListInto.getRowCount() > 0) {
+					int rowCount = tableModelFunctionListInto.getRowCount();
+					for (int i = 0; i < rowCount; i++) {tableModelFunctionListInto.removeRow(0);}
+				}
+				//
+				if (jTextAreaMessage.getText().equals("")) {
+					jTextAreaMessage.setText(res.getString("ImportMessage1") + "\n");
+				} else {
+					jTextAreaMessage.setText(jTextAreaMessage.getText() + "\n");
+				}
+				jButtonImport.setEnabled(false);
+				//
+				super.setVisible(true);
 			}
-			jButtonImport.setEnabled(false);
-			//
-			super.setVisible(true);
-			//
 		} catch(Exception e) {
 			JOptionPane.showMessageDialog(this, res.getString("FailedToParse") + "\n\n" + e.getMessage());
 			e.printStackTrace();

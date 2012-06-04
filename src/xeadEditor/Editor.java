@@ -83,7 +83,7 @@ public class Editor extends JFrame {
 	 * Application Information
 	 */
 	public static final String APPLICATION_NAME  = "XEAD Editor 1.1";
-	public static final String FULL_VERSION  = "V1.R1.M4";
+	public static final String FULL_VERSION  = "V1.R1.M5";
 	public static final String FORMAT_VERSION  = "1.1";
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2012 DBC,Ltd.";
@@ -11294,6 +11294,10 @@ public class Editor extends JFrame {
 		return domDocument;
 	}
 
+	String getFormatVersion() {
+		return FORMAT_VERSION;
+	}
+
 	public MainTreeNode getSubsystemListNode() {
 		return subsystemListNode;
 	}
@@ -18594,12 +18598,14 @@ public class Editor extends JFrame {
 		}
 
 		public void updateFields() {
-			//
-			//[0]:any fields value changed, [1]:value of "SortKey" changed//
+			//////////////////////////////////////////////////////////////////
+			// [0]:any fields value changed, [1]:value of "SortKey" changed //
+			//////////////////////////////////////////////////////////////////
 			boolean updateStatusFlag = false;
 			try {
-				//
-				//Update related area of xmlDocument according to nodeType//
+				//////////////////////////////////////////////////////////////
+				// Update related area of xmlDocument according to nodeType //
+				//////////////////////////////////////////////////////////////
 				if (nodeType_.equals("System"))		{updateStatusFlag = updateFieldsForSystem();}
 				if (nodeType_.equals("Menu"))		{updateStatusFlag = updateFieldsForMenu();}
 				if (nodeType_.equals("Subsystem"))	{updateStatusFlag = updateFieldsForSubsystem();}
@@ -18636,8 +18642,17 @@ public class Editor extends JFrame {
 						updateStatusFlag = updateFieldsForFunction390();
 					}
 				}
-				//
-				//Refresh TreeView if any of fields value was changed//
+				///////////////////////////
+				// Update Format Version //
+				///////////////////////////
+				float fileFormat = Float.parseFloat(systemNode.getElement().getAttribute("FormatVersion"));
+				float appliFormat = Float.parseFloat(FORMAT_VERSION);
+				if (fileFormat < appliFormat) {
+					systemNode.getElement().setAttribute("FormatVersion", FORMAT_VERSION);
+				}
+				/////////////////////////////////////////////////////////
+				// Refresh TreeView if any of fields value was changed //
+				/////////////////////////////////////////////////////////
 				if (updateStatusFlag == true) {
 					jTreeMain.updateUI();
 				}
