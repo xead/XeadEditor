@@ -83,7 +83,7 @@ public class Editor extends JFrame {
 	 * Application Information
 	 */
 	public static final String APPLICATION_NAME  = "XEAD Editor 1.1";
-	public static final String FULL_VERSION  = "V1.R1.M6";
+	public static final String FULL_VERSION  = "V1.R1.M7";
 	public static final String FORMAT_VERSION  = "1.1";
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2012 DBC,Ltd.";
@@ -2445,14 +2445,17 @@ public class Editor extends JFrame {
 		org.w3c.dom.Element element1;
 		MainTreeNode xETreeNode1,xETreeNode2;
 		try {
-			//
-			//Set application folder name//
+			/////////////////////////////////
+			// Set application folder name //
+			/////////////////////////////////
 			String strWrk = System.getProperty("java.class.path");
 			fileSeparator = System.getProperty("file.separator");
 			int pos = strWrk.lastIndexOf(fileSeparator);
 			applicationFolder = strWrk.substring(0,pos+1);
-			//
-			//Clear components//
+
+			//////////////////////
+			// Clear components //
+			//////////////////////
 			jTreeMain.removeAll();
 			jPanelJumpButtons.removeAll();
 			jPanelJumpButtons.updateUI();
@@ -2466,8 +2469,8 @@ public class Editor extends JFrame {
 			nodeJumpButton[7] = null;
 			currentMainTreeNode = null;
 			previousMainTreeNode = null;
-			//
 			application.setTextOnSplash(res.getString("SplashMessage1"));
+			
 			if (currentFileName.startsWith("http:")
 					|| currentFileName.startsWith("https:")
 					|| currentFileName.startsWith("file:")) {
@@ -2492,10 +2495,10 @@ public class Editor extends JFrame {
 				// And also check File real-only attribute.                             //
 				//////////////////////////////////////////////////////////////////////////
 				File file = new File(currentFileName);
-				currentFileFolder = file.getParent();
-				if (!file.canWrite()) {
+				if (file.exists() && !file.canWrite()) {
 					JOptionPane.showMessageDialog(this, res.getString("ReadOnlyWarning1") + "\n" + res.getString("ReadOnlyWarning2"));
 				}
+				currentFileFolder = file.getParent();
 				/////////////////////////////////////////////////////////
 				// Parse content file in XML Format and setup Document //
 				/////////////////////////////////////////////////////////
@@ -19635,6 +19638,19 @@ public class Editor extends JFrame {
 				//
 				TableRowNumber tableRowNumber = (TableRowNumber)tableModelTableScriptList.getValueAt(selectedRow_jTableTableScriptList, 0);
 				org.w3c.dom.Element element = tableRowNumber.getElement();
+				//
+				boolean checkRequired = true;
+				while (checkRequired) {
+					checkRequired = false;	
+					for (int i = 0; i < tableModelTableScriptList.getRowCount(); i++) {
+						if (i != selectedRow_jTableTableScriptList
+								&& tableModelTableScriptList.getValueAt(i, 1).equals(jTextFieldTableScriptName.getText())) {
+							jTextFieldTableScriptName.setText(jTextFieldTableScriptName.getText() + "#");
+							checkRequired = true;
+							break;
+						}
+					}
+				}
 				//
 				if (!element.getAttribute("Name").equals(jTextFieldTableScriptName.getText())) {
 					valueOfFieldsChanged = true;
