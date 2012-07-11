@@ -83,7 +83,7 @@ public class Editor extends JFrame {
 	 * Application Information
 	 */
 	public static final String APPLICATION_NAME  = "XEAD Editor 1.1";
-	public static final String FULL_VERSION  = "V1.R1.M7";
+	public static final String FULL_VERSION  = "V1.R1.M8";
 	public static final String FORMAT_VERSION  = "1.1";
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2012 DBC,Ltd.";
@@ -374,6 +374,8 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldSystemEditorUser = new JTextField();
 	private JLabel jLabelSystemEditorUserPassword = new JLabel();
 	private JTextField jTextFieldSystemEditorUserPassword = new JTextField();
+	private JLabel jLabelSystemDriverVMOptions = new JLabel();
+	private JTextField jTextFieldSystemDriverVMOptions = new JTextField();
 	private JLabel jLabelSystemSmtpHost = new JLabel();
 	private JTextField jTextFieldSystemSmtpHost = new JTextField();
 	private JLabel jLabelSystemSmtpPort = new JLabel();
@@ -1016,6 +1018,7 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction100FilterValue = new JLabel();
 	private JTextField jTextFieldFunction100FilterValue = new JTextField();
 	private JCheckBox jCheckBoxFunction100FilterNonEditable = new JCheckBox();
+	private JCheckBox jCheckBoxFunction100FilterIgnoreIfZero = new JCheckBox();
 	//
 	private JScrollPane jScrollPaneFunction100ColumnList = new JScrollPane();
 	private TableModelReadOnlyList tableModelFunction100ColumnList = new TableModelReadOnlyList();
@@ -1143,6 +1146,7 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction110FilterValue = new JLabel();
 	private JTextField jTextFieldFunction110FilterValue = new JTextField();
 	private JCheckBox jCheckBoxFunction110FilterNonEditable = new JCheckBox();
+	private JCheckBox jCheckBoxFunction110FilterIgnoreIfZero = new JCheckBox();
 	//
 	private JScrollPane jScrollPaneFunction110ColumnList = new JScrollPane();
 	private TableModelReadOnlyList tableModelFunction110ColumnList = new TableModelReadOnlyList();
@@ -1777,6 +1781,7 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction300DetailFilterValue = new JLabel();
 	private JTextField jTextFieldFunction300DetailFilterValue = new JTextField();
 	private JCheckBox jCheckBoxFunction300DetailFilterNonEditable = new JCheckBox();
+	private JCheckBox jCheckBoxFunction300DetailFilterIgnoreIfZero = new JCheckBox();
 	//
 	private JScrollPane jScrollPaneFunction300DetailButtonList = new JScrollPane();
 	private TableModelReadOnlyList tableModelFunction300DetailButtonList = new TableModelReadOnlyList();
@@ -3497,6 +3502,13 @@ public class Editor extends JFrame {
 		jLabelSystemEditorUserPassword.setBounds(new Rectangle(164, 124, 86, 15));
 		jTextFieldSystemEditorUserPassword.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldSystemEditorUserPassword.setBounds(new Rectangle(258, 121, 120, 22));
+		jLabelSystemDriverVMOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemDriverVMOptions.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelSystemDriverVMOptions.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelSystemDriverVMOptions.setText(res.getString("DriverVMOptions"));
+		jLabelSystemDriverVMOptions.setBounds(new Rectangle(384, 124, 90, 15));
+		jTextFieldSystemDriverVMOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldSystemDriverVMOptions.setBounds(new Rectangle(478, 121, 280, 22));
 		jLabelSystemSmtpHost.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemSmtpHost.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSmtpHost.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -3541,6 +3553,8 @@ public class Editor extends JFrame {
 		jPanelSystemOtherConfigTop.add(jTextFieldSystemEditorUser);
 		jPanelSystemOtherConfigTop.add(jLabelSystemEditorUserPassword);
 		jPanelSystemOtherConfigTop.add(jTextFieldSystemEditorUserPassword);
+		jPanelSystemOtherConfigTop.add(jLabelSystemDriverVMOptions);
+		jPanelSystemOtherConfigTop.add(jTextFieldSystemDriverVMOptions);
 		jPanelSystemOtherConfigTop.add(jLabelSystemSmtpHost);
 		jPanelSystemOtherConfigTop.add(jTextFieldSystemSmtpHost);
 		jPanelSystemOtherConfigTop.add(jLabelSystemSmtpPort);
@@ -4287,18 +4301,20 @@ public class Editor extends JFrame {
 		jComboBoxTableFieldType.addActionListener(new Editor_jComboBoxTableFieldType_actionAdapter(this));
 		jComboBoxTableFieldType.addItem("CHAR");
 		jComboBoxTableFieldType.addItem("VARCHAR");
+		jComboBoxTableFieldType.addItem("LONG VARCHAR");
 		jComboBoxTableFieldType.addItem("INTEGER");
 		jComboBoxTableFieldType.addItem("SMALLINT");
 		jComboBoxTableFieldType.addItem("BIGINT");
 		jComboBoxTableFieldType.addItem("DOUBLE");
+		jComboBoxTableFieldType.addItem("DOUBLE PRECISION");
 		jComboBoxTableFieldType.addItem("DECIMAL");
 		jComboBoxTableFieldType.addItem("NUMERIC");
 		jComboBoxTableFieldType.addItem("REAL");
 		jComboBoxTableFieldType.addItem("DATE");
 		jComboBoxTableFieldType.addItem("TIME");
+		jComboBoxTableFieldType.addItem("TIMETZ");
 		jComboBoxTableFieldType.addItem("TIMESTAMP");
-		jComboBoxTableFieldType.addItem("LONG VARCHAR");
-		jComboBoxTableFieldType.addItem("DOUBLE PRECISION");
+		jComboBoxTableFieldType.addItem("TIMESTAMPTZ");
 		jComboBoxTableFieldType.addItem("BINARY");
 		jComboBoxTableFieldType.addItem("VARBINARY");
 		jComboBoxTableFieldType.addItem("CLOB");
@@ -5820,6 +5836,9 @@ public class Editor extends JFrame {
 		jCheckBoxFunction100FilterNonEditable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jCheckBoxFunction100FilterNonEditable.setText(res.getString("NonEditable"));
 		jCheckBoxFunction100FilterNonEditable.setBounds(new Rectangle(735, 65, 100, 22));
+		jCheckBoxFunction100FilterIgnoreIfZero.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jCheckBoxFunction100FilterIgnoreIfZero.setText(res.getString("IgnoreIfZero"));
+		jCheckBoxFunction100FilterIgnoreIfZero.setBounds(new Rectangle(840, 65, 100, 22));
 		jLabelFunction100FilterCaptionOption.setEnabled(false);
 		jLabelFunction100FilterCaptionOption.setText(res.getString("Caption"));
 		jLabelFunction100FilterCaptionOption.setFont(new java.awt.Font("SansSerif", 0, 12));
@@ -5926,6 +5945,7 @@ public class Editor extends JFrame {
 		jPanelFunction100FilterList.add(jLabelFunction100FilterValue);
 		jPanelFunction100FilterList.add(jTextFieldFunction100FilterValue);
 		jPanelFunction100FilterList.add(jCheckBoxFunction100FilterNonEditable);
+		jPanelFunction100FilterList.add(jCheckBoxFunction100FilterIgnoreIfZero);
 		//
 		jScrollPaneFunction100ButtonList.setBorder(null);
 		jScrollPaneFunction100ButtonList.getViewport().add(jTableFunction100ButtonList, null);
@@ -6534,6 +6554,9 @@ public class Editor extends JFrame {
 		jCheckBoxFunction110FilterNonEditable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jCheckBoxFunction110FilterNonEditable.setText(res.getString("NonEditable"));
 		jCheckBoxFunction110FilterNonEditable.setBounds(new Rectangle(735, 65, 100, 22));
+		jCheckBoxFunction110FilterIgnoreIfZero.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jCheckBoxFunction110FilterIgnoreIfZero.setText(res.getString("IgnoreIfZero"));
+		jCheckBoxFunction110FilterIgnoreIfZero.setBounds(new Rectangle(840, 65, 100, 22));
 		jLabelFunction110FilterCaptionOption.setEnabled(false);
 		jLabelFunction110FilterCaptionOption.setText(res.getString("Caption"));
 		jLabelFunction110FilterCaptionOption.setFont(new java.awt.Font("SansSerif", 0, 12));
@@ -6640,6 +6663,7 @@ public class Editor extends JFrame {
 		jPanelFunction110FilterList.add(jLabelFunction110FilterValue);
 		jPanelFunction110FilterList.add(jTextFieldFunction110FilterValue);
 		jPanelFunction110FilterList.add(jCheckBoxFunction110FilterNonEditable);
+		jPanelFunction110FilterList.add(jCheckBoxFunction110FilterIgnoreIfZero);
 		//
 		jPanelFunction110BatchTableAndField.setLayout(new BorderLayout());
 		jPanelFunction110BatchTableAndField.setBorder(null);
@@ -9462,6 +9486,9 @@ public class Editor extends JFrame {
 		jCheckBoxFunction300DetailFilterNonEditable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jCheckBoxFunction300DetailFilterNonEditable.setText(res.getString("NonEditable"));
 		jCheckBoxFunction300DetailFilterNonEditable.setBounds(new Rectangle(735, 65, 100, 22));
+		jCheckBoxFunction300DetailFilterIgnoreIfZero.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jCheckBoxFunction300DetailFilterIgnoreIfZero.setText(res.getString("IgnoreIfZero"));
+		jCheckBoxFunction300DetailFilterIgnoreIfZero.setBounds(new Rectangle(840, 65, 100, 22));
 		jLabelFunction300DetailFilterCaptionOption.setEnabled(false);
 		jLabelFunction300DetailFilterCaptionOption.setText(res.getString("Caption"));
 		jLabelFunction300DetailFilterCaptionOption.setFont(new java.awt.Font("SansSerif", 0, 12));
@@ -9568,6 +9595,7 @@ public class Editor extends JFrame {
 		jPanelFunction300DetailFilterList.add(jLabelFunction300DetailFilterValue);
 		jPanelFunction300DetailFilterList.add(jTextFieldFunction300DetailFilterValue);
 		jPanelFunction300DetailFilterList.add(jCheckBoxFunction300DetailFilterNonEditable);
+		jPanelFunction300DetailFilterList.add(jCheckBoxFunction300DetailFilterIgnoreIfZero);
 		//
 		jScrollPaneFunction300DetailButtonList.setBorder(null);
 		jScrollPaneFunction300DetailButtonList.getViewport().add(jTableFunction300DetailButtonList, null);
@@ -12750,6 +12778,13 @@ public class Editor extends JFrame {
         		}
         		result = result + res.getString("NonEditable");
         	}
+			//
+        	if (optionList.contains("IGNORE_IF_ZERO")) {
+        		if (!result.equals("")) {
+        			result = result + res.getString("Comma");
+        		}
+        		result = result + res.getString("IgnoreIfZero");
+        	}
         }
         //
 		return result;
@@ -15034,23 +15069,17 @@ public class Editor extends JFrame {
 				if (tableModelTableUsageList.getRowCount() == 0) {
 					Connection connection = databaseConnList.get(databaseIDList.indexOf(domNode_.getAttribute("DB")));
 					if (connection != null && !errorStatus_.equals("ER1")) {
-						try {
-							if (!connection.isValid(0)) {
-								setupConnectionList(true);
-								connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
-							}
-							Object[] bts = {res.getString("Cancel"), res.getString("DeleteTableDefinitionOnly"), res.getString("DeleteTableDefinitionAndModule")};
-							int rtn = JOptionPane.showOptionDialog(null, res.getString("DeleteTableMessage"),
-									res.getString("DeleteTableModule"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
-							//
-							if (rtn == 2) {
-								dialogCheckTableModule.deleteTable(connection, domNode_.getAttribute("ID"));
-							}
-							if (rtn != 1 && rtn != 2) {
-								errorMessage = res.getString("DeleteCanceled");
-							}
-						} catch (SQLException e) {
-							errorMessage = res.getString("DeleteCanceled") + "\n" + e.getMessage();
+						setupConnectionList(true);
+						connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
+						//
+						Object[] bts = {res.getString("Cancel"), res.getString("DeleteTableDefinitionOnly"), res.getString("DeleteTableDefinitionAndModule")};
+						int rtn = JOptionPane.showOptionDialog(null, res.getString("DeleteTableMessage"),
+								res.getString("DeleteTableModule"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
+						if (rtn == 2) {
+							dialogCheckTableModule.deleteTable(connection, domNode_.getAttribute("ID"));
+						}
+						if (rtn != 1 && rtn != 2) {
+							errorMessage = res.getString("DeleteCanceled");
 						}
 					}
 				} else {
@@ -15422,6 +15451,7 @@ public class Editor extends JFrame {
 			}
 			jTextFieldSystemEditorUser.setText(domNode_.getAttribute("EditorUser"));
 			jTextFieldSystemEditorUserPassword.setText(domNode_.getAttribute("EditorUserPassword"));
+			jTextFieldSystemDriverVMOptions.setText(domNode_.getAttribute("DriverVMOptions"));
 			jTextFieldSystemSmtpHost.setText(domNode_.getAttribute("SmtpHost"));
 			jTextFieldSystemSmtpPort.setText(domNode_.getAttribute("SmtpPort"));
 			jTextFieldSystemSmtpUser.setText(domNode_.getAttribute("SmtpUser"));
@@ -18834,6 +18864,9 @@ public class Editor extends JFrame {
 			if (!domNode_.getAttribute("EditorUserPassword").equals(jTextFieldSystemEditorUserPassword.getText())) {
 				valueOfFieldsChanged = true;
 			}
+			if (!domNode_.getAttribute("DriverVMOptions").equals(jTextFieldSystemDriverVMOptions.getText())) {
+				valueOfFieldsChanged = true;
+			}
 			if (!domNode_.getAttribute("SmtpHost").equals(jTextFieldSystemSmtpHost.getText())) {
 				valueOfFieldsChanged = true;
 			}
@@ -18893,6 +18926,7 @@ public class Editor extends JFrame {
 				//
 				domNode_.setAttribute("EditorUser", jTextFieldSystemEditorUser.getText());
 				domNode_.setAttribute("EditorUserPassword", jTextFieldSystemEditorUserPassword.getText());
+				domNode_.setAttribute("DriverVMOptions", jTextFieldSystemDriverVMOptions.getText());
 				//
 				domNode_.setAttribute("SmtpHost", jTextFieldSystemSmtpHost.getText());
 				domNode_.setAttribute("SmtpPort", jTextFieldSystemSmtpPort.getText());
@@ -20241,6 +20275,20 @@ public class Editor extends JFrame {
 						valueOfFieldsChanged = true;
 					}
 				}
+		        //
+				if (jCheckBoxFunction100FilterIgnoreIfZero.isSelected()) {
+					if (!optionList.contains("IGNORE_IF_ZERO")) {
+						valueOfFieldsChanged = true;
+					}
+					if (!wrkOptions.equals("")) {
+						wrkOptions = wrkOptions + ",";
+					}
+					wrkOptions = wrkOptions + "IGNORE_IF_ZERO";
+				} else {
+					if (optionList.contains("IGNORE_IF_ZERO")) {
+						valueOfFieldsChanged = true;
+					}
+				}
 				//
 				if (valueOfFieldsChanged) {
 					element.setAttribute("FieldOptions", wrkOptions);
@@ -20819,6 +20867,20 @@ public class Editor extends JFrame {
 					wrkOptions = wrkOptions + "NON_EDITABLE";
 				} else {
 					if (optionList.contains("NON_EDITABLE")) {
+						valueOfFieldsChanged = true;
+					}
+				}
+		        //
+				if (jCheckBoxFunction110FilterIgnoreIfZero.isSelected()) {
+					if (!optionList.contains("IGNORE_IF_ZERO")) {
+						valueOfFieldsChanged = true;
+					}
+					if (!wrkOptions.equals("")) {
+						wrkOptions = wrkOptions + ",";
+					}
+					wrkOptions = wrkOptions + "IGNORE_IF_ZERO";
+				} else {
+					if (optionList.contains("IGNORE_IF_ZERO")) {
 						valueOfFieldsChanged = true;
 					}
 				}
@@ -23197,6 +23259,20 @@ public class Editor extends JFrame {
 						valueOfFieldsChanged = true;
 					}
 				}
+		        //
+				if (jCheckBoxFunction300DetailFilterIgnoreIfZero.isSelected()) {
+					if (!optionList.contains("IGNORE_IF_ZERO")) {
+						valueOfFieldsChanged = true;
+					}
+					if (!wrkOptions.equals("")) {
+						wrkOptions = wrkOptions + ",";
+					}
+					wrkOptions = wrkOptions + "IGNORE_IF_ZERO";
+				} else {
+					if (optionList.contains("IGNORE_IF_ZERO")) {
+						valueOfFieldsChanged = true;
+					}
+				}
 				//
 				if (valueOfFieldsChanged) {
 					element.setAttribute("FieldOptions", wrkOptions);
@@ -25516,14 +25592,34 @@ public class Editor extends JFrame {
 			String command = "";
 			try {
 				Runtime rt = Runtime.getRuntime();
-				//command = "javaw -Xmx100m -splash:\"" + applicationFolder + "xeaddrv.png\" -jar \"" + applicationFolder + "xeaddrv.jar\" \"" + currentFileName + "\"";
-				command = "javaw -Xmx100m -jar \"" + applicationFolder + "xeaddrv.jar\" \"" + currentFileName + "\"";
+				////command = "javaw -Xmx100m -splash:\"" + applicationFolder + "xeaddrv.png\" -jar \"" + applicationFolder + "xeaddrv.jar\" \"" + currentFileName + "\"";
+				//command = "javaw -Xms256m -Xmx256m -jar \"" + applicationFolder + "xeaddrv.jar\" \"" + currentFileName + "\"";
+				//if (!jTextFieldSystemEditorUser.getText().equals("")) {
+				//	command = command + " \"" + jTextFieldSystemEditorUser.getText() + "\"";
+				//	if (!jTextFieldSystemEditorUserPassword.getText().equals("")) {
+				//		command = command + " \"" + jTextFieldSystemEditorUserPassword.getText() + "\"";
+				//	}
+				//}
+				//rt.exec(command);
+				StringBuffer bf = new StringBuffer();
+				bf.append("javaw ");
+				bf.append(jTextFieldSystemDriverVMOptions.getText());
+				bf.append(" -jar \"");
+				bf.append(applicationFolder);
+				bf.append("xeaddrv.jar\" \"");
+				bf.append(currentFileName);
+				bf.append("\"");
 				if (!jTextFieldSystemEditorUser.getText().equals("")) {
-					command = command + " \"" + jTextFieldSystemEditorUser.getText() + "\"";
+					bf.append(" \"");
+					bf.append(jTextFieldSystemEditorUser.getText());
+					bf.append("\"");
 					if (!jTextFieldSystemEditorUserPassword.getText().equals("")) {
-						command = command + " \"" + jTextFieldSystemEditorUserPassword.getText() + "\"";
+						bf.append(" \"");
+						bf.append(jTextFieldSystemEditorUserPassword.getText());
+						bf.append("\"");
 					}
 				}
+				command = bf.toString();
 				rt.exec(command);
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(this, res.getString("ErrorMessage25") + command + res.getString("ErrorMessage26") + e1.getMessage());
@@ -27318,6 +27414,8 @@ public class Editor extends JFrame {
 				jButtonFunction100FilterPromptOptionCallFunctionExchange.setEnabled(false);
 				jCheckBoxFunction100FilterNonEditable.setSelected(false);
 				jCheckBoxFunction100FilterNonEditable.setEnabled(false);
+				jCheckBoxFunction100FilterIgnoreIfZero.setSelected(false);
+				jCheckBoxFunction100FilterIgnoreIfZero.setVisible(false);
 				//
 				if (jTableFunction100FilterList.getSelectedRow() != -1) {
 					//
@@ -27384,6 +27482,8 @@ public class Editor extends JFrame {
 						jRadioButtonFunction100FilterOptionLT.setEnabled(true);
 						jRadioButtonFunction100FilterOptionGE.setEnabled(true);
 						jRadioButtonFunction100FilterOptionGT.setEnabled(true);
+						//
+						jCheckBoxFunction100FilterIgnoreIfZero.setVisible(true);
 					} else {
 						//
 						jTextFieldFunction100FilterFieldType.setText(fieldElement.getAttribute("Type") + "(" + fieldElement.getAttribute("Size") + ")" + wrkStr);
@@ -27394,7 +27494,8 @@ public class Editor extends JFrame {
 							jRadioButtonFunction100FilterOptionGE.setEnabled(true);
 							jRadioButtonFunction100FilterOptionGT.setEnabled(true);
 						} else {
-							if (dataType.equals("TIME")	|| dataType.equals("TIMESTAMP")) {
+							if (dataType.equals("TIME") || dataType.equals("TIMESTAMP")
+									|| dataType.equals("TIMETZ") || dataType.equals("TIMESTAMPTZ")) {
 								jRadioButtonFunction100FilterOptionLE.setEnabled(true);
 								jRadioButtonFunction100FilterOptionLT.setEnabled(true);
 								jRadioButtonFunction100FilterOptionGE.setEnabled(true);
@@ -27491,6 +27592,11 @@ public class Editor extends JFrame {
 						jCheckBoxFunction100FilterNonEditable.setSelected(true);
 					} else {
 						jCheckBoxFunction100FilterNonEditable.setSelected(false);
+					}
+					if (optionList.contains("IGNORE_IF_ZERO")) {
+						jCheckBoxFunction100FilterIgnoreIfZero.setSelected(true);
+					} else {
+						jCheckBoxFunction100FilterIgnoreIfZero.setSelected(false);
 					}
 				}
 			} catch (Exception e1) {
@@ -27792,6 +27898,8 @@ public class Editor extends JFrame {
 				jTextFieldFunction110FilterValue.setEnabled(false);
 				jCheckBoxFunction110FilterNonEditable.setSelected(false);
 				jCheckBoxFunction110FilterNonEditable.setEnabled(false);
+				jCheckBoxFunction110FilterIgnoreIfZero.setSelected(false);
+				jCheckBoxFunction110FilterIgnoreIfZero.setVisible(false);
 				//
 				if (jTableFunction110FilterList.getSelectedRow() != -1) {
 					//
@@ -27858,6 +27966,8 @@ public class Editor extends JFrame {
 						jRadioButtonFunction110FilterOptionLT.setEnabled(true);
 						jRadioButtonFunction110FilterOptionGE.setEnabled(true);
 						jRadioButtonFunction110FilterOptionGT.setEnabled(true);
+						//
+						jCheckBoxFunction110FilterIgnoreIfZero.setVisible(true);
 					} else {
 						//
 						jTextFieldFunction110FilterFieldType.setText(fieldElement.getAttribute("Type") + "(" + fieldElement.getAttribute("Size") + ")" + wrkStr);
@@ -27868,7 +27978,8 @@ public class Editor extends JFrame {
 							jRadioButtonFunction110FilterOptionGE.setEnabled(true);
 							jRadioButtonFunction110FilterOptionGT.setEnabled(true);
 						} else {
-							if (dataType.equals("TIME")	|| dataType.equals("TIMESTAMP")	) {
+							if (dataType.equals("TIME") || dataType.equals("TIMESTAMP")
+									|| dataType.equals("TIMETZ") || dataType.equals("TIMESTAMPTZ")) {
 								jRadioButtonFunction110FilterOptionLE.setEnabled(true);
 								jRadioButtonFunction110FilterOptionLT.setEnabled(true);
 								jRadioButtonFunction110FilterOptionGE.setEnabled(true);
@@ -27965,6 +28076,11 @@ public class Editor extends JFrame {
 						jCheckBoxFunction110FilterNonEditable.setSelected(true);
 					} else {
 						jCheckBoxFunction110FilterNonEditable.setSelected(false);
+					}
+					if (optionList.contains("IGNORE_IF_ZERO")) {
+						jCheckBoxFunction110FilterIgnoreIfZero.setSelected(true);
+					} else {
+						jCheckBoxFunction110FilterIgnoreIfZero.setSelected(false);
 					}
 				}
 			} catch (Exception e1) {
@@ -32306,15 +32422,6 @@ public class Editor extends JFrame {
 					jRadioButtonFieldTypeOptionNONE.setSelected(true);
 				}
 			}
-//			//
-//			if ((Integer)jSpinnerTableFieldSize.getValue() == 4) {
-//				jRadioButtonFieldTypeOptionFYEAR.setEnabled(true);
-//			} else {
-//				if(jRadioButtonFieldTypeOptionFYEAR.isSelected()) {
-//					jRadioButtonFieldTypeOptionNONE.setSelected(true);
-//				}
-//			}
-			//
 			jRadioButtonFieldTypeOptionKANJI.setEnabled(true);
 			jRadioButtonFieldTypeOptionKATAKANA.setEnabled(true);
 			jRadioButtonFieldTypeOptionZIPNO.setEnabled(true);
@@ -32334,7 +32441,8 @@ public class Editor extends JFrame {
 		}
 		//
 		//VARCHAR;LONG VARCHAR;
-		if (jComboBoxTableFieldType.getSelectedItem().equals("VARCHAR")) {
+		if (jComboBoxTableFieldType.getSelectedItem().equals("VARCHAR")
+				|| jComboBoxTableFieldType.getSelectedItem().equals("LONG VARCHAR")) {
 			jRadioButtonFieldTypeOptionKANJI.setEnabled(true);
 			jRadioButtonFieldTypeOptionKATAKANA.setEnabled(true);
 			jRadioButtonFieldTypeOptionZIPADRS.setEnabled(true);
@@ -32355,7 +32463,15 @@ public class Editor extends JFrame {
 		if (jComboBoxTableFieldType.getSelectedItem().equals("TIMESTAMP")) {
 			jRadioButtonFieldTypeOptionNONE.setEnabled(false);
 			jRadioButtonFieldTypeOptionNONE.setSelected(true);
-			jSpinnerTableFieldSize.setValue(26); //FIXED LENGTH//
+			//jSpinnerTableFieldSize.setValue(26); //FIXED LENGTH//
+			jSpinnerTableFieldSize.setValue(23); //FIXED LENGTH//
+		}
+		//
+		//TIMESTAMP+TZ;
+		if (jComboBoxTableFieldType.getSelectedItem().equals("TIMESTAMPTZ")) {
+			jRadioButtonFieldTypeOptionNONE.setEnabled(false);
+			jRadioButtonFieldTypeOptionNONE.setSelected(true);
+			jSpinnerTableFieldSize.setValue(30); //FIXED LENGTH//
 		}
 		//
 		//INTEGER;SMALLINT;BIGINT:
@@ -32367,18 +32483,10 @@ public class Editor extends JFrame {
 			//
 			if ((Integer)jSpinnerTableFieldSize.getValue() == 4) {
 				jRadioButtonFieldTypeOptionFYEAR.setEnabled(true);
-//			} else {
-//				if(jRadioButtonFieldTypeOptionFYEAR.isSelected()) {
-//					jRadioButtonFieldTypeOptionNONE.setSelected(true);
-//				}
 			}
 			//
 			if ((Integer)jSpinnerTableFieldSize.getValue() == 2) {
 				jRadioButtonFieldTypeOptionMSEQ.setEnabled(true);
-//			} else {
-//				if(jRadioButtonFieldTypeOptionMSEQ.isSelected()) {
-//					jRadioButtonFieldTypeOptionNONE.setSelected(true);
-//				}
 			}
 			//
 			jLabelTableFieldSize.setVisible(true);
@@ -32466,7 +32574,13 @@ public class Editor extends JFrame {
 		//
 		//TIME;
 		if (jComboBoxTableFieldType.getSelectedItem().equals("TIME")) {
-			jSpinnerTableFieldSize.setValue(8); //FIXED LENGTH//
+			//jSpinnerTableFieldSize.setValue(8); //FIXED LENGTH//
+			jSpinnerTableFieldSize.setValue(12); //FIXED LENGTH//
+		}
+		//
+		//TIME+TZ;
+		if (jComboBoxTableFieldType.getSelectedItem().equals("TIMETZ")) {
+			jSpinnerTableFieldSize.setValue(19); //FIXED LENGTH//
 		}
 		//
 		//BINARY;VARBINARY;CLOB;BLOB;
@@ -34477,6 +34591,8 @@ public class Editor extends JFrame {
 				jButtonFunction300DetailFilterPromptOptionCallFunctionExchange.setEnabled(false);
 				jCheckBoxFunction300DetailFilterNonEditable.setSelected(false);
 				jCheckBoxFunction300DetailFilterNonEditable.setEnabled(false);
+				jCheckBoxFunction300DetailFilterIgnoreIfZero.setSelected(false);
+				jCheckBoxFunction300DetailFilterIgnoreIfZero.setVisible(false);
 				//
 				if (jTableFunction300DetailFilterList.getSelectedRow() != -1) {
 					//
@@ -34543,6 +34659,8 @@ public class Editor extends JFrame {
 						jRadioButtonFunction300DetailFilterOptionLT.setEnabled(true);
 						jRadioButtonFunction300DetailFilterOptionGE.setEnabled(true);
 						jRadioButtonFunction300DetailFilterOptionGT.setEnabled(true);
+						//
+						jCheckBoxFunction300DetailFilterIgnoreIfZero.setVisible(true);
 					} else {
 						//
 						jTextFieldFunction300DetailFilterFieldType.setText(fieldElement.getAttribute("Type") + "(" + fieldElement.getAttribute("Size") + ")" + wrkStr);
@@ -34553,7 +34671,8 @@ public class Editor extends JFrame {
 							jRadioButtonFunction300DetailFilterOptionGE.setEnabled(true);
 							jRadioButtonFunction300DetailFilterOptionGT.setEnabled(true);
 						} else {
-							if (dataType.equals("TIME")	|| dataType.equals("TIMESTAMP")) {
+							if (dataType.equals("TIME") || dataType.equals("TIMESTAMP")
+									|| dataType.equals("TIMETZ") || dataType.equals("TIMESTAMPTZ")) {
 								jRadioButtonFunction300DetailFilterOptionLE.setEnabled(true);
 								jRadioButtonFunction300DetailFilterOptionLT.setEnabled(true);
 								jRadioButtonFunction300DetailFilterOptionGE.setEnabled(true);
@@ -34645,6 +34764,11 @@ public class Editor extends JFrame {
 						jCheckBoxFunction300DetailFilterNonEditable.setSelected(true);
 					} else {
 						jCheckBoxFunction300DetailFilterNonEditable.setSelected(false);
+					}
+					if (optionList.contains("IGNORE_IF_ZERO")) {
+						jCheckBoxFunction300DetailFilterIgnoreIfZero.setSelected(true);
+					} else {
+						jCheckBoxFunction300DetailFilterIgnoreIfZero.setSelected(false);
 					}
 				}
 			} catch (Exception e1) {
@@ -35891,10 +36015,10 @@ public class Editor extends JFrame {
 		if (dataType.equals("DATE")) {
 			basicType = "DATE";
 		}
-		if (dataType.equals("TIME")) {
+		if (dataType.startsWith("TIME")) {
 			basicType = "TIME";
 		}
-		if (dataType.equals("TIMESTAMP")) {
+		if (dataType.startsWith("TIMESTAMP")) {
 			basicType = "DATETIME";
 		}
 		return basicType;
@@ -36276,10 +36400,8 @@ public class Editor extends JFrame {
 			MainTreeNode tableNode = getSpecificXETreeNode("Table", tableID);
 			Connection connection = databaseConnList.get(databaseIDList.indexOf(tableNode.getElement().getAttribute("DB")));
 			if (connection != null && !connection.isClosed()) {
-				if (!connection.isValid(0)) {
-					setupConnectionList(true);
-					connection = databaseConnList.get(databaseIDList.indexOf(tableNode.getElement().getAttribute("DB")));
-				}
+				setupConnectionList(true);
+				connection = databaseConnList.get(databaseIDList.indexOf(tableNode.getElement().getAttribute("DB")));
 				//
 				jTextAreaTableFieldTypeOptionKUBUN.setText("");
 				//
@@ -36368,10 +36490,8 @@ public class Editor extends JFrame {
 			int blockRows = 0;
 			TableDataRowNumber rowNumber;
 			Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
-			if (!connection.isValid(0)) {
-				setupConnectionList(true);
-				connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
-			}
+			setupConnectionList(true);
+			connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
 			statement = connection.createStatement();
 			result = statement.executeQuery(buf.toString());
 			while (result.next()) {
@@ -36581,10 +36701,8 @@ public class Editor extends JFrame {
 				statementBuf.append(tableRowNumber.getUpdateCounter()) ;
 				//
 				Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
-				if (!connection.isValid(0)) {
-					setupConnectionList(true);
-					connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
-				}
+				setupConnectionList(true);
+				connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
 				Statement statement = connection.createStatement();
 				int recordCount = statement.executeUpdate(statementBuf.toString());
 				if (recordCount == 1) {
@@ -36678,10 +36796,8 @@ public class Editor extends JFrame {
 				}
 				//
 				Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
-				if (!connection.isValid(0)) {
-					setupConnectionList(true);
-					connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
-				}
+				setupConnectionList(true);
+				connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
 				Statement statement = connection.createStatement();
 				ResultSet result = statement.executeQuery(statementBuf.toString());
 				if (result.next()) {
@@ -36773,10 +36889,8 @@ public class Editor extends JFrame {
 				statementBuf.append(tableRowNumber.getUpdateCounter()) ;
 				//
 				Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
-				if (!connection.isValid(0)) {
-					setupConnectionList(true);
-					connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
-				}
+				setupConnectionList(true);
+				connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
 				Statement statement = connection.createStatement();
 				int recordCount = statement.executeUpdate(statementBuf.toString());
 				if (recordCount == 1) {
@@ -36904,10 +37018,8 @@ public class Editor extends JFrame {
 							}
 						}
 						Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
-						if (!connection.isValid(0)) {
-							setupConnectionList(true);
-							connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
-						}
+						setupConnectionList(true);
+						connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
 						Statement statement = connection.createStatement();
 						ResultSet result = statement.executeQuery(statementBuf.toString());
 						if (result.next()) {
@@ -39090,7 +39202,9 @@ class Editor_EditableTableField extends JPanel {
 				|| dataType.equals("LONG VARCHAR")
 				|| dataType.equals("DATE")
 				|| dataType.equals("TIME")
-				|| dataType.equals("TIMESTAMP")) {
+				|| dataType.equals("TIMETZ")
+				|| dataType.equals("TIMESTAMP")
+				|| dataType.equals("TIMESTAMPTZ")) {
 			return true;
 		} else {
 			return false;

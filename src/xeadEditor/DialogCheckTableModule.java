@@ -535,7 +535,7 @@ public class DialogCheckTableModule extends JDialog {
 							//
 							for (int k = 0; k < fieldList2.size(); k++) {
 								count1++;
-								wrkInt = fieldList1.indexOf(fieldList2.get(k));
+								wrkInt = fieldList1.indexOf(fieldList2.get(k).replaceAll("\"", ""));
 								if (wrkInt != -1 && ascDescList1.get(wrkInt).equals(ascDescList2.get(k))) {
 									count2++;
 								}
@@ -869,6 +869,16 @@ public class DialogCheckTableModule extends JDialog {
 						isEquivalent = true;
 					}
 				}
+				if (dataTypeDefiition.equals("REAL")) {
+					if (dataTypeModule.equals("float4")) {
+						isEquivalent = true;
+					}
+				}
+				if (dataTypeDefiition.equals("DOUBLE PRECISION")) {
+					if (dataTypeModule.equals("float8")) {
+						isEquivalent = true;
+					}
+				}
 				if (dataTypeDefiition.equals("NUMERIC")) {
 					if (dataTypeModule.equals("DECIMAL")) {
 						isEquivalent = true;
@@ -880,7 +890,7 @@ public class DialogCheckTableModule extends JDialog {
 					}
 				}
 				if (dataTypeDefiition.equals("CHAR")) {
-					if (dataTypeModule.equals("bpchar")) {
+					if (dataTypeModule.equals("bpchar") || dataTypeModule.equals("bool")) {
 						isEquivalent = true;
 					}
 				}
@@ -1323,27 +1333,35 @@ public class DialogCheckTableModule extends JDialog {
 	    for (int i = 0; i < fieldList.getLength(); i++) {
 	        element = (org.w3c.dom.Element)fieldList.item(i);
 			if (element.getAttribute("ID").equals(fieldID)) {
-				if (databaseName.contains("jdbc:postgresql") && element.getAttribute("Type").equals("LONG VARCHAR")) {
-					buf.append("text");
+				if (element.getAttribute("Type").equals("TIMETZ")) {
+					buf.append("time with time zone");
 				} else {
-					buf.append(element.getAttribute("Type"));
-				}
-				if (getBasicTypeOf(element.getAttribute("Type")).equals("STRING")) {
-					if (element.getAttribute("Type").equals("CHAR") || element.getAttribute("Type").equals("VARCHAR")) {
-						buf.append("(");
-						buf.append(element.getAttribute("Size"));
-						buf.append(")");
-					}
-				} else {
-						if (getBasicTypeOf(element.getAttribute("Type")).equals("FLOAT")) {
-							if (element.getAttribute("Type").equals("DECIMAL") || element.getAttribute("Type").equals("NUMERIC")) {
+					if (element.getAttribute("Type").equals("TIMESTAMPTZ")) {
+						buf.append("timestamp with time zone");
+					} else {
+						if (databaseName.contains("jdbc:postgresql") && element.getAttribute("Type").equals("LONG VARCHAR")) {
+							buf.append("text");
+						} else {
+							buf.append(element.getAttribute("Type"));
+						}
+						if (getBasicTypeOf(element.getAttribute("Type")).equals("STRING")) {
+							if (element.getAttribute("Type").equals("CHAR") || element.getAttribute("Type").equals("VARCHAR")) {
 								buf.append("(");
 								buf.append(element.getAttribute("Size"));
-								buf.append(",");
-								buf.append(element.getAttribute("Decimal"));
 								buf.append(")");
 							}
+						} else {
+							if (getBasicTypeOf(element.getAttribute("Type")).equals("FLOAT")) {
+								if (element.getAttribute("Type").equals("DECIMAL") || element.getAttribute("Type").equals("NUMERIC")) {
+									buf.append("(");
+									buf.append(element.getAttribute("Size"));
+									buf.append(",");
+									buf.append(element.getAttribute("Decimal"));
+									buf.append(")");
+								}
+							}
 						}
+					}
 				}
 				break;
 			}
@@ -1375,30 +1393,38 @@ public class DialogCheckTableModule extends JDialog {
 				buf.append("     ");
 				buf.append(element.getAttribute("ID"));
 				buf.append(" ");
-				if (databaseName.contains("jdbc:postgresql") && element.getAttribute("Type").equals("LONG VARCHAR")) {
-					buf.append("text");
+				if (element.getAttribute("Type").equals("TIMETZ")) {
+					buf.append("time with time zone");
 				} else {
-					buf.append(element.getAttribute("Type"));
-				}
-				if (getBasicTypeOf(element.getAttribute("Type")).equals("STRING")) {
-					if (element.getAttribute("Type").equals("CHAR") || element.getAttribute("Type").equals("VARCHAR")) {
-						buf.append("(");
-						buf.append(element.getAttribute("Size"));
-						buf.append(")");
-					}
-				} else {
-					if (getBasicTypeOf(element.getAttribute("Type")).equals("INTEGER")) {
-						buf.append(" Default 0");
+					if (element.getAttribute("Type").equals("TIMESTAMPTZ")) {
+						buf.append("timestamp with time zone");
 					} else {
-						if (getBasicTypeOf(element.getAttribute("Type")).equals("FLOAT")) {
-							if (element.getAttribute("Type").equals("DECIMAL") || element.getAttribute("Type").equals("NUMERIC")) {
+						if (databaseName.contains("jdbc:postgresql") && element.getAttribute("Type").equals("LONG VARCHAR")) {
+							buf.append("text");
+						} else {
+							buf.append(element.getAttribute("Type"));
+						}
+						if (getBasicTypeOf(element.getAttribute("Type")).equals("STRING")) {
+							if (element.getAttribute("Type").equals("CHAR") || element.getAttribute("Type").equals("VARCHAR")) {
 								buf.append("(");
 								buf.append(element.getAttribute("Size"));
-								buf.append(",");
-								buf.append(element.getAttribute("Decimal"));
 								buf.append(")");
 							}
-							buf.append(" Default 0.0");
+						} else {
+							if (getBasicTypeOf(element.getAttribute("Type")).equals("INTEGER")) {
+								buf.append(" Default 0");
+							} else {
+								if (getBasicTypeOf(element.getAttribute("Type")).equals("FLOAT")) {
+									if (element.getAttribute("Type").equals("DECIMAL") || element.getAttribute("Type").equals("NUMERIC")) {
+										buf.append("(");
+										buf.append(element.getAttribute("Size"));
+										buf.append(",");
+										buf.append(element.getAttribute("Decimal"));
+										buf.append(")");
+									}
+									buf.append(" Default 0.0");
+								}
+							}
 						}
 					}
 				}
@@ -1485,10 +1511,10 @@ public class DialogCheckTableModule extends JDialog {
 		if (dataType.equals("DATE")) {
 			basicType = "DATE";
 		}
-		if (dataType.equals("TIME")) {
+		if (dataType.startsWith("TIME")) {
 			basicType = "TIME";
 		}
-		if (dataType.equals("TIMESTAMP")) {
+		if (dataType.startsWith("TIMESTAMP")) {
 			basicType = "DATETIME";
 		}
 		return basicType;

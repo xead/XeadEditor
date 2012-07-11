@@ -136,7 +136,7 @@ public class DialogCreateTable extends JDialog {
 		jPanelMessage.add(jScrollPaneMessage, BorderLayout.CENTER);
 		//
 		jSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jSplitPane.setDividerLocation(350);
+		jSplitPane.setDividerLocation(240);
 		jSplitPane.add(jPanelMain, JSplitPane.TOP);
 		jSplitPane.add(jPanelMessage, JSplitPane.BOTTOM);
 		//
@@ -156,6 +156,7 @@ public class DialogCreateTable extends JDialog {
 		//
 		validTypeList.add("CHAR");
 		validTypeList.add("VARCHAR");
+		validTypeList.add("TEXT");
 		validTypeList.add("INTEGER");
 		validTypeList.add("SMALLINT");
 		validTypeList.add("BIGINT");
@@ -166,6 +167,9 @@ public class DialogCreateTable extends JDialog {
 		validTypeList.add("DATE");
 		validTypeList.add("TIME");
 		validTypeList.add("TIMESTAMP");
+		validTypeList.add("TIMETZ");
+		validTypeList.add("TIMESTAMPTZ");
+		validTypeList.add("TEXT");
 		//
 		this.setTitle(res.getString("CreateTableTitle"));
 		this.getContentPane().add(jPanelButtons,  BorderLayout.SOUTH);
@@ -192,7 +196,6 @@ public class DialogCreateTable extends JDialog {
 			subsystemNodeList.add(node);
 		}
 		jTextFieldTableName.setText("*ID");
-		jTextAreaStatement.setText("");
 		jButtonCreate.setEnabled(false);
 		//
 		jPanelButtons.getRootPane().setDefaultButton(jButtonClose);
@@ -253,10 +256,12 @@ public class DialogCreateTable extends JDialog {
 									}
 									if (bracketOpen == bracketClose && bracketOpen > 0) {
 										tableID = getSubstringInOrder(statements.substring(posOfCREATE_TABLE+13, posOfFirstBracket), 0).toUpperCase();
+										tableID = tableID.replace("\n", "");
+										tableID = tableID.replace("\t", "").trim();
 										if (tableName.equals("*ID") || tableName.equals("")) {
 											tableName = tableID;
 										}
-										tableAttr = statements.substring(posOfFirstBracket+1, posWork);
+										tableAttr = statements.substring(posOfFirstBracket+1, posWork).trim();
 										posOfCREATE_TABLE = posWork;
 										break;
 									}
@@ -331,12 +336,39 @@ public class DialogCreateTable extends JDialog {
 		///////////////////////////////////
 		//Substring attributes into array//
 		///////////////////////////////////
-		int bracketOpen = 0;
-		int lastPosOfBracketClose = 0;
-		int bracketClose = 0;
-		tableAttributes = tableAttributes.replace("\n", "");
-		tableAttributes = tableAttributes.replace("\t", " ");
+//		int bracketOpen = 0;
+//		int lastPosOfBracketClose = 0;
+//		int bracketClose = 0;
+//		tableAttributes = tableAttributes.replace("\n", "");
+//		tableAttributes = tableAttributes.replace("\t", " ");
+//		int posStartFrom = 0;
+//		for (int pos = 0; pos < tableAttributes.length(); pos++) {
+//			if (tableAttributes.substring(pos, pos+1).equals(",")) {
+//				if (bracketOpen == bracketClose) {
+//					attrList.add(tableAttributes.substring(posStartFrom, pos));
+//					posStartFrom = pos + 1;
+//					bracketOpen = 0;
+//					bracketClose = 0;
+//				}
+//			}
+//			if (tableAttributes.substring(pos, pos+1).equals("(")) {
+//				bracketOpen++;
+//			}
+//			if (tableAttributes.substring(pos, pos+1).equals(")")) {
+//				bracketClose++;
+//				if (bracketOpen == bracketClose) {
+//					lastPosOfBracketClose = pos;
+//				}
+//			}
+//		}
+//		if (lastPosOfBracketClose > posStartFrom) {
+//			attrList.add(tableAttributes.substring(posStartFrom, lastPosOfBracketClose + 1));
+//		}
 		int posStartFrom = 0;
+		int bracketOpen = 0;
+		int bracketClose = 0;
+		tableAttributes = tableAttributes.replace("\n", " ");
+		tableAttributes = tableAttributes.replace("\t", " ").trim();
 		for (int pos = 0; pos < tableAttributes.length(); pos++) {
 			if (tableAttributes.substring(pos, pos+1).equals(",")) {
 				if (bracketOpen == bracketClose) {
@@ -351,13 +383,10 @@ public class DialogCreateTable extends JDialog {
 			}
 			if (tableAttributes.substring(pos, pos+1).equals(")")) {
 				bracketClose++;
-				if (bracketOpen == bracketClose) {
-					lastPosOfBracketClose = pos;
-				}
 			}
-		}
-		if (lastPosOfBracketClose > posStartFrom) {
-			attrList.add(tableAttributes.substring(posStartFrom, lastPosOfBracketClose + 1));
+			if (pos+1 == tableAttributes.length() && bracketOpen == bracketClose) {
+				attrList.add(tableAttributes.substring(posStartFrom, pos+1));
+			}
 		}
 
 		/////////////////////
@@ -485,13 +514,17 @@ public class DialogCreateTable extends JDialog {
 				fieldElement.setAttribute("Decimal", "");
 			}
 		} else {
-			fieldElement.setAttribute("Type", wrkStr);
-			if (wrkStr.equals("CHAR")) {
+			if (wrkStr.equals("CHAR") || wrkStr.equals("TEXT")) {
 				fieldElement.setAttribute("Size", "5");
 				fieldElement.setAttribute("Decimal", "");
 			}
 			if (wrkStr.equals("VARCHAR")) {
 				fieldElement.setAttribute("Size", "50");
+				fieldElement.setAttribute("Decimal", "");
+			}
+			if (wrkStr.equals("TEXT")) {
+				wrkStr = "LONG VARCHAR";
+				fieldElement.setAttribute("Size", "500");
 				fieldElement.setAttribute("Decimal", "");
 			}
 			if (wrkStr.equals("INTEGER")) {
@@ -514,19 +547,31 @@ public class DialogCreateTable extends JDialog {
 				fieldElement.setAttribute("Size", "10");
 				fieldElement.setAttribute("Decimal", "");
 			}
-			if (wrkStr.equals("TIME")) {
-				fieldElement.setAttribute("Size", "8");
+			if (wrkStr.equals("TIME")) { //04:05:06.000
+				//fieldElement.setAttribute("Size", "8");
+				fieldElement.setAttribute("Size", "12");
 				fieldElement.setAttribute("Decimal", "");
 			}
-			if (wrkStr.equals("TIMESTAMP")) {
-				fieldElement.setAttribute("Size", "26");
+			if (wrkStr.equals("TIMETZ")) { //04:05:06.000 -12:00
+				fieldElement.setAttribute("Size", "19");
 				fieldElement.setAttribute("Decimal", "");
 			}
+			if (wrkStr.equals("TIMESTAMP")) { //1999-01-08 04:05:06.000
+				//fieldElement.setAttribute("Size", "26");
+				fieldElement.setAttribute("Size", "23");
+				fieldElement.setAttribute("Decimal", "");
+			}
+			if (wrkStr.equals("TIMESTAMPTZ")) { //1999-01-08 04:05:06.000 -12:00
+				fieldElement.setAttribute("Size", "30");
+				fieldElement.setAttribute("Decimal", "");
+			}
+			fieldElement.setAttribute("Type", wrkStr);
 		}
 		fieldElement.setAttribute("Nullable", nullable);
 		fieldElement.setAttribute("TypeOptions", "");
 		//
-		if (validTypeList.contains(fieldElement.getAttribute("Type"))) {
+		if (validTypeList.contains(fieldElement.getAttribute("Type"))
+				|| fieldElement.getAttribute("Type").equals("LONG VARCHAR")) {
 			if (fieldAttrString.contains(" PRIMARY KEY")) {
 				primaryKeyFieldID = fieldID;
 			}

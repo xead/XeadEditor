@@ -174,7 +174,6 @@ public class DialogSQL extends JDialog {
 	}
 
 	void jButtonCommit_actionPerformed(ActionEvent e) {
-		//String wrkStr;
 		ResultSetMetaData resultSetMetaData;
 		ResultSet resultSet;
 		StringBuffer bf = new StringBuffer();
@@ -184,9 +183,11 @@ public class DialogSQL extends JDialog {
 			//
 			Connection connection = frame_.getDatabaseConnList().get(jComboBoxConnection.getSelectedIndex());
 			Statement statement = connection.createStatement();
-			sql = jTextAreaStatement.getText().toUpperCase().trim().replace("\n", " ");
+			//sql = jTextAreaStatement.getText().toUpperCase().trim().replace("\n", " ");
+			sql = jTextAreaStatement.getText().trim().replace("\n", " ");
 			if (sql.length() > 1) {
-				if (sql.contains("SELECT ")) {
+				//if (sql.contains("SELECT ")) {
+				if (sql.toUpperCase().contains("SELECT ")) {
 					int seq = 0;
 					resultSet = statement.executeQuery(sql);
 					resultSetMetaData = resultSet.getMetaData();
@@ -223,7 +224,6 @@ public class DialogSQL extends JDialog {
 					jTextAreaMessage.setText(bf.toString());
 				} else {
 					statement.executeUpdate(sql);
-					//connection_.commit();
 					bf.append(jTextAreaMessage.getText());
 					bf.append("\n> ");
 					bf.append(sql);
@@ -235,9 +235,7 @@ public class DialogSQL extends JDialog {
 					jTextAreaMessage.setText(bf.toString());
 				}
 				sqlExecuted = true;
-				//connection_.commit();
 			}
-			//
 		} catch (SQLException ex1) {
 			bf.append(jTextAreaMessage.getText());
 			bf.append("\n> ");
@@ -250,11 +248,6 @@ public class DialogSQL extends JDialog {
 			bf.append(formatter.format(calendar.getTime()));
 			bf.append(")\n");
 			jTextAreaMessage.setText(bf.toString());
-			//try {
-			//	connection_.rollback();
-			//} catch (SQLException ex2) {
-			//	ex2.printStackTrace();
-			//}
 		} finally {
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
