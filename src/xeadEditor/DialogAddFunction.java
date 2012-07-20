@@ -147,11 +147,9 @@ public class DialogAddFunction extends JDialog {
         DefaultComboBoxModel model = new DefaultComboBoxModel();
         model.addElement(new ComboBoxItem("", res.getString("SelectFromList"), null));
 		model.addElement(new ComboBoxItem("XF000", res.getString("FunctionTypeXF000"), new ImageIcon(xeadEditor.Editor.class.getResource("ifnc000.png"))));
-		//model.addElement(new ComboBoxItem("XF010", res.getString("FunctionTypeXF010"), new ImageIcon(xeadEditor.Editor.class.getResource("ifnc010.png"))));
 		model.addElement(new ComboBoxItem("XF100", res.getString("FunctionTypeXF100"), new ImageIcon(xeadEditor.Editor.class.getResource("ifnc100.png"))));
 		model.addElement(new ComboBoxItem("XF110", res.getString("FunctionTypeXF110"), new ImageIcon(xeadEditor.Editor.class.getResource("ifnc110.png"))));
 		model.addElement(new ComboBoxItem("XF200", res.getString("FunctionTypeXF200"), new ImageIcon(xeadEditor.Editor.class.getResource("ifnc200.png"))));
-		//model.addElement(new ComboBoxItem("XF210", res.getString("FunctionTypeXF210"), new ImageIcon(xeadEditor.Editor.class.getResource("ifnc210.png"))));
 		model.addElement(new ComboBoxItem("XF290", res.getString("FunctionTypeXF290"), new ImageIcon(xeadEditor.Editor.class.getResource("ifnc290.png"))));
 		model.addElement(new ComboBoxItem("XF300", res.getString("FunctionTypeXF300"), new ImageIcon(xeadEditor.Editor.class.getResource("ifnc300.png"))));
 		model.addElement(new ComboBoxItem("XF310", res.getString("FunctionTypeXF310"), new ImageIcon(xeadEditor.Editor.class.getResource("ifnc310.png"))));
@@ -357,11 +355,9 @@ public class DialogAddFunction extends JDialog {
 							jButtonOK_actionPerformed(null);
 						}
 						//
-						if (functionType.equals("XF010")
-								|| functionType.equals("XF100")
+						if (functionType.equals("XF100")
 								|| functionType.equals("XF110")
 								|| functionType.equals("XF200")
-								|| functionType.equals("XF210")
 								|| functionType.equals("XF290")) {
 							jTextFieldTableID.setText("");
 							jLabelTableName.setText("");
@@ -408,11 +404,6 @@ public class DialogAddFunction extends JDialog {
 							jButtonOK.setEnabled(false);
 							jTextFieldHeaderTableID.requestFocus();
 						}
-						//
-						//jPanelButtons.removeAll();
-						//jPanelButtons.add(jButtonCancel, null);
-						//jPanelButtons.add(jButtonOK, null);
-						//this.getRootPane().setDefaultButton(jButtonOK);
 					}
 				}
 			}
@@ -426,11 +417,9 @@ public class DialogAddFunction extends JDialog {
 		ComboBoxItem item = (ComboBoxItem)jComboBoxType.getSelectedItem();
 		String functionType = item.getID();
 		//
-		if (functionType.equals("XF010")
-			|| functionType.equals("XF100")
+		if (functionType.equals("XF100")
 			|| functionType.equals("XF110")
 			|| functionType.equals("XF200")
-			|| functionType.equals("XF210")
 			|| functionType.equals("XF290")) {
 			//
 			String keyFieldIDs = "";
@@ -481,32 +470,13 @@ public class DialogAddFunction extends JDialog {
 				element.setAttribute("Script", "");
 			}
 			//
-			if (functionType.equals("XF010")) {
-				element.setAttribute("PrimaryTable", jTextFieldTableID.getText());
-				element.setAttribute("KeyFields", tableKeys);
-				element.setAttribute("Script", "");
-				//
-				NodeList nodeList = tableNode.getElement().getElementsByTagName("Field");
-				sortingList = frame_.getSortedListModel(nodeList, "Order");
-				for (int i = 0; i < sortingList.getSize(); i++) {
-					if (i < 5) {
-						workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
-						childElement = frame_.getDomDocument().createElement("Field");
-						childElement.setAttribute("Order", frame_.getFormatted4ByteString(i * 10));
-						childElement.setAttribute("DataSource", jTextFieldTableID.getText() + "." + workElement.getAttribute("ID")); 
-						element.appendChild(childElement);
-					} else {
-						break;
-					}
-				}
-			}
-			//
 			if (functionType.equals("XF100")) {
 				element.setAttribute("PrimaryTable", jTextFieldTableID.getText());
 				element.setAttribute("KeyFields", tableKeys);
 				element.setAttribute("OrderBy", "");
+				element.setAttribute("InitialReadCount", "1000");
 				element.setAttribute("DetailFunction", "XXXXXX");
-				element.setAttribute("Size", "");
+				element.setAttribute("Size", "AUTO");
 				element.setAttribute("InitialMsg", "");
 				//
 				NodeList nodeList = tableNode.getElement().getElementsByTagName("Field");
@@ -561,10 +531,11 @@ public class DialogAddFunction extends JDialog {
 				element.setAttribute("PrimaryTable", jTextFieldTableID.getText());
 				element.setAttribute("KeyFields", tableKeys);
 				element.setAttribute("OrderBy", "");
+				element.setAttribute("InitialReadCount", "1000");
 				element.setAttribute("BatchTable", "");
 				element.setAttribute("BatchKeyFields", "");
 				element.setAttribute("BatchWithKeyFields", "");
-				element.setAttribute("Size", "");
+				element.setAttribute("Size", "AUTO");
 				element.setAttribute("InitialMsg", "");
 				//
 				NodeList nodeList = tableNode.getElement().getElementsByTagName("Field");
@@ -676,43 +647,6 @@ public class DialogAddFunction extends JDialog {
 				element.appendChild(childElement);
 			}
 			//
-			if (functionType.equals("XF210")) {
-				element.setAttribute("PrimaryTable", jTextFieldTableID.getText());
-				element.setAttribute("KeyFields", tableKeys);
-				element.setAttribute("Size", "AUTO");
-				element.setAttribute("InitialMsg", "");
-				//
-				NodeList nodeList = tableNode.getElement().getElementsByTagName("Field");
-				sortingList = frame_.getSortedListModel(nodeList, "Order");
-				for (int i = 0; i < sortingList.getSize(); i++) {
-					workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
-					childElement = frame_.getDomDocument().createElement("Field");
-					childElement.setAttribute("Order", frame_.getFormatted4ByteString(i * 10));
-					childElement.setAttribute("DataSource", jTextFieldTableID.getText() + "." + workElement.getAttribute("ID")); 
-					childElement.setAttribute("FieldOptions", "");
-					element.appendChild(childElement);
-				}
-				//
-				childElement = frame_.getDomDocument().createElement("Button");
-				childElement.setAttribute("Position", "0");
-				childElement.setAttribute("Number", "3");
-				childElement.setAttribute("Caption", res.getString("Close"));
-				childElement.setAttribute("Action", "EXIT");
-				element.appendChild(childElement);
-				childElement = frame_.getDomDocument().createElement("Button");
-				childElement.setAttribute("Position", "2");
-				childElement.setAttribute("Number", "5");
-				childElement.setAttribute("Caption", res.getString("Update"));
-				childElement.setAttribute("Action", "UPDATE");
-				element.appendChild(childElement);
-				childElement = frame_.getDomDocument().createElement("Button");
-				childElement.setAttribute("Position", "6");
-				childElement.setAttribute("Number", "12");
-				childElement.setAttribute("Caption", res.getString("Output"));
-				childElement.setAttribute("Action", "OUTPUT");
-				element.appendChild(childElement);
-			}
-			//
 			if (functionType.equals("XF290")) {
 				element.setAttribute("PrimaryTable", jTextFieldTableID.getText());
 				element.setAttribute("KeyFields", tableKeys);
@@ -767,7 +701,7 @@ public class DialogAddFunction extends JDialog {
 					element.setAttribute("HeaderTable", jTextFieldHeaderTableID.getText());
 					element.setAttribute("HeaderKeyFields", "");
 					element.setAttribute("HeaderFunction", "");
-					element.setAttribute("Size", "");
+					element.setAttribute("Size", "AUTO");
 					//
 					NodeList nodeList = headerTableNode.getElement().getElementsByTagName("Field");
 					sortingList = frame_.getSortedListModel(nodeList, "Order");
@@ -856,13 +790,7 @@ public class DialogAddFunction extends JDialog {
 					element.setAttribute("HeaderKeyFields", headerTableKeys);
 					element.setAttribute("DetailTable", jTextFieldDetailTableID.getText());
 					element.setAttribute("DetailKeyFields", detailTableKeys);
-//					element.setAttribute("DetailRowNo", detailRowNoID);
-//					if (detailRowNoID.equals("")) {
-//						element.setAttribute("AddBlankRowAllowed", "F");
-//					} else {
-//						element.setAttribute("AddBlankRowAllowed", "T");
-//					}
-					element.setAttribute("Size", "");
+					element.setAttribute("Size", "AUTO");
 					//
 					NodeList nodeList = headerTableNode.getElement().getElementsByTagName("Field");
 					sortingList = frame_.getSortedListModel(nodeList, "Order");

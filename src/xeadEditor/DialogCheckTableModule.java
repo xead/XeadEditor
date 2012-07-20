@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2011 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2012 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -148,9 +148,7 @@ public class DialogCheckTableModule extends JDialog {
 			connection_ = frame_.getDatabaseConnection(tableElement.getAttribute("DB"));
 			databaseName = frame_.getDatabaseName(tableElement.getAttribute("DB"));
 			//
-			if (connection_ == null) {
-				//errorStatus = "ER1";
-			} else {
+			if (connection_ != null) {
 				if (tableNode.getType().equals("Table")) {
 					checkTableModule("");
 					if (isShowDialog) {
@@ -163,8 +161,6 @@ public class DialogCheckTableModule extends JDialog {
 					}
 				}
 			}
-		} else {
-			//errorStatus = "ER1";
 		}
 		//
 		return errorStatus;
@@ -280,9 +276,7 @@ public class DialogCheckTableModule extends JDialog {
 								}
 							}
 						}
-						if (element.getAttribute("Nullable").equals("T")) {
-							//moduleBuf.append(" null");
-						} else {
+						if (!element.getAttribute("Nullable").equals("T")) {
 							moduleBuf.append(" Not null");
 						}
 						moduleBuf.append(" Comment '" + element.getAttribute("Name") + "',\n");
@@ -383,7 +377,6 @@ public class DialogCheckTableModule extends JDialog {
 				}
 			    ResultSet rs2 = connection_.getMetaData().getColumns(null, null, tableID, fieldID);
 				if (rs2.next()) {
-					//if (!rs2.getString("TYPE_NAME").equals("INTEGER") && !rs2.getString("TYPE_NAME").equals("INT")) {
 					if (!isEquivalentDataType("INTEGER", rs2.getString("TYPE_NAME"))) {
 						countOfErrors++;
 						fieldListToBeDropped.add(updateCounterID);
@@ -642,7 +635,6 @@ public class DialogCheckTableModule extends JDialog {
 							}
 							countOfKey++;
 							countOfSK++;
-							//moduleBuf.append("Constraint " + tableElement.getAttribute("ID") + "_SK" + countOfSK + " Unique key (");
 							moduleBuf.append("Constraint " + tableElement.getAttribute("ID") + "_SK" + countOfSK + " Unique (");
 							moduleBuf.append(element.getAttribute("Fields").replace(";", ", ") + ")");
 						}
