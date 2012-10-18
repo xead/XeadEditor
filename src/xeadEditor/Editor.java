@@ -80,15 +80,6 @@ import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 public class Editor extends JFrame {
 	private static final long serialVersionUID = 1L;
 	/**
-	 * Application Information
-	 */
-	public static final String APPLICATION_NAME  = "XEAD Editor 1.1";
-	public static final String FULL_VERSION  = "V1.R1.M9";
-	public static final String FORMAT_VERSION  = "1.1";
-	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
-	public static final String COPYRIGHT = "Copyright 2012 DBC,Ltd.";
-	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
-	/**
 	 * Static constants
 	 */
 	private static final ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
@@ -1038,8 +1029,16 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldFunction100Field = new JTextField();
 	private JLabel jLabelFunction100FieldType = new JLabel();
 	private JTextField jTextFieldFunction100FieldType = new JTextField();
+	//private JLabel jLabelFunction100FieldWidth = new JLabel();
+	//private JTextField jTextFieldFunction100FieldWidth = new JTextField();
+	private JLabel jLabelFunction100FieldLayoutOption = new JLabel();
+	private JRadioButton jRadioButtonFunction100FieldLayoutOptionVertical = new JRadioButton();
+	private JRadioButton jRadioButtonFunction100FieldLayoutOptionHorizontal = new JRadioButton();
+	private ButtonGroup buttonGroupFunction100FieldLayoutOption = new ButtonGroup();
 	private JLabel jLabelFunction100FieldWidth = new JLabel();
 	private JTextField jTextFieldFunction100FieldWidth = new JTextField();
+	private JLabel jLabelFunction100FieldRows = new JLabel();
+	private JTextField jTextFieldFunction100FieldRows = new JTextField();
 	private JLabel jLabelFunction100FieldCaptionOption = new JLabel();
 	private JRadioButton jRadioButtonFunction100FieldCaptionOptionName = new JRadioButton();
 	private JRadioButton jRadioButtonFunction100FieldCaptionOptionValue = new JRadioButton();
@@ -1167,8 +1166,16 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldFunction110Field = new JTextField();
 	private JLabel jLabelFunction110FieldType = new JLabel();
 	private JTextField jTextFieldFunction110FieldType = new JTextField();
+	//private JLabel jLabelFunction110FieldWidth = new JLabel();
+	//private JTextField jTextFieldFunction110FieldWidth = new JTextField();
+	private JLabel jLabelFunction110FieldLayoutOption = new JLabel();
+	private JRadioButton jRadioButtonFunction110FieldLayoutOptionVertical = new JRadioButton();
+	private JRadioButton jRadioButtonFunction110FieldLayoutOptionHorizontal = new JRadioButton();
+	private ButtonGroup buttonGroupFunction110FieldLayoutOption = new ButtonGroup();
 	private JLabel jLabelFunction110FieldWidth = new JLabel();
 	private JTextField jTextFieldFunction110FieldWidth = new JTextField();
+	private JLabel jLabelFunction110FieldRows = new JLabel();
+	private JTextField jTextFieldFunction110FieldRows = new JTextField();
 	private JLabel jLabelFunction110FieldCaptionOption = new JLabel();
 	private JRadioButton jRadioButtonFunction110FieldCaptionOptionName = new JRadioButton();
 	private JRadioButton jRadioButtonFunction110FieldCaptionOptionValue = new JRadioButton();
@@ -1216,10 +1223,10 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldFunction110BatchField = new JTextField();
 	private JLabel jLabelFunction110BatchFieldType = new JLabel();
 	private JTextField jTextFieldFunction110BatchFieldType = new JTextField();
-	private JLabel jLabelFunction110BatchFieldDisplayOption = new JLabel();
-	private JRadioButton jRadioButtonFunction110BatchFieldDisplayOptionVertical = new JRadioButton();
-	private JRadioButton jRadioButtonFunction110BatchFieldDisplayOptionHorizontal = new JRadioButton();
-	private ButtonGroup buttonGroupFunction110BatchFieldDisplayOption = new ButtonGroup();
+	private JLabel jLabelFunction110BatchFieldLayoutOption = new JLabel();
+	private JRadioButton jRadioButtonFunction110BatchFieldLayoutOptionVertical = new JRadioButton();
+	private JRadioButton jRadioButtonFunction110BatchFieldLayoutOptionHorizontal = new JRadioButton();
+	private ButtonGroup buttonGroupFunction110BatchFieldLayoutOption = new ButtonGroup();
 	private JLabel jLabelFunction110BatchFieldWidth = new JLabel();
 	private JTextField jTextFieldFunction110BatchFieldWidth = new JTextField();
 	private JLabel jLabelFunction110BatchFieldRows = new JLabel();
@@ -1331,10 +1338,10 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldFunction200Field = new JTextField();
 	private JLabel jLabelFunction200FieldType = new JLabel();
 	private JTextField jTextFieldFunction200FieldType = new JTextField();
-	private JLabel jLabelFunction200FieldDisplayOption = new JLabel();
-	private JRadioButton jRadioButtonFunction200FieldDisplayOptionVertical = new JRadioButton();
-	private JRadioButton jRadioButtonFunction200FieldDisplayOptionHorizontal = new JRadioButton();
-	private ButtonGroup buttonGroupFunction200FieldDisplayOption = new ButtonGroup();
+	private JLabel jLabelFunction200FieldLayoutOption = new JLabel();
+	private JRadioButton jRadioButtonFunction200FieldLayoutOptionVertical = new JRadioButton();
+	private JRadioButton jRadioButtonFunction200FieldLayoutOptionHorizontal = new JRadioButton();
+	private ButtonGroup buttonGroupFunction200FieldLayoutOption = new ButtonGroup();
 	private JLabel jLabelFunction200FieldWidth = new JLabel();
 	private JTextField jTextFieldFunction200FieldWidth = new JTextField();
 	private JLabel jLabelFunction200FieldRows = new JLabel();
@@ -1387,10 +1394,10 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldFunction200TabField = new JTextField();
 	private JLabel jLabelFunction200TabFieldType = new JLabel();
 	private JTextField jTextFieldFunction200TabFieldType = new JTextField();
-	private JLabel jLabelFunction200TabFieldDisplayOption = new JLabel();
-	private JRadioButton jRadioButtonFunction200TabFieldDisplayOptionVertical = new JRadioButton();
-	private JRadioButton jRadioButtonFunction200TabFieldDisplayOptionHorizontal = new JRadioButton();
-	private ButtonGroup buttonGroupFunction200TabFieldDisplayOption = new ButtonGroup();
+	private JLabel jLabelFunction200TabFieldLayoutOption = new JLabel();
+	private JRadioButton jRadioButtonFunction200TabFieldLayoutOptionVertical = new JRadioButton();
+	private JRadioButton jRadioButtonFunction200TabFieldLayoutOptionHorizontal = new JRadioButton();
+	private ButtonGroup buttonGroupFunction200TabFieldLayoutOption = new ButtonGroup();
 	private JLabel jLabelFunction200TabFieldWidth = new JLabel();
 	private JTextField jTextFieldFunction200TabFieldWidth = new JTextField();
 	private JLabel jLabelFunction200TabFieldRows = new JLabel();
@@ -1487,10 +1494,10 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldFunction210Field = new JTextField();
 	private JLabel jLabelFunction210FieldType = new JLabel();
 	private JTextField jTextFieldFunction210FieldType = new JTextField();
-	private JLabel jLabelFunction210FieldDisplayOption = new JLabel();
-	private JRadioButton jRadioButtonFunction210FieldDisplayOptionVertical = new JRadioButton();
-	private JRadioButton jRadioButtonFunction210FieldDisplayOptionHorizontal = new JRadioButton();
-	private ButtonGroup buttonGroupFunction210FieldDisplayOption = new ButtonGroup();
+	private JLabel jLabelFunction210FieldLayoutOption = new JLabel();
+	private JRadioButton jRadioButtonFunction210FieldLayoutOptionVertical = new JRadioButton();
+	private JRadioButton jRadioButtonFunction210FieldLayoutOptionHorizontal = new JRadioButton();
+	private ButtonGroup buttonGroupFunction210FieldLayoutOption = new ButtonGroup();
 	private JLabel jLabelFunction210FieldWidth = new JLabel();
 	private JTextField jTextFieldFunction210FieldWidth = new JTextField();
 	private JLabel jLabelFunction210FieldRows = new JLabel();
@@ -1667,10 +1674,10 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldFunction300HeaderField = new JTextField();
 	private JLabel jLabelFunction300HeaderFieldType = new JLabel();
 	private JTextField jTextFieldFunction300HeaderFieldType = new JTextField();
-	private JLabel jLabelFunction300HeaderFieldDisplayOption = new JLabel();
-	private JRadioButton jRadioButtonFunction300HeaderFieldDisplayOptionVertical = new JRadioButton();
-	private JRadioButton jRadioButtonFunction300HeaderFieldDisplayOptionHorizontal = new JRadioButton();
-	private ButtonGroup buttonGroupFunction300HeaderFieldDisplayOption = new ButtonGroup();
+	private JLabel jLabelFunction300HeaderFieldLayoutOption = new JLabel();
+	private JRadioButton jRadioButtonFunction300HeaderFieldLayoutOptionVertical = new JRadioButton();
+	private JRadioButton jRadioButtonFunction300HeaderFieldLayoutOptionHorizontal = new JRadioButton();
+	private ButtonGroup buttonGroupFunction300HeaderFieldLayoutOption = new ButtonGroup();
 	private JLabel jLabelFunction300HeaderFieldWidth = new JLabel();
 	private JTextField jTextFieldFunction300HeaderFieldWidth = new JTextField();
 	private JLabel jLabelFunction300HeaderFieldRows = new JLabel();
@@ -1733,8 +1740,16 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldFunction300DetailField = new JTextField();
 	private JLabel jLabelFunction300DetailFieldType = new JLabel();
 	private JTextField jTextFieldFunction300DetailFieldType = new JTextField();
+	//private JLabel jLabelFunction300DetailFieldWidth = new JLabel();
+	//private JTextField jTextFieldFunction300DetailFieldWidth = new JTextField();
+	private JLabel jLabelFunction300DetailFieldLayoutOption = new JLabel();
+	private JRadioButton jRadioButtonFunction300DetailFieldLayoutOptionVertical = new JRadioButton();
+	private JRadioButton jRadioButtonFunction300DetailFieldLayoutOptionHorizontal = new JRadioButton();
+	private ButtonGroup buttonGroupFunction300DetailFieldLayoutOption = new ButtonGroup();
 	private JLabel jLabelFunction300DetailFieldWidth = new JLabel();
 	private JTextField jTextFieldFunction300DetailFieldWidth = new JTextField();
+	private JLabel jLabelFunction300DetailFieldRows = new JLabel();
+	private JTextField jTextFieldFunction300DetailFieldRows = new JTextField();
 	private JLabel jLabelFunction300DetailFieldCaptionOption = new JLabel();
 	private JRadioButton jRadioButtonFunction300DetailFieldCaptionOptionName = new JRadioButton();
 	private JRadioButton jRadioButtonFunction300DetailFieldCaptionOptionValue = new JRadioButton();
@@ -1869,10 +1884,10 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldFunction310HeaderField = new JTextField();
 	private JLabel jLabelFunction310HeaderFieldType = new JLabel();
 	private JTextField jTextFieldFunction310HeaderFieldType = new JTextField();
-	private JLabel jLabelFunction310HeaderFieldDisplayOption = new JLabel();
-	private JRadioButton jRadioButtonFunction310HeaderFieldDisplayOptionVertical = new JRadioButton();
-	private JRadioButton jRadioButtonFunction310HeaderFieldDisplayOptionHorizontal = new JRadioButton();
-	private ButtonGroup buttonGroupFunction310HeaderFieldDisplayOption = new ButtonGroup();
+	private JLabel jLabelFunction310HeaderFieldLayoutOption = new JLabel();
+	private JRadioButton jRadioButtonFunction310HeaderFieldLayoutOptionVertical = new JRadioButton();
+	private JRadioButton jRadioButtonFunction310HeaderFieldLayoutOptionHorizontal = new JRadioButton();
+	private ButtonGroup buttonGroupFunction310HeaderFieldLayoutOption = new ButtonGroup();
 	private JLabel jLabelFunction310HeaderFieldWidth = new JLabel();
 	private JTextField jTextFieldFunction310HeaderFieldWidth = new JTextField();
 	private JLabel jLabelFunction310HeaderFieldRows = new JLabel();
@@ -1915,8 +1930,16 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldFunction310DetailField = new JTextField();
 	private JLabel jLabelFunction310DetailFieldType = new JLabel();
 	private JTextField jTextFieldFunction310DetailFieldType = new JTextField();
+	//private JLabel jLabelFunction310DetailFieldWidth = new JLabel();
+	//private JTextField jTextFieldFunction310DetailFieldWidth = new JTextField();
+	private JLabel jLabelFunction310DetailFieldLayoutOption = new JLabel();
+	private JRadioButton jRadioButtonFunction310DetailFieldLayoutOptionVertical = new JRadioButton();
+	private JRadioButton jRadioButtonFunction310DetailFieldLayoutOptionHorizontal = new JRadioButton();
+	private ButtonGroup buttonGroupFunction310DetailFieldLayoutOption = new ButtonGroup();
 	private JLabel jLabelFunction310DetailFieldWidth = new JLabel();
 	private JTextField jTextFieldFunction310DetailFieldWidth = new JTextField();
+	private JLabel jLabelFunction310DetailFieldRows = new JLabel();
+	private JTextField jTextFieldFunction310DetailFieldRows = new JTextField();
 	private JLabel jLabelFunction310DetailFieldCaptionOption = new JLabel();
 	private JRadioButton jRadioButtonFunction310DetailFieldCaptionOptionName = new JRadioButton();
 	private JRadioButton jRadioButtonFunction310DetailFieldCaptionOptionValue = new JRadioButton();
@@ -1965,8 +1988,16 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldFunction310AddRowListColumn = new JTextField();
 	private JLabel jLabelFunction310AddRowListColumnType = new JLabel();
 	private JTextField jTextFieldFunction310AddRowListColumnType = new JTextField();
+	//private JLabel jLabelFunction310AddRowListColumnWidth = new JLabel();
+	//private JTextField jTextFieldFunction310AddRowListColumnWidth = new JTextField();
+	private JLabel jLabelFunction310AddRowListColumnLayoutOption = new JLabel();
+	private JRadioButton jRadioButtonFunction310AddRowListColumnLayoutOptionVertical = new JRadioButton();
+	private JRadioButton jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal = new JRadioButton();
+	private ButtonGroup buttonGroupFunction310AddRowListColumnLayoutOption = new ButtonGroup();
 	private JLabel jLabelFunction310AddRowListColumnWidth = new JLabel();
 	private JTextField jTextFieldFunction310AddRowListColumnWidth = new JTextField();
+	private JLabel jLabelFunction310AddRowListColumnRows = new JLabel();
+	private JTextField jTextFieldFunction310AddRowListColumnRows = new JTextField();
 	private JLabel jLabelFunction310AddRowListColumnCaptionOption = new JLabel();
 	private JRadioButton jRadioButtonFunction310AddRowListColumnCaptionOptionName = new JRadioButton();
 	private JRadioButton jRadioButtonFunction310AddRowListColumnCaptionOptionValue = new JRadioButton();
@@ -2521,11 +2552,11 @@ public class Editor extends JFrame {
 			xmlnodelist1 = domDocument.getElementsByTagName("System");
 			element1 = (org.w3c.dom.Element)xmlnodelist1.item(0);
 			float fileFormat = Float.parseFloat(element1.getAttribute("FormatVersion"));
-			float appliFormat = Float.parseFloat(FORMAT_VERSION);
+			float appliFormat = Float.parseFloat(DialogAbout.FORMAT_VERSION);
 			if (fileFormat > appliFormat) {
 				JOptionPane.showMessageDialog(this, res.getString("FormatVersionError1") +
 						element1.getAttribute("FormatVersion") + res.getString("FormatVersionError2") +
-						FORMAT_VERSION + res.getString("FormatVersionError3"));
+						DialogAbout.FORMAT_VERSION + res.getString("FormatVersionError3"));
 				System.exit(0);
 			}
 			systemNode = new MainTreeNode("System", element1, this);
@@ -5652,11 +5683,8 @@ public class Editor extends JFrame {
 		jSplitPaneFunction100ColumnList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction100ColumnList.add(jScrollPaneFunction100ColumnList, JSplitPane.TOP);
 		jSplitPaneFunction100ColumnList.add(jPanelFunction100ColumnList, JSplitPane.BOTTOM);
-		//if (screenHeight > 768) {
-			jSplitPaneFunction100ColumnList.setDividerLocation(screenHeight - 467);
-		//} else {
-		//	jSplitPaneFunction100ColumnList.setDividerLocation(311);
-		//}
+		//jSplitPaneFunction100ColumnList.setDividerLocation(screenHeight - 467);
+		jSplitPaneFunction100ColumnList.setDividerLocation(screenHeight - 495);
 		jLabelFunction100Table.setEnabled(false);
 		jLabelFunction100Table.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction100Table.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -5693,6 +5721,32 @@ public class Editor extends JFrame {
 		jTextFieldFunction100FieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldFunction100FieldType.setBounds(new Rectangle(514, 37, 250, 22));
 		jTextFieldFunction100FieldType.setEditable(false);
+//		jLabelFunction100FieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+//		jLabelFunction100FieldWidth.setHorizontalAlignment(SwingConstants.RIGHT);
+//		jLabelFunction100FieldWidth.setHorizontalTextPosition(SwingConstants.LEADING);
+//		jLabelFunction100FieldWidth.setText(res.getString("FieldWidth"));
+//		jLabelFunction100FieldWidth.setBounds(new Rectangle(430, 68, 76, 15));
+//		jLabelFunction100FieldWidth.setEnabled(false);
+//		jTextFieldFunction100FieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+//		jTextFieldFunction100FieldWidth.setBounds(new Rectangle(514, 65, 45, 22));
+//		jTextFieldFunction100FieldWidth.setEnabled(false);
+//		jTextFieldFunction100FieldWidth.setText("");
+		jLabelFunction100FieldLayoutOption.setEnabled(false);
+		jLabelFunction100FieldLayoutOption.setText(res.getString("LayoutOption"));
+		jLabelFunction100FieldLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100FieldLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction100FieldLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction100FieldLayoutOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jRadioButtonFunction100FieldLayoutOptionVertical.setText(res.getString("LayoutVertical"));
+		jRadioButtonFunction100FieldLayoutOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction100FieldLayoutOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
+		jRadioButtonFunction100FieldLayoutOptionVertical.setEnabled(false);
+		jRadioButtonFunction100FieldLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
+		jRadioButtonFunction100FieldLayoutOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction100FieldLayoutOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
+		jRadioButtonFunction100FieldLayoutOptionHorizontal.setEnabled(false);
+		buttonGroupFunction100FieldLayoutOption.add(jRadioButtonFunction100FieldLayoutOptionVertical);
+		buttonGroupFunction100FieldLayoutOption.add(jRadioButtonFunction100FieldLayoutOptionHorizontal);
 		jLabelFunction100FieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction100FieldWidth.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100FieldWidth.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -5703,26 +5757,36 @@ public class Editor extends JFrame {
 		jTextFieldFunction100FieldWidth.setBounds(new Rectangle(514, 65, 45, 22));
 		jTextFieldFunction100FieldWidth.setEnabled(false);
 		jTextFieldFunction100FieldWidth.setText("");
+		jLabelFunction100FieldRows.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100FieldRows.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction100FieldRows.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction100FieldRows.setText(res.getString("FieldRows"));
+		jLabelFunction100FieldRows.setBounds(new Rectangle(564, 68, 45, 15));
+		jLabelFunction100FieldRows.setEnabled(false);
+		jTextFieldFunction100FieldRows.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldFunction100FieldRows.setBounds(new Rectangle(614, 65, 45, 22));
+		jTextFieldFunction100FieldRows.setText("");
+		jTextFieldFunction100FieldRows.setEnabled(false);
 		jLabelFunction100FieldCaptionOption.setEnabled(false);
 		jLabelFunction100FieldCaptionOption.setText(res.getString("Caption"));
 		jLabelFunction100FieldCaptionOption.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction100FieldCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100FieldCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction100FieldCaptionOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction100FieldCaptionOption.setBounds(new Rectangle(11, 96, 96, 15));
 		jRadioButtonFunction100FieldCaptionOptionName.setText(res.getString("FieldName"));
 		jRadioButtonFunction100FieldCaptionOptionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FieldCaptionOptionName.setBounds(new Rectangle(115, 65, 100, 22));
+		jRadioButtonFunction100FieldCaptionOptionName.setBounds(new Rectangle(115, 93, 100, 22));
 		jRadioButtonFunction100FieldCaptionOptionName.setEnabled(false);
 		jRadioButtonFunction100FieldCaptionOptionName.addChangeListener(new Editor_jRadioButtonFunction100FieldCaptionOption_changeAdapter(this));
 		jRadioButtonFunction100FieldCaptionOptionValue.setText(res.getString("ValueSpecified"));
 		jRadioButtonFunction100FieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FieldCaptionOptionValue.setBounds(new Rectangle(225, 65, 63, 22));
+		jRadioButtonFunction100FieldCaptionOptionValue.setBounds(new Rectangle(225, 93, 63, 22));
 		jRadioButtonFunction100FieldCaptionOptionValue.setEnabled(false);
 		jRadioButtonFunction100FieldCaptionOptionValue.addChangeListener(new Editor_jRadioButtonFunction100FieldCaptionOption_changeAdapter(this));
 		buttonGroupFunction100FieldCaptionOption.add(jRadioButtonFunction100FieldCaptionOptionName);
 		buttonGroupFunction100FieldCaptionOption.add(jRadioButtonFunction100FieldCaptionOptionValue);
 		jTextFieldFunction100FieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100FieldCaptionOptionValue.setBounds(new Rectangle(300, 65, 150, 22));
+		jTextFieldFunction100FieldCaptionOptionValue.setBounds(new Rectangle(300, 93, 150, 22));
 		jTextFieldFunction100FieldCaptionOptionValue.setEnabled(false);
 		jTextFieldFunction100FieldCaptionOptionValue.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
 		jPanelFunction100ColumnList.setLayout(null);
@@ -5735,8 +5799,15 @@ public class Editor extends JFrame {
 		jPanelFunction100ColumnList.add(jTextFieldFunction100Field);
 		jPanelFunction100ColumnList.add(jLabelFunction100FieldType);
 		jPanelFunction100ColumnList.add(jTextFieldFunction100FieldType);
+		//jPanelFunction100ColumnList.add(jLabelFunction100FieldWidth);
+		//jPanelFunction100ColumnList.add(jTextFieldFunction100FieldWidth);
+		jPanelFunction100ColumnList.add(jLabelFunction100FieldLayoutOption);
+		jPanelFunction100ColumnList.add(jRadioButtonFunction100FieldLayoutOptionVertical);
+		jPanelFunction100ColumnList.add(jRadioButtonFunction100FieldLayoutOptionHorizontal);
 		jPanelFunction100ColumnList.add(jLabelFunction100FieldWidth);
 		jPanelFunction100ColumnList.add(jTextFieldFunction100FieldWidth);
+		jPanelFunction100ColumnList.add(jLabelFunction100FieldRows);
+		jPanelFunction100ColumnList.add(jTextFieldFunction100FieldRows);
 		jPanelFunction100ColumnList.add(jLabelFunction100FieldCaptionOption);
 		jPanelFunction100ColumnList.add(jRadioButtonFunction100FieldCaptionOptionName);
 		jPanelFunction100ColumnList.add(jRadioButtonFunction100FieldCaptionOptionValue);
@@ -6311,7 +6382,8 @@ public class Editor extends JFrame {
 		jSplitPaneFunction110ColumnList.add(jScrollPaneFunction110ColumnList, JSplitPane.TOP);
 		jSplitPaneFunction110ColumnList.add(jPanelFunction110ColumnList, JSplitPane.BOTTOM);
 		//if (screenHeight > 768) {
-			jSplitPaneFunction110ColumnList.setDividerLocation(screenHeight - 466);
+			//jSplitPaneFunction110ColumnList.setDividerLocation(screenHeight - 466);
+			jSplitPaneFunction110ColumnList.setDividerLocation(screenHeight - 494);
 		//} else {
 		//	jSplitPaneFunction110ColumnList.setDividerLocation(312);
 		//}
@@ -6351,6 +6423,32 @@ public class Editor extends JFrame {
 		jTextFieldFunction110FieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldFunction110FieldType.setBounds(new Rectangle(514, 37, 250, 22));
 		jTextFieldFunction110FieldType.setEditable(false);
+//		jLabelFunction110FieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+//		jLabelFunction110FieldWidth.setHorizontalAlignment(SwingConstants.RIGHT);
+//		jLabelFunction110FieldWidth.setHorizontalTextPosition(SwingConstants.LEADING);
+//		jLabelFunction110FieldWidth.setText(res.getString("FieldWidth"));
+//		jLabelFunction110FieldWidth.setBounds(new Rectangle(430, 68, 76, 15));
+//		jLabelFunction110FieldWidth.setEnabled(false);
+//		jTextFieldFunction110FieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+//		jTextFieldFunction110FieldWidth.setBounds(new Rectangle(514, 65, 45, 22));
+//		jTextFieldFunction110FieldWidth.setEnabled(false);
+//		jTextFieldFunction110FieldWidth.setText("");
+		jLabelFunction110FieldLayoutOption.setEnabled(false);
+		jLabelFunction110FieldLayoutOption.setText(res.getString("LayoutOption"));
+		jLabelFunction110FieldLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110FieldLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction110FieldLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction110FieldLayoutOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jRadioButtonFunction110FieldLayoutOptionVertical.setText(res.getString("LayoutVertical"));
+		jRadioButtonFunction110FieldLayoutOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction110FieldLayoutOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
+		jRadioButtonFunction110FieldLayoutOptionVertical.setEnabled(false);
+		jRadioButtonFunction110FieldLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
+		jRadioButtonFunction110FieldLayoutOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction110FieldLayoutOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
+		jRadioButtonFunction110FieldLayoutOptionHorizontal.setEnabled(false);
+		buttonGroupFunction110FieldLayoutOption.add(jRadioButtonFunction110FieldLayoutOptionVertical);
+		buttonGroupFunction110FieldLayoutOption.add(jRadioButtonFunction110FieldLayoutOptionHorizontal);
 		jLabelFunction110FieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction110FieldWidth.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110FieldWidth.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -6361,26 +6459,36 @@ public class Editor extends JFrame {
 		jTextFieldFunction110FieldWidth.setBounds(new Rectangle(514, 65, 45, 22));
 		jTextFieldFunction110FieldWidth.setEnabled(false);
 		jTextFieldFunction110FieldWidth.setText("");
+		jLabelFunction110FieldRows.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110FieldRows.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction110FieldRows.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction110FieldRows.setText(res.getString("FieldRows"));
+		jLabelFunction110FieldRows.setBounds(new Rectangle(564, 68, 45, 15));
+		jLabelFunction110FieldRows.setEnabled(false);
+		jTextFieldFunction110FieldRows.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldFunction110FieldRows.setBounds(new Rectangle(614, 65, 45, 22));
+		jTextFieldFunction110FieldRows.setText("");
+		jTextFieldFunction110FieldRows.setEnabled(false);
 		jLabelFunction110FieldCaptionOption.setEnabled(false);
 		jLabelFunction110FieldCaptionOption.setText(res.getString("Caption"));
 		jLabelFunction110FieldCaptionOption.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction110FieldCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110FieldCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction110FieldCaptionOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction110FieldCaptionOption.setBounds(new Rectangle(11, 96, 96, 15));
 		jRadioButtonFunction110FieldCaptionOptionName.setText(res.getString("FieldName"));
 		jRadioButtonFunction110FieldCaptionOptionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FieldCaptionOptionName.setBounds(new Rectangle(115, 65, 100, 22));
+		jRadioButtonFunction110FieldCaptionOptionName.setBounds(new Rectangle(115, 93, 100, 22));
 		jRadioButtonFunction110FieldCaptionOptionName.setEnabled(false);
 		jRadioButtonFunction110FieldCaptionOptionName.addChangeListener(new Editor_jRadioButtonFunction110FieldCaptionOption_changeAdapter(this));
 		jRadioButtonFunction110FieldCaptionOptionValue.setText(res.getString("ValueSpecified"));
 		jRadioButtonFunction110FieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FieldCaptionOptionValue.setBounds(new Rectangle(225, 65, 63, 22));
+		jRadioButtonFunction110FieldCaptionOptionValue.setBounds(new Rectangle(225, 93, 63, 22));
 		jRadioButtonFunction110FieldCaptionOptionValue.setEnabled(false);
 		jRadioButtonFunction110FieldCaptionOptionValue.addChangeListener(new Editor_jRadioButtonFunction110FieldCaptionOption_changeAdapter(this));
 		buttonGroupFunction110FieldCaptionOption.add(jRadioButtonFunction110FieldCaptionOptionName);
 		buttonGroupFunction110FieldCaptionOption.add(jRadioButtonFunction110FieldCaptionOptionValue);
 		jTextFieldFunction110FieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110FieldCaptionOptionValue.setBounds(new Rectangle(300, 65, 150, 22));
+		jTextFieldFunction110FieldCaptionOptionValue.setBounds(new Rectangle(300, 93, 150, 22));
 		jTextFieldFunction110FieldCaptionOptionValue.setEnabled(false);
 		jTextFieldFunction110FieldCaptionOptionValue.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
 		jLabelFunction110ColumnOnList.setEnabled(false);
@@ -6388,18 +6496,18 @@ public class Editor extends JFrame {
 		jLabelFunction110ColumnOnList.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction110ColumnOnList.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110ColumnOnList.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction110ColumnOnList.setBounds(new Rectangle(11, 96, 96, 15));
+		jLabelFunction110ColumnOnList.setBounds(new Rectangle(11, 124, 96, 15));
 		jRadioButtonFunction110ColumnOnBothList.setText(res.getString("Both"));
 		jRadioButtonFunction110ColumnOnBothList.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110ColumnOnBothList.setBounds(new Rectangle(115, 93, 100, 22));
+		jRadioButtonFunction110ColumnOnBothList.setBounds(new Rectangle(115, 121, 100, 22));
 		jRadioButtonFunction110ColumnOnBothList.setEnabled(false);
 		jRadioButtonFunction110ColumnOnList1.setText(res.getString("SelectList"));
 		jRadioButtonFunction110ColumnOnList1.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110ColumnOnList1.setBounds(new Rectangle(225, 93, 100, 22));
+		jRadioButtonFunction110ColumnOnList1.setBounds(new Rectangle(225, 121, 100, 22));
 		jRadioButtonFunction110ColumnOnList1.setEnabled(false);
 		jRadioButtonFunction110ColumnOnList2.setText(res.getString("UpdateList"));
 		jRadioButtonFunction110ColumnOnList2.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110ColumnOnList2.setBounds(new Rectangle(335, 93, 100, 22));
+		jRadioButtonFunction110ColumnOnList2.setBounds(new Rectangle(335, 121, 100, 22));
 		jRadioButtonFunction110ColumnOnList2.setEnabled(false);
 		buttonGroupFunction110ColumnOnList.add(jRadioButtonFunction110ColumnOnBothList);
 		buttonGroupFunction110ColumnOnList.add(jRadioButtonFunction110ColumnOnList1);
@@ -6408,37 +6516,37 @@ public class Editor extends JFrame {
 		jLabelFunction110FieldPromptOption.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction110FieldPromptOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110FieldPromptOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction110FieldPromptOption.setBounds(new Rectangle(11, 124, 96, 15));
+		jLabelFunction110FieldPromptOption.setBounds(new Rectangle(11, 152, 96, 15));
 		jLabelFunction110FieldPromptOption.setEnabled(false);
 		jRadioButtonFunction110FieldPromptOptionNone.setText(res.getString("None"));
 		jRadioButtonFunction110FieldPromptOptionNone.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FieldPromptOptionNone.setBounds(new Rectangle(115, 121, 100, 22));
+		jRadioButtonFunction110FieldPromptOptionNone.setBounds(new Rectangle(115, 149, 100, 22));
 		jRadioButtonFunction110FieldPromptOptionNone.setEnabled(false);
 		jRadioButtonFunction110FieldPromptOptionNone.addChangeListener(new Editor_jRadioButtonFunction110FieldPromptOption_changeAdapter(this));
 		jRadioButtonFunction110FieldPromptOptionList.setText(res.getString("ListBox"));
 		jRadioButtonFunction110FieldPromptOptionList.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FieldPromptOptionList.setBounds(new Rectangle(225, 121, 110, 22));
+		jRadioButtonFunction110FieldPromptOptionList.setBounds(new Rectangle(225, 149, 110, 22));
 		jRadioButtonFunction110FieldPromptOptionList.setEnabled(false);
 		jRadioButtonFunction110FieldPromptOptionList.addChangeListener(new Editor_jRadioButtonFunction110FieldPromptOption_changeAdapter(this));
 		jRadioButtonFunction110FieldPromptOptionCall.setText(res.getString("CallPromptFunction"));
 		jRadioButtonFunction110FieldPromptOptionCall.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FieldPromptOptionCall.setBounds(new Rectangle(335, 121, 78, 22));
+		jRadioButtonFunction110FieldPromptOptionCall.setBounds(new Rectangle(335, 149, 78, 22));
 		jRadioButtonFunction110FieldPromptOptionCall.setEnabled(false);
 		jRadioButtonFunction110FieldPromptOptionCall.addChangeListener(new Editor_jRadioButtonFunction110FieldPromptOption_changeAdapter(this));
 		buttonGroupFunction110FieldPromptOption.add(jRadioButtonFunction110FieldPromptOptionNone);
 		buttonGroupFunction110FieldPromptOption.add(jRadioButtonFunction110FieldPromptOptionList);
 		buttonGroupFunction110FieldPromptOption.add(jRadioButtonFunction110FieldPromptOptionCall);
 		jTextFieldFunction110FieldPromptOptionCallFunctionID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110FieldPromptOptionCallFunctionID.setBounds(new Rectangle(415, 121, 80, 22));
+		jTextFieldFunction110FieldPromptOptionCallFunctionID.setBounds(new Rectangle(415, 149, 80, 22));
 		jTextFieldFunction110FieldPromptOptionCallFunctionID.setEnabled(false);
 		jTextFieldFunction110FieldPromptOptionCallFunctionID.addKeyListener(new Editor_jTextFieldFunction110FieldPromptOptionCallFunctionID_keyAdapter(this));
 		jTextFieldFunction110FieldPromptOptionCallFunctionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110FieldPromptOptionCallFunctionName.setBounds(new Rectangle(500, 121, 204, 22));
+		jTextFieldFunction110FieldPromptOptionCallFunctionName.setBounds(new Rectangle(500, 149, 204, 22));
 		jTextFieldFunction110FieldPromptOptionCallFunctionName.setEnabled(false);
 		jTextFieldFunction110FieldPromptOptionCallFunctionName.setEditable(false);
 		jButtonFunction110FieldPromptOptionCallFunctionExchange.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jButtonFunction110FieldPromptOptionCallFunctionExchange.setText(res.getString("ExchangeParms"));
-		jButtonFunction110FieldPromptOptionCallFunctionExchange.setBounds(new Rectangle(704, 120, 60, 23));
+		jButtonFunction110FieldPromptOptionCallFunctionExchange.setBounds(new Rectangle(704, 148, 60, 23));
 		jButtonFunction110FieldPromptOptionCallFunctionExchange.setEnabled(false);
 		jButtonFunction110FieldPromptOptionCallFunctionExchange.addActionListener(new Editor_jButtonToEditPromptOptionCallFunctionExchange_actionAdapter(this));
 		jPanelFunction110ColumnList.setLayout(null);
@@ -6451,8 +6559,15 @@ public class Editor extends JFrame {
 		jPanelFunction110ColumnList.add(jTextFieldFunction110Field);
 		jPanelFunction110ColumnList.add(jLabelFunction110FieldType);
 		jPanelFunction110ColumnList.add(jTextFieldFunction110FieldType);
+		//jPanelFunction110ColumnList.add(jLabelFunction110FieldWidth);
+		//jPanelFunction110ColumnList.add(jTextFieldFunction110FieldWidth);
+		jPanelFunction110ColumnList.add(jLabelFunction110FieldLayoutOption);
+		jPanelFunction110ColumnList.add(jRadioButtonFunction110FieldLayoutOptionVertical);
+		jPanelFunction110ColumnList.add(jRadioButtonFunction110FieldLayoutOptionHorizontal);
 		jPanelFunction110ColumnList.add(jLabelFunction110FieldWidth);
 		jPanelFunction110ColumnList.add(jTextFieldFunction110FieldWidth);
+		jPanelFunction110ColumnList.add(jLabelFunction110FieldRows);
+		jPanelFunction110ColumnList.add(jTextFieldFunction110FieldRows);
 		jPanelFunction110ColumnList.add(jLabelFunction110FieldCaptionOption);
 		jPanelFunction110ColumnList.add(jRadioButtonFunction110FieldCaptionOptionName);
 		jPanelFunction110ColumnList.add(jRadioButtonFunction110FieldCaptionOptionValue);
@@ -6825,22 +6940,22 @@ public class Editor extends JFrame {
 		jTextFieldFunction110BatchFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldFunction110BatchFieldType.setBounds(new Rectangle(514, 37, 250, 22));
 		jTextFieldFunction110BatchFieldType.setEditable(false);
-		jLabelFunction110BatchFieldDisplayOption.setEnabled(false);
-		jLabelFunction110BatchFieldDisplayOption.setText(res.getString("LayoutOption"));
-		jLabelFunction110BatchFieldDisplayOption.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelFunction110BatchFieldDisplayOption.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction110BatchFieldDisplayOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction110BatchFieldDisplayOption.setBounds(new Rectangle(11, 68, 96, 15));
-		jRadioButtonFunction110BatchFieldDisplayOptionVertical.setText(res.getString("LayoutVertical"));
-		jRadioButtonFunction110BatchFieldDisplayOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110BatchFieldDisplayOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
-		jRadioButtonFunction110BatchFieldDisplayOptionVertical.setEnabled(false);
-		jRadioButtonFunction110BatchFieldDisplayOptionHorizontal.setText(res.getString("LayoutHorizontal"));
-		jRadioButtonFunction110BatchFieldDisplayOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110BatchFieldDisplayOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
-		jRadioButtonFunction110BatchFieldDisplayOptionHorizontal.setEnabled(false);
-		buttonGroupFunction110BatchFieldDisplayOption.add(jRadioButtonFunction110BatchFieldDisplayOptionVertical);
-		buttonGroupFunction110BatchFieldDisplayOption.add(jRadioButtonFunction110BatchFieldDisplayOptionHorizontal);
+		jLabelFunction110BatchFieldLayoutOption.setEnabled(false);
+		jLabelFunction110BatchFieldLayoutOption.setText(res.getString("LayoutOption"));
+		jLabelFunction110BatchFieldLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110BatchFieldLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction110BatchFieldLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction110BatchFieldLayoutOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jRadioButtonFunction110BatchFieldLayoutOptionVertical.setText(res.getString("LayoutVertical"));
+		jRadioButtonFunction110BatchFieldLayoutOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction110BatchFieldLayoutOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
+		jRadioButtonFunction110BatchFieldLayoutOptionVertical.setEnabled(false);
+		jRadioButtonFunction110BatchFieldLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
+		jRadioButtonFunction110BatchFieldLayoutOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction110BatchFieldLayoutOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
+		jRadioButtonFunction110BatchFieldLayoutOptionHorizontal.setEnabled(false);
+		buttonGroupFunction110BatchFieldLayoutOption.add(jRadioButtonFunction110BatchFieldLayoutOptionVertical);
+		buttonGroupFunction110BatchFieldLayoutOption.add(jRadioButtonFunction110BatchFieldLayoutOptionHorizontal);
 		jLabelFunction110BatchFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction110BatchFieldWidth.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110BatchFieldWidth.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -6959,9 +7074,9 @@ public class Editor extends JFrame {
 		jPanelFunction110BatchFieldList.add(jTextFieldFunction110BatchField);
 		jPanelFunction110BatchFieldList.add(jLabelFunction110BatchFieldType);
 		jPanelFunction110BatchFieldList.add(jTextFieldFunction110BatchFieldType);
-		jPanelFunction110BatchFieldList.add(jLabelFunction110BatchFieldDisplayOption);
-		jPanelFunction110BatchFieldList.add(jRadioButtonFunction110BatchFieldDisplayOptionVertical);
-		jPanelFunction110BatchFieldList.add(jRadioButtonFunction110BatchFieldDisplayOptionHorizontal);
+		jPanelFunction110BatchFieldList.add(jLabelFunction110BatchFieldLayoutOption);
+		jPanelFunction110BatchFieldList.add(jRadioButtonFunction110BatchFieldLayoutOptionVertical);
+		jPanelFunction110BatchFieldList.add(jRadioButtonFunction110BatchFieldLayoutOptionHorizontal);
 		jPanelFunction110BatchFieldList.add(jLabelFunction110BatchFieldWidth);
 		jPanelFunction110BatchFieldList.add(jTextFieldFunction110BatchFieldWidth);
 		jPanelFunction110BatchFieldList.add(jLabelFunction110BatchFieldRows);
@@ -7357,22 +7472,22 @@ public class Editor extends JFrame {
 		jTextFieldFunction200FieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldFunction200FieldType.setBounds(new Rectangle(514, 37, 250, 22));
 		jTextFieldFunction200FieldType.setEditable(false);
-		jLabelFunction200FieldDisplayOption.setEnabled(false);
-		jLabelFunction200FieldDisplayOption.setText(res.getString("LayoutOption"));
-		jLabelFunction200FieldDisplayOption.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelFunction200FieldDisplayOption.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction200FieldDisplayOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction200FieldDisplayOption.setBounds(new Rectangle(11, 68, 96, 15));
-		jRadioButtonFunction200FieldDisplayOptionVertical.setText(res.getString("LayoutVertical"));
-		jRadioButtonFunction200FieldDisplayOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction200FieldDisplayOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
-		jRadioButtonFunction200FieldDisplayOptionVertical.setEnabled(false);
-		jRadioButtonFunction200FieldDisplayOptionHorizontal.setText(res.getString("LayoutHorizontal"));
-		jRadioButtonFunction200FieldDisplayOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction200FieldDisplayOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
-		jRadioButtonFunction200FieldDisplayOptionHorizontal.setEnabled(false);
-		buttonGroupFunction200FieldDisplayOption.add(jRadioButtonFunction200FieldDisplayOptionVertical);
-		buttonGroupFunction200FieldDisplayOption.add(jRadioButtonFunction200FieldDisplayOptionHorizontal);
+		jLabelFunction200FieldLayoutOption.setEnabled(false);
+		jLabelFunction200FieldLayoutOption.setText(res.getString("LayoutOption"));
+		jLabelFunction200FieldLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200FieldLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction200FieldLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction200FieldLayoutOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jRadioButtonFunction200FieldLayoutOptionVertical.setText(res.getString("LayoutVertical"));
+		jRadioButtonFunction200FieldLayoutOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction200FieldLayoutOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
+		jRadioButtonFunction200FieldLayoutOptionVertical.setEnabled(false);
+		jRadioButtonFunction200FieldLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
+		jRadioButtonFunction200FieldLayoutOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction200FieldLayoutOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
+		jRadioButtonFunction200FieldLayoutOptionHorizontal.setEnabled(false);
+		buttonGroupFunction200FieldLayoutOption.add(jRadioButtonFunction200FieldLayoutOptionVertical);
+		buttonGroupFunction200FieldLayoutOption.add(jRadioButtonFunction200FieldLayoutOptionHorizontal);
 		jLabelFunction200FieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction200FieldWidth.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200FieldWidth.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -7492,9 +7607,9 @@ public class Editor extends JFrame {
 		jPanelFunction200FieldList.add(jTextFieldFunction200Field);
 		jPanelFunction200FieldList.add(jLabelFunction200FieldType);
 		jPanelFunction200FieldList.add(jTextFieldFunction200FieldType);
-		jPanelFunction200FieldList.add(jLabelFunction200FieldDisplayOption);
-		jPanelFunction200FieldList.add(jRadioButtonFunction200FieldDisplayOptionVertical);
-		jPanelFunction200FieldList.add(jRadioButtonFunction200FieldDisplayOptionHorizontal);
+		jPanelFunction200FieldList.add(jLabelFunction200FieldLayoutOption);
+		jPanelFunction200FieldList.add(jRadioButtonFunction200FieldLayoutOptionVertical);
+		jPanelFunction200FieldList.add(jRadioButtonFunction200FieldLayoutOptionHorizontal);
 		jPanelFunction200FieldList.add(jLabelFunction200FieldWidth);
 		jPanelFunction200FieldList.add(jTextFieldFunction200FieldWidth);
 		jPanelFunction200FieldList.add(jLabelFunction200FieldRows);
@@ -7641,22 +7756,22 @@ public class Editor extends JFrame {
 		jTextFieldFunction200TabFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldFunction200TabFieldType.setBounds(new Rectangle(514, 37, 250, 22));
 		jTextFieldFunction200TabFieldType.setEditable(false);
-		jLabelFunction200TabFieldDisplayOption.setEnabled(false);
-		jLabelFunction200TabFieldDisplayOption.setText(res.getString("LayoutOption"));
-		jLabelFunction200TabFieldDisplayOption.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelFunction200TabFieldDisplayOption.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction200TabFieldDisplayOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction200TabFieldDisplayOption.setBounds(new Rectangle(11, 68, 96, 15));
-		jRadioButtonFunction200TabFieldDisplayOptionVertical.setText(res.getString("LayoutVertical"));
-		jRadioButtonFunction200TabFieldDisplayOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction200TabFieldDisplayOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
-		jRadioButtonFunction200TabFieldDisplayOptionVertical.setEnabled(false);
-		jRadioButtonFunction200TabFieldDisplayOptionHorizontal.setText(res.getString("LayoutHorizontal"));
-		jRadioButtonFunction200TabFieldDisplayOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction200TabFieldDisplayOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
-		jRadioButtonFunction200TabFieldDisplayOptionHorizontal.setEnabled(false);
-		buttonGroupFunction200TabFieldDisplayOption.add(jRadioButtonFunction200TabFieldDisplayOptionVertical);
-		buttonGroupFunction200TabFieldDisplayOption.add(jRadioButtonFunction200TabFieldDisplayOptionHorizontal);
+		jLabelFunction200TabFieldLayoutOption.setEnabled(false);
+		jLabelFunction200TabFieldLayoutOption.setText(res.getString("LayoutOption"));
+		jLabelFunction200TabFieldLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200TabFieldLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction200TabFieldLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction200TabFieldLayoutOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jRadioButtonFunction200TabFieldLayoutOptionVertical.setText(res.getString("LayoutVertical"));
+		jRadioButtonFunction200TabFieldLayoutOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction200TabFieldLayoutOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
+		jRadioButtonFunction200TabFieldLayoutOptionVertical.setEnabled(false);
+		jRadioButtonFunction200TabFieldLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
+		jRadioButtonFunction200TabFieldLayoutOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction200TabFieldLayoutOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
+		jRadioButtonFunction200TabFieldLayoutOptionHorizontal.setEnabled(false);
+		buttonGroupFunction200TabFieldLayoutOption.add(jRadioButtonFunction200TabFieldLayoutOptionVertical);
+		buttonGroupFunction200TabFieldLayoutOption.add(jRadioButtonFunction200TabFieldLayoutOptionHorizontal);
 		jLabelFunction200TabFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction200TabFieldWidth.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200TabFieldWidth.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -7776,9 +7891,9 @@ public class Editor extends JFrame {
 		jPanelFunction200TabFieldList.add(jTextFieldFunction200TabField);
 		jPanelFunction200TabFieldList.add(jLabelFunction200TabFieldType);
 		jPanelFunction200TabFieldList.add(jTextFieldFunction200TabFieldType);
-		jPanelFunction200TabFieldList.add(jLabelFunction200TabFieldDisplayOption);
-		jPanelFunction200TabFieldList.add(jRadioButtonFunction200TabFieldDisplayOptionVertical);
-		jPanelFunction200TabFieldList.add(jRadioButtonFunction200TabFieldDisplayOptionHorizontal);
+		jPanelFunction200TabFieldList.add(jLabelFunction200TabFieldLayoutOption);
+		jPanelFunction200TabFieldList.add(jRadioButtonFunction200TabFieldLayoutOptionVertical);
+		jPanelFunction200TabFieldList.add(jRadioButtonFunction200TabFieldLayoutOptionHorizontal);
 		jPanelFunction200TabFieldList.add(jLabelFunction200TabFieldWidth);
 		jPanelFunction200TabFieldList.add(jTextFieldFunction200TabFieldWidth);
 		jPanelFunction200TabFieldList.add(jLabelFunction200TabFieldRows);
@@ -8134,22 +8249,22 @@ public class Editor extends JFrame {
 		jTextFieldFunction210FieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldFunction210FieldType.setBounds(new Rectangle(514, 37, 250, 22));
 		jTextFieldFunction210FieldType.setEditable(false);
-		jLabelFunction210FieldDisplayOption.setEnabled(false);
-		jLabelFunction210FieldDisplayOption.setText(res.getString("LayoutOption"));
-		jLabelFunction210FieldDisplayOption.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelFunction210FieldDisplayOption.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction210FieldDisplayOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction210FieldDisplayOption.setBounds(new Rectangle(11, 68, 96, 15));
-		jRadioButtonFunction210FieldDisplayOptionVertical.setText(res.getString("LayoutVertical"));
-		jRadioButtonFunction210FieldDisplayOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction210FieldDisplayOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
-		jRadioButtonFunction210FieldDisplayOptionVertical.setEnabled(false);
-		jRadioButtonFunction210FieldDisplayOptionHorizontal.setText(res.getString("LayoutHorizontal"));
-		jRadioButtonFunction210FieldDisplayOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction210FieldDisplayOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
-		jRadioButtonFunction210FieldDisplayOptionHorizontal.setEnabled(false);
-		buttonGroupFunction210FieldDisplayOption.add(jRadioButtonFunction210FieldDisplayOptionVertical);
-		buttonGroupFunction210FieldDisplayOption.add(jRadioButtonFunction210FieldDisplayOptionHorizontal);
+		jLabelFunction210FieldLayoutOption.setEnabled(false);
+		jLabelFunction210FieldLayoutOption.setText(res.getString("LayoutOption"));
+		jLabelFunction210FieldLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction210FieldLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction210FieldLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction210FieldLayoutOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jRadioButtonFunction210FieldLayoutOptionVertical.setText(res.getString("LayoutVertical"));
+		jRadioButtonFunction210FieldLayoutOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction210FieldLayoutOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
+		jRadioButtonFunction210FieldLayoutOptionVertical.setEnabled(false);
+		jRadioButtonFunction210FieldLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
+		jRadioButtonFunction210FieldLayoutOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction210FieldLayoutOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
+		jRadioButtonFunction210FieldLayoutOptionHorizontal.setEnabled(false);
+		buttonGroupFunction210FieldLayoutOption.add(jRadioButtonFunction210FieldLayoutOptionVertical);
+		buttonGroupFunction210FieldLayoutOption.add(jRadioButtonFunction210FieldLayoutOptionHorizontal);
 		jLabelFunction210FieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction210FieldWidth.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction210FieldWidth.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -8264,9 +8379,9 @@ public class Editor extends JFrame {
 		jPanelFunction210FieldList.add(jTextFieldFunction210Field);
 		jPanelFunction210FieldList.add(jLabelFunction210FieldType);
 		jPanelFunction210FieldList.add(jTextFieldFunction210FieldType);
-		jPanelFunction210FieldList.add(jLabelFunction210FieldDisplayOption);
-		jPanelFunction210FieldList.add(jRadioButtonFunction210FieldDisplayOptionVertical);
-		jPanelFunction210FieldList.add(jRadioButtonFunction210FieldDisplayOptionHorizontal);
+		jPanelFunction210FieldList.add(jLabelFunction210FieldLayoutOption);
+		jPanelFunction210FieldList.add(jRadioButtonFunction210FieldLayoutOptionVertical);
+		jPanelFunction210FieldList.add(jRadioButtonFunction210FieldLayoutOptionHorizontal);
 		jPanelFunction210FieldList.add(jLabelFunction210FieldWidth);
 		jPanelFunction210FieldList.add(jTextFieldFunction210FieldWidth);
 		jPanelFunction210FieldList.add(jLabelFunction210FieldRows);
@@ -9026,22 +9141,22 @@ public class Editor extends JFrame {
 		jTextFieldFunction300HeaderFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldFunction300HeaderFieldType.setBounds(new Rectangle(514, 37, 250, 22));
 		jTextFieldFunction300HeaderFieldType.setEditable(false);
-		jLabelFunction300HeaderFieldDisplayOption.setEnabled(false);
-		jLabelFunction300HeaderFieldDisplayOption.setText(res.getString("LayoutOption"));
-		jLabelFunction300HeaderFieldDisplayOption.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelFunction300HeaderFieldDisplayOption.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction300HeaderFieldDisplayOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction300HeaderFieldDisplayOption.setBounds(new Rectangle(11, 68, 96, 15));
-		jRadioButtonFunction300HeaderFieldDisplayOptionVertical.setText(res.getString("LayoutVertical"));
-		jRadioButtonFunction300HeaderFieldDisplayOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300HeaderFieldDisplayOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
-		jRadioButtonFunction300HeaderFieldDisplayOptionVertical.setEnabled(false);
-		jRadioButtonFunction300HeaderFieldDisplayOptionHorizontal.setText(res.getString("LayoutHorizontal"));
-		jRadioButtonFunction300HeaderFieldDisplayOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300HeaderFieldDisplayOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
-		jRadioButtonFunction300HeaderFieldDisplayOptionHorizontal.setEnabled(false);
-		buttonGroupFunction300HeaderFieldDisplayOption.add(jRadioButtonFunction300HeaderFieldDisplayOptionVertical);
-		buttonGroupFunction300HeaderFieldDisplayOption.add(jRadioButtonFunction300HeaderFieldDisplayOptionHorizontal);
+		jLabelFunction300HeaderFieldLayoutOption.setEnabled(false);
+		jLabelFunction300HeaderFieldLayoutOption.setText(res.getString("LayoutOption"));
+		jLabelFunction300HeaderFieldLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300HeaderFieldLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction300HeaderFieldLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction300HeaderFieldLayoutOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jRadioButtonFunction300HeaderFieldLayoutOptionVertical.setText(res.getString("LayoutVertical"));
+		jRadioButtonFunction300HeaderFieldLayoutOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction300HeaderFieldLayoutOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
+		jRadioButtonFunction300HeaderFieldLayoutOptionVertical.setEnabled(false);
+		jRadioButtonFunction300HeaderFieldLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
+		jRadioButtonFunction300HeaderFieldLayoutOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction300HeaderFieldLayoutOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
+		jRadioButtonFunction300HeaderFieldLayoutOptionHorizontal.setEnabled(false);
+		buttonGroupFunction300HeaderFieldLayoutOption.add(jRadioButtonFunction300HeaderFieldLayoutOptionVertical);
+		buttonGroupFunction300HeaderFieldLayoutOption.add(jRadioButtonFunction300HeaderFieldLayoutOptionHorizontal);
 		jLabelFunction300HeaderFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction300HeaderFieldWidth.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300HeaderFieldWidth.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -9123,9 +9238,9 @@ public class Editor extends JFrame {
 		jPanelFunction300HeaderFieldList.add(jTextFieldFunction300HeaderField);
 		jPanelFunction300HeaderFieldList.add(jLabelFunction300HeaderFieldType);
 		jPanelFunction300HeaderFieldList.add(jTextFieldFunction300HeaderFieldType);
-		jPanelFunction300HeaderFieldList.add(jLabelFunction300HeaderFieldDisplayOption);
-		jPanelFunction300HeaderFieldList.add(jRadioButtonFunction300HeaderFieldDisplayOptionVertical);
-		jPanelFunction300HeaderFieldList.add(jRadioButtonFunction300HeaderFieldDisplayOptionHorizontal);
+		jPanelFunction300HeaderFieldList.add(jLabelFunction300HeaderFieldLayoutOption);
+		jPanelFunction300HeaderFieldList.add(jRadioButtonFunction300HeaderFieldLayoutOptionVertical);
+		jPanelFunction300HeaderFieldList.add(jRadioButtonFunction300HeaderFieldLayoutOptionHorizontal);
 		jPanelFunction300HeaderFieldList.add(jLabelFunction300HeaderFieldWidth);
 		jPanelFunction300HeaderFieldList.add(jTextFieldFunction300HeaderFieldWidth);
 		jPanelFunction300HeaderFieldList.add(jLabelFunction300HeaderFieldRows);
@@ -9330,7 +9445,8 @@ public class Editor extends JFrame {
 		jSplitPaneFunction300DetailFieldList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction300DetailFieldList.add(jScrollPaneFunction300DetailFieldList, JSplitPane.TOP);
 		jSplitPaneFunction300DetailFieldList.add(jPanelFunction300DetailFieldList, JSplitPane.BOTTOM);
-		jSplitPaneFunction300DetailFieldList.setDividerLocation(screenHeight - wrkForDividerLocation - 568);
+		//jSplitPaneFunction300DetailFieldList.setDividerLocation(screenHeight - wrkForDividerLocation - 568);
+		jSplitPaneFunction300DetailFieldList.setDividerLocation(screenHeight - wrkForDividerLocation - 596);
 		jLabelFunction300DetailTable.setEnabled(false);
 		jLabelFunction300DetailTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction300DetailTable.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -9367,6 +9483,32 @@ public class Editor extends JFrame {
 		jTextFieldFunction300DetailFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldFunction300DetailFieldType.setBounds(new Rectangle(514, 37, 250, 22));
 		jTextFieldFunction300DetailFieldType.setEditable(false);
+//		jLabelFunction300DetailFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+//		jLabelFunction300DetailFieldWidth.setHorizontalAlignment(SwingConstants.RIGHT);
+//		jLabelFunction300DetailFieldWidth.setHorizontalTextPosition(SwingConstants.LEADING);
+//		jLabelFunction300DetailFieldWidth.setText(res.getString("FieldWidth"));
+//		jLabelFunction300DetailFieldWidth.setBounds(new Rectangle(430, 68, 76, 15));
+//		jLabelFunction300DetailFieldWidth.setEnabled(false);
+//		jTextFieldFunction300DetailFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+//		jTextFieldFunction300DetailFieldWidth.setBounds(new Rectangle(514, 65, 45, 22));
+//		jTextFieldFunction300DetailFieldWidth.setEnabled(false);
+//		jTextFieldFunction300DetailFieldWidth.setText("");
+		jLabelFunction300DetailFieldLayoutOption.setEnabled(false);
+		jLabelFunction300DetailFieldLayoutOption.setText(res.getString("LayoutOption"));
+		jLabelFunction300DetailFieldLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailFieldLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction300DetailFieldLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction300DetailFieldLayoutOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jRadioButtonFunction300DetailFieldLayoutOptionVertical.setText(res.getString("LayoutVertical"));
+		jRadioButtonFunction300DetailFieldLayoutOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction300DetailFieldLayoutOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
+		jRadioButtonFunction300DetailFieldLayoutOptionVertical.setEnabled(false);
+		jRadioButtonFunction300DetailFieldLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
+		jRadioButtonFunction300DetailFieldLayoutOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction300DetailFieldLayoutOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
+		jRadioButtonFunction300DetailFieldLayoutOptionHorizontal.setEnabled(false);
+		buttonGroupFunction300DetailFieldLayoutOption.add(jRadioButtonFunction300DetailFieldLayoutOptionVertical);
+		buttonGroupFunction300DetailFieldLayoutOption.add(jRadioButtonFunction300DetailFieldLayoutOptionHorizontal);
 		jLabelFunction300DetailFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction300DetailFieldWidth.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailFieldWidth.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -9377,26 +9519,36 @@ public class Editor extends JFrame {
 		jTextFieldFunction300DetailFieldWidth.setBounds(new Rectangle(514, 65, 45, 22));
 		jTextFieldFunction300DetailFieldWidth.setEnabled(false);
 		jTextFieldFunction300DetailFieldWidth.setText("");
+		jLabelFunction300DetailFieldRows.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailFieldRows.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction300DetailFieldRows.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction300DetailFieldRows.setText(res.getString("FieldRows"));
+		jLabelFunction300DetailFieldRows.setBounds(new Rectangle(564, 68, 45, 15));
+		jLabelFunction300DetailFieldRows.setEnabled(false);
+		jTextFieldFunction300DetailFieldRows.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldFunction300DetailFieldRows.setBounds(new Rectangle(614, 65, 45, 22));
+		jTextFieldFunction300DetailFieldRows.setText("");
+		jTextFieldFunction300DetailFieldRows.setEnabled(false);
 		jLabelFunction300DetailFieldCaptionOption.setEnabled(false);
 		jLabelFunction300DetailFieldCaptionOption.setText(res.getString("Caption"));
 		jLabelFunction300DetailFieldCaptionOption.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction300DetailFieldCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailFieldCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction300DetailFieldCaptionOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction300DetailFieldCaptionOption.setBounds(new Rectangle(11, 96, 96, 15));
 		jRadioButtonFunction300DetailFieldCaptionOptionName.setText(res.getString("FieldName"));
 		jRadioButtonFunction300DetailFieldCaptionOptionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFieldCaptionOptionName.setBounds(new Rectangle(115, 65, 100, 22));
+		jRadioButtonFunction300DetailFieldCaptionOptionName.setBounds(new Rectangle(115, 93, 100, 22));
 		jRadioButtonFunction300DetailFieldCaptionOptionName.setEnabled(false);
 		jRadioButtonFunction300DetailFieldCaptionOptionName.addChangeListener(new Editor_jRadioButtonFunction300DetailFieldCaptionOption_changeAdapter(this));
 		jRadioButtonFunction300DetailFieldCaptionOptionValue.setText(res.getString("ValueSpecified"));
 		jRadioButtonFunction300DetailFieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFieldCaptionOptionValue.setBounds(new Rectangle(225, 65, 63, 22));
+		jRadioButtonFunction300DetailFieldCaptionOptionValue.setBounds(new Rectangle(225, 93, 63, 22));
 		jRadioButtonFunction300DetailFieldCaptionOptionValue.setEnabled(false);
 		jRadioButtonFunction300DetailFieldCaptionOptionValue.addChangeListener(new Editor_jRadioButtonFunction300DetailFieldCaptionOption_changeAdapter(this));
 		buttonGroupFunction300DetailFieldCaptionOption.add(jRadioButtonFunction300DetailFieldCaptionOptionName);
 		buttonGroupFunction300DetailFieldCaptionOption.add(jRadioButtonFunction300DetailFieldCaptionOptionValue);
 		jTextFieldFunction300DetailFieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailFieldCaptionOptionValue.setBounds(new Rectangle(300, 65, 150, 22));
+		jTextFieldFunction300DetailFieldCaptionOptionValue.setBounds(new Rectangle(300, 93, 150, 22));
 		jTextFieldFunction300DetailFieldCaptionOptionValue.setEnabled(false);
 		jTextFieldFunction300DetailFieldCaptionOptionValue.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
 		jPanelFunction300DetailFieldList.setLayout(null);
@@ -9409,8 +9561,15 @@ public class Editor extends JFrame {
 		jPanelFunction300DetailFieldList.add(jTextFieldFunction300DetailField);
 		jPanelFunction300DetailFieldList.add(jLabelFunction300DetailFieldType);
 		jPanelFunction300DetailFieldList.add(jTextFieldFunction300DetailFieldType);
+		//jPanelFunction300DetailFieldList.add(jLabelFunction300DetailFieldWidth);
+		//jPanelFunction300DetailFieldList.add(jTextFieldFunction300DetailFieldWidth);
+		jPanelFunction300DetailFieldList.add(jLabelFunction300DetailFieldLayoutOption);
+		jPanelFunction300DetailFieldList.add(jRadioButtonFunction300DetailFieldLayoutOptionVertical);
+		jPanelFunction300DetailFieldList.add(jRadioButtonFunction300DetailFieldLayoutOptionHorizontal);
 		jPanelFunction300DetailFieldList.add(jLabelFunction300DetailFieldWidth);
 		jPanelFunction300DetailFieldList.add(jTextFieldFunction300DetailFieldWidth);
+		jPanelFunction300DetailFieldList.add(jLabelFunction300DetailFieldRows);
+		jPanelFunction300DetailFieldList.add(jTextFieldFunction300DetailFieldRows);
 		jPanelFunction300DetailFieldList.add(jLabelFunction300DetailFieldCaptionOption);
 		jPanelFunction300DetailFieldList.add(jRadioButtonFunction300DetailFieldCaptionOptionName);
 		jPanelFunction300DetailFieldList.add(jRadioButtonFunction300DetailFieldCaptionOptionValue);
@@ -10029,22 +10188,22 @@ public class Editor extends JFrame {
 		jTextFieldFunction310HeaderFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldFunction310HeaderFieldType.setBounds(new Rectangle(514, 37, 250, 22));
 		jTextFieldFunction310HeaderFieldType.setEditable(false);
-		jLabelFunction310HeaderFieldDisplayOption.setEnabled(false);
-		jLabelFunction310HeaderFieldDisplayOption.setText(res.getString("LayoutOption"));
-		jLabelFunction310HeaderFieldDisplayOption.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelFunction310HeaderFieldDisplayOption.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction310HeaderFieldDisplayOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310HeaderFieldDisplayOption.setBounds(new Rectangle(11, 68, 96, 15));
-		jRadioButtonFunction310HeaderFieldDisplayOptionVertical.setText(res.getString("LayoutVertical"));
-		jRadioButtonFunction310HeaderFieldDisplayOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310HeaderFieldDisplayOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
-		jRadioButtonFunction310HeaderFieldDisplayOptionVertical.setEnabled(false);
-		jRadioButtonFunction310HeaderFieldDisplayOptionHorizontal.setText(res.getString("LayoutHorizontal"));
-		jRadioButtonFunction310HeaderFieldDisplayOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310HeaderFieldDisplayOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
-		jRadioButtonFunction310HeaderFieldDisplayOptionHorizontal.setEnabled(false);
-		buttonGroupFunction310HeaderFieldDisplayOption.add(jRadioButtonFunction310HeaderFieldDisplayOptionVertical);
-		buttonGroupFunction310HeaderFieldDisplayOption.add(jRadioButtonFunction310HeaderFieldDisplayOptionHorizontal);
+		jLabelFunction310HeaderFieldLayoutOption.setEnabled(false);
+		jLabelFunction310HeaderFieldLayoutOption.setText(res.getString("LayoutOption"));
+		jLabelFunction310HeaderFieldLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310HeaderFieldLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction310HeaderFieldLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction310HeaderFieldLayoutOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jRadioButtonFunction310HeaderFieldLayoutOptionVertical.setText(res.getString("LayoutVertical"));
+		jRadioButtonFunction310HeaderFieldLayoutOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction310HeaderFieldLayoutOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
+		jRadioButtonFunction310HeaderFieldLayoutOptionVertical.setEnabled(false);
+		jRadioButtonFunction310HeaderFieldLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
+		jRadioButtonFunction310HeaderFieldLayoutOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction310HeaderFieldLayoutOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
+		jRadioButtonFunction310HeaderFieldLayoutOptionHorizontal.setEnabled(false);
+		buttonGroupFunction310HeaderFieldLayoutOption.add(jRadioButtonFunction310HeaderFieldLayoutOptionVertical);
+		buttonGroupFunction310HeaderFieldLayoutOption.add(jRadioButtonFunction310HeaderFieldLayoutOptionHorizontal);
 		jLabelFunction310HeaderFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction310HeaderFieldWidth.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310HeaderFieldWidth.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -10163,9 +10322,9 @@ public class Editor extends JFrame {
 		jPanelFunction310HeaderFieldList.add(jTextFieldFunction310HeaderField);
 		jPanelFunction310HeaderFieldList.add(jLabelFunction310HeaderFieldType);
 		jPanelFunction310HeaderFieldList.add(jTextFieldFunction310HeaderFieldType);
-		jPanelFunction310HeaderFieldList.add(jLabelFunction310HeaderFieldDisplayOption);
-		jPanelFunction310HeaderFieldList.add(jRadioButtonFunction310HeaderFieldDisplayOptionVertical);
-		jPanelFunction310HeaderFieldList.add(jRadioButtonFunction310HeaderFieldDisplayOptionHorizontal);
+		jPanelFunction310HeaderFieldList.add(jLabelFunction310HeaderFieldLayoutOption);
+		jPanelFunction310HeaderFieldList.add(jRadioButtonFunction310HeaderFieldLayoutOptionVertical);
+		jPanelFunction310HeaderFieldList.add(jRadioButtonFunction310HeaderFieldLayoutOptionHorizontal);
 		jPanelFunction310HeaderFieldList.add(jLabelFunction310HeaderFieldWidth);
 		jPanelFunction310HeaderFieldList.add(jTextFieldFunction310HeaderFieldWidth);
 		jPanelFunction310HeaderFieldList.add(jLabelFunction310HeaderFieldRows);
@@ -10226,7 +10385,8 @@ public class Editor extends JFrame {
 		jSplitPaneFunction310DetailFieldList.add(jPanelFunction310DetailFieldList, JSplitPane.BOTTOM);
 		jSplitPaneFunction310DetailFieldList.setDividerLocation(286);
 		//if (screenHeight > 768) {
-			jSplitPaneFunction310DetailFieldList.setDividerLocation(screenHeight - 492);
+			//jSplitPaneFunction310DetailFieldList.setDividerLocation(screenHeight - 492);
+			jSplitPaneFunction310DetailFieldList.setDividerLocation(screenHeight - 520);
 		//} else {
 		//	jSplitPaneFunction310DetailFieldList.setDividerLocation(286);
 		//}
@@ -10266,6 +10426,32 @@ public class Editor extends JFrame {
 		jTextFieldFunction310DetailFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldFunction310DetailFieldType.setBounds(new Rectangle(514, 37, 250, 22));
 		jTextFieldFunction310DetailFieldType.setEditable(false);
+//		jLabelFunction310DetailFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+//		jLabelFunction310DetailFieldWidth.setHorizontalAlignment(SwingConstants.RIGHT);
+//		jLabelFunction310DetailFieldWidth.setHorizontalTextPosition(SwingConstants.LEADING);
+//		jLabelFunction310DetailFieldWidth.setText(res.getString("FieldWidth"));
+//		jLabelFunction310DetailFieldWidth.setBounds(new Rectangle(430, 68, 76, 15));
+//		jLabelFunction310DetailFieldWidth.setEnabled(false);
+//		jTextFieldFunction310DetailFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+//		jTextFieldFunction310DetailFieldWidth.setBounds(new Rectangle(514, 65, 45, 22));
+//		jTextFieldFunction310DetailFieldWidth.setEnabled(false);
+//		jTextFieldFunction310DetailFieldWidth.setText("");
+		jLabelFunction310DetailFieldLayoutOption.setEnabled(false);
+		jLabelFunction310DetailFieldLayoutOption.setText(res.getString("LayoutOption"));
+		jLabelFunction310DetailFieldLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310DetailFieldLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction310DetailFieldLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction310DetailFieldLayoutOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jRadioButtonFunction310DetailFieldLayoutOptionVertical.setText(res.getString("LayoutVertical"));
+		jRadioButtonFunction310DetailFieldLayoutOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction310DetailFieldLayoutOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
+		jRadioButtonFunction310DetailFieldLayoutOptionVertical.setEnabled(false);
+		jRadioButtonFunction310DetailFieldLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
+		jRadioButtonFunction310DetailFieldLayoutOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction310DetailFieldLayoutOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
+		jRadioButtonFunction310DetailFieldLayoutOptionHorizontal.setEnabled(false);
+		buttonGroupFunction310DetailFieldLayoutOption.add(jRadioButtonFunction310DetailFieldLayoutOptionVertical);
+		buttonGroupFunction310DetailFieldLayoutOption.add(jRadioButtonFunction310DetailFieldLayoutOptionHorizontal);
 		jLabelFunction310DetailFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction310DetailFieldWidth.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310DetailFieldWidth.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -10276,63 +10462,73 @@ public class Editor extends JFrame {
 		jTextFieldFunction310DetailFieldWidth.setBounds(new Rectangle(514, 65, 45, 22));
 		jTextFieldFunction310DetailFieldWidth.setEnabled(false);
 		jTextFieldFunction310DetailFieldWidth.setText("");
+		jLabelFunction310DetailFieldRows.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310DetailFieldRows.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction310DetailFieldRows.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction310DetailFieldRows.setText(res.getString("FieldRows"));
+		jLabelFunction310DetailFieldRows.setBounds(new Rectangle(564, 68, 45, 15));
+		jLabelFunction310DetailFieldRows.setEnabled(false);
+		jTextFieldFunction310DetailFieldRows.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldFunction310DetailFieldRows.setBounds(new Rectangle(614, 65, 45, 22));
+		jTextFieldFunction310DetailFieldRows.setText("");
+		jTextFieldFunction310DetailFieldRows.setEnabled(false);
 		jLabelFunction310DetailFieldCaptionOption.setEnabled(false);
 		jLabelFunction310DetailFieldCaptionOption.setText(res.getString("Caption"));
 		jLabelFunction310DetailFieldCaptionOption.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction310DetailFieldCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310DetailFieldCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310DetailFieldCaptionOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction310DetailFieldCaptionOption.setBounds(new Rectangle(11, 96, 96, 15));
 		jRadioButtonFunction310DetailFieldCaptionOptionName.setText(res.getString("FieldName"));
 		jRadioButtonFunction310DetailFieldCaptionOptionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310DetailFieldCaptionOptionName.setBounds(new Rectangle(115, 65, 100, 22));
+		jRadioButtonFunction310DetailFieldCaptionOptionName.setBounds(new Rectangle(115, 93, 100, 22));
 		jRadioButtonFunction310DetailFieldCaptionOptionName.setEnabled(false);
 		jRadioButtonFunction310DetailFieldCaptionOptionName.addChangeListener(new Editor_jRadioButtonFunction310DetailFieldCaptionOption_changeAdapter(this));
 		jRadioButtonFunction310DetailFieldCaptionOptionValue.setText(res.getString("ValueSpecified"));
 		jRadioButtonFunction310DetailFieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310DetailFieldCaptionOptionValue.setBounds(new Rectangle(225, 65, 63, 22));
+		jRadioButtonFunction310DetailFieldCaptionOptionValue.setBounds(new Rectangle(225, 93, 63, 22));
 		jRadioButtonFunction310DetailFieldCaptionOptionValue.setEnabled(false);
 		jRadioButtonFunction310DetailFieldCaptionOptionValue.addChangeListener(new Editor_jRadioButtonFunction310DetailFieldCaptionOption_changeAdapter(this));
 		buttonGroupFunction310DetailFieldCaptionOption.add(jRadioButtonFunction310DetailFieldCaptionOptionName);
 		buttonGroupFunction310DetailFieldCaptionOption.add(jRadioButtonFunction310DetailFieldCaptionOptionValue);
 		jTextFieldFunction310DetailFieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310DetailFieldCaptionOptionValue.setBounds(new Rectangle(300, 65, 150, 22));
+		jTextFieldFunction310DetailFieldCaptionOptionValue.setBounds(new Rectangle(300, 93, 150, 22));
 		jTextFieldFunction310DetailFieldCaptionOptionValue.setEnabled(false);
 		jTextFieldFunction310DetailFieldCaptionOptionValue.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
 		jLabelFunction310DetailFieldPromptOption.setText(res.getString("Prompt"));
 		jLabelFunction310DetailFieldPromptOption.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction310DetailFieldPromptOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310DetailFieldPromptOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310DetailFieldPromptOption.setBounds(new Rectangle(11, 96, 96, 15));
+		jLabelFunction310DetailFieldPromptOption.setBounds(new Rectangle(11, 124, 96, 15));
 		jLabelFunction310DetailFieldPromptOption.setEnabled(false);
 		jRadioButtonFunction310DetailFieldPromptOptionNone.setText(res.getString("None"));
 		jRadioButtonFunction310DetailFieldPromptOptionNone.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310DetailFieldPromptOptionNone.setBounds(new Rectangle(115, 93, 100, 22));
+		jRadioButtonFunction310DetailFieldPromptOptionNone.setBounds(new Rectangle(115, 121, 100, 22));
 		jRadioButtonFunction310DetailFieldPromptOptionNone.setEnabled(false);
 		jRadioButtonFunction310DetailFieldPromptOptionNone.addChangeListener(new Editor_jRadioButtonFunction310DetailFieldPromptOption_changeAdapter(this));
 		jRadioButtonFunction310DetailFieldPromptOptionList.setText(res.getString("ListBox"));
 		jRadioButtonFunction310DetailFieldPromptOptionList.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310DetailFieldPromptOptionList.setBounds(new Rectangle(225, 93, 110, 22));
+		jRadioButtonFunction310DetailFieldPromptOptionList.setBounds(new Rectangle(225, 121, 110, 22));
 		jRadioButtonFunction310DetailFieldPromptOptionList.setEnabled(false);
 		jRadioButtonFunction310DetailFieldPromptOptionList.addChangeListener(new Editor_jRadioButtonFunction310DetailFieldPromptOption_changeAdapter(this));
 		jRadioButtonFunction310DetailFieldPromptOptionCall.setText(res.getString("CallPromptFunction"));
 		jRadioButtonFunction310DetailFieldPromptOptionCall.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310DetailFieldPromptOptionCall.setBounds(new Rectangle(335, 93, 78, 22));
+		jRadioButtonFunction310DetailFieldPromptOptionCall.setBounds(new Rectangle(335, 121, 78, 22));
 		jRadioButtonFunction310DetailFieldPromptOptionCall.setEnabled(false);
 		jRadioButtonFunction310DetailFieldPromptOptionCall.addChangeListener(new Editor_jRadioButtonFunction310DetailFieldPromptOption_changeAdapter(this));
 		buttonGroupFunction310DetailFieldPromptOption.add(jRadioButtonFunction310DetailFieldPromptOptionNone);
 		buttonGroupFunction310DetailFieldPromptOption.add(jRadioButtonFunction310DetailFieldPromptOptionList);
 		buttonGroupFunction310DetailFieldPromptOption.add(jRadioButtonFunction310DetailFieldPromptOptionCall);
 		jTextFieldFunction310DetailFieldPromptOptionCallFunctionID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310DetailFieldPromptOptionCallFunctionID.setBounds(new Rectangle(415, 93, 80, 22));
+		jTextFieldFunction310DetailFieldPromptOptionCallFunctionID.setBounds(new Rectangle(415, 121, 80, 22));
 		jTextFieldFunction310DetailFieldPromptOptionCallFunctionID.setEnabled(false);
 		jTextFieldFunction310DetailFieldPromptOptionCallFunctionID.addKeyListener(new Editor_jTextFieldFunction310DetailFieldPromptOptionCallFunctionID_keyAdapter(this));
 		jTextFieldFunction310DetailFieldPromptOptionCallFunctionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310DetailFieldPromptOptionCallFunctionName.setBounds(new Rectangle(500, 93, 204, 22));
+		jTextFieldFunction310DetailFieldPromptOptionCallFunctionName.setBounds(new Rectangle(500, 121, 204, 22));
 		jTextFieldFunction310DetailFieldPromptOptionCallFunctionName.setEnabled(false);
 		jTextFieldFunction310DetailFieldPromptOptionCallFunctionName.setEditable(false);
 		jButtonFunction310DetailFieldPromptOptionCallFunctionExchange.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jButtonFunction310DetailFieldPromptOptionCallFunctionExchange.setText(res.getString("ExchangeParms"));
-		jButtonFunction310DetailFieldPromptOptionCallFunctionExchange.setBounds(new Rectangle(704, 92, 60, 23));
+		jButtonFunction310DetailFieldPromptOptionCallFunctionExchange.setBounds(new Rectangle(704, 120, 60, 23));
 		jButtonFunction310DetailFieldPromptOptionCallFunctionExchange.setEnabled(false);
 		jButtonFunction310DetailFieldPromptOptionCallFunctionExchange.addActionListener(new Editor_jButtonToEditPromptOptionCallFunctionExchange_actionAdapter(this));
 		jPanelFunction310DetailFieldList.setLayout(null);
@@ -10345,8 +10541,15 @@ public class Editor extends JFrame {
 		jPanelFunction310DetailFieldList.add(jTextFieldFunction310DetailField);
 		jPanelFunction310DetailFieldList.add(jLabelFunction310DetailFieldType);
 		jPanelFunction310DetailFieldList.add(jTextFieldFunction310DetailFieldType);
+		//jPanelFunction310DetailFieldList.add(jLabelFunction310DetailFieldWidth);
+		//jPanelFunction310DetailFieldList.add(jTextFieldFunction310DetailFieldWidth);
+		jPanelFunction310DetailFieldList.add(jLabelFunction310DetailFieldLayoutOption);
+		jPanelFunction310DetailFieldList.add(jRadioButtonFunction310DetailFieldLayoutOptionVertical);
+		jPanelFunction310DetailFieldList.add(jRadioButtonFunction310DetailFieldLayoutOptionHorizontal);
 		jPanelFunction310DetailFieldList.add(jLabelFunction310DetailFieldWidth);
 		jPanelFunction310DetailFieldList.add(jTextFieldFunction310DetailFieldWidth);
+		jPanelFunction310DetailFieldList.add(jLabelFunction310DetailFieldRows);
+		jPanelFunction310DetailFieldList.add(jTextFieldFunction310DetailFieldRows);
 		jPanelFunction310DetailFieldList.add(jLabelFunction310DetailFieldCaptionOption);
 		jPanelFunction310DetailFieldList.add(jRadioButtonFunction310DetailFieldCaptionOptionName);
 		jPanelFunction310DetailFieldList.add(jRadioButtonFunction310DetailFieldCaptionOptionValue);
@@ -10470,7 +10673,8 @@ public class Editor extends JFrame {
 		jSplitPaneFunction310AddRowListColumnList.add(jScrollPaneFunction310AddRowListColumnList, JSplitPane.TOP);
 		jSplitPaneFunction310AddRowListColumnList.add(jPanelFunction310AddRowListColumnList, JSplitPane.BOTTOM);
 		//if (screenHeight > 768) {
-			jSplitPaneFunction310AddRowListColumnList.setDividerLocation(screenHeight - 642);
+			//jSplitPaneFunction310AddRowListColumnList.setDividerLocation(screenHeight - 642);
+			jSplitPaneFunction310AddRowListColumnList.setDividerLocation(screenHeight - 670);
 		//} else {
 		//	jSplitPaneFunction310AddRowListColumnList.setDividerLocation(136);
 		//}
@@ -10510,6 +10714,32 @@ public class Editor extends JFrame {
 		jTextFieldFunction310AddRowListColumnType.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldFunction310AddRowListColumnType.setBounds(new Rectangle(514, 37, 250, 22));
 		jTextFieldFunction310AddRowListColumnType.setEditable(false);
+//		jLabelFunction310AddRowListColumnWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+//		jLabelFunction310AddRowListColumnWidth.setHorizontalAlignment(SwingConstants.RIGHT);
+//		jLabelFunction310AddRowListColumnWidth.setHorizontalTextPosition(SwingConstants.LEADING);
+//		jLabelFunction310AddRowListColumnWidth.setText(res.getString("FieldWidth"));
+//		jLabelFunction310AddRowListColumnWidth.setBounds(new Rectangle(430, 68, 76, 15));
+//		jLabelFunction310AddRowListColumnWidth.setEnabled(false);
+//		jTextFieldFunction310AddRowListColumnWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+//		jTextFieldFunction310AddRowListColumnWidth.setBounds(new Rectangle(514, 65, 45, 22));
+//		jTextFieldFunction310AddRowListColumnWidth.setEnabled(false);
+//		jTextFieldFunction310AddRowListColumnWidth.setText("");
+		jLabelFunction310AddRowListColumnLayoutOption.setEnabled(false);
+		jLabelFunction310AddRowListColumnLayoutOption.setText(res.getString("LayoutOption"));
+		jLabelFunction310AddRowListColumnLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310AddRowListColumnLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction310AddRowListColumnLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction310AddRowListColumnLayoutOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jRadioButtonFunction310AddRowListColumnLayoutOptionVertical.setText(res.getString("LayoutVertical"));
+		jRadioButtonFunction310AddRowListColumnLayoutOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction310AddRowListColumnLayoutOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
+		jRadioButtonFunction310AddRowListColumnLayoutOptionVertical.setEnabled(false);
+		jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
+		jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
+		jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal.setEnabled(false);
+		buttonGroupFunction310AddRowListColumnLayoutOption.add(jRadioButtonFunction310AddRowListColumnLayoutOptionVertical);
+		buttonGroupFunction310AddRowListColumnLayoutOption.add(jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal);
 		jLabelFunction310AddRowListColumnWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction310AddRowListColumnWidth.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310AddRowListColumnWidth.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -10520,26 +10750,36 @@ public class Editor extends JFrame {
 		jTextFieldFunction310AddRowListColumnWidth.setBounds(new Rectangle(514, 65, 45, 22));
 		jTextFieldFunction310AddRowListColumnWidth.setEnabled(false);
 		jTextFieldFunction310AddRowListColumnWidth.setText("");
+		jLabelFunction310AddRowListColumnRows.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310AddRowListColumnRows.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction310AddRowListColumnRows.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction310AddRowListColumnRows.setText(res.getString("FieldRows"));
+		jLabelFunction310AddRowListColumnRows.setBounds(new Rectangle(564, 68, 45, 15));
+		jLabelFunction310AddRowListColumnRows.setEnabled(false);
+		jTextFieldFunction310AddRowListColumnRows.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldFunction310AddRowListColumnRows.setBounds(new Rectangle(614, 65, 45, 22));
+		jTextFieldFunction310AddRowListColumnRows.setText("");
+		jTextFieldFunction310AddRowListColumnRows.setEnabled(false);
 		jLabelFunction310AddRowListColumnCaptionOption.setEnabled(false);
 		jLabelFunction310AddRowListColumnCaptionOption.setText(res.getString("Caption"));
 		jLabelFunction310AddRowListColumnCaptionOption.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction310AddRowListColumnCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310AddRowListColumnCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310AddRowListColumnCaptionOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction310AddRowListColumnCaptionOption.setBounds(new Rectangle(11, 96, 96, 15));
 		jRadioButtonFunction310AddRowListColumnCaptionOptionName.setText(res.getString("FieldName"));
 		jRadioButtonFunction310AddRowListColumnCaptionOptionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310AddRowListColumnCaptionOptionName.setBounds(new Rectangle(115, 65, 100, 22));
+		jRadioButtonFunction310AddRowListColumnCaptionOptionName.setBounds(new Rectangle(115, 93, 100, 22));
 		jRadioButtonFunction310AddRowListColumnCaptionOptionName.setEnabled(false);
 		jRadioButtonFunction310AddRowListColumnCaptionOptionName.addChangeListener(new Editor_jRadioButtonFunction310AddRowListColumnCaptionOption_changeAdapter(this));
 		jRadioButtonFunction310AddRowListColumnCaptionOptionValue.setText(res.getString("ValueSpecified"));
 		jRadioButtonFunction310AddRowListColumnCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310AddRowListColumnCaptionOptionValue.setBounds(new Rectangle(225, 65, 63, 22));
+		jRadioButtonFunction310AddRowListColumnCaptionOptionValue.setBounds(new Rectangle(225, 93, 63, 22));
 		jRadioButtonFunction310AddRowListColumnCaptionOptionValue.setEnabled(false);
 		jRadioButtonFunction310AddRowListColumnCaptionOptionValue.addChangeListener(new Editor_jRadioButtonFunction310AddRowListColumnCaptionOption_changeAdapter(this));
 		buttonGroupFunction310AddRowListColumnCaptionOption.add(jRadioButtonFunction310AddRowListColumnCaptionOptionName);
 		buttonGroupFunction310AddRowListColumnCaptionOption.add(jRadioButtonFunction310AddRowListColumnCaptionOptionValue);
 		jTextFieldFunction310AddRowListColumnCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310AddRowListColumnCaptionOptionValue.setBounds(new Rectangle(300, 65, 150, 22));
+		jTextFieldFunction310AddRowListColumnCaptionOptionValue.setBounds(new Rectangle(300, 93, 150, 22));
 		jTextFieldFunction310AddRowListColumnCaptionOptionValue.setEnabled(false);
 		jTextFieldFunction310AddRowListColumnCaptionOptionValue.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
 		jPanelFunction310AddRowListColumnList.setLayout(null);
@@ -10551,8 +10791,15 @@ public class Editor extends JFrame {
 		jPanelFunction310AddRowListColumnList.add(jTextFieldFunction310AddRowListColumn);
 		jPanelFunction310AddRowListColumnList.add(jLabelFunction310AddRowListColumnType);
 		jPanelFunction310AddRowListColumnList.add(jTextFieldFunction310AddRowListColumnType);
+		//jPanelFunction310AddRowListColumnList.add(jLabelFunction310AddRowListColumnWidth);
+		//jPanelFunction310AddRowListColumnList.add(jTextFieldFunction310AddRowListColumnWidth);
+		jPanelFunction310AddRowListColumnList.add(jLabelFunction310AddRowListColumnLayoutOption);
+		jPanelFunction310AddRowListColumnList.add(jRadioButtonFunction310AddRowListColumnLayoutOptionVertical);
+		jPanelFunction310AddRowListColumnList.add(jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal);
 		jPanelFunction310AddRowListColumnList.add(jLabelFunction310AddRowListColumnWidth);
 		jPanelFunction310AddRowListColumnList.add(jTextFieldFunction310AddRowListColumnWidth);
+		jPanelFunction310AddRowListColumnList.add(jLabelFunction310AddRowListColumnRows);
+		jPanelFunction310AddRowListColumnList.add(jTextFieldFunction310AddRowListColumnRows);
 		jPanelFunction310AddRowListColumnList.add(jLabelFunction310AddRowListColumnCaptionOption);
 		jPanelFunction310AddRowListColumnList.add(jRadioButtonFunction310AddRowListColumnCaptionOptionName);
 		jPanelFunction310AddRowListColumnList.add(jRadioButtonFunction310AddRowListColumnCaptionOptionValue);
@@ -11381,10 +11628,6 @@ public class Editor extends JFrame {
 
 	public org.w3c.dom.Document getDomDocument() {
 		return domDocument;
-	}
-
-	String getFormatVersion() {
-		return FORMAT_VERSION;
 	}
 
 	public MainTreeNode getSubsystemListNode() {
@@ -12728,24 +12971,40 @@ public class Editor extends JFrame {
 		String result = "";
         String wrkStr = "";
         if (!options.equals("")) {
+        	//
 			ArrayList<String> optionList = getOptionList(options);
+			//
+			if (optionList.contains("VERTICAL")) {
+				result = res.getString("LayoutVertical");
+			}
 			//
         	wrkStr = getOptionValueWithKeyword(options, "WIDTH");
         	if (!wrkStr.equals("")) {
-        		result = res.getString("Width") + wrkStr + "pic";
+				if (!result.equals("")) {
+					result = result + res.getString("Comma");
+				}
+        		result = result + res.getString("Width") + wrkStr + "pic";
         	}
+			//
+			wrkStr = getOptionValueWithKeyword(options, "ROWS");
+			if (!wrkStr.equals("")) {
+				if (!result.equals("")) {
+					result = result + res.getString("Comma");
+				}
+				result = result + res.getString("Height") + wrkStr + res.getString("Lines");
+			}
         	//
         	wrkStr = getOptionValueWithKeyword(options, "CAPTION");
         	if (!wrkStr.equals("")) {
         		if (!result.equals("")) {
-        			result = result + "、";
+        			result = result + res.getString("Comma");
         		}
         		result = result + res.getString("Caption") + "\"" + wrkStr + "\"";
         	}
         	//
 			if (optionList.contains("PROMPT_LIST")) {
 				if (!result.equals("")) {
-					result = result + "、";
+        			result = result + res.getString("Comma");
 				}
 				result = result + res.getString("PrompterList");
 			}
@@ -12753,7 +13012,7 @@ public class Editor extends JFrame {
 			for (int i = 0; i < optionList.size(); i++) {
 				if (optionList.get(i).contains("PROMPT_CALL")) {
 					if (!result.equals("")) {
-						result = result + "、";
+	        			result = result + res.getString("Comma");
 					}
 					result = result + res.getString("PrompterFunction");
 					break;
@@ -12763,7 +13022,7 @@ public class Editor extends JFrame {
         	wrkStr = getOptionValueWithKeyword(options, "EDIT_CODE");
         	if (!wrkStr.equals("")) {
 				if (!result.equals("")) {
-					result = result + "、";
+        			result = result + res.getString("Comma");
 				}
         		result = result + res.getString("EditCode") + ":" + wrkStr;
         	}
@@ -12771,14 +13030,14 @@ public class Editor extends JFrame {
         	wrkStr = getOptionValueWithKeyword(options, "BARCODE_TYPE");
         	if (!wrkStr.equals("")) {
 				if (!result.equals("")) {
-					result = result + "、";
+        			result = result + res.getString("Comma");
 				}
         		result = result + res.getString("BarcodeType") + ":" + wrkStr;
         	}
         	//
 			if (optionList.contains("WITH_TOTAL")) {
 				if (!result.equals("")) {
-					result = result + "、";
+        			result = result + res.getString("Comma");
 				}
 				result = result + res.getString("WithTotal");
 			}
@@ -12981,144 +13240,6 @@ public class Editor extends JFrame {
 		//
 		return result;
 	}
-	
-//	private String getDescriptionsOfFunction200FieldOptions(String options) {
-//		String result = "";
-//		String wrkStr;
-//		//
-//		if (!options.equals("")) {
-//			//
-//			ArrayList<String> optionList = getOptionList(options);
-//			//
-//			wrkStr = getOptionValueWithKeyword(options, "HORIZONTAL");
-//			if (wrkStr.equals("")) {
-//				if (optionList.contains("HORIZONTAL")) {
-//					result = "水平配置";
-//				} else {
-//					wrkStr = getOptionValueWithKeyword(options, "VERTICAL");
-//					if (!wrkStr.equals("")) {
-//						result = "垂直配置(" + wrkStr + "pic)";
-//					}
-//				}
-//			} else {
-//				result = "水平配置(" + wrkStr + "pic)";
-//			}
-//			wrkStr = getOptionValueWithKeyword(options, "WIDTH");
-//			if (!wrkStr.equals("")) {
-//				if (!result.equals("")) {
-//					result = result + "、";
-//				}
-//				result = result + "幅" + wrkStr + "pic";
-//			}
-//			wrkStr = getOptionValueWithKeyword(options, "ROWS");
-//			if (!wrkStr.equals("")) {
-//				if (!result.equals("")) {
-//					result = result + "、";
-//				}
-//				result = result + "高さ" + wrkStr + "行";
-//			}
-//			if (optionList.contains("NO_CAPTION")) {
-//				if (!result.equals("")) {
-//					result = result + "、";
-//				}
-//				result = result + "キャプションなし";
-//			} else {
-//				wrkStr = getOptionValueWithKeyword(options, "CAPTION");
-//				if (!wrkStr.equals("")) {
-//					if (!result.equals("")) {
-//						result = result + "、";
-//					}
-//					result = result + "キャプション「" + wrkStr + "」";
-//				}
-//			}
-//			if (optionList.contains("PROMPT_LIST")) {
-//				if (!result.equals("")) {
-//					result = result + "、";
-//				}
-//				result = result + "リスト選択";
-//			}
-//			for (int i = 0; i < optionList.size(); i++) {
-//				if (optionList.get(i).contains("PROMPT_CALL")) {
-//					if (!result.equals("")) {
-//						result = result + "、";
-//					}
-//					result = result + "関数検索";
-//					break;
-//				}
-//			}
-//		}
-//		//
-//		return result;
-//	}
-//	
-//	private String getDescriptionsOfHeaderFieldOptions(String options) {
-//		String result = "";
-//		String wrkStr;
-//		//
-//		if (!options.equals("")) {
-//			//
-//	    	ArrayList<String> optionList = getOptionList(options);
-//	    	//
-//			wrkStr = getOptionValueWithKeyword(options, "HORIZONTAL");
-//			if (wrkStr.equals("")) {
-//				if (optionList.contains("HORIZONTAL")) {
-//					result = "水平配置";
-//				} else {
-//					wrkStr = getOptionValueWithKeyword(options, "VERTICAL");
-//					if (!wrkStr.equals("")) {
-//						result = "垂直配置(" + wrkStr + "pic)";
-//					}
-//				}
-//			} else {
-//				result = "水平配置(" + wrkStr + "pic)";
-//			}
-//			wrkStr = getOptionValueWithKeyword(options, "WIDTH");
-//			if (!wrkStr.equals("")) {
-//				if (!result.equals("")) {
-//					result = result + "、";
-//				}
-//				result = result + "幅" + wrkStr + "pic";
-//			}
-//			wrkStr = getOptionValueWithKeyword(options, "ROWS");
-//			if (!wrkStr.equals("")) {
-//				if (!result.equals("")) {
-//					result = result + "、";
-//				}
-//				result = result + "高さ" + wrkStr + "行";
-//			}
-//			if (optionList.contains("NO_CAPTION")) {
-//				if (!result.equals("")) {
-//					result = result + "、";
-//				}
-//				result = result + "キャプションなし";
-//			} else {
-//				wrkStr = getOptionValueWithKeyword(options, "CAPTION");
-//				if (!wrkStr.equals("")) {
-//					if (!result.equals("")) {
-//						result = result + "、";
-//					}
-//					result = result + "キャプション「" + wrkStr + "」";
-//				}
-//			}
-//			if (optionList.contains("PROMPT_LIST")) {
-//				if (!result.equals("")) {
-//					result = result + "、";
-//				}
-//				result = result + "リスト選択";
-//			}
-//			for (int i = 0; i < optionList.size(); i++) {
-//				if (optionList.get(i).contains("PROMPT_CALL")) {
-//					if (!result.equals("")) {
-//						result = result + "、";
-//					}
-//					result = result + "関数検索";
-//					break;
-//				}
-//			}
-//		}
-//		return result;
-//	}
-	
 	
 	MainTreeNode getSpecificXETreeNode(String type, String id1) {
 		int childCount1;
@@ -13342,7 +13463,7 @@ public class Editor extends JFrame {
 			}
 			//
 			//Setup frame title//
-			this.setTitle(APPLICATION_NAME + " - [" + currentFileName + "] - " + systemName + " " + systemVersion);
+			this.setTitle(DialogAbout.APPLICATION_NAME + " - [" + currentFileName + "] - " + systemName + " " + systemVersion);
 			//
 			//Reset cursor//
 		} finally {
@@ -15246,10 +15367,10 @@ public class Editor extends JFrame {
 					if (answer == null || answer.equals("")) {
 						ready = true;
 					} else {
-						if (answer.contains("_")) {
-							JOptionPane.showMessageDialog(null, res.getString("ErrorMessage105"));
-							ready = true;
-						} else {
+						//if (answer.contains("_")) {
+						//	JOptionPane.showMessageDialog(null, res.getString("ErrorMessage105"));
+						//	ready = true;
+						//} else {
 							answer = answer.toUpperCase();
 							duplicated = false;
 							for (int i = 0; i < subsystemListNode.getChildCount(); i++) {
@@ -15277,7 +15398,7 @@ public class Editor extends JFrame {
 								this.add(childNode);
 								ready = true;
 							}
-						}
+						//}
 					}
 				}
 			}
@@ -16006,7 +16127,7 @@ public class Editor extends JFrame {
 				if (element.getAttribute("Fields").equals("")) {
 					Cell[4] = "*None";
 				} else {
-					Cell[4] = getFieldNames(element.getAttribute("ToTable"), element.getAttribute("Fields"), "、", false);
+					Cell[4] = getFieldNames(element.getAttribute("ToTable"), element.getAttribute("Fields"), res.getString("Comma"), false);
 				}
 				tableModelTableReferList.addRow(Cell);
 			}
@@ -18826,9 +18947,9 @@ public class Editor extends JFrame {
 				// Update Format Version //
 				///////////////////////////
 				float fileFormat = Float.parseFloat(systemNode.getElement().getAttribute("FormatVersion"));
-				float appliFormat = Float.parseFloat(FORMAT_VERSION);
+				float appliFormat = Float.parseFloat(DialogAbout.FORMAT_VERSION);
 				if (fileFormat < appliFormat) {
-					systemNode.getElement().setAttribute("FormatVersion", FORMAT_VERSION);
+					systemNode.getElement().setAttribute("FormatVersion", DialogAbout.FORMAT_VERSION);
 				}
 				/////////////////////////////////////////////////////////
 				// Refresh TreeView if any of fields value was changed //
@@ -18969,7 +19090,7 @@ public class Editor extends JFrame {
 				domNode_.setAttribute("Name", systemName);
 				systemVersion = jTextFieldSystemVersion.getText(); //variant for frame title//
 				domNode_.setAttribute("Version", systemVersion);
-				setTitle(APPLICATION_NAME + " - [" + currentFileName + "] - " + systemName + " " + systemVersion);
+				setTitle(DialogAbout.APPLICATION_NAME + " - [" + currentFileName + "] - " + systemName + " " + systemVersion);
 				//
 				domNode_.setAttribute("Remarks", concatLinesWithTokenOfEOL(jTextAreaSystemRemarks.getText()));
 				//
@@ -19727,7 +19848,7 @@ public class Editor extends JFrame {
 					if (element.getAttribute("Fields").equals("")) {
 						tableModelTableReferList.setValueAt("*None", selectedRow_jTableTableReferList, 4);
 					} else {
-						tableModelTableReferList.setValueAt(getFieldNames(element.getAttribute("ToTable"), element.getAttribute("Fields"), "、", false), selectedRow_jTableTableReferList, 4);
+						tableModelTableReferList.setValueAt(getFieldNames(element.getAttribute("ToTable"), element.getAttribute("Fields"), res.getString("Comma"), false), selectedRow_jTableTableReferList, 4);
 					}
 					//
 				    setupTableScriptNotes(domNode_);
@@ -20128,6 +20249,7 @@ public class Editor extends JFrame {
 				//
 				TableRowNumber tableRowNumber = (TableRowNumber)tableModelFunction100ColumnList.getValueAt(selectedRow_jTableFunction100ColumnList, 0);
 				org.w3c.dom.Element element = tableRowNumber.getElement();
+				ArrayList<String> optionList = getOptionList(element.getAttribute("FieldOptions"));
 				//
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "CAPTION");
 				if (jRadioButtonFunction100FieldCaptionOptionValue.isSelected()) {
@@ -20147,6 +20269,27 @@ public class Editor extends JFrame {
 					}
 				}
 				//
+//				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
+//				if (jTextFieldFunction100FieldWidth.getText().equals("*Auto") || jTextFieldFunction100FieldWidth.getText().equals("")) {
+//					if (!wrkStr.equals("")) {
+//						valueOfFieldsChanged = true;
+//					}
+//				} else {
+//					if (wrkStr.equals("")) {
+//						valueOfFieldsChanged = true;
+//					} else {
+//						if (!wrkStr.equals(jTextFieldFunction100FieldWidth.getText())) {
+//							valueOfFieldsChanged = true;
+//						}
+//					}
+//					wrkStr = getStringSizeValue(jTextFieldFunction100FieldWidth.getText(), "", 10, 1000);
+//					if (!wrkStr.equals("")) {
+//						if (!wrkOptions.equals("")) {
+//							wrkOptions = wrkOptions + ",";
+//						}
+//						wrkOptions = wrkOptions + "WIDTH(" + wrkStr + ")";
+//					}
+//				}
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
 				if (jTextFieldFunction100FieldWidth.getText().equals("*Auto") || jTextFieldFunction100FieldWidth.getText().equals("")) {
 					if (!wrkStr.equals("")) {
@@ -20166,6 +20309,43 @@ public class Editor extends JFrame {
 							wrkOptions = wrkOptions + ",";
 						}
 						wrkOptions = wrkOptions + "WIDTH(" + wrkStr + ")";
+					}
+				}
+				//
+				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "ROWS");
+				if (jTextFieldFunction100FieldRows.getText().equals("*Auto") || jTextFieldFunction100FieldRows.getText().equals("")) {
+					if (!wrkStr.equals("")) {
+						valueOfFieldsChanged = true;
+					}
+				} else {
+					if (wrkStr.equals("")) {
+						valueOfFieldsChanged = true;
+					} else {
+						if (!wrkStr.equals(jTextFieldFunction100FieldRows.getText())) {
+							valueOfFieldsChanged = true;
+						}
+					}
+					wrkStr = getStringSizeValue(jTextFieldFunction100FieldRows.getText(), "", 1, 50);
+					if (!wrkStr.equals("")) {
+						if (!wrkOptions.equals("")) {
+							wrkOptions = wrkOptions + ",";
+						}
+						wrkOptions = wrkOptions + "ROWS(" + wrkStr + ")";
+					}
+				}
+				//
+				if (jRadioButtonFunction100FieldLayoutOptionVertical.isSelected()) {
+						if (!optionList.contains("VERTICAL")) {
+							valueOfFieldsChanged = true;
+						}
+						if (!wrkOptions.equals("")) {
+							wrkOptions = wrkOptions + ",";
+						}
+						wrkOptions = wrkOptions + "VERTICAL";
+				}
+				if (jRadioButtonFunction100FieldLayoutOptionHorizontal.isSelected()) {
+					if (optionList.contains("VERTICAL")) {
+						valueOfFieldsChanged = true;
 					}
 				}
 				//
@@ -20664,6 +20844,27 @@ public class Editor extends JFrame {
 					}
 				}
 				//
+//				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
+//				if (jTextFieldFunction110FieldWidth.getText().equals("*Auto") || jTextFieldFunction110FieldWidth.getText().equals("")) {
+//					if (!wrkStr.equals("")) {
+//						valueOfFieldsChanged = true;
+//					}
+//				} else {
+//					if (wrkStr.equals("")) {
+//						valueOfFieldsChanged = true;
+//					} else {
+//						if (!wrkStr.equals(jTextFieldFunction110FieldWidth.getText())) {
+//							valueOfFieldsChanged = true;
+//						}
+//					}
+//					wrkStr = getStringSizeValue(jTextFieldFunction110FieldWidth.getText(), "", 10, 1000);
+//					if (!wrkStr.equals("")) {
+//						if (!wrkOptions.equals("")) {
+//							wrkOptions = wrkOptions + ",";
+//						}
+//						wrkOptions = wrkOptions + "WIDTH(" + wrkStr + ")";
+//					}
+//				}
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
 				if (jTextFieldFunction110FieldWidth.getText().equals("*Auto") || jTextFieldFunction110FieldWidth.getText().equals("")) {
 					if (!wrkStr.equals("")) {
@@ -20683,6 +20884,43 @@ public class Editor extends JFrame {
 							wrkOptions = wrkOptions + ",";
 						}
 						wrkOptions = wrkOptions + "WIDTH(" + wrkStr + ")";
+					}
+				}
+				//
+				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "ROWS");
+				if (jTextFieldFunction110FieldRows.getText().equals("*Auto") || jTextFieldFunction110FieldRows.getText().equals("")) {
+					if (!wrkStr.equals("")) {
+						valueOfFieldsChanged = true;
+					}
+				} else {
+					if (wrkStr.equals("")) {
+						valueOfFieldsChanged = true;
+					} else {
+						if (!wrkStr.equals(jTextFieldFunction110FieldRows.getText())) {
+							valueOfFieldsChanged = true;
+						}
+					}
+					wrkStr = getStringSizeValue(jTextFieldFunction110FieldRows.getText(), "", 1, 50);
+					if (!wrkStr.equals("")) {
+						if (!wrkOptions.equals("")) {
+							wrkOptions = wrkOptions + ",";
+						}
+						wrkOptions = wrkOptions + "ROWS(" + wrkStr + ")";
+					}
+				}
+				//
+				if (jRadioButtonFunction110FieldLayoutOptionVertical.isSelected()) {
+						if (!optionList.contains("VERTICAL")) {
+							valueOfFieldsChanged = true;
+						}
+						if (!wrkOptions.equals("")) {
+							wrkOptions = wrkOptions + ",";
+						}
+						wrkOptions = wrkOptions + "VERTICAL";
+				}
+				if (jRadioButtonFunction110FieldLayoutOptionHorizontal.isSelected()) {
+					if (optionList.contains("VERTICAL")) {
+						valueOfFieldsChanged = true;
 					}
 				}
 				//
@@ -21091,7 +21329,7 @@ public class Editor extends JFrame {
 				}
 				//
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "HORIZONTAL");
-				if (jRadioButtonFunction110BatchFieldDisplayOptionHorizontal.isSelected()) {
+				if (jRadioButtonFunction110BatchFieldLayoutOptionHorizontal.isSelected()) {
 					if (jTextFieldFunction110BatchFieldMargin.getText().equals("*Auto") || jTextFieldFunction110BatchFieldMargin.getText().equals("") || jTextFieldFunction110BatchFieldMargin.getText().equals("0")) {
 						if (!optionList.contains("HORIZONTAL")) {
 							valueOfFieldsChanged = true;
@@ -21123,7 +21361,7 @@ public class Editor extends JFrame {
 				}
 				//
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "VERTICAL");
-				if (jRadioButtonFunction110BatchFieldDisplayOptionVertical.isSelected()) {
+				if (jRadioButtonFunction110BatchFieldLayoutOptionVertical.isSelected()) {
 					if (optionList.contains("HORIZONTAL")) {
 						valueOfFieldsChanged = true;
 					}
@@ -21564,7 +21802,7 @@ public class Editor extends JFrame {
 				}
 				//
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "HORIZONTAL");
-				if (jRadioButtonFunction200FieldDisplayOptionHorizontal.isSelected()) {
+				if (jRadioButtonFunction200FieldLayoutOptionHorizontal.isSelected()) {
 					if (jTextFieldFunction200FieldMargin.getText().equals("*Auto") || jTextFieldFunction200FieldMargin.getText().equals("") || jTextFieldFunction200FieldMargin.getText().equals("0")) {
 						if (!optionList.contains("HORIZONTAL") || !wrkStr.equals("")) {
 							valueOfFieldsChanged = true;
@@ -21596,7 +21834,7 @@ public class Editor extends JFrame {
 				}
 				//
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "VERTICAL");
-				if (jRadioButtonFunction200FieldDisplayOptionVertical.isSelected()) {
+				if (jRadioButtonFunction200FieldLayoutOptionVertical.isSelected()) {
 					if (optionList.contains("HORIZONTAL")) {
 						valueOfFieldsChanged = true;
 					}
@@ -21832,7 +22070,7 @@ public class Editor extends JFrame {
 				}
 				//
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "HORIZONTAL");
-				if (jRadioButtonFunction200TabFieldDisplayOptionHorizontal.isSelected()) {
+				if (jRadioButtonFunction200TabFieldLayoutOptionHorizontal.isSelected()) {
 					if (jTextFieldFunction200TabFieldMargin.getText().equals("*Auto") || jTextFieldFunction200TabFieldMargin.getText().equals("") || jTextFieldFunction200TabFieldMargin.getText().equals("0")) {
 						if (!optionList.contains("HORIZONTAL") || !wrkStr.equals("")) {
 							valueOfFieldsChanged = true;
@@ -21864,7 +22102,7 @@ public class Editor extends JFrame {
 				}
 				//
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "VERTICAL");
-				if (jRadioButtonFunction200TabFieldDisplayOptionVertical.isSelected()) {
+				if (jRadioButtonFunction200TabFieldLayoutOptionVertical.isSelected()) {
 					if (optionList.contains("HORIZONTAL")) {
 						valueOfFieldsChanged = true;
 					}
@@ -22244,7 +22482,7 @@ public class Editor extends JFrame {
 				}
 				//
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "HORIZONTAL");
-				if (jRadioButtonFunction210FieldDisplayOptionHorizontal.isSelected()) {
+				if (jRadioButtonFunction210FieldLayoutOptionHorizontal.isSelected()) {
 					if (jTextFieldFunction210FieldMargin.getText().equals("*Auto") || jTextFieldFunction210FieldMargin.getText().equals("") || jTextFieldFunction210FieldMargin.getText().equals("0")) {
 						if (!optionList.contains("HORIZONTAL")) {
 							valueOfFieldsChanged = true;
@@ -22276,7 +22514,7 @@ public class Editor extends JFrame {
 				}
 				//
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "VERTICAL");
-				if (jRadioButtonFunction210FieldDisplayOptionVertical.isSelected()) {
+				if (jRadioButtonFunction210FieldLayoutOptionVertical.isSelected()) {
 					if (optionList.contains("HORIZONTAL")) {
 						valueOfFieldsChanged = true;
 					}
@@ -22901,7 +23139,7 @@ public class Editor extends JFrame {
 				}
 				//
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "HORIZONTAL");
-				if (jRadioButtonFunction300HeaderFieldDisplayOptionHorizontal.isSelected()) {
+				if (jRadioButtonFunction300HeaderFieldLayoutOptionHorizontal.isSelected()) {
 					if (jTextFieldFunction300HeaderFieldMargin.getText().equals("*Auto") || jTextFieldFunction300HeaderFieldMargin.getText().equals("") || jTextFieldFunction300HeaderFieldMargin.getText().equals("0")) {
 						if (!optionList.contains("HORIZONTAL")) {
 							valueOfFieldsChanged = true;
@@ -22933,7 +23171,7 @@ public class Editor extends JFrame {
 				}
 				//
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "VERTICAL");
-				if (jRadioButtonFunction300HeaderFieldDisplayOptionVertical.isSelected()) {
+				if (jRadioButtonFunction300HeaderFieldLayoutOptionVertical.isSelected()) {
 					if (optionList.contains("HORIZONTAL")) {
 						valueOfFieldsChanged = true;
 					}
@@ -23124,6 +23362,7 @@ public class Editor extends JFrame {
 				//
 				TableRowNumber tableRowNumber = (TableRowNumber)tableModelFunction300DetailFieldList.getValueAt(selectedRow_jTableFunction300DetailFieldList, 0);
 				org.w3c.dom.Element element = tableRowNumber.getElement();
+				ArrayList<String> optionList = getOptionList(element.getAttribute("FieldOptions"));
 				//
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "CAPTION");
 				if (jRadioButtonFunction300DetailFieldCaptionOptionValue.isSelected()) {
@@ -23143,6 +23382,27 @@ public class Editor extends JFrame {
 					}
 				}
 				//
+//				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
+//				if (jTextFieldFunction300DetailFieldWidth.getText().equals("*Auto") || jTextFieldFunction300DetailFieldWidth.getText().equals("")) {
+//					if (!wrkStr.equals("")) {
+//						valueOfFieldsChanged = true;
+//					}
+//				} else {
+//					if (wrkStr.equals("")) {
+//						valueOfFieldsChanged = true;
+//					} else {
+//						if (!wrkStr.equals(jTextFieldFunction300DetailFieldWidth.getText())) {
+//							valueOfFieldsChanged = true;
+//						}
+//					}
+//					wrkStr = getStringSizeValue(jTextFieldFunction300DetailFieldWidth.getText(), "", 10, 1000);
+//					if (!wrkStr.equals("")) {
+//						if (!wrkOptions.equals("")) {
+//							wrkOptions = wrkOptions + ",";
+//						}
+//						wrkOptions = wrkOptions + "WIDTH(" + wrkStr + ")";
+//					}
+//				}
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
 				if (jTextFieldFunction300DetailFieldWidth.getText().equals("*Auto") || jTextFieldFunction300DetailFieldWidth.getText().equals("")) {
 					if (!wrkStr.equals("")) {
@@ -23162,6 +23422,43 @@ public class Editor extends JFrame {
 							wrkOptions = wrkOptions + ",";
 						}
 						wrkOptions = wrkOptions + "WIDTH(" + wrkStr + ")";
+					}
+				}
+				//
+				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "ROWS");
+				if (jTextFieldFunction300DetailFieldRows.getText().equals("*Auto") || jTextFieldFunction300DetailFieldRows.getText().equals("")) {
+					if (!wrkStr.equals("")) {
+						valueOfFieldsChanged = true;
+					}
+				} else {
+					if (wrkStr.equals("")) {
+						valueOfFieldsChanged = true;
+					} else {
+						if (!wrkStr.equals(jTextFieldFunction300DetailFieldRows.getText())) {
+							valueOfFieldsChanged = true;
+						}
+					}
+					wrkStr = getStringSizeValue(jTextFieldFunction300DetailFieldRows.getText(), "", 1, 50);
+					if (!wrkStr.equals("")) {
+						if (!wrkOptions.equals("")) {
+							wrkOptions = wrkOptions + ",";
+						}
+						wrkOptions = wrkOptions + "ROWS(" + wrkStr + ")";
+					}
+				}
+				//
+				if (jRadioButtonFunction300DetailFieldLayoutOptionVertical.isSelected()) {
+						if (!optionList.contains("VERTICAL")) {
+							valueOfFieldsChanged = true;
+						}
+						if (!wrkOptions.equals("")) {
+							wrkOptions = wrkOptions + ",";
+						}
+						wrkOptions = wrkOptions + "VERTICAL";
+				}
+				if (jRadioButtonFunction300DetailFieldLayoutOptionHorizontal.isSelected()) {
+					if (optionList.contains("VERTICAL")) {
+						valueOfFieldsChanged = true;
 					}
 				}
 				//
@@ -23902,7 +24199,7 @@ public class Editor extends JFrame {
 				}
 				//
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "HORIZONTAL");
-				if (jRadioButtonFunction310HeaderFieldDisplayOptionHorizontal.isSelected()) {
+				if (jRadioButtonFunction310HeaderFieldLayoutOptionHorizontal.isSelected()) {
 					if (jTextFieldFunction310HeaderFieldMargin.getText().equals("*Auto") || jTextFieldFunction310HeaderFieldMargin.getText().equals("") || jTextFieldFunction310HeaderFieldMargin.getText().equals("0")) {
 						if (!optionList.contains("HORIZONTAL")) {
 							valueOfFieldsChanged = true;
@@ -23934,7 +24231,7 @@ public class Editor extends JFrame {
 				}
 				//
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "VERTICAL");
-				if (jRadioButtonFunction310HeaderFieldDisplayOptionVertical.isSelected()) {
+				if (jRadioButtonFunction310HeaderFieldLayoutOptionVertical.isSelected()) {
 					if (optionList.contains("HORIZONTAL")) {
 						valueOfFieldsChanged = true;
 					}
@@ -24079,6 +24376,27 @@ public class Editor extends JFrame {
 					}
 				}
 				//
+//				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
+//				if (jTextFieldFunction310DetailFieldWidth.getText().equals("*Auto") || jTextFieldFunction310DetailFieldWidth.getText().equals("")) {
+//					if (!wrkStr.equals("")) {
+//						valueOfFieldsChanged = true;
+//					}
+//				} else {
+//					if (wrkStr.equals("")) {
+//						valueOfFieldsChanged = true;
+//					} else {
+//						if (!wrkStr.equals(jTextFieldFunction310DetailFieldWidth.getText())) {
+//							valueOfFieldsChanged = true;
+//						}
+//					}
+//					wrkStr = getStringSizeValue(jTextFieldFunction310DetailFieldWidth.getText(), "", 10, 1000);
+//					if (!wrkStr.equals("")) {
+//						if (!wrkOptions.equals("")) {
+//							wrkOptions = wrkOptions + ",";
+//						}
+//						wrkOptions = wrkOptions + "WIDTH(" + wrkStr + ")";
+//					}
+//				}
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
 				if (jTextFieldFunction310DetailFieldWidth.getText().equals("*Auto") || jTextFieldFunction310DetailFieldWidth.getText().equals("")) {
 					if (!wrkStr.equals("")) {
@@ -24098,6 +24416,43 @@ public class Editor extends JFrame {
 							wrkOptions = wrkOptions + ",";
 						}
 						wrkOptions = wrkOptions + "WIDTH(" + wrkStr + ")";
+					}
+				}
+				//
+				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "ROWS");
+				if (jTextFieldFunction310DetailFieldRows.getText().equals("*Auto") || jTextFieldFunction310DetailFieldRows.getText().equals("")) {
+					if (!wrkStr.equals("")) {
+						valueOfFieldsChanged = true;
+					}
+				} else {
+					if (wrkStr.equals("")) {
+						valueOfFieldsChanged = true;
+					} else {
+						if (!wrkStr.equals(jTextFieldFunction310DetailFieldRows.getText())) {
+							valueOfFieldsChanged = true;
+						}
+					}
+					wrkStr = getStringSizeValue(jTextFieldFunction310DetailFieldRows.getText(), "", 1, 50);
+					if (!wrkStr.equals("")) {
+						if (!wrkOptions.equals("")) {
+							wrkOptions = wrkOptions + ",";
+						}
+						wrkOptions = wrkOptions + "ROWS(" + wrkStr + ")";
+					}
+				}
+				//
+				if (jRadioButtonFunction310DetailFieldLayoutOptionVertical.isSelected()) {
+						if (!optionList.contains("VERTICAL")) {
+							valueOfFieldsChanged = true;
+						}
+						if (!wrkOptions.equals("")) {
+							wrkOptions = wrkOptions + ",";
+						}
+						wrkOptions = wrkOptions + "VERTICAL";
+				}
+				if (jRadioButtonFunction310DetailFieldLayoutOptionHorizontal.isSelected()) {
+					if (optionList.contains("VERTICAL")) {
+						valueOfFieldsChanged = true;
 					}
 				}
 				//
@@ -24185,6 +24540,7 @@ public class Editor extends JFrame {
 				//
 				TableRowNumber tableRowNumber = (TableRowNumber)tableModelFunction310AddRowListColumnList.getValueAt(selectedRow_jTableFunction310AddRowListColumnList, 0);
 				org.w3c.dom.Element element = tableRowNumber.getElement();
+				ArrayList<String> optionList = getOptionList(element.getAttribute("FieldOptions"));
 				//
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "CAPTION");
 				if (jRadioButtonFunction310AddRowListColumnCaptionOptionValue.isSelected()) {
@@ -24204,6 +24560,27 @@ public class Editor extends JFrame {
 					}
 				}
 				//
+//				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
+//				if (jTextFieldFunction310AddRowListColumnWidth.getText().equals("*Auto") || jTextFieldFunction310AddRowListColumnWidth.getText().equals("")) {
+//					if (!wrkStr.equals("")) {
+//						valueOfFieldsChanged = true;
+//					}
+//				} else {
+//					if (wrkStr.equals("")) {
+//						valueOfFieldsChanged = true;
+//					} else {
+//						if (!wrkStr.equals(jTextFieldFunction310AddRowListColumnWidth.getText())) {
+//							valueOfFieldsChanged = true;
+//						}
+//					}
+//					wrkStr = getStringSizeValue(jTextFieldFunction310AddRowListColumnWidth.getText(), "", 10, 1000);
+//					if (!wrkStr.equals("")) {
+//						if (!wrkOptions.equals("")) {
+//							wrkOptions = wrkOptions + ",";
+//						}
+//						wrkOptions = wrkOptions + "WIDTH(" + wrkStr + ")";
+//					}
+//				}
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
 				if (jTextFieldFunction310AddRowListColumnWidth.getText().equals("*Auto") || jTextFieldFunction310AddRowListColumnWidth.getText().equals("")) {
 					if (!wrkStr.equals("")) {
@@ -24223,6 +24600,43 @@ public class Editor extends JFrame {
 							wrkOptions = wrkOptions + ",";
 						}
 						wrkOptions = wrkOptions + "WIDTH(" + wrkStr + ")";
+					}
+				}
+				//
+				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "ROWS");
+				if (jTextFieldFunction310AddRowListColumnRows.getText().equals("*Auto") || jTextFieldFunction310AddRowListColumnRows.getText().equals("")) {
+					if (!wrkStr.equals("")) {
+						valueOfFieldsChanged = true;
+					}
+				} else {
+					if (wrkStr.equals("")) {
+						valueOfFieldsChanged = true;
+					} else {
+						if (!wrkStr.equals(jTextFieldFunction310AddRowListColumnRows.getText())) {
+							valueOfFieldsChanged = true;
+						}
+					}
+					wrkStr = getStringSizeValue(jTextFieldFunction310AddRowListColumnRows.getText(), "", 1, 50);
+					if (!wrkStr.equals("")) {
+						if (!wrkOptions.equals("")) {
+							wrkOptions = wrkOptions + ",";
+						}
+						wrkOptions = wrkOptions + "ROWS(" + wrkStr + ")";
+					}
+				}
+				//
+				if (jRadioButtonFunction310AddRowListColumnLayoutOptionVertical.isSelected()) {
+						if (!optionList.contains("VERTICAL")) {
+							valueOfFieldsChanged = true;
+						}
+						if (!wrkOptions.equals("")) {
+							wrkOptions = wrkOptions + ",";
+						}
+						wrkOptions = wrkOptions + "VERTICAL";
+				}
+				if (jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal.isSelected()) {
+					if (optionList.contains("VERTICAL")) {
+						valueOfFieldsChanged = true;
 					}
 				}
 				//
@@ -25242,7 +25656,7 @@ public class Editor extends JFrame {
 			String name = specifyNameOfExistingFile(res.getString("OpenXEAFFile"), "xeaf");
 			if (!name.equals("")) {
 				currentFileName = name;
-				this.setTitle(APPLICATION_NAME + " - [" + currentFileName + "] - " + systemName);
+				this.setTitle(DialogAbout.APPLICATION_NAME + " - [" + currentFileName + "] - " + systemName);
 				changeState.setChanged(false);
 				undoManager.resetLog();
 				try {
@@ -25299,7 +25713,7 @@ public class Editor extends JFrame {
 							name = specifyNameOfNewFile(res.getString("NameDialogTitle"),res.getString("SaveAsThis"), currentFileName);
 							if (!name.equals("")) {
 								currentFileName = name;
-								this.setTitle(APPLICATION_NAME + " - [" + currentFileName + "] - " + systemName);
+								this.setTitle(DialogAbout.APPLICATION_NAME + " - [" + currentFileName + "] - " + systemName);
 								saveFileWithCurrentFileName();
 								changeState.setChanged(false);
 								undoManager.resetLog();
@@ -25364,7 +25778,7 @@ public class Editor extends JFrame {
 							name = specifyNameOfNewFile(res.getString("NameDialogTitle"),res.getString("SaveAsThis"), currentFileName);
 							if (!name.equals("")) {
 								currentFileName = name;
-								this.setTitle(APPLICATION_NAME + " - [" + currentFileName + "] - " + systemName);
+								this.setTitle(DialogAbout.APPLICATION_NAME + " - [" + currentFileName + "] - " + systemName);
 								saveFileWithCurrentFileName();
 								changeState.setChanged(false);
 								undoManager.resetLog();
@@ -25426,7 +25840,7 @@ public class Editor extends JFrame {
 						String name = specifyNameOfNewFile(res.getString("NameDialogTitle"),res.getString("SaveAsThis"), currentFileName);
 						if (!name.equals("")) {
 							currentFileName = name;
-							this.setTitle(APPLICATION_NAME + " - [" + currentFileName + "] - " + systemName);
+							this.setTitle(DialogAbout.APPLICATION_NAME + " - [" + currentFileName + "] - " + systemName);
 							saveFileWithCurrentFileName();
 							changeState.setChanged(false);
 							undoManager.resetLog();
@@ -25660,7 +26074,7 @@ public class Editor extends JFrame {
 			try {
 				setCursor(new Cursor(Cursor.WAIT_CURSOR));
 				currentFileName = name;
-				this.setTitle(APPLICATION_NAME + " - [" + currentFileName + "] - " + systemName);
+				this.setTitle(DialogAbout.APPLICATION_NAME + " - [" + currentFileName + "] - " + systemName);
 				saveFileWithCurrentFileName();
 				changeState.setChanged(false);
 				undoManager.resetLog();
@@ -26184,6 +26598,13 @@ public class Editor extends JFrame {
 						} else {
 							currentMainTreeNode.getElement().appendChild(newElement);
 							currentMainTreeNode.updateFields();
+							if (componentType_jPopupMenuComponent.equals("SystemSubDBList")) {
+								if (systemNode.getElement().getAttribute("AutoConnectToEdit").equals("T")) {
+									setupConnectionList(true);
+								} else {
+									setupConnectionList(false);
+								}
+							}
 							currentMainTreeNode.activateContentsPane();
 						}
 						//
@@ -26312,10 +26733,10 @@ public class Editor extends JFrame {
 			    }
 				lastOrder = lastOrder + 1;
 				newElement.setAttribute("ID", "Sdb" + lastOrder);
-				newElement.setAttribute("Description", "Sdb" + lastOrder);
+				newElement.setAttribute("Description", res.getString("SubDB") + lastOrder);
 			} else {
 				newElement.setAttribute("ID", "Sdb0");
-				newElement.setAttribute("Description", "Sdb0");
+				newElement.setAttribute("Description", res.getString("SubDB") + "0");
 			}
 			///////////////////////////////////////////////////////////////////////////////
 			// String "..." in the name required as it should be skipped to be connected //
@@ -26880,6 +27301,13 @@ public class Editor extends JFrame {
 									|| componentType_jPopupMenuComponent.equals("Function300DetailButtonList")) {
 								jTableFunction300DetailList_valueChanged(null);
 							} else {
+								if (componentType_jPopupMenuComponent.equals("SystemSubDBList")) {
+									if (systemNode.getElement().getAttribute("AutoConnectToEdit").equals("T")) {
+										setupConnectionList(true);
+									} else {
+										setupConnectionList(false);
+									}
+								}
 								currentMainTreeNode.activateContentsPane();
 							}
 						}
@@ -27471,9 +27899,19 @@ public class Editor extends JFrame {
 				jTextFieldFunction100TableType.setText("");
 				jTextFieldFunction100Field.setText("");
 				jTextFieldFunction100FieldType.setText("");
+				//jLabelFunction100FieldWidth.setEnabled(false);
+				//jTextFieldFunction100FieldWidth.setText("");
+				//jTextFieldFunction100FieldWidth.setEnabled(false);
+				jLabelFunction100FieldLayoutOption.setEnabled(false);
+				jRadioButtonFunction100FieldLayoutOptionVertical.setSelected(true);
+				jRadioButtonFunction100FieldLayoutOptionVertical.setEnabled(false);
+				jRadioButtonFunction100FieldLayoutOptionHorizontal.setEnabled(false);
 				jLabelFunction100FieldWidth.setEnabled(false);
 				jTextFieldFunction100FieldWidth.setText("");
 				jTextFieldFunction100FieldWidth.setEnabled(false);
+				jLabelFunction100FieldRows.setEnabled(false);
+				jTextFieldFunction100FieldRows.setText("");
+				jTextFieldFunction100FieldRows.setEnabled(false);
 				jRadioButtonFunction100FieldCaptionOptionName.setSelected(true);
 				jRadioButtonFunction100FieldCaptionOptionName.setEnabled(false);
 				jRadioButtonFunction100FieldCaptionOptionValue.setEnabled(false);
@@ -27490,8 +27928,17 @@ public class Editor extends JFrame {
 					jLabelFunction100Field.setEnabled(true);
 					jLabelFunction100FieldType.setEnabled(true);
 					jLabelFunction100FieldCaptionOption.setEnabled(true);
+					//jLabelFunction100FieldWidth.setEnabled(true);
+					jLabelFunction100FieldLayoutOption.setEnabled(true);
+					jLabelFunction100FieldWidth.setEnabled(true);
+					jLabelFunction100FieldRows.setEnabled(true);
 					jRadioButtonFunction100FieldCaptionOptionName.setEnabled(true);
 					jRadioButtonFunction100FieldCaptionOptionValue.setEnabled(true);
+					//jTextFieldFunction100FieldWidth.setEnabled(true);
+					jRadioButtonFunction100FieldLayoutOptionVertical.setEnabled(true);
+					jRadioButtonFunction100FieldLayoutOptionHorizontal.setEnabled(true);
+					jTextFieldFunction100FieldWidth.setEnabled(true);
+					jTextFieldFunction100FieldRows.setEnabled(true);
 					//
 					org.w3c.dom.Element element = tableRowNumber.getElement();
 					//
@@ -27518,14 +27965,31 @@ public class Editor extends JFrame {
 					wrkStr = getDescriptionsOfTypeOptions(fieldElement, true, function100TableElement);
 					jTextFieldFunction100FieldType.setText(getDescriptionsOfTypeAndSize(fieldElement.getAttribute("Type"), fieldElement.getAttribute("Size"), fieldElement.getAttribute("Decimal")) + wrkStr);
 					//
-					jLabelFunction100FieldWidth.setEnabled(true);
-					jTextFieldFunction100FieldWidth.setEnabled(true);
+//					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
+//					if (wrkStr.equals("")) {
+//						jTextFieldFunction100FieldWidth.setText("*Auto");
+//					} else {
+//						jTextFieldFunction100FieldWidth.setText(wrkStr);
+//					}
+					ArrayList<String> optionList = getOptionList(element.getAttribute("FieldOptions"));
+					if (optionList.contains("VERTICAL")) {
+						jRadioButtonFunction100FieldLayoutOptionVertical.setSelected(true);
+					} else {
+						jRadioButtonFunction100FieldLayoutOptionHorizontal.setSelected(true);
+					}
 					//
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
 					if (wrkStr.equals("")) {
 						jTextFieldFunction100FieldWidth.setText("*Auto");
 					} else {
 						jTextFieldFunction100FieldWidth.setText(wrkStr);
+					}
+					//
+					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "ROWS");
+					if (wrkStr.equals("")) {
+						jTextFieldFunction100FieldRows.setText("*Auto");
+					} else {
+						jTextFieldFunction100FieldRows.setText(wrkStr);
 					}
 					//
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "CAPTION");
@@ -27898,9 +28362,19 @@ public class Editor extends JFrame {
 				jTextFieldFunction110TableType.setText("");
 				jTextFieldFunction110Field.setText("");
 				jTextFieldFunction110FieldType.setText("");
+				//jLabelFunction110FieldWidth.setEnabled(false);
+				//jTextFieldFunction110FieldWidth.setText("");
+				//jTextFieldFunction110FieldWidth.setEnabled(false);
+				jLabelFunction110FieldLayoutOption.setEnabled(false);
+				jRadioButtonFunction110FieldLayoutOptionVertical.setSelected(true);
+				jRadioButtonFunction110FieldLayoutOptionVertical.setEnabled(false);
+				jRadioButtonFunction110FieldLayoutOptionHorizontal.setEnabled(false);
 				jLabelFunction110FieldWidth.setEnabled(false);
 				jTextFieldFunction110FieldWidth.setText("");
 				jTextFieldFunction110FieldWidth.setEnabled(false);
+				jLabelFunction110FieldRows.setEnabled(false);
+				jTextFieldFunction110FieldRows.setText("");
+				jTextFieldFunction110FieldRows.setEnabled(false);
 				jRadioButtonFunction110FieldCaptionOptionName.setSelected(true);
 				jRadioButtonFunction110FieldCaptionOptionName.setEnabled(false);
 				jRadioButtonFunction110FieldCaptionOptionValue.setEnabled(false);
@@ -27930,6 +28404,13 @@ public class Editor extends JFrame {
 					jLabelFunction110TableType.setEnabled(true);
 					jLabelFunction110Field.setEnabled(true);
 					jLabelFunction110FieldType.setEnabled(true);
+					jLabelFunction110FieldLayoutOption.setEnabled(true);
+					jLabelFunction110FieldWidth.setEnabled(true);
+					jLabelFunction110FieldRows.setEnabled(true);
+					jRadioButtonFunction110FieldLayoutOptionVertical.setEnabled(true);
+					jRadioButtonFunction110FieldLayoutOptionHorizontal.setEnabled(true);
+					jTextFieldFunction110FieldWidth.setEnabled(true);
+					jTextFieldFunction110FieldRows.setEnabled(true);
 					jLabelFunction110FieldCaptionOption.setEnabled(true);
 					jLabelFunction110ColumnOnList.setEnabled(true);
 					jRadioButtonFunction110FieldCaptionOptionName.setEnabled(true);
@@ -27969,11 +28450,21 @@ public class Editor extends JFrame {
 					wrkStr = getDescriptionsOfTypeOptions(fieldElement, true, function110TableElement);
 					jTextFieldFunction110FieldType.setText(getDescriptionsOfTypeAndSize(fieldElement.getAttribute("Type"), fieldElement.getAttribute("Size"), fieldElement.getAttribute("Decimal")) + wrkStr);
 					//
-					jLabelFunction110FieldWidth.setEnabled(true);
-					jTextFieldFunction110FieldWidth.setEnabled(true);
-					//
 					if (!fieldElement.getAttribute("TypeOptions").contains("BOOLEAN(")) {
 						jRadioButtonFunction110FieldPromptOptionCall.setEnabled(true);
+					}
+					//
+//					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
+//					if (wrkStr.equals("")) {
+//						jTextFieldFunction110FieldWidth.setText("*Auto");
+//					} else {
+//						jTextFieldFunction110FieldWidth.setText(wrkStr);
+//					}
+					ArrayList<String> optionList = getOptionList(element.getAttribute("FieldOptions"));
+					if (optionList.contains("VERTICAL")) {
+						jRadioButtonFunction110FieldLayoutOptionVertical.setSelected(true);
+					} else {
+						jRadioButtonFunction110FieldLayoutOptionHorizontal.setSelected(true);
 					}
 					//
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
@@ -27983,13 +28474,20 @@ public class Editor extends JFrame {
 						jTextFieldFunction110FieldWidth.setText(wrkStr);
 					}
 					//
+					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "ROWS");
+					if (wrkStr.equals("")) {
+						jTextFieldFunction110FieldRows.setText("*Auto");
+					} else {
+						jTextFieldFunction110FieldRows.setText(wrkStr);
+					}
+					//
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "CAPTION");
 					if (!wrkStr.equals("")) {
 						jRadioButtonFunction110FieldCaptionOptionValue.setSelected(true);
 						jTextFieldFunction110FieldCaptionOptionValue.setText(wrkStr);
 					}
 					//
-					ArrayList<String> optionList = getOptionList(element.getAttribute("FieldOptions"));
+					//ArrayList<String> optionList = getOptionList(element.getAttribute("FieldOptions"));
 					if (optionList.contains("LIST1")) {
 						jRadioButtonFunction110ColumnOnList1.setSelected(true);
 					}
@@ -29380,7 +29878,7 @@ public class Editor extends JFrame {
 			if (function310AddRowListReturnDataSources.equals("")) {
 				jTextFieldFunction310AddRowListReturnDataSources.setText("*Auto");
 			} else {
-				jTextFieldFunction310AddRowListReturnDataSources.setText(getDataSourceNames(function310DetailTableID, function310DetailReferList, function310AddRowListReturnToDetailDataSources, "、"));
+				jTextFieldFunction310AddRowListReturnDataSources.setText(getDataSourceNames(function310DetailTableID, function310DetailReferList, function310AddRowListReturnToDetailDataSources, res.getString("Comma")));
 			}
 			//
 			if (function310AddRowListOrderByFields.equals("")) {
@@ -29751,10 +30249,10 @@ public class Editor extends JFrame {
 				jTextFieldFunction200Field.setText("");
 				jLabelFunction200FieldType.setEnabled(false);
 				jTextFieldFunction200FieldType.setText("");
-				jLabelFunction200FieldDisplayOption.setEnabled(false);
-				jRadioButtonFunction200FieldDisplayOptionVertical.setSelected(true);
-				jRadioButtonFunction200FieldDisplayOptionVertical.setEnabled(false);
-				jRadioButtonFunction200FieldDisplayOptionHorizontal.setEnabled(false);
+				jLabelFunction200FieldLayoutOption.setEnabled(false);
+				jRadioButtonFunction200FieldLayoutOptionVertical.setSelected(true);
+				jRadioButtonFunction200FieldLayoutOptionVertical.setEnabled(false);
+				jRadioButtonFunction200FieldLayoutOptionHorizontal.setEnabled(false);
 				jLabelFunction200FieldWidth.setEnabled(false);
 				jTextFieldFunction200FieldWidth.setText("");
 				jTextFieldFunction200FieldWidth.setEnabled(false);
@@ -29794,11 +30292,11 @@ public class Editor extends JFrame {
 					jLabelFunction200TableType.setEnabled(true);
 					jLabelFunction200Field.setEnabled(true);
 					jLabelFunction200FieldType.setEnabled(true);
-					jLabelFunction200FieldDisplayOption.setEnabled(true);
+					jLabelFunction200FieldLayoutOption.setEnabled(true);
 					jLabelFunction200FieldCaptionOption.setEnabled(true);
 					jLabelFunction200FieldComment.setEnabled(true);
-					jRadioButtonFunction200FieldDisplayOptionVertical.setEnabled(true);
-					jRadioButtonFunction200FieldDisplayOptionHorizontal.setEnabled(true);
+					jRadioButtonFunction200FieldLayoutOptionVertical.setEnabled(true);
+					jRadioButtonFunction200FieldLayoutOptionHorizontal.setEnabled(true);
 					jRadioButtonFunction200FieldCaptionOptionName.setEnabled(true);
 					jRadioButtonFunction200FieldCaptionOptionNone.setEnabled(true);
 					jRadioButtonFunction200FieldCaptionOptionValue.setEnabled(true);
@@ -29853,10 +30351,10 @@ public class Editor extends JFrame {
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "HORIZONTAL");
 					if (wrkStr.equals("")) {
 						if (optionList.contains("HORIZONTAL")) {
-							jRadioButtonFunction200FieldDisplayOptionHorizontal.setSelected(true);
+							jRadioButtonFunction200FieldLayoutOptionHorizontal.setSelected(true);
 						}
 					} else {
-						jRadioButtonFunction200FieldDisplayOptionHorizontal.setSelected(true);
+						jRadioButtonFunction200FieldLayoutOptionHorizontal.setSelected(true);
 						jTextFieldFunction200FieldMargin.setText(wrkStr);
 					}
 					//
@@ -30034,10 +30532,10 @@ public class Editor extends JFrame {
 				jTextFieldFunction200TabField.setText("");
 				jLabelFunction200TabFieldType.setEnabled(false);
 				jTextFieldFunction200TabFieldType.setText("");
-				jLabelFunction200TabFieldDisplayOption.setEnabled(false);
-				jRadioButtonFunction200TabFieldDisplayOptionVertical.setSelected(true);
-				jRadioButtonFunction200TabFieldDisplayOptionVertical.setEnabled(false);
-				jRadioButtonFunction200TabFieldDisplayOptionHorizontal.setEnabled(false);
+				jLabelFunction200TabFieldLayoutOption.setEnabled(false);
+				jRadioButtonFunction200TabFieldLayoutOptionVertical.setSelected(true);
+				jRadioButtonFunction200TabFieldLayoutOptionVertical.setEnabled(false);
+				jRadioButtonFunction200TabFieldLayoutOptionHorizontal.setEnabled(false);
 				jLabelFunction200TabFieldWidth.setEnabled(false);
 				jTextFieldFunction200TabFieldWidth.setText("");
 				jTextFieldFunction200TabFieldWidth.setEnabled(false);
@@ -30077,11 +30575,11 @@ public class Editor extends JFrame {
 					jLabelFunction200TabFieldTableType.setEnabled(true);
 					jLabelFunction200TabField.setEnabled(true);
 					jLabelFunction200TabFieldType.setEnabled(true);
-					jLabelFunction200TabFieldDisplayOption.setEnabled(true);
+					jLabelFunction200TabFieldLayoutOption.setEnabled(true);
 					jLabelFunction200TabFieldCaptionOption.setEnabled(true);
 					jLabelFunction200TabFieldComment.setEnabled(true);
-					jRadioButtonFunction200TabFieldDisplayOptionVertical.setEnabled(true);
-					jRadioButtonFunction200TabFieldDisplayOptionHorizontal.setEnabled(true);
+					jRadioButtonFunction200TabFieldLayoutOptionVertical.setEnabled(true);
+					jRadioButtonFunction200TabFieldLayoutOptionHorizontal.setEnabled(true);
 					jRadioButtonFunction200TabFieldCaptionOptionName.setEnabled(true);
 					jRadioButtonFunction200TabFieldCaptionOptionNone.setEnabled(true);
 					jRadioButtonFunction200TabFieldCaptionOptionValue.setEnabled(true);
@@ -30133,10 +30631,10 @@ public class Editor extends JFrame {
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "HORIZONTAL");
 					if (wrkStr.equals("")) {
 						if (optionList.contains("HORIZONTAL")) {
-							jRadioButtonFunction200TabFieldDisplayOptionHorizontal.setSelected(true);
+							jRadioButtonFunction200TabFieldLayoutOptionHorizontal.setSelected(true);
 						}
 					} else {
-						jRadioButtonFunction200TabFieldDisplayOptionHorizontal.setSelected(true);
+						jRadioButtonFunction200TabFieldLayoutOptionHorizontal.setSelected(true);
 						jTextFieldFunction200TabFieldMargin.setText(wrkStr);
 					}
 					//
@@ -30231,10 +30729,10 @@ public class Editor extends JFrame {
 				jTextFieldFunction210Field.setText("");
 				jLabelFunction210FieldType.setEnabled(false);
 				jTextFieldFunction210FieldType.setText("");
-				jLabelFunction210FieldDisplayOption.setEnabled(false);
-				jRadioButtonFunction210FieldDisplayOptionVertical.setSelected(true);
-				jRadioButtonFunction210FieldDisplayOptionVertical.setEnabled(false);
-				jRadioButtonFunction210FieldDisplayOptionHorizontal.setEnabled(false);
+				jLabelFunction210FieldLayoutOption.setEnabled(false);
+				jRadioButtonFunction210FieldLayoutOptionVertical.setSelected(true);
+				jRadioButtonFunction210FieldLayoutOptionVertical.setEnabled(false);
+				jRadioButtonFunction210FieldLayoutOptionHorizontal.setEnabled(false);
 				jLabelFunction210FieldWidth.setEnabled(false);
 				jTextFieldFunction210FieldWidth.setText("");
 				jTextFieldFunction210FieldWidth.setEnabled(false);
@@ -30273,11 +30771,11 @@ public class Editor extends JFrame {
 					jLabelFunction210TableType.setEnabled(true);
 					jLabelFunction210Field.setEnabled(true);
 					jLabelFunction210FieldType.setEnabled(true);
-					jLabelFunction210FieldDisplayOption.setEnabled(true);
+					jLabelFunction210FieldLayoutOption.setEnabled(true);
 					jLabelFunction210FieldCaptionOption.setEnabled(true);
 					jLabelFunction210FieldComment.setEnabled(true);
-					jRadioButtonFunction210FieldDisplayOptionVertical.setEnabled(true);
-					jRadioButtonFunction210FieldDisplayOptionHorizontal.setEnabled(true);
+					jRadioButtonFunction210FieldLayoutOptionVertical.setEnabled(true);
+					jRadioButtonFunction210FieldLayoutOptionHorizontal.setEnabled(true);
 					jRadioButtonFunction210FieldCaptionOptionName.setEnabled(true);
 					jRadioButtonFunction210FieldCaptionOptionNone.setEnabled(true);
 					jRadioButtonFunction210FieldCaptionOptionValue.setEnabled(true);
@@ -30328,10 +30826,10 @@ public class Editor extends JFrame {
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "HORIZONTAL");
 					if (wrkStr.equals("")) {
 						if (optionList.contains("HORIZONTAL")) {
-							jRadioButtonFunction210FieldDisplayOptionHorizontal.setSelected(true);
+							jRadioButtonFunction210FieldLayoutOptionHorizontal.setSelected(true);
 						}
 					} else {
-						jRadioButtonFunction210FieldDisplayOptionHorizontal.setSelected(true);
+						jRadioButtonFunction210FieldLayoutOptionHorizontal.setSelected(true);
 						jTextFieldFunction210FieldMargin.setText(wrkStr);
 					}
 					//
@@ -32922,7 +33420,7 @@ public class Editor extends JFrame {
 										if (element2.getAttribute("Fields").equals("")) {
 											Cell[4] = "*None";
 										} else {
-											Cell[4] = getFieldNames(tableID, element2.getAttribute("Fields"), "、", false);
+											Cell[4] = getFieldNames(tableID, element2.getAttribute("Fields"), res.getString("Comma"), false);
 										}
 										tableModelTableKeyRelationshipList.addRow(Cell);
 									}
@@ -33959,17 +34457,17 @@ public class Editor extends JFrame {
 				jLabelFunction110BatchFieldTableType.setEnabled(false);
 				jLabelFunction110BatchField.setEnabled(false);
 				jLabelFunction110BatchFieldType.setEnabled(false);
-				jLabelFunction110BatchFieldDisplayOption.setEnabled(false);
+				jLabelFunction110BatchFieldLayoutOption.setEnabled(false);
 				jLabelFunction110BatchFieldCaptionOption.setEnabled(false);
 				jLabelFunction110BatchFieldPromptOption.setEnabled(false);
 				jTextFieldFunction110BatchFieldTable.setText("");
 				jTextFieldFunction110BatchFieldTableType.setText("");
 				jTextFieldFunction110BatchField.setText("");
 				jTextFieldFunction110BatchFieldType.setText("");
-				jLabelFunction110BatchFieldDisplayOption.setEnabled(false);
-				jRadioButtonFunction110BatchFieldDisplayOptionVertical.setSelected(true);
-				jRadioButtonFunction110BatchFieldDisplayOptionVertical.setEnabled(false);
-				jRadioButtonFunction110BatchFieldDisplayOptionHorizontal.setEnabled(false);
+				jLabelFunction110BatchFieldLayoutOption.setEnabled(false);
+				jRadioButtonFunction110BatchFieldLayoutOptionVertical.setSelected(true);
+				jRadioButtonFunction110BatchFieldLayoutOptionVertical.setEnabled(false);
+				jRadioButtonFunction110BatchFieldLayoutOptionHorizontal.setEnabled(false);
 				jLabelFunction110BatchFieldWidth.setEnabled(false);
 				jTextFieldFunction110BatchFieldWidth.setText("");
 				jTextFieldFunction110BatchFieldWidth.setEnabled(false);
@@ -34008,11 +34506,11 @@ public class Editor extends JFrame {
 					jLabelFunction110BatchFieldTableType.setEnabled(true);
 					jLabelFunction110BatchField.setEnabled(true);
 					jLabelFunction110BatchFieldType.setEnabled(true);
-					jLabelFunction110BatchFieldDisplayOption.setEnabled(true);
+					jLabelFunction110BatchFieldLayoutOption.setEnabled(true);
 					jLabelFunction110BatchFieldCaptionOption.setEnabled(true);
 					jLabelFunction110BatchFieldComment.setEnabled(true);
-					jRadioButtonFunction110BatchFieldDisplayOptionVertical.setEnabled(true);
-					jRadioButtonFunction110BatchFieldDisplayOptionHorizontal.setEnabled(true);
+					jRadioButtonFunction110BatchFieldLayoutOptionVertical.setEnabled(true);
+					jRadioButtonFunction110BatchFieldLayoutOptionHorizontal.setEnabled(true);
 					jRadioButtonFunction110BatchFieldCaptionOptionName.setEnabled(true);
 					jRadioButtonFunction110BatchFieldCaptionOptionValue.setEnabled(true);
 					jRadioButtonFunction110BatchFieldCaptionOptionNone.setEnabled(true);
@@ -34064,10 +34562,10 @@ public class Editor extends JFrame {
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "HORIZONTAL");
 					if (wrkStr.equals("")) {
 						if (optionList.contains("HORIZONTAL")) {
-							jRadioButtonFunction110BatchFieldDisplayOptionHorizontal.setSelected(true);
+							jRadioButtonFunction110BatchFieldLayoutOptionHorizontal.setSelected(true);
 						}
 					} else {
-						jRadioButtonFunction110BatchFieldDisplayOptionHorizontal.setSelected(true);
+						jRadioButtonFunction110BatchFieldLayoutOptionHorizontal.setSelected(true);
 						jTextFieldFunction110BatchFieldMargin.setText(wrkStr);
 					}
 					//
@@ -34158,16 +34656,16 @@ public class Editor extends JFrame {
 				jLabelFunction300HeaderTableType.setEnabled(false);
 				jLabelFunction300HeaderField.setEnabled(false);
 				jLabelFunction300HeaderFieldType.setEnabled(false);
-				jLabelFunction300HeaderFieldDisplayOption.setEnabled(false);
+				jLabelFunction300HeaderFieldLayoutOption.setEnabled(false);
 				jLabelFunction300HeaderFieldCaptionOption.setEnabled(false);
 				jTextFieldFunction300HeaderTable.setText("");
 				jTextFieldFunction300HeaderTableType.setText("");
 				jTextFieldFunction300HeaderField.setText("");
 				jTextFieldFunction300HeaderFieldType.setText("");
-				jLabelFunction300HeaderFieldDisplayOption.setEnabled(false);
-				jRadioButtonFunction300HeaderFieldDisplayOptionVertical.setSelected(true);
-				jRadioButtonFunction300HeaderFieldDisplayOptionVertical.setEnabled(false);
-				jRadioButtonFunction300HeaderFieldDisplayOptionHorizontal.setEnabled(false);
+				jLabelFunction300HeaderFieldLayoutOption.setEnabled(false);
+				jRadioButtonFunction300HeaderFieldLayoutOptionVertical.setSelected(true);
+				jRadioButtonFunction300HeaderFieldLayoutOptionVertical.setEnabled(false);
+				jRadioButtonFunction300HeaderFieldLayoutOptionHorizontal.setEnabled(false);
 				jLabelFunction300HeaderFieldWidth.setEnabled(false);
 				jTextFieldFunction300HeaderFieldWidth.setText("");
 				jTextFieldFunction300HeaderFieldWidth.setEnabled(false);
@@ -34198,10 +34696,10 @@ public class Editor extends JFrame {
 					jLabelFunction300HeaderField.setEnabled(true);
 					jLabelFunction300HeaderFieldType.setEnabled(true);
 					jLabelFunction300HeaderFieldComment.setEnabled(true);
-					jLabelFunction300HeaderFieldDisplayOption.setEnabled(true);
+					jLabelFunction300HeaderFieldLayoutOption.setEnabled(true);
 					jLabelFunction300HeaderFieldCaptionOption.setEnabled(true);
-					jRadioButtonFunction300HeaderFieldDisplayOptionVertical.setEnabled(true);
-					jRadioButtonFunction300HeaderFieldDisplayOptionHorizontal.setEnabled(true);
+					jRadioButtonFunction300HeaderFieldLayoutOptionVertical.setEnabled(true);
+					jRadioButtonFunction300HeaderFieldLayoutOptionHorizontal.setEnabled(true);
 					jRadioButtonFunction300HeaderFieldCaptionOptionName.setEnabled(true);
 					jRadioButtonFunction300HeaderFieldCaptionOptionValue.setEnabled(true);
 					jRadioButtonFunction300HeaderFieldCaptionOptionNone.setEnabled(true);
@@ -34246,10 +34744,10 @@ public class Editor extends JFrame {
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "HORIZONTAL");
 					if (wrkStr.equals("")) {
 						if (optionList.contains("HORIZONTAL")) {
-							jRadioButtonFunction300HeaderFieldDisplayOptionHorizontal.setSelected(true);
+							jRadioButtonFunction300HeaderFieldLayoutOptionHorizontal.setSelected(true);
 						}
 					} else {
-						jRadioButtonFunction300HeaderFieldDisplayOptionHorizontal.setSelected(true);
+						jRadioButtonFunction300HeaderFieldLayoutOptionHorizontal.setSelected(true);
 						jTextFieldFunction300HeaderFieldMargin.setText(wrkStr);
 					}
 					//
@@ -34318,17 +34816,17 @@ public class Editor extends JFrame {
 				jLabelFunction310HeaderTableType.setEnabled(false);
 				jLabelFunction310HeaderField.setEnabled(false);
 				jLabelFunction310HeaderFieldType.setEnabled(false);
-				jLabelFunction310HeaderFieldDisplayOption.setEnabled(false);
+				jLabelFunction310HeaderFieldLayoutOption.setEnabled(false);
 				jLabelFunction310HeaderFieldCaptionOption.setEnabled(false);
 				jLabelFunction310HeaderFieldPromptOption.setEnabled(false);
 				jTextFieldFunction310HeaderTable.setText("");
 				jTextFieldFunction310HeaderTableType.setText("");
 				jTextFieldFunction310HeaderField.setText("");
 				jTextFieldFunction310HeaderFieldType.setText("");
-				jLabelFunction310HeaderFieldDisplayOption.setEnabled(false);
-				jRadioButtonFunction310HeaderFieldDisplayOptionVertical.setSelected(true);
-				jRadioButtonFunction310HeaderFieldDisplayOptionVertical.setEnabled(false);
-				jRadioButtonFunction310HeaderFieldDisplayOptionHorizontal.setEnabled(false);
+				jLabelFunction310HeaderFieldLayoutOption.setEnabled(false);
+				jRadioButtonFunction310HeaderFieldLayoutOptionVertical.setSelected(true);
+				jRadioButtonFunction310HeaderFieldLayoutOptionVertical.setEnabled(false);
+				jRadioButtonFunction310HeaderFieldLayoutOptionHorizontal.setEnabled(false);
 				jLabelFunction310HeaderFieldWidth.setEnabled(false);
 				jTextFieldFunction310HeaderFieldWidth.setText("");
 				jTextFieldFunction310HeaderFieldWidth.setEnabled(false);
@@ -34367,11 +34865,11 @@ public class Editor extends JFrame {
 					jLabelFunction310HeaderTableType.setEnabled(true);
 					jLabelFunction310HeaderField.setEnabled(true);
 					jLabelFunction310HeaderFieldType.setEnabled(true);
-					jLabelFunction310HeaderFieldDisplayOption.setEnabled(true);
+					jLabelFunction310HeaderFieldLayoutOption.setEnabled(true);
 					jLabelFunction310HeaderFieldCaptionOption.setEnabled(true);
 					jLabelFunction310HeaderFieldComment.setEnabled(true);
-					jRadioButtonFunction310HeaderFieldDisplayOptionVertical.setEnabled(true);
-					jRadioButtonFunction310HeaderFieldDisplayOptionHorizontal.setEnabled(true);
+					jRadioButtonFunction310HeaderFieldLayoutOptionVertical.setEnabled(true);
+					jRadioButtonFunction310HeaderFieldLayoutOptionHorizontal.setEnabled(true);
 					jRadioButtonFunction310HeaderFieldCaptionOptionName.setEnabled(true);
 					jRadioButtonFunction310HeaderFieldCaptionOptionValue.setEnabled(true);
 					jRadioButtonFunction310HeaderFieldCaptionOptionNone.setEnabled(true);
@@ -34427,10 +34925,10 @@ public class Editor extends JFrame {
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "HORIZONTAL");
 					if (wrkStr.equals("")) {
 						if (optionList.contains("HORIZONTAL")) {
-							jRadioButtonFunction310HeaderFieldDisplayOptionHorizontal.setSelected(true);
+							jRadioButtonFunction310HeaderFieldLayoutOptionHorizontal.setSelected(true);
 						}
 					} else {
-						jRadioButtonFunction310HeaderFieldDisplayOptionHorizontal.setSelected(true);
+						jRadioButtonFunction310HeaderFieldLayoutOptionHorizontal.setSelected(true);
 						jTextFieldFunction310HeaderFieldMargin.setText(wrkStr);
 					}
 					//
@@ -34763,9 +35261,19 @@ public class Editor extends JFrame {
 				jTextFieldFunction300DetailTableType.setText("");
 				jTextFieldFunction300DetailField.setText("");
 				jTextFieldFunction300DetailFieldType.setText("");
+				//jLabelFunction300DetailFieldWidth.setEnabled(false);
+				//jTextFieldFunction300DetailFieldWidth.setText("");
+				//jTextFieldFunction300DetailFieldWidth.setEnabled(false);
+				jLabelFunction300DetailFieldLayoutOption.setEnabled(false);
+				jRadioButtonFunction300DetailFieldLayoutOptionVertical.setSelected(true);
+				jRadioButtonFunction300DetailFieldLayoutOptionVertical.setEnabled(false);
+				jRadioButtonFunction300DetailFieldLayoutOptionHorizontal.setEnabled(false);
 				jLabelFunction300DetailFieldWidth.setEnabled(false);
 				jTextFieldFunction300DetailFieldWidth.setText("");
 				jTextFieldFunction300DetailFieldWidth.setEnabled(false);
+				jLabelFunction300DetailFieldRows.setEnabled(false);
+				jTextFieldFunction300DetailFieldRows.setText("");
+				jTextFieldFunction300DetailFieldRows.setEnabled(false);
 				jRadioButtonFunction300DetailFieldCaptionOptionName.setSelected(true);
 				jRadioButtonFunction300DetailFieldCaptionOptionName.setEnabled(false);
 				jRadioButtonFunction300DetailFieldCaptionOptionValue.setEnabled(false);
@@ -34781,7 +35289,14 @@ public class Editor extends JFrame {
 					jLabelFunction300DetailTableType.setEnabled(true);
 					jLabelFunction300DetailField.setEnabled(true);
 					jLabelFunction300DetailFieldType.setEnabled(true);
+					jLabelFunction300DetailFieldLayoutOption.setEnabled(true);
+					jLabelFunction300DetailFieldWidth.setEnabled(true);
+					jLabelFunction300DetailFieldRows.setEnabled(true);
 					jLabelFunction300DetailFieldCaptionOption.setEnabled(true);
+					jRadioButtonFunction300DetailFieldLayoutOptionVertical.setEnabled(true);
+					jRadioButtonFunction300DetailFieldLayoutOptionHorizontal.setEnabled(true);
+					jTextFieldFunction300DetailFieldWidth.setEnabled(true);
+					jTextFieldFunction300DetailFieldRows.setEnabled(true);
 					jRadioButtonFunction300DetailFieldCaptionOptionName.setEnabled(true);
 					jRadioButtonFunction300DetailFieldCaptionOptionValue.setEnabled(true);
 					//
@@ -34813,11 +35328,31 @@ public class Editor extends JFrame {
 					jLabelFunction300DetailFieldWidth.setEnabled(true);
 					jTextFieldFunction300DetailFieldWidth.setEnabled(true);
 					//
+//					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
+//					if (wrkStr.equals("")) {
+//						jTextFieldFunction300DetailFieldWidth.setText("*Auto");
+//					} else {
+//						jTextFieldFunction300DetailFieldWidth.setText(wrkStr);
+//					}
+					ArrayList<String> optionList = getOptionList(element.getAttribute("FieldOptions"));
+					if (optionList.contains("VERTICAL")) {
+						jRadioButtonFunction300DetailFieldLayoutOptionVertical.setSelected(true);
+					} else {
+						jRadioButtonFunction300DetailFieldLayoutOptionHorizontal.setSelected(true);
+					}
+					//
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
 					if (wrkStr.equals("")) {
 						jTextFieldFunction300DetailFieldWidth.setText("*Auto");
 					} else {
 						jTextFieldFunction300DetailFieldWidth.setText(wrkStr);
+					}
+					//
+					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "ROWS");
+					if (wrkStr.equals("")) {
+						jTextFieldFunction300DetailFieldRows.setText("*Auto");
+					} else {
+						jTextFieldFunction300DetailFieldRows.setText(wrkStr);
 					}
 					//
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "CAPTION");
@@ -35096,9 +35631,19 @@ public class Editor extends JFrame {
 				jTextFieldFunction310DetailTableType.setText("");
 				jTextFieldFunction310DetailField.setText("");
 				jTextFieldFunction310DetailFieldType.setText("");
+				//jLabelFunction310DetailFieldWidth.setEnabled(false);
+				//jTextFieldFunction310DetailFieldWidth.setText("");
+				//jTextFieldFunction310DetailFieldWidth.setEnabled(false);
+				jLabelFunction310DetailFieldLayoutOption.setEnabled(false);
+				jRadioButtonFunction310DetailFieldLayoutOptionVertical.setSelected(true);
+				jRadioButtonFunction310DetailFieldLayoutOptionVertical.setEnabled(false);
+				jRadioButtonFunction310DetailFieldLayoutOptionHorizontal.setEnabled(false);
 				jLabelFunction310DetailFieldWidth.setEnabled(false);
 				jTextFieldFunction310DetailFieldWidth.setText("");
 				jTextFieldFunction310DetailFieldWidth.setEnabled(false);
+				jLabelFunction310DetailFieldRows.setEnabled(false);
+				jTextFieldFunction310DetailFieldRows.setText("");
+				jTextFieldFunction310DetailFieldRows.setEnabled(false);
 				jRadioButtonFunction310DetailFieldCaptionOptionName.setSelected(true);
 				jRadioButtonFunction310DetailFieldCaptionOptionName.setEnabled(false);
 				jRadioButtonFunction310DetailFieldCaptionOptionValue.setEnabled(false);
@@ -35123,6 +35668,15 @@ public class Editor extends JFrame {
 					jLabelFunction310DetailTableType.setEnabled(true);
 					jLabelFunction310DetailField.setEnabled(true);
 					jLabelFunction310DetailFieldType.setEnabled(true);
+					jLabelFunction310DetailFieldLayoutOption.setEnabled(true);
+					//jLabelFunction310DetailFieldWidth.setEnabled(true);
+					//jTextFieldFunction310DetailFieldWidth.setEnabled(true);
+					jRadioButtonFunction310DetailFieldLayoutOptionVertical.setEnabled(true);
+					jRadioButtonFunction310DetailFieldLayoutOptionHorizontal.setEnabled(true);
+					jLabelFunction310DetailFieldWidth.setEnabled(true);
+					jTextFieldFunction310DetailFieldWidth.setEnabled(true);
+					jLabelFunction310DetailFieldRows.setEnabled(true);
+					jTextFieldFunction310DetailFieldRows.setEnabled(true);
 					jLabelFunction310DetailFieldCaptionOption.setEnabled(true);
 					jRadioButtonFunction310DetailFieldCaptionOptionName.setEnabled(true);
 					jRadioButtonFunction310DetailFieldCaptionOptionValue.setEnabled(true);
@@ -35159,20 +35713,36 @@ public class Editor extends JFrame {
 					wrkStr = getDescriptionsOfTypeOptions(fieldElement, true, function310DetailTableElement);
 					jTextFieldFunction310DetailFieldType.setText(getDescriptionsOfTypeAndSize(fieldElement.getAttribute("Type"), fieldElement.getAttribute("Size"), fieldElement.getAttribute("Decimal")) + wrkStr);
 					//
-					jLabelFunction310DetailFieldWidth.setEnabled(true);
-					jTextFieldFunction310DetailFieldWidth.setEnabled(true);
-					//
 					if (!fieldElement.getAttribute("TypeOptions").contains("BOOLEAN(")) {
 						jRadioButtonFunction310DetailFieldPromptOptionCall.setEnabled(true);
 					}
 					//
 					ArrayList<String> optionList = getOptionList(element.getAttribute("FieldOptions"));
 					//
+//					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
+//					if (wrkStr.equals("")) {
+//						jTextFieldFunction310DetailFieldWidth.setText("*Auto");
+//					} else {
+//						jTextFieldFunction310DetailFieldWidth.setText(wrkStr);
+//					}
+					if (optionList.contains("VERTICAL")) {
+						jRadioButtonFunction310DetailFieldLayoutOptionVertical.setSelected(true);
+					} else {
+						jRadioButtonFunction310DetailFieldLayoutOptionHorizontal.setSelected(true);
+					}
+					//
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
 					if (wrkStr.equals("")) {
 						jTextFieldFunction310DetailFieldWidth.setText("*Auto");
 					} else {
 						jTextFieldFunction310DetailFieldWidth.setText(wrkStr);
+					}
+					//
+					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "ROWS");
+					if (wrkStr.equals("")) {
+						jTextFieldFunction310DetailFieldRows.setText("*Auto");
+					} else {
+						jTextFieldFunction310DetailFieldRows.setText(wrkStr);
 					}
 					//
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "CAPTION");
@@ -35236,9 +35806,19 @@ public class Editor extends JFrame {
 				jLabelFunction310AddRowListColumnType.setEnabled(false);
 				jTextFieldFunction310AddRowListColumnType.setEnabled(false);
 				jTextFieldFunction310AddRowListColumnType.setText("");
+				//jLabelFunction310AddRowListColumnWidth.setEnabled(false);
+				//jTextFieldFunction310AddRowListColumnWidth.setEnabled(false);
+				//jTextFieldFunction310AddRowListColumnWidth.setText("");
+				jLabelFunction310AddRowListColumnLayoutOption.setEnabled(false);
+				jRadioButtonFunction310AddRowListColumnLayoutOptionVertical.setSelected(true);
+				jRadioButtonFunction310AddRowListColumnLayoutOptionVertical.setEnabled(false);
+				jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal.setEnabled(false);
 				jLabelFunction310AddRowListColumnWidth.setEnabled(false);
-				jTextFieldFunction310AddRowListColumnWidth.setEnabled(false);
 				jTextFieldFunction310AddRowListColumnWidth.setText("");
+				jTextFieldFunction310AddRowListColumnWidth.setEnabled(false);
+				jLabelFunction310AddRowListColumnRows.setEnabled(false);
+				jTextFieldFunction310AddRowListColumnRows.setText("");
+				jTextFieldFunction310AddRowListColumnRows.setEnabled(false);
 				jLabelFunction310AddRowListColumnCaptionOption.setEnabled(false);
 				jRadioButtonFunction310AddRowListColumnCaptionOptionName.setEnabled(false);
 				jRadioButtonFunction310AddRowListColumnCaptionOptionName.setSelected(true);
@@ -35259,8 +35839,15 @@ public class Editor extends JFrame {
 					jTextFieldFunction310AddRowListColumn.setEnabled(true);
 					jLabelFunction310AddRowListColumnType.setEnabled(true);
 					jTextFieldFunction310AddRowListColumnType.setEnabled(true);
+					//jLabelFunction310AddRowListColumnWidth.setEnabled(true);
+					//jTextFieldFunction310AddRowListColumnWidth.setEnabled(true);
+					jLabelFunction310AddRowListColumnLayoutOption.setEnabled(true);
+					jRadioButtonFunction310AddRowListColumnLayoutOptionVertical.setEnabled(true);
+					jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal.setEnabled(true);
 					jLabelFunction310AddRowListColumnWidth.setEnabled(true);
 					jTextFieldFunction310AddRowListColumnWidth.setEnabled(true);
+					jLabelFunction310AddRowListColumnRows.setEnabled(true);
+					jTextFieldFunction310AddRowListColumnRows.setEnabled(true);
 					jLabelFunction310AddRowListColumnCaptionOption.setEnabled(true);
 					jRadioButtonFunction310AddRowListColumnCaptionOptionName.setEnabled(true);
 					jRadioButtonFunction310AddRowListColumnCaptionOptionValue.setEnabled(true);
@@ -35290,14 +35877,31 @@ public class Editor extends JFrame {
 					wrkStr = getDescriptionsOfTypeOptions(fieldElement, true, null);
 					jTextFieldFunction310AddRowListColumnType.setText(getDescriptionsOfTypeAndSize(fieldElement.getAttribute("Type"), fieldElement.getAttribute("Size"), fieldElement.getAttribute("Decimal")) + wrkStr);
 					//
-					jLabelFunction310AddRowListColumnWidth.setEnabled(true);
-					jTextFieldFunction310AddRowListColumnWidth.setEnabled(true);
+//					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
+//					if (wrkStr.equals("")) {
+//						jTextFieldFunction310AddRowListColumnWidth.setText("*Auto");
+//					} else {
+//						jTextFieldFunction310AddRowListColumnWidth.setText(wrkStr);
+//					}
+					ArrayList<String> optionList = getOptionList(element.getAttribute("FieldOptions"));
+					if (optionList.contains("VERTICAL")) {
+						jRadioButtonFunction310AddRowListColumnLayoutOptionVertical.setSelected(true);
+					} else {
+						jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal.setSelected(true);
+					}
 					//
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
 					if (wrkStr.equals("")) {
 						jTextFieldFunction310AddRowListColumnWidth.setText("*Auto");
 					} else {
 						jTextFieldFunction310AddRowListColumnWidth.setText(wrkStr);
+					}
+					//
+					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "ROWS");
+					if (wrkStr.equals("")) {
+						jTextFieldFunction310AddRowListColumnRows.setText("*Auto");
+					} else {
+						jTextFieldFunction310AddRowListColumnRows.setText(wrkStr);
 					}
 					//
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "CAPTION");

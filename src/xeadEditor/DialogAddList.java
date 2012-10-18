@@ -310,15 +310,15 @@ public class DialogAddList extends JDialog {
 		boolean noError = true;
 		boolean duplicated;
 		//
-		if (parentType_.equals("TableList")) {
-			for (int i = 0; i < 10; i++) {
-				if (idList.get(i).getText().contains("_")) {
-					noError = false;
-					JOptionPane.showMessageDialog(this, res.getString("ErrorMessage105"));
-					break;
-				}
-			}
-		}
+		//if (parentType_.equals("TableList")) {
+		//	for (int i = 0; i < 10; i++) {
+		//		if (idList.get(i).getText().contains("_")) {
+		//			noError = false;
+		//			JOptionPane.showMessageDialog(this, res.getString("ErrorMessage105"));
+		//			break;
+		//		}
+		//	}
+		//}
 		//
 		if (noError) {
 			for (int i = 0; i < 10; i++) {

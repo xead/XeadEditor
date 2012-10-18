@@ -39,18 +39,30 @@ import javax.swing.text.html.HTMLEditorKit;
 
 public class DialogAbout extends JDialog implements ActionListener {
 	private static final long serialVersionUID = 1L;
-	JPanel panel1 = new JPanel();
-	JPanel panel2 = new JPanel();
-	JPanel insetsPanel1 = new JPanel();
-	JPanel insetsPanel2 = new JPanel();
-	JPanel insetsPanel3 = new JPanel();
-	JButton buttonOK = new JButton();
-	JLabel imageLabel = new JLabel();
-	JLabel labelName = new JLabel();
-	JLabel labelVersion = new JLabel();
-	JLabel labelCopyright = new JLabel();
-	JLabel labelURL = new JLabel();
-	ImageIcon imageXead = new ImageIcon();
+	/**
+	 * Application Information
+	 */
+	public static final String APPLICATION_NAME  = "XEAD Editor 1.1";
+	public static final String FULL_VERSION  = "V1.R1.M10";
+	public static final String FORMAT_VERSION  = "1.1";
+	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
+	public static final String COPYRIGHT = "Copyright 2012 DBC,Ltd.";
+	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
+	/**
+	 * Components on dialog
+	 */
+	private JPanel panel1 = new JPanel();
+	private JPanel panel2 = new JPanel();
+	private JPanel insetsPanel1 = new JPanel();
+	private JPanel insetsPanel2 = new JPanel();
+	private JPanel insetsPanel3 = new JPanel();
+	private JButton buttonOK = new JButton();
+	private JLabel imageLabel = new JLabel();
+	private JLabel labelName = new JLabel();
+	private JLabel labelVersion = new JLabel();
+	private JLabel labelCopyright = new JLabel();
+	private JLabel labelURL = new JLabel();
+	private ImageIcon imageXead = new ImageIcon();
 	private HTMLEditorKit htmlEditorKit = new HTMLEditorKit();
 	private Desktop desktop = Desktop.getDesktop();
 	private Editor editor;
@@ -80,19 +92,19 @@ public class DialogAbout extends JDialog implements ActionListener {
 		//
 		labelName.setFont(new java.awt.Font("Serif", 1, 16));
 		labelName.setHorizontalAlignment(SwingConstants.CENTER);
-		labelName.setText(Editor.PRODUCT_NAME);
+		labelName.setText(PRODUCT_NAME);
 		labelName.setBounds(new Rectangle(-5, 9, 190, 18));
 		labelVersion.setFont(new java.awt.Font("Dialog", 0, 12));
 		labelVersion.setHorizontalAlignment(SwingConstants.CENTER);
-		labelVersion.setText(Editor.FULL_VERSION);
+		labelVersion.setText(FULL_VERSION);
 		labelVersion.setBounds(new Rectangle(-5, 32, 190, 15));
 		labelCopyright.setFont(new java.awt.Font("Dialog", 0, 12));
 		labelCopyright.setHorizontalAlignment(SwingConstants.CENTER);
-		labelCopyright.setText(Editor.COPYRIGHT);
+		labelCopyright.setText(COPYRIGHT);
 		labelCopyright.setBounds(new Rectangle(-5, 53, 190, 15));
 		labelURL.setFont(new java.awt.Font("Dialog", 0, 12));
 		labelURL.setHorizontalAlignment(SwingConstants.CENTER);
-		labelURL.setText("<html><u><font color='blue'>" + Editor.URL_DBC);
+		labelURL.setText("<html><u><font color='blue'>" + URL_DBC);
 		labelURL.setBounds(new Rectangle(-5, 73, 190, 15));
 		labelURL.addMouseListener(new DialogAbout_labelURL_mouseAdapter(this));
 		insetsPanel3.setLayout(null);
@@ -148,7 +160,7 @@ public class DialogAbout extends JDialog implements ActionListener {
 	void labelURL_mouseClicked(MouseEvent e) {
 		try {
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
-			desktop.browse(new URI(Editor.URL_DBC));
+			desktop.browse(new URI(URL_DBC));
 		} catch (Exception ex) {
 			JOptionPane.showMessageDialog(this, "The Site is inaccessible.");
 		} finally {

@@ -366,11 +366,11 @@ public class DialogImport extends JDialog {
 			NodeList nodeList = domDocumentImportingFrom.getElementsByTagName("System");
 			org.w3c.dom.Element systemElementImportFrom = (org.w3c.dom.Element)nodeList.item(0);
 			float importFileFormat = Float.parseFloat(systemElementImportFrom.getAttribute("FormatVersion"));
-			float appliFormat = Float.parseFloat(frame_.getFormatVersion());
+			float appliFormat = Float.parseFloat(DialogAbout.FORMAT_VERSION);
 			if (importFileFormat > appliFormat) {
 				JOptionPane.showMessageDialog(this, res.getString("FormatVersionError1") +
 						systemElementImportFrom.getAttribute("FormatVersion") + res.getString("FormatVersionError2") +
-						frame_.getFormatVersion() + res.getString("FormatVersionError3"));
+						DialogAbout.FORMAT_VERSION + res.getString("FormatVersionError3"));
 			} else {
 				jTextFieldSystemNameFrom.setText(systemElementImportFrom.getAttribute("Name"));
 				jTextFieldSystemVersionFrom.setText(systemElementImportFrom.getAttribute("Version"));

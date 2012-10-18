@@ -222,8 +222,10 @@ public class DialogAddReferTable extends JDialog {
 			} else {
 				tableAlias = jTextFieldAlias.getText();
 			}
-			if (isInvalidAlias(tableAlias)) {
-				JOptionPane.showMessageDialog(this, res.getString("ErrorMessage118"));
+			//
+			String aliasError = getAliasError(tableAlias);
+			if (!aliasError.equals("")) {
+				JOptionPane.showMessageDialog(this, aliasError);
 				jTextFieldAlias.requestFocus();
 			} else {
 				tableIDList.clear();
@@ -320,15 +322,15 @@ public class DialogAddReferTable extends JDialog {
 		}
 	}
 	
-	boolean isInvalidAlias(String alias) {
-		boolean isInvalid = false;
+	String getAliasError(String alias) {
+		String message = "";
 		if (!alias.equals(jTextFieldID.getText()) && !alias.equals("")) {
 			MainTreeNode tableNode = frame_.getSpecificXETreeNode("Table", alias);
 			if (tableNode != null) {
-				isInvalid = true;
+				message = res.getString("ErrorMessage118");
 			}
 		}
-		return isInvalid;
+		return message;
 	}
 	
 	void jButtonOK_actionPerformed(ActionEvent e) {
