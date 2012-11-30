@@ -104,12 +104,16 @@ public class Application {
 	}
 	
 	public void setTextOnSplash(String text) {
-		splashLabel.setText(text);
+		if (splashLabel != null) {
+			splashLabel.setText(text);
+		}
 	}
 
 	public void hideSplash() {
-		splashScreen.setVisible(false);
-		splashScreen = null;
-		splashLabel  = null;
+		if (splashScreen != null) {
+			splashScreen.setVisible(false);
+			splashScreen = null;
+			splashLabel  = null;
+		}
 	}
 }

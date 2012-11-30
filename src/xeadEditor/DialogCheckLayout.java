@@ -158,201 +158,6 @@ public class DialogCheckLayout extends JDialog {
 		}
 	}
 
-//	private void showLayoutOfTable(NodeList functionColumnList) {
-//		///////////////////////////////////////////////////////////
-//		// Set panel size and position according specified sizes //
-//		///////////////////////////////////////////////////////////
-//		if (!functionElement.getAttribute("Size").equals("")
-//				&& !functionElement.getAttribute("Size").equals("AUTO")) {
-//			workTokenizer = new StringTokenizer(functionElement.getAttribute("Size"), ";" );
-//			int width = Integer.parseInt(workTokenizer.nextToken());
-//			int height = Integer.parseInt(workTokenizer.nextToken());
-//			this.setPreferredSize(new Dimension(width, height));
-//			int posX = ((screenRect.width - width) / 2) + screenRect.x;
-//			int posY = ((screenRect.height - height) / 2) + screenRect.y;
-//			this.setLocation(posX, posY);
-//			this.pack();
-//		}
-//
-//		//////////////////////////////////////////////
-//		// Setup the primary table and refer tables //
-//		//////////////////////////////////////////////
-//		primaryTable = new DialogCheckLayoutPrimaryTable(functionElement, this);
-//		NodeList referNodeList = primaryTable.getTableElement().getElementsByTagName("Refer");
-//		sortableList = editor.getSortedListModel(referNodeList, "Order");
-//		for (int i = 0; i < sortableList.getSize(); i++) {
-//			org.w3c.dom.Element element = (org.w3c.dom.Element)sortableList.getElementAt(i);
-//			referTableList.add(new DialogCheckLayoutReferTable(element));
-//		}
-//		if (panelType_.equals("Function300DetailFieldList")) {
-//			referNodeList = detailTable.getTableElement().getElementsByTagName("Refer");
-//			sortableList = editor.getSortedListModel(referNodeList, "Order");
-//			for (int i = 0; i < sortableList.getSize(); i++) {
-//				org.w3c.dom.Element element = (org.w3c.dom.Element)sortableList.getElementAt(i);
-//				referTableList2.add(new DialogCheckLayoutReferTable(element));
-//			}
-//		}
-//
-//		////////////////////////////
-//		// Setup columns on table //
-//		////////////////////////////
-//		TableColumn column;
-//		DialogCheckLayoutColumn field;
-//		int biggestWidth = 0;
-//		int workHeight = 100;
-//		int posX, posY;
-//		TableModelReadOnlyList tableModel = editor.new TableModelReadOnlyList();
-//		jTableMain.setModel(tableModel);
-//		jScrollPane.getViewport().add(jTableMain, null);
-//		tableModel.addColumn("No.");
-//		columnList = new ArrayList<DialogCheckLayoutColumn>();
-//		sortableList = editor.getSortedListModel(functionColumnList, "Order");
-//		if (extForXF110_ == 0) {
-//			for (int i = 0; i < sortableList.getSize(); i++) {
-//				field = new DialogCheckLayoutColumn((org.w3c.dom.Element)sortableList.getElementAt(i), this);
-//				tableModel.addColumn(field.getCaption());
-//				columnList.add(field);
-//			}
-//			for (int i = 0; i < jTableMain.getColumnModel().getColumnCount(); i++) {
-//				column = jTableMain.getColumnModel().getColumn(i);
-//				if (i == 0) {
-//					column.setPreferredWidth(38);
-//					column.setCellRenderer(new DialogCheckLayoutRowNumberRenderer());
-//					biggestWidth = 38;
-//				} else {
-//					column.setPreferredWidth(columnList.get(i-1).getWidth());
-//					column.setHeaderRenderer(columnList.get(i-1).getHeaderRenderer());
-//					column.setCellRenderer(columnList.get(i-1).getCellRenderer());
-//					biggestWidth = biggestWidth + columnList.get(i-1).getWidth();
-//				}
-//			}
-//			for (int r = 0; r < 4; r++) {
-//				Object[] Cell = new Object[jTableMain.getColumnModel().getColumnCount()];
-//				for (int i = 0; i < jTableMain.getColumnModel().getColumnCount(); i++) {
-//					if (i == 0) {
-//						Cell[i] = r+1;
-//					} else {
-//						Cell[i] = columnList.get(i-1).getValue();
-//					}
-//				}
-//				tableModel.addRow(Cell);
-//			}
-//		}
-//		if (extForXF110_ == 1) {
-//			tableModel.addColumn("");
-//			for (int i = 0; i < sortableList.getSize(); i++) {
-//				field = new DialogCheckLayoutColumn((org.w3c.dom.Element)sortableList.getElementAt(i), this);
-//				if (field.isVisibleOnPanel(extForXF110_)) {
-//					tableModel.addColumn(field.getCaption());
-//					columnList.add(field);
-//				}
-//			}
-//			for (int i = 0; i < jTableMain.getColumnModel().getColumnCount(); i++) {
-//				column = jTableMain.getColumnModel().getColumn(i);
-//				if (i == 0) {
-//					column.setPreferredWidth(38);
-//					column.setCellRenderer(new DialogCheckLayoutRowNumberRenderer());
-//					biggestWidth = 38;
-//				} else {
-//					if (i == 1) {
-//						column.setPreferredWidth(22);
-//						column.setCellRenderer(new DialogCheckLayoutCheckBoxRenderer());
-//						column.setHeaderRenderer(new DialogCheckLayoutCheckBoxHeaderRenderer());
-//						biggestWidth = biggestWidth + 22;
-//					} else {
-//						column.setPreferredWidth(columnList.get(i-2).getWidth());
-//						column.setHeaderRenderer(columnList.get(i-2).getHeaderRenderer());
-//						column.setCellRenderer(columnList.get(i-2).getCellRenderer());
-//						biggestWidth = biggestWidth + columnList.get(i-2).getWidth();
-//					}
-//				}
-//			}
-//			for (int r = 0; r < 4; r++) {
-//				Object[] Cell = new Object[jTableMain.getColumnModel().getColumnCount()];
-//				for (int i = 0; i < jTableMain.getColumnModel().getColumnCount(); i++) {
-//					if (i == 0) {
-//						Cell[i] = r+1;
-//					} else {
-//						if (i == 1) {
-//							Cell[i] = "";
-//						} else {
-//							Cell[i] = columnList.get(i-2).getValue();
-//						}
-//					}
-//				}
-//				tableModel.addRow(Cell);
-//			}
-//		}
-//		if (extForXF110_ == 2) {
-//			for (int i = 0; i < sortableList.getSize(); i++) {
-//				field = new DialogCheckLayoutColumn((org.w3c.dom.Element)sortableList.getElementAt(i), this);
-//				if (field.isVisibleOnPanel(extForXF110_)) {
-//					tableModel.addColumn(field.getCaption());
-//					columnList.add(field);
-//				}
-//			}
-//			for (int i = 0; i < jTableMain.getColumnModel().getColumnCount(); i++) {
-//				column = jTableMain.getColumnModel().getColumn(i);
-//				if (i == 0) {
-//					column.setPreferredWidth(38);
-//					column.setCellRenderer(new DialogCheckLayoutRowNumberRenderer());
-//					biggestWidth = 38;
-//				} else {
-//					column.setPreferredWidth(columnList.get(i-1).getWidth());
-//					column.setHeaderRenderer(columnList.get(i-1).getHeaderRenderer());
-//					column.setCellRenderer(columnList.get(i-1).getCellRenderer());
-//					biggestWidth = biggestWidth + columnList.get(i-1).getWidth();
-//				}
-//			}
-//			for (int r = 0; r < 4; r++) {
-//				Object[] Cell = new Object[jTableMain.getColumnModel().getColumnCount()];
-//				for (int i = 0; i < jTableMain.getColumnModel().getColumnCount(); i++) {
-//					if (i == 0) {
-//						Cell[i] = r+1;
-//					} else {
-//						Cell[i] = columnList.get(i-1).getValue();
-//					}
-//				}
-//				tableModel.addRow(Cell);
-//			}
-//		}
-//		jTableMain.setRowSelectionInterval(0, 0);
-//		jTableMain.setPreferredSize(new Dimension(biggestWidth, workHeight));
-//
-//		///////////////////////////////////////////////////////////////
-//		// Adjust panel size and position according to fields layout //
-//		///////////////////////////////////////////////////////////////
-//		int workWidth = biggestWidth + 50;
-//		if (functionElement.getAttribute("Size").equals("")) {
-//			workWidth = screenRect.width;
-//			posX = screenRect.x;
-//		} else {
-//			if (functionElement.getAttribute("Size").equals("AUTO")) {
-//				if (workWidth < 800) {
-//					workWidth = 800;
-//				}
-//				if (workWidth > screenRect.width) {
-//					workWidth = screenRect.width;
-//					posX = screenRect.x;
-//				} else {
-//					posX = ((screenRect.width - workWidth) / 2) + screenRect.x;
-//				}
-//			} else {
-//				workWidth = this.getPreferredSize().width;
-//				posX = this.getLocation().x;
-//			}
-//		}
-//		posY = ((screenRect.height - workHeight) / 2) + screenRect.y;
-//		this.setPreferredSize(new Dimension(workWidth, workHeight+100));
-//		this.setLocation(posX, posY);
-//
-//		///////////////////////////////////////
-//		// Arrange components and show panel //
-//		///////////////////////////////////////
-//		this.pack();
-//		super.setVisible(true);
-//	}
-
 	private void showLayoutOfTableColumns(NodeList functionColumnList) {
 		///////////////////////////////////////////////////////////
 		// Set panel size and position according specified sizes //
@@ -397,13 +202,7 @@ public class DialogCheckLayout extends JDialog {
 		sortableList = editor.getSortedListModel(functionColumnList, "Order");
 		for (int i = 0; i < sortableList.getSize(); i++) {
 			field = new DialogCheckLayoutColumn((org.w3c.dom.Element)sortableList.getElementAt(i), this);
-			if (extForXF110_ == 0) {
-				columnList.add(field);
-			} else {
-				if (field.isVisibleOnPanel(extForXF110_)) {
-					columnList.add(field);
-				}
-			}
+			columnList.add(field);
 		}
 		TableModelReadOnlyList tableModel = editor.new TableModelReadOnlyList();
 		jTableMain.setModel(tableModel);
@@ -439,9 +238,6 @@ public class DialogCheckLayout extends JDialog {
 			posX = screenRect.x;
 		} else {
 			if (functionElement.getAttribute("Size").equals("AUTO")) {
-				//if (workWidth < 800) {
-				//	workWidth = 800;
-				//}
 				if (workWidth > screenRect.width) {
 					workWidth = screenRect.width;
 					posX = screenRect.x;
@@ -1404,7 +1200,9 @@ class DialogCheckLayoutColumn extends Object {
 			} catch(Exception e) {
 			}
 		} else {
-			if (dataTypeOptionList.contains("KANJI") || dataTypeOptionList.contains("ZIPADRS")) {
+			//if (dataTypeOptionList.contains("KANJI") || dataTypeOptionList.contains("ZIPADRS")) {
+			if ((dataTypeOptionList.contains("KANJI") || dataTypeOptionList.contains("ZIPADRS"))
+					&& !dataType.equals("VARCHAR") && !dataType.equals("LONG VARCHAR")) {
 				fieldWidth = dataSize * 14 + 5;
 				value = dialog_.getStringData("KANJI", dataSize, 0, false);
 			} else {
@@ -1466,8 +1264,17 @@ class DialogCheckLayoutColumn extends Object {
 											fieldWidth = 20;
 											value = "(v)";
 										} else {
-											fieldWidth = dataSize * 7 + 15;
-											value = dialog_.getStringData("STRING", dataSize, 0, false);
+											if (dataType.equals("VARCHAR") || dataType.equals("LONG VARCHAR")) {
+												fieldWidth = 320;
+												if (dataTypeOptionList.contains("KANJI")) {
+													value = dialog_.getStringData("KANJI", dataSize, 0, false);
+												} else {
+													value = dialog_.getStringData("STRING", dataSize, 0, false);
+												}
+											} else {
+												fieldWidth = dataSize * 7 + 15;
+												value = dialog_.getStringData("STRING", dataSize, 0, false);
+											}
 										}
 									}
 								}
@@ -1505,43 +1312,6 @@ class DialogCheckLayoutColumn extends Object {
 	public String getLayout() {
 		return fieldLayout;
 	}
-
-//	public DialogCheckLayoutHorizontalAlignmentHeaderRenderer getHeaderRenderer(){
-//		DialogCheckLayoutHorizontalAlignmentHeaderRenderer renderer = null;
-//		if (this.getBasicType().equals("INTEGER") || this.getBasicType().equals("FLOAT")) {
-//			if (dataTypeOptionList.contains("MSEQ") || dataTypeOptionList.contains("FYEAR")) {
-//				renderer = new DialogCheckLayoutHorizontalAlignmentHeaderRenderer(SwingConstants.LEFT);
-//			} else {
-//				renderer = new DialogCheckLayoutHorizontalAlignmentHeaderRenderer(SwingConstants.RIGHT);
-//			}
-//		} else {
-//			renderer = new DialogCheckLayoutHorizontalAlignmentHeaderRenderer(SwingConstants.LEFT);
-//		}
-//		return renderer;
-//	}
-//
-//	public TableCellRenderer getCellRenderer(){
-//		TableCellRenderer renderer = null;
-//		//
-//		String wrkStr = dialog_.getEditor().getOptionValueWithKeyword(dataTypeOptions, "BOOLEAN");
-//		if (wrkStr.equals("")) {
-//			renderer = new DialogCheckLayoutTableCellRenderer();
-//			if (this.getBasicType().equals("INTEGER") || this.getBasicType().equals("FLOAT")) {
-//				if (dataTypeOptionList.contains("MSEQ") || dataTypeOptionList.contains("FYEAR")) {
-//					((DialogCheckLayoutTableCellRenderer)renderer).setHorizontalAlignment(SwingConstants.LEFT);
-//				} else {
-//					((DialogCheckLayoutTableCellRenderer)renderer).setHorizontalAlignment(SwingConstants.RIGHT);
-//				}
-//			} else {
-//				((DialogCheckLayoutTableCellRenderer)renderer).setHorizontalAlignment(SwingConstants.LEFT);
-//			}
-//		} else {
-//			renderer = new DialogCheckLayoutTableCellRendererWithCheckBox(dataTypeOptions);
-//			((DialogCheckLayoutTableCellRendererWithCheckBox)renderer).setHorizontalAlignment(SwingConstants.CENTER);
-//		}
-//		//
-//		return renderer;
-//	}
 	
 	public String getCaption() {
 		return fieldCaption;
@@ -1557,20 +1327,6 @@ class DialogCheckLayoutColumn extends Object {
 
 	public Object getValue() {
 		return value;
-	}
-
-	public boolean isVisibleOnPanel(int ext){
-		boolean isVisibleOnPanel = false;
-		if (fieldOptionList.contains("LIST1") && ext == 1) {
-			isVisibleOnPanel = true;
-		}
-		if (fieldOptionList.contains("LIST2") && ext == 2) {
-			isVisibleOnPanel = true;
-		}
-		if (!fieldOptionList.contains("LIST1") && !fieldOptionList.contains("LIST2")) {
-			isVisibleOnPanel = true;
-		}
-		return isVisibleOnPanel;
 	}
 	
 	private String getLongestSegment(String caption) {

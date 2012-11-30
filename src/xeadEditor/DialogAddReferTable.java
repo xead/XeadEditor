@@ -287,6 +287,7 @@ public class DialogAddReferTable extends JDialog {
 					fieldsList.clear();
 					fieldsDefaultValuesList.clear();
 					//
+					String fieldIDOfObjectTable;
 					NodeList keyList = referTableNode.getElement().getElementsByTagName("Key");
 					for (int i = 0; i < keyList.getLength(); i++) {
 						workElement = (org.w3c.dom.Element)keyList.item(i);
@@ -301,7 +302,9 @@ public class DialogAddReferTable extends JDialog {
 								if (count > 0) {
 									buf.append(";");
 								}
-								buf.append(objectTableElement_.getAttribute("ID") + "." + workTokenizer.nextToken());
+								//buf.append(objectTableElement_.getAttribute("ID") + "." + workTokenizer.nextToken());
+								fieldIDOfObjectTable = getFieldIDWithTheSameDataTypeInTheTargetTable(referTableNode.getElement(), workTokenizer.nextToken(), objectTableElement_);
+								buf.append(objectTableElement_.getAttribute("ID") + "." + fieldIDOfObjectTable);
 								count++;
 							}
 							fieldsDefaultValuesList.add(buf.toString());
@@ -320,6 +323,35 @@ public class DialogAddReferTable extends JDialog {
 				}
 			}
 		}
+	}
+
+	String getFieldIDWithTheSameDataTypeInTheTargetTable(org.w3c.dom.Element tableElement, String fieldID, org.w3c.dom.Element targetTableElement) {
+		String fieldIDFound = fieldID;
+		org.w3c.dom.Element element, fieldElement = null;
+		//
+		NodeList fieldList = tableElement.getElementsByTagName("Field");
+		for (int i = 0; i < fieldList.getLength(); i++) {
+			element = (org.w3c.dom.Element)fieldList.item(i);
+			if (element.getAttribute("ID").equals(fieldID)) {
+				fieldElement = element;
+				break;
+			}
+		}
+		//
+		if (fieldElement != null) {
+			fieldList = targetTableElement.getElementsByTagName("Field");
+			for (int i = 0; i < fieldList.getLength(); i++) {
+				element = (org.w3c.dom.Element)fieldList.item(i);
+				if (element.getAttribute("Type").equals(fieldElement.getAttribute("Type"))
+						&& element.getAttribute("Size").equals(fieldElement.getAttribute("Size"))
+						&& element.getAttribute("Decimal").equals(fieldElement.getAttribute("Decimal"))) {
+					fieldIDFound = element.getAttribute("ID");
+					break;
+				}
+			}
+		}
+		//
+		return fieldIDFound;
 	}
 	
 	String getAliasError(String alias) {

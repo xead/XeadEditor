@@ -155,9 +155,7 @@ public class DialogSQL extends JDialog {
 	}
 
 	public boolean request(Connection connection) {
-		//
 		sqlExecuted = false;
-		//
 		jComboBoxConnection.removeAllItems();
 		for (int i = 0; i < frame_.getDatabaseNameList().size(); i++) {
 			jComboBoxConnection.addItem(frame_.getDatabaseNameList().get(i));
@@ -169,7 +167,6 @@ public class DialogSQL extends JDialog {
 		Point loc = frame_.getLocation();
 		this.setLocation((frmSize.width - dlgSize.width) / 2 + loc.x, (frmSize.height - dlgSize.height) / 2 + loc.y);
 		super.setVisible(true);
-		//
 		return sqlExecuted;
 	}
 
@@ -180,14 +177,11 @@ public class DialogSQL extends JDialog {
 		String sql = "";
 		try {
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
-			//
 			Connection connection = frame_.getDatabaseConnList().get(jComboBoxConnection.getSelectedIndex());
 			Statement statement = connection.createStatement();
-			//sql = jTextAreaStatement.getText().toUpperCase().trim().replace("\n", " ");
 			sql = jTextAreaStatement.getText().trim().replace("\n", " ");
 			if (sql.length() > 1) {
-				//if (sql.contains("SELECT ")) {
-				if (sql.toUpperCase().contains("SELECT ")) {
+				if (sql.toUpperCase().startsWith("SELECT ")) {
 					int seq = 0;
 					resultSet = statement.executeQuery(sql);
 					resultSetMetaData = resultSet.getMetaData();

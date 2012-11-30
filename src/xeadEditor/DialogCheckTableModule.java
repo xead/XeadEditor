@@ -312,11 +312,12 @@ public class DialogCheckTableModule extends JDialog {
 								isNullableOfModuleField = false;
 							}
 							//
-							if (isEquivalentDataType(element.getAttribute("Type"), rs2.getString("TYPE_NAME"))) {
+							if (isEquivalentDataType(element.getAttribute("Type"), sizeOfDefinitionField, rs2.getString("TYPE_NAME"))) {
 								if (element.getAttribute("Type").equals("CHAR")
 										|| element.getAttribute("Type").equals("DECIMAL")
 										|| element.getAttribute("Type").equals("NUMERIC")) {
-									if (sizeOfDefinitionField != sizeOfModuleField || decimalOfDefinitionField != decimalOfModuleField) {
+									if (sizeOfDefinitionField != sizeOfModuleField
+											|| decimalOfDefinitionField != decimalOfModuleField) {
 										countOfErrors++;
 										fieldListToBeDropped.add(element.getAttribute("ID"));
 										fieldListToBeAdded.add(element.getAttribute("ID"));
@@ -371,24 +372,26 @@ public class DialogCheckTableModule extends JDialog {
 				//////////////////////////
 			    // Check update counter //
 				//////////////////////////
-				fieldID = updateCounterID;
-				if (databaseName.contains("jdbc:postgresql")) {
-					fieldID = fieldID.toLowerCase();
-				}
-			    ResultSet rs2 = connection_.getMetaData().getColumns(null, null, tableID, fieldID);
-				if (rs2.next()) {
-					if (!isEquivalentDataType("INTEGER", rs2.getString("TYPE_NAME"))) {
-						countOfErrors++;
-						fieldListToBeDropped.add(updateCounterID);
-						fieldListToBeAdded.add(updateCounterID);
-						buf.append("(" + countOfErrors + ") " + res.getString("ModuleCheckMessage11") + updateCounterID + res.getString("ModuleCheckMessage12") + rs2.getString("TYPE_NAME") + res.getString("ModuleCheckMessage13"));
-					}
-				} else {
-					countOfErrors++;
-					fieldListToBeAdded.add(updateCounterID);
-					buf.append("(" + countOfErrors + ") " + res.getString("ModuleCheckMessage14") + updateCounterID + res.getString("ModuleCheckMessage15"));
-				}
-				rs2.close();
+			    if (!updateCounterID.toUpperCase().equals("*NONE")) {
+			    	fieldID = updateCounterID;
+			    	if (databaseName.contains("jdbc:postgresql")) {
+			    		fieldID = fieldID.toLowerCase();
+			    	}
+			    	ResultSet rs2 = connection_.getMetaData().getColumns(null, null, tableID, fieldID);
+			    	if (rs2.next()) {
+			    		if (!isEquivalentDataType("INTEGER", 9, rs2.getString("TYPE_NAME"))) {
+			    			countOfErrors++;
+			    			fieldListToBeDropped.add(updateCounterID);
+			    			fieldListToBeAdded.add(updateCounterID);
+			    			buf.append("(" + countOfErrors + ") " + res.getString("ModuleCheckMessage11") + updateCounterID + res.getString("ModuleCheckMessage12") + rs2.getString("TYPE_NAME") + res.getString("ModuleCheckMessage13"));
+			    		}
+			    	} else {
+			    		countOfErrors++;
+			    		fieldListToBeAdded.add(updateCounterID);
+			    		buf.append("(" + countOfErrors + ") " + res.getString("ModuleCheckMessage14") + updateCounterID + res.getString("ModuleCheckMessage15"));
+			    	}
+			    	rs2.close();
+			    }
 				//
 				int columnCounter = 0;
 				//
@@ -834,7 +837,7 @@ public class DialogCheckTableModule extends JDialog {
 		}
 	}
 	
-	boolean isEquivalentDataType(String dataTypeDefiition, String dataTypeModule) {
+	boolean isEquivalentDataType(String dataTypeDefiition, int size, String dataTypeModule) {
 		boolean isEquivalent = false;
 		if (dataTypeDefiition.equals(dataTypeModule)) {
 			isEquivalent = true;
@@ -848,7 +851,9 @@ public class DialogCheckTableModule extends JDialog {
 					}
 				}
 				if (dataTypeDefiition.equals("INTEGER")) {
-					if (dataTypeModule.equals("INT")) {
+					if (dataTypeModule.equals("INT")
+							|| dataTypeModule.equals("INT SIGNED")
+							|| dataTypeModule.equals("INT UNSIGNED")) {
 						isEquivalent = true;
 					}
 					if (dataTypeModule.equals("int")
@@ -883,6 +888,9 @@ public class DialogCheckTableModule extends JDialog {
 				}
 				if (dataTypeDefiition.equals("CHAR")) {
 					if (dataTypeModule.equals("bpchar") || dataTypeModule.equals("bool")) {
+						isEquivalent = true;
+					}
+					if (size == 19 && dataTypeModule.equals("DATETIME")) {
 						isEquivalent = true;
 					}
 				}
@@ -1463,6 +1471,18 @@ public class DialogCheckTableModule extends JDialog {
 			}
 		}
 		buf.append(")\n)\n");
+	    //
+		if (databaseName.contains("jdbc:mysql")) {
+			String engines[] = {"MyISAM", "InnoDB"};
+		    int index = JOptionPane.showOptionDialog(this,
+		    	"Choose table engine type.", "MySQL ENGINE Option", 
+		    	JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE,
+		    	null, engines, engines[1]);
+		    if (index != JOptionPane.CLOSED_OPTION){
+			    buf.append(" ENGINE=");
+			    buf.append(engines[index]);
+		    }
+		}
 		//
 		return buf.toString();
 	}

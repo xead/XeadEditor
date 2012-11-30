@@ -274,9 +274,9 @@ public class DialogCreateTable extends JDialog {
 						}
 					}
 					//
-					if (tableID.contains("_")) {
-						messageList.add(res.getString("ErrorMessage105"));
-					} else {
+					//if (tableID.contains("_")) {
+					//	messageList.add(res.getString("ErrorMessage105"));
+					//} else {
 						MainTreeNode subsystemNode = subsystemNodeList.get(jComboBoxSubsystem.getSelectedIndex());
 						tableElement = createTableDefinition(subsystemNode, tableID, tableName, tableAttr);
 						if (tableElement == null) {
@@ -296,7 +296,7 @@ public class DialogCreateTable extends JDialog {
 								messageList.add(res.getString("ErrorMessage100") + tableElement.getAttribute("ID") + res.getString("ErrorMessage101"));
 							}
 						}
-					}
+					//}
 				}
 			}
 			//
