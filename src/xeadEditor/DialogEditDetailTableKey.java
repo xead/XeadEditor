@@ -35,6 +35,7 @@ import java.awt.*;
 import javax.swing.*;
 import org.w3c.dom.NodeList;
 import xeadEditor.Editor.MainTreeNode;
+import xeadEditor.Editor.SortableDomElementListModel;
 import java.awt.event.*;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
@@ -46,6 +47,8 @@ public class DialogEditDetailTableKey extends JDialog {
 	private JButton jButtonOK = new JButton();
 	private JButton jButtonCancel = new JButton();
 	private Editor frame_;
+	private org.w3c.dom.Element functionElement_;
+	private int tabIndex_;
 	private JLabel jLabelID = new JLabel();
 	private JLabel jLabelHdrKeyFields = new JLabel();
 	private JLabel jLabelDtlKeyFields = new JLabel();
@@ -58,9 +61,11 @@ public class DialogEditDetailTableKey extends JDialog {
 	private JPanel jPanelButtons = new JPanel();
 	private MainTreeNode headerTableNode = null;
 	private MainTreeNode detailTableNode = null;
+	private String originalDetailTableID = "";
 	private String headerPK = "";
 	private String detailPK = "";
 	private boolean isValidated = false;
+	private SortableDomElementListModel sortingList;
 	
 	public DialogEditDetailTableKey(Editor frame) {
 		super(frame, "", true);
@@ -75,10 +80,9 @@ public class DialogEditDetailTableKey extends JDialog {
 	}
 
 	private void jbInit() throws Exception {
-		//
 		panelMain.setBorder(BorderFactory.createEtchedBorder());
 		this.getContentPane().setLayout(new BorderLayout());
-		//
+
 		jLabelID.setText(res.getString("DTLTableID"));
 		jLabelID.setFont(new java.awt.Font("Dialog", 0, 12));
 		jLabelID.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -86,8 +90,7 @@ public class DialogEditDetailTableKey extends JDialog {
 		jLabelID.setBounds(new Rectangle(11, 12, 89, 15));
 		jTextFieldID.setFont(new java.awt.Font("Dialog", 0, 12));
 		jTextFieldID.setBounds(new Rectangle(105, 9, 70, 21));
-		jTextFieldID.setEditable(false);
-		jTextFieldID.setFocusable(false);
+		jTextFieldID.addKeyListener(new DialogEditDetailTableKey_jTextFieldID_keyAdapter(this));
 		jTextFieldName.setFont(new java.awt.Font("Dialog", 0, 12));
 		jTextFieldName.setBounds(new Rectangle(180, 9, 305, 22));
 		jTextFieldName.setEditable(false);
@@ -97,8 +100,6 @@ public class DialogEditDetailTableKey extends JDialog {
 		jLabelHdrKeyFields.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelHdrKeyFields.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelHdrKeyFields.setBounds(new Rectangle(11, 40, 89, 15));
-		//jTextFieldHdrKeyFields.setEditable(false);
-		//jTextFieldHdrKeyFields.setFocusable(false);
 		jTextFieldHdrKeyFields.setFont(new java.awt.Font("Dialog", 0, 12));
 		jTextFieldHdrKeyFields.setBounds(new Rectangle(105, 37, 380, 21));
 		jLabelDtlKeyFields.setText(res.getString("DTLTableKeys"));
@@ -124,7 +125,7 @@ public class DialogEditDetailTableKey extends JDialog {
 		panelMain.add(jLabelDtlKeyFields);
 		panelMain.add(jTextFieldDtlKeyFields);
 		panelMain.add(jScrollPaneMessage);
-		//
+
 		jPanelButtons.setBorder(BorderFactory.createEtchedBorder());
 		jPanelButtons.setPreferredSize(new Dimension(350, 43));
 		jButtonOK.setBounds(new Rectangle(620, 10, 73, 25));
@@ -138,7 +139,7 @@ public class DialogEditDetailTableKey extends JDialog {
 		jPanelButtons.setLayout(null);
 		jPanelButtons.add(jButtonOK);
 		jPanelButtons.add(jButtonCancel);
-		//
+
 		this.setTitle(res.getString("EditDetailTableKeyTitle"));
 		this.getContentPane().add(jPanelButtons,  BorderLayout.SOUTH);
 		this.setResizable(false);
@@ -147,15 +148,18 @@ public class DialogEditDetailTableKey extends JDialog {
 		jPanelButtons.getRootPane().setDefaultButton(jButtonOK);
 		this.pack();
 	}
-	//
-	public boolean request(org.w3c.dom.Element objectFunctionElement, String detailTableID, String headerKeys, String detailKeys) {
+
+	public boolean request(org.w3c.dom.Element functionElement, int tabIndex, String detailTableID, String headerKeys, String detailKeys) {
 		org.w3c.dom.Element workElement;
-		//
+
 		isValidated = false;
-		headerTableNode = frame_.getSpecificXETreeNode("Table", objectFunctionElement.getAttribute("HeaderTable"));
+		functionElement_ = functionElement;
+		tabIndex_ = tabIndex;
+		originalDetailTableID = detailTableID;
+		headerTableNode = frame_.getSpecificXETreeNode("Table", functionElement_.getAttribute("HeaderTable"));
 		detailTableNode = frame_.getSpecificXETreeNode("Table", detailTableID);
 		if (headerTableNode != null && detailTableNode != null) {
-			//
+
 	    	NodeList keyList = headerTableNode.getElement().getElementsByTagName("Key");
 	    	for (int i = 0; i < keyList.getLength(); i++) {
 	    		workElement = (org.w3c.dom.Element)keyList.item(i);
@@ -172,7 +176,7 @@ public class DialogEditDetailTableKey extends JDialog {
 	    			break;
 	    		}
 	    	}
-			//
+
 			jTextFieldID.setText(detailTableID);
 			jTextFieldID.requestFocus();
 			jTextFieldName.setText("");
@@ -182,70 +186,82 @@ public class DialogEditDetailTableKey extends JDialog {
 			} else {
 				jTextFieldHdrKeyFields.setText(headerKeys);
 			}
+			if (functionElement_.getAttribute("Type").equals("XF300")) {
+				jTextFieldHdrKeyFields.setEditable(true);
+			} else {
+				jTextFieldHdrKeyFields.setEditable(false);
+			}
 			if (detailKeys.equals("")) {
 				jTextFieldDtlKeyFields.setText(detailPK);
 			} else {
 				jTextFieldDtlKeyFields.setText(detailKeys);
 			}
 			jTextAreaMessage.setText(res.getString("EditDetailTableKeyComment"));
-			//
+
 			Dimension dlgSize = this.getPreferredSize();
 			Dimension frmSize = frame_.getSize();
 			Point loc = frame_.getLocation();
 			this.setLocation((frmSize.width - dlgSize.width) / 2 + loc.x, (frmSize.height - dlgSize.height) / 2 + loc.y);
 			jPanelButtons.getRootPane().setDefaultButton(jButtonOK);
-			//
+
 			super.setVisible(true);
 		}
-		//
+
 		return isValidated;
 	}
-	//
+
 	void jButtonOK_actionPerformed(ActionEvent e) {
 		org.w3c.dom.Element elementHdr, elementDtl;
 		StringTokenizer workTokenizerHdr, workTokenizerDtl;
 		String dataSourceHdr, dataSourceDtl;
 		String errorMessage = "";
-		//
-		workTokenizerHdr = new StringTokenizer(jTextFieldHdrKeyFields.getText(), ";");
-		if (workTokenizerHdr.countTokens() == 0) {
-			errorMessage = res.getString("ErrorMessage106");
-		} else {
-			while (workTokenizerHdr.hasMoreTokens()) {
-				dataSourceHdr = workTokenizerHdr.nextToken();
-				elementHdr = frame_.getSpecificFieldElement(headerTableNode.getElement().getAttribute("ID"), dataSourceHdr);
-				if (elementHdr == null ) {
-					errorMessage = res.getString("ErrorMessage75") + dataSourceHdr + res.getString("ErrorMessage76");
-					break;
-				}
-			}
+
+		if (!jTextFieldID.getText().equals(originalDetailTableID)) {
+			detailTableNode = frame_.getSpecificXETreeNode("Table", jTextFieldID.getText());
+			errorMessage = validateNewTableID();
 		}
-		//
-		workTokenizerDtl = new StringTokenizer(jTextFieldDtlKeyFields.getText(), ";");
-		if (workTokenizerDtl.countTokens() == 0) {
-			errorMessage = res.getString("ErrorMessage73");
-		} else {
-			if (workTokenizerHdr.countTokens() >= workTokenizerDtl.countTokens()) {
-				errorMessage = res.getString("ErrorMessage74");
+
+		if (errorMessage.equals("")) {
+			workTokenizerHdr = new StringTokenizer(jTextFieldHdrKeyFields.getText(), ";");
+			if (workTokenizerHdr.countTokens() == 0) {
+				errorMessage = res.getString("ErrorMessage106");
 			} else {
 				while (workTokenizerHdr.hasMoreTokens()) {
 					dataSourceHdr = workTokenizerHdr.nextToken();
-					dataSourceDtl = workTokenizerDtl.nextToken();
 					elementHdr = frame_.getSpecificFieldElement(headerTableNode.getElement().getAttribute("ID"), dataSourceHdr);
-					elementDtl = frame_.getSpecificFieldElement(detailTableNode.getElement().getAttribute("ID"), dataSourceDtl);
-					if (elementDtl == null ) {
-						errorMessage = res.getString("ErrorMessage75") + dataSourceDtl + res.getString("ErrorMessage76");
+					if (elementHdr == null ) {
+						errorMessage = res.getString("ErrorMessage75") + dataSourceHdr + res.getString("ErrorMessage76");
 						break;
-					} else {
-						if (!elementHdr.getAttribute("Type").equals(elementDtl.getAttribute("Type")) || !elementHdr.getAttribute("Size").equals(elementDtl.getAttribute("Size")) || !elementHdr.getAttribute("Decimal").equals(elementDtl.getAttribute("Decimal"))) {
-							errorMessage = res.getString("ErrorMessage77");
+					}
+				}
+			}
+
+			workTokenizerDtl = new StringTokenizer(jTextFieldDtlKeyFields.getText(), ";");
+			if (workTokenizerDtl.countTokens() == 0) {
+				errorMessage = res.getString("ErrorMessage73");
+			} else {
+				if (workTokenizerHdr.countTokens() >= workTokenizerDtl.countTokens()) {
+					errorMessage = res.getString("ErrorMessage74");
+				} else {
+					while (workTokenizerHdr.hasMoreTokens()) {
+						dataSourceHdr = workTokenizerHdr.nextToken();
+						dataSourceDtl = workTokenizerDtl.nextToken();
+						elementHdr = frame_.getSpecificFieldElement(headerTableNode.getElement().getAttribute("ID"), dataSourceHdr);
+						elementDtl = frame_.getSpecificFieldElement(detailTableNode.getElement().getAttribute("ID"), dataSourceDtl);
+						if (elementDtl == null ) {
+							errorMessage = res.getString("ErrorMessage75") + dataSourceDtl + res.getString("ErrorMessage76");
 							break;
+						} else {
+							if (!elementHdr.getAttribute("Type").equals(elementDtl.getAttribute("Type")) || !elementHdr.getAttribute("Size").equals(elementDtl.getAttribute("Size")) || !elementHdr.getAttribute("Decimal").equals(elementDtl.getAttribute("Decimal"))) {
+								errorMessage = res.getString("ErrorMessage77");
+								break;
+							}
 						}
 					}
 				}
 			}
 		}
-		//
+
 		if (errorMessage.equals("")) {
 			isValidated = true;
 			this.setVisible(false);
@@ -254,11 +270,240 @@ public class DialogEditDetailTableKey extends JDialog {
 			JOptionPane.showMessageDialog(this, errorMessage);
 		}
 	}
-	//
+	
+	String validateNewTableID() {
+		String message = "";
+		int countOfFieldErrors = 0;
+		String dataSource;
+		org.w3c.dom.Element element1, element2;
+		NodeList detailList, detailFieldList;
+		StringTokenizer tokenizer;
+
+		StringBuffer buf = new StringBuffer();
+		buf.append(res.getString("ErrorMessage119"));
+
+		NodeList headerReferList = headerTableNode.getElement().getElementsByTagName("Refer");
+		NodeList detailReferList = detailTableNode.getElement().getElementsByTagName("Refer");
+		
+		if (functionElement_.getAttribute("Type").equals("XF300")) {
+			detailList = functionElement_.getElementsByTagName("Detail");
+			sortingList = frame_.getSortedListModel(detailList, "Order");
+		    for (int i = 0; i < sortingList.getSize(); i++) {
+		    	if (i == tabIndex_) {
+			        element1 = (org.w3c.dom.Element)sortingList.getElementAt(i);
+					dataSource = element1.getAttribute("OrderBy");
+					tokenizer = new StringTokenizer(dataSource, ";");
+					while (tokenizer.hasMoreTokens()) {
+						if (isInvalidDataSourceName(tokenizer.nextToken(), buf, detailReferList, headerReferList, res.getString("OrderByFields"))) {
+							countOfFieldErrors++;
+						}
+					}
+			        detailFieldList = element1.getElementsByTagName("Column");
+					for (int j = 0; j < detailFieldList.getLength(); j++) {
+						element2 = (org.w3c.dom.Element)detailFieldList.item(j);
+						if (isInvalidFieldElement(element2, buf, detailReferList, headerReferList, res.getString("Columns"))) {
+							countOfFieldErrors++;
+						}
+					}
+		    	}
+		    }
+		}
+	
+		if (functionElement_.getAttribute("Type").equals("XF310")) {
+			dataSource = functionElement_.getAttribute("DetailOrderBy");
+			tokenizer = new StringTokenizer(dataSource, ";");
+			while (tokenizer.hasMoreTokens()) {
+				if (isInvalidDataSourceName(tokenizer.nextToken(), buf, detailReferList, headerReferList, res.getString("OrderByFields"))) {
+					countOfFieldErrors++;
+				}
+			}
+			detailFieldList = functionElement_.getElementsByTagName("Column");
+			for (int i = 0; i < detailFieldList.getLength(); i++) {
+				element2 = (org.w3c.dom.Element)detailFieldList.item(i);
+				if (isInvalidFieldElement(element2, buf, detailReferList, headerReferList, res.getString("Columns"))) {
+					countOfFieldErrors++;
+				}
+			}
+			dataSource = functionElement_.getAttribute("AddRowListReturnToDetailDataSources");
+			tokenizer = new StringTokenizer(dataSource, ";");
+			while (tokenizer.hasMoreTokens()) {
+				if (isInvalidDataSourceName(tokenizer.nextToken(), buf, detailReferList, headerReferList, res.getString("AddRowListReturnToField"))) {
+					countOfFieldErrors++;
+				}
+			}
+		}
+		
+		if (functionElement_.getAttribute("Type").equals("XF390")) {
+			dataSource = functionElement_.getAttribute("DetailOrderBy");
+			tokenizer = new StringTokenizer(dataSource, ";");
+			while (tokenizer.hasMoreTokens()) {
+				if (isInvalidDataSourceName(tokenizer.nextToken(), buf, detailReferList, headerReferList, res.getString("OrderByFields"))) {
+					countOfFieldErrors++;
+				}
+			}
+			detailFieldList = functionElement_.getElementsByTagName("Column");
+			for (int i = 0; i < detailFieldList.getLength(); i++) {
+				element2 = (org.w3c.dom.Element)detailFieldList.item(i);
+				if (isInvalidFieldElement(element2, buf, detailReferList, headerReferList, res.getString("Columns"))) {
+					countOfFieldErrors++;
+				}
+			}
+		}
+
+		if (countOfFieldErrors > 0) {
+			buf.append(res.getString("ErrorMessage120"));
+			message = buf.toString();
+		}
+		
+		return message;
+	}
+	
+	boolean isInvalidFieldElement(org.w3c.dom.Element functionFieldElement, StringBuffer buf, NodeList detailReferList, NodeList headerReferList, String remarks) {
+		String wrkStr, tableID, tableAlias, fieldID;
+		int wrkInt;
+		StringTokenizer tokenizer;
+		org.w3c.dom.Element fieldElement, element;
+		boolean isInvalid = false;
+		
+		wrkStr = functionFieldElement.getAttribute("DataSource");
+		wrkInt = wrkStr.indexOf(".");
+		tableAlias = wrkStr.substring(0, wrkInt);
+		if (tableAlias.equals(originalDetailTableID)) {
+			tableAlias = jTextFieldID.getText();
+			tableID = jTextFieldID.getText();
+		} else {
+			tableID = frame_.getTableIDOfTableAlias(tableAlias, detailReferList, headerReferList);
+		}
+		fieldID = wrkStr.substring(wrkInt+1, wrkStr.length());
+
+		fieldElement = frame_.getSpecificFieldElement(tableID, fieldID);
+		if (fieldElement == null) {
+			buf.append(tableAlias);
+			buf.append(".");
+			buf.append(fieldID);
+			buf.append(" - ");
+			buf.append(remarks);
+			buf.append("\n");
+			isInvalid = true;
+		} else {
+			if (!tableID.equals(jTextFieldID.getText())) {
+				boolean isContainedInReferList = false;
+				for (int i = 0; i < headerReferList.getLength(); i++) {
+					element = (org.w3c.dom.Element)headerReferList.item(i);
+					if (element.getAttribute("Alias").equals(tableAlias)) {
+						tokenizer = new StringTokenizer(element.getAttribute("Fields"), ";");
+						while (tokenizer.hasMoreTokens()) {
+							if (tokenizer.nextToken().equals(fieldID)) {
+								isContainedInReferList = true;
+							}
+						}
+					}
+				}
+				for (int i = 0; i < detailReferList.getLength(); i++) {
+					element = (org.w3c.dom.Element)detailReferList.item(i);
+					if (element.getAttribute("Alias").equals(tableAlias)) {
+						tokenizer = new StringTokenizer(element.getAttribute("Fields"), ";");
+						while (tokenizer.hasMoreTokens()) {
+							if (tokenizer.nextToken().equals(fieldID)) {
+								isContainedInReferList = true;
+							}
+						}
+					}
+				}
+				if (!isContainedInReferList) {
+					buf.append(tableAlias);
+					buf.append(".");
+					buf.append(fieldID);
+					buf.append(" - ");
+					buf.append(remarks);
+					buf.append("\n");
+					isInvalid = true;
+				}
+			}
+		}
+
+		return isInvalid;
+	}
+	
+	boolean isInvalidDataSourceName(String dataSource, StringBuffer buf, NodeList detailReferList, NodeList headerReferList, String remarks) {
+		String tableID, tableAlias, fieldID;
+		int wrkInt;
+		StringTokenizer tokenizer;
+		org.w3c.dom.Element fieldElement, element;
+		boolean isInvalid = false;
+		
+		wrkInt = dataSource.indexOf(".");
+		tableAlias = dataSource.substring(0, wrkInt);
+		if (tableAlias.equals(originalDetailTableID)) {
+			tableAlias = jTextFieldID.getText();
+			tableID = jTextFieldID.getText();
+		} else {
+			tableID = frame_.getTableIDOfTableAlias(tableAlias, detailReferList, headerReferList);
+		}
+		fieldID = dataSource.substring(wrkInt+1, dataSource.length());
+
+		fieldElement = frame_.getSpecificFieldElement(tableID, fieldID);
+		if (fieldElement == null) {
+			buf.append(tableAlias);
+			buf.append(".");
+			buf.append(fieldID);
+			buf.append(" - ");
+			buf.append(remarks);
+			buf.append("\n");
+			isInvalid = true;
+		} else {
+			if (!tableID.equals(jTextFieldID.getText())) {
+				boolean isContainedInReferList = false;
+				for (int i = 0; i < headerReferList.getLength(); i++) {
+					element = (org.w3c.dom.Element)headerReferList.item(i);
+					if (element.getAttribute("Alias").equals(tableAlias)) {
+						tokenizer = new StringTokenizer(element.getAttribute("Fields"), ";");
+						while (tokenizer.hasMoreTokens()) {
+							if (tokenizer.nextToken().equals(fieldID)) {
+								isContainedInReferList = true;
+							}
+						}
+					}
+				}
+				for (int i = 0; i < detailReferList.getLength(); i++) {
+					element = (org.w3c.dom.Element)detailReferList.item(i);
+					if (element.getAttribute("Alias").equals(tableAlias)) {
+						tokenizer = new StringTokenizer(element.getAttribute("Fields"), ";");
+						while (tokenizer.hasMoreTokens()) {
+							if (tokenizer.nextToken().equals(fieldID)) {
+								isContainedInReferList = true;
+							}
+						}
+					}
+				}
+				if (!isContainedInReferList) {
+					buf.append(tableAlias);
+					buf.append(".");
+					buf.append(fieldID);
+					buf.append(" - ");
+					buf.append(remarks);
+					buf.append("\n");
+					isInvalid = true;
+				}
+			}
+		}
+
+		return isInvalid;
+	}
+
 	void jButtonCancel_actionPerformed(ActionEvent e) {
 		this.setVisible(false);
 	}
-	//
+	
+	public String getDetailTableIDToBeChanged() {
+		String id = "";
+		if (!jTextFieldID.getText().equals(originalDetailTableID)
+				&& !jTextFieldID.getText().equals("")) {
+			id = jTextFieldID.getText();
+		}
+		return id;
+	}
+
 	public String getValidatedHeaderKeys() {
 		String keys = "";
 		if (isValidated) {
@@ -270,7 +515,7 @@ public class DialogEditDetailTableKey extends JDialog {
 		} 
 		return keys;
 	}
-	//
+
 	public String getValidatedDetailKeys() {
 		String keys = "";
 		if (isValidated) {
@@ -282,13 +527,46 @@ public class DialogEditDetailTableKey extends JDialog {
 		} 
 		return keys;
 	}
-	//
+
 	public String getDetailTableName() {
 		return jTextFieldName.getText();
 	}
-	//
+
 	public String getDetailTablePK() {
 		return detailPK;
+	}
+
+	void jTextFieldID_keyReleased(KeyEvent e) {
+		jButtonOK.setEnabled(false);
+		detailTableNode = null;
+		jTextFieldName.setText("");
+		if (!jTextFieldID.getText().equals("")) {
+			jTextFieldName.setText("N/A");
+			detailTableNode = frame_.getSpecificXETreeNode("Table", jTextFieldID.getText());
+			if (detailTableNode == null) {
+				detailTableNode = frame_.getSpecificXETreeNode("Table", jTextFieldID.getText().toUpperCase());
+				if (detailTableNode != null) {
+					jButtonOK.setEnabled(true);
+					jTextFieldName.setText(detailTableNode.getElement().getAttribute("Name"));
+					jTextFieldID.setText(jTextFieldID.getText().toUpperCase());
+					this.getRootPane().setDefaultButton(jButtonOK);
+				}
+			} else {
+				jButtonOK.setEnabled(true);
+				jTextFieldName.setText(detailTableNode.getElement().getAttribute("Name"));
+				this.getRootPane().setDefaultButton(jButtonOK);
+			}
+		}
+	}
+}
+
+class DialogEditDetailTableKey_jTextFieldID_keyAdapter extends java.awt.event.KeyAdapter {
+	DialogEditDetailTableKey adaptee;
+	DialogEditDetailTableKey_jTextFieldID_keyAdapter(DialogEditDetailTableKey adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void keyReleased(KeyEvent e) {
+		adaptee.jTextFieldID_keyReleased(e);
 	}
 }
 

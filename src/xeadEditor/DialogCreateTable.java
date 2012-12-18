@@ -514,7 +514,8 @@ public class DialogCreateTable extends JDialog {
 				fieldElement.setAttribute("Decimal", "");
 			}
 		} else {
-			if (wrkStr.equals("CHAR") || wrkStr.equals("TEXT")) {
+			//if (wrkStr.equals("CHAR") || wrkStr.equals("TEXT")) {
+			if (wrkStr.equals("CHAR")) {
 				fieldElement.setAttribute("Size", "5");
 				fieldElement.setAttribute("Decimal", "");
 			}
@@ -523,9 +524,15 @@ public class DialogCreateTable extends JDialog {
 				fieldElement.setAttribute("Decimal", "");
 			}
 			if (wrkStr.equals("TEXT")) {
-				wrkStr = "LONG VARCHAR";
-				fieldElement.setAttribute("Size", "500");
+				//wrkStr = "LONG VARCHAR";
+				wrkStr = "VARCHAR";
+				fieldElement.setAttribute("Size", "50");
 				fieldElement.setAttribute("Decimal", "");
+			}
+			if (wrkStr.toUpperCase().equals("SERIAL")) {
+				wrkStr = "INTEGER";
+				fieldElement.setAttribute("Size", "9");
+				fieldElement.setAttribute("Decimal", "0");
 			}
 			if (wrkStr.equals("INTEGER")) {
 				fieldElement.setAttribute("Size", "9");

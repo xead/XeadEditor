@@ -168,7 +168,7 @@ public class DialogCheckTableModule extends JDialog {
 
 	void checkTableModule(String requestType) {
 		org.w3c.dom.Element element;
-		String wrkStr, tableID, fieldID;
+		String wrkStr, tableID, moduleID, fieldID;
 		StringBuffer buf = new StringBuffer();
 		StringBuffer moduleBuf = new StringBuffer();
 		int sizeOfModuleField, sizeOfDefinitionField;
@@ -220,13 +220,20 @@ public class DialogCheckTableModule extends JDialog {
 			}
 			//
 			tableID = tableElement.getAttribute("ID");
+			moduleID = tableElement.getAttribute("ModuleID");
+			if (moduleID.equals("")) {
+				moduleID = tableID;
+			}
 			if (databaseName.contains("jdbc:postgresql")) {
 				tableID = tableID.toLowerCase();
+				moduleID = moduleID.toLowerCase();
 			}
-			ResultSet rs1 = connection_.getMetaData().getColumns(null, null, tableID, null);
+			//ResultSet rs1 = connection_.getMetaData().getColumns(null, null, tableID, null);
+			ResultSet rs1 = connection_.getMetaData().getColumns(null, null, moduleID, null);
 			if (rs1.next()) {
 				//
-				moduleBuf.append("Create table " + tableElement.getAttribute("ID") + " (\n");
+				//moduleBuf.append("Create table " + tableElement.getAttribute("ID") + " (\n");
+				moduleBuf.append("Create table " + moduleID.toUpperCase() + " (\n");
 				//
 				///////////////////////////////////////////
 				// Field check from definition to module //
@@ -285,7 +292,8 @@ public class DialogCheckTableModule extends JDialog {
 						if (databaseName.contains("jdbc:postgresql")) {
 							fieldID = fieldID.toLowerCase();
 						}
-						ResultSet rs2 = connection_.getMetaData().getColumns(null, null, tableID, fieldID);
+						//ResultSet rs2 = connection_.getMetaData().getColumns(null, null, tableID, fieldID);
+						ResultSet rs2 = connection_.getMetaData().getColumns(null, null, moduleID, fieldID);
 						if (rs2.next()) {
 							//
 							sizeOfModuleField = Integer.parseInt(rs2.getString("COLUMN_SIZE"));
@@ -330,20 +338,20 @@ public class DialogCheckTableModule extends JDialog {
 										buf.append("(" + countOfErrors + ") " + res.getString("ModuleCheckMessage1") + element.getAttribute("ID") + "(" + element.getAttribute("Name") +")" + res.getString("ModuleCheckMessage2") + typeDescriptionsOfDefinitionField + res.getString("ModuleCheckMessage3") + typeDescriptionsOfModuleField + res.getString("ModuleCheckMessage4"));
 									}
 								}
-								if (element.getAttribute("Type").equals("VARCHAR")) {
-									if (sizeOfDefinitionField != sizeOfModuleField) {
-										countOfErrors++;
-										fieldListToBeDropped.add(element.getAttribute("ID"));
-										fieldListToBeAdded.add(element.getAttribute("ID"));
-										fieldListToBeConverted.add(element.getAttribute("ID"));
-										fieldTypeListToBeConverted.add(element.getAttribute("Type"));
-										fieldSizeListToBeConvertedOld.add(sizeOfModuleField);
-										fieldSizeListToBeConvertedNew.add(sizeOfDefinitionField);
-										fieldDecimalListToBeConvertedOld.add(0);
-										fieldDecimalListToBeConvertedNew.add(0);
-										buf.append("(" + countOfErrors + ") " + res.getString("ModuleCheckMessage1") + element.getAttribute("ID") + "(" + element.getAttribute("Name") +")" + res.getString("ModuleCheckMessage2") + typeDescriptionsOfDefinitionField + res.getString("ModuleCheckMessage3") + typeDescriptionsOfModuleField + "(" + sizeOfModuleField + ")" + res.getString("ModuleCheckMessage4"));
-									}
-								}
+//								if (element.getAttribute("Type").equals("VARCHAR")) {
+//									if (sizeOfDefinitionField != sizeOfModuleField) {
+//										countOfErrors++;
+//										fieldListToBeDropped.add(element.getAttribute("ID"));
+//										fieldListToBeAdded.add(element.getAttribute("ID"));
+//										fieldListToBeConverted.add(element.getAttribute("ID"));
+//										fieldTypeListToBeConverted.add(element.getAttribute("Type"));
+//										fieldSizeListToBeConvertedOld.add(sizeOfModuleField);
+//										fieldSizeListToBeConvertedNew.add(sizeOfDefinitionField);
+//										fieldDecimalListToBeConvertedOld.add(0);
+//										fieldDecimalListToBeConvertedNew.add(0);
+//										buf.append("(" + countOfErrors + ") " + res.getString("ModuleCheckMessage1") + element.getAttribute("ID") + "(" + element.getAttribute("Name") +")" + res.getString("ModuleCheckMessage2") + typeDescriptionsOfDefinitionField + res.getString("ModuleCheckMessage3") + typeDescriptionsOfModuleField + "(" + sizeOfModuleField + ")" + res.getString("ModuleCheckMessage4"));
+//									}
+//								}
 							} else {
 								countOfErrors++;
 								fieldListToBeDropped.add(element.getAttribute("ID"));
@@ -377,7 +385,8 @@ public class DialogCheckTableModule extends JDialog {
 			    	if (databaseName.contains("jdbc:postgresql")) {
 			    		fieldID = fieldID.toLowerCase();
 			    	}
-			    	ResultSet rs2 = connection_.getMetaData().getColumns(null, null, tableID, fieldID);
+			    	//ResultSet rs2 = connection_.getMetaData().getColumns(null, null, tableID, fieldID);
+			    	ResultSet rs2 = connection_.getMetaData().getColumns(null, null, moduleID, fieldID);
 			    	if (rs2.next()) {
 			    		if (!isEquivalentDataType("INTEGER", 9, rs2.getString("TYPE_NAME"))) {
 			    			countOfErrors++;
@@ -398,7 +407,8 @@ public class DialogCheckTableModule extends JDialog {
 				///////////////////////////////////////////
 				// Field check from module to definition //
 				///////////////////////////////////////////
-				ResultSet rs3 = connection_.getMetaData().getColumns(null, null, tableID, null);
+				//ResultSet rs3 = connection_.getMetaData().getColumns(null, null, tableID, null);
+				ResultSet rs3 = connection_.getMetaData().getColumns(null, null, moduleID, null);
 				while (rs3.next()) {
 					//
 					columnCounter++;
@@ -448,7 +458,8 @@ public class DialogCheckTableModule extends JDialog {
 				indexFieldsList.clear();
 				indexAscDescList.clear();
 				indexNotUniqueList.clear();
-				ResultSet rs4 = connection_.getMetaData().getIndexInfo(null, null, tableID, false, true);
+				//ResultSet rs4 = connection_.getMetaData().getIndexInfo(null, null, tableID, false, true);
+				ResultSet rs4 = connection_.getMetaData().getIndexInfo(null, null, moduleID, false, true);
 				while (rs4.next()) {
 					//
 					workIndex = indexNameList.indexOf(rs4.getString("INDEX_NAME"));
@@ -608,7 +619,8 @@ public class DialogCheckTableModule extends JDialog {
 						count2 = 0;
 						wrkStr = "";
 						//
-						ResultSet rs5 = connection_.getMetaData().getPrimaryKeys(null, null, tableID);
+						//ResultSet rs5 = connection_.getMetaData().getPrimaryKeys(null, null, tableID);
+						ResultSet rs5 = connection_.getMetaData().getPrimaryKeys(null, null, moduleID);
 						while (rs5.next()) {
 							count1++;
 							if (keyFieldList.contains(rs5.getString("COLUMN_NAME").toUpperCase())) {
@@ -708,7 +720,8 @@ public class DialogCheckTableModule extends JDialog {
 				foreignKeyNameList.clear();
 				foreignKeyTableList.clear();
 				foreignKeyFieldList.clear();
-				ResultSet rs7 = connection_.getMetaData().getImportedKeys(null, null, tableID);
+				//ResultSet rs7 = connection_.getMetaData().getImportedKeys(null, null, tableID);
+				ResultSet rs7 = connection_.getMetaData().getImportedKeys(null, null, moduleID);
 				while (rs7.next()) {
 					//
 					workIndex = foreignKeyNameList.indexOf(rs7.getString("FK_NAME"));
@@ -735,7 +748,8 @@ public class DialogCheckTableModule extends JDialog {
 				if (isWithoutPKDefined) {
 					//
 					wrkStr = "";
-					ResultSet rs6 = connection_.getMetaData().getPrimaryKeys(null, null, tableID);
+					//ResultSet rs6 = connection_.getMetaData().getPrimaryKeys(null, null, tableID);
+					ResultSet rs6 = connection_.getMetaData().getPrimaryKeys(null, null, moduleID);
 					while (rs6.next()) {
 						if (wrkStr.equals("")) {
 							wrkStr = wrkStr + rs6.getString("COLUMN_NAME").toUpperCase();
@@ -853,11 +867,13 @@ public class DialogCheckTableModule extends JDialog {
 				if (dataTypeDefiition.equals("INTEGER")) {
 					if (dataTypeModule.equals("INT")
 							|| dataTypeModule.equals("INT SIGNED")
-							|| dataTypeModule.equals("INT UNSIGNED")) {
+							|| dataTypeModule.equals("INT UNSIGNED")
+							|| dataTypeModule.equals("SERIAL")) {
 						isEquivalent = true;
 					}
 					if (dataTypeModule.equals("int")
-							|| dataTypeModule.equals("int4")) {
+							|| dataTypeModule.equals("int4")
+							|| dataTypeModule.equals("serial")) {
 						isEquivalent = true;
 					}
 				}
@@ -902,6 +918,11 @@ public class DialogCheckTableModule extends JDialog {
 						isEquivalent = true;
 					}
 				}
+				if (dataTypeDefiition.equals("VARCHAR")) {
+					if (dataTypeModule.equals("text")) {
+						isEquivalent = true;
+					}
+				}
 			}
 		}
 		return isEquivalent;
@@ -929,7 +950,11 @@ public class DialogCheckTableModule extends JDialog {
 				for (int i = 0; i < fieldListToBeNullable.size(); i++) {
 					buf = new StringBuffer();
 					buf.append("ALTER TABLE ");
-					buf.append(tableElement.getAttribute("ID"));
+					if (tableElement.getAttribute("ModuleID").equals("")) {
+						buf.append(tableElement.getAttribute("ID"));
+					} else {
+						buf.append(tableElement.getAttribute("ModuleID"));
+					}
 					if (databaseName.contains("jdbc:mysql")) {
 						buf.append(" MODIFY COLUMN ");
 					} else {
@@ -950,7 +975,11 @@ public class DialogCheckTableModule extends JDialog {
 				for (int i = 0; i < fieldListToBeNotNull.size(); i++) {
 					buf = new StringBuffer();
 					buf.append("ALTER TABLE ");
-					buf.append(tableElement.getAttribute("ID"));
+					if (tableElement.getAttribute("ModuleID").equals("")) {
+						buf.append(tableElement.getAttribute("ID"));
+					} else {
+						buf.append(tableElement.getAttribute("ModuleID"));
+					}
 					if (databaseName.contains("jdbc:mysql")) {
 						buf.append(" MODIFY COLUMN ");
 					} else {
@@ -980,7 +1009,13 @@ public class DialogCheckTableModule extends JDialog {
 				///////////////////////////////////////////////////////
 				if (fieldListToBeConverted.size() > 0 && keyFieldList.size() > 0) {
 					Object value;
-					ResultSet rs1 = statement.executeQuery("SELECT * FROM " + tableElement.getAttribute("ID"));
+					String query;
+					if (tableElement.getAttribute("ModuleID").equals("")) {
+						query = "SELECT * FROM " + tableElement.getAttribute("ID");
+					} else {
+						query = "SELECT * FROM " + tableElement.getAttribute("ModuleID");
+					}
+					ResultSet rs1 = statement.executeQuery(query);
 					while (rs1.next()) {
 						ArrayList<Object> keyValues = new ArrayList<Object>();
 						for (int i = 0; i < keyFieldList.size(); i++) {
@@ -1003,7 +1038,11 @@ public class DialogCheckTableModule extends JDialog {
 				for (int i = 0; i < fieldListToBeDropped.size(); i++) {
 					buf = new StringBuffer();
 					buf.append("ALTER TABLE ");
-					buf.append(tableElement.getAttribute("ID"));
+					if (tableElement.getAttribute("ModuleID").equals("")) {
+						buf.append(tableElement.getAttribute("ID"));
+					} else {
+						buf.append(tableElement.getAttribute("ModuleID"));
+					}
 					buf.append(" DROP COLUMN ");
 					buf.append(fieldListToBeDropped.get(i));
 					statement.executeUpdate(buf.toString());
@@ -1016,7 +1055,11 @@ public class DialogCheckTableModule extends JDialog {
 				for (int i = 0; i < fieldListToBeAdded.size(); i++) {
 					buf = new StringBuffer();
 					buf.append("ALTER TABLE ");
-					buf.append(tableElement.getAttribute("ID"));
+					if (tableElement.getAttribute("ModuleID").equals("")) {
+						buf.append(tableElement.getAttribute("ID"));
+					} else {
+						buf.append(tableElement.getAttribute("ModuleID"));
+					}
 					if (updateCounterID.equals(fieldListToBeAdded.get(i))) {
 						buf.append(" ADD COLUMN ");
 						buf.append(updateCounterID);
@@ -1068,7 +1111,11 @@ public class DialogCheckTableModule extends JDialog {
 					for (int i = 0; i < keyValueList.size(); i++) {
 						buf = new StringBuffer();
 						buf.append("update ");
-						buf.append(tableElement.getAttribute("ID"));
+						if (tableElement.getAttribute("ModuleID").equals("")) {
+							buf.append(tableElement.getAttribute("ID"));
+						} else {
+							buf.append(tableElement.getAttribute("ModuleID"));
+						}
 						buf.append(" set ");
 						//
 						firstField = true;
@@ -1107,7 +1154,11 @@ public class DialogCheckTableModule extends JDialog {
 				for (int i = 0; i < addingSKList.size(); i++) {
 					buf = new StringBuffer();
 					buf.append("CREATE UNIQUE INDEX UniqueIndexOf");
-					buf.append(tableElement.getAttribute("ID"));
+					if (tableElement.getAttribute("ModuleID").equals("")) {
+						buf.append(tableElement.getAttribute("ID"));
+					} else {
+						buf.append(tableElement.getAttribute("ModuleID"));
+					}
 					buf.append("With");
 					wrkCount = -1;
 					workTokenizer = new StringTokenizer(addingSKList.get(i), ";");
@@ -1119,7 +1170,11 @@ public class DialogCheckTableModule extends JDialog {
 						buf.append(workTokenizer.nextToken());
 					}
 					buf.append(" ON ");
-					buf.append(tableElement.getAttribute("ID"));
+					if (tableElement.getAttribute("ModuleID").equals("")) {
+						buf.append(tableElement.getAttribute("ID"));
+					} else {
+						buf.append(tableElement.getAttribute("ModuleID"));
+					}
 					buf.append("(");
 					wrkCount = -1;
 					workTokenizer = new StringTokenizer(addingSKList.get(i), ";");
@@ -1140,7 +1195,11 @@ public class DialogCheckTableModule extends JDialog {
 				for (int i = 0; i < addingXKList.size(); i++) {
 					buf = new StringBuffer();
 					buf.append("CREATE INDEX Index");
-					buf.append(tableElement.getAttribute("ID"));
+					if (tableElement.getAttribute("ModuleID").equals("")) {
+						buf.append(tableElement.getAttribute("ID"));
+					} else {
+						buf.append(tableElement.getAttribute("ModuleID"));
+					}
 					buf.append("With");
 					wrkCount = -1;
 					workTokenizer = new StringTokenizer(addingXKList.get(i), ";");
@@ -1158,7 +1217,11 @@ public class DialogCheckTableModule extends JDialog {
 						}
 					}
 					buf.append(" ON ");
-					buf.append(tableElement.getAttribute("ID"));
+					if (tableElement.getAttribute("ModuleID").equals("")) {
+						buf.append(tableElement.getAttribute("ID"));
+					} else {
+						buf.append(tableElement.getAttribute("ModuleID"));
+					}
 					buf.append("(");
 					wrkCount = -1;
 					workTokenizer = new StringTokenizer(addingXKList.get(i), ";");
@@ -1287,7 +1350,6 @@ public class DialogCheckTableModule extends JDialog {
 					checkTableModule("CREATE");
 					//
 				} catch (SQLException ex1) {
-					ex1.printStackTrace();
 					JOptionPane.showMessageDialog(this, res.getString("ModuleCheckMessage40") + sqlText + "\n" + ex1.getMessage());
 				} finally {
 					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
@@ -1377,7 +1439,11 @@ public class DialogCheckTableModule extends JDialog {
 		boolean firstField = true;
 		//
 		buf.append("Create table ");
-		buf.append(tableElement.getAttribute("ID"));
+		if (tableElement.getAttribute("ModuleID").equals("")) {
+			buf.append(tableElement.getAttribute("ID"));
+		} else {
+			buf.append(tableElement.getAttribute("ModuleID"));
+		}
 		buf.append(" (\n");
 		//
 		NodeList fieldList = tableElement.getElementsByTagName("Field");
@@ -1428,16 +1494,16 @@ public class DialogCheckTableModule extends JDialog {
 						}
 					}
 				}
-				if (element.getAttribute("Nullable").equals("T")) {
-					//buf.append(" NULL");
-				} else {
+				if (!element.getAttribute("Nullable").equals("T")) {
 					buf.append(" Not null");
 				}
 			}
 		}
-		buf.append(",\n");
-		buf.append(updateCounterID);
-		buf.append(" INTEGER Default 0,\n");
+    	buf.append(",\n");
+	    if (!updateCounterID.toUpperCase().equals("*NONE")) {
+	    	buf.append(updateCounterID);
+	    	buf.append(" INTEGER Default 0,\n");
+	    }
 		//
 		int wrkCount1 = -1;
 		int wrkCount2 = -1;
@@ -1452,11 +1518,19 @@ public class DialogCheckTableModule extends JDialog {
 					buf.append("),\n");
 				}
 				if (element.getAttribute("Type").equals("PK")) {
-					buf.append("Constraint " + tableElement.getAttribute("ID") + "_PK Primary key (");
+					if (tableElement.getAttribute("ModuleID").equals("")) {
+						buf.append("Constraint " + tableElement.getAttribute("ID") + "_PK Primary key (");
+					} else {
+						buf.append("Constraint " + tableElement.getAttribute("ModuleID") + "_PK Primary key (");
+					}
 				}
 				if (element.getAttribute("Type").equals("SK")) {
 					countOfSK++;
-					buf.append("Constraint " + tableElement.getAttribute("ID") + "_SK" + countOfSK + " Unique (");
+					if (tableElement.getAttribute("ModuleID").equals("")) {
+						buf.append("Constraint " + tableElement.getAttribute("ID") + "_SK" + countOfSK + " Unique (");
+					} else {
+						buf.append("Constraint " + tableElement.getAttribute("ModuleID") + "_SK" + countOfSK + " Unique (");
+					}
 				}
 				wrkCount2 = -1;
 				workTokenizer = new StringTokenizer(element.getAttribute("Fields"), ";");

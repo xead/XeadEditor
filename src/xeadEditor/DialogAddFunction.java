@@ -474,7 +474,7 @@ public class DialogAddFunction extends JDialog {
 				element.setAttribute("PrimaryTable", jTextFieldTableID.getText());
 				element.setAttribute("KeyFields", tableKeys);
 				element.setAttribute("OrderBy", "");
-				element.setAttribute("InitialReadCount", "1000");
+				element.setAttribute("InitialReadCount", "");
 				element.setAttribute("DetailFunction", "XXXXXX");
 				element.setAttribute("Size", "AUTO");
 				element.setAttribute("InitialMsg", "");

@@ -81,6 +81,7 @@ public class DialogListLog extends JDialog {
 	private JScrollPane jScrollPaneScanDetail = new JScrollPane();
 	private JLabel jLabelTableID = new JLabel();
 	private JTextField jTextFieldTableID = new JTextField();
+	private String tableModuleID = "";
 	private JLabel jLabelTableName = new JLabel();
 	private JTextField jTextFieldTableName = new JTextField();
 	private JLabel jLabelListingOperation = new JLabel();
@@ -289,6 +290,11 @@ public class DialogListLog extends JDialog {
 		StringTokenizer workTokenizer;
 		//
 		jTextFieldTableID.setText(tableElement.getAttribute("ID"));
+		if (tableElement.getAttribute("ModuleID").equals("")) {
+			tableModuleID = tableElement.getAttribute("ID");
+		} else {
+			tableModuleID = tableElement.getAttribute("ModuleID");
+		}
 		jTextFieldTableName.setText(tableElement.getAttribute("Name"));
 		//
 		posX = 8;
@@ -471,19 +477,19 @@ public class DialogListLog extends JDialog {
 		//
 		if (jCheckBoxSelect.isSelected()
 				&& logString.contains("> select ")
-				&& logString.contains(" from " + jTextFieldTableID.getText() + " ")) {
+				&& logString.contains(" from " + tableModuleID + " ")) {
 			isTargetLog = isValidatedWithKey(getKeyValueMapInLog(logString ,"select"));
 		}
 		if (jCheckBoxInsert.isSelected()
-				&& logString.contains("> insert into " + jTextFieldTableID.getText() + " ")) {
+				&& logString.contains("> insert into " + tableModuleID + " ")) {
 			isTargetLog = isValidatedWithKey(getKeyValueMapInLog(logString ,"insert"));
 		}
 		if (jCheckBoxUpdate.isSelected()
-				&& logString.contains("> update " + jTextFieldTableID.getText() + " ")) {
+				&& logString.contains("> update " + tableModuleID + " ")) {
 			isTargetLog = isValidatedWithKey(getKeyValueMapInLog(logString ,"update"));
 		}
 		if (jCheckBoxDelete.isSelected()
-				&& logString.contains("> delete from " + jTextFieldTableID.getText() + " ")) {
+				&& logString.contains("> delete from " + tableModuleID + " ")) {
 			isTargetLog = isValidatedWithKey(getKeyValueMapInLog(logString ,"delete"));
 		}
 		//

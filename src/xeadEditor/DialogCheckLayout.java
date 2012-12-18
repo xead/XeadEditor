@@ -428,6 +428,10 @@ public class DialogCheckLayout extends JDialog {
 		return FIELD_UNIT_HEIGHT;
 	}
 	
+	public int getFieldVerticalMargin() {
+		return FIELD_VERTICAL_MARGIN;
+	}
+	
 	public String getStringData(String type, int dataSize, int decimal, boolean isAcceptMinus) {
 		String value = "";
 		StringBuffer bf = new StringBuffer();
@@ -2049,7 +2053,7 @@ class DialogCheckLayoutTextArea extends JScrollPane {
 			fieldWidth = Integer.parseInt(wrkStr);
 		}
 		//
-		int fieldHeight = rows_ * dialog.getFieldUnitHeight();
+		int fieldHeight = rows_ * dialog.getFieldUnitHeight() + (rows_ - 1) * dialog.getFieldVerticalMargin();
 		this.setPreferredSize(new Dimension(fieldWidth, fieldHeight));
 	}
 	public int getRows() {
