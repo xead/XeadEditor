@@ -15135,7 +15135,6 @@ public class Editor extends JFrame {
 				str = domNode_.getAttribute("ID") + " " + domNode_.getAttribute("Name");
 			}
 			if (nodeType_.equals("SubsystemList")) {
-				//str = res.getString("SubsystemList");
 				str = res.getString("Application");
 			}
 			if (nodeType_.equals("Subsystem")) {
@@ -15151,7 +15150,13 @@ public class Editor extends JFrame {
 				str = res.getString("TableList");
 			}
 			if (nodeType_.equals("Table")) {
-				str = domNode_.getAttribute("ID") + " " + domNode_.getAttribute("Name");
+				String wrk1 = domNode_.getAttribute("ID").toUpperCase();
+				String wrk2 = domNode_.getAttribute("Name").toUpperCase();
+				if (wrk1.equals(wrk2)) {
+					str = domNode_.getAttribute("ID");
+				} else {
+					str = domNode_.getAttribute("ID") + " " + domNode_.getAttribute("Name");
+				}
 			}
 			//
 			return str;
@@ -15747,7 +15752,7 @@ public class Editor extends JFrame {
 				for (int i = 0; i < rowCount; i++) {tableModelSystemSubDBList.removeRow(0);}
 			}
 			NodeList columnList = domNode_.getElementsByTagName("SubDB");
-			sortingList = getSortedListModel(columnList, "Name");
+			sortingList = getSortedListModel(columnList, "ID");
 		    for (int i = 0; i < sortingList.getSize(); i++) {
 		    	//
 		        element = (org.w3c.dom.Element)sortingList.getElementAt(i);
@@ -16070,7 +16075,7 @@ public class Editor extends JFrame {
 			databaseIDList.clear();
 			databaseIDList.add("");
 			NodeList columnList = systemNode.getElement().getElementsByTagName("SubDB");
-			sortingList = getSortedListModel(columnList, "Name");
+			sortingList = getSortedListModel(columnList, "ID");
 		    for (int i = 0; i < sortingList.getSize(); i++) {
 		        element = (org.w3c.dom.Element)sortingList.getElementAt(i);
 				jComboBoxTableDB.addItem(element.getAttribute("Description"));
@@ -19515,6 +19520,7 @@ public class Editor extends JFrame {
 					}
 				}
 			}
+			//
 			if (!domNode_.getAttribute("DB").equals(databaseIDList.get(jComboBoxTableDB.getSelectedIndex()))) {
 				valueOfFieldsChanged = true;
 				domNode_.setAttribute("DB", databaseIDList.get(jComboBoxTableDB.getSelectedIndex()));
@@ -37328,8 +37334,11 @@ public class Editor extends JFrame {
 		}
 
 		NodeList subDBList = systemNode.getElement().getElementsByTagName("SubDB");
-		for (int i = 0; i < subDBList.getLength(); i++) {
-			element = (org.w3c.dom.Element)subDBList.item(i);
+//		for (int i = 0; i < subDBList.getLength(); i++) {
+//			element = (org.w3c.dom.Element)subDBList.item(i);
+		sortingList = getSortedListModel(subDBList, "ID");
+	    for (int i = 0; i < sortingList.getSize(); i++) {
+	        element = (org.w3c.dom.Element)sortingList.getElementAt(i);
 			databaseName = element.getAttribute("Name");
 			if (databaseName.contains("<CURRENT>")) {
 				databaseName = databaseName.replace("<CURRENT>", currentFileFolder);
@@ -38390,58 +38399,54 @@ public class Editor extends JFrame {
 						&& !jTextFieldTableUpdateCounter.getText().equals("")) {
 					updateCounterID = jTextFieldTableUpdateCounter.getText();
 				}
-//				//
-//				if (updateCounterID.toUpperCase().equals("*NONE")) {
-//					jTextAreaTableDataMessages.setText(res.getString("DataUtilityMessage8"));
-//				} else {
-					boolean firstField = true;
-					StringBuffer statementBuf = new StringBuffer();
-					statementBuf.append("delete from ");
-					if (jTextFieldTableModuleID.getText().equals("")
-							|| jTextFieldTableModuleID.getText().toUpperCase().equals("*ID")) {
-						statementBuf.append(jTextFieldTableID.getText());
-					} else {
-						statementBuf.append(jTextFieldTableModuleID.getText());
-					}
-					statementBuf.append(" where ") ;
-					for (int i = 0; i < editableTableFieldList.size(); i++) {
-						if (editableTableFieldList.get(i).isKey()) {
-							if (!firstField) {
-								statementBuf.append(" and ") ;
-							}
-							statementBuf.append(editableTableFieldList.get(i).getFieldID()) ;
-							statementBuf.append("=") ;
-							statementBuf.append(editableTableFieldList.get(i).getTableOperationValue()) ;
-							firstField = false;
+				//
+				boolean firstField = true;
+				StringBuffer statementBuf = new StringBuffer();
+				statementBuf.append("delete from ");
+				if (jTextFieldTableModuleID.getText().equals("")
+						|| jTextFieldTableModuleID.getText().toUpperCase().equals("*ID")) {
+					statementBuf.append(jTextFieldTableID.getText());
+				} else {
+					statementBuf.append(jTextFieldTableModuleID.getText());
+				}
+				statementBuf.append(" where ") ;
+				for (int i = 0; i < editableTableFieldList.size(); i++) {
+					if (editableTableFieldList.get(i).isKey()) {
+						if (!firstField) {
+							statementBuf.append(" and ") ;
 						}
-					}
-					if (!updateCounterID.toUpperCase().equals("*NONE")) {
-						statementBuf.append(" and ") ;
-						statementBuf.append(updateCounterID) ;
+						statementBuf.append(editableTableFieldList.get(i).getFieldID()) ;
 						statementBuf.append("=") ;
-						statementBuf.append(tableRowNumber.getUpdateCounter()) ;
+						statementBuf.append(editableTableFieldList.get(i).getTableOperationValue()) ;
+						firstField = false;
 					}
-					//
-					Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
-					setupConnectionList(true);
-					connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
-					Statement statement = connection.createStatement();
-					sql = statementBuf.toString();
-					int recordCount = statement.executeUpdate(sql);
-					if (recordCount == 1) {
-						jTextAreaTableDataMessages.setText(res.getString("DataUtilityMessage6"));
-					} else {
-						String errorMessage = res.getString("DataUtilityMessage3");
-						JOptionPane.showMessageDialog(jPanelMain, errorMessage);
-						try {
-							connection.rollback();
-						} catch (SQLException e6) {
-							jTextAreaTableDataMessages.setText("SQLException : "+ e6.getMessage());
-						}
+				}
+				if (!updateCounterID.toUpperCase().equals("*NONE")) {
+					statementBuf.append(" and ") ;
+					statementBuf.append(updateCounterID) ;
+					statementBuf.append("=") ;
+					statementBuf.append(tableRowNumber.getUpdateCounter()) ;
+				}
+				//
+				Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
+				setupConnectionList(true);
+				connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
+				Statement statement = connection.createStatement();
+				sql = statementBuf.toString();
+				int recordCount = statement.executeUpdate(sql);
+				if (recordCount == 1) {
+					jTextAreaTableDataMessages.setText(res.getString("DataUtilityMessage6"));
+				} else {
+					String errorMessage = res.getString("DataUtilityMessage3");
+					JOptionPane.showMessageDialog(jPanelMain, errorMessage);
+					try {
+						connection.rollback();
+					} catch (SQLException e6) {
+						jTextAreaTableDataMessages.setText("SQLException : "+ e6.getMessage());
 					}
-					//
-					jButtonTableDataSelect.doClick();
-				//}
+				}
+				//
+				jButtonTableDataSelect.doClick();
 			} catch (SQLException e1) {
 				jTextAreaTableDataMessages.setText("SQLException : "+ e1.getMessage() + "\nSQL: " + sql);
 			} finally {
@@ -38724,7 +38729,6 @@ public class Editor extends JFrame {
 				function300StructureUpperKeys = dialogStructureTableEdit.getUpperKeys();
 				function300StructureChildKeys = dialogStructureTableEdit.getChildKeys();
 				function300StructureOrderBy = dialogStructureTableEdit.getOrderBy();
-				function300StructureTableID = dialogStructureTableEdit.getTableID();
 				function300StructureTableElement = dialogStructureTableEdit.getTableElement();
 				String keyNames = getFieldNames(function300StructureTableID, function300StructureUpperKeys, " + ", false);
 				if (function300StructureOrderBy.equals("")) {
@@ -38734,6 +38738,7 @@ public class Editor extends JFrame {
 					jTextFieldFunction300StructureTableName.setText(function300StructureTableID + " " + function300StructureTableElement.getAttribute("Name") + "  Key:" + keyNames + "  OrderBy:" + orderBy);
 				}
 				if (!function300StructureTableID.equals(dialogStructureTableEdit.getTableID())) {
+					function300StructureTableID = dialogStructureTableEdit.getTableID();
 					function300StructureRootText = "";
 					jTextFieldFunction300StructureRootText.setText("");
 					jButtonFunction300StructureRootTextEdit.setEnabled(true);
@@ -38760,7 +38765,9 @@ public class Editor extends JFrame {
 				jTextFieldFunction300StructureRootText.setText("");
 			} else {
 				String wrkStr = getDataSourceNamesForStructureRootText(function300HeaderTableID, answer.toUpperCase());
-				if (!wrkStr.equals("")) {
+				if (wrkStr.equals("")) {
+					JOptionPane.showMessageDialog(null, res.getString("ErrorMessage121"));
+				} else {
 					informationOnThisPageChanged = true;
 					function300StructureRootText = answer.toUpperCase();
 					jTextFieldFunction300StructureRootText.setText(wrkStr);
@@ -38778,7 +38785,9 @@ public class Editor extends JFrame {
 				jTextFieldFunction300StructureNodeText.setText("");
 			} else {
 				String wrkStr = getDataSourceNamesForStructureNodeText(function300HeaderTableID, function300StructureTableID, answer.toUpperCase());
-				if (!wrkStr.equals("")) {
+				if (wrkStr.equals("")) {
+					JOptionPane.showMessageDialog(null, res.getString("ErrorMessage108"));
+				} else {
 					informationOnThisPageChanged = true;
 					function300StructureNodeText = answer.toUpperCase();
 					jTextFieldFunction300StructureNodeText.setText(wrkStr);
