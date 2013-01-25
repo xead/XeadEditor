@@ -76,7 +76,7 @@ public class DialogCheckLayout extends JDialog {
 	private SortableDomElementListModel sortableList;
 	private DialogCheckLayoutPrimaryTable primaryTable;
 	private DialogCheckLayoutDetailTable detailTable;
-	private ArrayList<DialogCheckLayoutReferTable> referTableList = new ArrayList<DialogCheckLayoutReferTable>(); 
+	private ArrayList<DialogCheckLayoutReferTable> referTableList1 = new ArrayList<DialogCheckLayoutReferTable>(); 
 	private ArrayList<DialogCheckLayoutReferTable> referTableList2 = new ArrayList<DialogCheckLayoutReferTable>(); 
 	private Rectangle screenRect = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 	private String panelType_ = "";
@@ -118,7 +118,7 @@ public class DialogCheckLayout extends JDialog {
 		panelType_ = panelType;
 		extForXF110_ = extForXF110;
 		//
-		referTableList.clear();
+		referTableList1.clear();
 		referTableList2.clear();
 		detailTable = null;
 		//
@@ -144,13 +144,14 @@ public class DialogCheckLayout extends JDialog {
 			NodeList detailTableList = functionElement.getElementsByTagName("Detail");
 			sortableList = editor.getSortedListModel(detailTableList, "Order");
 			org.w3c.dom.Element element = (org.w3c.dom.Element)sortableList.getElementAt(tabIndex);
-			detailTable = new DialogCheckLayoutDetailTable(element, this);
+			detailTable = new DialogCheckLayoutDetailTable(element.getAttribute("Table"), element.getAttribute("KeyFields"), this);
 			showLayoutOfTableColumns(element.getElementsByTagName("Column"));
 		}
 		if (panelType_.equals("Function310HeaderFieldList")) {
 			showLayoutOfPanelFields(functionElement.getElementsByTagName("Field"), true);
 		}
 		if (panelType_.equals("Function310DetailFieldList")) {
+			detailTable = new DialogCheckLayoutDetailTable(functionElement.getAttribute("DetailTable"), functionElement.getAttribute("DetailKeyFields"), this);
 			showLayoutOfTableColumns(functionElement.getElementsByTagName("Column"));
 		}
 		if (panelType_.equals("Function310AddRowListColumnList")) {
@@ -182,9 +183,10 @@ public class DialogCheckLayout extends JDialog {
 		sortableList = editor.getSortedListModel(referNodeList, "Order");
 		for (int i = 0; i < sortableList.getSize(); i++) {
 			org.w3c.dom.Element element = (org.w3c.dom.Element)sortableList.getElementAt(i);
-			referTableList.add(new DialogCheckLayoutReferTable(element));
+			referTableList1.add(new DialogCheckLayoutReferTable(element));
 		}
-		if (panelType_.equals("Function300DetailFieldList")) {
+		if (panelType_.equals("Function300DetailFieldList")
+				|| panelType_.equals("Function310DetailFieldList")) {
 			referNodeList = detailTable.getTableElement().getElementsByTagName("Refer");
 			sortableList = editor.getSortedListModel(referNodeList, "Order");
 			for (int i = 0; i < sortableList.getSize(); i++) {
@@ -287,7 +289,7 @@ public class DialogCheckLayout extends JDialog {
 		sortableList = editor.getSortedListModel(referNodeList, "Order");
 		for (int i = 0; i < sortableList.getSize(); i++) {
 			org.w3c.dom.Element element = (org.w3c.dom.Element)sortableList.getElementAt(i);
-			referTableList.add(new DialogCheckLayoutReferTable(element));
+			referTableList1.add(new DialogCheckLayoutReferTable(element));
 		}
 
 		///////////////////////////
@@ -399,14 +401,14 @@ public class DialogCheckLayout extends JDialog {
 	}
 
 	public ArrayList<DialogCheckLayoutReferTable> getReferTableList() {
-		return referTableList;
+		return referTableList1;
 	}
 
 	public String getTableIDOfTableAlias(String tableAlias) {
 		String tableID = tableAlias;
 		DialogCheckLayoutReferTable referTable;
-		for (int j = 0; j < referTableList.size(); j++) {
-			referTable = referTableList.get(j);
+		for (int j = 0; j < referTableList1.size(); j++) {
+			referTable = referTableList1.get(j);
 			referTable.getTableAlias();
 			if (referTable.getTableAlias().equals(tableAlias)) {
 				tableID = referTable.getTableID();
@@ -800,7 +802,6 @@ public class DialogCheckLayout extends JDialog {
 		private JPanel checkBoxPanel = new JPanel();
 		private JCheckBox checkBox = new JCheckBox();
 		private JPanel centerPanel = new JPanel();
-		private JPanel widthChangerPanel = new JPanel();
 		private ArrayList<JLabel> headerList = new ArrayList<JLabel>();
 		private int totalWidthOfCenterPanel = 0;
 		private int totalHeight = 0;
@@ -833,8 +834,6 @@ public class DialogCheckLayout extends JDialog {
 				this.add(westPanel, BorderLayout.WEST);
 			} else {
 				centerPanel.setLayout(null);
-				widthChangerPanel.setPreferredSize(new Dimension(4, 10));
-				widthChangerPanel.setBorder(new WidthChangerBorder());
 				numberLabel.setFont(new java.awt.Font("SansSerif", 0, 14));
 				numberLabel.setBorder(new HeaderBorder());
 				numberLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -844,11 +843,8 @@ public class DialogCheckLayout extends JDialog {
 			}
 			//
 			centerPanel.setLayout(null);
-			widthChangerPanel.setPreferredSize(new Dimension(4, 10));
-			widthChangerPanel.setBorder(new WidthChangerBorder());
 			this.setPreferredSize(new Dimension(totalWidthOfCenterPanel + workWidth, totalHeight));
 			this.add(centerPanel, BorderLayout.CENTER);
-			this.add(widthChangerPanel, BorderLayout.EAST);
 		}
 		
 		public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {  
@@ -965,24 +961,6 @@ public class DialogCheckLayout extends JDialog {
 			g.drawLine(x, y, x+width, y);
 			g.drawLine(x, y, x, y+height);
 			g.setColor(Color.gray);
-			g.drawLine(x, y+height-1, x+width, y+height-1);
-			g.drawLine(x+width-1, y+height, x+width-1, y);
-		}
-	}
-
-	class WidthChangerBorder implements Border {
-		public Insets getBorderInsets(Component c){
-			return new Insets(2, 2, 2, 2);
-		}
-		public boolean isBorderOpaque(){
-			return false;
-		}
-		public void paintBorder (Component c, Graphics g, int x, int y, int width, int height){
-			g.setColor(Color.white);
-			g.drawLine(x, y, x+width, y);
-			g.drawLine(x+1, y, x+1, y+height);
-			g.setColor(Color.gray);
-			g.drawLine(x, y, x, y+height);
 			g.drawLine(x, y+height-1, x+width, y+height-1);
 			g.drawLine(x+width-1, y+height, x+width-1, y);
 		}
@@ -1163,7 +1141,7 @@ class DialogCheckLayoutColumn extends Object {
 		if (!wrkStr.equals("")) {
 			fieldCaption = wrkStr;
 		}
-		int captionWidth = metrics.stringWidth(getLongestSegment(fieldCaption)) + 18;
+		int captionWidth = metrics.stringWidth(fieldCaption) + 18;
 		//
 		if (fieldOptionList.contains("HORIZONTAL")) {
 			fieldLayout = "HORIZONTAL";
@@ -1204,7 +1182,6 @@ class DialogCheckLayoutColumn extends Object {
 			} catch(Exception e) {
 			}
 		} else {
-			//if (dataTypeOptionList.contains("KANJI") || dataTypeOptionList.contains("ZIPADRS")) {
 			if ((dataTypeOptionList.contains("KANJI") || dataTypeOptionList.contains("ZIPADRS"))
 					&& !dataType.equals("VARCHAR") && !dataType.equals("LONG VARCHAR")) {
 				fieldWidth = dataSize * 14 + 5;
@@ -1333,23 +1310,23 @@ class DialogCheckLayoutColumn extends Object {
 		return value;
 	}
 	
-	private String getLongestSegment(String caption) {
-		String value = "";
-		ArrayList<String> stringList = new ArrayList<String>();
-		String wrkStr = caption.toUpperCase();
-		wrkStr = wrkStr.replace("<HTML>", "");
-		wrkStr = wrkStr.replace("</HTML>", "");
-		StringTokenizer workTokenizer = new StringTokenizer(wrkStr, "<BR>");
-		while (workTokenizer.hasMoreTokens()) {
-			stringList.add(workTokenizer.nextToken());
-		}
-		for (int i = 0; i < stringList.size(); i++) {
-			if (stringList.get(i).length() > value.length()) {
-				value = stringList.get(i);
-			}
-		}
-		return value;
-	}
+//	private String getLongestSegment(String caption) {
+//		String value = "";
+//		ArrayList<String> stringList = new ArrayList<String>();
+//		String wrkStr = caption.toUpperCase();
+//		wrkStr = wrkStr.replace("<HTML>", "");
+//		wrkStr = wrkStr.replace("</HTML>", "");
+//		StringTokenizer workTokenizer = new StringTokenizer(wrkStr, "<BR>");
+//		while (workTokenizer.hasMoreTokens()) {
+//			stringList.add(workTokenizer.nextToken());
+//		}
+//		for (int i = 0; i < stringList.size(); i++) {
+//			if (stringList.get(i).length() > value.length()) {
+//				value = stringList.get(i);
+//			}
+//		}
+//		return value;
+//	}
 }
 
 class DialogCheckLayoutField extends JPanel {
@@ -1407,6 +1384,8 @@ class DialogCheckLayoutField extends JPanel {
 						break;
 					}
 				}
+			} else {
+				isEditable = false;
 			}
 		} else {
 			isEditable = false;
@@ -1484,7 +1463,7 @@ class DialogCheckLayoutField extends JPanel {
 				component = new DialogCheckLayoutPromptCallField(functionFieldElement, isEditable, dialog_);
 			} else {
 				wrkStr = dialog.getFunctionElement().getAttribute("Type"); 
-				if ((wrkStr.equals("XF200") || wrkStr.equals("XF310"))
+				if (isEditable && (wrkStr.equals("XF200") || wrkStr.equals("XF310"))
 						&& 	(!dialog_.getEditor().getOptionValueWithKeyword(dataTypeOptions, "KUBUN").equals("")
 							|| !dialog_.getEditor().getOptionValueWithKeyword(dataTypeOptions, "VALUES").equals(""))) {
 					component = new DialogCheckLayoutComboBox(functionFieldElement_, dataTypeOptions, null, dialog_);
@@ -1498,7 +1477,7 @@ class DialogCheckLayoutField extends JPanel {
 							component = textarea;
 						} else {
 							if (dataTypeOptionList.contains("URL")) {
-								component = new DialogCheckLayoutUrlField(dataSize, isEditable, dialog_);
+								component = new DialogCheckLayoutUrlField(dataSize, fieldOptions, isEditable, dialog_);
 							} else {
 								if (dataTypeOptionList.contains("IMAGE")) {
 									DialogCheckLayoutImageField imagefield = new DialogCheckLayoutImageField(fieldOptions, dataSize, isEditable, dialog_);
@@ -1828,20 +1807,32 @@ class DialogCheckLayoutUrlField extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JTextField jTextField = new JTextField();
 	private JLabel jLabel = new JLabel();
-	public DialogCheckLayoutUrlField(int digits, boolean isEditable, DialogCheckLayout dialog){
+	public DialogCheckLayoutUrlField(int digits, String fieldOptions, boolean isEditable, DialogCheckLayout dialog){
 		super();
+		//
 		jTextField.setFont(new java.awt.Font("Monospaced", 0, 14));
 		jTextField.setText(dialog.getStringData("STRING", digits, 0, false));
 		jTextField.setFocusable(false);
+		//
 		jLabel.setFont(new java.awt.Font("Monospaced", 0, 14));
 		jLabel.setForeground(Color.blue);
 		jLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		jLabel.setBorder(jTextField.getBorder());
-		jLabel.setText("<html><ul>" + dialog.getStringData("STRING", digits, 0, false));
+		jLabel.setText("<html><u>" + dialog.getStringData("STRING", digits, 0, false));
+		//
 		this.setLayout(new BorderLayout());
-		this.add(jTextField, BorderLayout.CENTER);
-		int fieldWidth;
-		fieldWidth = digits * 7 + 10;
+		if (isEditable) {
+			this.add(jTextField, BorderLayout.CENTER);
+		} else {
+			this.add(jLabel, BorderLayout.CENTER);
+		}
+		int fieldWidth = 50;
+		String wrkStr = dialog.getEditor().getOptionValueWithKeyword(fieldOptions, "WIDTH");
+		if (!wrkStr.equals("")) {
+			fieldWidth = Integer.parseInt(wrkStr);
+		} else {
+			fieldWidth = digits * 7 + 10;
+		}
 		if (fieldWidth > 800) {
 			fieldWidth = 800;
 		}
@@ -2257,20 +2248,22 @@ class DialogCheckLayoutPrimaryTable extends Object {
 class DialogCheckLayoutDetailTable extends Object {
 	private static final long serialVersionUID = 1L;
 	private org.w3c.dom.Element tableElement = null;
-	private org.w3c.dom.Element detailElement_ = null;
-	private String tableID = "";
+	//private org.w3c.dom.Element detailElement_ = null;
+	private String tableID_ = "";
 	private ArrayList<String> keyFieldList = new ArrayList<String>();
 	private DialogCheckLayout dialog_;
 	private StringTokenizer workTokenizer;
-	public DialogCheckLayoutDetailTable(org.w3c.dom.Element detailElement, DialogCheckLayout dialog){
+	public DialogCheckLayoutDetailTable(String tableID, String keyFields, DialogCheckLayout dialog){
 		super();
-		detailElement_ = detailElement;
+		//detailElement_ = detailElement;
 		dialog_ = dialog;
-		tableID = detailElement_.getAttribute("Table");
-		tableElement = dialog_.getEditor().getSpecificXETreeNode("Table", tableID).getElement();
+		//tableID = detailElement_.getAttribute("Table");
+		tableID_ = tableID;
+		tableElement = dialog_.getEditor().getSpecificXETreeNode("Table", tableID_).getElement();
 		String wrkStr1;
 		org.w3c.dom.Element workElement;
-		if (detailElement_.getAttribute("KeyFields").equals("")) {
+		//if (detailElement_.getAttribute("KeyFields").equals("")) {
+		if (keyFields.equals("")) {
 			NodeList nodeList = tableElement.getElementsByTagName("Key");
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				workElement = (org.w3c.dom.Element)nodeList.item(i);
@@ -2283,7 +2276,8 @@ class DialogCheckLayoutDetailTable extends Object {
 				}
 			}
 		} else {
-			workTokenizer = new StringTokenizer(detailElement_.getAttribute("KeyFields"), ";" );
+			//workTokenizer = new StringTokenizer(detailElement_.getAttribute("KeyFields"), ";" );
+			workTokenizer = new StringTokenizer(keyFields, ";" );
 			while (workTokenizer.hasMoreTokens()) {
 				keyFieldList.add(workTokenizer.nextToken());
 			}
@@ -2293,7 +2287,7 @@ class DialogCheckLayoutDetailTable extends Object {
 		return tableElement.getAttribute("Name");
 	}
 	public String getTableID(){
-		return tableID;
+		return tableID_;
 	}
 	public org.w3c.dom.Element getTableElement(){
 		return tableElement;

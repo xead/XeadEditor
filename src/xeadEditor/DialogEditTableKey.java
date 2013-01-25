@@ -211,8 +211,14 @@ public class DialogEditTableKey extends JDialog {
 
 		if (functionElement_.getAttribute("Type").equals("XF100")
 				|| functionElement_.getAttribute("Type").equals("XF110")) {
-			String orderByDataSource = functionElement_.getAttribute("OrderBy");
-			tokenizer = new StringTokenizer(orderByDataSource, ";");
+			String dataSource = functionElement_.getAttribute("OrderBy");
+			if (dataSource.contains("(D)")) {
+				dataSource = dataSource.replaceAll("(D)", "");
+			}
+			if (dataSource.contains("(A)")) {
+				dataSource = dataSource.replaceAll("(A)", "");
+			}
+			tokenizer = new StringTokenizer(dataSource, ";");
 			while (tokenizer.hasMoreTokens()) {
 				if (isInvalidDataSourceName(tokenizer.nextToken(), buf, referList, res.getString("OrderByFields"))) {
 					countOfFieldErrors++;
@@ -258,6 +264,12 @@ public class DialogEditTableKey extends JDialog {
 		if (countOfFieldErrors > 0) {
 			buf.append(res.getString("ErrorMessage120"));
 			message = buf.toString();
+		} else {
+			if (functionElement_.getAttribute("Type").equals("XF300")) {
+				if (!functionElement_.getAttribute("StructureTable").equals("")) {
+					message = res.getString("ErrorMessage123");
+				}
+			}
 		}
 		
 		return message;
@@ -295,14 +307,14 @@ public class DialogEditTableKey extends JDialog {
 				boolean isContainedInReferList = false;
 				for (int i = 0; i < referList.getLength(); i++) {
 					element = (org.w3c.dom.Element)referList.item(i);
-					if (element.getAttribute("Alias").equals(tableAlias)) {
+					if (element.getAttribute("TableAlias").equals(tableAlias)
+						|| (element.getAttribute("TableAlias").equals("") && element.getAttribute("ToTable").equals(tableAlias))) {
 						tokenizer = new StringTokenizer(element.getAttribute("Fields"), ";");
 						while (tokenizer.hasMoreTokens()) {
 							if (tokenizer.nextToken().equals(fieldID)) {
 								isContainedInReferList = true;
 							}
 						}
-
 					}
 				}
 				if (!isContainedInReferList) {
@@ -336,6 +348,8 @@ public class DialogEditTableKey extends JDialog {
 			tableID = frame_.getTableIDOfTableAlias(tableAlias, referList, null);
 		}
 		fieldID = dataSource.substring(wrkInt+1, dataSource.length());
+		fieldID = fieldID.replace("(D)", "");
+		fieldID = fieldID.replace("(A)", "");
 
 		fieldElement = frame_.getSpecificFieldElement(tableID, fieldID);
 		if (fieldElement == null) {
@@ -351,7 +365,8 @@ public class DialogEditTableKey extends JDialog {
 				boolean isContainedInReferList = false;
 				for (int i = 0; i < referList.getLength(); i++) {
 					element = (org.w3c.dom.Element)referList.item(i);
-					if (element.getAttribute("Alias").equals(tableAlias)) {
+					if (element.getAttribute("TableAlias").equals(tableAlias)
+						|| (element.getAttribute("TableAlias").equals("") && element.getAttribute("ToTable").equals(tableAlias))) {
 						tokenizer = new StringTokenizer(element.getAttribute("Fields"), ";");
 						while (tokenizer.hasMoreTokens()) {
 							if (tokenizer.nextToken().equals(fieldID)) {

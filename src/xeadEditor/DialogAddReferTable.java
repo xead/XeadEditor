@@ -169,7 +169,7 @@ public class DialogAddReferTable extends JDialog {
 		jPanelButtons.getRootPane().setDefaultButton(jButtonOK);
 		this.pack();
 	}
-	//
+
 	public org.w3c.dom.Element request(org.w3c.dom.Element objectTableElement) {
 		//
 		newElement = null;
@@ -203,7 +203,7 @@ public class DialogAddReferTable extends JDialog {
 		//
 		return newElement;
 	}
-	//
+
 	void jButtonNext_actionPerformed(ActionEvent e) {
 		org.w3c.dom.Element workElement;
 		StringTokenizer workTokenizer;
@@ -302,7 +302,6 @@ public class DialogAddReferTable extends JDialog {
 								if (count > 0) {
 									buf.append(";");
 								}
-								//buf.append(objectTableElement_.getAttribute("ID") + "." + workTokenizer.nextToken());
 								fieldIDOfObjectTable = getFieldIDWithTheSameDataTypeInTheTargetTable(referTableNode.getElement(), workTokenizer.nextToken(), objectTableElement_);
 								buf.append(objectTableElement_.getAttribute("ID") + "." + fieldIDOfObjectTable);
 								count++;
@@ -326,7 +325,7 @@ public class DialogAddReferTable extends JDialog {
 	}
 
 	String getFieldIDWithTheSameDataTypeInTheTargetTable(org.w3c.dom.Element tableElement, String fieldID, org.w3c.dom.Element targetTableElement) {
-		String fieldIDFound = fieldID;
+		String fieldIDFound = "";
 		org.w3c.dom.Element element, fieldElement = null;
 		//
 		NodeList fieldList = tableElement.getElementsByTagName("Field");
@@ -342,11 +341,20 @@ public class DialogAddReferTable extends JDialog {
 			fieldList = targetTableElement.getElementsByTagName("Field");
 			for (int i = 0; i < fieldList.getLength(); i++) {
 				element = (org.w3c.dom.Element)fieldList.item(i);
-				if (element.getAttribute("Type").equals(fieldElement.getAttribute("Type"))
-						&& element.getAttribute("Size").equals(fieldElement.getAttribute("Size"))
-						&& element.getAttribute("Decimal").equals(fieldElement.getAttribute("Decimal"))) {
-					fieldIDFound = element.getAttribute("ID");
+				if (element.getAttribute("ID").equals(fieldID)) {
+					fieldIDFound = fieldID;
 					break;
+				}
+			}
+			if (fieldIDFound.equals("")) {
+				for (int i = 0; i < fieldList.getLength(); i++) {
+					element = (org.w3c.dom.Element)fieldList.item(i);
+					if (element.getAttribute("Type").equals(fieldElement.getAttribute("Type"))
+							&& element.getAttribute("Size").equals(fieldElement.getAttribute("Size"))
+							&& element.getAttribute("Decimal").equals(fieldElement.getAttribute("Decimal"))) {
+						fieldIDFound = element.getAttribute("ID");
+						break;
+					}
 				}
 			}
 		}

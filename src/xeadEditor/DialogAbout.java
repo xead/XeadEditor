@@ -43,7 +43,18 @@ public class DialogAbout extends JDialog implements ActionListener {
 	 * Application Information
 	 */
 	public static final String APPLICATION_NAME  = "XEAD Editor 1.1";
-	public static final String FULL_VERSION  = "V1.R1.M12";
+	public static final String FULL_VERSION  = "V1.R1.M13";
+	//13の変更点
+	//・モデルのインポート処理において、親子テーブルのキー構成探索ロジックを改善した
+	//・結合テーブル追加時の参照キーの探索ロジックを改善した
+	//・機能定義の削除ロジックを改善。利用要素があっても警告にとどめ、削除可能とした
+	//・機能定義のテーブル切替処理でのバリデーションロジック上の問題を修正
+	//・レイアウト確認ダイアログにてURLタイプのフィールドが幅指定されるように修正
+	//・フィールド一覧上のキーフィールドを太字表示にするとともに、CSV出力で太字を*付に変換するステップを追加
+	//・XF310タイプでの明細行の「レイアウト確認」ができないことがある問題を修正
+	//・XF300タイプでの明細タブ追加処理におけるキー構成の妥当検査に含まれていた問題を修正
+	//・「レイアウト確認」で一部の変更不可項目が編集可として示されていた問題を修正
+	//・DBコネクションが確立されていないテーブル定義を選んだ後で「保留中のコミット」が検出される問題を修正
 	public static final String FORMAT_VERSION  = "1.1";
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2012 DBC,Ltd.";

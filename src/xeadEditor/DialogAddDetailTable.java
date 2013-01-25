@@ -100,8 +100,6 @@ public class DialogAddDetailTable extends JDialog {
 		jLabelHdrKeyFields.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelHdrKeyFields.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelHdrKeyFields.setBounds(new Rectangle(11, 40, 89, 15));
-		//jTextFieldHdrKeyFields.setEditable(false);
-		//jTextFieldHdrKeyFields.setFocusable(false);
 		jTextFieldHdrKeyFields.setFont(new java.awt.Font("Dialog", 0, 12));
 		jTextFieldHdrKeyFields.setBounds(new Rectangle(105, 37, 380, 21));
 		jLabelDtlKeyFields.setText(res.getString("DTLTableKeys"));
@@ -150,7 +148,7 @@ public class DialogAddDetailTable extends JDialog {
 		jPanelButtons.getRootPane().setDefaultButton(jButtonOK);
 		this.pack();
 	}
-	//
+
 	public org.w3c.dom.Element request(org.w3c.dom.Element objectFunctionElement) {
 		org.w3c.dom.Element workElement;
 		//
@@ -178,14 +176,6 @@ public class DialogAddDetailTable extends JDialog {
     		}
     	}
 	    if (objectFunctionElement_.getAttribute("HeaderKeyFields").equals("")) {
-//	    	NodeList keyList = headerTableNode.getElement().getElementsByTagName("Key");
-//	    	for (int i = 0; i < keyList.getLength(); i++) {
-//	    		workElement = (org.w3c.dom.Element)keyList.item(i);
-//	    		if (workElement.getAttribute("Type").equals("PK")) {
-//	    			jTextFieldHdrKeyFields.setText(workElement.getAttribute("Fields"));
-//	    			break;
-//	    		}
-//	    	}
 			jTextFieldHdrKeyFields.setText(headerPK);
 	    } else {
 			jTextFieldHdrKeyFields.setText(objectFunctionElement_.getAttribute("HeaderKeyFields"));
@@ -200,7 +190,7 @@ public class DialogAddDetailTable extends JDialog {
 		//
 		return newElement;
 	}
-	//
+
 	void jButtonOK_actionPerformed(ActionEvent e) {
 		org.w3c.dom.Element elementHdr, elementDtl, childElement, workElement;
 		StringTokenizer workTokenizerHdr, workTokenizerDtl;
@@ -228,25 +218,39 @@ public class DialogAddDetailTable extends JDialog {
 			}
 		}
 		//
-		workTokenizerDtl = new StringTokenizer(jTextFieldDtlKeyFields.getText(), ";");
-		if (workTokenizerDtl.countTokens() == 0) {
-			errorMessage = res.getString("ErrorMessage73");
-		} else {
-			if (workTokenizerHdr.countTokens() >= workTokenizerDtl.countTokens()) {
-				errorMessage = res.getString("ErrorMessage74");
+		if (errorMessage.equals("")) {
+			workTokenizerDtl = new StringTokenizer(jTextFieldDtlKeyFields.getText(), ";");
+			if (workTokenizerDtl.countTokens() == 0) {
+				errorMessage = res.getString("ErrorMessage73");
 			} else {
-				while (workTokenizerHdr.hasMoreTokens()) {
-					dataSourceHdr = workTokenizerHdr.nextToken();
-					dataSourceDtl = workTokenizerDtl.nextToken();
-					elementHdr = frame_.getSpecificFieldElement(headerTableNode.getElement().getAttribute("ID"), dataSourceHdr);
-					elementDtl = frame_.getSpecificFieldElement(detailTableNode.getElement().getAttribute("ID"), dataSourceDtl);
-					if (elementDtl == null ) {
-						errorMessage = res.getString("ErrorMessage75") + dataSourceDtl + res.getString("ErrorMessage76");
-						break;
-					} else {
-						if (!elementHdr.getAttribute("Type").equals(elementDtl.getAttribute("Type")) || !elementHdr.getAttribute("Size").equals(elementDtl.getAttribute("Size")) || !elementHdr.getAttribute("Decimal").equals(elementDtl.getAttribute("Decimal"))) {
-							errorMessage = res.getString("ErrorMessage77");
+				if (workTokenizerHdr.countTokens() >= workTokenizerDtl.countTokens()) {
+					errorMessage = res.getString("ErrorMessage74");
+				} else {
+					while (workTokenizerDtl.hasMoreTokens()) {
+						dataSourceDtl = workTokenizerDtl.nextToken();
+						elementDtl = frame_.getSpecificFieldElement(detailTableNode.getElement().getAttribute("ID"), dataSourceDtl);
+						if (elementDtl == null ) {
+							errorMessage = res.getString("ErrorMessage75") + dataSourceDtl + res.getString("ErrorMessage76");
 							break;
+						}
+					}
+					if (errorMessage.equals("")) {
+						workTokenizerHdr = new StringTokenizer(jTextFieldHdrKeyFields.getText(), ";");
+						workTokenizerDtl = new StringTokenizer(jTextFieldDtlKeyFields.getText(), ";");
+						while (workTokenizerHdr.hasMoreTokens()) {
+							dataSourceHdr = workTokenizerHdr.nextToken();
+							dataSourceDtl = workTokenizerDtl.nextToken();
+							elementHdr = frame_.getSpecificFieldElement(headerTableNode.getElement().getAttribute("ID"), dataSourceHdr);
+							elementDtl = frame_.getSpecificFieldElement(detailTableNode.getElement().getAttribute("ID"), dataSourceDtl);
+							if (elementDtl == null ) {
+								errorMessage = res.getString("ErrorMessage75") + dataSourceDtl + res.getString("ErrorMessage76");
+								break;
+							} else {
+								if (!elementHdr.getAttribute("Type").equals(elementDtl.getAttribute("Type")) || !elementHdr.getAttribute("Size").equals(elementDtl.getAttribute("Size")) || !elementHdr.getAttribute("Decimal").equals(elementDtl.getAttribute("Decimal"))) {
+									errorMessage = res.getString("ErrorMessage77");
+									break;
+								}
+							}
 						}
 					}
 				}
@@ -318,11 +322,11 @@ public class DialogAddDetailTable extends JDialog {
 			JOptionPane.showMessageDialog(this, errorMessage);
 		}
 	}
-	//
+
 	void jButtonCancel_actionPerformed(ActionEvent e) {
 		this.setVisible(false);
 	}
-	//
+
 	void jTextFieldID_keyReleased(KeyEvent e) {
 		detailTableNode = null;
 		org.w3c.dom.Element workElement;
