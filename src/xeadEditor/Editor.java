@@ -985,6 +985,16 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldFunction100FilterField = new JTextField();
 	private JLabel jLabelFunction100FilterFieldType = new JLabel();
 	private JTextField jTextFieldFunction100FilterFieldType = new JTextField();
+	private JLabel jLabelFunction100FilterLayoutOption = new JLabel();
+	private JRadioButton jRadioButtonFunction100FilterLayoutOptionVertical = new JRadioButton();
+	private JRadioButton jRadioButtonFunction100FilterLayoutOptionHorizontal = new JRadioButton();
+	private ButtonGroup buttonGroupFunction100FilterLayoutOption = new ButtonGroup();
+	private JLabel jLabelFunction100FilterWidth = new JLabel();
+	private JTextField jTextFieldFunction100FilterWidth = new JTextField();
+	private JLabel jLabelFunction100FilterMargin = new JLabel();
+	private JTextField jTextFieldFunction100FilterMargin = new JTextField();
+	private JLabel jLabelFunction100FilterEditableOptions = new JLabel();
+	private JComboBox jComboBoxFunction100FilterEditableOptions = new JComboBox();
 	private JLabel jLabelFunction100FilterOption = new JLabel();
 	private JRadioButton jRadioButtonFunction100FilterOptionEQ = new JRadioButton();
 	private JRadioButton jRadioButtonFunction100FilterOptionSCAN = new JRadioButton();
@@ -1015,8 +1025,6 @@ public class Editor extends JFrame {
 	private String function100FilterPromptOptionCallFunctionFieldsToGetTo;
 	private JLabel jLabelFunction100FilterValue = new JLabel();
 	private JTextField jTextFieldFunction100FilterValue = new JTextField();
-	//private JCheckBox jCheckBoxFunction100FilterNonEditable = new JCheckBox();
-	private JComboBox jComboBoxFunction100FilterEditableOptions = new JComboBox();
 	private JCheckBox jCheckBoxFunction100FilterIgnoreIfZero = new JCheckBox();
 	//
 	private JScrollPane jScrollPaneFunction100ColumnList = new JScrollPane();
@@ -1033,8 +1041,6 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldFunction100Field = new JTextField();
 	private JLabel jLabelFunction100FieldType = new JLabel();
 	private JTextField jTextFieldFunction100FieldType = new JTextField();
-	//private JLabel jLabelFunction100FieldWidth = new JLabel();
-	//private JTextField jTextFieldFunction100FieldWidth = new JTextField();
 	private JLabel jLabelFunction100FieldLayoutOption = new JLabel();
 	private JRadioButton jRadioButtonFunction100FieldLayoutOptionVertical = new JRadioButton();
 	private JRadioButton jRadioButtonFunction100FieldLayoutOptionHorizontal = new JRadioButton();
@@ -1123,6 +1129,16 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldFunction110FilterField = new JTextField();
 	private JLabel jLabelFunction110FilterFieldType = new JLabel();
 	private JTextField jTextFieldFunction110FilterFieldType = new JTextField();
+	private JLabel jLabelFunction110FilterLayoutOption = new JLabel();
+	private JRadioButton jRadioButtonFunction110FilterLayoutOptionVertical = new JRadioButton();
+	private JRadioButton jRadioButtonFunction110FilterLayoutOptionHorizontal = new JRadioButton();
+	private ButtonGroup buttonGroupFunction110FilterLayoutOption = new ButtonGroup();
+	private JLabel jLabelFunction110FilterWidth = new JLabel();
+	private JTextField jTextFieldFunction110FilterWidth = new JTextField();
+	private JLabel jLabelFunction110FilterMargin = new JLabel();
+	private JTextField jTextFieldFunction110FilterMargin = new JTextField();
+	private JLabel jLabelFunction110FilterEditableOptions = new JLabel();
+	private JComboBox jComboBoxFunction110FilterEditableOptions = new JComboBox();
 	private JLabel jLabelFunction110FilterOption = new JLabel();
 	private JRadioButton jRadioButtonFunction110FilterOptionEQ = new JRadioButton();
 	private JRadioButton jRadioButtonFunction110FilterOptionSCAN = new JRadioButton();
@@ -1153,8 +1169,6 @@ public class Editor extends JFrame {
 	private String function110FilterPromptOptionCallFunctionFieldsToGetTo;
 	private JLabel jLabelFunction110FilterValue = new JLabel();
 	private JTextField jTextFieldFunction110FilterValue = new JTextField();
-	//private JCheckBox jCheckBoxFunction110FilterNonEditable = new JCheckBox();
-	private JComboBox jComboBoxFunction110FilterEditableOptions = new JComboBox();
 	private JCheckBox jCheckBoxFunction110FilterIgnoreIfZero = new JCheckBox();
 	//
 	private JScrollPane jScrollPaneFunction110ColumnList = new JScrollPane();
@@ -1579,7 +1593,6 @@ public class Editor extends JFrame {
 	private JComboBox jComboBoxFunction290PhraseBlockType = new JComboBox();
 	private JLabel jLabelFunction290PhraseAlignment = new JLabel();
 	private JComboBox jComboBoxFunction290PhraseAlignment = new JComboBox();
-	//private JTextField jTextFieldFunction290PhraseAlignment = new JTextField();
 	private JLabel jLabelFunction290PhraseMargin = new JLabel();
 	private JTextField jTextFieldFunction290PhraseMarginLeft = new JTextField();
 	private JTextField jTextFieldFunction290PhraseMarginRight = new JTextField();
@@ -1739,8 +1752,6 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldFunction300DetailField = new JTextField();
 	private JLabel jLabelFunction300DetailFieldType = new JLabel();
 	private JTextField jTextFieldFunction300DetailFieldType = new JTextField();
-	//private JLabel jLabelFunction300DetailFieldWidth = new JLabel();
-	//private JTextField jTextFieldFunction300DetailFieldWidth = new JTextField();
 	private JLabel jLabelFunction300DetailFieldLayoutOption = new JLabel();
 	private JRadioButton jRadioButtonFunction300DetailFieldLayoutOptionVertical = new JRadioButton();
 	private JRadioButton jRadioButtonFunction300DetailFieldLayoutOptionHorizontal = new JRadioButton();
@@ -1769,6 +1780,16 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldFunction300DetailFilterField = new JTextField();
 	private JLabel jLabelFunction300DetailFilterFieldType = new JLabel();
 	private JTextField jTextFieldFunction300DetailFilterFieldType = new JTextField();
+	private JLabel jLabelFunction300DetailFilterLayoutOption = new JLabel();
+	private JRadioButton jRadioButtonFunction300DetailFilterLayoutOptionVertical = new JRadioButton();
+	private JRadioButton jRadioButtonFunction300DetailFilterLayoutOptionHorizontal = new JRadioButton();
+	private ButtonGroup buttonGroupFunction300DetailFilterLayoutOption = new ButtonGroup();
+	private JLabel jLabelFunction300DetailFilterWidth = new JLabel();
+	private JTextField jTextFieldFunction300DetailFilterWidth = new JTextField();
+	private JLabel jLabelFunction300DetailFilterMargin = new JLabel();
+	private JTextField jTextFieldFunction300DetailFilterMargin = new JTextField();
+	private JLabel jLabelFunction300DetailFilterEditableOptions = new JLabel();
+	private JComboBox jComboBoxFunction300DetailFilterEditableOptions = new JComboBox();
 	private JLabel jLabelFunction300DetailFilterOption = new JLabel();
 	private JRadioButton jRadioButtonFunction300DetailFilterOptionEQ = new JRadioButton();
 	private JRadioButton jRadioButtonFunction300DetailFilterOptionSCAN = new JRadioButton();
@@ -1799,8 +1820,6 @@ public class Editor extends JFrame {
 	private String function300DetailFilterPromptOptionCallFunctionFieldsToGetTo;
 	private JLabel jLabelFunction300DetailFilterValue = new JLabel();
 	private JTextField jTextFieldFunction300DetailFilterValue = new JTextField();
-	//private JCheckBox jCheckBoxFunction300DetailFilterNonEditable = new JCheckBox();
-	private JComboBox jComboBoxFunction300DetailFilterEditableOptions = new JComboBox();
 	private JCheckBox jCheckBoxFunction300DetailFilterIgnoreIfZero = new JCheckBox();
 	//
 	private JScrollPane jScrollPaneFunction300DetailButtonList = new JScrollPane();
@@ -5709,7 +5728,6 @@ public class Editor extends JFrame {
 		jSplitPaneFunction100ColumnList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction100ColumnList.add(jScrollPaneFunction100ColumnList, JSplitPane.TOP);
 		jSplitPaneFunction100ColumnList.add(jPanelFunction100ColumnList, JSplitPane.BOTTOM);
-		//jSplitPaneFunction100ColumnList.setDividerLocation(screenHeight - 467);
 		jSplitPaneFunction100ColumnList.setDividerLocation(screenHeight - 495);
 		jLabelFunction100Table.setEnabled(false);
 		jLabelFunction100Table.setFont(new java.awt.Font("SansSerif", 0, 12));
@@ -5747,16 +5765,6 @@ public class Editor extends JFrame {
 		jTextFieldFunction100FieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldFunction100FieldType.setBounds(new Rectangle(514, 37, 250, 22));
 		jTextFieldFunction100FieldType.setEditable(false);
-//		jLabelFunction100FieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-//		jLabelFunction100FieldWidth.setHorizontalAlignment(SwingConstants.RIGHT);
-//		jLabelFunction100FieldWidth.setHorizontalTextPosition(SwingConstants.LEADING);
-//		jLabelFunction100FieldWidth.setText(res.getString("FieldWidth"));
-//		jLabelFunction100FieldWidth.setBounds(new Rectangle(430, 68, 76, 15));
-//		jLabelFunction100FieldWidth.setEnabled(false);
-//		jTextFieldFunction100FieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-//		jTextFieldFunction100FieldWidth.setBounds(new Rectangle(514, 65, 45, 22));
-//		jTextFieldFunction100FieldWidth.setEnabled(false);
-//		jTextFieldFunction100FieldWidth.setText("");
 		jLabelFunction100FieldLayoutOption.setEnabled(false);
 		jLabelFunction100FieldLayoutOption.setText(res.getString("LayoutOption"));
 		jLabelFunction100FieldLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
@@ -5825,8 +5833,6 @@ public class Editor extends JFrame {
 		jPanelFunction100ColumnList.add(jTextFieldFunction100Field);
 		jPanelFunction100ColumnList.add(jLabelFunction100FieldType);
 		jPanelFunction100ColumnList.add(jTextFieldFunction100FieldType);
-		//jPanelFunction100ColumnList.add(jLabelFunction100FieldWidth);
-		//jPanelFunction100ColumnList.add(jTextFieldFunction100FieldWidth);
 		jPanelFunction100ColumnList.add(jLabelFunction100FieldLayoutOption);
 		jPanelFunction100ColumnList.add(jRadioButtonFunction100FieldLayoutOptionVertical);
 		jPanelFunction100ColumnList.add(jRadioButtonFunction100FieldLayoutOptionHorizontal);
@@ -5875,11 +5881,7 @@ public class Editor extends JFrame {
 		jSplitPaneFunction100FilterList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction100FilterList.add(jScrollPaneFunction100FilterList, JSplitPane.TOP);
 		jSplitPaneFunction100FilterList.add(jPanelFunction100FilterList, JSplitPane.BOTTOM);
-		//if (screenHeight > 768) {
-			jSplitPaneFunction100FilterList.setDividerLocation(screenHeight - 521);
-		//} else {
-		//	jSplitPaneFunction100FilterList.setDividerLocation(257);
-		//}
+		jSplitPaneFunction100FilterList.setDividerLocation(screenHeight - 549);
 		jLabelFunction100FilterTable.setEnabled(false);
 		jLabelFunction100FilterTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction100FilterTable.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -5916,43 +5918,90 @@ public class Editor extends JFrame {
 		jTextFieldFunction100FilterFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldFunction100FilterFieldType.setBounds(new Rectangle(514, 37, 250, 22));
 		jTextFieldFunction100FilterFieldType.setEditable(false);
+		jLabelFunction100FilterLayoutOption.setEnabled(false);
+		jLabelFunction100FilterLayoutOption.setText(res.getString("LayoutOption"));
+		jLabelFunction100FilterLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100FilterLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction100FilterLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction100FilterLayoutOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jRadioButtonFunction100FilterLayoutOptionVertical.setText(res.getString("LayoutVertical"));
+		jRadioButtonFunction100FilterLayoutOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction100FilterLayoutOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
+		jRadioButtonFunction100FilterLayoutOptionVertical.setEnabled(false);
+		jRadioButtonFunction100FilterLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
+		jRadioButtonFunction100FilterLayoutOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction100FilterLayoutOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
+		jRadioButtonFunction100FilterLayoutOptionHorizontal.setEnabled(false);
+		buttonGroupFunction100FilterLayoutOption.add(jRadioButtonFunction100FilterLayoutOptionVertical);
+		buttonGroupFunction100FilterLayoutOption.add(jRadioButtonFunction100FilterLayoutOptionHorizontal);
+		jLabelFunction100FilterWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100FilterWidth.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction100FilterWidth.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction100FilterWidth.setText(res.getString("FieldWidth"));
+		jLabelFunction100FilterWidth.setBounds(new Rectangle(430, 68, 76, 15));
+		jLabelFunction100FilterWidth.setEnabled(false);
+		jTextFieldFunction100FilterWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldFunction100FilterWidth.setBounds(new Rectangle(514, 65, 45, 22));
+		jTextFieldFunction100FilterWidth.setEnabled(false);
+		jTextFieldFunction100FilterWidth.setText("");
+		jLabelFunction100FilterMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100FilterMargin.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction100FilterMargin.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction100FilterMargin.setText(res.getString("FieldMargin"));
+		jLabelFunction100FilterMargin.setBounds(new Rectangle(564, 68, 45, 15));
+		jLabelFunction100FilterMargin.setEnabled(false);
+		jTextFieldFunction100FilterMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldFunction100FilterMargin.setBounds(new Rectangle(614, 65, 45, 22));
+		jTextFieldFunction100FilterMargin.setText("");
+		jTextFieldFunction100FilterMargin.setEnabled(false);
+		jLabelFunction100FilterEditableOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100FilterEditableOptions.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction100FilterEditableOptions.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction100FilterEditableOptions.setText(res.getString("EditableOptions"));
+		jLabelFunction100FilterEditableOptions.setBounds(new Rectangle(664, 68, 100, 15));
+		jLabelFunction100FilterEditableOptions.setEnabled(false);
+		jComboBoxFunction100FilterEditableOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jComboBoxFunction100FilterEditableOptions.addItem(res.getString("Editable"));
+		jComboBoxFunction100FilterEditableOptions.addItem(res.getString("NonEditable"));
+		jComboBoxFunction100FilterEditableOptions.addItem(res.getString("Hidden"));
+		jComboBoxFunction100FilterEditableOptions.setBounds(new Rectangle(769, 65, 100, 22));
 		jLabelFunction100FilterOption.setEnabled(false);
 		jLabelFunction100FilterOption.setText(res.getString("FilterOption"));
 		jLabelFunction100FilterOption.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction100FilterOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100FilterOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction100FilterOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction100FilterOption.setBounds(new Rectangle(11, 96, 96, 15));
 		jRadioButtonFunction100FilterOptionEQ.setText("EQ");
 		jRadioButtonFunction100FilterOptionEQ.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterOptionEQ.setBounds(new Rectangle(115, 65, 60, 22));
+		jRadioButtonFunction100FilterOptionEQ.setBounds(new Rectangle(115, 93, 60, 22));
 		jRadioButtonFunction100FilterOptionEQ.setEnabled(false);
 		jRadioButtonFunction100FilterOptionSCAN.setText("SCAN");
 		jRadioButtonFunction100FilterOptionSCAN.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterOptionSCAN.setBounds(new Rectangle(185, 65, 60, 22));
+		jRadioButtonFunction100FilterOptionSCAN.setBounds(new Rectangle(185, 93, 60, 22));
 		jRadioButtonFunction100FilterOptionSCAN.setEnabled(false);
 		jRadioButtonFunction100FilterOptionGENERIC.setText("GENERIC");
 		jRadioButtonFunction100FilterOptionGENERIC.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterOptionGENERIC.setBounds(new Rectangle(255, 65, 80, 22));
+		jRadioButtonFunction100FilterOptionGENERIC.setBounds(new Rectangle(255, 93, 80, 22));
 		jRadioButtonFunction100FilterOptionGENERIC.setEnabled(false);
 		jRadioButtonFunction100FilterOptionLE.setText("LE");
 		jRadioButtonFunction100FilterOptionLE.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterOptionLE.setBounds(new Rectangle(345, 65, 60, 22));
+		jRadioButtonFunction100FilterOptionLE.setBounds(new Rectangle(345, 93, 60, 22));
 		jRadioButtonFunction100FilterOptionLE.setEnabled(false);
 		jRadioButtonFunction100FilterOptionLT.setText("LT");
 		jRadioButtonFunction100FilterOptionLT.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterOptionLT.setBounds(new Rectangle(415, 65, 60, 22));
+		jRadioButtonFunction100FilterOptionLT.setBounds(new Rectangle(415, 93, 60, 22));
 		jRadioButtonFunction100FilterOptionLT.setEnabled(false);
 		jRadioButtonFunction100FilterOptionGE.setText("GE");
 		jRadioButtonFunction100FilterOptionGE.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterOptionGE.setBounds(new Rectangle(485, 65, 60, 22));
+		jRadioButtonFunction100FilterOptionGE.setBounds(new Rectangle(485, 93, 60, 22));
 		jRadioButtonFunction100FilterOptionGE.setEnabled(false);
 		jRadioButtonFunction100FilterOptionGT.setText("GT");
 		jRadioButtonFunction100FilterOptionGT.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterOptionGT.setBounds(new Rectangle(555, 65, 60, 22));
+		jRadioButtonFunction100FilterOptionGT.setBounds(new Rectangle(555, 93, 60, 22));
 		jRadioButtonFunction100FilterOptionGT.setEnabled(false);
 		jRadioButtonFunction100FilterOptionREFLECT.setText("REFLECT");
 		jRadioButtonFunction100FilterOptionREFLECT.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterOptionREFLECT.setBounds(new Rectangle(625, 65, 80, 22));
+		jRadioButtonFunction100FilterOptionREFLECT.setBounds(new Rectangle(625, 93, 80, 22));
 		jRadioButtonFunction100FilterOptionREFLECT.setEnabled(false);
 		buttonGroupFunction100FilterOption.add(jRadioButtonFunction100FilterOptionEQ);
 		buttonGroupFunction100FilterOption.add(jRadioButtonFunction100FilterOptionSCAN);
@@ -5962,67 +6011,62 @@ public class Editor extends JFrame {
 		buttonGroupFunction100FilterOption.add(jRadioButtonFunction100FilterOptionGE);
 		buttonGroupFunction100FilterOption.add(jRadioButtonFunction100FilterOptionGT);
 		buttonGroupFunction100FilterOption.add(jRadioButtonFunction100FilterOptionREFLECT);
-		jComboBoxFunction100FilterEditableOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxFunction100FilterEditableOptions.addItem(res.getString("Editable"));
-		jComboBoxFunction100FilterEditableOptions.addItem(res.getString("NonEditable"));
-		jComboBoxFunction100FilterEditableOptions.addItem(res.getString("Hidden"));
-		jComboBoxFunction100FilterEditableOptions.setBounds(new Rectangle(735, 65, 100, 22));
 		jCheckBoxFunction100FilterIgnoreIfZero.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jCheckBoxFunction100FilterIgnoreIfZero.setText(res.getString("IgnoreIfZero"));
-		jCheckBoxFunction100FilterIgnoreIfZero.setBounds(new Rectangle(840, 65, 100, 22));
+		jCheckBoxFunction100FilterIgnoreIfZero.setBounds(new Rectangle(769, 93, 100, 22));
 		jLabelFunction100FilterCaptionOption.setEnabled(false);
 		jLabelFunction100FilterCaptionOption.setText(res.getString("Caption"));
 		jLabelFunction100FilterCaptionOption.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction100FilterCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100FilterCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction100FilterCaptionOption.setBounds(new Rectangle(11, 96, 96, 15));
+		jLabelFunction100FilterCaptionOption.setBounds(new Rectangle(11, 124, 96, 15));
 		jRadioButtonFunction100FilterCaptionOptionName.setText(res.getString("FieldName"));
 		jRadioButtonFunction100FilterCaptionOptionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterCaptionOptionName.setBounds(new Rectangle(115, 93, 100, 22));
+		jRadioButtonFunction100FilterCaptionOptionName.setBounds(new Rectangle(115, 121, 100, 22));
 		jRadioButtonFunction100FilterCaptionOptionName.setEnabled(false);
 		jRadioButtonFunction100FilterCaptionOptionName.addChangeListener(new Editor_jRadioButtonFunction100FilterCaptionOption_changeAdapter(this));
 		jRadioButtonFunction100FilterCaptionOptionValue.setText(res.getString("ValueSpecified"));
 		jRadioButtonFunction100FilterCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterCaptionOptionValue.setBounds(new Rectangle(225, 93, 63, 22));
+		jRadioButtonFunction100FilterCaptionOptionValue.setBounds(new Rectangle(225, 121, 63, 22));
 		jRadioButtonFunction100FilterCaptionOptionValue.setEnabled(false);
 		jRadioButtonFunction100FilterCaptionOptionValue.addChangeListener(new Editor_jRadioButtonFunction100FilterCaptionOption_changeAdapter(this));
 		buttonGroupFunction100FilterCaptionOption.add(jRadioButtonFunction100FilterCaptionOptionName);
 		buttonGroupFunction100FilterCaptionOption.add(jRadioButtonFunction100FilterCaptionOptionValue);
 		jTextFieldFunction100FilterCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100FilterCaptionOptionValue.setBounds(new Rectangle(300, 93, 220, 22));
+		jTextFieldFunction100FilterCaptionOptionValue.setBounds(new Rectangle(300, 121, 220, 22));
 		jTextFieldFunction100FilterCaptionOptionValue.setEnabled(false);
 		jTextFieldFunction100FilterCaptionOptionValue.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
 		jLabelFunction100FilterValue.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction100FilterValue.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100FilterValue.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100FilterValue.setText(res.getString("InitialValue"));
-		jLabelFunction100FilterValue.setBounds(new Rectangle(526, 96, 96, 15));
+		jLabelFunction100FilterValue.setBounds(new Rectangle(526, 124, 96, 15));
 		jTextFieldFunction100FilterValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100FilterValue.setBounds(new Rectangle(630, 93, 264, 22));
+		jTextFieldFunction100FilterValue.setBounds(new Rectangle(630, 121, 264, 22));
 		jLabelFunction100FilterPromptOption.setText(res.getString("Prompt"));
 		jLabelFunction100FilterPromptOption.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction100FilterPromptOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100FilterPromptOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction100FilterPromptOption.setBounds(new Rectangle(11, 124, 96, 15));
+		jLabelFunction100FilterPromptOption.setBounds(new Rectangle(11, 152, 96, 15));
 		jLabelFunction100FilterPromptOption.setEnabled(false);
 		jRadioButtonFunction100FilterPromptOptionNone.setText(res.getString("None"));
 		jRadioButtonFunction100FilterPromptOptionNone.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterPromptOptionNone.setBounds(new Rectangle(115, 121, 60, 22));
+		jRadioButtonFunction100FilterPromptOptionNone.setBounds(new Rectangle(115, 149, 60, 22));
 		jRadioButtonFunction100FilterPromptOptionNone.setEnabled(false);
 		jRadioButtonFunction100FilterPromptOptionNone.addChangeListener(new Editor_jRadioButtonFunction100FilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction100FilterPromptOptionList1.setText(res.getString("OptionalList"));
 		jRadioButtonFunction100FilterPromptOptionList1.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterPromptOptionList1.setBounds(new Rectangle(175, 121, 100, 22));
+		jRadioButtonFunction100FilterPromptOptionList1.setBounds(new Rectangle(175, 149, 100, 22));
 		jRadioButtonFunction100FilterPromptOptionList1.setEnabled(false);
 		jRadioButtonFunction100FilterPromptOptionList1.addChangeListener(new Editor_jRadioButtonFunction100FilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction100FilterPromptOptionList2.setText(res.getString("RequiredList"));
 		jRadioButtonFunction100FilterPromptOptionList2.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterPromptOptionList2.setBounds(new Rectangle(285, 121, 100, 22));
+		jRadioButtonFunction100FilterPromptOptionList2.setBounds(new Rectangle(285, 149, 100, 22));
 		jRadioButtonFunction100FilterPromptOptionList2.setEnabled(false);
 		jRadioButtonFunction100FilterPromptOptionList2.addChangeListener(new Editor_jRadioButtonFunction100FilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction100FilterPromptOptionCall.setText(res.getString("CallPromptFunction"));
 		jRadioButtonFunction100FilterPromptOptionCall.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterPromptOptionCall.setBounds(new Rectangle(395, 121, 78, 22));
+		jRadioButtonFunction100FilterPromptOptionCall.setBounds(new Rectangle(395, 149, 78, 22));
 		jRadioButtonFunction100FilterPromptOptionCall.setEnabled(false);
 		jRadioButtonFunction100FilterPromptOptionCall.addChangeListener(new Editor_jRadioButtonFunction100FilterPromptOption_changeAdapter(this));
 		buttonGroupFunction100FilterPromptOption.add(jRadioButtonFunction100FilterPromptOptionNone);
@@ -6030,16 +6074,16 @@ public class Editor extends JFrame {
 		buttonGroupFunction100FilterPromptOption.add(jRadioButtonFunction100FilterPromptOptionList2);
 		buttonGroupFunction100FilterPromptOption.add(jRadioButtonFunction100FilterPromptOptionCall);
 		jTextFieldFunction100FilterPromptOptionCallFunctionID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100FilterPromptOptionCallFunctionID.setBounds(new Rectangle(475, 121, 80, 22));
+		jTextFieldFunction100FilterPromptOptionCallFunctionID.setBounds(new Rectangle(475, 149, 80, 22));
 		jTextFieldFunction100FilterPromptOptionCallFunctionID.setEnabled(false);
 		jTextFieldFunction100FilterPromptOptionCallFunctionID.addKeyListener(new Editor_jTextFieldFunction100FilterPromptOptionCallFunctionID_keyAdapter(this));
 		jTextFieldFunction100FilterPromptOptionCallFunctionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100FilterPromptOptionCallFunctionName.setBounds(new Rectangle(560, 121, 204, 22));
+		jTextFieldFunction100FilterPromptOptionCallFunctionName.setBounds(new Rectangle(560, 149, 204, 22));
 		jTextFieldFunction100FilterPromptOptionCallFunctionName.setEnabled(false);
 		jTextFieldFunction100FilterPromptOptionCallFunctionName.setEditable(false);
 		jButtonFunction100FilterPromptOptionCallFunctionExchange.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jButtonFunction100FilterPromptOptionCallFunctionExchange.setText(res.getString("ExchangeParms"));
-		jButtonFunction100FilterPromptOptionCallFunctionExchange.setBounds(new Rectangle(764, 120, 60, 23));
+		jButtonFunction100FilterPromptOptionCallFunctionExchange.setBounds(new Rectangle(764, 148, 60, 23));
 		jButtonFunction100FilterPromptOptionCallFunctionExchange.setEnabled(false);
 		jButtonFunction100FilterPromptOptionCallFunctionExchange.addActionListener(new Editor_jButtonToEditPromptOptionCallFunctionExchange_actionAdapter(this));
 		jPanelFunction100FilterList.setLayout(null);
@@ -6052,6 +6096,15 @@ public class Editor extends JFrame {
 		jPanelFunction100FilterList.add(jTextFieldFunction100FilterField);
 		jPanelFunction100FilterList.add(jLabelFunction100FilterFieldType);
 		jPanelFunction100FilterList.add(jTextFieldFunction100FilterFieldType);
+		jPanelFunction100FilterList.add(jLabelFunction100FilterLayoutOption);
+		jPanelFunction100FilterList.add(jRadioButtonFunction100FilterLayoutOptionVertical);
+		jPanelFunction100FilterList.add(jRadioButtonFunction100FilterLayoutOptionHorizontal);
+		jPanelFunction100FilterList.add(jLabelFunction100FilterWidth);
+		jPanelFunction100FilterList.add(jTextFieldFunction100FilterWidth);
+		jPanelFunction100FilterList.add(jLabelFunction100FilterMargin);
+		jPanelFunction100FilterList.add(jTextFieldFunction100FilterMargin);
+		jPanelFunction100FilterList.add(jLabelFunction100FilterEditableOptions);
+		jPanelFunction100FilterList.add(jComboBoxFunction100FilterEditableOptions);
 		jPanelFunction100FilterList.add(jLabelFunction100FilterOption);
 		jPanelFunction100FilterList.add(jRadioButtonFunction100FilterOptionEQ);
 		jPanelFunction100FilterList.add(jRadioButtonFunction100FilterOptionSCAN);
@@ -6075,7 +6128,6 @@ public class Editor extends JFrame {
 		jPanelFunction100FilterList.add(jButtonFunction100FilterPromptOptionCallFunctionExchange);
 		jPanelFunction100FilterList.add(jLabelFunction100FilterValue);
 		jPanelFunction100FilterList.add(jTextFieldFunction100FilterValue);
-		jPanelFunction100FilterList.add(jComboBoxFunction100FilterEditableOptions);
 		jPanelFunction100FilterList.add(jCheckBoxFunction100FilterIgnoreIfZero);
 		//
 		jScrollPaneFunction100ButtonList.setBorder(null);
@@ -6113,11 +6165,7 @@ public class Editor extends JFrame {
 		jSplitPaneFunction100ButtonList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction100ButtonList.add(jScrollPaneFunction100ButtonList, JSplitPane.TOP);
 		jSplitPaneFunction100ButtonList.add(jPanelFunction100ButtonList, JSplitPane.BOTTOM);
-		//if (screenHeight > 768) {
-			jSplitPaneFunction100ButtonList.setDividerLocation(screenHeight - 493);
-		//} else {
-		//	jSplitPaneFunction100ButtonList.setDividerLocation(285);
-		//}
+		jSplitPaneFunction100ButtonList.setDividerLocation(screenHeight - 493);
 		jLabelFunction100ButtonPosition.setEnabled(false);
 		jLabelFunction100ButtonPosition.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction100ButtonPosition.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -6606,11 +6654,7 @@ public class Editor extends JFrame {
 		jSplitPaneFunction110FilterList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction110FilterList.add(jScrollPaneFunction110FilterList, JSplitPane.TOP);
 		jSplitPaneFunction110FilterList.add(jPanelFunction110FilterList, JSplitPane.BOTTOM);
-		//if (screenHeight > 768) {
-			jSplitPaneFunction110FilterList.setDividerLocation(screenHeight - 465);
-		//} else {
-		//	jSplitPaneFunction110FilterList.setDividerLocation(313);
-		//}
+		jSplitPaneFunction110FilterList.setDividerLocation(screenHeight - 493);
 		jLabelFunction110FilterTable.setEnabled(false);
 		jLabelFunction110FilterTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction110FilterTable.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -6647,43 +6691,90 @@ public class Editor extends JFrame {
 		jTextFieldFunction110FilterFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldFunction110FilterFieldType.setBounds(new Rectangle(514, 37, 250, 22));
 		jTextFieldFunction110FilterFieldType.setEditable(false);
+		jLabelFunction110FilterLayoutOption.setEnabled(false);
+		jLabelFunction110FilterLayoutOption.setText(res.getString("LayoutOption"));
+		jLabelFunction110FilterLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110FilterLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction110FilterLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction110FilterLayoutOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jRadioButtonFunction110FilterLayoutOptionVertical.setText(res.getString("LayoutVertical"));
+		jRadioButtonFunction110FilterLayoutOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction110FilterLayoutOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
+		jRadioButtonFunction110FilterLayoutOptionVertical.setEnabled(false);
+		jRadioButtonFunction110FilterLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
+		jRadioButtonFunction110FilterLayoutOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction110FilterLayoutOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
+		jRadioButtonFunction110FilterLayoutOptionHorizontal.setEnabled(false);
+		buttonGroupFunction110FilterLayoutOption.add(jRadioButtonFunction110FilterLayoutOptionVertical);
+		buttonGroupFunction110FilterLayoutOption.add(jRadioButtonFunction110FilterLayoutOptionHorizontal);
+		jLabelFunction110FilterWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110FilterWidth.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction110FilterWidth.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction110FilterWidth.setText(res.getString("FieldWidth"));
+		jLabelFunction110FilterWidth.setBounds(new Rectangle(430, 68, 76, 15));
+		jLabelFunction110FilterWidth.setEnabled(false);
+		jTextFieldFunction110FilterWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldFunction110FilterWidth.setBounds(new Rectangle(514, 65, 45, 22));
+		jTextFieldFunction110FilterWidth.setEnabled(false);
+		jTextFieldFunction110FilterWidth.setText("");
+		jLabelFunction110FilterMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110FilterMargin.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction110FilterMargin.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction110FilterMargin.setText(res.getString("FieldMargin"));
+		jLabelFunction110FilterMargin.setBounds(new Rectangle(564, 68, 45, 15));
+		jLabelFunction110FilterMargin.setEnabled(false);
+		jTextFieldFunction110FilterMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldFunction110FilterMargin.setBounds(new Rectangle(614, 65, 45, 22));
+		jTextFieldFunction110FilterMargin.setText("");
+		jTextFieldFunction110FilterMargin.setEnabled(false);
+		jLabelFunction110FilterEditableOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110FilterEditableOptions.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction110FilterEditableOptions.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction110FilterEditableOptions.setText(res.getString("EditableOptions"));
+		jLabelFunction110FilterEditableOptions.setBounds(new Rectangle(664, 68, 100, 15));
+		jLabelFunction110FilterEditableOptions.setEnabled(false);
+		jComboBoxFunction110FilterEditableOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jComboBoxFunction110FilterEditableOptions.addItem(res.getString("Editable"));
+		jComboBoxFunction110FilterEditableOptions.addItem(res.getString("NonEditable"));
+		jComboBoxFunction110FilterEditableOptions.addItem(res.getString("Hidden"));
+		jComboBoxFunction110FilterEditableOptions.setBounds(new Rectangle(769, 65, 100, 22));
 		jLabelFunction110FilterOption.setEnabled(false);
 		jLabelFunction110FilterOption.setText(res.getString("FilterOption"));
 		jLabelFunction110FilterOption.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction110FilterOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110FilterOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction110FilterOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction110FilterOption.setBounds(new Rectangle(11, 96, 96, 15));
 		jRadioButtonFunction110FilterOptionEQ.setText("EQ");
 		jRadioButtonFunction110FilterOptionEQ.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterOptionEQ.setBounds(new Rectangle(115, 65, 60, 22));
+		jRadioButtonFunction110FilterOptionEQ.setBounds(new Rectangle(115, 93, 60, 22));
 		jRadioButtonFunction110FilterOptionEQ.setEnabled(false);
 		jRadioButtonFunction110FilterOptionSCAN.setText("SCAN");
 		jRadioButtonFunction110FilterOptionSCAN.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterOptionSCAN.setBounds(new Rectangle(185, 65, 60, 22));
+		jRadioButtonFunction110FilterOptionSCAN.setBounds(new Rectangle(185, 93, 60, 22));
 		jRadioButtonFunction110FilterOptionSCAN.setEnabled(false);
 		jRadioButtonFunction110FilterOptionGENERIC.setText("GENERIC");
 		jRadioButtonFunction110FilterOptionGENERIC.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterOptionGENERIC.setBounds(new Rectangle(255, 65, 80, 22));
+		jRadioButtonFunction110FilterOptionGENERIC.setBounds(new Rectangle(255, 93, 80, 22));
 		jRadioButtonFunction110FilterOptionGENERIC.setEnabled(false);
 		jRadioButtonFunction110FilterOptionLE.setText("LE");
 		jRadioButtonFunction110FilterOptionLE.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterOptionLE.setBounds(new Rectangle(345, 65, 60, 22));
+		jRadioButtonFunction110FilterOptionLE.setBounds(new Rectangle(345, 93, 60, 22));
 		jRadioButtonFunction110FilterOptionLE.setEnabled(false);
 		jRadioButtonFunction110FilterOptionLT.setText("LT");
 		jRadioButtonFunction110FilterOptionLT.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterOptionLT.setBounds(new Rectangle(415, 65, 60, 22));
+		jRadioButtonFunction110FilterOptionLT.setBounds(new Rectangle(415, 93, 60, 22));
 		jRadioButtonFunction110FilterOptionLT.setEnabled(false);
 		jRadioButtonFunction110FilterOptionGE.setText("GE");
 		jRadioButtonFunction110FilterOptionGE.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterOptionGE.setBounds(new Rectangle(485, 65, 60, 22));
+		jRadioButtonFunction110FilterOptionGE.setBounds(new Rectangle(485, 93, 60, 22));
 		jRadioButtonFunction110FilterOptionGE.setEnabled(false);
 		jRadioButtonFunction110FilterOptionGT.setText("GT");
 		jRadioButtonFunction110FilterOptionGT.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterOptionGT.setBounds(new Rectangle(555, 65, 60, 22));
+		jRadioButtonFunction110FilterOptionGT.setBounds(new Rectangle(555, 93, 60, 22));
 		jRadioButtonFunction110FilterOptionGT.setEnabled(false);
 		jRadioButtonFunction110FilterOptionREFLECT.setText("REFLECT");
 		jRadioButtonFunction110FilterOptionREFLECT.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterOptionREFLECT.setBounds(new Rectangle(625, 65, 80, 22));
+		jRadioButtonFunction110FilterOptionREFLECT.setBounds(new Rectangle(625, 93, 80, 22));
 		jRadioButtonFunction110FilterOptionREFLECT.setEnabled(false);
 		buttonGroupFunction110FilterOption.add(jRadioButtonFunction110FilterOptionEQ);
 		buttonGroupFunction110FilterOption.add(jRadioButtonFunction110FilterOptionSCAN);
@@ -6693,67 +6784,62 @@ public class Editor extends JFrame {
 		buttonGroupFunction110FilterOption.add(jRadioButtonFunction110FilterOptionGE);
 		buttonGroupFunction110FilterOption.add(jRadioButtonFunction110FilterOptionGT);
 		buttonGroupFunction110FilterOption.add(jRadioButtonFunction110FilterOptionREFLECT);
-		jComboBoxFunction110FilterEditableOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxFunction110FilterEditableOptions.addItem(res.getString("Editable"));
-		jComboBoxFunction110FilterEditableOptions.addItem(res.getString("NonEditable"));
-		jComboBoxFunction110FilterEditableOptions.addItem(res.getString("Hidden"));
-		jComboBoxFunction110FilterEditableOptions.setBounds(new Rectangle(735, 65, 100, 22));
 		jCheckBoxFunction110FilterIgnoreIfZero.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jCheckBoxFunction110FilterIgnoreIfZero.setText(res.getString("IgnoreIfZero"));
-		jCheckBoxFunction110FilterIgnoreIfZero.setBounds(new Rectangle(840, 65, 100, 22));
+		jCheckBoxFunction110FilterIgnoreIfZero.setBounds(new Rectangle(769, 93, 100, 22));
 		jLabelFunction110FilterCaptionOption.setEnabled(false);
 		jLabelFunction110FilterCaptionOption.setText(res.getString("Caption"));
 		jLabelFunction110FilterCaptionOption.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction110FilterCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110FilterCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction110FilterCaptionOption.setBounds(new Rectangle(11, 96, 96, 15));
+		jLabelFunction110FilterCaptionOption.setBounds(new Rectangle(11, 124, 96, 15));
 		jRadioButtonFunction110FilterCaptionOptionName.setText(res.getString("FieldName"));
 		jRadioButtonFunction110FilterCaptionOptionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterCaptionOptionName.setBounds(new Rectangle(115, 93, 100, 22));
+		jRadioButtonFunction110FilterCaptionOptionName.setBounds(new Rectangle(115, 121, 100, 22));
 		jRadioButtonFunction110FilterCaptionOptionName.setEnabled(false);
 		jRadioButtonFunction110FilterCaptionOptionName.addChangeListener(new Editor_jRadioButtonFunction110FilterCaptionOption_changeAdapter(this));
 		jRadioButtonFunction110FilterCaptionOptionValue.setText(res.getString("ValueSpecified"));
 		jRadioButtonFunction110FilterCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterCaptionOptionValue.setBounds(new Rectangle(225, 93, 63, 22));
+		jRadioButtonFunction110FilterCaptionOptionValue.setBounds(new Rectangle(225, 121, 63, 22));
 		jRadioButtonFunction110FilterCaptionOptionValue.setEnabled(false);
 		jRadioButtonFunction110FilterCaptionOptionValue.addChangeListener(new Editor_jRadioButtonFunction110FilterCaptionOption_changeAdapter(this));
 		buttonGroupFunction110FilterCaptionOption.add(jRadioButtonFunction110FilterCaptionOptionName);
 		buttonGroupFunction110FilterCaptionOption.add(jRadioButtonFunction110FilterCaptionOptionValue);
 		jTextFieldFunction110FilterCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110FilterCaptionOptionValue.setBounds(new Rectangle(300, 93, 220, 22));
+		jTextFieldFunction110FilterCaptionOptionValue.setBounds(new Rectangle(300, 121, 220, 22));
 		jTextFieldFunction110FilterCaptionOptionValue.setEnabled(false);
 		jTextFieldFunction110FilterCaptionOptionValue.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
 		jLabelFunction110FilterValue.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction110FilterValue.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110FilterValue.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110FilterValue.setText(res.getString("InitialValue"));
-		jLabelFunction110FilterValue.setBounds(new Rectangle(526, 96, 96, 15));
+		jLabelFunction110FilterValue.setBounds(new Rectangle(526, 124, 96, 15));
 		jTextFieldFunction110FilterValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110FilterValue.setBounds(new Rectangle(630, 93, 264, 22));
+		jTextFieldFunction110FilterValue.setBounds(new Rectangle(630, 121, 264, 22));
 		jLabelFunction110FilterPromptOption.setText(res.getString("Prompt"));
 		jLabelFunction110FilterPromptOption.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction110FilterPromptOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110FilterPromptOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction110FilterPromptOption.setBounds(new Rectangle(11, 124, 96, 15));
+		jLabelFunction110FilterPromptOption.setBounds(new Rectangle(11, 152, 96, 15));
 		jLabelFunction110FilterPromptOption.setEnabled(false);
 		jRadioButtonFunction110FilterPromptOptionNone.setText(res.getString("None"));
 		jRadioButtonFunction110FilterPromptOptionNone.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterPromptOptionNone.setBounds(new Rectangle(115, 121, 60, 22));
+		jRadioButtonFunction110FilterPromptOptionNone.setBounds(new Rectangle(115, 149, 60, 22));
 		jRadioButtonFunction110FilterPromptOptionNone.setEnabled(false);
 		jRadioButtonFunction110FilterPromptOptionNone.addChangeListener(new Editor_jRadioButtonFunction110FilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction110FilterPromptOptionList1.setText(res.getString("OptionalList"));
 		jRadioButtonFunction110FilterPromptOptionList1.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterPromptOptionList1.setBounds(new Rectangle(175, 121, 100, 22));
+		jRadioButtonFunction110FilterPromptOptionList1.setBounds(new Rectangle(175, 149, 100, 22));
 		jRadioButtonFunction110FilterPromptOptionList1.setEnabled(false);
 		jRadioButtonFunction110FilterPromptOptionList1.addChangeListener(new Editor_jRadioButtonFunction110FilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction110FilterPromptOptionList2.setText(res.getString("RequiredList"));
 		jRadioButtonFunction110FilterPromptOptionList2.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterPromptOptionList2.setBounds(new Rectangle(285, 121, 100, 22));
+		jRadioButtonFunction110FilterPromptOptionList2.setBounds(new Rectangle(285, 149, 100, 22));
 		jRadioButtonFunction110FilterPromptOptionList2.setEnabled(false);
 		jRadioButtonFunction110FilterPromptOptionList2.addChangeListener(new Editor_jRadioButtonFunction110FilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction110FilterPromptOptionCall.setText(res.getString("CallPromptFunction"));
 		jRadioButtonFunction110FilterPromptOptionCall.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterPromptOptionCall.setBounds(new Rectangle(395, 121, 78, 22));
+		jRadioButtonFunction110FilterPromptOptionCall.setBounds(new Rectangle(395, 149, 78, 22));
 		jRadioButtonFunction110FilterPromptOptionCall.setEnabled(false);
 		jRadioButtonFunction110FilterPromptOptionCall.addChangeListener(new Editor_jRadioButtonFunction110FilterPromptOption_changeAdapter(this));
 		buttonGroupFunction110FilterPromptOption.add(jRadioButtonFunction110FilterPromptOptionNone);
@@ -6761,16 +6847,16 @@ public class Editor extends JFrame {
 		buttonGroupFunction110FilterPromptOption.add(jRadioButtonFunction110FilterPromptOptionList2);
 		buttonGroupFunction110FilterPromptOption.add(jRadioButtonFunction110FilterPromptOptionCall);
 		jTextFieldFunction110FilterPromptOptionCallFunctionID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110FilterPromptOptionCallFunctionID.setBounds(new Rectangle(475, 121, 80, 22));
+		jTextFieldFunction110FilterPromptOptionCallFunctionID.setBounds(new Rectangle(475, 149, 80, 22));
 		jTextFieldFunction110FilterPromptOptionCallFunctionID.setEnabled(false);
 		jTextFieldFunction110FilterPromptOptionCallFunctionID.addKeyListener(new Editor_jTextFieldFunction110FilterPromptOptionCallFunctionID_keyAdapter(this));
 		jTextFieldFunction110FilterPromptOptionCallFunctionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110FilterPromptOptionCallFunctionName.setBounds(new Rectangle(560, 121, 204, 22));
+		jTextFieldFunction110FilterPromptOptionCallFunctionName.setBounds(new Rectangle(560, 149, 204, 22));
 		jTextFieldFunction110FilterPromptOptionCallFunctionName.setEnabled(false);
 		jTextFieldFunction110FilterPromptOptionCallFunctionName.setEditable(false);
 		jButtonFunction110FilterPromptOptionCallFunctionExchange.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jButtonFunction110FilterPromptOptionCallFunctionExchange.setText(res.getString("ExchangeParms"));
-		jButtonFunction110FilterPromptOptionCallFunctionExchange.setBounds(new Rectangle(764, 120, 60, 23));
+		jButtonFunction110FilterPromptOptionCallFunctionExchange.setBounds(new Rectangle(764, 148, 60, 23));
 		jButtonFunction110FilterPromptOptionCallFunctionExchange.setEnabled(false);
 		jButtonFunction110FilterPromptOptionCallFunctionExchange.addActionListener(new Editor_jButtonToEditPromptOptionCallFunctionExchange_actionAdapter(this));
 		jPanelFunction110FilterList.setLayout(null);
@@ -6783,6 +6869,15 @@ public class Editor extends JFrame {
 		jPanelFunction110FilterList.add(jTextFieldFunction110FilterField);
 		jPanelFunction110FilterList.add(jLabelFunction110FilterFieldType);
 		jPanelFunction110FilterList.add(jTextFieldFunction110FilterFieldType);
+		jPanelFunction110FilterList.add(jLabelFunction110FilterLayoutOption);
+		jPanelFunction110FilterList.add(jRadioButtonFunction110FilterLayoutOptionVertical);
+		jPanelFunction110FilterList.add(jRadioButtonFunction110FilterLayoutOptionHorizontal);
+		jPanelFunction110FilterList.add(jLabelFunction110FilterWidth);
+		jPanelFunction110FilterList.add(jTextFieldFunction110FilterWidth);
+		jPanelFunction110FilterList.add(jLabelFunction110FilterMargin);
+		jPanelFunction110FilterList.add(jTextFieldFunction110FilterMargin);
+		jPanelFunction110FilterList.add(jLabelFunction110FilterEditableOptions);
+		jPanelFunction110FilterList.add(jComboBoxFunction110FilterEditableOptions);
 		jPanelFunction110FilterList.add(jLabelFunction110FilterOption);
 		jPanelFunction110FilterList.add(jRadioButtonFunction110FilterOptionEQ);
 		jPanelFunction110FilterList.add(jRadioButtonFunction110FilterOptionSCAN);
@@ -6806,7 +6901,6 @@ public class Editor extends JFrame {
 		jPanelFunction110FilterList.add(jButtonFunction110FilterPromptOptionCallFunctionExchange);
 		jPanelFunction110FilterList.add(jLabelFunction110FilterValue);
 		jPanelFunction110FilterList.add(jTextFieldFunction110FilterValue);
-		jPanelFunction110FilterList.add(jComboBoxFunction110FilterEditableOptions);
 		jPanelFunction110FilterList.add(jCheckBoxFunction110FilterIgnoreIfZero);
 		//
 		jPanelFunction110BatchTableAndField.setLayout(new BorderLayout());
@@ -6887,11 +6981,7 @@ public class Editor extends JFrame {
 		jSplitPaneFunction110BatchFieldList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction110BatchFieldList.add(jScrollPaneFunction110BatchFieldList, JSplitPane.TOP);
 		jSplitPaneFunction110BatchFieldList.add(jPanelFunction110BatchFieldList, JSplitPane.BOTTOM);
-		//if (screenHeight > 768) {
-			jSplitPaneFunction110BatchFieldList.setDividerLocation(screenHeight - 588);
-		//} else {
-		//	jSplitPaneFunction110BatchFieldList.setDividerLocation(190);
-		//}
+		jSplitPaneFunction110BatchFieldList.setDividerLocation(screenHeight - 588);
 		jLabelFunction110BatchFieldTable.setEnabled(false);
 		jLabelFunction110BatchFieldTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction110BatchFieldTable.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -7124,11 +7214,7 @@ public class Editor extends JFrame {
 		jSplitPaneFunction110ButtonList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction110ButtonList.add(jScrollPaneFunction110ButtonList, JSplitPane.TOP);
 		jSplitPaneFunction110ButtonList.add(jPanelFunction110ButtonList, JSplitPane.BOTTOM);
-		//if (screenHeight > 768) {
-			jSplitPaneFunction110ButtonList.setDividerLocation(screenHeight - 409);
-		//} else {
-		//	jSplitPaneFunction110ButtonList.setDividerLocation(369);
-		//}
+		jSplitPaneFunction110ButtonList.setDividerLocation(screenHeight - 409);
 		jLabelFunction110ButtonPosition.setEnabled(false);
 		jLabelFunction110ButtonPosition.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction110ButtonPosition.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -8675,33 +8761,13 @@ public class Editor extends JFrame {
 		column4.setCellRenderer(rendererAlignmentCenterControlColor);
 		column5.setCellRenderer(rendererAlignmentRightControlColor);
 		column6.setCellRenderer(rendererAlignmentLeftControlColor);
-//		tableModelFunction290PhraseList.addColumn(res.getString("Font"));
-//		column0 = jTableFunction290PhraseList.getColumnModel().getColumn(0);
-//		column1 = jTableFunction290PhraseList.getColumnModel().getColumn(1);
-//		column2 = jTableFunction290PhraseList.getColumnModel().getColumn(2);
-//		column3 = jTableFunction290PhraseList.getColumnModel().getColumn(3);
-//		column4 = jTableFunction290PhraseList.getColumnModel().getColumn(4);
-//		column0.setPreferredWidth(37);
-//		column1.setPreferredWidth(90);
-//		column2.setPreferredWidth(410);
-//		column3.setPreferredWidth(100);
-//		column4.setPreferredWidth(140);
-//		column0.setCellRenderer(rendererAlignmentCenterControlColor);
-//		column1.setCellRenderer(rendererAlignmentLeftControlColor);
-//		column2.setCellRenderer(rendererAlignmentLeftControlColor);
-//		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-//		column4.setCellRenderer(rendererAlignmentLeftControlColor);
 		jTableFunction290PhraseList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction290PhraseList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
 		jSplitPaneFunction290PhraseList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction290PhraseList.add(jScrollPaneFunction290PhraseList, JSplitPane.TOP);
 		jSplitPaneFunction290PhraseList.add(jPanelFunction290PhraseList, JSplitPane.BOTTOM);
-		//if (screenHeight > 768) {
-			jSplitPaneFunction290PhraseList.setDividerLocation(screenHeight - 371);
-		//} else {
-		//	jSplitPaneFunction290PhraseList.setDividerLocation(407);
-		//}
+		jSplitPaneFunction290PhraseList.setDividerLocation(screenHeight - 371);
 		jLabelFunction290PhraseBlockType.setEnabled(false);
 		jLabelFunction290PhraseBlockType.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction290PhraseBlockType.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -8714,8 +8780,6 @@ public class Editor extends JFrame {
 		jComboBoxFunction290PhraseBlockType.addActionListener(new Editor_jComboBoxFunction290PhraseBlockType_actionAdapter(this));
 		jComboBoxFunction290PhraseBlockType.addItem("HEADER");
 		jComboBoxFunction290PhraseBlockType.addItem("PARAGRAPH");
-		//jComboBoxFunction290PhraseBlockType.addItem("PHRASE");
-		//jComboBoxFunction290PhraseBlockType.addActionListener(new Editor_jComboBoxFunction290PhraseBlockType_actionAdapter(this));
 		jLabelFunction290PhraseAlignment.setEnabled(false);
 		jLabelFunction290PhraseAlignment.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction290PhraseAlignment.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -8728,10 +8792,6 @@ public class Editor extends JFrame {
 		jComboBoxFunction290PhraseAlignment.addItem("LEFT");
 		jComboBoxFunction290PhraseAlignment.addItem("CENTER");
 		jComboBoxFunction290PhraseAlignment.addItem("RIGHT");
-//		jTextFieldFunction290PhraseAlignment.setEditable(false);
-//		jTextFieldFunction290PhraseAlignment.setFont(new java.awt.Font("SansSerif", 0, 12));
-//		jTextFieldFunction290PhraseAlignment.setBounds(new Rectangle(365, 9, 90, 22));
-//		jTextFieldFunction290PhraseAlignment.setText("*Prev");
 		jLabelFunction290PhraseMargin.setEnabled(false);
 		jLabelFunction290PhraseMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction290PhraseMargin.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -8811,7 +8871,6 @@ public class Editor extends JFrame {
 		jPanelFunction290PhraseList.add(jLabelFunction290PhraseBlockType);
 		jPanelFunction290PhraseList.add(jComboBoxFunction290PhraseBlockType);
 		jPanelFunction290PhraseList.add(jLabelFunction290PhraseAlignment);
-		//jPanelFunction290PhraseList.add(jTextFieldFunction290PhraseAlignment);
 		jPanelFunction290PhraseList.add(jComboBoxFunction290PhraseAlignment);
 		jPanelFunction290PhraseList.add(jLabelFunction290PhraseMargin);
 		jPanelFunction290PhraseList.add(jTextFieldFunction290PhraseMarginLeft);
@@ -9433,7 +9492,6 @@ public class Editor extends JFrame {
 		jSplitPaneFunction300DetailFieldList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction300DetailFieldList.add(jScrollPaneFunction300DetailFieldList, JSplitPane.TOP);
 		jSplitPaneFunction300DetailFieldList.add(jPanelFunction300DetailFieldList, JSplitPane.BOTTOM);
-		//jSplitPaneFunction300DetailFieldList.setDividerLocation(screenHeight - wrkForDividerLocation - 568);
 		jSplitPaneFunction300DetailFieldList.setDividerLocation(screenHeight - wrkForDividerLocation - 596);
 		jLabelFunction300DetailTable.setEnabled(false);
 		jLabelFunction300DetailTable.setFont(new java.awt.Font("SansSerif", 0, 12));
@@ -9471,16 +9529,6 @@ public class Editor extends JFrame {
 		jTextFieldFunction300DetailFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldFunction300DetailFieldType.setBounds(new Rectangle(514, 37, 250, 22));
 		jTextFieldFunction300DetailFieldType.setEditable(false);
-//		jLabelFunction300DetailFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-//		jLabelFunction300DetailFieldWidth.setHorizontalAlignment(SwingConstants.RIGHT);
-//		jLabelFunction300DetailFieldWidth.setHorizontalTextPosition(SwingConstants.LEADING);
-//		jLabelFunction300DetailFieldWidth.setText(res.getString("FieldWidth"));
-//		jLabelFunction300DetailFieldWidth.setBounds(new Rectangle(430, 68, 76, 15));
-//		jLabelFunction300DetailFieldWidth.setEnabled(false);
-//		jTextFieldFunction300DetailFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-//		jTextFieldFunction300DetailFieldWidth.setBounds(new Rectangle(514, 65, 45, 22));
-//		jTextFieldFunction300DetailFieldWidth.setEnabled(false);
-//		jTextFieldFunction300DetailFieldWidth.setText("");
 		jLabelFunction300DetailFieldLayoutOption.setEnabled(false);
 		jLabelFunction300DetailFieldLayoutOption.setText(res.getString("LayoutOption"));
 		jLabelFunction300DetailFieldLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
@@ -9597,7 +9645,7 @@ public class Editor extends JFrame {
 		jSplitPaneFunction300DetailFilterList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction300DetailFilterList.add(jScrollPaneFunction300DetailFilterList, JSplitPane.TOP);
 		jSplitPaneFunction300DetailFilterList.add(jPanelFunction300DetailFilterList, JSplitPane.BOTTOM);
-		jSplitPaneFunction300DetailFilterList.setDividerLocation(screenHeight - wrkForDividerLocation - 624);
+		jSplitPaneFunction300DetailFilterList.setDividerLocation(screenHeight - wrkForDividerLocation - 652);
 		jLabelFunction300DetailFilterTable.setEnabled(false);
 		jLabelFunction300DetailFilterTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction300DetailFilterTable.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -9634,43 +9682,90 @@ public class Editor extends JFrame {
 		jTextFieldFunction300DetailFilterFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldFunction300DetailFilterFieldType.setBounds(new Rectangle(514, 37, 250, 22));
 		jTextFieldFunction300DetailFilterFieldType.setEditable(false);
+		jLabelFunction300DetailFilterLayoutOption.setEnabled(false);
+		jLabelFunction300DetailFilterLayoutOption.setText(res.getString("LayoutOption"));
+		jLabelFunction300DetailFilterLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailFilterLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction300DetailFilterLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction300DetailFilterLayoutOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jRadioButtonFunction300DetailFilterLayoutOptionVertical.setText(res.getString("LayoutVertical"));
+		jRadioButtonFunction300DetailFilterLayoutOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction300DetailFilterLayoutOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
+		jRadioButtonFunction300DetailFilterLayoutOptionVertical.setEnabled(false);
+		jRadioButtonFunction300DetailFilterLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
+		jRadioButtonFunction300DetailFilterLayoutOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction300DetailFilterLayoutOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
+		jRadioButtonFunction300DetailFilterLayoutOptionHorizontal.setEnabled(false);
+		buttonGroupFunction300DetailFilterLayoutOption.add(jRadioButtonFunction300DetailFilterLayoutOptionVertical);
+		buttonGroupFunction300DetailFilterLayoutOption.add(jRadioButtonFunction300DetailFilterLayoutOptionHorizontal);
+		jLabelFunction300DetailFilterWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailFilterWidth.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction300DetailFilterWidth.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction300DetailFilterWidth.setText(res.getString("FieldWidth"));
+		jLabelFunction300DetailFilterWidth.setBounds(new Rectangle(430, 68, 76, 15));
+		jLabelFunction300DetailFilterWidth.setEnabled(false);
+		jTextFieldFunction300DetailFilterWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldFunction300DetailFilterWidth.setBounds(new Rectangle(514, 65, 45, 22));
+		jTextFieldFunction300DetailFilterWidth.setEnabled(false);
+		jTextFieldFunction300DetailFilterWidth.setText("");
+		jLabelFunction300DetailFilterMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailFilterMargin.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction300DetailFilterMargin.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction300DetailFilterMargin.setText(res.getString("FieldMargin"));
+		jLabelFunction300DetailFilterMargin.setBounds(new Rectangle(564, 68, 45, 15));
+		jLabelFunction300DetailFilterMargin.setEnabled(false);
+		jTextFieldFunction300DetailFilterMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldFunction300DetailFilterMargin.setBounds(new Rectangle(614, 65, 45, 22));
+		jTextFieldFunction300DetailFilterMargin.setText("");
+		jTextFieldFunction300DetailFilterMargin.setEnabled(false);
+		jLabelFunction300DetailFilterEditableOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailFilterEditableOptions.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction300DetailFilterEditableOptions.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction300DetailFilterEditableOptions.setText(res.getString("EditableOptions"));
+		jLabelFunction300DetailFilterEditableOptions.setBounds(new Rectangle(664, 68, 100, 15));
+		jLabelFunction300DetailFilterEditableOptions.setEnabled(false);
+		jComboBoxFunction300DetailFilterEditableOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jComboBoxFunction300DetailFilterEditableOptions.addItem(res.getString("Editable"));
+		jComboBoxFunction300DetailFilterEditableOptions.addItem(res.getString("NonEditable"));
+		jComboBoxFunction300DetailFilterEditableOptions.addItem(res.getString("Hidden"));
+		jComboBoxFunction300DetailFilterEditableOptions.setBounds(new Rectangle(769, 65, 100, 22));
 		jLabelFunction300DetailFilterOption.setEnabled(false);
 		jLabelFunction300DetailFilterOption.setText(res.getString("FilterOption"));
 		jLabelFunction300DetailFilterOption.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction300DetailFilterOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailFilterOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction300DetailFilterOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction300DetailFilterOption.setBounds(new Rectangle(11, 96, 96, 15));
 		jRadioButtonFunction300DetailFilterOptionEQ.setText("EQ");
 		jRadioButtonFunction300DetailFilterOptionEQ.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterOptionEQ.setBounds(new Rectangle(115, 65, 60, 22));
+		jRadioButtonFunction300DetailFilterOptionEQ.setBounds(new Rectangle(115, 93, 60, 22));
 		jRadioButtonFunction300DetailFilterOptionEQ.setEnabled(false);
 		jRadioButtonFunction300DetailFilterOptionSCAN.setText("SCAN");
 		jRadioButtonFunction300DetailFilterOptionSCAN.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterOptionSCAN.setBounds(new Rectangle(185, 65, 60, 22));
+		jRadioButtonFunction300DetailFilterOptionSCAN.setBounds(new Rectangle(185, 93, 60, 22));
 		jRadioButtonFunction300DetailFilterOptionSCAN.setEnabled(false);
 		jRadioButtonFunction300DetailFilterOptionGENERIC.setText("GENERIC");
 		jRadioButtonFunction300DetailFilterOptionGENERIC.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterOptionGENERIC.setBounds(new Rectangle(255, 65, 80, 22));
+		jRadioButtonFunction300DetailFilterOptionGENERIC.setBounds(new Rectangle(255, 93, 80, 22));
 		jRadioButtonFunction300DetailFilterOptionGENERIC.setEnabled(false);
 		jRadioButtonFunction300DetailFilterOptionLE.setText("LE");
 		jRadioButtonFunction300DetailFilterOptionLE.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterOptionLE.setBounds(new Rectangle(345, 65, 60, 22));
+		jRadioButtonFunction300DetailFilterOptionLE.setBounds(new Rectangle(345, 93, 60, 22));
 		jRadioButtonFunction300DetailFilterOptionLE.setEnabled(false);
 		jRadioButtonFunction300DetailFilterOptionLT.setText("LT");
 		jRadioButtonFunction300DetailFilterOptionLT.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterOptionLT.setBounds(new Rectangle(415, 65, 60, 22));
+		jRadioButtonFunction300DetailFilterOptionLT.setBounds(new Rectangle(415, 93, 60, 22));
 		jRadioButtonFunction300DetailFilterOptionLT.setEnabled(false);
 		jRadioButtonFunction300DetailFilterOptionGE.setText("GE");
 		jRadioButtonFunction300DetailFilterOptionGE.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterOptionGE.setBounds(new Rectangle(485, 65, 60, 22));
+		jRadioButtonFunction300DetailFilterOptionGE.setBounds(new Rectangle(485, 93, 60, 22));
 		jRadioButtonFunction300DetailFilterOptionGE.setEnabled(false);
 		jRadioButtonFunction300DetailFilterOptionGT.setText("GT");
 		jRadioButtonFunction300DetailFilterOptionGT.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterOptionGT.setBounds(new Rectangle(555, 65, 60, 22));
+		jRadioButtonFunction300DetailFilterOptionGT.setBounds(new Rectangle(555, 93, 60, 22));
 		jRadioButtonFunction300DetailFilterOptionGT.setEnabled(false);
 		jRadioButtonFunction300DetailFilterOptionREFLECT.setText("REFLECT");
 		jRadioButtonFunction300DetailFilterOptionREFLECT.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterOptionREFLECT.setBounds(new Rectangle(625, 65, 80, 22));
+		jRadioButtonFunction300DetailFilterOptionREFLECT.setBounds(new Rectangle(625, 93, 80, 22));
 		jRadioButtonFunction300DetailFilterOptionREFLECT.setEnabled(false);
 		buttonGroupFunction300DetailFilterOption.add(jRadioButtonFunction300DetailFilterOptionEQ);
 		buttonGroupFunction300DetailFilterOption.add(jRadioButtonFunction300DetailFilterOptionSCAN);
@@ -9680,70 +9775,62 @@ public class Editor extends JFrame {
 		buttonGroupFunction300DetailFilterOption.add(jRadioButtonFunction300DetailFilterOptionGE);
 		buttonGroupFunction300DetailFilterOption.add(jRadioButtonFunction300DetailFilterOptionGT);
 		buttonGroupFunction300DetailFilterOption.add(jRadioButtonFunction300DetailFilterOptionREFLECT);
-		//jCheckBoxFunction300DetailFilterNonEditable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		//jCheckBoxFunction300DetailFilterNonEditable.setText(res.getString("NonEditable"));
-		//jCheckBoxFunction300DetailFilterNonEditable.setBounds(new Rectangle(735, 65, 100, 22));
-		jComboBoxFunction300DetailFilterEditableOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxFunction300DetailFilterEditableOptions.addItem(res.getString("Editable"));
-		jComboBoxFunction300DetailFilterEditableOptions.addItem(res.getString("NonEditable"));
-		jComboBoxFunction300DetailFilterEditableOptions.addItem(res.getString("Hidden"));
-		jComboBoxFunction300DetailFilterEditableOptions.setBounds(new Rectangle(735, 65, 100, 22));
 		jCheckBoxFunction300DetailFilterIgnoreIfZero.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jCheckBoxFunction300DetailFilterIgnoreIfZero.setText(res.getString("IgnoreIfZero"));
-		jCheckBoxFunction300DetailFilterIgnoreIfZero.setBounds(new Rectangle(840, 65, 100, 22));
+		jCheckBoxFunction300DetailFilterIgnoreIfZero.setBounds(new Rectangle(769, 93, 100, 22));
 		jLabelFunction300DetailFilterCaptionOption.setEnabled(false);
 		jLabelFunction300DetailFilterCaptionOption.setText(res.getString("Caption"));
 		jLabelFunction300DetailFilterCaptionOption.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction300DetailFilterCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailFilterCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction300DetailFilterCaptionOption.setBounds(new Rectangle(11, 96, 96, 15));
+		jLabelFunction300DetailFilterCaptionOption.setBounds(new Rectangle(11, 124, 96, 15));
 		jRadioButtonFunction300DetailFilterCaptionOptionName.setText(res.getString("FieldName"));
 		jRadioButtonFunction300DetailFilterCaptionOptionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterCaptionOptionName.setBounds(new Rectangle(115, 93, 100, 22));
+		jRadioButtonFunction300DetailFilterCaptionOptionName.setBounds(new Rectangle(115, 121, 100, 22));
 		jRadioButtonFunction300DetailFilterCaptionOptionName.setEnabled(false);
 		jRadioButtonFunction300DetailFilterCaptionOptionName.addChangeListener(new Editor_jRadioButtonFunction300DetailFilterCaptionOption_changeAdapter(this));
 		jRadioButtonFunction300DetailFilterCaptionOptionValue.setText(res.getString("ValueSpecified"));
 		jRadioButtonFunction300DetailFilterCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterCaptionOptionValue.setBounds(new Rectangle(225, 93, 63, 22));
+		jRadioButtonFunction300DetailFilterCaptionOptionValue.setBounds(new Rectangle(225, 121, 63, 22));
 		jRadioButtonFunction300DetailFilterCaptionOptionValue.setEnabled(false);
 		jRadioButtonFunction300DetailFilterCaptionOptionValue.addChangeListener(new Editor_jRadioButtonFunction300DetailFilterCaptionOption_changeAdapter(this));
 		buttonGroupFunction300DetailFilterCaptionOption.add(jRadioButtonFunction300DetailFilterCaptionOptionName);
 		buttonGroupFunction300DetailFilterCaptionOption.add(jRadioButtonFunction300DetailFilterCaptionOptionValue);
 		jTextFieldFunction300DetailFilterCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailFilterCaptionOptionValue.setBounds(new Rectangle(300, 93, 220, 22));
+		jTextFieldFunction300DetailFilterCaptionOptionValue.setBounds(new Rectangle(300, 121, 220, 22));
 		jTextFieldFunction300DetailFilterCaptionOptionValue.setEnabled(false);
 		jTextFieldFunction300DetailFilterCaptionOptionValue.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
 		jLabelFunction300DetailFilterValue.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction300DetailFilterValue.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailFilterValue.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailFilterValue.setText(res.getString("InitialValue"));
-		jLabelFunction300DetailFilterValue.setBounds(new Rectangle(526, 96, 96, 15));
+		jLabelFunction300DetailFilterValue.setBounds(new Rectangle(526, 124, 96, 15));
 		jTextFieldFunction300DetailFilterValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailFilterValue.setBounds(new Rectangle(630, 93, 264, 22));
+		jTextFieldFunction300DetailFilterValue.setBounds(new Rectangle(630, 121, 264, 22));
 		jLabelFunction300DetailFilterPromptOption.setText(res.getString("Prompt"));
 		jLabelFunction300DetailFilterPromptOption.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction300DetailFilterPromptOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailFilterPromptOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction300DetailFilterPromptOption.setBounds(new Rectangle(11, 124, 96, 15));
+		jLabelFunction300DetailFilterPromptOption.setBounds(new Rectangle(11, 152, 96, 15));
 		jLabelFunction300DetailFilterPromptOption.setEnabled(false);
 		jRadioButtonFunction300DetailFilterPromptOptionNone.setText(res.getString("None"));
 		jRadioButtonFunction300DetailFilterPromptOptionNone.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterPromptOptionNone.setBounds(new Rectangle(115, 121, 60, 22));
+		jRadioButtonFunction300DetailFilterPromptOptionNone.setBounds(new Rectangle(115, 149, 60, 22));
 		jRadioButtonFunction300DetailFilterPromptOptionNone.setEnabled(false);
 		jRadioButtonFunction300DetailFilterPromptOptionNone.addChangeListener(new Editor_jRadioButtonFunction300DetailFilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction300DetailFilterPromptOptionList1.setText(res.getString("OptionalList"));
 		jRadioButtonFunction300DetailFilterPromptOptionList1.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterPromptOptionList1.setBounds(new Rectangle(175, 121, 100, 22));
+		jRadioButtonFunction300DetailFilterPromptOptionList1.setBounds(new Rectangle(175, 149, 100, 22));
 		jRadioButtonFunction300DetailFilterPromptOptionList1.setEnabled(false);
 		jRadioButtonFunction300DetailFilterPromptOptionList1.addChangeListener(new Editor_jRadioButtonFunction300DetailFilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction300DetailFilterPromptOptionList2.setText(res.getString("RequiredList"));
 		jRadioButtonFunction300DetailFilterPromptOptionList2.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterPromptOptionList2.setBounds(new Rectangle(285, 121, 100, 22));
+		jRadioButtonFunction300DetailFilterPromptOptionList2.setBounds(new Rectangle(285, 149, 100, 22));
 		jRadioButtonFunction300DetailFilterPromptOptionList2.setEnabled(false);
 		jRadioButtonFunction300DetailFilterPromptOptionList2.addChangeListener(new Editor_jRadioButtonFunction300DetailFilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction300DetailFilterPromptOptionCall.setText(res.getString("CallPromptFunction"));
 		jRadioButtonFunction300DetailFilterPromptOptionCall.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterPromptOptionCall.setBounds(new Rectangle(395, 121, 78, 22));
+		jRadioButtonFunction300DetailFilterPromptOptionCall.setBounds(new Rectangle(395, 149, 78, 22));
 		jRadioButtonFunction300DetailFilterPromptOptionCall.setEnabled(false);
 		jRadioButtonFunction300DetailFilterPromptOptionCall.addChangeListener(new Editor_jRadioButtonFunction300DetailFilterPromptOption_changeAdapter(this));
 		buttonGroupFunction300DetailFilterPromptOption.add(jRadioButtonFunction300DetailFilterPromptOptionNone);
@@ -9751,16 +9838,16 @@ public class Editor extends JFrame {
 		buttonGroupFunction300DetailFilterPromptOption.add(jRadioButtonFunction300DetailFilterPromptOptionList2);
 		buttonGroupFunction300DetailFilterPromptOption.add(jRadioButtonFunction300DetailFilterPromptOptionCall);
 		jTextFieldFunction300DetailFilterPromptOptionCallFunctionID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailFilterPromptOptionCallFunctionID.setBounds(new Rectangle(475, 121, 80, 22));
+		jTextFieldFunction300DetailFilterPromptOptionCallFunctionID.setBounds(new Rectangle(475, 149, 80, 22));
 		jTextFieldFunction300DetailFilterPromptOptionCallFunctionID.setEnabled(false);
 		jTextFieldFunction300DetailFilterPromptOptionCallFunctionID.addKeyListener(new Editor_jTextFieldFunction300DetailFilterPromptOptionCallFunctionID_keyAdapter(this));
 		jTextFieldFunction300DetailFilterPromptOptionCallFunctionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailFilterPromptOptionCallFunctionName.setBounds(new Rectangle(560, 121, 204, 22));
+		jTextFieldFunction300DetailFilterPromptOptionCallFunctionName.setBounds(new Rectangle(560, 149, 204, 22));
 		jTextFieldFunction300DetailFilterPromptOptionCallFunctionName.setEnabled(false);
 		jTextFieldFunction300DetailFilterPromptOptionCallFunctionName.setEditable(false);
 		jButtonFunction300DetailFilterPromptOptionCallFunctionExchange.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jButtonFunction300DetailFilterPromptOptionCallFunctionExchange.setText(res.getString("ExchangeParms"));
-		jButtonFunction300DetailFilterPromptOptionCallFunctionExchange.setBounds(new Rectangle(764, 120, 60, 23));
+		jButtonFunction300DetailFilterPromptOptionCallFunctionExchange.setBounds(new Rectangle(764, 148, 60, 23));
 		jButtonFunction300DetailFilterPromptOptionCallFunctionExchange.setEnabled(false);
 		jButtonFunction300DetailFilterPromptOptionCallFunctionExchange.addActionListener(new Editor_jButtonToEditPromptOptionCallFunctionExchange_actionAdapter(this));
 		jPanelFunction300DetailFilterList.setLayout(null);
@@ -9773,6 +9860,15 @@ public class Editor extends JFrame {
 		jPanelFunction300DetailFilterList.add(jTextFieldFunction300DetailFilterField);
 		jPanelFunction300DetailFilterList.add(jLabelFunction300DetailFilterFieldType);
 		jPanelFunction300DetailFilterList.add(jTextFieldFunction300DetailFilterFieldType);
+		jPanelFunction300DetailFilterList.add(jLabelFunction300DetailFilterLayoutOption);
+		jPanelFunction300DetailFilterList.add(jRadioButtonFunction300DetailFilterLayoutOptionVertical);
+		jPanelFunction300DetailFilterList.add(jRadioButtonFunction300DetailFilterLayoutOptionHorizontal);
+		jPanelFunction300DetailFilterList.add(jLabelFunction300DetailFilterWidth);
+		jPanelFunction300DetailFilterList.add(jTextFieldFunction300DetailFilterWidth);
+		jPanelFunction300DetailFilterList.add(jLabelFunction300DetailFilterMargin);
+		jPanelFunction300DetailFilterList.add(jTextFieldFunction300DetailFilterMargin);
+		jPanelFunction300DetailFilterList.add(jLabelFunction300DetailFilterEditableOptions);
+		jPanelFunction300DetailFilterList.add(jComboBoxFunction300DetailFilterEditableOptions);
 		jPanelFunction300DetailFilterList.add(jLabelFunction300DetailFilterOption);
 		jPanelFunction300DetailFilterList.add(jRadioButtonFunction300DetailFilterOptionEQ);
 		jPanelFunction300DetailFilterList.add(jRadioButtonFunction300DetailFilterOptionSCAN);
@@ -9796,7 +9892,6 @@ public class Editor extends JFrame {
 		jPanelFunction300DetailFilterList.add(jButtonFunction300DetailFilterPromptOptionCallFunctionExchange);
 		jPanelFunction300DetailFilterList.add(jLabelFunction300DetailFilterValue);
 		jPanelFunction300DetailFilterList.add(jTextFieldFunction300DetailFilterValue);
-		jPanelFunction300DetailFilterList.add(jComboBoxFunction300DetailFilterEditableOptions);
 		jPanelFunction300DetailFilterList.add(jCheckBoxFunction300DetailFilterIgnoreIfZero);
 		//
 		jScrollPaneFunction300DetailButtonList.setBorder(null);
@@ -10146,11 +10241,7 @@ public class Editor extends JFrame {
 		jSplitPaneFunction310HeaderFieldList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction310HeaderFieldList.add(jScrollPaneFunction310HeaderFieldList, JSplitPane.TOP);
 		jSplitPaneFunction310HeaderFieldList.add(jPanelFunction310HeaderFieldList, JSplitPane.BOTTOM);
-		//if (screenHeight > 768) {
-			jSplitPaneFunction310HeaderFieldList.setDividerLocation(screenHeight - 551);
-		//} else {
-		//	jSplitPaneFunction310HeaderFieldList.setDividerLocation(227);
-		//}
+		jSplitPaneFunction310HeaderFieldList.setDividerLocation(screenHeight - 551);
 		jLabelFunction310HeaderTable.setEnabled(false);
 		jLabelFunction310HeaderTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction310HeaderTable.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -10383,12 +10474,7 @@ public class Editor extends JFrame {
 		jSplitPaneFunction310DetailFieldList.add(jScrollPaneFunction310DetailFieldList, JSplitPane.TOP);
 		jSplitPaneFunction310DetailFieldList.add(jPanelFunction310DetailFieldList, JSplitPane.BOTTOM);
 		jSplitPaneFunction310DetailFieldList.setDividerLocation(286);
-		//if (screenHeight > 768) {
-			//jSplitPaneFunction310DetailFieldList.setDividerLocation(screenHeight - 492);
-			jSplitPaneFunction310DetailFieldList.setDividerLocation(screenHeight - 520);
-		//} else {
-		//	jSplitPaneFunction310DetailFieldList.setDividerLocation(286);
-		//}
+		jSplitPaneFunction310DetailFieldList.setDividerLocation(screenHeight - 520);
 		jLabelFunction310DetailTable.setEnabled(false);
 		jLabelFunction310DetailTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction310DetailTable.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -10425,16 +10511,6 @@ public class Editor extends JFrame {
 		jTextFieldFunction310DetailFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldFunction310DetailFieldType.setBounds(new Rectangle(514, 37, 250, 22));
 		jTextFieldFunction310DetailFieldType.setEditable(false);
-//		jLabelFunction310DetailFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-//		jLabelFunction310DetailFieldWidth.setHorizontalAlignment(SwingConstants.RIGHT);
-//		jLabelFunction310DetailFieldWidth.setHorizontalTextPosition(SwingConstants.LEADING);
-//		jLabelFunction310DetailFieldWidth.setText(res.getString("FieldWidth"));
-//		jLabelFunction310DetailFieldWidth.setBounds(new Rectangle(430, 68, 76, 15));
-//		jLabelFunction310DetailFieldWidth.setEnabled(false);
-//		jTextFieldFunction310DetailFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-//		jTextFieldFunction310DetailFieldWidth.setBounds(new Rectangle(514, 65, 45, 22));
-//		jTextFieldFunction310DetailFieldWidth.setEnabled(false);
-//		jTextFieldFunction310DetailFieldWidth.setText("");
 		jLabelFunction310DetailFieldLayoutOption.setEnabled(false);
 		jLabelFunction310DetailFieldLayoutOption.setText(res.getString("LayoutOption"));
 		jLabelFunction310DetailFieldLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
@@ -10540,8 +10616,6 @@ public class Editor extends JFrame {
 		jPanelFunction310DetailFieldList.add(jTextFieldFunction310DetailField);
 		jPanelFunction310DetailFieldList.add(jLabelFunction310DetailFieldType);
 		jPanelFunction310DetailFieldList.add(jTextFieldFunction310DetailFieldType);
-		//jPanelFunction310DetailFieldList.add(jLabelFunction310DetailFieldWidth);
-		//jPanelFunction310DetailFieldList.add(jTextFieldFunction310DetailFieldWidth);
 		jPanelFunction310DetailFieldList.add(jLabelFunction310DetailFieldLayoutOption);
 		jPanelFunction310DetailFieldList.add(jRadioButtonFunction310DetailFieldLayoutOptionVertical);
 		jPanelFunction310DetailFieldList.add(jRadioButtonFunction310DetailFieldLayoutOptionHorizontal);
@@ -10671,12 +10745,7 @@ public class Editor extends JFrame {
 		jSplitPaneFunction310AddRowListColumnList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction310AddRowListColumnList.add(jScrollPaneFunction310AddRowListColumnList, JSplitPane.TOP);
 		jSplitPaneFunction310AddRowListColumnList.add(jPanelFunction310AddRowListColumnList, JSplitPane.BOTTOM);
-		//if (screenHeight > 768) {
-			//jSplitPaneFunction310AddRowListColumnList.setDividerLocation(screenHeight - 642);
-			jSplitPaneFunction310AddRowListColumnList.setDividerLocation(screenHeight - 670);
-		//} else {
-		//	jSplitPaneFunction310AddRowListColumnList.setDividerLocation(136);
-		//}
+		jSplitPaneFunction310AddRowListColumnList.setDividerLocation(screenHeight - 670);
 		jLabelFunction310AddRowListColumnTable.setEnabled(false);
 		jLabelFunction310AddRowListColumnTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction310AddRowListColumnTable.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -10713,16 +10782,6 @@ public class Editor extends JFrame {
 		jTextFieldFunction310AddRowListColumnType.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldFunction310AddRowListColumnType.setBounds(new Rectangle(514, 37, 250, 22));
 		jTextFieldFunction310AddRowListColumnType.setEditable(false);
-//		jLabelFunction310AddRowListColumnWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-//		jLabelFunction310AddRowListColumnWidth.setHorizontalAlignment(SwingConstants.RIGHT);
-//		jLabelFunction310AddRowListColumnWidth.setHorizontalTextPosition(SwingConstants.LEADING);
-//		jLabelFunction310AddRowListColumnWidth.setText(res.getString("FieldWidth"));
-//		jLabelFunction310AddRowListColumnWidth.setBounds(new Rectangle(430, 68, 76, 15));
-//		jLabelFunction310AddRowListColumnWidth.setEnabled(false);
-//		jTextFieldFunction310AddRowListColumnWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-//		jTextFieldFunction310AddRowListColumnWidth.setBounds(new Rectangle(514, 65, 45, 22));
-//		jTextFieldFunction310AddRowListColumnWidth.setEnabled(false);
-//		jTextFieldFunction310AddRowListColumnWidth.setText("");
 		jLabelFunction310AddRowListColumnLayoutOption.setEnabled(false);
 		jLabelFunction310AddRowListColumnLayoutOption.setText(res.getString("LayoutOption"));
 		jLabelFunction310AddRowListColumnLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
@@ -10837,11 +10896,7 @@ public class Editor extends JFrame {
 		jSplitPaneFunction310AddRowListButtonList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction310AddRowListButtonList.add(jScrollPaneFunction310AddRowListButtonList, JSplitPane.TOP);
 		jSplitPaneFunction310AddRowListButtonList.add(jPanelFunction310AddRowListButtonList, JSplitPane.BOTTOM);
-		//if (screenHeight > 768) {
-			jSplitPaneFunction310AddRowListButtonList.setDividerLocation(screenHeight - 673);
-		//} else {
-		//	jSplitPaneFunction310AddRowListButtonList.setDividerLocation(105);
-		//}
+		jSplitPaneFunction310AddRowListButtonList.setDividerLocation(screenHeight - 673);
 		jLabelFunction310AddRowListButtonPosition.setEnabled(false);
 		jLabelFunction310AddRowListButtonPosition.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction310AddRowListButtonPosition.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -10951,11 +11006,7 @@ public class Editor extends JFrame {
 		jSplitPaneFunction310ButtonList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction310ButtonList.add(jScrollPaneFunction310ButtonList, JSplitPane.TOP);
 		jSplitPaneFunction310ButtonList.add(jPanelFunction310ButtonList, JSplitPane.BOTTOM);
-		//if (screenHeight > 768) {
-			jSplitPaneFunction310ButtonList.setDividerLocation(screenHeight - 465);
-		//} else {
-		//	jSplitPaneFunction310ButtonList.setDividerLocation(313);
-		//}
+		jSplitPaneFunction310ButtonList.setDividerLocation(screenHeight - 465);
 		jLabelFunction310ButtonPosition.setEnabled(false);
 		jLabelFunction310ButtonPosition.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction310ButtonPosition.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -11289,11 +11340,7 @@ public class Editor extends JFrame {
 		jSplitPaneFunction390HeaderPhraseList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction390HeaderPhraseList.add(jScrollPaneFunction390HeaderPhraseList, JSplitPane.TOP);
 		jSplitPaneFunction390HeaderPhraseList.add(jPanelFunction390HeaderPhraseList, JSplitPane.BOTTOM);
-		//if (screenHeight > 768) {
-			jSplitPaneFunction390HeaderPhraseList.setDividerLocation(screenHeight - 483);
-		//} else {
-		//	jSplitPaneFunction390HeaderPhraseList.setDividerLocation(295);
-		//}
+		jSplitPaneFunction390HeaderPhraseList.setDividerLocation(screenHeight - 483);
 		jLabelFunction390HeaderPhraseBlockType.setEnabled(false);
 		jLabelFunction390HeaderPhraseBlockType.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction390HeaderPhraseBlockType.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -11306,9 +11353,7 @@ public class Editor extends JFrame {
 		jComboBoxFunction390HeaderPhraseBlockType.addActionListener(new Editor_jComboBoxFunction390HeaderPhraseBlockType_actionAdapter(this));
 		jComboBoxFunction390HeaderPhraseBlockType.addItem("HEADER");
 		jComboBoxFunction390HeaderPhraseBlockType.addItem("PARAGRAPH");
-		//jComboBoxFunction390HeaderPhraseBlockType.addItem("PHRASE");
 		jComboBoxFunction390HeaderPhraseBlockType.addItem("FOOTER");
-		//jComboBoxFunction390HeaderPhraseBlockType.addActionListener(new Editor_jComboBoxFunction390HeaderPhraseBlockType_actionAdapter(this));
 		jLabelFunction390HeaderPhraseAlignment.setEnabled(false);
 		jLabelFunction390HeaderPhraseAlignment.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction390HeaderPhraseAlignment.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -11321,10 +11366,6 @@ public class Editor extends JFrame {
 		jComboBoxFunction390HeaderPhraseAlignment.addItem("LEFT");
 		jComboBoxFunction390HeaderPhraseAlignment.addItem("CENTER");
 		jComboBoxFunction390HeaderPhraseAlignment.addItem("RIGHT");
-		//jTextFieldFunction390HeaderPhraseAlignment.setEditable(false);
-		//jTextFieldFunction390HeaderPhraseAlignment.setFont(new java.awt.Font("SansSerif", 0, 12));
-		//jTextFieldFunction390HeaderPhraseAlignment.setBounds(new Rectangle(365, 9, 90, 22));
-		//jTextFieldFunction390HeaderPhraseAlignment.setText("*Prev");
 		jLabelFunction390HeaderPhraseMargin.setEnabled(false);
 		jLabelFunction390HeaderPhraseMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction390HeaderPhraseMargin.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -11466,11 +11507,7 @@ public class Editor extends JFrame {
 		jSplitPaneFunction390DetailFieldList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction390DetailFieldList.add(jScrollPaneFunction390DetailFieldList, JSplitPane.TOP);
 		jSplitPaneFunction390DetailFieldList.add(jPanelFunction390DetailFieldList, JSplitPane.BOTTOM);
-		//if (screenHeight > 768) {
-			jSplitPaneFunction390DetailFieldList.setDividerLocation(screenHeight - 467);
-		//} else {
-		//	jSplitPaneFunction390DetailFieldList.setDividerLocation(311);
-		//}
+		jSplitPaneFunction390DetailFieldList.setDividerLocation(screenHeight - 467);
 		jLabelFunction390DetailTable.setEnabled(false);
 		jLabelFunction390DetailTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction390DetailTable.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -13124,6 +13161,34 @@ public class Editor extends JFrame {
             result = getOperandType(options);
             //
         	ArrayList<String> optionList = getOptionList(options);
+        	//
+			wrkStr = getOptionValueWithKeyword(options, "VERTICAL");
+			if (wrkStr.equals("")) {
+				if (!result.equals("")) {
+					result = result + res.getString("Comma");
+				}
+				if (optionList.contains("VERTICAL")) {
+					result = result + res.getString("LayoutVertical");
+				} else {
+					wrkStr = getOptionValueWithKeyword(options, "HORIZONTAL");
+					if (!wrkStr.equals("")) {
+						result = result + res.getString("LayoutHorizontal") + "(" + wrkStr + "pic)";
+					}
+				}
+			} else {
+				if (!result.equals("")) {
+					result = result + res.getString("Comma");
+				}
+				result = result + res.getString("LayoutVertical") + "(" + wrkStr + "pic)";
+			}
+        	wrkStr = getOptionValueWithKeyword(options, "WIDTH");
+        	if (!wrkStr.equals("")) {
+				if (!result.equals("")) {
+					result = result + res.getString("Comma");
+				}
+        		result = result + res.getString("Width") + wrkStr + "pic";
+        	}
+        	//
         	if (optionList.contains("PROMPT_LIST1")) {
         		if (!result.equals("")) {
         			result = result + res.getString("Comma");
@@ -13964,11 +14029,13 @@ public class Editor extends JFrame {
 			if (jTableFunction100FilterList.getRowCount() == 0) {
 				jMenuItemComponentToListCsv.setEnabled(false);
 			}
+	    	jPopupMenuComponent.add(jMenuItemComponentToCheckLayout);
 	    }
 	    if (e.getComponent().equals(jTableFunction100FilterList)) {
 	    	componentType_jPopupMenuComponent = "Function100FilterList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
 	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
+	    	jPopupMenuComponent.add(jMenuItemComponentToCheckLayout);
 	    	jPopupMenuComponent.addSeparator();
 	    	jPopupMenuComponent.add(jMenuItemComponentToDelete);
 	    }
@@ -14026,11 +14093,13 @@ public class Editor extends JFrame {
 			if (jTableFunction110FilterList.getRowCount() == 0) {
 				jMenuItemComponentToListCsv.setEnabled(false);
 			}
+	    	jPopupMenuComponent.add(jMenuItemComponentToCheckLayout);
 	    }
 	    if (e.getComponent().equals(jTableFunction110FilterList)) {
 	    	componentType_jPopupMenuComponent = "Function110FilterList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
 	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
+	    	jPopupMenuComponent.add(jMenuItemComponentToCheckLayout);
 	    	jPopupMenuComponent.addSeparator();
 	    	jPopupMenuComponent.add(jMenuItemComponentToDelete);
 	    }
@@ -14293,11 +14362,13 @@ public class Editor extends JFrame {
 			if (jTableFunction300DetailFilterList.getRowCount() == 0) {
 				jMenuItemComponentToListCsv.setEnabled(false);
 			}
+	    	jPopupMenuComponent.add(jMenuItemComponentToCheckLayout);
 	    }
 	    if (e.getComponent().equals(jTableFunction300DetailFilterList)) {
 	    	componentType_jPopupMenuComponent = "Function300DetailFilterList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
 	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
+	    	jPopupMenuComponent.add(jMenuItemComponentToCheckLayout);
 	    	jPopupMenuComponent.addSeparator();
 	    	jPopupMenuComponent.add(jMenuItemComponentToDelete);
 	    }
@@ -20656,7 +20727,6 @@ public class Editor extends JFrame {
 		        	if (!operandType.equals("")) {
 						valueOfFieldsChanged = true;
 		        	}
-		        	wrkOptions = "";
 		        }
 		        if (jRadioButtonFunction100FilterOptionGE.isSelected()) {
 		        	if (!operandType.equals("GE")) {
@@ -20700,6 +20770,83 @@ public class Editor extends JFrame {
 		        	}
 		        	wrkOptions = "REFLECT";
 		        }
+				//
+				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "VERTICAL");
+				if (jRadioButtonFunction100FilterLayoutOptionVertical.isSelected()) {
+					if (jTextFieldFunction100FilterMargin.getText().equals("*Auto") || jTextFieldFunction100FilterMargin.getText().equals("")) {
+						if (!optionList.contains("VERTICAL") || !wrkStr.equals("")) {
+							valueOfFieldsChanged = true;
+						}
+						if (!wrkOptions.equals("")) {
+							wrkOptions = wrkOptions + ",";
+						}
+						wrkOptions = wrkOptions + "VERTICAL";
+					} else {
+						String wrkStr2 = getStringSizeValue(jTextFieldFunction100FilterMargin.getText(), "", 1, 500);
+						if (wrkStr2.equals("")) {
+							if (!optionList.contains("VERTICAL")) {
+								valueOfFieldsChanged = true;
+							}
+							if (!wrkOptions.equals("")) {
+								wrkOptions = wrkOptions + ",";
+							}
+							wrkOptions = wrkOptions + "VERTICAL";
+						} else {
+							if (!wrkStr2.equals(wrkStr)) {
+								valueOfFieldsChanged = true;
+							}
+							if (!wrkOptions.equals("")) {
+								wrkOptions = wrkOptions + ",";
+							}
+							wrkOptions = wrkOptions + "VERTICAL(" + wrkStr2 + ")";
+						}
+					}
+				}
+				//
+				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "HORIZONTAL");
+				if (jRadioButtonFunction100FilterLayoutOptionHorizontal.isSelected()) {
+					if (optionList.contains("VERTICAL")) {
+						valueOfFieldsChanged = true;
+					}
+					if (jTextFieldFunction100FilterMargin.getText().equals("*Auto") || jTextFieldFunction100FilterMargin.getText().equals("")) {
+						if (!wrkStr.equals("")) {
+							valueOfFieldsChanged = true;
+						}
+					} else {
+						String wrkStr2 = getStringSizeValue(jTextFieldFunction100FilterMargin.getText(), "", 0, 500);
+						if (!wrkStr2.equals("")) {
+							if (!wrkStr2.equals(wrkStr)) {
+								valueOfFieldsChanged = true;
+							}
+							if (!wrkOptions.equals("")) {
+								wrkOptions = wrkOptions + ",";
+							}
+							wrkOptions = wrkOptions + "HORIZONTAL(" + wrkStr2 + ")";
+						}
+					}
+				}
+				//
+				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
+				if (jTextFieldFunction100FilterWidth.getText().toUpperCase().equals("*AUTO") || jTextFieldFunction100FilterWidth.getText().equals("")) {
+					if (!wrkStr.equals("")) {
+						valueOfFieldsChanged = true;
+					}
+				} else {
+					if (wrkStr.equals("")) {
+						valueOfFieldsChanged = true;
+					} else {
+						if (!wrkStr.equals(jTextFieldFunction100FilterWidth.getText())) {
+							valueOfFieldsChanged = true;
+						}
+					}
+					wrkStr = getStringSizeValue(jTextFieldFunction100FilterWidth.getText(), "", 10, 1000);
+					if (!wrkStr.equals("")) {
+						if (!wrkOptions.equals("")) {
+							wrkOptions = wrkOptions + ",";
+						}
+						wrkOptions = wrkOptions + "WIDTH(" + wrkStr + ")";
+					}
+				}
 				//
 		        if (jRadioButtonFunction100FilterPromptOptionNone.isSelected()) {
 			        if (optionList.contains("PROMPT_LIST1")
@@ -21332,7 +21479,6 @@ public class Editor extends JFrame {
 		        	if (!operandType.equals("")) {
 						valueOfFieldsChanged = true;
 		        	}
-		        	wrkOptions = "";
 		        }
 		        if (jRadioButtonFunction110FilterOptionGE.isSelected()) {
 		        	if (!operandType.equals("GE")) {
@@ -21376,6 +21522,83 @@ public class Editor extends JFrame {
 		        	}
 		        	wrkOptions = "REFLECT";
 		        }
+				//
+				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "VERTICAL");
+				if (jRadioButtonFunction110FilterLayoutOptionVertical.isSelected()) {
+					if (jTextFieldFunction110FilterMargin.getText().equals("*Auto") || jTextFieldFunction110FilterMargin.getText().equals("")) {
+						if (!optionList.contains("VERTICAL") || !wrkStr.equals("")) {
+							valueOfFieldsChanged = true;
+						}
+						if (!wrkOptions.equals("")) {
+							wrkOptions = wrkOptions + ",";
+						}
+						wrkOptions = wrkOptions + "VERTICAL";
+					} else {
+						String wrkStr2 = getStringSizeValue(jTextFieldFunction110FilterMargin.getText(), "", 1, 500);
+						if (wrkStr2.equals("")) {
+							if (!optionList.contains("VERTICAL")) {
+								valueOfFieldsChanged = true;
+							}
+							if (!wrkOptions.equals("")) {
+								wrkOptions = wrkOptions + ",";
+							}
+							wrkOptions = wrkOptions + "VERTICAL";
+						} else {
+							if (!wrkStr2.equals(wrkStr)) {
+								valueOfFieldsChanged = true;
+							}
+							if (!wrkOptions.equals("")) {
+								wrkOptions = wrkOptions + ",";
+							}
+							wrkOptions = wrkOptions + "VERTICAL(" + wrkStr2 + ")";
+						}
+					}
+				}
+				//
+				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "HORIZONTAL");
+				if (jRadioButtonFunction110FilterLayoutOptionHorizontal.isSelected()) {
+					if (optionList.contains("VERTICAL")) {
+						valueOfFieldsChanged = true;
+					}
+					if (jTextFieldFunction110FilterMargin.getText().equals("*Auto") || jTextFieldFunction110FilterMargin.getText().equals("")) {
+						if (!wrkStr.equals("")) {
+							valueOfFieldsChanged = true;
+						}
+					} else {
+						String wrkStr2 = getStringSizeValue(jTextFieldFunction110FilterMargin.getText(), "", 0, 500);
+						if (!wrkStr2.equals("")) {
+							if (!wrkStr2.equals(wrkStr)) {
+								valueOfFieldsChanged = true;
+							}
+							if (!wrkOptions.equals("")) {
+								wrkOptions = wrkOptions + ",";
+							}
+							wrkOptions = wrkOptions + "HORIZONTAL(" + wrkStr2 + ")";
+						}
+					}
+				}
+				//
+				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
+				if (jTextFieldFunction110FilterWidth.getText().toUpperCase().equals("*AUTO") || jTextFieldFunction110FilterWidth.getText().equals("")) {
+					if (!wrkStr.equals("")) {
+						valueOfFieldsChanged = true;
+					}
+				} else {
+					if (wrkStr.equals("")) {
+						valueOfFieldsChanged = true;
+					} else {
+						if (!wrkStr.equals(jTextFieldFunction110FilterWidth.getText())) {
+							valueOfFieldsChanged = true;
+						}
+					}
+					wrkStr = getStringSizeValue(jTextFieldFunction110FilterWidth.getText(), "", 10, 1000);
+					if (!wrkStr.equals("")) {
+						if (!wrkOptions.equals("")) {
+							wrkOptions = wrkOptions + ",";
+						}
+						wrkOptions = wrkOptions + "WIDTH(" + wrkStr + ")";
+					}
+				}
 				//
 		        if (jRadioButtonFunction110FilterPromptOptionNone.isSelected()) {
 			        if (optionList.contains("PROMPT_LIST1")
@@ -21485,7 +21708,7 @@ public class Editor extends JFrame {
 					}
 					wrkOptions = wrkOptions + "VALUE(" + jTextFieldFunction110FilterValue.getText() + ")";
 				}
-				//
+		        //
 				if (jComboBoxFunction110FilterEditableOptions.getSelectedIndex() == 0) {
 					if (optionList.contains("NON_EDITABLE")
 							|| optionList.contains("HIDDEN")) {
@@ -23791,7 +24014,6 @@ public class Editor extends JFrame {
 		        	if (!operandType.equals("")) {
 						valueOfFieldsChanged = true;
 		        	}
-		        	wrkOptions = "";
 		        }
 		        if (jRadioButtonFunction300DetailFilterOptionGE.isSelected()) {
 		        	if (!operandType.equals("GE")) {
@@ -23835,6 +24057,83 @@ public class Editor extends JFrame {
 		        	}
 		        	wrkOptions = "REFLECT";
 		        }
+				//
+				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "VERTICAL");
+				if (jRadioButtonFunction300DetailFilterLayoutOptionVertical.isSelected()) {
+					if (jTextFieldFunction300DetailFilterMargin.getText().equals("*Auto") || jTextFieldFunction300DetailFilterMargin.getText().equals("")) {
+						if (!optionList.contains("VERTICAL") || !wrkStr.equals("")) {
+							valueOfFieldsChanged = true;
+						}
+						if (!wrkOptions.equals("")) {
+							wrkOptions = wrkOptions + ",";
+						}
+						wrkOptions = wrkOptions + "VERTICAL";
+					} else {
+						String wrkStr2 = getStringSizeValue(jTextFieldFunction300DetailFilterMargin.getText(), "", 1, 500);
+						if (wrkStr2.equals("")) {
+							if (!optionList.contains("VERTICAL")) {
+								valueOfFieldsChanged = true;
+							}
+							if (!wrkOptions.equals("")) {
+								wrkOptions = wrkOptions + ",";
+							}
+							wrkOptions = wrkOptions + "VERTICAL";
+						} else {
+							if (!wrkStr2.equals(wrkStr)) {
+								valueOfFieldsChanged = true;
+							}
+							if (!wrkOptions.equals("")) {
+								wrkOptions = wrkOptions + ",";
+							}
+							wrkOptions = wrkOptions + "VERTICAL(" + wrkStr2 + ")";
+						}
+					}
+				}
+				//
+				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "HORIZONTAL");
+				if (jRadioButtonFunction300DetailFilterLayoutOptionHorizontal.isSelected()) {
+					if (optionList.contains("VERTICAL")) {
+						valueOfFieldsChanged = true;
+					}
+					if (jTextFieldFunction300DetailFilterMargin.getText().equals("*Auto") || jTextFieldFunction300DetailFilterMargin.getText().equals("")) {
+						if (!wrkStr.equals("")) {
+							valueOfFieldsChanged = true;
+						}
+					} else {
+						String wrkStr2 = getStringSizeValue(jTextFieldFunction300DetailFilterMargin.getText(), "", 0, 500);
+						if (!wrkStr2.equals("")) {
+							if (!wrkStr2.equals(wrkStr)) {
+								valueOfFieldsChanged = true;
+							}
+							if (!wrkOptions.equals("")) {
+								wrkOptions = wrkOptions + ",";
+							}
+							wrkOptions = wrkOptions + "HORIZONTAL(" + wrkStr2 + ")";
+						}
+					}
+				}
+				//
+				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
+				if (jTextFieldFunction300DetailFilterWidth.getText().toUpperCase().equals("*AUTO") || jTextFieldFunction300DetailFilterWidth.getText().equals("")) {
+					if (!wrkStr.equals("")) {
+						valueOfFieldsChanged = true;
+					}
+				} else {
+					if (wrkStr.equals("")) {
+						valueOfFieldsChanged = true;
+					} else {
+						if (!wrkStr.equals(jTextFieldFunction300DetailFilterWidth.getText())) {
+							valueOfFieldsChanged = true;
+						}
+					}
+					wrkStr = getStringSizeValue(jTextFieldFunction300DetailFilterWidth.getText(), "", 10, 1000);
+					if (!wrkStr.equals("")) {
+						if (!wrkOptions.equals("")) {
+							wrkOptions = wrkOptions + ",";
+						}
+						wrkOptions = wrkOptions + "WIDTH(" + wrkStr + ")";
+					}
+				}
 				//
 		        if (jRadioButtonFunction300DetailFilterPromptOptionNone.isSelected()) {
 			        if (optionList.contains("PROMPT_LIST1")
@@ -26808,7 +27107,8 @@ public class Editor extends JFrame {
 	void jMenuItemComponentToCheckLayout_actionPerformed(ActionEvent e) {
 		currentMainTreeNode.updateFields();
 		int tabIndex = 0;
-		if (componentType_jPopupMenuComponent.equals("Function300DetailFieldList")) {
+		if (componentType_jPopupMenuComponent.equals("Function300DetailFieldList")
+				|| componentType_jPopupMenuComponent.equals("Function300DetailFilterList")) {
 			tabIndex = jTableFunction300DetailList.getSelectedRow();
 		}
 		int extForXF110 = 0;
@@ -28229,9 +28529,6 @@ public class Editor extends JFrame {
 				jTextFieldFunction100TableType.setText("");
 				jTextFieldFunction100Field.setText("");
 				jTextFieldFunction100FieldType.setText("");
-				//jLabelFunction100FieldWidth.setEnabled(false);
-				//jTextFieldFunction100FieldWidth.setText("");
-				//jTextFieldFunction100FieldWidth.setEnabled(false);
 				jLabelFunction100FieldLayoutOption.setEnabled(false);
 				jRadioButtonFunction100FieldLayoutOptionVertical.setSelected(true);
 				jRadioButtonFunction100FieldLayoutOptionVertical.setEnabled(false);
@@ -28258,13 +28555,11 @@ public class Editor extends JFrame {
 					jLabelFunction100Field.setEnabled(true);
 					jLabelFunction100FieldType.setEnabled(true);
 					jLabelFunction100FieldCaptionOption.setEnabled(true);
-					//jLabelFunction100FieldWidth.setEnabled(true);
 					jLabelFunction100FieldLayoutOption.setEnabled(true);
 					jLabelFunction100FieldWidth.setEnabled(true);
 					jLabelFunction100FieldRows.setEnabled(true);
 					jRadioButtonFunction100FieldCaptionOptionName.setEnabled(true);
 					jRadioButtonFunction100FieldCaptionOptionValue.setEnabled(true);
-					//jTextFieldFunction100FieldWidth.setEnabled(true);
 					jRadioButtonFunction100FieldLayoutOptionVertical.setEnabled(true);
 					jRadioButtonFunction100FieldLayoutOptionHorizontal.setEnabled(true);
 					jTextFieldFunction100FieldWidth.setEnabled(true);
@@ -28295,12 +28590,6 @@ public class Editor extends JFrame {
 					wrkStr = getDescriptionsOfTypeOptions(fieldElement, true, function100TableElement);
 					jTextFieldFunction100FieldType.setText(getDescriptionsOfTypeAndSize(fieldElement.getAttribute("Type"), fieldElement.getAttribute("Size"), fieldElement.getAttribute("Decimal")) + wrkStr);
 					//
-//					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
-//					if (wrkStr.equals("")) {
-//						jTextFieldFunction100FieldWidth.setText("*Auto");
-//					} else {
-//						jTextFieldFunction100FieldWidth.setText(wrkStr);
-//					}
 					ArrayList<String> optionList = getOptionList(element.getAttribute("FieldOptions"));
 					if (optionList.contains("VERTICAL")) {
 						jRadioButtonFunction100FieldLayoutOptionVertical.setSelected(true);
@@ -28353,6 +28642,10 @@ public class Editor extends JFrame {
 				jLabelFunction100FilterTableType.setEnabled(false);
 				jLabelFunction100FilterField.setEnabled(false);
 				jLabelFunction100FilterFieldType.setEnabled(false);
+				jLabelFunction100FilterLayoutOption.setEnabled(false);
+				jLabelFunction100FilterWidth.setEnabled(false);
+				jLabelFunction100FilterMargin.setEnabled(false);
+				jLabelFunction100FilterEditableOptions.setEnabled(false);
 				jLabelFunction100FilterOption.setEnabled(false);
 				jLabelFunction100FilterCaptionOption.setEnabled(false);
 				jLabelFunction100FilterPromptOption.setEnabled(false);
@@ -28361,6 +28654,15 @@ public class Editor extends JFrame {
 				jTextFieldFunction100FilterTableType.setText("");
 				jTextFieldFunction100FilterField.setText("");
 				jTextFieldFunction100FilterFieldType.setText("");
+				jRadioButtonFunction100FilterLayoutOptionHorizontal.setSelected(true);
+				jRadioButtonFunction100FilterLayoutOptionHorizontal.setEnabled(false);
+				jRadioButtonFunction100FilterLayoutOptionVertical.setEnabled(false);
+				jTextFieldFunction100FilterWidth.setText("");
+				jTextFieldFunction100FilterWidth.setEnabled(false);
+				jTextFieldFunction100FilterMargin.setText("");
+				jTextFieldFunction100FilterMargin.setEnabled(false);
+				jComboBoxFunction100FilterEditableOptions.setSelectedIndex(0);
+				jComboBoxFunction100FilterEditableOptions.setEnabled(false);
 				jRadioButtonFunction100FilterCaptionOptionName.setSelected(true);
 				jRadioButtonFunction100FilterCaptionOptionName.setEnabled(false);
 				jRadioButtonFunction100FilterCaptionOptionValue.setEnabled(false);
@@ -28386,8 +28688,6 @@ public class Editor extends JFrame {
 				jTextFieldFunction100FilterValue.setText("");
 				jTextFieldFunction100FilterValue.setEnabled(false);
 				jButtonFunction100FilterPromptOptionCallFunctionExchange.setEnabled(false);
-				jComboBoxFunction100FilterEditableOptions.setSelectedIndex(0);
-				jComboBoxFunction100FilterEditableOptions.setEnabled(false);
 				jCheckBoxFunction100FilterIgnoreIfZero.setSelected(false);
 				jCheckBoxFunction100FilterIgnoreIfZero.setVisible(false);
 				//
@@ -28400,10 +28700,18 @@ public class Editor extends JFrame {
 					jLabelFunction100FilterTableType.setEnabled(true);
 					jLabelFunction100FilterField.setEnabled(true);
 					jLabelFunction100FilterFieldType.setEnabled(true);
+					jLabelFunction100FilterLayoutOption.setEnabled(true);
+					jLabelFunction100FilterWidth.setEnabled(true);
+					jLabelFunction100FilterMargin.setEnabled(true);
+					jLabelFunction100FilterEditableOptions.setEnabled(true);
 					jLabelFunction100FilterOption.setEnabled(true);
 					jLabelFunction100FilterCaptionOption.setEnabled(true);
 					jLabelFunction100FilterPromptOption.setEnabled(true);
 					jLabelFunction100FilterValue.setEnabled(true);
+					jRadioButtonFunction100FilterLayoutOptionHorizontal.setEnabled(true);
+					jRadioButtonFunction100FilterLayoutOptionVertical.setEnabled(true);
+					jTextFieldFunction100FilterWidth.setEnabled(true);
+					jTextFieldFunction100FilterMargin.setEnabled(true);
 					jRadioButtonFunction100FilterOptionEQ.setEnabled(true);
 					jRadioButtonFunction100FilterCaptionOptionName.setEnabled(true);
 					jRadioButtonFunction100FilterCaptionOptionValue.setEnabled(true);
@@ -28440,6 +28748,7 @@ public class Editor extends JFrame {
 					//
 					jTextFieldFunction100FilterField.setText(fieldID + " " + fieldElement.getAttribute("Name"));
 					wrkStr = getDescriptionsOfTypeOptions(fieldElement, true, function100TableElement);
+					jTextFieldFunction100FilterFieldType.setText(getDescriptionsOfTypeAndSize(fieldElement.getAttribute("Type"), fieldElement.getAttribute("Size"), fieldElement.getAttribute("Decimal")) + wrkStr);
 					String dataType = fieldElement.getAttribute("Type");
 					if (dataType.equals("INTEGER")
 							|| dataType.equals("SMALLINT")
@@ -28450,8 +28759,6 @@ public class Editor extends JFrame {
 							|| dataType.equals("NUMERIC")
 							|| dataType.equals("REAL")	) {
 						//
-						jTextFieldFunction100FilterFieldType.setText(fieldElement.getAttribute("Type") + "(" + fieldElement.getAttribute("Size") + "," + fieldElement.getAttribute("Decimal") + ")" + wrkStr);
-						//
 						jRadioButtonFunction100FilterOptionLE.setEnabled(true);
 						jRadioButtonFunction100FilterOptionLT.setEnabled(true);
 						jRadioButtonFunction100FilterOptionGE.setEnabled(true);
@@ -28459,8 +28766,6 @@ public class Editor extends JFrame {
 						//
 						jCheckBoxFunction100FilterIgnoreIfZero.setVisible(true);
 					} else {
-						//
-						jTextFieldFunction100FilterFieldType.setText(fieldElement.getAttribute("Type") + "(" + fieldElement.getAttribute("Size") + ")" + wrkStr);
 						//
 						if (dataType.equals("DATE")) {
 							jRadioButtonFunction100FilterOptionLE.setEnabled(true);
@@ -28530,6 +28835,28 @@ public class Editor extends JFrame {
 					}
 					//
 					ArrayList<String> optionList = getOptionList(element.getAttribute("FieldOptions"));
+					//
+					jTextFieldFunction100FilterMargin.setText("*Auto");
+					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "VERTICAL");
+					if (wrkStr.equals("")) {
+						if (optionList.contains("VERTICAL")) {
+							jRadioButtonFunction100FilterLayoutOptionVertical.setSelected(true);
+						}
+					} else {
+						jRadioButtonFunction100FilterLayoutOptionVertical.setSelected(true);
+						jTextFieldFunction100FilterMargin.setText(wrkStr);
+					}
+					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "HORIZONTAL");
+					if (!wrkStr.equals("")) {
+						jTextFieldFunction100FilterMargin.setText(wrkStr);
+					}
+					//
+					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
+					if (wrkStr.equals("")) {
+						jTextFieldFunction100FilterWidth.setText("*Auto");
+					} else {
+						jTextFieldFunction100FilterWidth.setText(wrkStr);
+					}
 					if (optionList.contains("PROMPT_LIST1") && jRadioButtonFunction100FilterPromptOptionList1.isEnabled()) {
 						jRadioButtonFunction100FilterPromptOptionList1.setSelected(true);
 					}
@@ -28845,6 +29172,10 @@ public class Editor extends JFrame {
 				jLabelFunction110FilterTableType.setEnabled(false);
 				jLabelFunction110FilterField.setEnabled(false);
 				jLabelFunction110FilterFieldType.setEnabled(false);
+				jLabelFunction110FilterLayoutOption.setEnabled(false);
+				jLabelFunction110FilterWidth.setEnabled(false);
+				jLabelFunction110FilterMargin.setEnabled(false);
+				jLabelFunction110FilterEditableOptions.setEnabled(false);
 				jLabelFunction110FilterOption.setEnabled(false);
 				jLabelFunction110FilterCaptionOption.setEnabled(false);
 				jLabelFunction110FilterPromptOption.setEnabled(false);
@@ -28853,6 +29184,15 @@ public class Editor extends JFrame {
 				jTextFieldFunction110FilterTableType.setText("");
 				jTextFieldFunction110FilterField.setText("");
 				jTextFieldFunction110FilterFieldType.setText("");
+				jRadioButtonFunction110FilterLayoutOptionHorizontal.setSelected(true);
+				jRadioButtonFunction110FilterLayoutOptionHorizontal.setEnabled(false);
+				jRadioButtonFunction110FilterLayoutOptionVertical.setEnabled(false);
+				jTextFieldFunction110FilterWidth.setText("");
+				jTextFieldFunction110FilterWidth.setEnabled(false);
+				jTextFieldFunction110FilterMargin.setText("");
+				jTextFieldFunction110FilterMargin.setEnabled(false);
+				jComboBoxFunction110FilterEditableOptions.setSelectedIndex(0);
+				jComboBoxFunction110FilterEditableOptions.setEnabled(false);
 				jRadioButtonFunction110FilterCaptionOptionName.setSelected(true);
 				jRadioButtonFunction110FilterCaptionOptionName.setEnabled(false);
 				jRadioButtonFunction110FilterCaptionOptionValue.setEnabled(false);
@@ -28866,7 +29206,6 @@ public class Editor extends JFrame {
 				jTextFieldFunction110FilterPromptOptionCallFunctionID.setText("");
 				jTextFieldFunction110FilterPromptOptionCallFunctionID.setEnabled(false);
 				jTextFieldFunction110FilterPromptOptionCallFunctionName.setText("");
-				jButtonFunction110FilterPromptOptionCallFunctionExchange.setEnabled(false);
 				jRadioButtonFunction110FilterOptionEQ.setSelected(true);
 				jRadioButtonFunction110FilterOptionEQ.setEnabled(false);
 				jRadioButtonFunction110FilterOptionSCAN.setEnabled(false);
@@ -28878,8 +29217,7 @@ public class Editor extends JFrame {
 				jRadioButtonFunction110FilterOptionREFLECT.setEnabled(false);
 				jTextFieldFunction110FilterValue.setText("");
 				jTextFieldFunction110FilterValue.setEnabled(false);
-				jComboBoxFunction110FilterEditableOptions.setSelectedIndex(0);
-				jComboBoxFunction110FilterEditableOptions.setEnabled(false);
+				jButtonFunction110FilterPromptOptionCallFunctionExchange.setEnabled(false);
 				jCheckBoxFunction110FilterIgnoreIfZero.setSelected(false);
 				jCheckBoxFunction110FilterIgnoreIfZero.setVisible(false);
 				//
@@ -28892,10 +29230,18 @@ public class Editor extends JFrame {
 					jLabelFunction110FilterTableType.setEnabled(true);
 					jLabelFunction110FilterField.setEnabled(true);
 					jLabelFunction110FilterFieldType.setEnabled(true);
+					jLabelFunction110FilterLayoutOption.setEnabled(true);
+					jLabelFunction110FilterWidth.setEnabled(true);
+					jLabelFunction110FilterMargin.setEnabled(true);
+					jLabelFunction110FilterEditableOptions.setEnabled(true);
 					jLabelFunction110FilterOption.setEnabled(true);
 					jLabelFunction110FilterCaptionOption.setEnabled(true);
 					jLabelFunction110FilterPromptOption.setEnabled(true);
 					jLabelFunction110FilterValue.setEnabled(true);
+					jRadioButtonFunction110FilterLayoutOptionHorizontal.setEnabled(true);
+					jRadioButtonFunction110FilterLayoutOptionVertical.setEnabled(true);
+					jTextFieldFunction110FilterWidth.setEnabled(true);
+					jTextFieldFunction110FilterMargin.setEnabled(true);
 					jRadioButtonFunction110FilterOptionEQ.setEnabled(true);
 					jRadioButtonFunction110FilterCaptionOptionName.setEnabled(true);
 					jRadioButtonFunction110FilterCaptionOptionValue.setEnabled(true);
@@ -28932,6 +29278,7 @@ public class Editor extends JFrame {
 					//
 					jTextFieldFunction110FilterField.setText(fieldID + " " + fieldElement.getAttribute("Name"));
 					wrkStr = getDescriptionsOfTypeOptions(fieldElement, true, function110TableElement);
+					jTextFieldFunction110FilterFieldType.setText(getDescriptionsOfTypeAndSize(fieldElement.getAttribute("Type"), fieldElement.getAttribute("Size"), fieldElement.getAttribute("Decimal")) + wrkStr);
 					String dataType = fieldElement.getAttribute("Type");
 					if (dataType.equals("INTEGER")
 							|| dataType.equals("SMALLINT")
@@ -28942,8 +29289,6 @@ public class Editor extends JFrame {
 							|| dataType.equals("NUMERIC")
 							|| dataType.equals("REAL")	) {
 						//
-						jTextFieldFunction110FilterFieldType.setText(fieldElement.getAttribute("Type") + "(" + fieldElement.getAttribute("Size") + "," + fieldElement.getAttribute("Decimal") + ")" + wrkStr);
-						//
 						jRadioButtonFunction110FilterOptionLE.setEnabled(true);
 						jRadioButtonFunction110FilterOptionLT.setEnabled(true);
 						jRadioButtonFunction110FilterOptionGE.setEnabled(true);
@@ -28951,8 +29296,6 @@ public class Editor extends JFrame {
 						//
 						jCheckBoxFunction110FilterIgnoreIfZero.setVisible(true);
 					} else {
-						//
-						jTextFieldFunction110FilterFieldType.setText(fieldElement.getAttribute("Type") + "(" + fieldElement.getAttribute("Size") + ")" + wrkStr);
 						//
 						if (dataType.equals("DATE")) {
 							jRadioButtonFunction110FilterOptionLE.setEnabled(true);
@@ -29022,14 +29365,36 @@ public class Editor extends JFrame {
 					}
 					//
 					ArrayList<String> optionList = getOptionList(element.getAttribute("FieldOptions"));
-					if (optionList.contains("PROMPT_LIST1")) {
+					//
+					jTextFieldFunction110FilterMargin.setText("*Auto");
+					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "VERTICAL");
+					if (wrkStr.equals("")) {
+						if (optionList.contains("VERTICAL")) {
+							jRadioButtonFunction110FilterLayoutOptionVertical.setSelected(true);
+						}
+					} else {
+						jRadioButtonFunction110FilterLayoutOptionVertical.setSelected(true);
+						jTextFieldFunction110FilterMargin.setText(wrkStr);
+					}
+					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "HORIZONTAL");
+					if (!wrkStr.equals("")) {
+						jTextFieldFunction110FilterMargin.setText(wrkStr);
+					}
+					//
+					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
+					if (wrkStr.equals("")) {
+						jTextFieldFunction110FilterWidth.setText("*Auto");
+					} else {
+						jTextFieldFunction110FilterWidth.setText(wrkStr);
+					}
+					if (optionList.contains("PROMPT_LIST1") && jRadioButtonFunction110FilterPromptOptionList1.isEnabled()) {
 						jRadioButtonFunction110FilterPromptOptionList1.setSelected(true);
 					}
-					if (optionList.contains("PROMPT_LIST2")) {
+					if (optionList.contains("PROMPT_LIST2") && jRadioButtonFunction110FilterPromptOptionList2.isEnabled()) {
 						jRadioButtonFunction110FilterPromptOptionList2.setSelected(true);
 					}
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "PROMPT_CALL");
-					if (!wrkStr.equals("")) {
+					if (!wrkStr.equals("") && jRadioButtonFunction110FilterPromptOptionCall.isEnabled()) {
 						jRadioButtonFunction110FilterPromptOptionCall.setSelected(true);
 						jButtonFunction110FilterPromptOptionCallFunctionExchange.setEnabled(true);
 						jTextFieldFunction110FilterPromptOptionCallFunctionID.setText(wrkStr);
@@ -35769,6 +36134,10 @@ public class Editor extends JFrame {
 				jLabelFunction300DetailFilterTableType.setEnabled(false);
 				jLabelFunction300DetailFilterField.setEnabled(false);
 				jLabelFunction300DetailFilterFieldType.setEnabled(false);
+				jLabelFunction300DetailFilterLayoutOption.setEnabled(false);
+				jLabelFunction300DetailFilterWidth.setEnabled(false);
+				jLabelFunction300DetailFilterMargin.setEnabled(false);
+				jLabelFunction300DetailFilterEditableOptions.setEnabled(false);
 				jLabelFunction300DetailFilterOption.setEnabled(false);
 				jLabelFunction300DetailFilterCaptionOption.setEnabled(false);
 				jLabelFunction300DetailFilterPromptOption.setEnabled(false);
@@ -35777,6 +36146,15 @@ public class Editor extends JFrame {
 				jTextFieldFunction300DetailFilterTableType.setText("");
 				jTextFieldFunction300DetailFilterField.setText("");
 				jTextFieldFunction300DetailFilterFieldType.setText("");
+				jRadioButtonFunction300DetailFilterLayoutOptionHorizontal.setSelected(true);
+				jRadioButtonFunction300DetailFilterLayoutOptionHorizontal.setEnabled(false);
+				jRadioButtonFunction300DetailFilterLayoutOptionVertical.setEnabled(false);
+				jTextFieldFunction300DetailFilterWidth.setText("");
+				jTextFieldFunction300DetailFilterWidth.setEnabled(false);
+				jTextFieldFunction300DetailFilterMargin.setText("");
+				jTextFieldFunction300DetailFilterMargin.setEnabled(false);
+				jComboBoxFunction300DetailFilterEditableOptions.setSelectedIndex(0);
+				jComboBoxFunction300DetailFilterEditableOptions.setEnabled(false);
 				jRadioButtonFunction300DetailFilterCaptionOptionName.setSelected(true);
 				jRadioButtonFunction300DetailFilterCaptionOptionName.setEnabled(false);
 				jRadioButtonFunction300DetailFilterCaptionOptionValue.setEnabled(false);
@@ -35802,8 +36180,6 @@ public class Editor extends JFrame {
 				jTextFieldFunction300DetailFilterValue.setText("");
 				jTextFieldFunction300DetailFilterValue.setEnabled(false);
 				jButtonFunction300DetailFilterPromptOptionCallFunctionExchange.setEnabled(false);
-				jComboBoxFunction300DetailFilterEditableOptions.setSelectedIndex(0);
-				jComboBoxFunction300DetailFilterEditableOptions.setEnabled(false);
 				jCheckBoxFunction300DetailFilterIgnoreIfZero.setSelected(false);
 				jCheckBoxFunction300DetailFilterIgnoreIfZero.setVisible(false);
 				//
@@ -35816,15 +36192,22 @@ public class Editor extends JFrame {
 					jLabelFunction300DetailFilterTableType.setEnabled(true);
 					jLabelFunction300DetailFilterField.setEnabled(true);
 					jLabelFunction300DetailFilterFieldType.setEnabled(true);
+					jLabelFunction300DetailFilterLayoutOption.setEnabled(true);
+					jLabelFunction300DetailFilterWidth.setEnabled(true);
+					jLabelFunction300DetailFilterMargin.setEnabled(true);
+					jLabelFunction300DetailFilterEditableOptions.setEnabled(true);
 					jLabelFunction300DetailFilterOption.setEnabled(true);
 					jLabelFunction300DetailFilterCaptionOption.setEnabled(true);
 					jLabelFunction300DetailFilterPromptOption.setEnabled(true);
 					jLabelFunction300DetailFilterValue.setEnabled(true);
+					jRadioButtonFunction300DetailFilterLayoutOptionHorizontal.setEnabled(true);
+					jRadioButtonFunction300DetailFilterLayoutOptionVertical.setEnabled(true);
+					jTextFieldFunction300DetailFilterWidth.setEnabled(true);
+					jTextFieldFunction300DetailFilterMargin.setEnabled(true);
 					jRadioButtonFunction300DetailFilterOptionEQ.setEnabled(true);
 					jRadioButtonFunction300DetailFilterCaptionOptionName.setEnabled(true);
 					jRadioButtonFunction300DetailFilterCaptionOptionValue.setEnabled(true);
 					jRadioButtonFunction300DetailFilterPromptOptionNone.setEnabled(true);
-					jRadioButtonFunction300DetailFilterPromptOptionCall.setEnabled(true);
 					jTextFieldFunction300DetailFilterValue.setEnabled(true);
 					jComboBoxFunction300DetailFilterEditableOptions.setEnabled(true);
 					//
@@ -35848,7 +36231,8 @@ public class Editor extends JFrame {
 						} else {
 							jTextFieldFunction300DetailFilterTableType.setText(res.getString("JoinTableWithAlias") + tableAlias);
 						}
-						if (isStaticRefer(tableAlias, function300DetailReferList, function300DetailTableID) && isFieldAbleToBeWithComboBox(fieldElement)) {
+						if (isStaticRefer(tableAlias, function300DetailReferList, function300DetailTableID)
+								&& isFieldAbleToBeWithComboBox(fieldElement)) {
 							jRadioButtonFunction300DetailFilterPromptOptionList1.setEnabled(true);
 							jRadioButtonFunction300DetailFilterPromptOptionList2.setEnabled(true);
 						}
@@ -35856,6 +36240,7 @@ public class Editor extends JFrame {
 					//
 					jTextFieldFunction300DetailFilterField.setText(fieldID + " " + fieldElement.getAttribute("Name"));
 					wrkStr = getDescriptionsOfTypeOptions(fieldElement, true, function300DetailTableElement);
+					jTextFieldFunction300DetailFilterFieldType.setText(getDescriptionsOfTypeAndSize(fieldElement.getAttribute("Type"), fieldElement.getAttribute("Size"), fieldElement.getAttribute("Decimal")) + wrkStr);
 					String dataType = fieldElement.getAttribute("Type");
 					if (dataType.equals("INTEGER")
 							|| dataType.equals("SMALLINT")
@@ -35864,9 +36249,7 @@ public class Editor extends JFrame {
 							|| dataType.equals("DECIMAL")
 							|| dataType.equals("DOUBLE PRECISION")
 							|| dataType.equals("NUMERIC")
-							|| dataType.equals("REAL")) {
-						//
-						jTextFieldFunction300DetailFilterFieldType.setText(fieldElement.getAttribute("Type") + "(" + fieldElement.getAttribute("Size") + "," + fieldElement.getAttribute("Decimal") + ")" + wrkStr);
+							|| dataType.equals("REAL")	) {
 						//
 						jRadioButtonFunction300DetailFilterOptionLE.setEnabled(true);
 						jRadioButtonFunction300DetailFilterOptionLT.setEnabled(true);
@@ -35875,8 +36258,6 @@ public class Editor extends JFrame {
 						//
 						jCheckBoxFunction300DetailFilterIgnoreIfZero.setVisible(true);
 					} else {
-						//
-						jTextFieldFunction300DetailFilterFieldType.setText(fieldElement.getAttribute("Type") + "(" + fieldElement.getAttribute("Size") + ")" + wrkStr);
 						//
 						if (dataType.equals("DATE")) {
 							jRadioButtonFunction300DetailFilterOptionLE.setEnabled(true);
@@ -35898,8 +36279,10 @@ public class Editor extends JFrame {
 									jRadioButtonFunction300DetailFilterOptionGE.setEnabled(true);
 									jRadioButtonFunction300DetailFilterOptionGT.setEnabled(true);
 								} else {
-									jRadioButtonFunction300DetailFilterOptionSCAN.setEnabled(true);
-									jRadioButtonFunction300DetailFilterOptionGENERIC.setEnabled(true);
+									if (!fieldElement.getAttribute("TypeOptions").contains("BOOLEAN(")) {
+										jRadioButtonFunction300DetailFilterOptionSCAN.setEnabled(true);
+										jRadioButtonFunction300DetailFilterOptionGENERIC.setEnabled(true);
+									}
 								}
 							}
 						}
@@ -35912,6 +36295,9 @@ public class Editor extends JFrame {
 					if (!getOptionValueWithKeyword(fieldElement.getAttribute("TypeOptions"), "KUBUN").equals("")) {
 						jRadioButtonFunction300DetailFilterPromptOptionList1.setEnabled(true);
 						jRadioButtonFunction300DetailFilterPromptOptionList2.setEnabled(true);
+					}
+					if (!fieldElement.getAttribute("TypeOptions").contains("BOOLEAN(")) {
+						jRadioButtonFunction300DetailFilterPromptOptionCall.setEnabled(true);
 					}
 					//
 					String operandType = getOperandType(element.getAttribute("FieldOptions"));
@@ -35941,14 +36327,36 @@ public class Editor extends JFrame {
 					}
 					//
 					ArrayList<String> optionList = getOptionList(element.getAttribute("FieldOptions"));
-					if (optionList.contains("PROMPT_LIST1")) {
+					//
+					jTextFieldFunction300DetailFilterMargin.setText("*Auto");
+					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "VERTICAL");
+					if (wrkStr.equals("")) {
+						if (optionList.contains("VERTICAL")) {
+							jRadioButtonFunction300DetailFilterLayoutOptionVertical.setSelected(true);
+						}
+					} else {
+						jRadioButtonFunction300DetailFilterLayoutOptionVertical.setSelected(true);
+						jTextFieldFunction300DetailFilterMargin.setText(wrkStr);
+					}
+					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "HORIZONTAL");
+					if (!wrkStr.equals("")) {
+						jTextFieldFunction300DetailFilterMargin.setText(wrkStr);
+					}
+					//
+					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
+					if (wrkStr.equals("")) {
+						jTextFieldFunction300DetailFilterWidth.setText("*Auto");
+					} else {
+						jTextFieldFunction300DetailFilterWidth.setText(wrkStr);
+					}
+					if (optionList.contains("PROMPT_LIST1") && jRadioButtonFunction300DetailFilterPromptOptionList1.isEnabled()) {
 						jRadioButtonFunction300DetailFilterPromptOptionList1.setSelected(true);
 					}
-					if (optionList.contains("PROMPT_LIST2")) {
+					if (optionList.contains("PROMPT_LIST2") && jRadioButtonFunction300DetailFilterPromptOptionList2.isEnabled()) {
 						jRadioButtonFunction300DetailFilterPromptOptionList2.setSelected(true);
 					}
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "PROMPT_CALL");
-					if (!wrkStr.equals("")) {
+					if (!wrkStr.equals("") && jRadioButtonFunction300DetailFilterPromptOptionCall.isEnabled()) {
 						jRadioButtonFunction300DetailFilterPromptOptionCall.setSelected(true);
 						jButtonFunction300DetailFilterPromptOptionCallFunctionExchange.setEnabled(true);
 						jTextFieldFunction300DetailFilterPromptOptionCallFunctionID.setText(wrkStr);

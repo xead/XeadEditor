@@ -231,6 +231,7 @@ public class Res extends java.util.ListResourceBundle {
 		{ "DTLTabs", "DTL Tabs" },
 		{ "Edit", "Edit" },
 		{ "Editable", "Editable" },
+		{ "EditableOptions", "Edit Options" },
 		{ "EditCode", "Edit Code" },
 		{ "EditDetailTableKeyTitle", "Edit DTL Table and Key" },
 		{ "EditDetailTableKeyComment", "Specify unique keys of the header table and the detail table. Upper common fields must be as the same data type." },
