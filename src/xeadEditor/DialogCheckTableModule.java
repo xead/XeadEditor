@@ -228,11 +228,9 @@ public class DialogCheckTableModule extends JDialog {
 				tableID = tableID.toLowerCase();
 				moduleID = moduleID.toLowerCase();
 			}
-			//ResultSet rs1 = connection_.getMetaData().getColumns(null, null, tableID, null);
 			ResultSet rs1 = connection_.getMetaData().getColumns(null, null, moduleID, null);
 			if (rs1.next()) {
 				//
-				//moduleBuf.append("Create table " + tableElement.getAttribute("ID") + " (\n");
 				moduleBuf.append("Create table " + moduleID.toUpperCase() + " (\n");
 				//
 				///////////////////////////////////////////
@@ -292,7 +290,6 @@ public class DialogCheckTableModule extends JDialog {
 						if (databaseName.contains("jdbc:postgresql")) {
 							fieldID = fieldID.toLowerCase();
 						}
-						//ResultSet rs2 = connection_.getMetaData().getColumns(null, null, tableID, fieldID);
 						ResultSet rs2 = connection_.getMetaData().getColumns(null, null, moduleID, fieldID);
 						if (rs2.next()) {
 							//
@@ -338,20 +335,20 @@ public class DialogCheckTableModule extends JDialog {
 										buf.append("(" + countOfErrors + ") " + res.getString("ModuleCheckMessage1") + element.getAttribute("ID") + "(" + element.getAttribute("Name") +")" + res.getString("ModuleCheckMessage2") + typeDescriptionsOfDefinitionField + res.getString("ModuleCheckMessage3") + typeDescriptionsOfModuleField + res.getString("ModuleCheckMessage4"));
 									}
 								}
-//								if (element.getAttribute("Type").equals("VARCHAR")) {
-//									if (sizeOfDefinitionField != sizeOfModuleField) {
-//										countOfErrors++;
-//										fieldListToBeDropped.add(element.getAttribute("ID"));
-//										fieldListToBeAdded.add(element.getAttribute("ID"));
-//										fieldListToBeConverted.add(element.getAttribute("ID"));
-//										fieldTypeListToBeConverted.add(element.getAttribute("Type"));
-//										fieldSizeListToBeConvertedOld.add(sizeOfModuleField);
-//										fieldSizeListToBeConvertedNew.add(sizeOfDefinitionField);
-//										fieldDecimalListToBeConvertedOld.add(0);
-//										fieldDecimalListToBeConvertedNew.add(0);
-//										buf.append("(" + countOfErrors + ") " + res.getString("ModuleCheckMessage1") + element.getAttribute("ID") + "(" + element.getAttribute("Name") +")" + res.getString("ModuleCheckMessage2") + typeDescriptionsOfDefinitionField + res.getString("ModuleCheckMessage3") + typeDescriptionsOfModuleField + "(" + sizeOfModuleField + ")" + res.getString("ModuleCheckMessage4"));
-//									}
-//								}
+								if (element.getAttribute("Type").equals("VARCHAR")) {
+									if (sizeOfDefinitionField != sizeOfModuleField) {
+										countOfErrors++;
+										fieldListToBeDropped.add(element.getAttribute("ID"));
+										fieldListToBeAdded.add(element.getAttribute("ID"));
+										fieldListToBeConverted.add(element.getAttribute("ID"));
+										fieldTypeListToBeConverted.add(element.getAttribute("Type"));
+										fieldSizeListToBeConvertedOld.add(sizeOfModuleField);
+										fieldSizeListToBeConvertedNew.add(sizeOfDefinitionField);
+										fieldDecimalListToBeConvertedOld.add(0);
+										fieldDecimalListToBeConvertedNew.add(0);
+										buf.append("(" + countOfErrors + ") " + res.getString("ModuleCheckMessage1") + element.getAttribute("ID") + "(" + element.getAttribute("Name") +")" + res.getString("ModuleCheckMessage2") + typeDescriptionsOfDefinitionField + res.getString("ModuleCheckMessage3") + typeDescriptionsOfModuleField + "(" + sizeOfModuleField + ")" + res.getString("ModuleCheckMessage4"));
+									}
+								}
 							} else {
 								countOfErrors++;
 								fieldListToBeDropped.add(element.getAttribute("ID"));
@@ -923,6 +920,11 @@ public class DialogCheckTableModule extends JDialog {
 						isEquivalent = true;
 					}
 				}
+				if (dataTypeDefiition.equals("BLOB")) {
+					if (dataTypeModule.equals("bytea")) {
+						isEquivalent = true;
+					}
+				}
 			}
 		}
 		return isEquivalent;
@@ -1404,7 +1406,11 @@ public class DialogCheckTableModule extends JDialog {
 						if (databaseName.contains("jdbc:postgresql") && element.getAttribute("Type").equals("LONG VARCHAR")) {
 							buf.append("text");
 						} else {
-							buf.append(element.getAttribute("Type"));
+							if (databaseName.contains("jdbc:postgresql") && element.getAttribute("Type").equals("BLOB")) {
+								buf.append("bytea");
+							} else {
+								buf.append(element.getAttribute("Type"));
+							}
 						}
 						if (getBasicTypeOf(element.getAttribute("Type")).equals("STRING")) {
 							if (element.getAttribute("Type").equals("CHAR") || element.getAttribute("Type").equals("VARCHAR")) {

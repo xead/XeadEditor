@@ -136,16 +136,16 @@ public class DialogCheckLayout extends JDialog {
 			showLayoutOfTableFilters(functionElement.getElementsByTagName("Filter"));
 		}
 		if (panelType_.equals("Function110BatchFieldList")) {
-			showLayoutOfPanelFields(functionElement.getElementsByTagName("BatchField"), true);
+			showLayoutOfPanelFields(functionElement.getElementsByTagName("BatchField"), true, true);
 		}
 		if (panelType_.equals("Function200FieldList")) {
-			showLayoutOfPanelFields(functionElement.getElementsByTagName("Field"), true);
+			showLayoutOfPanelFields(functionElement.getElementsByTagName("Field"), true, false);
 		}
 		if (panelType_.equals("Function200TabFieldList")) {
-			showLayoutOfPanelFields(editor.getFunction200TabFieldList(), true);
+			showLayoutOfPanelFields(editor.getFunction200TabFieldList(), true, false);
 		}
 		if (panelType_.equals("Function300HeaderFieldList")) {
-			showLayoutOfPanelFields(functionElement.getElementsByTagName("Field"), false);
+			showLayoutOfPanelFields(functionElement.getElementsByTagName("Field"), false, false);
 		}
 		if (panelType_.equals("Function300DetailFieldList") && tabIndex >= 0) {
 			NodeList detailTableList = functionElement.getElementsByTagName("Detail");
@@ -162,7 +162,7 @@ public class DialogCheckLayout extends JDialog {
 			showLayoutOfTableFilters(element.getElementsByTagName("Filter"));
 		}
 		if (panelType_.equals("Function310HeaderFieldList")) {
-			showLayoutOfPanelFields(functionElement.getElementsByTagName("Field"), true);
+			showLayoutOfPanelFields(functionElement.getElementsByTagName("Field"), true, false);
 		}
 		if (panelType_.equals("Function310DetailFieldList")) {
 			detailTable = new DialogCheckLayoutDetailTable(functionElement.getAttribute("DetailTable"), functionElement.getAttribute("DetailKeyFields"), this);
@@ -192,7 +192,7 @@ public class DialogCheckLayout extends JDialog {
 		//////////////////////////////////////////////
 		// Setup the primary table and refer tables //
 		//////////////////////////////////////////////
-		primaryTable = new DialogCheckLayoutPrimaryTable(functionElement, this);
+		primaryTable = new DialogCheckLayoutPrimaryTable(functionElement, this, false);
 		NodeList referNodeList = primaryTable.getTableElement().getElementsByTagName("Refer");
 		sortableList = editor.getSortedListModel(referNodeList, "Order");
 		for (int i = 0; i < sortableList.getSize(); i++) {
@@ -283,7 +283,7 @@ public class DialogCheckLayout extends JDialog {
 		//////////////////////////////////////////////
 		// Setup the primary table and refer tables //
 		//////////////////////////////////////////////
-		primaryTable = new DialogCheckLayoutPrimaryTable(functionElement, this);
+		primaryTable = new DialogCheckLayoutPrimaryTable(functionElement, this, false);
 		NodeList referNodeList = primaryTable.getTableElement().getElementsByTagName("Refer");
 		sortableList = editor.getSortedListModel(referNodeList, "Order");
 		for (int i = 0; i < sortableList.getSize(); i++) {
@@ -380,7 +380,7 @@ public class DialogCheckLayout extends JDialog {
 		super.setVisible(true);
 	}
 
-	private void showLayoutOfPanelFields(NodeList functionFieldList, boolean isOnEditablePanel) {
+	private void showLayoutOfPanelFields(NodeList functionFieldList, boolean isOnEditablePanel, boolean isForBatchTable) {
 		///////////////////////////////////////////////////////////
 		// Set panel size and position according specified sizes //
 		///////////////////////////////////////////////////////////
@@ -399,7 +399,7 @@ public class DialogCheckLayout extends JDialog {
 		//////////////////////////////////////////////
 		// Setup the primary table and refer tables //
 		//////////////////////////////////////////////
-		primaryTable = new DialogCheckLayoutPrimaryTable(functionElement, this);
+		primaryTable = new DialogCheckLayoutPrimaryTable(functionElement, this, isForBatchTable);
 		NodeList referNodeList = primaryTable.getTableElement().getElementsByTagName("Refer");
 		sortableList = editor.getSortedListModel(referNodeList, "Order");
 		for (int i = 0; i < sortableList.getSize(); i++) {
@@ -528,7 +528,6 @@ public class DialogCheckLayout extends JDialog {
 		DialogCheckLayoutReferTable referTable;
 		for (int j = 0; j < referTableList1.size(); j++) {
 			referTable = referTableList1.get(j);
-			referTable.getTableAlias();
 			if (referTable.getTableAlias().equals(tableAlias)) {
 				tableID = referTable.getTableID();
 				break;
@@ -536,7 +535,6 @@ public class DialogCheckLayout extends JDialog {
 		}
 		for (int j = 0; j < referTableList2.size(); j++) {
 			referTable = referTableList2.get(j);
-			referTable.getTableAlias();
 			if (referTable.getTableAlias().equals(tableAlias)) {
 				tableID = referTable.getTableID();
 				break;
@@ -1576,6 +1574,9 @@ class DialogCheckLayoutFilter extends JPanel {
 				wrkStr = dialog_.getEditor().getOptionValueWithKeyword(fieldOptions, "PROMPT_CALL");
 				if (!wrkStr.equals("")) {
 					component = new DialogCheckLayoutPromptCallField(fieldElement, isEditable_, dialog_);
+					if (component.getPreferredSize().width < 70) {
+						component.setPreferredSize(new Dimension(70, component.getPreferredSize().height));
+					}
 				} else {
 					if (dataType.equals("DATE")) {
 						component = new DialogCheckLayoutDateField(isEditable_, dialog_);
@@ -2080,33 +2081,34 @@ class DialogCheckLayoutTextField extends JTextField {
 		this.setFont(new java.awt.Font("Monospaced", 0, 14));
 		this.setFocusable(false);
 		//
-		String wrkStr, value = "";
+		String wrkStr1, wrkStr2, value = "";
 		int fieldHeight, fieldWidth = 0;
 		if (dataTypeOptionList.contains("KANJI") || dataTypeOptionList.contains("ZIPADRS")) {
 			value = dialog_.getStringData("KANJI", digits, 0, false);
 			fieldWidth = digits_ * 14 + 10;
 		} else {
-			wrkStr = dialog_.getEditor().getOptionValueWithKeyword(dataTypeOptions, "KUBUN");
-			if (!wrkStr.equals("")) {
+			wrkStr1 = dialog_.getEditor().getOptionValueWithKeyword(dataTypeOptions, "KUBUN");
+			wrkStr2 = dialog_.getEditor().getOptionValueWithKeyword(fieldOptions_, "PROMPT_CALL");
+			if (!wrkStr1.equals("") && wrkStr2.equals("")) {
 				try {
 					FontMetrics metrics = this.getFontMetrics(new java.awt.Font("Dialog", 0, 14));
 					StringBuffer buf1 = new StringBuffer();
 					buf1.append("select * from ");
 					buf1.append(dialog_.getEditor().getSystemUserVariantsTableID());
 					buf1.append(" where IDUSERKUBUN = '");
-					buf1.append(wrkStr);
+					buf1.append(wrkStr1);
 					buf1.append("' order by SQLIST");
 					Connection connection = dialog_.getEditor().getDatabaseConnection("");
 					if (connection != null && !connection.isClosed()) {
 						Statement statement = connection.createStatement();
 						ResultSet result = statement.executeQuery(buf1.toString());
 						while (result.next()) {
-							wrkStr = result.getString("TXUSERKUBUN").trim();
-							if (metrics.stringWidth(wrkStr) > fieldWidth) {
-								fieldWidth = metrics.stringWidth(wrkStr);
+							wrkStr1 = result.getString("TXUSERKUBUN").trim();
+							if (metrics.stringWidth(wrkStr1) > fieldWidth) {
+								fieldWidth = metrics.stringWidth(wrkStr1);
 							}
 							if (value.equals("")) {
-								value = wrkStr;
+								value = wrkStr1;
 							}
 						}
 					}
@@ -2131,9 +2133,9 @@ class DialogCheckLayoutTextField extends JTextField {
 			fieldWidth = 800;
 		}
 		fieldHeight = dialog_.getFieldUnitHeight();
-		wrkStr = dialog_.getEditor().getOptionValueWithKeyword(fieldOptions_, "WIDTH");
-		if (!wrkStr.equals("")) {
-			fieldWidth = Integer.parseInt(wrkStr);
+		wrkStr1 = dialog_.getEditor().getOptionValueWithKeyword(fieldOptions_, "WIDTH");
+		if (!wrkStr1.equals("")) {
+			fieldWidth = Integer.parseInt(wrkStr1);
 		}
 		this.setPreferredSize(new Dimension(fieldWidth, fieldHeight));
 	}
@@ -2344,6 +2346,8 @@ class DialogCheckLayoutDateField extends JPanel {
 			jTextField.setEditable(false);
 			jPanelDummy.setPreferredSize(new Dimension(26, dialog.getFieldUnitHeight()));
 			this.add(jPanelDummy, BorderLayout.EAST);
+			this.setBorder(jTextField.getBorder());
+			jTextField.setBorder(null);
 		}
 	}
 }
@@ -2534,18 +2538,22 @@ class DialogCheckLayoutPrimaryTable extends Object {
 	private ArrayList<String> keyFieldList = new ArrayList<String>();
 	private DialogCheckLayout dialog_;
 	private StringTokenizer workTokenizer;
-	public DialogCheckLayoutPrimaryTable(org.w3c.dom.Element functionElement, DialogCheckLayout dialog){
+	public DialogCheckLayoutPrimaryTable(org.w3c.dom.Element functionElement, DialogCheckLayout dialog, boolean isForBatchTable){
 		super();
 		functionElement_ = functionElement;
 		dialog_ = dialog;
-		if (functionElement_.getAttribute("Type").equals("XF100")
-				|| functionElement_.getAttribute("Type").equals("XF110")
-				|| functionElement_.getAttribute("Type").equals("XF200")) {
-			tableID = functionElement_.getAttribute("PrimaryTable");
-		}
-		if (functionElement_.getAttribute("Type").equals("XF300")
-				|| functionElement_.getAttribute("Type").equals("XF310")) {
-			tableID = functionElement_.getAttribute("HeaderTable");
+		if (isForBatchTable) {
+			tableID = functionElement_.getAttribute("BatchTable"); //XF110 BatchTable//
+		} else {
+			if (functionElement_.getAttribute("Type").equals("XF100")
+					|| functionElement_.getAttribute("Type").equals("XF110")
+					|| functionElement_.getAttribute("Type").equals("XF200")) {
+				tableID = functionElement_.getAttribute("PrimaryTable");
+			}
+			if (functionElement_.getAttribute("Type").equals("XF300")
+					|| functionElement_.getAttribute("Type").equals("XF310")) {
+				tableID = functionElement_.getAttribute("HeaderTable");
+			}
 		}
 		tableElement = dialog_.getEditor().getSpecificXETreeNode("Table", tableID).getElement();
 		String wrkStr1;

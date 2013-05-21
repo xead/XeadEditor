@@ -980,30 +980,33 @@ public class DialogImportModel extends JDialog {
 		fieldSortingList = frame_.getSortedListModel(nodeList, "SortKey");
 		for (int i = 0; i < fieldSortingList.getSize(); i++) {
 			workElement1 = (org.w3c.dom.Element)fieldSortingList.elementAt(i);
-			childElement = frame_.getDomDocument().createElement("Field");
-			childElement.setAttribute("ID", workElement1.getAttribute("Alias"));
-			childElement.setAttribute("Name", workElement1.getAttribute("Name"));
-			childElement.setAttribute("Remarks", workElement1.getAttribute("Descriptions"));
-			childElement.setAttribute("Order", frame_.getFormatted4ByteString(i * 10));
-			//
-			attrMap = convertDataTypeIDToAttrMap(workElement1.getAttribute("DataTypeID"));
-			childElement.setAttribute("Type", attrMap.get("Type"));
-			childElement.setAttribute("Size", attrMap.get("Size"));
-			childElement.setAttribute("Decimal", attrMap.get("Decimal"));
-			//
-			if (workElement1.getAttribute("NotNull").equals("true")) {
-				childElement.setAttribute("Nullable", "F");
-			} else {
-				childElement.setAttribute("Nullable", "T");
+			if (workElement1.getAttribute("AttributeType").equals("NATIVE")
+					|| workElement1.getAttribute("AttributeType").equals("DERIVABLE")) {
+				childElement = frame_.getDomDocument().createElement("Field");
+				childElement.setAttribute("ID", workElement1.getAttribute("Alias"));
+				childElement.setAttribute("Name", workElement1.getAttribute("Name"));
+				childElement.setAttribute("Remarks", workElement1.getAttribute("Descriptions"));
+				childElement.setAttribute("Order", frame_.getFormatted4ByteString(i * 10));
+				//
+				attrMap = convertDataTypeIDToAttrMap(workElement1.getAttribute("DataTypeID"));
+				childElement.setAttribute("Type", attrMap.get("Type"));
+				childElement.setAttribute("Size", attrMap.get("Size"));
+				childElement.setAttribute("Decimal", attrMap.get("Decimal"));
+				//
+				if (workElement1.getAttribute("NotNull").equals("true")) {
+					childElement.setAttribute("Nullable", "F");
+				} else {
+					childElement.setAttribute("Nullable", "T");
+				}
+				//
+				if (workElement1.getAttribute("AttributeType").equals("NATIVE")) {
+					childElement.setAttribute("TypeOptions", "");
+				} else {
+					childElement.setAttribute("TypeOptions", "VIRTUAL");
+				}
+				//
+				newElementToBeAdded.appendChild(childElement);
 			}
-			//
-			if (workElement1.getAttribute("AttributeType").equals("NATIVE")) {
-				childElement.setAttribute("TypeOptions", "");
-			} else {
-				childElement.setAttribute("TypeOptions", "VIRTUAL");
-			}
-			//
-			newElementToBeAdded.appendChild(childElement);
 		}
 		//
 		childElement = frame_.getDomDocument().createElement("Key");
@@ -1032,6 +1035,32 @@ public class DialogImportModel extends JDialog {
 		}
 		childElement.setAttribute("Fields", bf.toString());
 		newElementToBeAdded.appendChild(childElement);
+		//
+		nodeList = modelElement.getElementsByTagName("TableKey");
+		for (int i = 0; i < nodeList.getLength(); i++) {
+			workElement1 = (org.w3c.dom.Element)nodeList.item(i);
+			if (workElement1.getAttribute("Type").equals("SK")) {
+				childElement = frame_.getDomDocument().createElement("Key");
+				childElement.setAttribute("Type", "SK");
+				bf = new StringBuffer();
+				NodeList nodeList2 = workElement1.getElementsByTagName("TableKeyField");
+				sortingList = frame_.getSortedListModel(nodeList2, "SortKey");
+				for (int j = 0; j < sortingList.getSize(); j++) {
+					workElement2 = (org.w3c.dom.Element)sortingList.elementAt(j);
+					for (int k = 0; k < fieldSortingList.getSize(); k++) {
+						workElement3 = (org.w3c.dom.Element)fieldSortingList.elementAt(k);
+						if (workElement3.getAttribute("ID").equals(workElement2.getAttribute("FieldID"))) {
+							if (j > 0) {
+								bf.append(";");
+							}
+							bf.append(workElement3.getAttribute("Alias"));
+						}
+					}
+				}
+				childElement.setAttribute("Fields", bf.toString());
+				newElementToBeAdded.appendChild(childElement);
+			}
+		}
 		//
 		return error;
 	}
@@ -1130,6 +1159,7 @@ public class DialogImportModel extends JDialog {
 			newElementToBeAdded.setAttribute("OrderBy", "");
 			newElementToBeAdded.setAttribute("Size", "AUTO");
 			newElementToBeAdded.setAttribute("InitialMsg", "");
+			newElementToBeAdded.setAttribute("InitialListing", "T");
 			//
 			nodeList = modelElement.getElementsByTagName("FunctionUsedByThis");
 			if (nodeList.getLength() == 1) {
@@ -1195,6 +1225,7 @@ public class DialogImportModel extends JDialog {
 			newElementToBeAdded.setAttribute("BatchWithKeyFields", "");
 			newElementToBeAdded.setAttribute("Size", "AUTO");
 			newElementToBeAdded.setAttribute("InitialMsg", "");
+			newElementToBeAdded.setAttribute("InitialListing", "T");
 			//
 			nodeList = primaryTableElement.getElementsByTagName("Field");
 			sortingList = frame_.getSortedListModel(nodeList, "Order");
@@ -1409,6 +1440,7 @@ public class DialogImportModel extends JDialog {
 				childElement.setAttribute("DetailFunction", "NONE");
 				childElement.setAttribute("Caption", detailTableElementList.get(p).getAttribute("Name"));
 				childElement.setAttribute("InitialMsg", "");
+				childElement.setAttribute("InitialListing", "T");
 				newElementToBeAdded.appendChild(childElement);
 				//
 				int columnCount = 0;

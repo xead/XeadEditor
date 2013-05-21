@@ -90,7 +90,7 @@ public class DialogSQL extends JDialog {
 		inputMap.clear();
 		ActionMap actionMap = jScrollPaneStatement.getActionMap();
 		actionMap.clear();
-		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0), "RUN");
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0), "RUN");
 		actionMap.put("RUN", commitAction);
 		//
 		jLabelConnection.setFont(new java.awt.Font("SansSerif", 0, 12));
@@ -137,7 +137,7 @@ public class DialogSQL extends JDialog {
 		jButtonClose.setBounds(new Rectangle(30, 8, 80, 25));
 		jButtonClose.setFont(new java.awt.Font("Dialog", 0, 12));
 		jButtonClose.addActionListener(new DialogSQL_jButtonClose_actionAdapter(this));
-		jButtonCommit.setText(res.getString("SqlCommitF9"));
+		jButtonCommit.setText(res.getString("SqlCommitF5"));
 		jButtonCommit.setBounds(new Rectangle(750, 8, 100, 25));
 		jButtonCommit.setFont(new java.awt.Font("Dialog", 0, 12));
 		jButtonCommit.addActionListener(new DialogSQL_jButtonCommit_actionAdapter(this));

@@ -236,6 +236,7 @@ public class DialogEditDetailTableKey extends JDialog {
 				}
 			}
 
+			workTokenizerHdr = new StringTokenizer(jTextFieldHdrKeyFields.getText(), ";");
 			workTokenizerDtl = new StringTokenizer(jTextFieldDtlKeyFields.getText(), ";");
 			if (workTokenizerDtl.countTokens() == 0) {
 				errorMessage = res.getString("ErrorMessage73");
@@ -243,18 +244,22 @@ public class DialogEditDetailTableKey extends JDialog {
 				if (workTokenizerHdr.countTokens() >= workTokenizerDtl.countTokens()) {
 					errorMessage = res.getString("ErrorMessage74");
 				} else {
-					while (workTokenizerHdr.hasMoreTokens()) {
-						dataSourceHdr = workTokenizerHdr.nextToken();
+					int count = 0;
+					while (workTokenizerDtl.hasMoreTokens()) {
+						count++;
 						dataSourceDtl = workTokenizerDtl.nextToken();
-						elementHdr = frame_.getSpecificFieldElement(headerTableNode.getElement().getAttribute("ID"), dataSourceHdr);
 						elementDtl = frame_.getSpecificFieldElement(detailTableNode.getElement().getAttribute("ID"), dataSourceDtl);
 						if (elementDtl == null ) {
 							errorMessage = res.getString("ErrorMessage75") + dataSourceDtl + res.getString("ErrorMessage76");
 							break;
 						} else {
-							if (!elementHdr.getAttribute("Type").equals(elementDtl.getAttribute("Type")) || !elementHdr.getAttribute("Size").equals(elementDtl.getAttribute("Size")) || !elementHdr.getAttribute("Decimal").equals(elementDtl.getAttribute("Decimal"))) {
-								errorMessage = res.getString("ErrorMessage77");
-								break;
+							if (count <= workTokenizerHdr.countTokens()) {
+								dataSourceHdr = workTokenizerHdr.nextToken();
+								elementHdr = frame_.getSpecificFieldElement(headerTableNode.getElement().getAttribute("ID"), dataSourceHdr);
+								if (!elementHdr.getAttribute("Type").equals(elementDtl.getAttribute("Type")) || !elementHdr.getAttribute("Size").equals(elementDtl.getAttribute("Size")) || !elementHdr.getAttribute("Decimal").equals(elementDtl.getAttribute("Decimal"))) {
+									errorMessage = res.getString("ErrorMessage77");
+									break;
+								}
 							}
 						}
 					}

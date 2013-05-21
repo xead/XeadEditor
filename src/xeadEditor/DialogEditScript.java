@@ -125,17 +125,17 @@ public class DialogEditScript extends JDialog {
 
 	private void init() throws Exception {
 		this.getContentPane().setLayout(new BorderLayout());
-		//
+
 		jPanelStatement.setLayout(new BorderLayout());
 		jPanelStatement.add(jPanelStatementHeader, BorderLayout.NORTH);
 		jPanelStatement.add(jScrollPaneStatement, BorderLayout.CENTER);
-		//
+
 		jPanelStatementHeader.setLayout(new BorderLayout());
 		jPanelStatementHeader.setPreferredSize(new Dimension(200, 20));
 		jLabelStatementHeader.setFont(new java.awt.Font("Dialog", 0, 12));
 		jLabelStatementHeader.setText(" " + res.getString("Script"));
 		jLabelStatementHeader.setPreferredSize(new Dimension(150, 20));
-		//
+
 		jPanelStatementFontSizeAndCursorPos.setLayout(new BorderLayout());
 		jPanelStatementFontSizeAndCursorPos.setPreferredSize(new Dimension(200, 20));
 		jPanelStatementFontSizeAndCursorPos.add(jLabelStatementCursorPos, BorderLayout.EAST);
@@ -160,7 +160,7 @@ public class DialogEditScript extends JDialog {
 		jLabelStatementCursorPos.setBorder(BorderFactory.createLineBorder(Color.lightGray));
 		jPanelStatementHeader.add(jLabelStatementHeader, BorderLayout.WEST);
 		jPanelStatementHeader.add(jPanelStatementFontSizeAndCursorPos, BorderLayout.EAST);
-		//
+
 		jPanelScan.setPreferredSize(new Dimension(10, 100));
 		jPanelScan.setLayout(null);
 		jLabelScanText.setFont(new java.awt.Font("SansSerif", 0, 12));
@@ -178,11 +178,11 @@ public class DialogEditScript extends JDialog {
 		jPanelScan.add(jTextFieldScanText);
 		jPanelScan.add(jCheckBoxScanText);
 		jPanelScan.add(jLabelFunctionKeys);
-		//
+
 		jPanelInformation.setLayout(new BorderLayout());
 		jPanelInformation.add(jScrollPaneFieldInformation, BorderLayout.CENTER);
 		jPanelInformation.add(jPanelScan, BorderLayout.SOUTH);
-		//
+
 		jScrollPaneFieldInformation.setBorder(BorderFactory.createEtchedBorder());
 		jTextAreaStatement.setFont(new java.awt.Font("Monospaced", 0, 14));
 		jTextAreaStatement.setEditable(true);
@@ -193,12 +193,12 @@ public class DialogEditScript extends JDialog {
 		ActionMap am = jTextAreaStatement.getActionMap();
 		am.put(DefaultEditorKit.pasteAction, pasteAction);
 		jScrollPaneStatement.getViewport().setView(jTextAreaStatement);
-		//
+
 		jTextAreaFieldInformation.setFont(new java.awt.Font("Dialog", 0, 12));
 		jTextAreaFieldInformation.setEditable(false);
 		jTextAreaFieldInformation.setOpaque(false);
 		jScrollPaneFieldInformation.getViewport().add(jTextAreaFieldInformation);
-		//
+
 		jSplitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
 		jSplitPane.setDividerLocation(250);
 		jSplitPane.add(jPanelStatement, JSplitPane.RIGHT);
@@ -219,7 +219,7 @@ public class DialogEditScript extends JDialog {
 		actionMap.put("UNDO", undoAction);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_DOWN_MASK), "REDO");
 		actionMap.put("REDO", redoAction);
-		//
+
 		this.setResizable(true);
         Rectangle screenRect = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 		int screenWidth = (int)screenRect.getWidth();
@@ -229,23 +229,21 @@ public class DialogEditScript extends JDialog {
 	}
 
 	public String request(String subtitle, String text, String fieldInfo, int caretPos) {
-		//
 		this.setTitle(res.getString("EditTableScriptTitle") + " - " +  subtitle);
-		//
+
 		jTextAreaFieldInformation.setText(fieldInfo);
 		jTextAreaFieldInformation.setCaretPosition(0);
-		//
+
 		originalText = text;
 		returnText = text;
-		//
+
 		jTextAreaStatement.setText(text);
 		jTextAreaStatement.setCaretPosition(caretPos);
 		jTextAreaStatement.requestFocus();
-		//
 		undoManager.discardAllEdits();
-		//
+
 		super.setVisible(true);
-		//
+
 		return returnText;
 	}
 
@@ -301,7 +299,7 @@ public class DialogEditScript extends JDialog {
 		jButtonStatementFontSizeS.setEnabled(true);
 		jButtonStatementFontSizeM.setEnabled(true);
 		jButtonStatementFontSizeL.setEnabled(true);
-		//
+
 		if (e.getSource() == jButtonStatementFontSizeS) {
 			jTextAreaStatement.setFont(new java.awt.Font("Monospaced", 0, 12));
 			jButtonStatementFontSizeS.setEnabled(false);
@@ -314,7 +312,7 @@ public class DialogEditScript extends JDialog {
 			jTextAreaStatement.setFont(new java.awt.Font("Monospaced", 0, 16));
 			jButtonStatementFontSizeL.setEnabled(false);
 		}
-		//
+
 		jTextAreaStatement.requestFocus();
 	}
 	
@@ -333,25 +331,6 @@ public class DialogEditScript extends JDialog {
 			undoManager.redo();
 		}
 	}
-	
-//	public void scanNext() {
-//		int pos;
-//		//
-//		if (jCheckBoxScanText.isSelected()) {
-//			pos = jTextAreaStatement.getText().indexOf(jTextFieldScanText.getText(), jTextAreaStatement.getCaretPosition());
-//		} else {
-//			pos = jTextAreaStatement.getText().toUpperCase().indexOf(jTextFieldScanText.getText().toUpperCase(), jTextAreaStatement.getCaretPosition());
-//		}
-//		//
-//	    if (pos == -1) {
-//	    	jTextAreaStatement.select(jTextAreaStatement.getCaretPosition(), jTextAreaStatement.getCaretPosition());
-//	    	JOptionPane.showMessageDialog(jScrollPaneStatement, res.getString("ScanStringInScriptMessage"));
-//	    } else {
-//	    	jTextAreaStatement.select(pos, pos + jTextFieldScanText.getText().length());
-//	    }
-//	    //
-//	    jTextAreaStatement.requestFocus();
-//	}
 }
 
 class DialogEditScript_jButtonStatementFontSize_actionAdapter implements java.awt.event.ActionListener {
@@ -373,4 +352,3 @@ class DialogEditScript_jTextAreaStatement_caretAdapter implements javax.swing.ev
 		adaptee.jTextAreaStatement_caretUpdate(e);
 	}
 }
-

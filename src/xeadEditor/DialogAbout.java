@@ -43,7 +43,29 @@ public class DialogAbout extends JDialog implements ActionListener {
 	 * Application Information
 	 */
 	public static final String APPLICATION_NAME  = "XEAD Editor 1.1";
-	public static final String FULL_VERSION  = "V1.R1.M16";
+	public static final String FULL_VERSION  = "V1.R1.M17";
+	//17
+	//・仮想フィールドの場合、フィールド一覧上でフィールドIDのみをカッコ付けするようにした
+	//・XF100,110,300について、初期表示オプションを組み込んだ
+	//・XF310の行追加リストの指定で０個の検索条件を許すようにした
+	//・xeadファイルのインポートにおいて、テーブルの二次識別子定義も取り込むようにした
+	//・xeadファイルのインポートにおいて、テーブルの継承属性を取り込まないようにした（結合フィールドとして手作業で定義されるため）
+	//・プロンプタ関数のパラメータ設定ダイアログの幅を広げた
+	//・レイアウト確認ダイアログにおいて日付フィールドの枠線表示設定を改善した
+	//・PostgreSQLのbytea型をBLOB型に対応させるようにした
+	//・データ保守ユーティリティでBLOB型を読み書きしないようにした
+	//・データ保守ユーティリティでシングルクォーテーションを含むデータを扱えるようにした
+	//・データ保守ユーティリティでの保留中のコミット操作のチェックロジックを改善した
+	//・結合テーブルの追加設定ダイアログのレイアウトを改善した
+	//・結合テーブルの追加後に「結合元KEY項目」を変更できるようにした
+	//・テーブルスクリプトの実行タイミングの選択で、結合テーブルが結合順序に従って一覧されるようにした
+	//・ツリービュー上で Ctrl+C と Ctrl+V を使えるようにするとともに、複数ノードを同時選択できないようにした
+	//・システムの起動およびSQLコンソールの実行のための機能キーをF9からF5に変更した
+	//・XF310の行追加リストの並び順指定でのバグを修正した
+	//・XF110のバッチフィールドについてレイアウト表示できないことがある問題を修正した
+	//・スクリプトの１行中に複数の'{'や'}'が含まれていると正しくインデント処理されない問題を修正した
+	//・右ペインで値を変更直後にCtrl+Sを押しても上書きされなかった問題を修正
+	//・結合フィールドの使途情報について、XF110での利用状況が不正確に示されていた問題を修正した
 	public static final String FORMAT_VERSION  = "1.1";
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2013 DBC,Ltd.";

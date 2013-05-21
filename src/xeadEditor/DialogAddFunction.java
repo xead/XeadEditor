@@ -475,6 +475,7 @@ public class DialogAddFunction extends JDialog {
 				element.setAttribute("KeyFields", tableKeys);
 				element.setAttribute("OrderBy", "");
 				element.setAttribute("InitialReadCount", "");
+				element.setAttribute("InitialListing", "T");
 				element.setAttribute("DetailFunction", "NONE");
 				element.setAttribute("Size", "AUTO");
 				element.setAttribute("InitialMsg", "");
@@ -532,6 +533,7 @@ public class DialogAddFunction extends JDialog {
 				element.setAttribute("KeyFields", tableKeys);
 				element.setAttribute("OrderBy", "");
 				element.setAttribute("InitialReadCount", "1000");
+				element.setAttribute("InitialListing", "T");
 				element.setAttribute("BatchTable", "");
 				element.setAttribute("BatchKeyFields", "");
 				element.setAttribute("BatchWithKeyFields", "");
@@ -726,6 +728,7 @@ public class DialogAddFunction extends JDialog {
 					childElement.setAttribute("DetailFunction", "NONE");
 					childElement.setAttribute("Caption", detailTableNode.getElement().getAttribute("Name"));
 					childElement.setAttribute("InitialMsg", "");
+					childElement.setAttribute("InitialListing", "T");
 					element.appendChild(childElement);
 					//
 					boolean isNotHeaderKey;
