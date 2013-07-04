@@ -388,6 +388,7 @@ public class DialogImportModel extends JDialog {
 		String error = "";
 		org.w3c.dom.Element workElement;
 		String dataType, alias;
+		ArrayList<String> aliasList = new ArrayList<String>();
 		//
 		try {
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
@@ -400,27 +401,33 @@ public class DialogImportModel extends JDialog {
 				if (alias.equals("")) {
 					error = res.getString("ImportModelMessage14") + " FieldName=" + workElement.getAttribute("Name");
 				} else {
-					attrMap = convertDataTypeIDToAttrMap(workElement.getAttribute("DataTypeID"));
-					dataType = attrMap.get("Type");
-					if (!dataType.equals("CHAR")
-							&& !dataType.equals("VARCHAR")
-							&& !dataType.equals("INTEGER")
-							&& !dataType.equals("SMALLINT")
-							&& !dataType.equals("BIGINT")
-							&& !dataType.equals("DOUBLE")
-							&& !dataType.equals("DECIMAL")
-							&& !dataType.equals("NUMERIC")
-							&& !dataType.equals("INT")
-							&& !dataType.equals("REAL")
-							&& !dataType.equals("DATE")
-							&& !dataType.equals("TIME")
-							&& !dataType.equals("TIMESTAMP")) {
-						error = res.getString("ImportModelMessage13")
+					if (aliasList.contains(alias)) {
+						error = res.getString("ImportModelMessage17") + " FieldName=" + workElement.getAttribute("Name");
+					} else {
+						attrMap = convertDataTypeIDToAttrMap(workElement.getAttribute("DataTypeID"));
+						dataType = attrMap.get("Type");
+						if (!dataType.equals("CHAR")
+								&& !dataType.equals("VARCHAR")
+								&& !dataType.equals("INTEGER")
+								&& !dataType.equals("SMALLINT")
+								&& !dataType.equals("BIGINT")
+								&& !dataType.equals("DOUBLE")
+								&& !dataType.equals("DECIMAL")
+								&& !dataType.equals("NUMERIC")
+								&& !dataType.equals("INT")
+								&& !dataType.equals("REAL")
+								&& !dataType.equals("DATE")
+								&& !dataType.equals("TIME")
+								&& !dataType.equals("TIMESTAMP")) {
+							error = res.getString("ImportModelMessage13")
 							+ " Field=" + workElement.getAttribute("Name") + "("  + alias + ")"
 							+ " DataType=" + dataType;
+						}
 					}
 				}
-				if (!error.equals("")) {
+				if (error.equals("")) {
+					aliasList.add(alias);
+				} else {
 					break;
 				}
 			}
@@ -433,7 +440,7 @@ public class DialogImportModel extends JDialog {
 	
 	private String getErrorWithFunction(org.w3c.dom.Element element) {
 		String error = "";
-		String primaryTableExternalID, headerTableExternalID;
+		String primaryTableExternalID, headerTableExternalID, headerTableInternalID;
 		org.w3c.dom.Element workElement;
 		NodeList nodeList;
 		//
@@ -484,13 +491,16 @@ public class DialogImportModel extends JDialog {
 			//
 			if (functionType.equals("XF300") || functionType.equals("XF310") || functionType.equals("XF390")) {
 				headerTableExternalID = "";
+				headerTableInternalID = "";
 				ArrayList<String> detailTableExternalIDList = new ArrayList<String>();
+				ArrayList<String> detailTableInternalIDList = new ArrayList<String>();
 				nodeList = element.getElementsByTagName("IOTable");
 				for (int i = 0; i < nodeList.getLength(); i++) {
 					workElement = (org.w3c.dom.Element)nodeList.item(i);
 					if (workElement.getAttribute("NameExtension").toUpperCase().startsWith("HEADER")
 							|| workElement.getAttribute("Descriptions").toUpperCase().startsWith(res.getString("HeaderTable").toUpperCase())) {
-						headerTableExternalID = convertTableInternalIDToExternalID(workElement.getAttribute("TableID"));
+						headerTableInternalID = workElement.getAttribute("TableID");
+						headerTableExternalID = convertTableInternalIDToExternalID(headerTableInternalID);
 						break;
 					}
 				}
@@ -498,6 +508,7 @@ public class DialogImportModel extends JDialog {
 					workElement = (org.w3c.dom.Element)nodeList.item(i);
 					if (workElement.getAttribute("NameExtension").toUpperCase().startsWith("DETAIL")
 							|| workElement.getAttribute("Descriptions").toUpperCase().startsWith(res.getString("DetailTable").toUpperCase())) {
+						detailTableInternalIDList.add(workElement.getAttribute("TableID"));
 						detailTableExternalIDList.add(convertTableInternalIDToExternalID(workElement.getAttribute("TableID")));
 					}
 				}
@@ -515,7 +526,7 @@ public class DialogImportModel extends JDialog {
 						int numberOfValidDetailTables = 0;
 						for (int i = 0; i < detailTableExternalIDList.size(); i++) {
 							if (isExistingTable(detailTableExternalIDList.get(i))
-									&& isValidWithKeys(headerTableExternalID, detailTableExternalIDList.get(i))) {
+									&& isValidWithKeys(headerTableInternalID, detailTableInternalIDList.get(i))) {
 								numberOfValidDetailTables++;
 							}
 						}
@@ -612,15 +623,19 @@ public class DialogImportModel extends JDialog {
 		}
 	}
 
-	private String[] getDetailKeys(String headerTableID, String detailTableID) {
+	private String[] getDetailKeys(String headerTableInternalID, String detailTableInternalID) {
 		String[] keyFields = {"", ""};
 		org.w3c.dom.Element element;
 		String fieldID;
+		int index = 0;
+		String keyFieldsOfHeaderTable = "";
+		String keyFieldsOfDetailTable = "";
 		StringTokenizer tokenizer1, tokenizer2;
 		ArrayList<String> headerPKFieldTypeList = new ArrayList<String>();
 		ArrayList<String> detailPKFieldTypeList = new ArrayList<String>();
 		//
-		org.w3c.dom.Element headerTableElement = getCurrentTableElementWithID(headerTableID);
+		String tableExternalID = convertTableInternalIDToExternalID(headerTableInternalID);
+		org.w3c.dom.Element headerTableElement = getCurrentTableElementWithID(tableExternalID);
 		NodeList headerTableKeyNodeList = headerTableElement.getElementsByTagName("Key");
 		NodeList headerTableFieldNodeList = headerTableElement.getElementsByTagName("Field");
 		org.w3c.dom.Element headerTableKeyElement = null;
@@ -632,7 +647,8 @@ public class DialogImportModel extends JDialog {
 			}
 		}
 		//
-		org.w3c.dom.Element detailTableElement = getCurrentTableElementWithID(detailTableID);
+		tableExternalID = convertTableInternalIDToExternalID(detailTableInternalID);
+		org.w3c.dom.Element detailTableElement = getCurrentTableElementWithID(tableExternalID);
 		NodeList detailTableKeyNodeList = detailTableElement.getElementsByTagName("Key");
 		NodeList detailTableFieldNodeList = detailTableElement.getElementsByTagName("Field");
 		org.w3c.dom.Element detailTableKeyElement = null;
@@ -670,11 +686,36 @@ public class DialogImportModel extends JDialog {
 					}	
 				}
 				for (int i = 0; i < headerPKFieldTypeList.size(); i++) {
-					if (!headerPKFieldTypeList.get(i).equals(detailPKFieldTypeList.get(i))) {
+//					if (!headerPKFieldTypeList.get(i).equals(detailPKFieldTypeList.get(i))) {
+//						isErrorWithKey = true;
+//						break;
+//					}
+					if (i == 0) {
+						keyFieldsOfHeaderTable = headerPKFieldTypeList.get(i);
+					} else {
+						keyFieldsOfHeaderTable = keyFieldsOfHeaderTable + ";" + headerPKFieldTypeList.get(i);
+					}
+					index = detailPKFieldTypeList.indexOf(headerPKFieldTypeList.get(i));
+					if (index == -1) {
 						isErrorWithKey = true;
 						break;
+					} else {
+						if (i == 0) {
+							keyFieldsOfDetailTable = detailPKFieldTypeList.get(index);
+						} else {
+							keyFieldsOfDetailTable = keyFieldsOfDetailTable + ";" + detailPKFieldTypeList.get(index);
+						}
 					}
 				}
+				if (!isErrorWithKey) {
+					for (int i = 0; i < detailPKFieldTypeList.size(); i++) {
+						if (!headerPKFieldTypeList.contains(detailPKFieldTypeList.get(i))) {
+							keyFieldsOfDetailTable = keyFieldsOfDetailTable + ";" + detailPKFieldTypeList.get(i);
+						}
+					}
+					keyFields[0] = getFieldsOfKey(headerTableInternalID, keyFieldsOfHeaderTable, false);
+					keyFields[1] = getFieldsOfKey(detailTableInternalID, keyFieldsOfDetailTable, true);
+				}	
 			} else {
 				isErrorWithKey = true;
 			}
@@ -1122,12 +1163,15 @@ public class DialogImportModel extends JDialog {
 		if (functionType.equals("XF300")
 				|| functionType.equals("XF310")
 				|| functionType.equals("XF390")) {
+			String headerTableInternalID = "";
+			String detailTableInternalID = "";
 			nodeList = modelElement.getElementsByTagName("IOTable");
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				workElement = (org.w3c.dom.Element)nodeList.item(i);
 				if (workElement.getAttribute("NameExtension").toUpperCase().startsWith("HEADER")
 						|| workElement.getAttribute("Descriptions").toUpperCase().startsWith(res.getString("HeaderTable").toUpperCase())) {
-					headerTableID = convertTableInternalIDToExternalID(workElement.getAttribute("TableID"));
+					headerTableInternalID = workElement.getAttribute("TableID");
+					headerTableID = convertTableInternalIDToExternalID(headerTableInternalID);
 					headerTableElement = getCurrentTableElementWithID(headerTableID);
 					break;
 				}
@@ -1137,10 +1181,11 @@ public class DialogImportModel extends JDialog {
 				workElement = (org.w3c.dom.Element)nodeList.item(i);
 				if (workElement.getAttribute("NameExtension").toUpperCase().startsWith("DETAIL")
 						|| workElement.getAttribute("Descriptions").toUpperCase().startsWith(res.getString("DetailTable").toUpperCase())) {
-					tableID = convertTableInternalIDToExternalID(workElement.getAttribute("TableID"));
-					if (isExistingTable(tableID) && isValidWithKeys(headerTableID, tableID)) {
+					detailTableInternalID = workElement.getAttribute("TableID");
+					tableID = convertTableInternalIDToExternalID(detailTableInternalID);
+					if (isExistingTable(tableID) && isValidWithKeys(headerTableInternalID, detailTableInternalID)) {
 						detailTableIDList.add(tableID);
-						String[] keys = getDetailKeys(headerTableID, tableID);
+						String[] keys = getDetailKeys(headerTableInternalID, detailTableInternalID);
 						headerTableKeysList.add(keys[0]);
 						detailTableKeysList.add(keys[1]);
 						detailTableElementList.add(getCurrentTableElementWithID(tableID));
@@ -1684,12 +1729,12 @@ public class DialogImportModel extends JDialog {
 		return error;
 	}
 	
-	private org.w3c.dom.Element getCurrentTableElementWithID(String id) {
+	private org.w3c.dom.Element getCurrentTableElementWithID(String externalTableID) {
 		org.w3c.dom.Element element = null;
 		NodeList nodeList = frame_.getDomDocument().getElementsByTagName("Table");
 		for (int i = 0; i < nodeList.getLength(); i++) {
 			element = (org.w3c.dom.Element)nodeList.item(i);
-			if (element.getAttribute("ID").equals(id)) {
+			if (element.getAttribute("ID").equals(externalTableID)) {
 				return element;
 			}
 		}

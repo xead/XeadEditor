@@ -13227,6 +13227,13 @@ public class Editor extends JFrame {
 				StringTokenizer workTokenizer = new StringTokenizer(wrkStr, ":");
 				workTokenizer.nextToken();
         		result = result + res.getString("InitialValue") + "\"" + workTokenizer.nextToken() + "\"";
+			} else {
+				if (!wrkStr.equals("")) {
+	        		if (!result.equals("")) {
+	        			result = result + res.getString("Comma");
+	        		}
+					result = result + res.getString("InitialValue") + "\"" + wrkStr + "\"";
+				}
 			}
 			//
         	if (optionList.contains("NON_EDITABLE")) {
@@ -13253,62 +13260,6 @@ public class Editor extends JFrame {
         //
 		return result;
 	}
-	
-//	private String getDescriptionsOfFunction100FilterOptions(String options) {
-//        String result = "";
-//        String wrkStr;
-//        //
-//        if (!options.equals("")) {
-//        	//
-//            result = getOperandType(options);
-//            //
-//        	ArrayList<String> optionList = getOptionList(options);
-//        	if (optionList.contains("PROMPT_LIST1")) {
-//              result = result + "、省略可リスト選択";
-//        	}
-//        	if (optionList.contains("PROMPT_LIST2")) {
-//              result = result + "、強制リスト選択";
-//        	}
-//        	if (optionList.contains("PROMPT_CALL")) {
-//              result = result + "、関数検索";
-//        	}
-//        	//
-//        	wrkStr = getOptionValueWithKeyword(options, "CAPTION");
-//			if (!wrkStr.equals("")) {
-//	            result = result + "、キャプション「" + wrkStr + "」";
-//			}
-//        }
-//        //
-//		return result;
-//	}
-//
-//	private String getDescriptionsOfFunction110FilterOptions(String options) {
-//        String result = "";
-//        String wrkStr;
-//        //
-//        if (!options.equals("")) {
-//        	//
-//            result = getOperandType(options);
-//            //
-//        	ArrayList<String> optionList = getOptionList(options);
-//        	if (optionList.contains("PROMPT_LIST1")) {
-//        		result = result + "、省略可リスト選択";
-//        	}
-//        	if (optionList.contains("PROMPT_LIST2")) {
-//        		result = result + "、強制リスト選択";
-//        	}
-//        	if (optionList.contains("PROMPT_CALL")) {
-//        		result = result + "、関数検索";
-//        	}
-//        	//
-//        	wrkStr = getOptionValueWithKeyword(options, "CAPTION");
-//			if (!wrkStr.equals("")) {
-//				result = result + "、キャプション「" + wrkStr + "」";
-//			}
-//        }
-//        //
-//		return result;
-//	}
 
 	private String getDescriptionsOfFieldOptions(String options) {
 		String result = "";
@@ -15143,7 +15094,7 @@ public class Editor extends JFrame {
 		private String nodeType_;
 		private String errorStatus_ = "";
 		private org.w3c.dom.Element domNode_;
-		private boolean searchImageFile_ = true; //a variant particularly for Function PanelIO and SpoolIO//
+		//private boolean searchImageFile_ = true; //a variant particularly for Function PanelIO and SpoolIO//
 		//
 		//Constructor//
 		public MainTreeNode(String type, org.w3c.dom.Element node, Editor editor) {
@@ -15165,17 +15116,17 @@ public class Editor extends JFrame {
 			return errorStatus_;
 		}
 		//
-		public void setSearchImageFileValid() {
-			searchImageFile_ = true;
-		}
-		//
-		public void setSearchImageFileInvalid() {
-			searchImageFile_ = false;
-		}
-		//
-		public boolean isSearchImageFileValid() {
-			return searchImageFile_;
-		}
+//		public void setSearchImageFileValid() {
+//			searchImageFile_ = true;
+//		}
+//		//
+//		public void setSearchImageFileInvalid() {
+//			searchImageFile_ = false;
+//		}
+//		//
+//		public boolean isSearchImageFileValid() {
+//			return searchImageFile_;
+//		}
 		//
 		public String toString() {
 			String str = "???";
@@ -15229,7 +15180,7 @@ public class Editor extends JFrame {
 			str = mark + this.getName();
 			return str;
 		}
-		//
+
 		public String getName() {
 			String str = "";
 			//
@@ -15269,7 +15220,70 @@ public class Editor extends JFrame {
 			//
 			return str;
 		}
-		//
+
+		public String getTipText() {
+			String str = "";
+			//
+			if (nodeType_.equals("System")) {
+				str = domNode_.getAttribute("Name");
+			}
+			if (nodeType_.equals("MenuList")) {
+				str = res.getString("MenuList");
+			}
+			if (nodeType_.equals("Menu")) {
+				str = domNode_.getAttribute("ID") + " " + domNode_.getAttribute("Name");
+			}
+			if (nodeType_.equals("SubsystemList")) {
+				str = res.getString("Application");
+			}
+			if (nodeType_.equals("Subsystem")) {
+				str = domNode_.getAttribute("ID") + " " + domNode_.getAttribute("Name");
+			}
+			if (nodeType_.equals("FunctionList")) {
+				str = res.getString("FunctionList");
+			}
+			if (nodeType_.equals("Function")) {
+				if (domNode_.getAttribute("Type").equals("XF000")) {
+					str = res.getString("FunctionTypeXF000");
+				}
+				if (domNode_.getAttribute("Type").equals("XF100")) {
+					str = res.getString("FunctionTypeXF100");
+				}
+				if (domNode_.getAttribute("Type").equals("XF110")) {
+					str = res.getString("FunctionTypeXF110");
+				}
+				if (domNode_.getAttribute("Type").equals("XF200")) {
+					str = res.getString("FunctionTypeXF200");
+				}
+				if (domNode_.getAttribute("Type").equals("XF290")) {
+					str = res.getString("FunctionTypeXF290");
+				}
+				if (domNode_.getAttribute("Type").equals("XF300")) {
+					str = res.getString("FunctionTypeXF300");
+				}
+				if (domNode_.getAttribute("Type").equals("XF310")) {
+					str = res.getString("FunctionTypeXF310");
+				}
+				if (domNode_.getAttribute("Type").equals("XF390")) {
+					str = res.getString("FunctionTypeXF390");
+				}
+			}
+			if (nodeType_.equals("TableList")) {
+				str = res.getString("TableList");
+			}
+			if (nodeType_.equals("Table")) {
+				String wrk1 = domNode_.getAttribute("ID").toUpperCase();
+				String wrk2 = domNode_.getAttribute("Name").toUpperCase();
+				if (wrk1.equals(wrk2)) {
+					str = domNode_.getAttribute("ID");
+				} else {
+					str = domNode_.getAttribute("ID") + " " + domNode_.getAttribute("Name");
+				}
+			}
+			//
+			return str;
+		}
+
 		public void showPopupMenu(Component com , int posX, int posY, org.w3c.dom.Element pastingElement) {
 			//
 			jPopupMenuXETreeNode.removeAll();
@@ -26244,7 +26258,7 @@ public class Editor extends JFrame {
 		if (row > -1) {
 			TreePath tp = jTreeMain.getPathForRow(row);
 			MainTreeNode node = (MainTreeNode)tp.getLastPathComponent();
-			jTreeMain.setToolTipText(node.getName());
+			jTreeMain.setToolTipText(node.getTipText());
 		}
 	}
 
@@ -42661,7 +42675,7 @@ class Editor_DialogAddRowListReturnDataSourcesEdit extends JDialog {
 		jPanelButtons.setBorder(BorderFactory.createEtchedBorder());
 		jPanelButtons.setPreferredSize(new Dimension(350, 43));
 		jPanelButtons.setLayout(null);
-		jButtonOK.setBounds(new Rectangle(400, 10, 73, 25));
+		jButtonOK.setBounds(new Rectangle(750, 10, 73, 25));
 		jButtonOK.setFont(new java.awt.Font("Dialog", 0, 12));
 		jButtonOK.setText("OK");
 		jButtonOK.addActionListener(new ActionListener() {
@@ -42691,16 +42705,16 @@ class Editor_DialogAddRowListReturnDataSourcesEdit extends JDialog {
 		jLabelReturnFromFields.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelReturnFromFields.setBounds(new Rectangle(5, 12, 110, 15));
 		jTextFieldReturnFromFields.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldReturnFromFields.setBounds(new Rectangle(120, 9, 380, 22));
+		jTextFieldReturnFromFields.setBounds(new Rectangle(120, 9, 730, 22));
 		jLabelReturnToFields.setText(res.getString("AddRowListReturnToFieldShort"));
 		jLabelReturnToFields.setFont(new java.awt.Font("Dialog", 0, 12));
 		jLabelReturnToFields.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelReturnToFields.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelReturnToFields.setBounds(new Rectangle(5, 40, 110, 15));
 		jTextFieldReturnToFields.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldReturnToFields.setBounds(new Rectangle(120, 37, 380, 22));
+		jTextFieldReturnToFields.setBounds(new Rectangle(120, 37, 730, 22));
 		jTextAreaMessage.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextAreaMessage.setBounds(new Rectangle(7, 66, 500, 57));
+		jTextAreaMessage.setBounds(new Rectangle(7, 66, 850, 57));
 		jTextAreaMessage.setLineWrap(true);
 		jTextAreaMessage.setEditable(false);
 		jTextAreaMessage.setBorder(BorderFactory.createEtchedBorder());
@@ -42729,7 +42743,7 @@ class Editor_DialogAddRowListReturnDataSourcesEdit extends JDialog {
 		returnCode = 0;
 		jTextAreaMessage.setText(res.getString("AddRowListFieldsDialogComment"));
 		//
-		this.setSize(new Dimension(520, 206));
+		this.setSize(new Dimension(870, 206));
 		Dimension dlgSize = this.getSize();
 		Dimension frmSize = frame_.getSize();
 		Point loc = frame_.getLocation();
@@ -42886,6 +42900,7 @@ class Editor_DialogPromptOptionCallFunctionExchangeEdit extends JDialog {
 				bf.append(jTextFieldFieldsToGetTo.getText());
 				StringSelection contents = new StringSelection(bf.toString());
 				clipboard.setContents(contents, null);
+				setVisible(false);
 			}
 		});
 		//

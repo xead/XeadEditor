@@ -568,6 +568,7 @@ public class Res_ja extends java.util.ListResourceBundle {
 		{ "ImportModelMessage14", "一部のフィールドのＩＤがブランクのため、インポートできません。"},
 		{ "ImportModelMessage15", "正常にインポートされました。"},
 		{ "ImportModelMessage16", "見出しテーブルの主キーが明細テーブルの「上位キー」でないため、インポートできません。"},
+		{ "ImportModelMessage17", "一部のフィールドのＩＤがテーブル内で重複しているため、インポートできません。"},
 		{ "ImportSaveMessage", "インポート処理の結果を保存しますか？" },
 		{ "ImportSaveTitle", "XEAD Editor - インポート保存確認" },
 		{ "ImportXEAD", "モデル情報ファイル(*.xead)より" },

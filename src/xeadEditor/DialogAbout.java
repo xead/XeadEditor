@@ -43,7 +43,14 @@ public class DialogAbout extends JDialog implements ActionListener {
 	 * Application Information
 	 */
 	public static final String APPLICATION_NAME  = "XEAD Editor 1.1";
-	public static final String FULL_VERSION  = "V1.R1.M17";
+	public static final String FULL_VERSION  = "V1.R1.M18";
+	//18
+	//・xeadファイルのXF300タイプの機能定義のインポートにおいて、見出し／明細テーブルの分析ロジックを改善した
+	//・xeadファイルのテーブル定義のインポートにおいて、１テーブル内でのフィールドIDの重複が許されていたバグを修正した
+	//・プロンプタの交換フィールド設定ダイアログで、コピーボタンでダイアログを閉じるようにした
+	//・絞込み条件でVALUE:の指定を省略した場合、絞込み条件の一覧上で初期値として示されないバグを修正した
+	//・ツリービュー上の機能定義の上にマウスポインタを置けば機能タイプがヒント表示されるようにした
+	//・XF310の行追加リストの交換フィールド設定ダイアログの幅を広げた
 	//17
 	//・仮想フィールドの場合、フィールド一覧上でフィールドIDのみをカッコ付けするようにした
 	//・XF100,110,300について、初期表示オプションを組み込んだ

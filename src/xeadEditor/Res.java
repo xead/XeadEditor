@@ -568,6 +568,7 @@ public class Res extends java.util.ListResourceBundle {
 		{ "ImportModelMessage14", "Importing is not allowed as ID of any field is blank."},
 		{ "ImportModelMessage15", "Imported successfully."},
 		{ "ImportModelMessage16", "Importing is not allowed as the header table key is not 'upper key' of detail table."},
+		{ "ImportModelMessage17", "Importing is not allowed as ID of any field is duplicated in the table definition."},
 		{ "ImportSaveMessage", "Save what you have imported?" },
 		{ "ImportSaveTitle", "XEAD Editor - Save Import" },
 		{ "ImportXEAD", "From XEAD Modeler File(*.xead)" },
