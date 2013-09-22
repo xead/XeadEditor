@@ -391,6 +391,9 @@ public class DialogScan extends JDialog {
 				int rowCount = tableModelScanResult.getRowCount();
 				for (int i = 0; i < rowCount; i++) {tableModelScanResult.removeRow(0);}
 			}
+			jButtonReplaceAllSelected.setEnabled(false);
+			checkBoxHeaderRenderer.setSelected(false);
+			jTableScanResult.getTableHeader().repaint();   
 			//
 			//Get ID of Subsystem if it is specified to be scanned;
 			if (jComboBoxSubsystems.getSelectedIndex() != 0) {
@@ -474,6 +477,7 @@ public class DialogScan extends JDialog {
 					jProgressBar.paintImmediately(0,0,jProgressBar.getWidth(),jProgressBar.getHeight());
 					//
 					scanAttribute(workElement, "Menu", res.getString("Menu"), "Name", res.getString("Name"));
+					scanAttribute(workElement, "Menu", res.getString("Menu"), "CrossCheckersToBeLoaded", res.getString("MenuCrossCheckers"));
 					scanAttribute(workElement, "Menu", res.getString("Menu"), "HelpURL", res.getString("MenuHelpURL"));
 					//
 					workList1 = workElement.getElementsByTagName("Option");
@@ -765,7 +769,6 @@ public class DialogScan extends JDialog {
 				jButtonGenerateListData.setEnabled(true);
 			} else {
 				jTextPaneScanDetail.setText(res.getString("ScanDialogComment4"));
-				jButtonReplaceAllSelected.setEnabled(false);
 				jButtonGenerateListData.setEnabled(false);
 			}
 		} finally {

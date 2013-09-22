@@ -43,7 +43,22 @@ public class DialogAbout extends JDialog implements ActionListener {
 	 * Application Information
 	 */
 	public static final String APPLICATION_NAME  = "XEAD Editor 1.1";
-	public static final String FULL_VERSION  = "V1.R1.M18";
+	public static final String FULL_VERSION  = "V1.R1.M19";
+	//19
+	//・テーブルモジュールが存在する場合でもPKの変更ボタンを有効にして、PKが変更不可であるメッセージを表示するようにした
+	//・モジュールチェックでのＰＫ違いのメッセージが不完全だった問題を修正
+	//・XF390の行番幅をゼロにできなかった問題を修正した
+	//・クロスチェッカーのログイン時ロード設定をメニュー定義に組み込んだ
+	//・Undoの回数を無制限にした
+	//・保守履歴を設け、UNDO情報を使って履歴追加時の初期値を設定するようにした
+	//・テーブル定義のUNDO/REDO時にエラー状況を再設定するようにした
+	//・PostgreSQLで漢字フィールドでインデックスを作るとモジュールチェックが正しく動作しない問題を修正
+	//・PostgreSQLでフィールドＩＤに全角英数字を混ぜた場合にモジュールチェックが正しく動作しない問題を修正
+	//・PostgreSQLのデータ型character varyingをVARCHARに対応させた
+	//・XF100,110,300の検索条件のプロンプトオプションとして「候補リスト」を設けた
+	//・機能定義へのフィールド組み込みの際の警告メッセージにデータソース名を組み込んだ
+	//・機能の使途一覧において、検索条件のプロンプタ向けの使途が抜けていた問題を修正
+	//・XF000で時刻初期値の指定をテキストフィールドでできるようにした
 	//18
 	//・xeadファイルのXF300タイプの機能定義のインポートにおいて、見出し／明細テーブルの分析ロジックを改善した
 	//・xeadファイルのテーブル定義のインポートにおいて、１テーブル内でのフィールドIDの重複が許されていたバグを修正した

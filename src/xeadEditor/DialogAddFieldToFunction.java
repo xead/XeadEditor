@@ -324,14 +324,14 @@ public class DialogAddFieldToFunction extends JDialog {
 							wrkElement = frame_.currentMainTreeNode.getElement();
 							if (!wrkElement.getAttribute("BatchTable").equals("")) {
 								if (hasDuplicatedReferField(wrkElement.getAttribute("BatchTable"), checkBox.getName())) {
-									JOptionPane.showMessageDialog(this, res.getString("WarningMessage1"));
+									JOptionPane.showMessageDialog(this, res.getString("WarningMessage1")+"\n"+checkBox.getName());
 								}
 							}
 						}
 						if (tableType_.equals("Function110BatchFieldList")) {
 							wrkElement = frame_.currentMainTreeNode.getElement();
 							if (hasDuplicatedReferField(wrkElement.getAttribute("PrimaryTable"), checkBox.getName())) {
-								JOptionPane.showMessageDialog(this, res.getString("WarningMessage2"));
+								JOptionPane.showMessageDialog(this, res.getString("WarningMessage2")+"\n"+checkBox.getName());
 							}
 						}
 						if (tableType_.equals("Function300HeaderFieldList")) {
@@ -339,26 +339,26 @@ public class DialogAddFieldToFunction extends JDialog {
 							for (int j = 0; j < detailList.getLength(); j++) {
 								wrkElement = (org.w3c.dom.Element)detailList.item(j);
 								if (hasDuplicatedReferField(wrkElement.getAttribute("Table"), checkBox.getName())) {
-									JOptionPane.showMessageDialog(this, res.getString("WarningMessage3"));
+									JOptionPane.showMessageDialog(this, res.getString("WarningMessage3")+"\n"+checkBox.getName());
 								}
 							}
 						}
 						if (tableType_.equals("Function300DetailFieldList")) {
 							wrkElement = frame_.currentMainTreeNode.getElement();
 							if (hasDuplicatedReferField(wrkElement.getAttribute("HeaderTable"), checkBox.getName())) {
-								JOptionPane.showMessageDialog(this, res.getString("WarningMessage4"));
+								JOptionPane.showMessageDialog(this, res.getString("WarningMessage4")+"\n"+checkBox.getName());
 							}
 						}
 						if (tableType_.equals("Function310HeaderFieldList")) {
 							wrkElement = frame_.currentMainTreeNode.getElement();
 							if (hasDuplicatedReferField(wrkElement.getAttribute("DetailTable"), checkBox.getName())) {
-								JOptionPane.showMessageDialog(this, res.getString("WarningMessage4"));
+								JOptionPane.showMessageDialog(this, res.getString("WarningMessage4")+"\n"+checkBox.getName());
 							}
 						}
 						if (tableType_.equals("Function310DetailFieldList")) {
 							wrkElement = frame_.currentMainTreeNode.getElement();
 							if (hasDuplicatedReferField(wrkElement.getAttribute("HeaderTable"), checkBox.getName())) {
-								JOptionPane.showMessageDialog(this, res.getString("WarningMessage4"));
+								JOptionPane.showMessageDialog(this, res.getString("WarningMessage4")+"\n"+checkBox.getName());
 							}
 						}
 					}

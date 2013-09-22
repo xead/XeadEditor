@@ -33,7 +33,7 @@ package xeadEditor;
 
 import java.awt.*;
 import javax.swing.*;
-import xeadEditor.Editor.TableRowNumber;
+import org.w3c.dom.NodeList;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -302,33 +302,32 @@ public class DialogAddList extends JDialog {
 		//
 		return reply;
 	}
-	//
+
 	void jButtonOK_actionPerformed(ActionEvent e) {
 		org.w3c.dom.Element element;
-		TableRowNumber tableRowNumber;
+		//TableRowNumber tableRowNumber;
 		reply = 1;
 		boolean noError = true;
 		boolean duplicated;
-		//
-		//if (parentType_.equals("TableList")) {
-		//	for (int i = 0; i < 10; i++) {
-		//		if (idList.get(i).getText().contains("_")) {
-		//			noError = false;
-		//			JOptionPane.showMessageDialog(this, res.getString("ErrorMessage105"));
-		//			break;
-		//		}
-		//	}
-		//}
+		NodeList nodeList;
 		//
 		if (noError) {
 			for (int i = 0; i < 10; i++) {
 				if (!idList.get(i).getText().equals("") && !nameList.get(i).getText().equals("")) {
-					idList.get(i).setText(idList.get(i).getText().toUpperCase());
+					idList.get(i).setText(frame_.getCaseShiftValue(idList.get(i).getText(), "Upper"));
 					if (parentType_.equals("TableFieldList")) {
 						duplicated = false;
-						for (int j = 0; j < frame_.tableModelTableFieldList.getRowCount(); j++) {
-							tableRowNumber = (TableRowNumber)frame_.tableModelTableFieldList.getValueAt(j, 0);
-							element = tableRowNumber.getElement();
+//						for (int j = 0; j < frame_.tableModelTableFieldList.getRowCount(); j++) {
+//						tableRowNumber = (TableRowNumber)frame_.tableModelTableFieldList.getValueAt(j, 0);
+//						element = tableRowNumber.getElement();
+//						if (element.getAttribute("ID").equals(idList.get(i).getText())) {
+//							duplicated = true;
+//							break;
+//						}
+//					}
+						nodeList = frame_.currentMainTreeNode.getElement().getElementsByTagName("Field");
+						for (int j = 0; j < nodeList.getLength(); j++) {
+							element = (org.w3c.dom.Element)nodeList.item(j);
 							if (element.getAttribute("ID").equals(idList.get(i).getText())) {
 								duplicated = true;
 								break;

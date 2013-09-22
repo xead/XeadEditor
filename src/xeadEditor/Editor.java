@@ -52,6 +52,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.*;
 import java.util.regex.Pattern;
+
 import javax.script.Compilable;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -69,11 +70,13 @@ import javax.swing.text.InternationalFormatter;
 import javax.swing.text.PlainDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.tree.*;
+
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.*;
 import org.apache.xerces.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.*;
+
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
@@ -154,6 +157,7 @@ public class Editor extends JFrame {
 	private JMenuItem jMenuItemToolCreateTable = new JMenuItem();
 	private JMenuItem jMenuItemToolSQL = new JMenuItem();
 	private JMenuItem jMenuItemToolConnectDB = new JMenuItem();
+	private JMenuItem jMenuItemToolCheckAllModules = new JMenuItem();
 	private JMenuItem jMenuItemToolCheckFunctionsCalled = new JMenuItem();
 	private JMenuItem jMenuItemToolCallModeler = new JMenuItem();
 	private JMenu jMenuHelp = new JMenu();
@@ -500,6 +504,23 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldSystemScriptFunctionsEditToolScan = new JTextField();
 	private JCheckBox jCheckBoxSystemScriptFunctionsEditToolScanCase = new JCheckBox();
 	private JLabel jLabelSystemScriptFunctionsEditToolCursorPos = new JLabel();
+	//
+	private int selectedRow_jTableSystemMaintenanceLog;
+	private JSplitPane jSplitPaneSystemMaintenanceLog = new JSplitPane();
+	private JScrollPane jScrollPaneSystemMaintenanceLog = new JScrollPane();
+	private TableModelReadOnlyList tableModelSystemMaintenanceLog = new TableModelReadOnlyList();
+	private JTable jTableSystemMaintenanceLog = new JTable(tableModelSystemMaintenanceLog);
+	private JPanel jPanelSystemMaintenanceLog = new JPanel();
+	private JPanel jPanelSystemMaintenanceLog1 = new JPanel();
+	private JPanel jPanelSystemMaintenanceLog2 = new JPanel();
+	private JPanel jPanelSystemMaintenanceLog3 = new JPanel();
+	private JLabel jLabelSystemMaintenanceLogHeadder = new JLabel();
+	private JTextField jTextFieldSystemMaintenanceLogHeadder = new JTextField();
+	private JLabel jLabelSystemMaintenanceLogSortKey = new JLabel();
+	private JTextField jTextFieldSystemMaintenanceLogSortKey = new JTextField();
+	private JLabel jLabelSystemMaintenanceLogDescriptions = new JLabel();
+	private JScrollPane jScrollPaneSystemMaintenanceLogDescriptions = new JScrollPane();
+	private Editor_KanjiTextArea jTextAreaSystemMaintenanceLogDescriptions = new Editor_KanjiTextArea();
 	/**
 	 * Definition components on jPanelMenuList
 	 */
@@ -519,6 +540,8 @@ public class Editor extends JFrame {
 	private Editor_KanjiTextField jTextFieldMenuName = new Editor_KanjiTextField();
 	private JLabel jLabelMenuHelpURL = new JLabel();
 	private JTextField jTextFieldMenuHelpURL = new JTextField();
+	private JLabel jLabelMenuCrossCheckers = new JLabel();
+	private JTextField jTextFieldMenuCrossCheckers = new JTextField();
 	private JTabbedPane jTabbedPaneMenu = new JTabbedPane();
 	private JPanel jPanelMenuFunctionList = new JPanel();
 	private JScrollPane jScrollPaneMenuFunctionList = new JScrollPane();
@@ -823,10 +846,11 @@ public class Editor extends JFrame {
 	private JRadioButton jRadioButtonFunction000ConsoleOptionTimer = new JRadioButton();
 	private ButtonGroup buttonGroupFunction000ConsoleOption = new ButtonGroup();
 	private JLabel jLabelFunction000TimerDefault = new JLabel();
-	private SpinnerNumberModel spinnerNumberModelHour = new SpinnerNumberModel(00, 00, 24, 1);
-	private JSpinner jSpinnerFunction000TimerDefaultHour = new JSpinner(spinnerNumberModelHour);
-	private SpinnerNumberModel spinnerNumberModelMinuite = new SpinnerNumberModel(00, 00, 55, 5);
-	private JSpinner jSpinnerFunction000TimerDefaultMinuite = new JSpinner(spinnerNumberModelMinuite);
+	private JTextField jTextFieldFunction000TimerDefault = new JTextField();
+	//private SpinnerNumberModel spinnerNumberModelHour = new SpinnerNumberModel(00, 00, 24, 1);
+	//private JSpinner jSpinnerFunction000TimerDefaultHour = new JSpinner(spinnerNumberModelHour);
+	//private SpinnerNumberModel spinnerNumberModelMinuite = new SpinnerNumberModel(00, 00, 55, 5);
+	//private JSpinner jSpinnerFunction000TimerDefaultMinuite = new JSpinner(spinnerNumberModelMinuite);
 	private JLabel jLabelFunction000TimerMessage = new JLabel();
 	private JTextField jTextFieldFunction000TimerMessage = new JTextField();
 	private JScrollPane jScrollPaneFunction000Script = new JScrollPane();
@@ -1016,6 +1040,7 @@ public class Editor extends JFrame {
 	private Editor_KanjiTextField jTextFieldFunction100FilterCaptionOptionValue = new Editor_KanjiTextField();
 	private JLabel jLabelFunction100FilterPromptOption = new JLabel();
 	private JRadioButton jRadioButtonFunction100FilterPromptOptionNone = new JRadioButton();
+	private JRadioButton jRadioButtonFunction100FilterPromptOptionList0 = new JRadioButton();
 	private JRadioButton jRadioButtonFunction100FilterPromptOptionList1 = new JRadioButton();
 	private JRadioButton jRadioButtonFunction100FilterPromptOptionList2 = new JRadioButton();
 	private JRadioButton jRadioButtonFunction100FilterPromptOptionCall = new JRadioButton();
@@ -1161,6 +1186,7 @@ public class Editor extends JFrame {
 	private Editor_KanjiTextField jTextFieldFunction110FilterCaptionOptionValue = new Editor_KanjiTextField();
 	private JLabel jLabelFunction110FilterPromptOption = new JLabel();
 	private JRadioButton jRadioButtonFunction110FilterPromptOptionNone = new JRadioButton();
+	private JRadioButton jRadioButtonFunction110FilterPromptOptionList0 = new JRadioButton();
 	private JRadioButton jRadioButtonFunction110FilterPromptOptionList1 = new JRadioButton();
 	private JRadioButton jRadioButtonFunction110FilterPromptOptionList2 = new JRadioButton();
 	private JRadioButton jRadioButtonFunction110FilterPromptOptionCall = new JRadioButton();
@@ -1813,6 +1839,7 @@ public class Editor extends JFrame {
 	private Editor_KanjiTextField jTextFieldFunction300DetailFilterCaptionOptionValue = new Editor_KanjiTextField();
 	private JLabel jLabelFunction300DetailFilterPromptOption = new JLabel();
 	private JRadioButton jRadioButtonFunction300DetailFilterPromptOptionNone = new JRadioButton();
+	private JRadioButton jRadioButtonFunction300DetailFilterPromptOptionList0 = new JRadioButton();
 	private JRadioButton jRadioButtonFunction300DetailFilterPromptOptionList1 = new JRadioButton();
 	private JRadioButton jRadioButtonFunction300DetailFilterPromptOptionList2 = new JRadioButton();
 	private JRadioButton jRadioButtonFunction300DetailFilterPromptOptionCall = new JRadioButton();
@@ -2945,6 +2972,8 @@ public class Editor extends JFrame {
 		jMenuItemToolSQL.addActionListener(new Editor_jMenuItemToolSQL_actionAdapter(this));
 		jMenuItemToolConnectDB.setText(res.getString("DBConnect"));
 		jMenuItemToolConnectDB.addActionListener(new Editor_jMenuItemToolConnectDB_actionAdapter(this));
+		jMenuItemToolCheckAllModules.setText(res.getString("CheckAllModules"));
+		jMenuItemToolCheckAllModules.addActionListener(new Editor_jMenuItemToolCheckAllModules_actionAdapter(this));
 		jMenuItemToolCheckFunctionsCalled.setText(res.getString("CheckFunctionsCalled"));
 		jMenuItemToolCheckFunctionsCalled.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_K,ActionEvent.CTRL_MASK));
 		jMenuItemToolCheckFunctionsCalled.addActionListener(new Editor_jMenuItemToolCheckFunctionsCalled_actionAdapter(this));
@@ -2993,6 +3022,7 @@ public class Editor extends JFrame {
 		jMenuJumpBookmark.add(jMenuItemJumpBookmark9);
 		jMenuTool.add(jMenuItemToolCreateTable);
 		jMenuTool.add(jMenuItemToolConnectDB);
+		jMenuTool.add(jMenuItemToolCheckAllModules);
 		jMenuTool.add(jMenuItemToolSQL);
 		jMenuTool.add(jMenuItemToolCheckFunctionsCalled);
 		jMenuTool.add(jMenuItemToolCallModeler);
@@ -3757,6 +3787,90 @@ public class Editor extends JFrame {
 		jPanelSystemPrintFontTop.add(jTextFieldSystemPrintPDFFontName);
 		jPanelSystemPrintFontTop.add(jLabelSystemPrintPDFEncoding);
 		jPanelSystemPrintFontTop.add(jTextFieldSystemPrintPDFEncoding);
+		//
+		//(SystemMaintenanceLog)//
+		jTabbedPaneSystem.addTab(res.getString("SystemMaintenanceLog"), jSplitPaneSystemMaintenanceLog);
+		jTabbedPaneSystem.setIconAt(5, imageIconFunction290);
+		jSplitPaneSystemMaintenanceLog.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		jSplitPaneSystemMaintenanceLog.setBorder(null);
+		jSplitPaneSystemMaintenanceLog.setDividerLocation(200);
+		jSplitPaneSystemMaintenanceLog.setFocusable(false);
+		jScrollPaneSystemMaintenanceLog.setBorder(null);
+		jScrollPaneSystemMaintenanceLog.addMouseListener(new Editor_jScrollPaneSystemMaintenanceLog_mouseAdapter(this));
+		jPanelSystemMaintenanceLog.setLayout(new BorderLayout());
+		jPanelSystemMaintenanceLog.setBorder(BorderFactory.createEtchedBorder());
+		jPanelSystemMaintenanceLog1.setLayout(null);
+		jPanelSystemMaintenanceLog1.setBorder(null);
+		jPanelSystemMaintenanceLog1.setPreferredSize(new Dimension(10, 38));
+		jPanelSystemMaintenanceLog2.setLayout(new BorderLayout());
+		jPanelSystemMaintenanceLog2.setBorder(null);
+		jPanelSystemMaintenanceLog3.setLayout(null);
+		jPanelSystemMaintenanceLog3.setBorder(null);
+		jPanelSystemMaintenanceLog3.setPreferredSize(new Dimension(105, 10));
+		jLabelSystemMaintenanceLogHeadder.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemMaintenanceLogHeadder.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelSystemMaintenanceLogHeadder.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelSystemMaintenanceLogHeadder.setText(res.getString("SystemMaintenanceLogVersion"));
+		jLabelSystemMaintenanceLogHeadder.setBounds(new Rectangle(11, 12, 86, 15));
+		jTextFieldSystemMaintenanceLogHeadder.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldSystemMaintenanceLogHeadder.setBounds(new Rectangle(105, 9, 258, 22));
+		jLabelSystemMaintenanceLogSortKey.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemMaintenanceLogSortKey.setRequestFocusEnabled(true);
+		jLabelSystemMaintenanceLogSortKey.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelSystemMaintenanceLogSortKey.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelSystemMaintenanceLogSortKey.setText(res.getString("SystemMaintenanceLogSortKey"));
+		jLabelSystemMaintenanceLogSortKey.setBounds(new Rectangle(394, 12, 101, 15));
+		jTextFieldSystemMaintenanceLogSortKey.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldSystemMaintenanceLogSortKey.setBounds(new Rectangle(502, 9, 120, 22));
+		jLabelSystemMaintenanceLogDescriptions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemMaintenanceLogDescriptions.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelSystemMaintenanceLogDescriptions.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelSystemMaintenanceLogDescriptions.setText(res.getString("SystemMaintenanceLogRemarks"));
+		jLabelSystemMaintenanceLogDescriptions.setBounds(new Rectangle(11, 2, 86, 15));
+		jTextAreaSystemMaintenanceLogDescriptions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextAreaSystemMaintenanceLogDescriptions.setLineWrap(true);
+		jScrollPaneSystemMaintenanceLogDescriptions.setBounds(new Rectangle(105, 35, 600, 42));
+		jScrollPaneSystemMaintenanceLogDescriptions.getViewport().add(jTextAreaSystemMaintenanceLogDescriptions, null);
+		jPanelSystemMaintenanceLog.add(jPanelSystemMaintenanceLog1, BorderLayout.NORTH);
+		jPanelSystemMaintenanceLog.add(jPanelSystemMaintenanceLog2, BorderLayout.CENTER);
+		jPanelSystemMaintenanceLog1.add(jLabelSystemMaintenanceLogHeadder, null);
+		jPanelSystemMaintenanceLog1.add(jTextFieldSystemMaintenanceLogHeadder, null);
+		jPanelSystemMaintenanceLog1.add(jLabelSystemMaintenanceLogSortKey, null);
+		jPanelSystemMaintenanceLog1.add(jTextFieldSystemMaintenanceLogSortKey, null);
+		jPanelSystemMaintenanceLog2.add(jPanelSystemMaintenanceLog3, BorderLayout.WEST);
+		jPanelSystemMaintenanceLog2.add(jScrollPaneSystemMaintenanceLogDescriptions, BorderLayout.CENTER);
+		jPanelSystemMaintenanceLog3.add(jLabelSystemMaintenanceLogDescriptions, null);
+		jScrollPaneSystemMaintenanceLog.getViewport().add(jTableSystemMaintenanceLog, null);
+		jSplitPaneSystemMaintenanceLog.add(jScrollPaneSystemMaintenanceLog, JSplitPane.TOP);
+		jSplitPaneSystemMaintenanceLog.add(jPanelSystemMaintenanceLog, JSplitPane.BOTTOM);
+		//
+		jTableSystemMaintenanceLog.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableSystemMaintenanceLog.setBackground(SystemColor.control);
+		jTableSystemMaintenanceLog.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		jTableSystemMaintenanceLog.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		jTableSystemMaintenanceLog.getSelectionModel().addListSelectionListener(new Editor_jTableSystemMaintenanceLog_listSelectionAdapter(this));
+		jTableSystemMaintenanceLog.addMouseListener(new Editor_jTableSystemMaintenanceLog_mouseAdapter(this));
+		jTableSystemMaintenanceLog.addFocusListener(new Editor_FocusListener());
+		jTableSystemMaintenanceLog.addKeyListener(new Editor_TableKeyAdapter(this));
+		tableModelSystemMaintenanceLog.addColumn("NO.");
+		tableModelSystemMaintenanceLog.addColumn(res.getString("SystemMaintenanceLogDateTime"));
+		tableModelSystemMaintenanceLog.addColumn(res.getString("SystemMaintenanceLogVersion"));
+		tableModelSystemMaintenanceLog.addColumn(res.getString("SystemMaintenanceLogRemarks"));
+		column0 = jTableSystemMaintenanceLog.getColumnModel().getColumn(0);
+		column1 = jTableSystemMaintenanceLog.getColumnModel().getColumn(1);
+		column2 = jTableSystemMaintenanceLog.getColumnModel().getColumn(2);
+		column3 = jTableSystemMaintenanceLog.getColumnModel().getColumn(3);
+		column0.setPreferredWidth(37);
+		column1.setPreferredWidth(120);
+		column2.setPreferredWidth(100);
+		column3.setPreferredWidth(600);
+		column0.setCellRenderer(rendererAlignmentCenter);
+		column1.setCellRenderer(rendererAlignmentLeft);
+		column2.setCellRenderer(rendererAlignmentLeft);
+		column3.setCellRenderer(rendererAlignmentLeft);
+		jTableSystemMaintenanceLog.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		rendererTableHeader = (DefaultTableCellRenderer)jTableSystemMaintenanceLog.getTableHeader().getDefaultRenderer();
+		rendererTableHeader.setHorizontalAlignment(2); //LEFT//
 	}
 	class JScrollPaneSystemLoginScriptChangeListener implements javax.swing.event.ChangeListener {
 		public void stateChanged(javax.swing.event.ChangeEvent event) {
@@ -3815,36 +3929,45 @@ public class Editor extends JFrame {
 	void initComponentsForMenu() {
 		jPanelMenu.setLayout(new BorderLayout());
 		jPanelMenu.setBorder(null);
-		jPanelMenuTop.setPreferredSize(new Dimension(10, 68));
+		jPanelMenuTop.setPreferredSize(new Dimension(10, 96));
 		jPanelMenuTop.setBorder(BorderFactory.createEtchedBorder());
 		jPanelMenuTop.setLayout(null);
 		jLabelMenuID.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelMenuID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelMenuID.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelMenuID.setText(res.getString("MenuID"));
-		jLabelMenuID.setBounds(new Rectangle(11, 12, 86, 15));
+		jLabelMenuID.setBounds(new Rectangle(11, 12, 146, 15));
 		jTextFieldMenuID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldMenuID.setBounds(new Rectangle(105, 9, 40, 22));
+		jTextFieldMenuID.setBounds(new Rectangle(165, 9, 40, 22));
 		jTextFieldMenuID.setEditable(false);
 		jLabelMenuName.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelMenuName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelMenuName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelMenuName.setText(res.getString("MenuName"));
-		jLabelMenuName.setBounds(new Rectangle(194, 12, 86, 15));
+		jLabelMenuName.setBounds(new Rectangle(244, 12, 96, 15));
 		jTextFieldMenuName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldMenuName.setBounds(new Rectangle(287, 9, 258, 22));
+		jTextFieldMenuName.setBounds(new Rectangle(347, 9, 258, 22));
+		jLabelMenuCrossCheckers.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelMenuCrossCheckers.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelMenuCrossCheckers.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelMenuCrossCheckers.setText(res.getString("MenuCrossCheckers"));
+		jLabelMenuCrossCheckers.setBounds(new Rectangle(11, 40, 146, 15));
+		jTextFieldMenuCrossCheckers.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldMenuCrossCheckers.setBounds(new Rectangle(165, 37, 440, 22));
 		jLabelMenuHelpURL.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelMenuHelpURL.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelMenuHelpURL.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelMenuHelpURL.setText(res.getString("MenuHelpURL"));
-		jLabelMenuHelpURL.setBounds(new Rectangle(11, 40, 86, 15));
+		jLabelMenuHelpURL.setBounds(new Rectangle(11, 68, 146, 15));
 		jTextFieldMenuHelpURL.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldMenuHelpURL.setBounds(new Rectangle(105, 37, 440, 22));
+		jTextFieldMenuHelpURL.setBounds(new Rectangle(165, 65, 440, 22));
 		jPanelMenu.add(jPanelMenuTop, BorderLayout.NORTH);
 		jPanelMenuTop.add(jLabelMenuID);
 		jPanelMenuTop.add(jTextFieldMenuID);
 		jPanelMenuTop.add(jLabelMenuName);
 		jPanelMenuTop.add(jTextFieldMenuName);
+		jPanelMenuTop.add(jLabelMenuCrossCheckers);
+		jPanelMenuTop.add(jTextFieldMenuCrossCheckers);
 		jPanelMenuTop.add(jLabelMenuHelpURL);
 		jPanelMenuTop.add(jTextFieldMenuHelpURL);
 		jPanelMenu.add(jTabbedPaneMenu,  BorderLayout.CENTER);
@@ -5180,21 +5303,23 @@ public class Editor extends JFrame {
 		jLabelFunction000TimerDefault.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction000TimerDefault.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction000TimerDefault.setText(res.getString("TimerDefault"));
-		jLabelFunction000TimerDefault.setBounds(new Rectangle(469, 40, 86, 15));
-		jSpinnerFunction000TimerDefaultHour.setFont(new java.awt.Font("SansSerif", 0, 14));
-		jSpinnerFunction000TimerDefaultHour.setBounds(new Rectangle(563, 39, 40, 18));
-	    JSpinner.NumberEditor editorHour = new JSpinner.NumberEditor(jSpinnerFunction000TimerDefaultHour, "00");
-	    jSpinnerFunction000TimerDefaultHour.setEditor(editorHour);
-	    JFormattedTextField ftextHour = editorHour.getTextField();
-	    ftextHour.setEditable(false);
-		ftextHour.setBackground(Color.white);
-		jSpinnerFunction000TimerDefaultMinuite.setFont(new java.awt.Font("SansSerif", 0, 14));
-		jSpinnerFunction000TimerDefaultMinuite.setBounds(new Rectangle(603, 39, 40, 18));
-	    JSpinner.NumberEditor editorMin = new JSpinner.NumberEditor(jSpinnerFunction000TimerDefaultMinuite, "00");
-	    jSpinnerFunction000TimerDefaultMinuite.setEditor(editorMin);
-	    JFormattedTextField ftextMin = editorMin.getTextField();
-	    ftextMin.setEditable(false);
-		ftextMin.setBackground(Color.white);
+		jLabelFunction000TimerDefault.setBounds(new Rectangle(400, 39, 96, 15));
+		jTextFieldFunction000TimerDefault.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldFunction000TimerDefault.setBounds(new Rectangle(504, 36, 309, 22));
+//		jSpinnerFunction000TimerDefaultHour.setFont(new java.awt.Font("SansSerif", 0, 14));
+//		jSpinnerFunction000TimerDefaultHour.setBounds(new Rectangle(563, 39, 40, 18));
+//	    JSpinner.NumberEditor editorHour = new JSpinner.NumberEditor(jSpinnerFunction000TimerDefaultHour, "00");
+//	    jSpinnerFunction000TimerDefaultHour.setEditor(editorHour);
+//	    JFormattedTextField ftextHour = editorHour.getTextField();
+//	    ftextHour.setEditable(false);
+//		ftextHour.setBackground(Color.white);
+//		jSpinnerFunction000TimerDefaultMinuite.setFont(new java.awt.Font("SansSerif", 0, 14));
+//		jSpinnerFunction000TimerDefaultMinuite.setBounds(new Rectangle(603, 39, 40, 18));
+//	    JSpinner.NumberEditor editorMin = new JSpinner.NumberEditor(jSpinnerFunction000TimerDefaultMinuite, "00");
+//	    jSpinnerFunction000TimerDefaultMinuite.setEditor(editorMin);
+//	    JFormattedTextField ftextMin = editorMin.getTextField();
+//	    ftextMin.setEditable(false);
+//		ftextMin.setBackground(Color.white);
 		jLabelFunction000TimerMessage.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction000TimerMessage.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction000TimerMessage.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -5214,8 +5339,9 @@ public class Editor extends JFrame {
 		jPanelFunction000Top.add(jRadioButtonFunction000ConsoleOptionYes);
 		jPanelFunction000Top.add(jRadioButtonFunction000ConsoleOptionTimer);
 		jPanelFunction000Top.add(jLabelFunction000TimerDefault);
-		jPanelFunction000Top.add(jSpinnerFunction000TimerDefaultHour);
-		jPanelFunction000Top.add(jSpinnerFunction000TimerDefaultMinuite);
+		jPanelFunction000Top.add(jTextFieldFunction000TimerDefault);
+		//jPanelFunction000Top.add(jSpinnerFunction000TimerDefaultHour);
+		//jPanelFunction000Top.add(jSpinnerFunction000TimerDefaultMinuite);
 		jPanelFunction000Top.add(jLabelFunction000TimerMessage);
 		jPanelFunction000Top.add(jTextFieldFunction000TimerMessage);
 		//
@@ -6051,36 +6177,42 @@ public class Editor extends JFrame {
 		jRadioButtonFunction100FilterPromptOptionNone.setBounds(new Rectangle(115, 149, 60, 22));
 		jRadioButtonFunction100FilterPromptOptionNone.setEnabled(false);
 		jRadioButtonFunction100FilterPromptOptionNone.addChangeListener(new Editor_jRadioButtonFunction100FilterPromptOption_changeAdapter(this));
+		jRadioButtonFunction100FilterPromptOptionList0.setText(res.getString("InputAssistList"));
+		jRadioButtonFunction100FilterPromptOptionList0.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction100FilterPromptOptionList0.setBounds(new Rectangle(175, 149, 100, 22));
+		jRadioButtonFunction100FilterPromptOptionList0.setEnabled(false);
+		jRadioButtonFunction100FilterPromptOptionList0.addChangeListener(new Editor_jRadioButtonFunction100FilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction100FilterPromptOptionList1.setText(res.getString("OptionalList"));
 		jRadioButtonFunction100FilterPromptOptionList1.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterPromptOptionList1.setBounds(new Rectangle(175, 149, 100, 22));
+		jRadioButtonFunction100FilterPromptOptionList1.setBounds(new Rectangle(285, 149, 100, 22));
 		jRadioButtonFunction100FilterPromptOptionList1.setEnabled(false);
 		jRadioButtonFunction100FilterPromptOptionList1.addChangeListener(new Editor_jRadioButtonFunction100FilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction100FilterPromptOptionList2.setText(res.getString("RequiredList"));
 		jRadioButtonFunction100FilterPromptOptionList2.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterPromptOptionList2.setBounds(new Rectangle(285, 149, 100, 22));
+		jRadioButtonFunction100FilterPromptOptionList2.setBounds(new Rectangle(395, 149, 100, 22));
 		jRadioButtonFunction100FilterPromptOptionList2.setEnabled(false);
 		jRadioButtonFunction100FilterPromptOptionList2.addChangeListener(new Editor_jRadioButtonFunction100FilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction100FilterPromptOptionCall.setText(res.getString("CallPromptFunction"));
 		jRadioButtonFunction100FilterPromptOptionCall.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterPromptOptionCall.setBounds(new Rectangle(395, 149, 78, 22));
+		jRadioButtonFunction100FilterPromptOptionCall.setBounds(new Rectangle(505, 149, 78, 22));
 		jRadioButtonFunction100FilterPromptOptionCall.setEnabled(false);
 		jRadioButtonFunction100FilterPromptOptionCall.addChangeListener(new Editor_jRadioButtonFunction100FilterPromptOption_changeAdapter(this));
 		buttonGroupFunction100FilterPromptOption.add(jRadioButtonFunction100FilterPromptOptionNone);
+		buttonGroupFunction100FilterPromptOption.add(jRadioButtonFunction100FilterPromptOptionList0);
 		buttonGroupFunction100FilterPromptOption.add(jRadioButtonFunction100FilterPromptOptionList1);
 		buttonGroupFunction100FilterPromptOption.add(jRadioButtonFunction100FilterPromptOptionList2);
 		buttonGroupFunction100FilterPromptOption.add(jRadioButtonFunction100FilterPromptOptionCall);
 		jTextFieldFunction100FilterPromptOptionCallFunctionID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100FilterPromptOptionCallFunctionID.setBounds(new Rectangle(475, 149, 80, 22));
+		jTextFieldFunction100FilterPromptOptionCallFunctionID.setBounds(new Rectangle(585, 149, 80, 22));
 		jTextFieldFunction100FilterPromptOptionCallFunctionID.setEnabled(false);
 		jTextFieldFunction100FilterPromptOptionCallFunctionID.addKeyListener(new Editor_jTextFieldFunction100FilterPromptOptionCallFunctionID_keyAdapter(this));
 		jTextFieldFunction100FilterPromptOptionCallFunctionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100FilterPromptOptionCallFunctionName.setBounds(new Rectangle(560, 149, 204, 22));
+		jTextFieldFunction100FilterPromptOptionCallFunctionName.setBounds(new Rectangle(670, 149, 204, 22));
 		jTextFieldFunction100FilterPromptOptionCallFunctionName.setEnabled(false);
 		jTextFieldFunction100FilterPromptOptionCallFunctionName.setEditable(false);
 		jButtonFunction100FilterPromptOptionCallFunctionExchange.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jButtonFunction100FilterPromptOptionCallFunctionExchange.setText(res.getString("ExchangeParms"));
-		jButtonFunction100FilterPromptOptionCallFunctionExchange.setBounds(new Rectangle(764, 148, 60, 23));
+		jButtonFunction100FilterPromptOptionCallFunctionExchange.setBounds(new Rectangle(874, 148, 60, 23));
 		jButtonFunction100FilterPromptOptionCallFunctionExchange.setEnabled(false);
 		jButtonFunction100FilterPromptOptionCallFunctionExchange.addActionListener(new Editor_jButtonToEditPromptOptionCallFunctionExchange_actionAdapter(this));
 		jPanelFunction100FilterList.setLayout(null);
@@ -6117,6 +6249,7 @@ public class Editor extends JFrame {
 		jPanelFunction100FilterList.add(jTextFieldFunction100FilterCaptionOptionValue);
 		jPanelFunction100FilterList.add(jLabelFunction100FilterPromptOption);
 		jPanelFunction100FilterList.add(jRadioButtonFunction100FilterPromptOptionNone);
+		jPanelFunction100FilterList.add(jRadioButtonFunction100FilterPromptOptionList0);
 		jPanelFunction100FilterList.add(jRadioButtonFunction100FilterPromptOptionList1);
 		jPanelFunction100FilterList.add(jRadioButtonFunction100FilterPromptOptionList2);
 		jPanelFunction100FilterList.add(jRadioButtonFunction100FilterPromptOptionCall);
@@ -6828,36 +6961,42 @@ public class Editor extends JFrame {
 		jRadioButtonFunction110FilterPromptOptionNone.setBounds(new Rectangle(115, 149, 60, 22));
 		jRadioButtonFunction110FilterPromptOptionNone.setEnabled(false);
 		jRadioButtonFunction110FilterPromptOptionNone.addChangeListener(new Editor_jRadioButtonFunction110FilterPromptOption_changeAdapter(this));
+		jRadioButtonFunction110FilterPromptOptionList0.setText(res.getString("InputAssistList"));
+		jRadioButtonFunction110FilterPromptOptionList0.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction110FilterPromptOptionList0.setBounds(new Rectangle(175, 149, 100, 22));
+		jRadioButtonFunction110FilterPromptOptionList0.setEnabled(false);
+		jRadioButtonFunction110FilterPromptOptionList0.addChangeListener(new Editor_jRadioButtonFunction110FilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction110FilterPromptOptionList1.setText(res.getString("OptionalList"));
 		jRadioButtonFunction110FilterPromptOptionList1.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterPromptOptionList1.setBounds(new Rectangle(175, 149, 100, 22));
+		jRadioButtonFunction110FilterPromptOptionList1.setBounds(new Rectangle(285, 149, 100, 22));
 		jRadioButtonFunction110FilterPromptOptionList1.setEnabled(false);
 		jRadioButtonFunction110FilterPromptOptionList1.addChangeListener(new Editor_jRadioButtonFunction110FilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction110FilterPromptOptionList2.setText(res.getString("RequiredList"));
 		jRadioButtonFunction110FilterPromptOptionList2.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterPromptOptionList2.setBounds(new Rectangle(285, 149, 100, 22));
+		jRadioButtonFunction110FilterPromptOptionList2.setBounds(new Rectangle(395, 149, 100, 22));
 		jRadioButtonFunction110FilterPromptOptionList2.setEnabled(false);
 		jRadioButtonFunction110FilterPromptOptionList2.addChangeListener(new Editor_jRadioButtonFunction110FilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction110FilterPromptOptionCall.setText(res.getString("CallPromptFunction"));
 		jRadioButtonFunction110FilterPromptOptionCall.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterPromptOptionCall.setBounds(new Rectangle(395, 149, 78, 22));
+		jRadioButtonFunction110FilterPromptOptionCall.setBounds(new Rectangle(505, 149, 78, 22));
 		jRadioButtonFunction110FilterPromptOptionCall.setEnabled(false);
 		jRadioButtonFunction110FilterPromptOptionCall.addChangeListener(new Editor_jRadioButtonFunction110FilterPromptOption_changeAdapter(this));
 		buttonGroupFunction110FilterPromptOption.add(jRadioButtonFunction110FilterPromptOptionNone);
+		buttonGroupFunction110FilterPromptOption.add(jRadioButtonFunction110FilterPromptOptionList0);
 		buttonGroupFunction110FilterPromptOption.add(jRadioButtonFunction110FilterPromptOptionList1);
 		buttonGroupFunction110FilterPromptOption.add(jRadioButtonFunction110FilterPromptOptionList2);
 		buttonGroupFunction110FilterPromptOption.add(jRadioButtonFunction110FilterPromptOptionCall);
 		jTextFieldFunction110FilterPromptOptionCallFunctionID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110FilterPromptOptionCallFunctionID.setBounds(new Rectangle(475, 149, 80, 22));
+		jTextFieldFunction110FilterPromptOptionCallFunctionID.setBounds(new Rectangle(585, 149, 80, 22));
 		jTextFieldFunction110FilterPromptOptionCallFunctionID.setEnabled(false);
 		jTextFieldFunction110FilterPromptOptionCallFunctionID.addKeyListener(new Editor_jTextFieldFunction110FilterPromptOptionCallFunctionID_keyAdapter(this));
 		jTextFieldFunction110FilterPromptOptionCallFunctionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110FilterPromptOptionCallFunctionName.setBounds(new Rectangle(560, 149, 204, 22));
+		jTextFieldFunction110FilterPromptOptionCallFunctionName.setBounds(new Rectangle(670, 149, 204, 22));
 		jTextFieldFunction110FilterPromptOptionCallFunctionName.setEnabled(false);
 		jTextFieldFunction110FilterPromptOptionCallFunctionName.setEditable(false);
 		jButtonFunction110FilterPromptOptionCallFunctionExchange.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jButtonFunction110FilterPromptOptionCallFunctionExchange.setText(res.getString("ExchangeParms"));
-		jButtonFunction110FilterPromptOptionCallFunctionExchange.setBounds(new Rectangle(764, 148, 60, 23));
+		jButtonFunction110FilterPromptOptionCallFunctionExchange.setBounds(new Rectangle(874, 148, 60, 23));
 		jButtonFunction110FilterPromptOptionCallFunctionExchange.setEnabled(false);
 		jButtonFunction110FilterPromptOptionCallFunctionExchange.addActionListener(new Editor_jButtonToEditPromptOptionCallFunctionExchange_actionAdapter(this));
 		jPanelFunction110FilterList.setLayout(null);
@@ -6894,6 +7033,7 @@ public class Editor extends JFrame {
 		jPanelFunction110FilterList.add(jTextFieldFunction110FilterCaptionOptionValue);
 		jPanelFunction110FilterList.add(jLabelFunction110FilterPromptOption);
 		jPanelFunction110FilterList.add(jRadioButtonFunction110FilterPromptOptionNone);
+		jPanelFunction110FilterList.add(jRadioButtonFunction110FilterPromptOptionList0);
 		jPanelFunction110FilterList.add(jRadioButtonFunction110FilterPromptOptionList1);
 		jPanelFunction110FilterList.add(jRadioButtonFunction110FilterPromptOptionList2);
 		jPanelFunction110FilterList.add(jRadioButtonFunction110FilterPromptOptionCall);
@@ -9815,36 +9955,42 @@ public class Editor extends JFrame {
 		jRadioButtonFunction300DetailFilterPromptOptionNone.setBounds(new Rectangle(115, 149, 60, 22));
 		jRadioButtonFunction300DetailFilterPromptOptionNone.setEnabled(false);
 		jRadioButtonFunction300DetailFilterPromptOptionNone.addChangeListener(new Editor_jRadioButtonFunction300DetailFilterPromptOption_changeAdapter(this));
+		jRadioButtonFunction300DetailFilterPromptOptionList0.setText(res.getString("InputAssistList"));
+		jRadioButtonFunction300DetailFilterPromptOptionList0.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jRadioButtonFunction300DetailFilterPromptOptionList0.setBounds(new Rectangle(175, 149, 100, 22));
+		jRadioButtonFunction300DetailFilterPromptOptionList0.setEnabled(false);
+		jRadioButtonFunction300DetailFilterPromptOptionList0.addChangeListener(new Editor_jRadioButtonFunction300DetailFilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction300DetailFilterPromptOptionList1.setText(res.getString("OptionalList"));
 		jRadioButtonFunction300DetailFilterPromptOptionList1.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterPromptOptionList1.setBounds(new Rectangle(175, 149, 100, 22));
+		jRadioButtonFunction300DetailFilterPromptOptionList1.setBounds(new Rectangle(285, 149, 100, 22));
 		jRadioButtonFunction300DetailFilterPromptOptionList1.setEnabled(false);
 		jRadioButtonFunction300DetailFilterPromptOptionList1.addChangeListener(new Editor_jRadioButtonFunction300DetailFilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction300DetailFilterPromptOptionList2.setText(res.getString("RequiredList"));
 		jRadioButtonFunction300DetailFilterPromptOptionList2.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterPromptOptionList2.setBounds(new Rectangle(285, 149, 100, 22));
+		jRadioButtonFunction300DetailFilterPromptOptionList2.setBounds(new Rectangle(395, 149, 100, 22));
 		jRadioButtonFunction300DetailFilterPromptOptionList2.setEnabled(false);
 		jRadioButtonFunction300DetailFilterPromptOptionList2.addChangeListener(new Editor_jRadioButtonFunction300DetailFilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction300DetailFilterPromptOptionCall.setText(res.getString("CallPromptFunction"));
 		jRadioButtonFunction300DetailFilterPromptOptionCall.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterPromptOptionCall.setBounds(new Rectangle(395, 149, 78, 22));
+		jRadioButtonFunction300DetailFilterPromptOptionCall.setBounds(new Rectangle(505, 149, 78, 22));
 		jRadioButtonFunction300DetailFilterPromptOptionCall.setEnabled(false);
 		jRadioButtonFunction300DetailFilterPromptOptionCall.addChangeListener(new Editor_jRadioButtonFunction300DetailFilterPromptOption_changeAdapter(this));
 		buttonGroupFunction300DetailFilterPromptOption.add(jRadioButtonFunction300DetailFilterPromptOptionNone);
+		buttonGroupFunction300DetailFilterPromptOption.add(jRadioButtonFunction300DetailFilterPromptOptionList0);
 		buttonGroupFunction300DetailFilterPromptOption.add(jRadioButtonFunction300DetailFilterPromptOptionList1);
 		buttonGroupFunction300DetailFilterPromptOption.add(jRadioButtonFunction300DetailFilterPromptOptionList2);
 		buttonGroupFunction300DetailFilterPromptOption.add(jRadioButtonFunction300DetailFilterPromptOptionCall);
 		jTextFieldFunction300DetailFilterPromptOptionCallFunctionID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailFilterPromptOptionCallFunctionID.setBounds(new Rectangle(475, 149, 80, 22));
+		jTextFieldFunction300DetailFilterPromptOptionCallFunctionID.setBounds(new Rectangle(585, 149, 80, 22));
 		jTextFieldFunction300DetailFilterPromptOptionCallFunctionID.setEnabled(false);
 		jTextFieldFunction300DetailFilterPromptOptionCallFunctionID.addKeyListener(new Editor_jTextFieldFunction300DetailFilterPromptOptionCallFunctionID_keyAdapter(this));
 		jTextFieldFunction300DetailFilterPromptOptionCallFunctionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailFilterPromptOptionCallFunctionName.setBounds(new Rectangle(560, 149, 204, 22));
+		jTextFieldFunction300DetailFilterPromptOptionCallFunctionName.setBounds(new Rectangle(670, 149, 204, 22));
 		jTextFieldFunction300DetailFilterPromptOptionCallFunctionName.setEnabled(false);
 		jTextFieldFunction300DetailFilterPromptOptionCallFunctionName.setEditable(false);
 		jButtonFunction300DetailFilterPromptOptionCallFunctionExchange.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jButtonFunction300DetailFilterPromptOptionCallFunctionExchange.setText(res.getString("ExchangeParms"));
-		jButtonFunction300DetailFilterPromptOptionCallFunctionExchange.setBounds(new Rectangle(764, 148, 60, 23));
+		jButtonFunction300DetailFilterPromptOptionCallFunctionExchange.setBounds(new Rectangle(874, 148, 60, 23));
 		jButtonFunction300DetailFilterPromptOptionCallFunctionExchange.setEnabled(false);
 		jButtonFunction300DetailFilterPromptOptionCallFunctionExchange.addActionListener(new Editor_jButtonToEditPromptOptionCallFunctionExchange_actionAdapter(this));
 		jPanelFunction300DetailFilterList.setLayout(null);
@@ -9881,6 +10027,7 @@ public class Editor extends JFrame {
 		jPanelFunction300DetailFilterList.add(jTextFieldFunction300DetailFilterCaptionOptionValue);
 		jPanelFunction300DetailFilterList.add(jLabelFunction300DetailFilterPromptOption);
 		jPanelFunction300DetailFilterList.add(jRadioButtonFunction300DetailFilterPromptOptionNone);
+		jPanelFunction300DetailFilterList.add(jRadioButtonFunction300DetailFilterPromptOptionList0);
 		jPanelFunction300DetailFilterList.add(jRadioButtonFunction300DetailFilterPromptOptionList1);
 		jPanelFunction300DetailFilterList.add(jRadioButtonFunction300DetailFilterPromptOptionList2);
 		jPanelFunction300DetailFilterList.add(jRadioButtonFunction300DetailFilterPromptOptionCall);
@@ -11689,6 +11836,7 @@ public class Editor extends JFrame {
 	public String getStringValueOfDateTime(String timeFormat) {
 		String monthStr = "";
 		String dayStr = "";
+		String underbar = "";
 		String hourStr = "";
 		String minStr = "";
 		String secStr = "";
@@ -11711,7 +11859,11 @@ public class Editor extends JFrame {
 			dayStr = Integer.toString(day);
 		}
 		//
-		if (timeFormat.equals("withTime")) {
+		if (timeFormat.equals("withUnderbarAndTime")) {
+			underbar = "_";
+		}
+		//
+		if (timeFormat.equals("withTime") || timeFormat.equals("withUnderbarAndTime")) {
 			int hour = calendar.get(Calendar.HOUR_OF_DAY);
 			if (hour < 10) {
 				hourStr = "0" + Integer.toString(hour);
@@ -11734,8 +11886,30 @@ public class Editor extends JFrame {
 			}
 		}
 		//
-		returnValue = Integer.toString(year) + monthStr + dayStr + hourStr + minStr + secStr;
+		returnValue = Integer.toString(year) + monthStr + dayStr + underbar + hourStr + minStr + secStr;
 		return returnValue;
+	}
+	
+	public String getCaseShiftValue(String originalString, String direction) {
+		StringBuffer bf = new StringBuffer();
+		for( int i=0; i < originalString.length(); i++ ) {
+            char c = originalString.charAt( i );
+            if (( c<='\u007e' ) || ( c=='\u00a5' ) || 
+                ( c=='\u203e' ) || ( c>='\uff61' && c<='\uff9f' )) {
+            	if (direction.equals("Lower")) {
+            		bf.append(originalString.substring(i, i+1).toLowerCase());
+            	} else {
+                	if (direction.equals("Upper")) {
+                		bf.append(originalString.substring(i, i+1).toUpperCase());
+                	} else {
+                    	bf.append(originalString.substring(i, i+1));
+                	}
+            	}
+            } else {
+            	bf.append(originalString.substring(i, i+1));
+            }
+        }
+		return bf.toString();
 	}
 	
 	ArrayList<String> getOptionList(String options) {
@@ -12092,6 +12266,20 @@ public class Editor extends JFrame {
 						usage = res.getString("UsageBatchFieldPrompter");
 						break;
 					}
+				}
+			}
+		}
+		//
+		if (element.getAttribute("Type").equals("XF100")
+				|| element.getAttribute("Type").equals("XF110") 
+				|| element.getAttribute("Type").equals("XF300")) { 
+			nodeList = element.getElementsByTagName("Filter");
+			for (int j = 0; j < nodeList.getLength(); j++) {
+				workElement = (org.w3c.dom.Element)nodeList.item(j);
+				wrkStr = getOptionValueWithKeyword(workElement.getAttribute("FieldOptions"), "PROMPT_CALL");
+				if (wrkStr.equals(functionID)) {
+					usage = res.getString("UsageFieldPrompter");
+					break;
 				}
 			}
 		}
@@ -13189,6 +13377,12 @@ public class Editor extends JFrame {
         		result = result + res.getString("Width") + wrkStr + "pic";
         	}
         	//
+        	if (optionList.contains("PROMPT_LIST0")) {
+        		if (!result.equals("")) {
+        			result = result + res.getString("Comma");
+        		}
+        		result = result + res.getString("InputAssistList");
+        	}
         	if (optionList.contains("PROMPT_LIST1")) {
         		if (!result.equals("")) {
         			result = result + res.getString("Comma");
@@ -13682,6 +13876,22 @@ public class Editor extends JFrame {
 	    	componentType_jPopupMenuComponent = "SystemPrintFontUsageList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToJump);
 	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
+	    }
+	    //
+	    if (e.getComponent().equals(jScrollPaneSystemMaintenanceLog)) {
+	    	componentType_jPopupMenuComponent = "SystemMaintenanceLog";
+	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
+			if (jTableSystemPrintFontList.getRowCount() == 0) {
+				jMenuItemComponentToListCsv.setEnabled(false);
+			}
+	    }
+	    if (e.getComponent().equals(jTableSystemMaintenanceLog)) {
+	    	componentType_jPopupMenuComponent = "SystemMaintenanceLog";
+	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
+	    	jPopupMenuComponent.addSeparator();
+	    	jPopupMenuComponent.add(jMenuItemComponentToDelete);
 	    }
 	    //
 	    if (e.getComponent().equals(jScrollPaneMenuList)) {
@@ -14513,162 +14723,343 @@ public class Editor extends JFrame {
 	    jPopupMenuComponent.show(e.getComponent(), e.getX(), e.getY());
 	  }
 
-	/**
-	 * Class of XE Undo Manager
-	 */
-	class UndoManager {
-		String[] actionArray = new String[100];
-		MainTreeNode[] nodeArray = new MainTreeNode[100];
-		MainTreeNode[] ownerNodeArray = new MainTreeNode[100];
-		org.w3c.dom.Element[] oldDomElementArray = new org.w3c.dom.Element[100];
-		org.w3c.dom.Element[] newDomElementArray = new org.w3c.dom.Element[100];
-		org.w3c.dom.Element savedDomElement;
-		MainTreeNode savedOwnerNode;
-		int indexOfLastElement = 0;
-		int indexOfRedoMax = -1;
-		int indexOfLastUndo = -1;
-		boolean undoRedoActionBeingExecuted = false;
-		//
-		void addLogOfAdd(MainTreeNode node) {
-			if (node.isUndoable() && !undoRedoActionBeingExecuted) {
-				indexOfRedoMax = indexOfLastElement;
-				indexOfLastUndo = indexOfLastElement;
-				//
-				actionArray[indexOfLastElement] = "Add";
-				nodeArray[indexOfLastElement] = node;
-				oldDomElementArray[indexOfLastElement] = null;
-				newDomElementArray[indexOfLastElement] = null;
-				ownerNodeArray[indexOfLastElement] = (MainTreeNode)node.getParent();
-				jMenuItemEditUndo.setEnabled(true);
-				jMenuItemEditRedo.setEnabled(false);
-				//
-				changeState.setChanged(true);
-				countUpIndex();
-			}
-		}
-		//
-		void addLogOfRemove(MainTreeNode node) {
-			if (node.isUndoable() && !undoRedoActionBeingExecuted) {
-				indexOfRedoMax = indexOfLastElement;
-				indexOfLastUndo = indexOfLastElement;
-				//
-				actionArray[indexOfLastElement] = "Remove";
-				nodeArray[indexOfLastElement] = node;
-				oldDomElementArray[indexOfLastElement] = null;
-				newDomElementArray[indexOfLastElement] = null;
-				ownerNodeArray[indexOfLastElement] = (MainTreeNode)node.getParent();
-				jMenuItemEditUndo.setEnabled(true);
-				jMenuItemEditRedo.setEnabled(false);
-				//
-				changeState.setChanged(true);
-				countUpIndex();
-			}
-		}
-		//
-		void saveNodeBeforeModified(MainTreeNode node) {
-			if (node.isUndoable()) {
-				savedDomElement = node.getUndoRedoElement();
-				savedOwnerNode = (MainTreeNode)node.getParent();
-			}
-		}
-		//
-		void addLogAfterModified(MainTreeNode node) {
-			if (node.isUndoable() && !undoRedoActionBeingExecuted) {
-				indexOfRedoMax = indexOfLastElement;
-				indexOfLastUndo = indexOfLastElement;
-				//
-				actionArray[indexOfLastElement] = "Modify";
-				nodeArray[indexOfLastElement] = node;
-				oldDomElementArray[indexOfLastElement] = savedDomElement;
-				newDomElementArray[indexOfLastElement] = node.getUndoRedoElement();
-				ownerNodeArray[indexOfLastElement] = savedOwnerNode;
-				jMenuItemEditUndo.setEnabled(true);
-				jMenuItemEditRedo.setEnabled(false);
-				//
-				changeState.setChanged(true);
-				countUpIndex();
-			}
-		}
-		//
-		void countUpIndex() {
-			if (indexOfLastElement < 99) {
-				indexOfLastElement = indexOfLastElement + 1;
-			} else {
-				for (int i = 0; i < 99; i++) {
-					nodeArray[i] = nodeArray[i+1];
-				}
-				for (int i = 0; i < 99; i++) {
-					ownerNodeArray[i] = ownerNodeArray[i+1];
-				}
-				for (int i = 0; i < 99; i++) {
-					actionArray[i] = actionArray[i+1];
-				}
-				for (int i = 0; i < 99; i++) {
-					oldDomElementArray[i] = oldDomElementArray[i+1];
-				}
-				for (int i = 0; i < 99; i++) {
-					newDomElementArray[i] = newDomElementArray[i+1];
-				}
-				indexOfLastElement = 99;
-			}
-		}
-		//
-		void undo() {
-			undoRedoActionBeingExecuted = true;
-			if (indexOfLastUndo > -1) {
-				if (actionArray[indexOfLastUndo].equals("Add")) {
-					nodeArray[indexOfLastUndo].undoAdd(ownerNodeArray[indexOfLastUndo]);
-				}
-				if (actionArray[indexOfLastUndo].equals("Modify")) {
-					nodeArray[indexOfLastUndo].undoModify(oldDomElementArray[indexOfLastUndo], newDomElementArray[indexOfLastUndo]);
-				}
-				if (actionArray[indexOfLastUndo].equals("Remove")) {
-					nodeArray[indexOfLastUndo].undoRemove(ownerNodeArray[indexOfLastUndo]);
-				}
-				//
-				indexOfLastUndo = indexOfLastUndo - 1;
-				if (indexOfLastUndo == -1) {
-					jMenuItemEditUndo.setEnabled(false);
-					changeState.setChanged(false);
-				}
-				indexOfLastElement = indexOfLastUndo + 1;
-				jMenuItemEditRedo.setEnabled(true);
-			}
-			undoRedoActionBeingExecuted = false;
-		}
-		//
-		void redo() {
-			undoRedoActionBeingExecuted = true;
-			if (indexOfLastUndo < indexOfRedoMax) {
-				indexOfLastUndo = indexOfLastUndo + 1;
-				//
-				if (actionArray[indexOfLastUndo].equals("Add")) {
-					nodeArray[indexOfLastUndo].redoAdd(ownerNodeArray[indexOfLastUndo]);
-				}
-				if (actionArray[indexOfLastUndo].equals("Modify")) {
-					nodeArray[indexOfLastUndo].redoModify(oldDomElementArray[indexOfLastUndo], newDomElementArray[indexOfLastUndo]);
-				}
-				if (actionArray[indexOfLastUndo].equals("Remove")) {
-					nodeArray[indexOfLastUndo].redoRemove(ownerNodeArray[indexOfLastUndo]);
-				}
-				//
-				if (indexOfLastUndo >= indexOfRedoMax) {
-					jMenuItemEditRedo.setEnabled(false);
-				}
-				changeState.setChanged(true);
-				indexOfLastElement = indexOfLastUndo + 1;
-				jMenuItemEditUndo.setEnabled(true);
-			}
-			undoRedoActionBeingExecuted = false;
-		}
-		//
-		void resetLog() {
-			indexOfLastUndo = -1;
-			indexOfLastElement = 0;
-			jMenuItemEditUndo.setEnabled(false);
-			jMenuItemEditRedo.setEnabled(false);
-		}
-	}
+//	/**
+//	 * Class of XE Undo Manager
+//	 */
+//	class UndoManager {
+//		String[] actionArray = new String[100];
+//		MainTreeNode[] nodeArray = new MainTreeNode[100];
+//		MainTreeNode[] ownerNodeArray = new MainTreeNode[100];
+//		org.w3c.dom.Element[] oldDomElementArray = new org.w3c.dom.Element[100];
+//		org.w3c.dom.Element[] newDomElementArray = new org.w3c.dom.Element[100];
+//		org.w3c.dom.Element savedDomElement;
+//		MainTreeNode savedOwnerNode;
+//		int indexOfLastElement = 0;
+//		int indexOfRedoMax = -1;
+//		int indexOfLastUndo = -1;
+//		boolean undoRedoActionBeingExecuted = false;
+//		//
+//		void addLogOfAdd(MainTreeNode node) {
+//			if (node.isUndoable() && !undoRedoActionBeingExecuted) {
+//				indexOfRedoMax = indexOfLastElement;
+//				indexOfLastUndo = indexOfLastElement;
+//				//
+//				actionArray[indexOfLastElement] = "Add";
+//				nodeArray[indexOfLastElement] = node;
+//				oldDomElementArray[indexOfLastElement] = null;
+//				newDomElementArray[indexOfLastElement] = null;
+//				ownerNodeArray[indexOfLastElement] = (MainTreeNode)node.getParent();
+//				jMenuItemEditUndo.setEnabled(true);
+//				jMenuItemEditRedo.setEnabled(false);
+//				//
+//				changeState.setChanged(true);
+//				countUpIndex();
+//			}
+//		}
+//		//
+//		void addLogOfRemove(MainTreeNode node) {
+//			if (node.isUndoable() && !undoRedoActionBeingExecuted) {
+//				indexOfRedoMax = indexOfLastElement;
+//				indexOfLastUndo = indexOfLastElement;
+//				//
+//				actionArray[indexOfLastElement] = "Remove";
+//				nodeArray[indexOfLastElement] = node;
+//				oldDomElementArray[indexOfLastElement] = null;
+//				newDomElementArray[indexOfLastElement] = null;
+//				ownerNodeArray[indexOfLastElement] = (MainTreeNode)node.getParent();
+//				jMenuItemEditUndo.setEnabled(true);
+//				jMenuItemEditRedo.setEnabled(false);
+//				//
+//				changeState.setChanged(true);
+//				countUpIndex();
+//			}
+//		}
+//		//
+//		void saveNodeBeforeModified(MainTreeNode node) {
+//			if (node.isUndoable()) {
+//				savedDomElement = node.getUndoRedoElement();
+//				savedOwnerNode = (MainTreeNode)node.getParent();
+//			}
+//		}
+//		//
+//		void addLogAfterModified(MainTreeNode node) {
+//			if (node.isUndoable() && !undoRedoActionBeingExecuted) {
+//				indexOfRedoMax = indexOfLastElement;
+//				indexOfLastUndo = indexOfLastElement;
+//				//
+//				actionArray[indexOfLastElement] = "Modify";
+//				nodeArray[indexOfLastElement] = node;
+//				oldDomElementArray[indexOfLastElement] = savedDomElement;
+//				newDomElementArray[indexOfLastElement] = node.getUndoRedoElement();
+//				ownerNodeArray[indexOfLastElement] = savedOwnerNode;
+//				jMenuItemEditUndo.setEnabled(true);
+//				jMenuItemEditRedo.setEnabled(false);
+//				//
+//				changeState.setChanged(true);
+//				countUpIndex();
+//			}
+//		}
+//		//
+//		void countUpIndex() {
+//			if (indexOfLastElement < 99) {
+//				indexOfLastElement = indexOfLastElement + 1;
+//			} else {
+//				for (int i = 0; i < 99; i++) {
+//					nodeArray[i] = nodeArray[i+1];
+//				}
+//				for (int i = 0; i < 99; i++) {
+//					ownerNodeArray[i] = ownerNodeArray[i+1];
+//				}
+//				for (int i = 0; i < 99; i++) {
+//					actionArray[i] = actionArray[i+1];
+//				}
+//				for (int i = 0; i < 99; i++) {
+//					oldDomElementArray[i] = oldDomElementArray[i+1];
+//				}
+//				for (int i = 0; i < 99; i++) {
+//					newDomElementArray[i] = newDomElementArray[i+1];
+//				}
+//				indexOfLastElement = 99;
+//			}
+//		}
+//		//
+//		void undo() {
+//			undoRedoActionBeingExecuted = true;
+//			if (indexOfLastUndo > -1) {
+//				if (actionArray[indexOfLastUndo].equals("Add")) {
+//					nodeArray[indexOfLastUndo].undoAdd(ownerNodeArray[indexOfLastUndo]);
+//				}
+//				if (actionArray[indexOfLastUndo].equals("Modify")) {
+//					nodeArray[indexOfLastUndo].undoModify(oldDomElementArray[indexOfLastUndo], newDomElementArray[indexOfLastUndo]);
+//				}
+//				if (actionArray[indexOfLastUndo].equals("Remove")) {
+//					nodeArray[indexOfLastUndo].undoRemove(ownerNodeArray[indexOfLastUndo]);
+//				}
+//				//
+//				indexOfLastUndo = indexOfLastUndo - 1;
+//				if (indexOfLastUndo == -1) {
+//					jMenuItemEditUndo.setEnabled(false);
+//					changeState.setChanged(false);
+//				}
+//				indexOfLastElement = indexOfLastUndo + 1;
+//				jMenuItemEditRedo.setEnabled(true);
+//			}
+//			undoRedoActionBeingExecuted = false;
+//		}
+//		//
+//		void redo() {
+//			undoRedoActionBeingExecuted = true;
+//			if (indexOfLastUndo < indexOfRedoMax) {
+//				indexOfLastUndo = indexOfLastUndo + 1;
+//				//
+//				if (actionArray[indexOfLastUndo].equals("Add")) {
+//					nodeArray[indexOfLastUndo].redoAdd(ownerNodeArray[indexOfLastUndo]);
+//				}
+//				if (actionArray[indexOfLastUndo].equals("Modify")) {
+//					nodeArray[indexOfLastUndo].redoModify(oldDomElementArray[indexOfLastUndo], newDomElementArray[indexOfLastUndo]);
+//				}
+//				if (actionArray[indexOfLastUndo].equals("Remove")) {
+//					nodeArray[indexOfLastUndo].redoRemove(ownerNodeArray[indexOfLastUndo]);
+//				}
+//				//
+//				if (indexOfLastUndo >= indexOfRedoMax) {
+//					jMenuItemEditRedo.setEnabled(false);
+//				}
+//				changeState.setChanged(true);
+//				indexOfLastElement = indexOfLastUndo + 1;
+//				jMenuItemEditUndo.setEnabled(true);
+//			}
+//			undoRedoActionBeingExecuted = false;
+//		}
+//		//
+//		void resetLog() {
+//			indexOfLastUndo = -1;
+//			indexOfLastElement = 0;
+//			jMenuItemEditUndo.setEnabled(false);
+//			jMenuItemEditRedo.setEnabled(false);
+//		}
+//	}
+	  /**
+	   * Class of XE Undo Manager
+	   */
+	  class UndoManager {
+		  ArrayList<String> actionArray = new ArrayList<String>();
+		  ArrayList<MainTreeNode> nodeArray = new ArrayList<MainTreeNode>();
+		  ArrayList<MainTreeNode> ownerNodeArray = new ArrayList<MainTreeNode>();
+		  ArrayList<org.w3c.dom.Element> oldDomElementArray = new ArrayList<org.w3c.dom.Element>();
+		  ArrayList<org.w3c.dom.Element> newDomElementArray = new ArrayList<org.w3c.dom.Element>();
+		  org.w3c.dom.Element savedDomElement;
+		  MainTreeNode savedOwnerNode;
+		  int indexOfLastElement = 0;
+		  int indexOfRedoMax = -1;
+		  int indexOfLastUndo = -1;
+		  boolean undoRedoActionBeingExecuted = false;
+
+		  void addLogOfAdd(MainTreeNode node) {
+			  if (node.isUndoable() && !undoRedoActionBeingExecuted) {
+				  indexOfRedoMax = indexOfLastElement;
+				  indexOfLastUndo = indexOfLastElement;
+				  //
+				  actionArray.add(indexOfLastElement, "Add");
+				  nodeArray.add(indexOfLastElement, node);
+				  oldDomElementArray.add(indexOfLastElement, null);
+				  newDomElementArray.add(indexOfLastElement, null);
+				  ownerNodeArray.add(indexOfLastElement, (MainTreeNode)node.getParent());
+				  jMenuItemEditUndo.setEnabled(true);
+				  jMenuItemEditRedo.setEnabled(false);
+				  //
+				  changeState.setChanged(true);
+				  indexOfLastElement++;
+			  }
+		  }
+
+		  void addLogOfRemove(MainTreeNode node) {
+			  if (node.isUndoable() && !undoRedoActionBeingExecuted) {
+				  indexOfRedoMax = indexOfLastElement;
+				  indexOfLastUndo = indexOfLastElement;
+				  //
+				  actionArray.add(indexOfLastElement, "Remove");
+				  nodeArray.add(indexOfLastElement, node);
+				  oldDomElementArray.add(indexOfLastElement, null);
+				  newDomElementArray.add(indexOfLastElement, null);
+				  ownerNodeArray.add(indexOfLastElement, (MainTreeNode)node.getParent());
+				  jMenuItemEditUndo.setEnabled(true);
+				  jMenuItemEditRedo.setEnabled(false);
+				  //
+				  changeState.setChanged(true);
+				  indexOfLastElement++;
+			  }
+		  }
+
+		  void saveNodeBeforeModified(MainTreeNode node) {
+			  if (node.isUndoable()) {
+				  savedDomElement = node.getUndoRedoElement();
+				  savedOwnerNode = (MainTreeNode)node.getParent();
+			  }
+		  }
+
+		  void addLogAfterModified(MainTreeNode node) {
+			  if (node.isUndoable() && !undoRedoActionBeingExecuted) {
+				  indexOfRedoMax = indexOfLastElement;
+				  indexOfLastUndo = indexOfLastElement;
+				  //
+				  actionArray.add(indexOfLastElement, "Modify");
+				  nodeArray.add(indexOfLastElement, node);
+				  oldDomElementArray.add(indexOfLastElement, savedDomElement);
+				  newDomElementArray.add(indexOfLastElement, node.getUndoRedoElement());
+				  ownerNodeArray.add(indexOfLastElement, savedOwnerNode);
+				  jMenuItemEditUndo.setEnabled(true);
+				  jMenuItemEditRedo.setEnabled(false);
+				  //
+				  changeState.setChanged(true);
+				  indexOfLastElement++;
+			  }
+		  }
+
+		  void undo() {
+			  undoRedoActionBeingExecuted = true;
+			  if (indexOfLastUndo > -1) {
+				  if (actionArray.get(indexOfLastUndo).equals("Add")) {
+					  nodeArray.get(indexOfLastUndo).undoAdd(ownerNodeArray.get(indexOfLastUndo));
+				  }
+				  if (actionArray.get(indexOfLastUndo).equals("Modify")) {
+					  nodeArray.get(indexOfLastUndo).undoModify(oldDomElementArray.get(indexOfLastUndo), newDomElementArray.get(indexOfLastUndo));
+				  }
+				  if (actionArray.get(indexOfLastUndo).equals("Remove")) {
+					  nodeArray.get(indexOfLastUndo).undoRemove(ownerNodeArray.get(indexOfLastUndo));
+				  }
+				  if (nodeArray.get(indexOfLastUndo).getNodeType().equals("Table")) {
+						String errorStatus = dialogCheckTableModule.request(nodeArray.get(indexOfLastUndo), false);
+						if (!nodeArray.get(indexOfLastUndo).getErrorStatus().equals(errorStatus)) {
+							nodeArray.get(indexOfLastUndo).setErrorStatus(errorStatus);
+							repaintErrorStatusOfParentNodes((MainTreeNode)nodeArray.get(indexOfLastUndo).getParent());
+						}
+				  }
+				  //
+				  indexOfLastUndo = indexOfLastUndo - 1;
+				  if (indexOfLastUndo == -1) {
+					  jMenuItemEditUndo.setEnabled(false);
+					  changeState.setChanged(false);
+				  }
+				  indexOfLastElement = indexOfLastUndo + 1;
+				  jMenuItemEditRedo.setEnabled(true);
+			  }
+			  undoRedoActionBeingExecuted = false;
+		  }
+
+		  void redo() {
+			  undoRedoActionBeingExecuted = true;
+			  if (indexOfLastUndo < indexOfRedoMax) {
+				  indexOfLastUndo = indexOfLastUndo + 1;
+				  //
+				  if (actionArray.get(indexOfLastUndo).equals("Add")) {
+					  nodeArray.get(indexOfLastUndo).redoAdd(ownerNodeArray.get(indexOfLastUndo));
+				  }
+				  if (actionArray.get(indexOfLastUndo).equals("Modify")) {
+					  nodeArray.get(indexOfLastUndo).redoModify(oldDomElementArray.get(indexOfLastUndo), newDomElementArray.get(indexOfLastUndo));
+				  }
+				  if (actionArray.get(indexOfLastUndo).equals("Remove")) {
+					  nodeArray.get(indexOfLastUndo).redoRemove(ownerNodeArray.get(indexOfLastUndo));
+				  }
+				  if (nodeArray.get(indexOfLastUndo).getNodeType().equals("Table")) {
+						String errorStatus = dialogCheckTableModule.request(nodeArray.get(indexOfLastUndo), false);
+						if (!nodeArray.get(indexOfLastUndo).getErrorStatus().equals(errorStatus)) {
+							nodeArray.get(indexOfLastUndo).setErrorStatus(errorStatus);
+							repaintErrorStatusOfParentNodes((MainTreeNode)nodeArray.get(indexOfLastUndo).getParent());
+						}
+				  }
+				  //
+				  if (indexOfLastUndo >= indexOfRedoMax) {
+					  jMenuItemEditRedo.setEnabled(false);
+				  }
+				  changeState.setChanged(true);
+				  indexOfLastElement = indexOfLastUndo + 1;
+				  jMenuItemEditUndo.setEnabled(true);
+			  }
+			  undoRedoActionBeingExecuted = false;
+		  }
+
+		  void resetLog() {
+			  indexOfLastUndo = -1;
+			  indexOfLastElement = 0;
+			  jMenuItemEditUndo.setEnabled(false);
+			  jMenuItemEditRedo.setEnabled(false);
+		  }
+
+		  String getText() {
+			  ArrayList<String> logList = new ArrayList<String>();
+			  StringBuffer bf;
+			  for (int i = 0; i < indexOfLastElement; i++) {
+				  bf = new StringBuffer();
+				  bf.append(res.getString("ListItemMark"));
+				  if (nodeArray.get(i).getNodeType().equals("System")) {
+					  bf.append(res.getString("System"));
+				  } else {
+					  bf.append(res.getString("Bracket1"));
+					  bf.append(nodeArray.get(i).getName());
+					  bf.append(res.getString("Bracket2"));
+				  }
+				  if (actionArray.get(i).equals("Add")) {
+					  bf.append(res.getString("UndoAdd"));
+				  }
+				  if (actionArray.get(i).equals("Modify")) {
+					  bf.append(res.getString("UndoModify"));
+				  }
+				  if (actionArray.get(i).equals("Remove")) {
+					  bf.append(res.getString("UndoRemove"));
+				  }
+				  bf.append("#EOL#");
+				  if (!logList.contains(bf.toString())) {
+					  logList.add(bf.toString());
+				  }
+			  }
+			  bf = new StringBuffer();
+			  for (int i = 0; i < logList.size(); i++) {
+				  bf.append(logList.get(i));
+			  }
+			  return bf.toString();
+		  }
+	  }
 	/**
 	 * Class of Change State
 	 */
@@ -15180,6 +15571,10 @@ public class Editor extends JFrame {
 			str = mark + this.getName();
 			return str;
 		}
+		
+		public String getNodeType() {
+			return nodeType_;
+		}
 
 		public String getName() {
 			String str = "";
@@ -15209,8 +15604,10 @@ public class Editor extends JFrame {
 				str = res.getString("TableList");
 			}
 			if (nodeType_.equals("Table")) {
-				String wrk1 = domNode_.getAttribute("ID").toUpperCase();
-				String wrk2 = domNode_.getAttribute("Name").toUpperCase();
+				//String wrk1 = domNode_.getAttribute("ID").toUpperCase();
+				String wrk1 = getCaseShiftValue(domNode_.getAttribute("ID"), "Upper");
+				//String wrk2 = domNode_.getAttribute("Name").toUpperCase();
+				String wrk2 = getCaseShiftValue(domNode_.getAttribute("Name"), "Upper");
 				if (wrk1.equals(wrk2)) {
 					str = domNode_.getAttribute("ID");
 				} else {
@@ -15272,8 +15669,10 @@ public class Editor extends JFrame {
 				str = res.getString("TableList");
 			}
 			if (nodeType_.equals("Table")) {
-				String wrk1 = domNode_.getAttribute("ID").toUpperCase();
-				String wrk2 = domNode_.getAttribute("Name").toUpperCase();
+				//String wrk1 = domNode_.getAttribute("ID").toUpperCase();
+				String wrk1 = getCaseShiftValue(domNode_.getAttribute("ID"), "Upper");
+				//String wrk2 = domNode_.getAttribute("Name").toUpperCase();
+				String wrk2 = getCaseShiftValue(domNode_.getAttribute("Name"), "Upper");
 				if (wrk1.equals(wrk2)) {
 					str = domNode_.getAttribute("ID");
 				} else {
@@ -15374,6 +15773,7 @@ public class Editor extends JFrame {
 						newElement = domDocument.createElement("Menu");
 						newElement.setAttribute("ID", nodeID);
 						newElement.setAttribute("Name", nodeName);
+						newElement.setAttribute("CrossCheckersToBeLoaded", "");
 						newElement.setAttribute("HelpURL", "");
 						childNode = new MainTreeNode("Menu", newElement, this.getEditor());
 						systemNode.getElement().appendChild(newElement);
@@ -15414,8 +15814,10 @@ public class Editor extends JFrame {
 						childCount1 = childNode2.getChildCount(); //Number of Subsystem Tables//
 						for (int j = 0; j < childCount1; j++) {
 							childNode3 = (MainTreeNode)childNode2.getChildAt(j);
-							id1 = childNode3.getElement().getAttribute("ID").toUpperCase();
-							id2 = nodeID.toUpperCase();
+							//id1 = childNode3.getElement().getAttribute("ID").toUpperCase();
+							id1 = getCaseShiftValue(childNode3.getElement().getAttribute("ID"), "Upper");
+							//id2 = nodeID.toUpperCase();
+							id2 = getCaseShiftValue(nodeID, "Upper");
 							if (id1.equals(id2)) {
 								duplicated = true;
 								break;
@@ -15639,7 +16041,8 @@ public class Editor extends JFrame {
 						//	JOptionPane.showMessageDialog(null, res.getString("ErrorMessage105"));
 						//	ready = true;
 						//} else {
-							answer = answer.toUpperCase();
+							//answer = answer.toUpperCase();
+							answer = getCaseShiftValue(answer, "Upper");
 							duplicated = false;
 							for (int i = 0; i < subsystemListNode.getChildCount(); i++) {
 								for (int j = 0; j < subsystemListNode.getChildAt(i).getChildAt(0).getChildCount(); j++) {
@@ -15902,6 +16305,27 @@ public class Editor extends JFrame {
 				Cell[2] = element.getAttribute("Description");
 				tableModelSystemSubDBList.addRow(Cell);
 			}
+			selectedRow_jTableSystemSubDBList = -1;
+			//if (tableModelSystemSubDBList.getRowCount() > 0) {
+			//	jTableSystemSubDBList.setRowSelectionInterval(0, 0);
+			//} else {
+			//	jTableSystemSubDBList_valueChanged();
+			//}
+			jLabelSystemSubDBID.setEnabled(false);
+			jLabelSystemSubDBName.setEnabled(false);
+			jLabelSystemSubDBDescription.setEnabled(false);
+			jLabelSystemSubDBUser.setEnabled(false);
+			jLabelSystemSubDBPassword.setEnabled(false);
+			jTextFieldSystemSubDBID.setEnabled(false);
+			jTextFieldSystemSubDBName.setEnabled(false);
+			jTextFieldSystemSubDBDescription.setEnabled(false);
+			jTextFieldSystemSubDBUser.setEnabled(false);
+			jTextFieldSystemSubDBPassword.setEnabled(false);
+			jTextFieldSystemSubDBID.setText("");
+			jTextFieldSystemSubDBDescription.setText("");
+			jTextFieldSystemSubDBName.setText("");
+			jTextFieldSystemSubDBUser.setText("");
+			jTextFieldSystemSubDBPassword.setText("");
 			//
 			jTextFieldSystemImageFileFolder.setText(domNode_.getAttribute("ImageFileFolder"));
 			if (domNode_.getAttribute("OutputFolder").equals("")) {
@@ -15940,18 +16364,22 @@ public class Editor extends JFrame {
 				Cell[3] = element.getAttribute("PDFEncoding");
 				tableModelSystemPrintFontList.addRow(Cell);
 			}
-			//
-		    tableRowsAreBeingSetup = false;
-			selectedRow_jTableSystemSubDBList = -1;
-			if (tableModelSystemSubDBList.getRowCount() > 0) {
-				jTableSystemSubDBList.setRowSelectionInterval(0, 0);
-			} else {
-				jTableSystemSubDBList_valueChanged();
-			}
-			if (tableModelSystemPrintFontList.getRowCount() > 0) {
-				jTableSystemPrintFontList.setRowSelectionInterval(0, 0);
-				selectedRow_jTableSystemPrintFontList = 0;
-			}
+			selectedRow_jTableSystemPrintFontList = -1;
+//			if (tableModelSystemPrintFontList.getRowCount() > 0) {
+//			jTableSystemPrintFontList.setRowSelectionInterval(0, 0);
+//			selectedRow_jTableSystemPrintFontList = 0;
+//		}
+			jLabelSystemPrintFontID.setEnabled(false);
+			jLabelSystemPrintFontName.setEnabled(false);
+			jLabelSystemPrintPDFFontName.setEnabled(false);
+			jLabelSystemPrintPDFEncoding.setEnabled(false);
+			jTextFieldSystemPrintFontID.setEnabled(false);
+			jTextFieldSystemPrintFontName.setEnabled(false);
+			jTextFieldSystemPrintPDFFontName.setEnabled(false);
+			jTextFieldSystemPrintPDFEncoding.setEnabled(false);
+			jTextFieldSystemPrintFontName.setText("");
+			jTextFieldSystemPrintPDFFontName.setText("");
+			jTextFieldSystemPrintPDFEncoding.setText("");
 			//
 			jTextAreaSystemLoginScript.setText(substringLinesWithTokenOfEOL(domNode_.getAttribute("LoginScript"), "\n"));
 			jTextAreaSystemLoginScriptUndoManager.discardAllEdits();
@@ -15962,6 +16390,33 @@ public class Editor extends JFrame {
 			jTextAreaSystemScriptFunctionsUndoManager.discardAllEdits();
 			jTextAreaSystemScriptFunctions.setCaretPosition(0);
 			jLabelSystemScriptFunctionsEditToolCursorPos.setText("1 : 0");
+			//
+			//Setup MaintenanceLog List//
+			if (tableModelSystemMaintenanceLog.getRowCount() > 0) {
+				int rowCount = tableModelSystemMaintenanceLog.getRowCount();
+				for (int i = 0; i < rowCount; i++) {tableModelSystemMaintenanceLog.removeRow(0);}
+			}
+			columnList = domNode_.getElementsByTagName("MaintenanceLog");
+			sortingList = getSortedListModel(columnList, "SortKey");
+			for (int i = 0; i < sortingList.getSize(); i++) {
+				element = (org.w3c.dom.Element)sortingList.elementAt(i);
+				Object[] Cell = new Object[4];
+				Cell[0] =  new TableRowNumber(i+1, element);
+				Cell[1] = element.getAttribute("SortKey");
+				Cell[2] = element.getAttribute("Headder");
+				Cell[3] = getFirstSentence(element.getAttribute("Descriptions"));
+				tableModelSystemMaintenanceLog.addRow(Cell);
+			}
+			selectedRow_jTableSystemMaintenanceLog = -1;
+			jTextFieldSystemMaintenanceLogHeadder.setText("");
+			jTextFieldSystemMaintenanceLogHeadder.setEnabled(false);
+			jTextFieldSystemMaintenanceLogSortKey.setText("");
+			jTextFieldSystemMaintenanceLogSortKey.setEnabled(false);
+			jTextAreaSystemMaintenanceLogDescriptions.setText("");
+			jTextAreaSystemMaintenanceLogDescriptions.setBackground(SystemColor.control);
+			jTextAreaSystemMaintenanceLogDescriptions.setEnabled(false);
+			//
+		    tableRowsAreBeingSetup = false;
 			//
 			//Return name of the page to be shown//
 			return "jPanelSystem";
@@ -15998,6 +16453,11 @@ public class Editor extends JFrame {
 			//
 			jTextFieldMenuID.setText(domNode_.getAttribute("ID"));
 			jTextFieldMenuName.setText(domNode_.getAttribute("Name"));
+			if (domNode_.getAttribute("CrossCheckersToBeLoaded").equals("")) {
+				jTextFieldMenuCrossCheckers.setText("*None");
+			} else {
+				jTextFieldMenuCrossCheckers.setText(domNode_.getAttribute("CrossCheckersToBeLoaded"));
+			}
 			if (domNode_.getAttribute("HelpURL").equals("")) {
 				jTextFieldMenuHelpURL.setText("*None");
 			} else {
@@ -16601,9 +17061,9 @@ public class Editor extends JFrame {
 		private String activateContentsPaneForFunction000() throws Exception {
 			org.w3c.dom.Element element1, element2;
 			NodeList nodeList1, nodeList2;
-			StringTokenizer workTokenizer;
+			//StringTokenizer workTokenizer;
 			String functionUsage;
-			int hour, minuite;
+			//int hour, minuite;
 			//
 		    tableRowsAreBeingSetup = true;
 			//
@@ -16616,31 +17076,29 @@ public class Editor extends JFrame {
 			if (domNode_.getAttribute("TimerOption").equals("")) {
 	        	jRadioButtonFunction000ConsoleOptionNo.setSelected(true);
 	        	jLabelFunction000TimerDefault.setEnabled(false);
-	    		jSpinnerFunction000TimerDefaultHour.setEnabled(false);
-	    		jSpinnerFunction000TimerDefaultMinuite.setEnabled(false);
-	    		jSpinnerFunction000TimerDefaultHour.setValue(0);
-	    		jSpinnerFunction000TimerDefaultMinuite.setValue(0);
+	    		jTextFieldFunction000TimerDefault.setEnabled(false);
+	    		jTextFieldFunction000TimerDefault.setText("");
+	    		//jSpinnerFunction000TimerDefaultHour.setEnabled(false);
+	    		//jSpinnerFunction000TimerDefaultMinuite.setEnabled(false);
+	    		//jSpinnerFunction000TimerDefaultHour.setValue(0);
+	    		//jSpinnerFunction000TimerDefaultMinuite.setValue(0);
 	        	jLabelFunction000TimerMessage.setEnabled(false);
 				jTextFieldFunction000TimerMessage.setEnabled(false);
 				jTextFieldFunction000TimerMessage.setText("*Default");
 			} else {
-				if (domNode_.getAttribute("TimerOption").contains(":")) {
+				if (domNode_.getAttribute("TimerOption").equals("CONSOLE")) {
+		        	jRadioButtonFunction000ConsoleOptionYes.setSelected(true);
+		        	jLabelFunction000TimerDefault.setEnabled(false);
+		    		jTextFieldFunction000TimerDefault.setEnabled(false);
+		    		jTextFieldFunction000TimerDefault.setText("");
+		        	jLabelFunction000TimerMessage.setEnabled(false);
+					jTextFieldFunction000TimerMessage.setEnabled(false);
+					jTextFieldFunction000TimerMessage.setText("*Default");
+				} else {
 					jRadioButtonFunction000ConsoleOptionTimer.setSelected(true);
 					jLabelFunction000TimerDefault.setEnabled(true);
-					jSpinnerFunction000TimerDefaultHour.setEnabled(true);
-					jSpinnerFunction000TimerDefaultMinuite.setEnabled(true);
-					hour = 0;
-					minuite = 0;
-					if (domNode_.getAttribute("TimerOption").contains(":")) {
-						workTokenizer = new StringTokenizer(domNode_.getAttribute("TimerOption"), ":" );
-						try {
-							hour = Integer.parseInt(workTokenizer.nextToken());
-							minuite = Integer.parseInt(workTokenizer.nextToken());
-						} catch (NumberFormatException e) {
-						}
-					}
-					jSpinnerFunction000TimerDefaultHour.setValue(hour);
-					jSpinnerFunction000TimerDefaultMinuite.setValue(minuite);
+		    		jTextFieldFunction000TimerDefault.setEnabled(true);
+		    		jTextFieldFunction000TimerDefault.setText(domNode_.getAttribute("TimerOption"));
 					jLabelFunction000TimerMessage.setEnabled(true);
 					jTextFieldFunction000TimerMessage.setEnabled(true);
 					if (domNode_.getAttribute("TimerMessage").equals("")) {
@@ -16648,19 +17106,44 @@ public class Editor extends JFrame {
 					} else {
 						jTextFieldFunction000TimerMessage.setText(domNode_.getAttribute("TimerMessage"));
 					}
-				} else {
-					if (domNode_.getAttribute("TimerOption").equals("CONSOLE")) {
-			        	jRadioButtonFunction000ConsoleOptionYes.setSelected(true);
-			        	jLabelFunction000TimerDefault.setEnabled(false);
-			    		jSpinnerFunction000TimerDefaultHour.setEnabled(false);
-			    		jSpinnerFunction000TimerDefaultMinuite.setEnabled(false);
-			    		jSpinnerFunction000TimerDefaultHour.setValue(0);
-			    		jSpinnerFunction000TimerDefaultMinuite.setValue(0);
-			        	jLabelFunction000TimerMessage.setEnabled(false);
-						jTextFieldFunction000TimerMessage.setEnabled(false);
-						jTextFieldFunction000TimerMessage.setText("*Default");
-					}
 				}
+//				if (domNode_.getAttribute("TimerOption").contains(":")) {
+//					jRadioButtonFunction000ConsoleOptionTimer.setSelected(true);
+//					jLabelFunction000TimerDefault.setEnabled(true);
+//					jSpinnerFunction000TimerDefaultHour.setEnabled(true);
+//					jSpinnerFunction000TimerDefaultMinuite.setEnabled(true);
+//					hour = 0;
+//					minuite = 0;
+//					if (domNode_.getAttribute("TimerOption").contains(":")) {
+//						workTokenizer = new StringTokenizer(domNode_.getAttribute("TimerOption"), ":" );
+//						try {
+//							hour = Integer.parseInt(workTokenizer.nextToken());
+//							minuite = Integer.parseInt(workTokenizer.nextToken());
+//						} catch (NumberFormatException e) {
+//						}
+//					}
+//					jSpinnerFunction000TimerDefaultHour.setValue(hour);
+//					jSpinnerFunction000TimerDefaultMinuite.setValue(minuite);
+//					jLabelFunction000TimerMessage.setEnabled(true);
+//					jTextFieldFunction000TimerMessage.setEnabled(true);
+//					if (domNode_.getAttribute("TimerMessage").equals("")) {
+//						jTextFieldFunction000TimerMessage.setText("*Default");
+//					} else {
+//						jTextFieldFunction000TimerMessage.setText(domNode_.getAttribute("TimerMessage"));
+//					}
+//				} else {
+//					if (domNode_.getAttribute("TimerOption").equals("CONSOLE")) {
+//			        	jRadioButtonFunction000ConsoleOptionYes.setSelected(true);
+//			        	jLabelFunction000TimerDefault.setEnabled(false);
+//			    		jSpinnerFunction000TimerDefaultHour.setEnabled(false);
+//			    		jSpinnerFunction000TimerDefaultMinuite.setEnabled(false);
+//			    		jSpinnerFunction000TimerDefaultHour.setValue(0);
+//			    		jSpinnerFunction000TimerDefaultMinuite.setValue(0);
+//			        	jLabelFunction000TimerMessage.setEnabled(false);
+//						jTextFieldFunction000TimerMessage.setEnabled(false);
+//						jTextFieldFunction000TimerMessage.setText("*Default");
+//					}
+//				}
 			}
 			//
 			jTextAreaFunction000Script.setText(substringLinesWithTokenOfEOL(domNode_.getAttribute("Script"), "\n"));
@@ -19495,6 +19978,10 @@ public class Editor extends JFrame {
 				valueOfFieldsChanged = true;
 			}
 			//
+			if (updateFieldsForSystemMaintenanceLog()) {
+				valueOfFieldsChanged = true;
+			}
+			//
 			//Log node after modified//
 			if (valueOfFieldsChanged) {
 				undoManager.addLogAfterModified(this);
@@ -19583,11 +20070,53 @@ public class Editor extends JFrame {
 			return valueOfFieldsChanged;
 		}
 
+		private boolean updateFieldsForSystemMaintenanceLog() throws Exception {
+			boolean valueOfFieldsChanged = informationOnThisPageChanged;
+			//
+			if (selectedRow_jTableSystemMaintenanceLog > -1) {
+				//
+				TableRowNumber tableRowNumber = (TableRowNumber)tableModelSystemMaintenanceLog.getValueAt(selectedRow_jTableSystemMaintenanceLog, 0);
+				org.w3c.dom.Element element = tableRowNumber.getElement();
+				//
+				if (!element.getAttribute("SortKey").equals(jTextFieldSystemMaintenanceLogSortKey.getText())) {
+					valueOfFieldsChanged = true;
+				}
+				if (!element.getAttribute("Headder").equals(jTextFieldSystemMaintenanceLogHeadder.getText())) {
+					valueOfFieldsChanged = true;
+				}
+				if (!element.getAttribute("Descriptions").equals(concatLinesWithTokenOfEOL(jTextAreaSystemMaintenanceLogDescriptions.getText()))) {
+					valueOfFieldsChanged = true;
+				}
+				//
+				if (valueOfFieldsChanged) {
+
+					element.setAttribute("SortKey", jTextFieldSystemMaintenanceLogSortKey.getText());
+					tableModelSystemMaintenanceLog.setValueAt(jTextFieldSystemMaintenanceLogSortKey.getText(),selectedRow_jTableSystemMaintenanceLog,1);
+					element.setAttribute("Headder", jTextFieldSystemMaintenanceLogHeadder.getText());
+					tableModelSystemMaintenanceLog.setValueAt(jTextFieldSystemMaintenanceLogHeadder.getText(),selectedRow_jTableSystemMaintenanceLog,2);
+					element.setAttribute("Descriptions",
+							concatLinesWithTokenOfEOL(jTextAreaSystemMaintenanceLogDescriptions.getText()));
+					tableModelSystemMaintenanceLog.setValueAt(jTextAreaSystemMaintenanceLogDescriptions.getText(),selectedRow_jTableSystemMaintenanceLog,3);
+				}
+			}
+			//
+			return valueOfFieldsChanged;
+		}
+
 		private boolean updateFieldsForMenu() throws Exception {
 			boolean valueOfFieldsChanged = informationOnThisPageChanged;
 			//
 			if (!domNode_.getAttribute("Name").equals(jTextFieldMenuName.getText())) {
 				valueOfFieldsChanged = true;
+			}
+			if (jTextFieldMenuCrossCheckers.getText().equals("*None") || jTextFieldMenuCrossCheckers.getText().equals("*NONE")) {
+				if (!domNode_.getAttribute("CrossCheckersToBeLoaded").equals("")) {
+					valueOfFieldsChanged = true;
+				}
+			} else {
+				if (!domNode_.getAttribute("CrossCheckersToBeLoaded").equals(jTextFieldMenuCrossCheckers.getText())) {
+					valueOfFieldsChanged = true;
+				}
 			}
 			if (jTextFieldMenuHelpURL.getText().equals("*None") || jTextFieldMenuHelpURL.getText().equals("*NONE") || jTextFieldMenuHelpURL.getText().equals("")) {
 				if (!domNode_.getAttribute("HelpURL").equals("")) {
@@ -19640,6 +20169,11 @@ public class Editor extends JFrame {
 				//
 				//Update DOM element//
 				domNode_.setAttribute("Name", jTextFieldMenuName.getText());
+				if (jTextFieldMenuCrossCheckers.getText().equals("*None") || jTextFieldMenuCrossCheckers.getText().equals("*NONE")) {
+					domNode_.setAttribute("CrossCheckersToBeLoaded", "");
+				} else {
+					domNode_.setAttribute("CrossCheckersToBeLoaded", jTextFieldMenuCrossCheckers.getText());
+				}
 				if (jTextFieldMenuHelpURL.getText().equals("*None") || jTextFieldMenuHelpURL.getText().equals("*NONE")) {
 					domNode_.setAttribute("HelpURL", "");
 				} else {
@@ -19724,10 +20258,11 @@ public class Editor extends JFrame {
 			} else {
 				if (!domNode_.getAttribute("ModuleID").equals(jTextFieldTableModuleID.getText())) {
 					valueOfFieldsChanged = true;
-					if (jTextFieldTableModuleID.getText().toUpperCase().equals(jTextFieldTableID.getText())) {
+					//if (jTextFieldTableModuleID.getText().toUpperCase().equals(jTextFieldTableID.getText())) {
+					if (getCaseShiftValue(jTextFieldTableModuleID.getText(), "Upper").equals(jTextFieldTableID.getText())) {
 						domNode_.setAttribute("ModuleID", "");
 					} else {
-						domNode_.setAttribute("ModuleID", jTextFieldTableModuleID.getText().toUpperCase().trim());
+						domNode_.setAttribute("ModuleID", getCaseShiftValue(jTextFieldTableModuleID.getText().trim(), "Upper"));
 					}
 				}
 			}
@@ -20417,15 +20952,23 @@ public class Editor extends JFrame {
 			if (domNode_.getAttribute("TimerOption").equals("")) {
 				if (jRadioButtonFunction000ConsoleOptionTimer.isSelected()) {
 					valueOfFieldsChanged = true;
-					wrkStr = jSpinnerFunction000TimerDefaultHour.getValue() + ":" + jSpinnerFunction000TimerDefaultMinuite.getValue(); 
-					domNode_.setAttribute("TimerOption", wrkStr);
+					domNode_.setAttribute("TimerOption", jTextFieldFunction000TimerDefault.getText());
 				}
 				if (jRadioButtonFunction000ConsoleOptionYes.isSelected()) {
 					valueOfFieldsChanged = true;
 					domNode_.setAttribute("TimerOption", "CONSOLE");
 				}
 			} else {
-				if (domNode_.getAttribute("TimerOption").contains(":")) {
+				if (domNode_.getAttribute("TimerOption").equals("CONSOLE")) {
+					if (jRadioButtonFunction000ConsoleOptionNo.isSelected()) {
+						valueOfFieldsChanged = true;
+						domNode_.setAttribute("TimerOption", "");
+					}
+					if (jRadioButtonFunction000ConsoleOptionTimer.isSelected()) {
+						valueOfFieldsChanged = true;
+						domNode_.setAttribute("TimerOption", jTextFieldFunction000TimerDefault.getText());
+					}
+				} else {
 					if (jRadioButtonFunction000ConsoleOptionNo.isSelected()) {
 						valueOfFieldsChanged = true;
 						domNode_.setAttribute("TimerOption", "");
@@ -20435,25 +20978,41 @@ public class Editor extends JFrame {
 						domNode_.setAttribute("TimerOption", "CONSOLE");
 					}
 					if (jRadioButtonFunction000ConsoleOptionTimer.isSelected()) {
-						wrkStr = jSpinnerFunction000TimerDefaultHour.getValue() + ":" + jSpinnerFunction000TimerDefaultMinuite.getValue(); 
-						if (!domNode_.getAttribute("TimerOption").equals(wrkStr)) {
+						if (!domNode_.getAttribute("TimerOption").equals(jTextFieldFunction000TimerDefault.getText())) {
 							valueOfFieldsChanged = true;
-							domNode_.setAttribute("TimerOption", wrkStr);
-						}
-					}
-				} else {
-					if (domNode_.getAttribute("TimerOption").equals("CONSOLE")) {
-						if (jRadioButtonFunction000ConsoleOptionNo.isSelected()) {
-							valueOfFieldsChanged = true;
-							domNode_.setAttribute("TimerOption", "");
-						}
-						if (jRadioButtonFunction000ConsoleOptionTimer.isSelected()) {
-							valueOfFieldsChanged = true;
-							wrkStr = jSpinnerFunction000TimerDefaultHour.getValue() + ":" + jSpinnerFunction000TimerDefaultMinuite.getValue(); 
-							domNode_.setAttribute("TimerOption", wrkStr);
+							domNode_.setAttribute("TimerOption", jTextFieldFunction000TimerDefault.getText());
 						}
 					}
 				}
+//				if (domNode_.getAttribute("TimerOption").contains(":")) {
+//					if (jRadioButtonFunction000ConsoleOptionNo.isSelected()) {
+//						valueOfFieldsChanged = true;
+//						domNode_.setAttribute("TimerOption", "");
+//					}
+//					if (jRadioButtonFunction000ConsoleOptionYes.isSelected()) {
+//						valueOfFieldsChanged = true;
+//						domNode_.setAttribute("TimerOption", "CONSOLE");
+//					}
+//					if (jRadioButtonFunction000ConsoleOptionTimer.isSelected()) {
+//						wrkStr = jSpinnerFunction000TimerDefaultHour.getValue() + ":" + jSpinnerFunction000TimerDefaultMinuite.getValue(); 
+//						if (!domNode_.getAttribute("TimerOption").equals(wrkStr)) {
+//							valueOfFieldsChanged = true;
+//							domNode_.setAttribute("TimerOption", wrkStr);
+//						}
+//					}
+//				} else {
+//					if (domNode_.getAttribute("TimerOption").equals("CONSOLE")) {
+//						if (jRadioButtonFunction000ConsoleOptionNo.isSelected()) {
+//							valueOfFieldsChanged = true;
+//							domNode_.setAttribute("TimerOption", "");
+//						}
+//						if (jRadioButtonFunction000ConsoleOptionTimer.isSelected()) {
+//							valueOfFieldsChanged = true;
+//							wrkStr = jSpinnerFunction000TimerDefaultHour.getValue() + ":" + jSpinnerFunction000TimerDefaultMinuite.getValue(); 
+//							domNode_.setAttribute("TimerOption", wrkStr);
+//						}
+//					}
+//				}
 			}
 			//
 			if (jRadioButtonFunction000ConsoleOptionTimer.isSelected()) {
@@ -20957,11 +21516,21 @@ public class Editor extends JFrame {
 				}
 				//
 		        if (jRadioButtonFunction100FilterPromptOptionNone.isSelected()) {
-			        if (optionList.contains("PROMPT_LIST1")
+			        if (optionList.contains("PROMPT_LIST0")
+			        		|| optionList.contains("PROMPT_LIST1")
 			        		|| optionList.contains("PROMPT_LIST2")
 			        		|| element.getAttribute("FieldOptions").contains("PROMPT_CALL(")) {
 						valueOfFieldsChanged = true;
 			        }
+		        }
+		        if (jRadioButtonFunction100FilterPromptOptionList0.isSelected()) {
+			        if (!optionList.contains("PROMPT_LIST0")) {
+						valueOfFieldsChanged = true;
+			        }
+					if (!wrkOptions.equals("")) {
+						wrkOptions = wrkOptions + ",";
+					}
+					wrkOptions = wrkOptions + "PROMPT_LIST0";
 		        }
 		        if (jRadioButtonFunction100FilterPromptOptionList1.isSelected()) {
 			        if (!optionList.contains("PROMPT_LIST1")) {
@@ -21734,11 +22303,21 @@ public class Editor extends JFrame {
 				}
 				//
 		        if (jRadioButtonFunction110FilterPromptOptionNone.isSelected()) {
-			        if (optionList.contains("PROMPT_LIST1")
+			        if (optionList.contains("PROMPT_LIST0")
+			        		|| optionList.contains("PROMPT_LIST1")
 			        		|| optionList.contains("PROMPT_LIST2")
 			        		|| element.getAttribute("FieldOptions").contains("PROMPT_CALL(")) {
 						valueOfFieldsChanged = true;
 			        }
+		        }
+		        if (jRadioButtonFunction110FilterPromptOptionList0.isSelected()) {
+			        if (!optionList.contains("PROMPT_LIST0")) {
+						valueOfFieldsChanged = true;
+			        }
+					if (!wrkOptions.equals("")) {
+						wrkOptions = wrkOptions + ",";
+					}
+					wrkOptions = wrkOptions + "PROMPT_LIST0";
 		        }
 		        if (jRadioButtonFunction110FilterPromptOptionList1.isSelected()) {
 			        if (!optionList.contains("PROMPT_LIST1")) {
@@ -24273,11 +24852,21 @@ public class Editor extends JFrame {
 				}
 				//
 		        if (jRadioButtonFunction300DetailFilterPromptOptionNone.isSelected()) {
-			        if (optionList.contains("PROMPT_LIST1")
+			        if (optionList.contains("PROMPT_LIST0")
+			        		|| optionList.contains("PROMPT_LIST1")
 			        		|| optionList.contains("PROMPT_LIST2")
 			        		|| element.getAttribute("FieldOptions").contains("PROMPT_CALL(")) {
 						valueOfFieldsChanged = true;
 			        }
+		        }
+		        if (jRadioButtonFunction300DetailFilterPromptOptionList0.isSelected()) {
+			        if (!optionList.contains("PROMPT_LIST0")) {
+						valueOfFieldsChanged = true;
+			        }
+					if (!wrkOptions.equals("")) {
+						wrkOptions = wrkOptions + ",";
+					}
+					wrkOptions = wrkOptions + "PROMPT_LIST0";
 		        }
 		        if (jRadioButtonFunction300DetailFilterPromptOptionList1.isSelected()) {
 			        if (!optionList.contains("PROMPT_LIST1")) {
@@ -25496,7 +26085,7 @@ public class Editor extends JFrame {
 				domNode_.setAttribute("TableFontSize", wrkStr);
 			}
 			//
-			wrkStr = getStringSizeValue(jTextFieldFunction390TableRowNoWidth.getText(), "", 1, 100);
+			wrkStr = getStringSizeValue(jTextFieldFunction390TableRowNoWidth.getText(), "", 0, 100);
 			if (!wrkStr.equals("") && !domNode_.getAttribute("TableRowNoWidth").equals(wrkStr)) {
 				valueOfFieldsChanged = true;
 				domNode_.setAttribute("TableRowNoWidth", wrkStr);
@@ -26974,9 +27563,11 @@ public class Editor extends JFrame {
 		}
 		if (allConnectionReady) {
 			jMenuItemToolConnectDB.setEnabled(false);
+			jMenuItemToolCheckAllModules.setEnabled(true);
 			jMenuItemToolSQL.setEnabled(true);
 		} else {
 			jMenuItemToolConnectDB.setEnabled(true);
+			jMenuItemToolCheckAllModules.setEnabled(false);
 			jMenuItemToolSQL.setEnabled(false);
 		}
 	}
@@ -27065,6 +27656,66 @@ public class Editor extends JFrame {
 				jProgressBar.setValue(0);
 				jLabelChangeState.setText("");
 				setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			}
+		}
+	}
+	/**
+	 * [Tool|CheckAllModules]
+	 * @param e :Action Event
+	 */
+	void jMenuItemToolCheckAllModules_actionPerformed(ActionEvent e) {
+		MainTreeNode childNode1, childNode2, childNode3;
+		int childCount1 = 0;
+		String errorStatus;
+
+		int numberOfTablesToBeProcessed = 0;
+		for (int i = 0; i < subsystemListNode.getChildCount(); i++) {
+			childNode1 = (MainTreeNode)subsystemListNode.getChildAt(i);
+			childNode2 = (MainTreeNode)childNode1.getChildAt(0); //SubsystemTableList//
+			childCount1 = childNode2.getChildCount(); //Number of Subsystem Tables//
+			for (int j = 0; j < childCount1; j++) {
+				childNode3 = (MainTreeNode)childNode2.getChildAt(j);
+				if (childNode3.getErrorStatus().equals("ER1")) {
+					numberOfTablesToBeProcessed++;
+				}
+			}
+		}
+
+		if (numberOfTablesToBeProcessed <= 0) {
+			JOptionPane.showMessageDialog(this, res.getString("CheckAllModulesMessage1"));
+		} else {
+			Object[] bts = {res.getString("Execute"), res.getString("Cancel")};
+			int rtn = JOptionPane.showOptionDialog(this, res.getString("CheckAllModulesMessage2"),
+					res.getString("CheckAllModules"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[1]);
+			if (rtn == 0) {
+				try {
+					setCursor(new Cursor(Cursor.WAIT_CURSOR));
+					currentMainTreeNode.updateFields();
+					jProgressBar.setMaximum(numberOfTablesToBeProcessed);
+
+					for (int i = 0; i < subsystemListNode.getChildCount(); i++) {
+						childNode1 = (MainTreeNode)subsystemListNode.getChildAt(i);
+						childNode2 = (MainTreeNode)childNode1.getChildAt(0); //SubsystemTableList//
+						childCount1 = childNode2.getChildCount(); //Number of Subsystem Tables//
+						for (int j = 0; j < childCount1; j++) {
+							childNode3 = (MainTreeNode)childNode2.getChildAt(j);
+							if (childNode3.getErrorStatus().equals("ER1")) {
+								errorStatus = dialogCheckTableModule.checkTableModule(childNode3);
+								if (!childNode3.getErrorStatus().equals(errorStatus)) {
+									childNode3.setErrorStatus(errorStatus);
+									repaintErrorStatusOfParentNodes((MainTreeNode)childNode3.getParent());
+								}
+								jProgressBar.setValue(jProgressBar.getValue()+1);
+								jProgressBar.paintImmediately(0,0,jProgressBar.getWidth(),jProgressBar.getHeight());
+							}
+						}
+					}
+
+					currentMainTreeNode.activateContentsPane();
+				} finally {
+					jProgressBar.setValue(0);
+					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				}
 			}
 		}
 	}
@@ -27476,6 +28127,12 @@ public class Editor extends JFrame {
 	
 	JTable getTableByComponentType() {
 		JTable table = null;
+		if (componentType_jPopupMenuComponent.equals("SystemPrintFontList")) {
+			table = jTableSystemPrintFontList;
+		}
+		if (componentType_jPopupMenuComponent.equals("SystemMaintenanceLog")) {
+			table = jTableSystemMaintenanceLog;
+		}
 		if (componentType_jPopupMenuComponent.equals("Function010FieldList")) {
 			table = jTableFunction010FieldList;
 		}
@@ -27624,6 +28281,25 @@ public class Editor extends JFrame {
 			newElement.setAttribute("PDFEncoding", "Cp1252");
 		}
 		//
+		if (type.equals("SystemMaintenanceLog")) {
+			newElement = domDocument.createElement("MaintenanceLog");
+			if (tableModelSystemMaintenanceLog.getRowCount() > 0) {
+			    for (int i = 0; i < tableModelSystemMaintenanceLog.getRowCount(); i++) {
+			    	tableRowNumber = (TableRowNumber)tableModelSystemMaintenanceLog.getValueAt(i, 0);
+			    	element = tableRowNumber.getElement();
+			    	wrkInt = Integer.parseInt(element.getAttribute("ID"));
+			    	if (wrkInt > lastOrder) {
+			    		lastOrder = wrkInt;
+			    	}
+			    }
+				lastOrder = lastOrder + 1;
+			}
+			newElement.setAttribute("ID", String.valueOf(lastOrder));
+			newElement.setAttribute("Headder", systemNode.getElement().getAttribute("Version"));
+			newElement.setAttribute("Descriptions", undoManager.getText());
+			newElement.setAttribute("SortKey", getStringValueOfDateTime("withUnderbarAndTime"));
+		}
+		//
 		if (type.equals("TableFieldList")) {
 			newElement = domDocument.createElement("Field");
 			if (tableModelTableFieldList.getRowCount() > 0) {
@@ -27763,7 +28439,8 @@ public class Editor extends JFrame {
 	    			if (answer == null || answer.equals("")) {
 	    				ready = true;
 	    			} else {
-	    				answer = answer.toUpperCase();
+	    				//answer = answer.toUpperCase();
+						answer = getCaseShiftValue(answer, "Upper");
 	    				duplicated = false;
 	    				for (int i = 0; i < tableModelTableFieldList.getRowCount(); i++) {
 	    					tableRowNumber = (TableRowNumber)tableModelTableFieldList.getValueAt(i, 0);
@@ -27921,6 +28598,12 @@ public class Editor extends JFrame {
 					} else {
 						errorMsg = res.getString("ErrorMessage30");
 					}
+				}
+				//
+				if (componentType_jPopupMenuComponent.equals("SystemMaintenanceLog")) {
+					table = jTableSystemMaintenanceLog;
+					rowNumberDeleted = jTableSystemMaintenanceLog.getSelectedRow();
+					tableRowNumber = (TableRowNumber)tableModelSystemMaintenanceLog.getValueAt(jTableSystemMaintenanceLog.getSelectedRow(),0);
 				}
 				//
 				if (componentType_jPopupMenuComponent.equals("MenuFunctionList")) {
@@ -28419,8 +29102,16 @@ public class Editor extends JFrame {
 	    //
 	    currentMainTreeNode.updateFields();
 		//
+		if (componentType_jPopupMenuComponent.equals("SystemPrintFontList")) {
+			tableModel = tableModelSystemPrintFontList;
+		}
+		//
 		if (componentType_jPopupMenuComponent.equals("SystemPrintFontUsageList")) {
 			tableModel = tableModelSystemPrintFontUsageList;
+		}
+		//
+		if (componentType_jPopupMenuComponent.equals("SystemMaintenanceLog")) {
+			tableModel = tableModelSystemMaintenanceLog;
 		}
 		//
 		if (componentType_jPopupMenuComponent.equals("MenuList")) {
@@ -28738,6 +29429,52 @@ public class Editor extends JFrame {
 	}
 
 	/**
+	 * Event Handler for jTableSystemMaintenanceLog in case Row Selection Changed
+	 * @param e :List Selection Event
+	 */
+	void jTableSystemMaintenanceLog_valueChanged(ListSelectionEvent e) {
+		//
+		if (!tableRowsAreBeingSetup) {
+			//
+			try {
+				if (currentMainTreeNode.updateFieldsForSystemMaintenanceLog()) {
+					informationOnThisPageChanged = true;
+				}
+				//
+				jLabelSystemMaintenanceLogHeadder.setEnabled(false);
+				jLabelSystemMaintenanceLogSortKey.setEnabled(false);
+				jLabelSystemMaintenanceLogDescriptions.setEnabled(false);
+				jTextFieldSystemMaintenanceLogHeadder.setEnabled(false);
+				jTextFieldSystemMaintenanceLogSortKey.setEnabled(false);
+				jTextAreaSystemMaintenanceLogDescriptions.setEnabled(false);
+				jTextAreaSystemMaintenanceLogDescriptions.setBackground(SystemColor.control);
+				jTextFieldSystemMaintenanceLogHeadder.setText("");
+				jTextFieldSystemMaintenanceLogSortKey.setText("");
+				jTextAreaSystemMaintenanceLogDescriptions.setText("");
+				//
+				if (jTableSystemMaintenanceLog.getSelectedRow() != -1) {
+					jLabelSystemMaintenanceLogHeadder.setEnabled(true);
+					jLabelSystemMaintenanceLogSortKey.setEnabled(true);
+					jLabelSystemMaintenanceLogDescriptions.setEnabled(true);
+					jTextFieldSystemMaintenanceLogHeadder.setEnabled(true);
+					jTextFieldSystemMaintenanceLogSortKey.setEnabled(true);
+					jTextAreaSystemMaintenanceLogDescriptions.setEnabled(true);
+					jTextAreaSystemMaintenanceLogDescriptions.setBackground(jTextFieldSystemMaintenanceLogSortKey.getBackground());
+					//
+					selectedRow_jTableSystemMaintenanceLog = jTableSystemMaintenanceLog.getSelectedRow();
+					TableRowNumber tableRowNumber = (TableRowNumber)tableModelSystemMaintenanceLog.getValueAt(selectedRow_jTableSystemMaintenanceLog, 0);
+					org.w3c.dom.Element element = tableRowNumber.getElement();
+					jTextFieldSystemMaintenanceLogSortKey.setText(element.getAttribute("SortKey"));
+					jTextFieldSystemMaintenanceLogHeadder.setText(element.getAttribute("Headder"));
+					jTextAreaSystemMaintenanceLogDescriptions.setText(substringLinesWithTokenOfEOL(element.getAttribute("Descriptions"), "\n"));
+				}
+			} catch (Exception e1) {
+				processError(e1);
+			}
+		}
+	}
+
+	/**
 	 * Event Handler for jTableFunction100ColumnList in case Row Selection Changed
 	 * @param e :List Selection Event
 	 */
@@ -28902,6 +29639,7 @@ public class Editor extends JFrame {
 				jTextFieldFunction100FilterCaptionOptionValue.setEnabled(false);
 				jRadioButtonFunction100FilterPromptOptionNone.setSelected(true);
 				jRadioButtonFunction100FilterPromptOptionNone.setEnabled(false);
+				jRadioButtonFunction100FilterPromptOptionList0.setEnabled(false);
 				jRadioButtonFunction100FilterPromptOptionList1.setEnabled(false);
 				jRadioButtonFunction100FilterPromptOptionList2.setEnabled(false);
 				jRadioButtonFunction100FilterPromptOptionCall.setEnabled(false);
@@ -28948,6 +29686,7 @@ public class Editor extends JFrame {
 					jRadioButtonFunction100FilterCaptionOptionName.setEnabled(true);
 					jRadioButtonFunction100FilterCaptionOptionValue.setEnabled(true);
 					jRadioButtonFunction100FilterPromptOptionNone.setEnabled(true);
+					jRadioButtonFunction100FilterPromptOptionList0.setEnabled(true);
 					jTextFieldFunction100FilterValue.setEnabled(true);
 					jComboBoxFunction100FilterEditableOptions.setEnabled(true);
 					//
@@ -29088,6 +29827,9 @@ public class Editor extends JFrame {
 						jTextFieldFunction100FilterWidth.setText("*Auto");
 					} else {
 						jTextFieldFunction100FilterWidth.setText(wrkStr);
+					}
+					if (optionList.contains("PROMPT_LIST0")) {
+						jRadioButtonFunction100FilterPromptOptionList0.setSelected(true);
 					}
 					if (optionList.contains("PROMPT_LIST1") && jRadioButtonFunction100FilterPromptOptionList1.isEnabled()) {
 						jRadioButtonFunction100FilterPromptOptionList1.setSelected(true);
@@ -29432,6 +30174,7 @@ public class Editor extends JFrame {
 				jTextFieldFunction110FilterCaptionOptionValue.setEnabled(false);
 				jRadioButtonFunction110FilterPromptOptionNone.setSelected(true);
 				jRadioButtonFunction110FilterPromptOptionNone.setEnabled(false);
+				jRadioButtonFunction110FilterPromptOptionList0.setEnabled(false);
 				jRadioButtonFunction110FilterPromptOptionList1.setEnabled(false);
 				jRadioButtonFunction110FilterPromptOptionList2.setEnabled(false);
 				jRadioButtonFunction110FilterPromptOptionCall.setEnabled(false);
@@ -29478,6 +30221,7 @@ public class Editor extends JFrame {
 					jRadioButtonFunction110FilterCaptionOptionName.setEnabled(true);
 					jRadioButtonFunction110FilterCaptionOptionValue.setEnabled(true);
 					jRadioButtonFunction110FilterPromptOptionNone.setEnabled(true);
+					jRadioButtonFunction110FilterPromptOptionList0.setEnabled(true);
 					jTextFieldFunction110FilterValue.setEnabled(true);
 					jComboBoxFunction110FilterEditableOptions.setEnabled(true);
 					//
@@ -29618,6 +30362,9 @@ public class Editor extends JFrame {
 						jTextFieldFunction110FilterWidth.setText("*Auto");
 					} else {
 						jTextFieldFunction110FilterWidth.setText(wrkStr);
+					}
+					if (optionList.contains("PROMPT_LIST0")) {
+						jRadioButtonFunction110FilterPromptOptionList0.setSelected(true);
 					}
 					if (optionList.contains("PROMPT_LIST1") && jRadioButtonFunction110FilterPromptOptionList1.isEnabled()) {
 						jRadioButtonFunction110FilterPromptOptionList1.setSelected(true);
@@ -29925,6 +30672,13 @@ public class Editor extends JFrame {
 		} else {
 			showPopupMenuComponentForTable(e, jTableSystemPrintFontUsageList);
 		}
+	}
+	
+	void jScrollPaneSystemMaintenanceLog_mouseClicked(MouseEvent e) {
+		showPopupMenuComponentForScrollPane(e, jScrollPaneSystemMaintenanceLog);
+	}
+	void jTableSystemMaintenanceLog_mouseClicked(MouseEvent e) {
+		showPopupMenuComponentForTable(e, jTableSystemMaintenanceLog);
 	}
 
 	void jScrollPaneMenuList_mouseClicked(MouseEvent e) {
@@ -32443,7 +33197,8 @@ public class Editor extends JFrame {
 	
 	String searchTableOperationsInScript(String script, String tableID) {
 		StringBuffer buf = new StringBuffer();
-		script = script.toUpperCase();
+		//script = script.toUpperCase();
+		script = getCaseShiftValue(script, "Upper");
 		int pos1, pos2, pos3, pos4;
 		//
 		if (script.contains("INSERT INTO " + tableID + " ")
@@ -34317,7 +35072,7 @@ public class Editor extends JFrame {
 				jLabelTableKeyFields.setEnabled(false);
 				jTextFieldTableKeyFields.setEnabled(false);
 				jTextFieldTableKeyFields.setText("");
-				jButtonTableKeyFieldsEdit.setEnabled(false);
+				//jButtonTableKeyFieldsEdit.setEnabled(false);
 				jCheckBoxTableDetailRowNumberAuto.setVisible(false);
 				//
 				if (tableModelTableKeyRelationshipList.getRowCount() > 0) {
@@ -34342,9 +35097,9 @@ public class Editor extends JFrame {
 					if (tableKeyType.equals("PK")) {
 						jTextFieldTableKeyType.setText(res.getString("PKey"));
 						jTextFieldTableKeyFields.setText(getFieldNames(tableID, tableKeyFields, " + ", false));
-						if (((MainTreeNode)currentMainTreeNode).getErrorStatus().equals("ER1")) {
-							jButtonTableKeyFieldsEdit.setEnabled(true);
-						}
+						//if (((MainTreeNode)currentMainTreeNode).getErrorStatus().equals("ER1")) {
+						//	jButtonTableKeyFieldsEdit.setEnabled(true);
+						//}
 						jCheckBoxTableDetailRowNumberAuto.setVisible(true);
 					}
 					if (tableKeyType.equals("SK")) {
@@ -35319,6 +36074,9 @@ public class Editor extends JFrame {
 		    }
 		    if (e.getComponent().equals(jTableSystemPrintFontList)) {
 		    	componentType_jPopupMenuComponent = "SystemPrintFontList";
+		    }
+		    if (e.getComponent().equals(jTableSystemMaintenanceLog)) {
+		    	componentType_jPopupMenuComponent = "SystemMaintenanceLog";
 		    }
 		    if (e.getComponent().equals(jTableMenuList)) {
 		    	componentType_jPopupMenuComponent = "MenuList";
@@ -36408,6 +37166,7 @@ public class Editor extends JFrame {
 				jTextFieldFunction300DetailFilterCaptionOptionValue.setEnabled(false);
 				jRadioButtonFunction300DetailFilterPromptOptionNone.setSelected(true);
 				jRadioButtonFunction300DetailFilterPromptOptionNone.setEnabled(false);
+				jRadioButtonFunction300DetailFilterPromptOptionList0.setEnabled(false);
 				jRadioButtonFunction300DetailFilterPromptOptionList1.setEnabled(false);
 				jRadioButtonFunction300DetailFilterPromptOptionList2.setEnabled(false);
 				jRadioButtonFunction300DetailFilterPromptOptionCall.setEnabled(false);
@@ -36454,6 +37213,7 @@ public class Editor extends JFrame {
 					jRadioButtonFunction300DetailFilterCaptionOptionName.setEnabled(true);
 					jRadioButtonFunction300DetailFilterCaptionOptionValue.setEnabled(true);
 					jRadioButtonFunction300DetailFilterPromptOptionNone.setEnabled(true);
+					jRadioButtonFunction300DetailFilterPromptOptionList0.setEnabled(true);
 					jTextFieldFunction300DetailFilterValue.setEnabled(true);
 					jComboBoxFunction300DetailFilterEditableOptions.setEnabled(true);
 					//
@@ -36594,6 +37354,9 @@ public class Editor extends JFrame {
 						jTextFieldFunction300DetailFilterWidth.setText("*Auto");
 					} else {
 						jTextFieldFunction300DetailFilterWidth.setText(wrkStr);
+					}
+					if (optionList.contains("PROMPT_LIST0")) {
+						jRadioButtonFunction300DetailFilterPromptOptionList0.setSelected(true);
 					}
 					if (optionList.contains("PROMPT_LIST1") && jRadioButtonFunction300DetailFilterPromptOptionList1.isEnabled()) {
 						jRadioButtonFunction300DetailFilterPromptOptionList1.setSelected(true);
@@ -37096,7 +37859,8 @@ public class Editor extends JFrame {
 		String answer = JOptionPane.showInputDialog(this.getContentPane(), res.getString("AddKeyMessage"), res.getString("AddPKey"), 1);
 		if (answer != null) {
 			if (!answer.equals("")) {
-				answer = answer.toUpperCase();
+				//answer = answer.toUpperCase();
+				answer = getCaseShiftValue(answer, "Upper");
 				String names = getFieldNames(currentMainTreeNode.getElement().getAttribute("ID"), answer, " + ", false);
 				if (names != null && !names.equals("")) {
 					org.w3c.dom.Element newElement = createNewElementAccordingToType("TableKeyList");
@@ -37117,7 +37881,8 @@ public class Editor extends JFrame {
 		String answer = JOptionPane.showInputDialog(this.getContentPane(), res.getString("AddKeyMessage"), res.getString("AddSKey"), 1);
 		if (answer != null) {
 			if (!answer.equals("")) {
-				answer = answer.toUpperCase();
+				//answer = answer.toUpperCase();
+				answer = getCaseShiftValue(answer, "Upper");
 				String names = getFieldNames(currentMainTreeNode.getElement().getAttribute("ID"), answer, " + ", false);
 				if (names != null && !names.equals("")) {
 					org.w3c.dom.Element newElement = createNewElementAccordingToType("TableKeyList");
@@ -37138,7 +37903,8 @@ public class Editor extends JFrame {
 		String answer = JOptionPane.showInputDialog(this.getContentPane(), res.getString("AddIndexMessage"), res.getString("AddIndex"), 1);
 		if (answer != null) {
 			if (!answer.equals("")) {
-				answer = answer.toUpperCase();
+				//answer = answer.toUpperCase();
+				answer = getCaseShiftValue(answer, "Upper");
 				String names = getIndexKeyNames(currentMainTreeNode.getElement().getAttribute("ID"), answer, " > ");
 				if (names != null && !names.equals("")) {
 					org.w3c.dom.Element newElement = createNewElementAccordingToType("TableKeyList");
@@ -38661,7 +39427,8 @@ public class Editor extends JFrame {
 		String currentValue = tableRangeKeyFields;
 		String answer = JOptionPane.showInputDialog(this.getContentPane(), res.getString("EditRangeKeyMessage"), currentValue);
 		if (answer != null) {
-			answer = answer.toUpperCase();
+			//answer = answer.toUpperCase();
+			answer = getCaseShiftValue(answer, "Upper");
 			if (!answer.equals(tableRangeKeyFields)) {
 				informationOnThisPageChanged = true;
 			}
@@ -38680,26 +39447,31 @@ public class Editor extends JFrame {
 	
 	void jButtonTableKeyFieldsEdit_actionPerformed(ActionEvent e) {
 		String names = "";
-		if (tableKeyType.equals("PK") && (tableModelTableKeyRelationshipList.getRowCount() > 0 || tableModelTableUsageList.getRowCount() > 0)) {
-			JOptionPane.showMessageDialog(this.getContentPane(), res.getString("ErrorMessage39"));
+		if (tableKeyType.equals("PK") && !((MainTreeNode)currentMainTreeNode).getErrorStatus().equals("ER1")) {
+			JOptionPane.showMessageDialog(this.getContentPane(), res.getString("ErrorMessage124"));
 		} else {
-			String currentValue = tableKeyFields;
-			String answer = JOptionPane.showInputDialog(this.getContentPane(), res.getString("AddKeyMessage"), currentValue);
-			if (answer != null) {
-				if (answer.equals("")) {
-					jTextFieldTableKeyFields.setText("*None");
-					tableKeyFields = "";
-				} else {
-					answer = answer.toUpperCase();
-					if (tableKeyType.equals("PK") || tableKeyType.equals("SK")) {
-						names = getFieldNames(jTextFieldTableID.getText(), answer, " + ", false);
-					}
-					if (tableKeyType.equals("XK")) {
-						names = getIndexKeyNames(jTextFieldTableID.getText(), answer, " > ");
-					}
-					if (!names.equals("")) {
-						jTextFieldTableKeyFields.setText(names);
-						tableKeyFields = answer;
+			if (tableKeyType.equals("PK") && (tableModelTableKeyRelationshipList.getRowCount() > 0 || tableModelTableUsageList.getRowCount() > 0)) {
+				JOptionPane.showMessageDialog(this.getContentPane(), res.getString("ErrorMessage39"));
+			} else {
+				String currentValue = tableKeyFields;
+				String answer = JOptionPane.showInputDialog(this.getContentPane(), res.getString("AddKeyMessage"), currentValue);
+				if (answer != null) {
+					if (answer.equals("")) {
+						jTextFieldTableKeyFields.setText("*None");
+						tableKeyFields = "";
+					} else {
+						//answer = answer.toUpperCase();
+						answer = getCaseShiftValue(answer, "Upper");
+						if (tableKeyType.equals("PK") || tableKeyType.equals("SK")) {
+							names = getFieldNames(jTextFieldTableID.getText(), answer, " + ", false);
+						}
+						if (tableKeyType.equals("XK")) {
+							names = getIndexKeyNames(jTextFieldTableID.getText(), answer, " > ");
+						}
+						if (!names.equals("")) {
+							jTextFieldTableKeyFields.setText(names);
+							tableKeyFields = answer;
+						}
 					}
 				}
 			}
@@ -39860,12 +40632,13 @@ public class Editor extends JFrame {
 				function300StructureRootText = "";
 				jTextFieldFunction300StructureRootText.setText("");
 			} else {
-				String wrkStr = getDataSourceNamesForStructureRootText(function300HeaderTableID, answer.toUpperCase());
+				answer = getCaseShiftValue(answer, "Upper");
+				String wrkStr = getDataSourceNamesForStructureRootText(function300HeaderTableID, answer);
 				if (wrkStr.equals("")) {
 					JOptionPane.showMessageDialog(null, res.getString("ErrorMessage121"));
 				} else {
 					informationOnThisPageChanged = true;
-					function300StructureRootText = answer.toUpperCase();
+					function300StructureRootText = answer;
 					jTextFieldFunction300StructureRootText.setText(wrkStr);
 				}
 			}
@@ -39880,12 +40653,13 @@ public class Editor extends JFrame {
 				function300StructureNodeText = "";
 				jTextFieldFunction300StructureNodeText.setText("");
 			} else {
-				String wrkStr = getDataSourceNamesForStructureNodeText(function300HeaderTableID, function300StructureTableID, answer.toUpperCase());
+				answer = getCaseShiftValue(answer, "Upper");
+				String wrkStr = getDataSourceNamesForStructureNodeText(function300HeaderTableID, function300StructureTableID, answer);
 				if (wrkStr.equals("")) {
 					JOptionPane.showMessageDialog(null, res.getString("ErrorMessage108"));
 				} else {
 					informationOnThisPageChanged = true;
-					function300StructureNodeText = answer.toUpperCase();
+					function300StructureNodeText = answer;
 					jTextFieldFunction300StructureNodeText.setText(wrkStr);
 				}
 			}
@@ -40213,16 +40987,18 @@ public class Editor extends JFrame {
 	void jRadioButtonFunction000ConsoleOption_stateChanged(ChangeEvent e) {
 		if (jRadioButtonFunction000ConsoleOptionNo.isSelected() || jRadioButtonFunction000ConsoleOptionYes.isSelected()) {
         	jLabelFunction000TimerDefault.setEnabled(false);
-			jSpinnerFunction000TimerDefaultHour.setEnabled(false);
-			jSpinnerFunction000TimerDefaultMinuite.setEnabled(false);
-			jSpinnerFunction000TimerDefaultHour.setValue(00);
-			jSpinnerFunction000TimerDefaultMinuite.setValue(00);
+			jTextFieldFunction000TimerDefault.setEnabled(false);
+//			jSpinnerFunction000TimerDefaultHour.setEnabled(false);
+//			jSpinnerFunction000TimerDefaultMinuite.setEnabled(false);
+//			jSpinnerFunction000TimerDefaultHour.setValue(00);
+//			jSpinnerFunction000TimerDefaultMinuite.setValue(00);
         	jLabelFunction000TimerMessage.setEnabled(false);
 			jTextFieldFunction000TimerMessage.setEnabled(false);
 		} else {
         	jLabelFunction000TimerDefault.setEnabled(true);
-			jSpinnerFunction000TimerDefaultHour.setEnabled(true);
-			jSpinnerFunction000TimerDefaultMinuite.setEnabled(true);
+			jTextFieldFunction000TimerDefault.setEnabled(true);
+//			jSpinnerFunction000TimerDefaultHour.setEnabled(true);
+//			jSpinnerFunction000TimerDefaultMinuite.setEnabled(true);
         	jLabelFunction000TimerMessage.setEnabled(true);
 			jTextFieldFunction000TimerMessage.setEnabled(true);
 		}
@@ -41093,7 +41869,7 @@ class Editor_DialogStructureTableEdit extends JDialog {
 				tableNode = frame_.getSpecificXETreeNode("Table", jTextFieldStructureTableID.getText().toUpperCase());
 				if (tableNode != null) {
 					jLabelStructureTableName.setText(tableNode.getElement().getAttribute("Name"));
-					jTextFieldStructureTableID.setText(jTextFieldStructureTableID.getText().toUpperCase());
+					jTextFieldStructureTableID.setText(frame_.getCaseShiftValue(jTextFieldStructureTableID.getText(), "Upper"));
 					org.w3c.dom.Element tablePKElement = frame_.getSpecificPKElement(jTextFieldStructureTableID.getText());
 					if (jTextFieldStructureUpperKeys.getText().equals("")) {
 						jTextFieldStructureUpperKeys.setText(tablePKElement.getAttribute("Fields"));
@@ -41143,17 +41919,17 @@ class Editor_DialogStructureTableEdit extends JDialog {
 		String wrkStr;
 		//
 		if (tableNode != null) {
-			jTextFieldStructureUpperKeys.setText(jTextFieldStructureUpperKeys.getText().toUpperCase());
-			jTextFieldStructureChildKeys.setText(jTextFieldStructureChildKeys.getText().toUpperCase());
-			jTextFieldStructureOrderBy.setText(jTextFieldStructureOrderBy.getText().toUpperCase());
+			jTextFieldStructureUpperKeys.setText(frame_.getCaseShiftValue(jTextFieldStructureUpperKeys.getText(), "Upper"));
+			jTextFieldStructureChildKeys.setText(frame_.getCaseShiftValue(jTextFieldStructureChildKeys.getText(), "Upper"));
+			jTextFieldStructureOrderBy.setText(frame_.getCaseShiftValue(jTextFieldStructureOrderBy.getText(), "Upper"));
 			if (jTextFieldStructureUpperKeys.getText().contains(".")
 					|| jTextFieldStructureChildKeys.getText().contains(".")
 					|| jTextFieldStructureOrderBy.getText().contains(".")) {
 				isValid = false;
 				jTextAreaMessage.setText(res.getString("ErrorMessage109"));
 			} else {
-				jTextFieldStructureUpperKeys.setText(jTextFieldStructureUpperKeys.getText().toUpperCase());
-				jTextFieldStructureChildKeys.setText(jTextFieldStructureChildKeys.getText().toUpperCase());
+				jTextFieldStructureUpperKeys.setText(frame_.getCaseShiftValue(jTextFieldStructureUpperKeys.getText(), "Upper"));
+				jTextFieldStructureChildKeys.setText(frame_.getCaseShiftValue(jTextFieldStructureChildKeys.getText(), "Upper"));
 				//
 				workTokenizer = new StringTokenizer(headerTableKeys_, ";" );
 				while (workTokenizer.hasMoreTokens()) {
@@ -41409,7 +42185,7 @@ class Editor_DialogStructureNodeIconsEdit extends JDialog {
 		org.w3c.dom.Element workElement;
 		StringTokenizer workTokenizer;
 		//
-		jTextFieldFieldID.setText(jTextFieldFieldID.getText().toUpperCase());
+		jTextFieldFieldID.setText(frame_.getCaseShiftValue(jTextFieldFieldID.getText(), "Upper"));
 		//
 		if (tableNode != null) {
 			if (jTextFieldFieldID.getText().contains(".")) {
@@ -41601,10 +42377,10 @@ class Editor_DialogAddRowListTableEdit extends JDialog {
 			jLabelAddRowListTableName.setText("N/A");
 			tableNode = frame_.getSpecificXETreeNode("Table", jTextFieldAddRowListTableID.getText());
 			if (tableNode == null) {
-				tableNode = frame_.getSpecificXETreeNode("Table", jTextFieldAddRowListTableID.getText().toUpperCase());
+				tableNode = frame_.getSpecificXETreeNode("Table", frame_.getCaseShiftValue(jTextFieldAddRowListTableID.getText(), "Upper"));
 				if (tableNode != null) {
 					jLabelAddRowListTableName.setText(tableNode.getElement().getAttribute("Name"));
-					jTextFieldAddRowListTableID.setText(jTextFieldAddRowListTableID.getText().toUpperCase());
+					jTextFieldAddRowListTableID.setText(frame_.getCaseShiftValue(jTextFieldAddRowListTableID.getText(), "Upper"));
 				}
 			} else {
 				jLabelAddRowListTableName.setText(tableNode.getElement().getAttribute("Name"));
@@ -42770,11 +43546,11 @@ class Editor_DialogAddRowListReturnDataSourcesEdit extends JDialog {
 		org.w3c.dom.Element workElement1, workElement2;
 		StringTokenizer workTokenizer;
 		//
-		workTokenizer = new StringTokenizer(jTextFieldReturnFromFields.getText().toUpperCase(), ";" );
+		workTokenizer = new StringTokenizer(frame_.getCaseShiftValue(jTextFieldReturnFromFields.getText(), "Upper"), ";");
 		while (workTokenizer.hasMoreTokens()) {
 			fromDataSourceList.add(workTokenizer.nextToken());
 		}
-		workTokenizer = new StringTokenizer(jTextFieldReturnToFields.getText().toUpperCase(), ";" );
+		workTokenizer = new StringTokenizer(frame_.getCaseShiftValue(jTextFieldReturnToFields.getText(), "Upper"), ";");
 		while (workTokenizer.hasMoreTokens()) {
 			toDataSourceList.add(workTokenizer.nextToken());
 		}
@@ -43098,11 +43874,11 @@ class Editor_DialogPromptOptionCallFunctionExchangeEdit extends JDialog {
 		ArrayList<String> toDataSourceList = new ArrayList<String>(); 
 		StringTokenizer workTokenizer;
 		//
-		workTokenizer = new StringTokenizer(jTextFieldFieldsToPut.getText().toUpperCase(), ";" );
+		workTokenizer = new StringTokenizer(frame_.getCaseShiftValue(jTextFieldFieldsToPut.getText(), "Upper"), ";");
 		while (workTokenizer.hasMoreTokens()) {
 			fromDataSourceList.add(workTokenizer.nextToken());
 		}
-		workTokenizer = new StringTokenizer(jTextFieldFieldsToPutTo.getText().toUpperCase(), ";" );
+		workTokenizer = new StringTokenizer(frame_.getCaseShiftValue(jTextFieldFieldsToPutTo.getText(), "Upper"), ";");
 		while (workTokenizer.hasMoreTokens()) {
 			toDataSourceList.add(workTokenizer.nextToken());
 		}
@@ -43154,12 +43930,12 @@ class Editor_DialogPromptOptionCallFunctionExchangeEdit extends JDialog {
 		//
 		if (isValid) {
 			fromDataSourceList.clear();
-			workTokenizer = new StringTokenizer(jTextFieldFieldsToGet.getText().toUpperCase(), ";" );
+			workTokenizer = new StringTokenizer(frame_.getCaseShiftValue(jTextFieldFieldsToGet.getText(), "Upper"), ";");
 			while (workTokenizer.hasMoreTokens()) {
 				fromDataSourceList.add(workTokenizer.nextToken());
 			}
 			toDataSourceList.clear();
-			workTokenizer = new StringTokenizer(jTextFieldFieldsToGetTo.getText().toUpperCase(), ";" );
+			workTokenizer = new StringTokenizer(frame_.getCaseShiftValue(jTextFieldFieldsToGetTo.getText(), "Upper"), ";");
 			while (workTokenizer.hasMoreTokens()) {
 				toDataSourceList.add(workTokenizer.nextToken());
 			}
@@ -45902,6 +46678,16 @@ class Editor_jMenuItemToolConnectDB_actionAdapter implements java.awt.event.Acti
 	}
 }
 
+class Editor_jMenuItemToolCheckAllModules_actionAdapter implements java.awt.event.ActionListener {
+	Editor adaptee;
+	Editor_jMenuItemToolCheckAllModules_actionAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jMenuItemToolCheckAllModules_actionPerformed(e);
+	}
+}
+
 class Editor_jMenuItemToolCheckFunctionsCalled_actionAdapter implements java.awt.event.ActionListener {
 	Editor adaptee;
 	Editor_jMenuItemToolCheckFunctionsCalled_actionAdapter(Editor adaptee) {
@@ -46684,4 +47470,32 @@ class XEditor_FieldSizeSpinnerEditor extends JSpinner.NumberEditor {
        } catch (ParseException e) {
        }
     }
+}
+
+class Editor_jScrollPaneSystemMaintenanceLog_mouseAdapter extends java.awt.event.MouseAdapter {
+	Editor adaptee;
+	Editor_jScrollPaneSystemMaintenanceLog_mouseAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void mouseClicked(MouseEvent e) {
+		adaptee.jScrollPaneSystemMaintenanceLog_mouseClicked(e);
+	}
+}
+class Editor_jTableSystemMaintenanceLog_listSelectionAdapter  implements ListSelectionListener {
+	Editor adaptee;
+	Editor_jTableSystemMaintenanceLog_listSelectionAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void valueChanged(ListSelectionEvent e) {
+		adaptee.jTableSystemMaintenanceLog_valueChanged(e);
+	}
+}
+class Editor_jTableSystemMaintenanceLog_mouseAdapter extends java.awt.event.MouseAdapter {
+	Editor adaptee;
+	Editor_jTableSystemMaintenanceLog_mouseAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void mouseClicked(MouseEvent e) {
+		adaptee.jTableSystemMaintenanceLog_mouseClicked(e);
+	}
 }
