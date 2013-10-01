@@ -534,7 +534,10 @@ public class DialogCheckTableModule extends JDialog {
 						indexListToBeDropped.add(indexNameList.get(i));
 						buf.append("(" + countOfErrors + ") " + res.getString("ModuleCheckMessage18") + indexFieldsList.get(i) + res.getString("ModuleCheckMessage19"));
 					}
-					if (!exist && indexNotUniqueList.get(i).equals("true")) {
+					///////////////////////////////////////////////////////////////////////////////////////////////
+					// Those "function indexes" which contains "(" in its expression should be skipped to check. //
+					///////////////////////////////////////////////////////////////////////////////////////////////
+					if (!exist && indexNotUniqueList.get(i).equals("true") && !indexFieldsList.get(i).contains("(")) {
 						countOfErrors++;
 						indexListToBeDropped.add(indexNameList.get(i));
 

@@ -29599,14 +29599,14 @@ public class Editor extends JFrame {
 	void jTableFunction100FilterList_valueChanged(ListSelectionEvent e) {
 		int pos1;
 		String wrkStr="";
-		//
+
 		if (!tableRowsAreBeingSetup) {
-			//
+
 			try {
 				if (currentMainTreeNode.updateFieldsForFunction100Filter()) {
 					informationOnThisPageChanged = true;
 				}
-				//
+
 				jLabelFunction100FilterTable.setEnabled(false);
 				jLabelFunction100FilterTableType.setEnabled(false);
 				jLabelFunction100FilterField.setEnabled(false);
@@ -29660,12 +29660,12 @@ public class Editor extends JFrame {
 				jButtonFunction100FilterPromptOptionCallFunctionExchange.setEnabled(false);
 				jCheckBoxFunction100FilterIgnoreIfZero.setSelected(false);
 				jCheckBoxFunction100FilterIgnoreIfZero.setVisible(false);
-				//
+
 				if (jTableFunction100FilterList.getSelectedRow() != -1) {
-					//
+
 					selectedRow_jTableFunction100FilterList = jTableFunction100FilterList.getSelectedRow();
 					TableRowNumber tableRowNumber = (TableRowNumber)tableModelFunction100FilterList.getValueAt(selectedRow_jTableFunction100FilterList, 0);
-					//
+
 					jLabelFunction100FilterTable.setEnabled(true);
 					jLabelFunction100FilterTableType.setEnabled(true);
 					jLabelFunction100FilterField.setEnabled(true);
@@ -29689,9 +29689,9 @@ public class Editor extends JFrame {
 					jRadioButtonFunction100FilterPromptOptionList0.setEnabled(true);
 					jTextFieldFunction100FilterValue.setEnabled(true);
 					jComboBoxFunction100FilterEditableOptions.setEnabled(true);
-					//
+
 					org.w3c.dom.Element element = tableRowNumber.getElement();
-					//
+
 					wrkStr = element.getAttribute("DataSource");
 					pos1 = wrkStr.indexOf(".");
 					String tableAlias = wrkStr.substring(0, pos1);
@@ -29701,7 +29701,7 @@ public class Editor extends JFrame {
 					org.w3c.dom.Element tableElement = tableNode.getElement();
 					jTextFieldFunction100FilterTable.setText(tableID + " " + tableElement.getAttribute("Name"));
 					org.w3c.dom.Element fieldElement = getSpecificFieldElement(tableID, fieldID);
-					//
+
 					if (tableAlias.equals(function100PrimaryTableID) && tableID.equals(function100PrimaryTableID)) {
 						jTextFieldFunction100FilterTableType.setText(res.getString("PrimaryTable"));
 					} else {
@@ -29716,7 +29716,7 @@ public class Editor extends JFrame {
 							jRadioButtonFunction100FilterPromptOptionList2.setEnabled(true);
 						}
 					}
-					//
+
 					jTextFieldFunction100FilterField.setText(fieldID + " " + fieldElement.getAttribute("Name"));
 					wrkStr = getDescriptionsOfTypeOptions(fieldElement, true, function100TableElement);
 					jTextFieldFunction100FilterFieldType.setText(getDescriptionsOfTypeAndSize(fieldElement.getAttribute("Type"), fieldElement.getAttribute("Size"), fieldElement.getAttribute("Decimal")) + wrkStr);
@@ -29729,15 +29729,15 @@ public class Editor extends JFrame {
 							|| dataType.equals("DOUBLE PRECISION")
 							|| dataType.equals("NUMERIC")
 							|| dataType.equals("REAL")	) {
-						//
+
 						jRadioButtonFunction100FilterOptionLE.setEnabled(true);
 						jRadioButtonFunction100FilterOptionLT.setEnabled(true);
 						jRadioButtonFunction100FilterOptionGE.setEnabled(true);
 						jRadioButtonFunction100FilterOptionGT.setEnabled(true);
-						//
+
 						jCheckBoxFunction100FilterIgnoreIfZero.setVisible(true);
 					} else {
-						//
+
 						if (dataType.equals("DATE")) {
 							jRadioButtonFunction100FilterOptionLE.setEnabled(true);
 							jRadioButtonFunction100FilterOptionLT.setEnabled(true);
@@ -29766,11 +29766,11 @@ public class Editor extends JFrame {
 							}
 						}
 					}
-					//
+
 					if (getOptionList(fieldElement.getAttribute("TypeOptions")).contains("VIRTUAL")) {
 						jRadioButtonFunction100FilterOptionREFLECT.setEnabled(true);
 					}
-					//
+
 					if (!getOptionValueWithKeyword(fieldElement.getAttribute("TypeOptions"), "KUBUN").equals("")) {
 						jRadioButtonFunction100FilterPromptOptionList1.setEnabled(true);
 						jRadioButtonFunction100FilterPromptOptionList2.setEnabled(true);
@@ -29778,7 +29778,7 @@ public class Editor extends JFrame {
 					if (!fieldElement.getAttribute("TypeOptions").contains("BOOLEAN(")) {
 						jRadioButtonFunction100FilterPromptOptionCall.setEnabled(true);
 					}
-					//
+
 					String operandType = getOperandType(element.getAttribute("FieldOptions"));
 					if (operandType.equals("")) {
 						jRadioButtonFunction100FilterOptionEQ.setSelected(true);
@@ -29804,9 +29804,9 @@ public class Editor extends JFrame {
 					if (operandType.equals("REFLECT")) {
 						jRadioButtonFunction100FilterOptionREFLECT.setSelected(true);
 					}
-					//
+
 					ArrayList<String> optionList = getOptionList(element.getAttribute("FieldOptions"));
-					//
+
 					jTextFieldFunction100FilterMargin.setText("*Auto");
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "VERTICAL");
 					if (wrkStr.equals("")) {
@@ -29821,13 +29821,14 @@ public class Editor extends JFrame {
 					if (!wrkStr.equals("")) {
 						jTextFieldFunction100FilterMargin.setText(wrkStr);
 					}
-					//
+
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
 					if (wrkStr.equals("")) {
 						jTextFieldFunction100FilterWidth.setText("*Auto");
 					} else {
 						jTextFieldFunction100FilterWidth.setText(wrkStr);
 					}
+
 					if (optionList.contains("PROMPT_LIST0")) {
 						jRadioButtonFunction100FilterPromptOptionList0.setSelected(true);
 					}
@@ -29853,7 +29854,7 @@ public class Editor extends JFrame {
 					function100FilterPromptOptionCallFunctionFieldsToPutTo = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "PROMPT_CALL_TO_PUT_TO");
 					function100FilterPromptOptionCallFunctionFieldsToGet = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "PROMPT_CALL_TO_GET");
 					function100FilterPromptOptionCallFunctionFieldsToGetTo = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "PROMPT_CALL_TO_GET_TO");
-					//
+
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "CAPTION");
 					if (!wrkStr.equals("")) {
 						jRadioButtonFunction100FilterCaptionOptionValue.setSelected(true);
@@ -37990,48 +37991,6 @@ public class Editor extends JFrame {
 		}
 	}
 	
-//	void jComboBoxFunction290PhraseBlockType_actionPerformed(ActionEvent e) {
-//		if (jComboBoxFunction290PhraseBlockType.getSelectedItem().equals("HEADER")) {
-//			jComboBoxFunction290PhraseAlignment.setVisible(true);
-//			jTextFieldFunction290PhraseAlignment.setVisible(false);
-//			jTextFieldFunction290PhraseAlignmentMargin.setEditable(false);
-//			jTextFieldFunction290PhraseAlignmentMargin.setText("0");
-//		}
-//		if (jComboBoxFunction290PhraseBlockType.getSelectedItem().equals("PARAGRAPH")) {
-//			jComboBoxFunction290PhraseAlignment.setVisible(true);
-//			jTextFieldFunction290PhraseAlignment.setVisible(false);
-//			jTextFieldFunction290PhraseAlignmentMargin.setEditable(true);
-//			jTextFieldFunction290PhraseAlignmentMargin.setText("0");
-//		}
-//		if (jComboBoxFunction290PhraseBlockType.getSelectedItem().equals("PHRASE")) {
-//			jComboBoxFunction290PhraseAlignment.setVisible(false);
-//			jTextFieldFunction290PhraseAlignment.setVisible(true);
-//			jTextFieldFunction290PhraseAlignmentMargin.setEditable(false);
-//			jTextFieldFunction290PhraseAlignmentMargin.setText("*Prev");
-//		}
-//	}
-	
-//	void jComboBoxFunction390HeaderPhraseBlockType_actionPerformed(ActionEvent e) {
-//		if (jComboBoxFunction390HeaderPhraseBlockType.getSelectedItem().equals("HEADER")) {
-//			jComboBoxFunction390HeaderPhraseAlignment.setVisible(true);
-//			jTextFieldFunction390HeaderPhraseAlignment.setVisible(false);
-//			jTextFieldFunction390HeaderPhraseAlignmentMargin.setEditable(false);
-//			jTextFieldFunction390HeaderPhraseAlignmentMargin.setText("0");
-//		}
-//		if (jComboBoxFunction390HeaderPhraseBlockType.getSelectedItem().equals("PARAGRAPH")) {
-//			jComboBoxFunction390HeaderPhraseAlignment.setVisible(true);
-//			jTextFieldFunction390HeaderPhraseAlignment.setVisible(false);
-//			jTextFieldFunction390HeaderPhraseAlignmentMargin.setEditable(true);
-//			jTextFieldFunction390HeaderPhraseAlignmentMargin.setText("0");
-//		}
-//		if (jComboBoxFunction390HeaderPhraseBlockType.getSelectedItem().equals("PHRASE")) {
-//			jComboBoxFunction390HeaderPhraseAlignment.setVisible(false);
-//			jTextFieldFunction390HeaderPhraseAlignment.setVisible(true);
-//			jTextFieldFunction390HeaderPhraseAlignmentMargin.setEditable(false);
-//			jTextFieldFunction390HeaderPhraseAlignmentMargin.setText("*Prev");
-//		}
-//	}
-	
 	void jButtonToEditPromptOptionCallFunctionExchange_actionPerformed(ActionEvent e) {
 		int reply;
 		//
@@ -41153,7 +41112,6 @@ public class Editor extends JFrame {
 	}
 	
 	void jRadioButtonFunction100FilterPromptOption_stateChanged(ChangeEvent e) {
-		//
 		if (jRadioButtonFunction100FilterPromptOptionCall.isSelected()) {
 			jTextFieldFunction100FilterPromptOptionCallFunctionID.setEnabled(true);
 			jTextFieldFunction100FilterPromptOptionCallFunctionName.setEnabled(true);
@@ -41174,7 +41132,6 @@ public class Editor extends JFrame {
 	}
 	
 	void jRadioButtonFunction110FilterPromptOption_stateChanged(ChangeEvent e) {
-		//
 		if (jRadioButtonFunction110FilterPromptOptionCall.isSelected()) {
 			jTextFieldFunction110FilterPromptOptionCallFunctionID.setEnabled(true);
 			jTextFieldFunction110FilterPromptOptionCallFunctionName.setEnabled(true);
