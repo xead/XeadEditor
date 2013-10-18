@@ -43,9 +43,17 @@ public class DialogAbout extends JDialog implements ActionListener {
 	 * Application Information
 	 */
 	public static final String APPLICATION_NAME  = "XEAD Editor 1.1";
-	public static final String FULL_VERSION  = "V1.R1.M20";
+	public static final String FULL_VERSION  = "V1.R1.M21";
+	//21
+	//・インポートやスキャン処理の後に「保存しない」を選んだときは、ツリービューを再描画しないようにした
+	//・パネルサイズの指定値の上限を1200から2000に拡張した
+	//・XF100,110,200,300,310でテーブルＩＤを置換した場合、フィールド定義のFieldOptionsに含まれるテーブルＩＤも置換するようにした
+	//・テーブルの使途要素一覧からテーブル定義にジャンプした際に、使途要素の定義明細行が選択されるようにした
+	//・XF390で明細フィールドを追加した際に、数値フィールドであればアラインメントRIGHTとして設定するようにした
+	//・テーブル毎にクロスチェックの除外を指定できるようにした
+	//
 	//20
-	//・postgresqlの関数インデックスをモジュールチェックの対象外とした
+	//・PostgreSQLの関数インデックスをモジュールチェックの対象外とした
 	//
 	//19
 	//・テーブルモジュールが存在する場合でもPKの変更ボタンを有効にして、PKが変更不可であるメッセージを表示するようにした

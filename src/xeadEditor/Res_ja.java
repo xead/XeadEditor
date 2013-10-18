@@ -906,6 +906,7 @@ public class Res_ja extends java.util.ListResourceBundle {
 		{ "TableModuleID", "モジュールID" },
 		{ "TableName", "テーブル名" },
 		{ "TableOperation", "テーブル操作" },
+		{ "TableReferCheck", "クロスチェック対象" },
 		{ "TableUsageInScript1", "スクリプト「" },
 		{ "TableUsageInScript2", "」での操作(" },
 		{ "TableUsageInScript3", ")" },

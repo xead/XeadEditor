@@ -906,6 +906,7 @@ public class Res extends java.util.ListResourceBundle {
 		{ "TableModuleID", "Module ID" },
 		{ "TableName", "Table Name" },
 		{ "TableOperation", "Table Operation" },
+		{ "TableReferCheck", "Chrosss Checking" },
 		{ "TableUsageInScript1", "Operated in Script '" },
 		{ "TableUsageInScript2", "' (" },
 		{ "TableUsageInScript3", ")" },

@@ -592,6 +592,7 @@ public class Editor extends JFrame {
 	private Editor_KanjiTextField jTextFieldTableName = new Editor_KanjiTextField();
 	private JLabel jLabelTableDB = new JLabel();
 	private JComboBox jComboBoxTableDB = new JComboBox();
+	private JCheckBox jCheckBoxTableReferCheck = new JCheckBox();
 	private JLabel jLabelTableModuleID = new JLabel();
 	private JTextField jTextFieldTableModuleID = new JTextField();
 	private JButton jButtonTableModuleCheck = new JButton();
@@ -4237,6 +4238,9 @@ public class Editor extends JFrame {
 		jComboBoxTableDB.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jComboBoxTableDB.setBounds(new Rectangle(675, 37, 150, 22));
 		jComboBoxTableDB.addActionListener(new Editor_jComboBoxTableDB_actionAdapter(this));
+		jCheckBoxTableReferCheck.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jCheckBoxTableReferCheck.setText(res.getString("TableReferCheck"));
+		jCheckBoxTableReferCheck.setBounds(new Rectangle(840, 37, 150, 22));
 		jLabelTableRangeKeyFields.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelTableRangeKeyFields.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableRangeKeyFields.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -4291,6 +4295,7 @@ public class Editor extends JFrame {
 		jPanelTableTop.add(jTextFieldTablePK);
 		jPanelTableTop.add(jLabelTablePK);
 		jPanelTableTop.add(jComboBoxTableDB);
+		jPanelTableTop.add(jCheckBoxTableReferCheck);
 		jPanelTableTop.add(jLabelTableDB);
 		jPanelTableTop.add(jTextFieldTableRangeKeyFields);
 		jPanelTableTop.add(jLabelTableRangeKeyFields);
@@ -13730,12 +13735,23 @@ public class Editor extends JFrame {
 			}
 		}
 	} //End of Class NodeJumpButton//
+
 	/**
 	 * Setup contents-pane for node selected
 	 * @param node :selected node
 	 * @param refreshRequired :specify whether refresh required even if the same node selected again
 	 */
 	void setupContentsPaneForTreeNodeSelected(MainTreeNode node, boolean refreshRequired) {
+		setupContentsPaneForTreeNodeSelected(node, null, refreshRequired);
+	}
+
+	/**
+	 * Setup contents-pane for node selected
+	 * @param node :selected node
+	 * @param targetElement :selected element
+	 * @param refreshRequired :specify whether refresh required even if the same node selected again
+	 */
+	void setupContentsPaneForTreeNodeSelected(MainTreeNode node, org.w3c.dom.Element targetElement, boolean refreshRequired) {
 		try {
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			previousMainTreeNode = currentMainTreeNode;
@@ -13749,7 +13765,7 @@ public class Editor extends JFrame {
 					setupJumpButtons();
 				}
 				//
-				currentMainTreeNode.activateContentsPane();
+				currentMainTreeNode.activateContentsPane(targetElement);
 			}
 			//
 			//Setup frame title//
@@ -13760,6 +13776,7 @@ public class Editor extends JFrame {
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
 	}
+
 	/**
 	 * Setup Jump-buttons
 	 */
@@ -16156,6 +16173,10 @@ public class Editor extends JFrame {
 		}
 
 		public void activateContentsPane() {
+			activateContentsPane(null);
+		}
+
+		public void activateContentsPane(org.w3c.dom.Element targetElement) {
 			String panelName = "";
 			//
 			informationOnThisPageChanged = false;
@@ -16168,7 +16189,7 @@ public class Editor extends JFrame {
 				if (nodeType_.equals("SubsystemList")) {panelName = activateContentsPaneForSubsystemList();}
 				if (nodeType_.equals("Subsystem")) {panelName = activateContentsPaneForSubsystem();}
 				if (nodeType_.equals("TableList")) {panelName = activateContentsPaneForTableList();}
-				if (nodeType_.equals("Table")) {panelName = activateContentsPaneForTable();}
+				if (nodeType_.equals("Table")) {panelName = activateContentsPaneForTable(targetElement);}
 				if (nodeType_.equals("FunctionList")) {panelName = activateContentsPaneForFunctionList();}
 				if (nodeType_.equals("Function")) {
 					if (domNode_.getAttribute("Type").equals("XF000")) {
@@ -16621,7 +16642,7 @@ public class Editor extends JFrame {
 			return "jPanelTableList";
 		}
 
-		private String activateContentsPaneForTable() throws Exception {
+		private String activateContentsPaneForTable(org.w3c.dom.Element targetElement) throws Exception {
 			org.w3c.dom.Element element1;
 			NodeList nodeList1;
 			MainTreeNode tableNode;
@@ -16631,6 +16652,10 @@ public class Editor extends JFrame {
 			String basicType;
 			ArrayList<Integer> columnWidthList = new ArrayList<Integer>();
 			ArrayList<String> columnTypeList = new ArrayList<String>();
+			//
+			int targetRow_jTableTableKeyList = 0;
+			int targetRow_jTableTableReferList = 0;
+			int targetRow_jTableTableScriptList = 0;
 			//
 			jLabelSubtitle.setText(((MainTreeNode)this.getParent().getParent()).getName() + " - " + this.getName());
 			//
@@ -16695,6 +16720,12 @@ public class Editor extends JFrame {
 			}
 			jComboBoxTableDB.setSelectedIndex(databaseIDList.indexOf(domNode_.getAttribute("DB")));
 			jComboBoxTableDB.setEnabled(!isSystemControlTable);
+			//
+			if (domNode_.getAttribute("SkipReferCheck").equals("T")) {
+				jCheckBoxTableReferCheck.setSelected(false);
+			} else {
+				jCheckBoxTableReferCheck.setSelected(true);
+			}
 			//
 			jTextFieldTableName.setText(domNode_.getAttribute("Name"));
 			if (domNode_.getAttribute("ModuleID").equals("")) {
@@ -16773,6 +16804,11 @@ public class Editor extends JFrame {
 					Cell[2] = getIndexKeyNames(domNode_.getAttribute("ID"), element1.getAttribute("Fields"), " > ");
 				}
 				tableModelTableKeyList.addRow(Cell);
+				//
+				if (element1 == targetElement) {
+					targetRow_jTableTableKeyList = i;
+					jTabbedPaneTable.setSelectedIndex(1);
+				}
 			}
 			//
 			//Field List//
@@ -16888,6 +16924,11 @@ public class Editor extends JFrame {
 					Cell[4] = getFieldNames(element.getAttribute("ToTable"), element.getAttribute("Fields"), res.getString("Comma"), false);
 				}
 				tableModelTableReferList.addRow(Cell);
+				//
+				if (element == targetElement) {
+					targetRow_jTableTableReferList = i;
+					jTabbedPaneTable.setSelectedIndex(2);
+				}
 			}
 		    //
 			//Script List//
@@ -16917,6 +16958,11 @@ public class Editor extends JFrame {
 				}
 		    	//
 		    	tableModelTableScriptList.addRow(Cell);
+		    	//
+				if (element1 == targetElement) {
+					targetRow_jTableTableScriptList = i;
+					jTabbedPaneTable.setSelectedIndex(3);
+				}
 		    }
 			//
 			//Table Usage List//
@@ -16964,21 +17010,21 @@ public class Editor extends JFrame {
 			//
 			selectedRow_jTableTableKeyList = -1;
 			if (tableModelTableKeyList.getRowCount() > 0) {
-				jTableTableKeyList.setRowSelectionInterval(0, 0);
+				jTableTableKeyList.setRowSelectionInterval(targetRow_jTableTableKeyList, targetRow_jTableTableKeyList);
 			} else {
 				jTableTableKeyList_valueChanged();
 			}
 			//
 			selectedRow_jTableTableReferList = -1;
 			if (tableModelTableReferList.getRowCount() > 0) {
-				jTableTableReferList.setRowSelectionInterval(0, 0);
+				jTableTableReferList.setRowSelectionInterval(targetRow_jTableTableReferList, targetRow_jTableTableReferList);
 			} else {
 				jTableTableReferList_valueChanged();
 			}
 			//
 			selectedRow_jTableTableScriptList = -1;
 			if (tableModelTableScriptList.getRowCount() > 0) {
-				jTableTableScriptList.setRowSelectionInterval(0, 0);
+				jTableTableScriptList.setRowSelectionInterval(targetRow_jTableTableScriptList, targetRow_jTableTableScriptList);
 			} else {
 				jTableTableScriptList_valueChanged();
 			}
@@ -20270,6 +20316,15 @@ public class Editor extends JFrame {
 				valueOfFieldsChanged = true;
 				domNode_.setAttribute("DB", databaseIDList.get(jComboBoxTableDB.getSelectedIndex()));
 			}
+			if (domNode_.getAttribute("SkipReferCheck").equals("T") && jCheckBoxTableReferCheck.isSelected()) {
+				valueOfFieldsChanged = true;
+				domNode_.setAttribute("SkipReferCheck", "F");
+			}
+			if ((domNode_.getAttribute("SkipReferCheck").equals("F") || domNode_.getAttribute("SkipReferCheck").equals(""))
+					&& !jCheckBoxTableReferCheck.isSelected()) {
+				valueOfFieldsChanged = true;
+				domNode_.setAttribute("SkipReferCheck", "T");
+			}
 			if (!domNode_.getAttribute("RangeKey").equals(tableRangeKeyFields)) {
 				valueOfFieldsChanged = true;
 				domNode_.setAttribute("RangeKey", tableRangeKeyFields);
@@ -21168,7 +21223,7 @@ public class Editor extends JFrame {
 						&& !jTextFieldFunction100SizeWidth.getText().equals("")
 						&& !jTextFieldFunction100SizeHeight.getText().equals("")) {
 					valueOfFieldsChanged = true;
-					domNode_.setAttribute("Size", getStringSizeValue(jTextFieldFunction100SizeWidth.getText(), jTextFieldFunction100SizeHeight.getText(), 50, 1200));
+					domNode_.setAttribute("Size", getStringSizeValue(jTextFieldFunction100SizeWidth.getText(), jTextFieldFunction100SizeHeight.getText(), 50, 2000));
 				}
 			} else {
 				if (domNode_.getAttribute("Size").equals("AUTO")) {
@@ -21180,7 +21235,7 @@ public class Editor extends JFrame {
 							&& !jTextFieldFunction100SizeWidth.getText().equals("")
 							&& !jTextFieldFunction100SizeHeight.getText().equals("")) {
 						valueOfFieldsChanged = true;
-						domNode_.setAttribute("Size", getStringSizeValue(jTextFieldFunction100SizeWidth.getText(), jTextFieldFunction100SizeHeight.getText(), 50, 1200));
+						domNode_.setAttribute("Size", getStringSizeValue(jTextFieldFunction100SizeWidth.getText(), jTextFieldFunction100SizeHeight.getText(), 50, 2000));
 					}
 				} else {
 					if (jRadioButtonFunction100SizeAuto.isSelected()) {
@@ -21194,7 +21249,7 @@ public class Editor extends JFrame {
 					if (jRadioButtonFunction100SizeSpecify.isSelected()
 							&& !jTextFieldFunction100SizeWidth.getText().equals("")
 							&& !jTextFieldFunction100SizeHeight.getText().equals("")) {
-						String wrkStr = getStringSizeValue(jTextFieldFunction100SizeWidth.getText(), jTextFieldFunction100SizeHeight.getText(), 50, 1200);
+						String wrkStr = getStringSizeValue(jTextFieldFunction100SizeWidth.getText(), jTextFieldFunction100SizeHeight.getText(), 50, 2000);
 						if (!wrkStr.equals(domNode_.getAttribute("Size"))) {
 							valueOfFieldsChanged = true;
 							domNode_.setAttribute("Size", wrkStr);
@@ -21786,7 +21841,7 @@ public class Editor extends JFrame {
 						&& !jTextFieldFunction110SizeWidth.getText().equals("")
 						&& !jTextFieldFunction110SizeHeight.getText().equals("")) {
 					valueOfFieldsChanged = true;
-					domNode_.setAttribute("Size", getStringSizeValue(jTextFieldFunction110SizeWidth.getText(), jTextFieldFunction110SizeHeight.getText(), 50, 1200));
+					domNode_.setAttribute("Size", getStringSizeValue(jTextFieldFunction110SizeWidth.getText(), jTextFieldFunction110SizeHeight.getText(), 50, 2000));
 				}
 			} else {
 				if (domNode_.getAttribute("Size").equals("AUTO")) {
@@ -21798,7 +21853,7 @@ public class Editor extends JFrame {
 							&& !jTextFieldFunction110SizeWidth.getText().equals("")
 							&& !jTextFieldFunction110SizeHeight.getText().equals("")) {
 						valueOfFieldsChanged = true;
-						domNode_.setAttribute("Size", getStringSizeValue(jTextFieldFunction110SizeWidth.getText(), jTextFieldFunction110SizeHeight.getText(), 50, 1200));
+						domNode_.setAttribute("Size", getStringSizeValue(jTextFieldFunction110SizeWidth.getText(), jTextFieldFunction110SizeHeight.getText(), 50, 2000));
 					}
 				} else {
 					if (jRadioButtonFunction110SizeAuto.isSelected()) {
@@ -21812,7 +21867,7 @@ public class Editor extends JFrame {
 					if (jRadioButtonFunction110SizeSpecify.isSelected()
 							&& !jTextFieldFunction110SizeWidth.getText().equals("")
 							&& !jTextFieldFunction110SizeHeight.getText().equals("")) {
-						String wrkStr = getStringSizeValue(jTextFieldFunction110SizeWidth.getText(), jTextFieldFunction110SizeHeight.getText(), 50, 1200);
+						String wrkStr = getStringSizeValue(jTextFieldFunction110SizeWidth.getText(), jTextFieldFunction110SizeHeight.getText(), 50, 2000);
 						if (!wrkStr.equals(domNode_.getAttribute("Size"))) {
 							valueOfFieldsChanged = true;
 							domNode_.setAttribute("Size", wrkStr);
@@ -22864,7 +22919,7 @@ public class Editor extends JFrame {
 						&& !jTextFieldFunction200SizeWidth.getText().equals("")
 						&& !jTextFieldFunction200SizeHeight.getText().equals("")) {
 					valueOfFieldsChanged = true;
-					domNode_.setAttribute("Size", getStringSizeValue(jTextFieldFunction200SizeWidth.getText(), jTextFieldFunction200SizeHeight.getText(), 50, 1200));
+					domNode_.setAttribute("Size", getStringSizeValue(jTextFieldFunction200SizeWidth.getText(), jTextFieldFunction200SizeHeight.getText(), 50, 2000));
 				}
 			} else {
 				if (domNode_.getAttribute("Size").equals("AUTO")) {
@@ -22876,7 +22931,7 @@ public class Editor extends JFrame {
 							&& !jTextFieldFunction200SizeWidth.getText().equals("")
 							&& !jTextFieldFunction200SizeHeight.getText().equals("")) {
 						valueOfFieldsChanged = true;
-						domNode_.setAttribute("Size", getStringSizeValue(jTextFieldFunction200SizeWidth.getText(), jTextFieldFunction200SizeHeight.getText(), 50, 1200));
+						domNode_.setAttribute("Size", getStringSizeValue(jTextFieldFunction200SizeWidth.getText(), jTextFieldFunction200SizeHeight.getText(), 50, 2000));
 					}
 				} else {
 					if (jRadioButtonFunction200SizeAuto.isSelected()) {
@@ -22890,7 +22945,7 @@ public class Editor extends JFrame {
 					if (jRadioButtonFunction200SizeSpecify.isSelected()
 							&& !jTextFieldFunction200SizeWidth.getText().equals("")
 							&& !jTextFieldFunction200SizeHeight.getText().equals("")) {
-						String wrkStr = getStringSizeValue(jTextFieldFunction200SizeWidth.getText(), jTextFieldFunction200SizeHeight.getText(), 50, 1200);
+						String wrkStr = getStringSizeValue(jTextFieldFunction200SizeWidth.getText(), jTextFieldFunction200SizeHeight.getText(), 50, 2000);
 						if (!wrkStr.equals(domNode_.getAttribute("Size"))) {
 							valueOfFieldsChanged = true;
 							domNode_.setAttribute("Size", wrkStr);
@@ -24162,7 +24217,7 @@ public class Editor extends JFrame {
 						&& !jTextFieldFunction300SizeWidth.getText().equals("")
 						&& !jTextFieldFunction300SizeHeight.getText().equals("")) {
 					valueOfFieldsChanged = true;
-					domNode_.setAttribute("Size", getStringSizeValue(jTextFieldFunction300SizeWidth.getText(), jTextFieldFunction300SizeHeight.getText(), 50, 1200));
+					domNode_.setAttribute("Size", getStringSizeValue(jTextFieldFunction300SizeWidth.getText(), jTextFieldFunction300SizeHeight.getText(), 50, 2000));
 				}
 			} else {
 				if (domNode_.getAttribute("Size").equals("AUTO")) {
@@ -24174,7 +24229,7 @@ public class Editor extends JFrame {
 							&& !jTextFieldFunction300SizeWidth.getText().equals("")
 							&& !jTextFieldFunction300SizeHeight.getText().equals("")) {
 						valueOfFieldsChanged = true;
-						domNode_.setAttribute("Size", getStringSizeValue(jTextFieldFunction300SizeWidth.getText(), jTextFieldFunction300SizeHeight.getText(), 50, 1200));
+						domNode_.setAttribute("Size", getStringSizeValue(jTextFieldFunction300SizeWidth.getText(), jTextFieldFunction300SizeHeight.getText(), 50, 2000));
 					}
 				} else {
 					if (jRadioButtonFunction300SizeAuto.isSelected()) {
@@ -24188,7 +24243,7 @@ public class Editor extends JFrame {
 					if (jRadioButtonFunction300SizeSpecify.isSelected()
 							&& !jTextFieldFunction300SizeWidth.getText().equals("")
 							&& !jTextFieldFunction300SizeHeight.getText().equals("")) {
-						String wrkStr = getStringSizeValue(jTextFieldFunction300SizeWidth.getText(), jTextFieldFunction300SizeHeight.getText(), 50, 1200);
+						String wrkStr = getStringSizeValue(jTextFieldFunction300SizeWidth.getText(), jTextFieldFunction300SizeHeight.getText(), 50, 2000);
 						if (!domNode_.getAttribute("Size").equals(wrkStr)) {
 							valueOfFieldsChanged = true;
 							domNode_.setAttribute("Size", wrkStr);
@@ -25165,7 +25220,7 @@ public class Editor extends JFrame {
 						&& !jTextFieldFunction310SizeWidth.getText().equals("")
 						&& !jTextFieldFunction310SizeHeight.getText().equals("")) {
 					valueOfFieldsChanged = true;
-					domNode_.setAttribute("Size", getStringSizeValue(jTextFieldFunction310SizeWidth.getText(), jTextFieldFunction310SizeHeight.getText(), 50, 1200));
+					domNode_.setAttribute("Size", getStringSizeValue(jTextFieldFunction310SizeWidth.getText(), jTextFieldFunction310SizeHeight.getText(), 50, 2000));
 				}
 			} else {
 				if (domNode_.getAttribute("Size").equals("AUTO")) {
@@ -25177,7 +25232,7 @@ public class Editor extends JFrame {
 							&& !jTextFieldFunction310SizeWidth.getText().equals("")
 							&& !jTextFieldFunction310SizeHeight.getText().equals("")) {
 						valueOfFieldsChanged = true;
-						domNode_.setAttribute("Size", getStringSizeValue(jTextFieldFunction310SizeWidth.getText(), jTextFieldFunction310SizeHeight.getText(), 50, 1200));
+						domNode_.setAttribute("Size", getStringSizeValue(jTextFieldFunction310SizeWidth.getText(), jTextFieldFunction310SizeHeight.getText(), 50, 2000));
 					}
 				} else {
 					if (jRadioButtonFunction310SizeAuto.isSelected()) {
@@ -25191,7 +25246,7 @@ public class Editor extends JFrame {
 					if (jRadioButtonFunction310SizeSpecify.isSelected()
 							&& !jTextFieldFunction310SizeWidth.getText().equals("")
 							&& !jTextFieldFunction310SizeHeight.getText().equals("")) {
-						String wrkStr = getStringSizeValue(jTextFieldFunction310SizeWidth.getText(), jTextFieldFunction310SizeHeight.getText(), 50, 1200);
+						String wrkStr = getStringSizeValue(jTextFieldFunction310SizeWidth.getText(), jTextFieldFunction310SizeHeight.getText(), 50, 2000);
 						if (!domNode_.getAttribute("Size").equals(wrkStr)) {
 							valueOfFieldsChanged = true;
 							domNode_.setAttribute("Size", wrkStr);
@@ -27029,7 +27084,6 @@ public class Editor extends JFrame {
 		return repliedToExit;
 	}
 
-
 	/**
 	 * Event Handler for jMenuEdit in case menu selected
 	 * @param e :Menu Event
@@ -27037,6 +27091,7 @@ public class Editor extends JFrame {
 	void jMenuEdit_menuSelected(MenuEvent e) {
 		currentMainTreeNode.updateFields();
 	}
+
 	/**
 	 * Event Handler for jMenuFile in case menu selected
 	 * @param e :Menu Event
@@ -27044,6 +27099,7 @@ public class Editor extends JFrame {
 	void jMenuFile_menuSelected(MenuEvent e) {
 		currentMainTreeNode.updateFields();
 	}
+
 	/**
 	 * [File|Open]
 	 * @param e :Action Event
@@ -27075,10 +27131,13 @@ public class Editor extends JFrame {
 		}
 	}
 
+	/**
+	 * [File|Import the file with ".xead" extension]
+	 * @param e :Action Event
+	 */
 	void jMenuItemFileImportXEAD_actionPerformed(ActionEvent e) {
-		int rtn1 = 0;
-		int rtn2 = 0;
-		//
+		int rtn1 = 0; int rtn2 = 0;
+
 		currentMainTreeNode.updateFields();
 		if (changeState.isChanged()) {
 			Object[] bts = {res.getString("SaveChanges"), res.getString("BackToEdit")} ;
@@ -27095,7 +27154,7 @@ public class Editor extends JFrame {
 				}
 			}
 		}
-		//
+
 		if (rtn1 == 0) {
 			String name = specifyNameOfExistingFile(res.getString("ChooseXeadFile"), "xead");
 			if (!name.equals("")) {
@@ -27104,17 +27163,16 @@ public class Editor extends JFrame {
 					Object[] bts = {res.getString("SaveChanges"), res.getString("SaveAs"), res.getString("CancelChanges")} ;
 					rtn2 = JOptionPane.showOptionDialog(this, res.getString("ImportSaveMessage"),
 							res.getString("ImportSaveTitle"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
-					//
 					try{
 						setCursor(new Cursor(Cursor.WAIT_CURSOR));
-						//
+
 						//Save changes//
 						if (rtn2 == 0) {
 							saveFileWithCurrentFileName();
 							undoManager.resetLog();
 							changeState.setChanged(false);
 						}
-						//
+
 						//Save changes as other name//
 						if (rtn2 == 1) {
 							name = specifyNameOfNewFile(res.getString("NameDialogTitle"),res.getString("SaveAsThis"), currentFileName);
@@ -27126,10 +27184,12 @@ public class Editor extends JFrame {
 								undoManager.resetLog();
 							}
 						}
-						//
+
 						//Setup MainTreeNode//
-						setupMainTreeModelWithCurrentFileName();
-						//
+						if (rtn2 == 0 || rtn2 == 1) {
+							setupMainTreeModelWithCurrentFileName();
+						}
+
 					} catch(Exception exception) {
 						exception.printStackTrace();
 					} finally {
@@ -27140,10 +27200,13 @@ public class Editor extends JFrame {
 		}
 	}
 
+	/**
+	 * [File|Import the file with ".xeaf" extension]
+	 * @param e :Action Event
+	 */
 	void jMenuItemFileImportXEAF_actionPerformed(ActionEvent e) {
-		int rtn1 = 0;
-		int rtn2 = 0;
-		//
+		int rtn1 = 0; int rtn2 = 0;
+
 		currentMainTreeNode.updateFields();
 		if (changeState.isChanged()) {
 			Object[] bts = {res.getString("SaveChanges"), res.getString("BackToEdit")} ;
@@ -27160,7 +27223,7 @@ public class Editor extends JFrame {
 				}
 			}
 		}
-		//
+
 		if (rtn1 == 0) {
 			String name = specifyNameOfExistingFile(res.getString("ChooseXeafFile"), "xeaf");
 			if (!name.equals("")) {
@@ -27169,17 +27232,16 @@ public class Editor extends JFrame {
 					Object[] bts = {res.getString("SaveChanges"), res.getString("SaveAs"), res.getString("CancelChanges")} ;
 					rtn2 = JOptionPane.showOptionDialog(this, res.getString("ImportSaveMessage"),
 							res.getString("ImportSaveTitle"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
-					//
 					try{
 						setCursor(new Cursor(Cursor.WAIT_CURSOR));
-						//
+
 						//Save changes//
 						if (rtn2 == 0) {
 							saveFileWithCurrentFileName();
 							undoManager.resetLog();
 							changeState.setChanged(false);
 						}
-						//
+
 						//Save changes as other name//
 						if (rtn2 == 1) {
 							name = specifyNameOfNewFile(res.getString("NameDialogTitle"),res.getString("SaveAsThis"), currentFileName);
@@ -27191,10 +27253,12 @@ public class Editor extends JFrame {
 								undoManager.resetLog();
 							}
 						}
-						//
+
 						//Setup MainTreeNode//
-						setupMainTreeModelWithCurrentFileName();
-						//
+						if (rtn2 == 0 || rtn2 == 1) {
+							setupMainTreeModelWithCurrentFileName();
+						}
+
 					} catch(Exception exception) {
 						exception.printStackTrace();
 					} finally {
@@ -27205,10 +27269,13 @@ public class Editor extends JFrame {
 		}
 	}
 
+	/**
+	 * [Scan|Scan strings]
+	 * @param e :Action Event
+	 */
 	void jMenuItemScan_actionPerformed(ActionEvent e) {
-		int rtn1 = 0;
-		int rtn2 = 0;
-		//
+		int rtn1 = 0; int rtn2 = 0;
+
 		currentMainTreeNode.updateFields();
 		if (changeState.isChanged()) {
 			Object[] bts = {res.getString("SaveChanges"), res.getString("BackToEdit")} ;
@@ -27225,7 +27292,7 @@ public class Editor extends JFrame {
 				}
 			}
 		}
-		//
+
 		if (rtn1 == 0) {
 			boolean scanAndUpdated = dialogScan.request();
 			if (scanAndUpdated) {
@@ -27234,14 +27301,14 @@ public class Editor extends JFrame {
 						res.getString("ReplaceSaveTitle"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
 				try {
 					setCursor(new Cursor(Cursor.WAIT_CURSOR));
-					//
+
 					//Save changes//
 					if (rtn2 == 0) {
 						saveFileWithCurrentFileName();
 						undoManager.resetLog();
 						changeState.setChanged(false);
 					}
-					//
+
 					//Save changes as other name//
 					if (rtn2 == 1) {
 						String name = specifyNameOfNewFile(res.getString("NameDialogTitle"),res.getString("SaveAsThis"), currentFileName);
@@ -27253,10 +27320,12 @@ public class Editor extends JFrame {
 							undoManager.resetLog();
 						}
 					}
-					//
+
 					//Setup MainTreeNode//
-					setupMainTreeModelWithCurrentFileName();
-					//
+					if (rtn2 == 0 || rtn2 == 1) {
+						setupMainTreeModelWithCurrentFileName();
+					}
+
 				} catch(Exception exception) {
 					exception.printStackTrace();
 				} finally {
@@ -27266,6 +27335,10 @@ public class Editor extends JFrame {
 		}
 	}
 
+	/**
+	 * [Scan|Set Bookmark1]
+	 * @param e :Action Event
+	 **/
 	void jMenuItemSetBookmark1_actionPerformed(ActionEvent e) {
 		if (bookmarkedNode1 == null) {
 			bookmarkedNode1 = currentMainTreeNode;
@@ -27413,42 +27486,34 @@ public class Editor extends JFrame {
 		if (bookmarkedNode1 != null) {
 			jMenuItemJumpBookmark1.setEnabled(true);
 		}
-		//
 		jMenuItemJumpBookmark2.setEnabled(false);
 		if (bookmarkedNode2 != null) {
 			jMenuItemJumpBookmark2.setEnabled(true);
 		}
-		//
 		jMenuItemJumpBookmark3.setEnabled(false);
 		if (bookmarkedNode3 != null) {
 			jMenuItemJumpBookmark3.setEnabled(true);
 		}
-		//
 		jMenuItemJumpBookmark4.setEnabled(false);
 		if (bookmarkedNode4 != null) {
 			jMenuItemJumpBookmark4.setEnabled(true);
 		}
-		//
 		jMenuItemJumpBookmark5.setEnabled(false);
 		if (bookmarkedNode5 != null) {
 			jMenuItemJumpBookmark5.setEnabled(true);
 		}
-		//
 		jMenuItemJumpBookmark6.setEnabled(false);
 		if (bookmarkedNode6 != null) {
 			jMenuItemJumpBookmark6.setEnabled(true);
 		}
-		//
 		jMenuItemJumpBookmark7.setEnabled(false);
 		if (bookmarkedNode7 != null) {
 			jMenuItemJumpBookmark7.setEnabled(true);
 		}
-		//
 		jMenuItemJumpBookmark8.setEnabled(false);
 		if (bookmarkedNode8 != null) {
 			jMenuItemJumpBookmark8.setEnabled(true);
 		}
-		//
 		jMenuItemJumpBookmark9.setEnabled(false);
 		if (bookmarkedNode9 != null) {
 			jMenuItemJumpBookmark9.setEnabled(true);
@@ -28957,6 +29022,7 @@ public class Editor extends JFrame {
 	 */
 	void jMenuItemComponentToJump_actionPerformed(ActionEvent e) {
 		MainTreeNode targetNode = null;
+		org.w3c.dom.Element targetElement = null;
 		TableRowNumber tableRowNumber = null;
 		//
 		if (componentType_jPopupMenuComponent.equals("SystemSubDBUsageList")) {
@@ -28997,6 +29063,7 @@ public class Editor extends JFrame {
 		//
 		if (componentType_jPopupMenuComponent.equals("TableFieldUsageList")) {
 			tableRowNumber = (TableRowNumber)tableModelTableFieldUsageList.getValueAt(jTableTableFieldUsageList.getSelectedRow(),0);
+			targetElement = tableRowNumber.getElementExt1();
 			if (tableModelTableFieldUsageList.getValueAt(jTableTableFieldUsageList.getSelectedRow(),2).equals("TABLE")) {
 				targetNode = getSpecificXETreeNode("Table", tableRowNumber.getElement().getAttribute("ID"));
 			} else {
@@ -29006,6 +29073,7 @@ public class Editor extends JFrame {
 		//
 		if (componentType_jPopupMenuComponent.equals("TableUsageList")) {
 			tableRowNumber = (TableRowNumber)tableModelTableUsageList.getValueAt(jTableTableUsageList.getSelectedRow(),0);
+			targetElement = tableRowNumber.getElementExt1();
 			if (tableModelTableUsageList.getValueAt(jTableTableUsageList.getSelectedRow(),2).equals("TABLE")) {
 				targetNode = getSpecificXETreeNode("Table", tableRowNumber.getElement().getAttribute("ID"));
 			} else {
@@ -29086,7 +29154,11 @@ public class Editor extends JFrame {
 			if (nodePos != null) {
 				jScrollPaneTreeView.getViewport().setViewPosition(new Point(0, nodePos.y));
 			}
-			setupContentsPaneForTreeNodeSelected(targetNode, false);
+			if (targetElement == null) {
+				setupContentsPaneForTreeNodeSelected(targetNode, false);
+			} else {
+				setupContentsPaneForTreeNodeSelected(targetNode, targetElement, true);
+			}
 		}
 	}
 	
@@ -33003,7 +33075,7 @@ public class Editor extends JFrame {
 	        	if (element2.getAttribute("ToTable").equals(tableID)) {
 	        		countOfUsageRows++;
 	        		Object[] Cell = new Object[4];
-	        		Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+	        		Cell[0] = new TableRowNumber(countOfUsageRows, element1, element2, null);
 	        		Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
 	        		Cell[2] = "TABLE";
 	        		Cell[3] = res.getString("JoinTable");
@@ -33021,7 +33093,7 @@ public class Editor extends JFrame {
 				if (!wrkStr.equals("")) {
 					countOfUsageRows++;
 					Object[] Cell = new Object[4];
-					Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+					Cell[0] = new TableRowNumber(countOfUsageRows, element1, element2, null);
 					Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
 					Cell[2] = "TABLE";
 					Cell[3] = res.getString("TableUsageInScript1")+ element2.getAttribute("Name") + res.getString("TableUsageInScript2") + wrkStr + res.getString("TableUsageInScript3");
@@ -33285,7 +33357,7 @@ public class Editor extends JFrame {
 						if (wrkStr.equals(fieldID)) {
 							countOfUsageRows++;
 							Object[] Cell = new Object[4];
-							Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+							Cell[0] = new TableRowNumber(countOfUsageRows, element1, element2, null);
 							Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
 							Cell[2] = "TABLE";
 							if (element2.getAttribute("Type").equals("PK")) {
@@ -33314,7 +33386,7 @@ public class Editor extends JFrame {
 						if (wrkStr.equals(tableID + "." + fieldID)) {
 							countOfUsageRows++;
 							Object[] Cell = new Object[4];
-							Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+							Cell[0] = new TableRowNumber(countOfUsageRows, element1, element2, null);
 							Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
 							Cell[2] = "TABLE";
 							Cell[3] = res.getString("FieldUsageWithKeyField1")+ element2.getAttribute("ToTable") + res.getString("FieldUsageWithKeyField2");
@@ -33331,7 +33403,7 @@ public class Editor extends JFrame {
 							element3 = (org.w3c.dom.Element)element2.getParentNode();
 							countOfUsageRows++;
 							Object[] Cell = new Object[4];
-							Cell[0] = new TableRowNumber(countOfUsageRows, element3);
+							Cell[0] = new TableRowNumber(countOfUsageRows, element3, element2, null);
 							Cell[1] = element3.getAttribute("ID") + " " + element3.getAttribute("Name");
 							Cell[2] = "TABLE";
 							Cell[3] = res.getString("FieldUsageToKeyField");
@@ -33346,7 +33418,7 @@ public class Editor extends JFrame {
 							element3 = (org.w3c.dom.Element)element2.getParentNode();
 							countOfUsageRows++;
 							Object[] Cell = new Object[4];
-							Cell[0] = new TableRowNumber(countOfUsageRows, element3);
+							Cell[0] = new TableRowNumber(countOfUsageRows, element3, element2, null);
 							Cell[1] = element3.getAttribute("ID") + " " + element3.getAttribute("Name");
 							Cell[2] = "TABLE";
 							Cell[3] = res.getString("JoinField");
@@ -33363,7 +33435,7 @@ public class Editor extends JFrame {
 							element3 = (org.w3c.dom.Element)element2.getParentNode();
 							countOfUsageRows++;
 							Object[] Cell = new Object[4];
-							Cell[0] = new TableRowNumber(countOfUsageRows, element3);
+							Cell[0] = new TableRowNumber(countOfUsageRows, element3, element2, null);
 							Cell[1] = element3.getAttribute("ID") + " " + element3.getAttribute("Name");
 							Cell[2] = "TABLE";
 							Cell[3] = res.getString("OrderByOfJoinTable");
@@ -33382,7 +33454,7 @@ public class Editor extends JFrame {
 				if (wrkStr.contains(fieldExpInScript)) {
 					countOfUsageRows++;
 					Object[] Cell = new Object[4];
-					Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+					Cell[0] = new TableRowNumber(countOfUsageRows, element1, element2, null);
 					Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
 					Cell[2] = "TABLE";
 					Cell[3] = res.getString("FieldUsageInScript1") + element2.getAttribute("Name") + res.getString("FieldUsageInScript2");
@@ -38449,7 +38521,7 @@ public class Editor extends JFrame {
 		StringTokenizer tokenizer;
 		StringBuffer bf;
 		String dataSource, dataSources, phraseValue;
-		String tableID, fieldID, originalTableID;
+		String tableID, fieldID, originalTableID, wrkStr;
 		int wrkInt;
 		boolean isDescendingOrder, isAscendingOrder;
 
@@ -38508,6 +38580,12 @@ public class Editor extends JFrame {
 				if (tableID.equals(originalTableID)) {
 					element.setAttribute("DataSource", newTableID + "." + fieldID);
 				}
+				wrkStr = element.getAttribute("FieldOptions");
+				if (!wrkStr.equals("")) {
+					wrkStr = wrkStr.replaceAll("("+originalTableID+".", "("+newTableID+".");
+					wrkStr = wrkStr.replaceAll(";"+originalTableID+".", ";"+newTableID+".");
+					element.setAttribute("FieldOptions", wrkStr);
+				}
 			}
 			fieldList = functionElement.getElementsByTagName("Filter");
 			for (int i = 0; i < fieldList.getLength(); i++) {
@@ -38518,6 +38596,12 @@ public class Editor extends JFrame {
 				fieldID = dataSource.substring(wrkInt+1, dataSource.length());
 				if (tableID.equals(originalTableID)) {
 					element.setAttribute("DataSource", newTableID + "." + fieldID);
+				}
+				wrkStr = element.getAttribute("FieldOptions");
+				if (!wrkStr.equals("")) {
+					wrkStr = wrkStr.replaceAll("("+originalTableID+".", "("+newTableID+".");
+					wrkStr = wrkStr.replaceAll(";"+originalTableID+".", ";"+newTableID+".");
+					element.setAttribute("FieldOptions", wrkStr);
 				}
 			}
 			if (functionElement.getAttribute("Type").equals("XF110")) {
@@ -38557,6 +38641,12 @@ public class Editor extends JFrame {
 				if (tableID.equals(originalTableID)) {
 					element.setAttribute("DataSource", newTableID + "." + fieldID);
 				}
+				wrkStr = element.getAttribute("FieldOptions");
+				if (!wrkStr.equals("")) {
+					wrkStr = wrkStr.replaceAll("("+originalTableID+".", "("+newTableID+".");
+					wrkStr = wrkStr.replaceAll(";"+originalTableID+".", ";"+newTableID+".");
+					element.setAttribute("FieldOptions", wrkStr);
+				}
 			}
 			functionElement.setAttribute("PrimaryTable", newTableID);
 		}
@@ -38584,6 +38674,12 @@ public class Editor extends JFrame {
 				if (tableID.equals(originalTableID)) {
 					element.setAttribute("DataSource", newTableID + "." + fieldID);
 				}
+				wrkStr = element.getAttribute("FieldOptions");
+				if (!wrkStr.equals("")) {
+					wrkStr = wrkStr.replaceAll("("+originalTableID+".", "("+newTableID+".");
+					wrkStr = wrkStr.replaceAll(";"+originalTableID+".", ";"+newTableID+".");
+					element.setAttribute("FieldOptions", wrkStr);
+				}
 			}
 			functionElement.setAttribute("HeaderTable", newTableID);
 		}
@@ -38599,6 +38695,12 @@ public class Editor extends JFrame {
 				fieldID = dataSource.substring(wrkInt+1, dataSource.length());
 				if (tableID.equals(originalTableID)) {
 					element.setAttribute("DataSource", newTableID + "." + fieldID);
+				}
+				wrkStr = element.getAttribute("FieldOptions");
+				if (!wrkStr.equals("")) {
+					wrkStr = wrkStr.replaceAll("("+originalTableID+".", "("+newTableID+".");
+					wrkStr = wrkStr.replaceAll(";"+originalTableID+".", ";"+newTableID+".");
+					element.setAttribute("FieldOptions", wrkStr);
 				}
 			}
 			functionElement.setAttribute("HeaderTable", newTableID);
@@ -38619,7 +38721,7 @@ public class Editor extends JFrame {
 	void replaceDetailTableID(org.w3c.dom.Element functionElement, int tabIndex, String newTableID) {
 		NodeList detailTableList, detailFieldList;
 		org.w3c.dom.Element element1, element2;
-		String dataSource, tableID, fieldID, originalTableID;
+		String dataSource, tableID, fieldID, originalTableID, wrkStr;
 		boolean isAscendingOrder, isDescendingOrder;
 		StringTokenizer tokenizer;
 		StringBuffer bf;
@@ -38698,6 +38800,12 @@ public class Editor extends JFrame {
 				fieldID = dataSource.substring(wrkInt+1, dataSource.length());
 				if (tableID.equals(originalTableID)) {
 					element2.setAttribute("DataSource", newTableID + "." + fieldID);
+				}
+				wrkStr = element2.getAttribute("FieldOptions");
+				if (!wrkStr.equals("")) {
+					wrkStr = wrkStr.replaceAll("("+originalTableID+".", "("+newTableID+".");
+					wrkStr = wrkStr.replaceAll(";"+originalTableID+".", ";"+newTableID+".");
+					element2.setAttribute("FieldOptions", wrkStr);
 				}
 			}
 

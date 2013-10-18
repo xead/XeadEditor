@@ -65,6 +65,7 @@ public class DialogAddFieldToFunction extends JDialog {
 	private ArrayList<String> tableAliasList = new ArrayList<String>();
 	private ArrayList<String> fieldIDList = new ArrayList<String>();
 	private ArrayList<String> fieldNameList = new ArrayList<String>();
+	private ArrayList<Boolean> isNumericList = new ArrayList<Boolean>();
 	private ArrayList<String> functionDataSourceList = new ArrayList<String>();
 	private int order = 0;
 	private int result = 0;
@@ -119,9 +120,9 @@ public class DialogAddFieldToFunction extends JDialog {
 		NodeList nodeList;
 		NodeList functionFieldNodeList = null;
 		NodeList functionFieldNodeList2 = null;
-		org.w3c.dom.Element wrkElement;
+		org.w3c.dom.Element wrkElement, fieldElement;
 		String tableID = "";
-		String wrkStr;
+		String wrkStr, dataType;
 		org.w3c.dom.Element tableElement = null;
 		StringTokenizer workTokenizer;
 	
@@ -201,6 +202,7 @@ public class DialogAddFieldToFunction extends JDialog {
 		tableAliasList.clear();
 		fieldIDList.clear();
 		fieldNameList.clear();
+		isNumericList.clear();
 		tableElement = frame_.getSpecificXETreeNode("Table", tableID).getElement();
 		nodeList = tableElement.getElementsByTagName("Field");
 		sortingList = frame_.getSortedListModel(nodeList, "Order");
@@ -210,6 +212,12 @@ public class DialogAddFieldToFunction extends JDialog {
 			tableAliasList.add(tableID);
 			fieldIDList.add(wrkElement.getAttribute("ID"));
 			fieldNameList.add(wrkElement.getAttribute("Name"));
+			dataType = frame_.getBasicTypeOf(wrkElement.getAttribute("Type"));
+			if (dataType.equals("INTEGER") || dataType.equals("FLOAT")) {
+				isNumericList.add(true);
+			} else {
+				isNumericList.add(false);
+			}
 		}
 		nodeList = tableElement.getElementsByTagName("Refer");
 		sortingList = frame_.getSortedListModel(nodeList, "Order");
@@ -226,6 +234,14 @@ public class DialogAddFieldToFunction extends JDialog {
 				}
 				fieldIDList.add(wrkStr);
 				fieldNameList.add(frame_.getFieldNames(wrkElement.getAttribute("ToTable"), wrkStr, "", false));
+
+				fieldElement = frame_.getSpecificFieldElement(wrkElement.getAttribute("ToTable"), wrkStr);
+				dataType = frame_.getBasicTypeOf(fieldElement.getAttribute("Type"));
+				if (dataType.equals("INTEGER") || dataType.equals("FLOAT")) {
+					isNumericList.add(true);
+				} else {
+					isNumericList.add(false);
+				}
 			}
 		}
 
@@ -265,10 +281,11 @@ public class DialogAddFieldToFunction extends JDialog {
 		for (int i = 0; i < fieldIDList.size(); i++) {
 			if (!functionDataSourceList.contains(tableAliasList.get(i) + "." + fieldIDList.get(i))
 					|| !tableAliasList.get(i).equals(tableID)) {
-				JCheckBox checkBox = new JCheckBox();
+				DialogAddFieldToFunction_CheckBox checkBox = new DialogAddFieldToFunction_CheckBox();
 				checkBox.setFont(new java.awt.Font("SansSerif", 0, 12));
 				checkBox.setText(tableAliasList.get(i) + "." + fieldNameList.get(i));
-				checkBox.setName(tableAliasList.get(i) + "." + fieldIDList.get(i));
+				checkBox.setDataSourceName(tableAliasList.get(i) + "." + fieldIDList.get(i));
+				checkBox.setNumeric(isNumericList.get(i));
 				listModelDataSource.addElement(checkBox);
 			}
 		}
@@ -294,7 +311,7 @@ public class DialogAddFieldToFunction extends JDialog {
 		boolean anySelected = false;
 
 		for (int i = 0; i < listModelDataSource.getSize(); i++) {
-			JCheckBox checkBox = (JCheckBox)listModelDataSource.getElementAt(i);
+			DialogAddFieldToFunction_CheckBox checkBox = (DialogAddFieldToFunction_CheckBox)listModelDataSource.getElementAt(i);
 			if (checkBox.isSelected()){
 				anySelected = true;
 				newElement = frame_.getDomDocument().createElement(frame_.getFieldTagNameAccordingComponentType(tableType_));
@@ -308,57 +325,60 @@ public class DialogAddFieldToFunction extends JDialog {
 						newElement.setAttribute("Block", "PARAGRAPH");
 						newElement.setAttribute("Alignment", "LEFT");
 						newElement.setAttribute("AlignmentMargin", "0");
-						newElement.setAttribute("Value", "&DataSource(" + checkBox.getName() + ")");
+						newElement.setAttribute("Value", "&DataSource(" + checkBox.getDataSourceName() + ")");
 						newElement.setAttribute("FontID", frame_.getDefaultPrintFontID());
 						newElement.setAttribute("FontSize", "12");
 						newElement.setAttribute("FontStyle", "");
 					} else {
-						newElement.setAttribute("DataSource", checkBox.getName());
+						newElement.setAttribute("DataSource", checkBox.getDataSourceName());
 						newElement.setAttribute("FieldOptions", "");
 						if (tableType_.equals("Function390DetailFieldList")) {
 							newElement.setAttribute("Width", "10");
-							newElement.setAttribute("Alignment", "LEFT");
+							if (checkBox.isNumeric()) {
+								newElement.setAttribute("Alignment", "RIGHT");
+							} else {
+								newElement.setAttribute("Alignment", "LEFT");
+							}
 						}
-
 						if (tableType_.equals("Function110ColumnList")) {
 							wrkElement = frame_.currentMainTreeNode.getElement();
 							if (!wrkElement.getAttribute("BatchTable").equals("")) {
-								if (hasDuplicatedReferField(wrkElement.getAttribute("BatchTable"), checkBox.getName())) {
-									JOptionPane.showMessageDialog(this, res.getString("WarningMessage1")+"\n"+checkBox.getName());
+								if (hasDuplicatedReferField(wrkElement.getAttribute("BatchTable"), checkBox.getDataSourceName())) {
+									JOptionPane.showMessageDialog(this, res.getString("WarningMessage1")+"\n"+checkBox.getDataSourceName());
 								}
 							}
 						}
 						if (tableType_.equals("Function110BatchFieldList")) {
 							wrkElement = frame_.currentMainTreeNode.getElement();
-							if (hasDuplicatedReferField(wrkElement.getAttribute("PrimaryTable"), checkBox.getName())) {
-								JOptionPane.showMessageDialog(this, res.getString("WarningMessage2")+"\n"+checkBox.getName());
+							if (hasDuplicatedReferField(wrkElement.getAttribute("PrimaryTable"), checkBox.getDataSourceName())) {
+								JOptionPane.showMessageDialog(this, res.getString("WarningMessage2")+"\n"+checkBox.getDataSourceName());
 							}
 						}
 						if (tableType_.equals("Function300HeaderFieldList")) {
 							NodeList detailList = frame_.currentMainTreeNode.getElement().getElementsByTagName("Detail");
 							for (int j = 0; j < detailList.getLength(); j++) {
 								wrkElement = (org.w3c.dom.Element)detailList.item(j);
-								if (hasDuplicatedReferField(wrkElement.getAttribute("Table"), checkBox.getName())) {
-									JOptionPane.showMessageDialog(this, res.getString("WarningMessage3")+"\n"+checkBox.getName());
+								if (hasDuplicatedReferField(wrkElement.getAttribute("Table"), checkBox.getDataSourceName())) {
+									JOptionPane.showMessageDialog(this, res.getString("WarningMessage3")+"\n"+checkBox.getDataSourceName());
 								}
 							}
 						}
 						if (tableType_.equals("Function300DetailFieldList")) {
 							wrkElement = frame_.currentMainTreeNode.getElement();
-							if (hasDuplicatedReferField(wrkElement.getAttribute("HeaderTable"), checkBox.getName())) {
-								JOptionPane.showMessageDialog(this, res.getString("WarningMessage4")+"\n"+checkBox.getName());
+							if (hasDuplicatedReferField(wrkElement.getAttribute("HeaderTable"), checkBox.getDataSourceName())) {
+								JOptionPane.showMessageDialog(this, res.getString("WarningMessage4")+"\n"+checkBox.getDataSourceName());
 							}
 						}
 						if (tableType_.equals("Function310HeaderFieldList")) {
 							wrkElement = frame_.currentMainTreeNode.getElement();
-							if (hasDuplicatedReferField(wrkElement.getAttribute("DetailTable"), checkBox.getName())) {
-								JOptionPane.showMessageDialog(this, res.getString("WarningMessage4")+"\n"+checkBox.getName());
+							if (hasDuplicatedReferField(wrkElement.getAttribute("DetailTable"), checkBox.getDataSourceName())) {
+								JOptionPane.showMessageDialog(this, res.getString("WarningMessage4")+"\n"+checkBox.getDataSourceName());
 							}
 						}
 						if (tableType_.equals("Function310DetailFieldList")) {
 							wrkElement = frame_.currentMainTreeNode.getElement();
-							if (hasDuplicatedReferField(wrkElement.getAttribute("HeaderTable"), checkBox.getName())) {
-								JOptionPane.showMessageDialog(this, res.getString("WarningMessage4")+"\n"+checkBox.getName());
+							if (hasDuplicatedReferField(wrkElement.getAttribute("HeaderTable"), checkBox.getDataSourceName())) {
+								JOptionPane.showMessageDialog(this, res.getString("WarningMessage4")+"\n"+checkBox.getDataSourceName());
 							}
 						}
 					}
@@ -448,6 +468,27 @@ public class DialogAddFieldToFunction extends JDialog {
 				break;
 			}
 		}
+	}
+}
+
+class DialogAddFieldToFunction_CheckBox extends JCheckBox {
+	private static final long serialVersionUID = 1L;
+	private String dataSourceName_ = "";
+	private boolean isNumeric_ = false;
+	DialogAddFieldToFunction_CheckBox() {
+		super();
+	}
+	public void setDataSourceName(String name) {
+		dataSourceName_ = name;
+	}
+	public void setNumeric(boolean isNumeric) {
+		isNumeric_ = isNumeric;
+	}
+	public String getDataSourceName() {
+		return dataSourceName_;
+	}
+	public boolean isNumeric() {
+		return isNumeric_;
 	}
 }
 
