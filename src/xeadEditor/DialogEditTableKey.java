@@ -168,7 +168,6 @@ public class DialogEditTableKey extends JDialog {
 		StringTokenizer workTokenizer;
 		String dataSource;
 		String errorMessage = "";
-
 		if (!jTextFieldID.getText().equals(originalTableID)) {
 			tableNode = frame_.getSpecificXETreeNode("Table", jTextFieldID.getText());
 			errorMessage = validateNewTableID();

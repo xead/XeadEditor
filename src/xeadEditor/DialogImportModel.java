@@ -1120,6 +1120,7 @@ public class DialogImportModel extends JDialog {
 		ArrayList<org.w3c.dom.Element> detailTableElementList = new ArrayList<org.w3c.dom.Element>();
 		SortableDomElementListModel sortingList;
 		NodeList nodeList;
+		String dataType;
 		//
 		String functionType = "";
 		for (int i = 0; i < functionTypeList.getLength(); i++) {
@@ -1234,7 +1235,14 @@ public class DialogImportModel extends JDialog {
 					childElement = frame_.getDomDocument().createElement("Filter");
 					childElement.setAttribute("Order", frame_.getFormatted4ByteString(i * 10));
 					childElement.setAttribute("DataSource", primaryTableID + "." + workElement.getAttribute("ID")); 
-					childElement.setAttribute("FieldOptions", "");
+					//childElement.setAttribute("FieldOptions", "");
+					dataType = workElement.getAttribute("Type");
+					if (frame_.getBasicTypeOf(dataType).equals("INTEGER")
+							|| frame_.getBasicTypeOf(dataType).equals("FLOAT")) {
+						childElement.setAttribute("FieldOptions", "IGNORE_IF_ZERO");	
+					} else {
+						childElement.setAttribute("FieldOptions", "");
+					}
 					newElementToBeAdded.appendChild(childElement);
 				} else {
 					break;
@@ -1292,7 +1300,14 @@ public class DialogImportModel extends JDialog {
 					childElement = frame_.getDomDocument().createElement("Filter");
 					childElement.setAttribute("Order", frame_.getFormatted4ByteString(i * 10));
 					childElement.setAttribute("DataSource", primaryTableID + "." + workElement.getAttribute("ID")); 
-					childElement.setAttribute("FieldOptions", "");
+					//childElement.setAttribute("FieldOptions", "");
+					dataType = workElement.getAttribute("Type");
+					if (frame_.getBasicTypeOf(dataType).equals("INTEGER")
+							|| frame_.getBasicTypeOf(dataType).equals("FLOAT")) {
+						childElement.setAttribute("FieldOptions", "IGNORE_IF_ZERO");	
+					} else {
+						childElement.setAttribute("FieldOptions", "");
+					}
 					newElementToBeAdded.appendChild(childElement);
 				} else {
 					break;

@@ -522,7 +522,7 @@ public class DialogScan extends JDialog {
 						workList1 = workElement.getElementsByTagName("Field");
 						for (int j = 0; j < workList1.getLength(); j++) {
 							workElement1 = (org.w3c.dom.Element)workList1.item(j);
-							scanAttribute(workElement1, "TableField", res.getString("Table/Field"), "ID", "ID");
+							//scanAttribute(workElement1, "TableField", res.getString("Table/Field"), "ID", "ID");
 							scanAttribute(workElement1, "TableField", res.getString("Table/Field"), "Name", res.getString("Name"));
 							scanAttribute(workElement1, "TableField", res.getString("Table/Field"), "TypeOptions", res.getString("TypeOptions"));
 							scanAttribute(workElement1, "TableField", res.getString("Table/Field"), "Remarks", res.getString("Remarks"));

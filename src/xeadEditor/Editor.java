@@ -288,6 +288,8 @@ public class Editor extends JFrame {
 	private DefaultTableCellRenderer rendererTableHeader = null;
 	private DefaultCellEditor cellEditorLeft;
 	private DefaultCellEditor editorMenuOptionIndex;
+	private Editor_HorizontalAlignmentHeaderRenderer headerRendererAlignmentRight = new Editor_HorizontalAlignmentHeaderRenderer(SwingConstants.RIGHT);
+	private Editor_HorizontalAlignmentHeaderRenderer headerRendererAlignmentLeft = new Editor_HorizontalAlignmentHeaderRenderer(SwingConstants.LEFT);
 	private TableColumn column0, column1, column2, column3, column4, column5, column6;
 	private boolean tableRowsAreBeingSetup;
 	private int dragObjectRow = 0;
@@ -416,6 +418,12 @@ public class Editor extends JFrame {
 			indentRows(jScrollPaneSystemLoginScript);
 		}
 	};
+	private Action actionCommentSystemLoginScript = new AbstractAction(){
+		private static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			commentRows(jScrollPaneSystemLoginScript);
+		}
+	};
 	private Action actionPasteSystemLoginScript = new AbstractAction(){
 		private static final long serialVersionUID = 1L;
 		public void actionPerformed(ActionEvent e){
@@ -463,6 +471,12 @@ public class Editor extends JFrame {
 		private static final long serialVersionUID = 1L;
 		public void actionPerformed(ActionEvent e){
 			indentRows(jScrollPaneSystemScriptFunctions);
+		}
+	};
+	private Action actionCommentSystemScriptFunctions = new AbstractAction(){
+		private static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			commentRows(jScrollPaneSystemScriptFunctions);
 		}
 	};
 	private Action actionPasteSystemScriptFunctions = new AbstractAction(){
@@ -540,8 +554,10 @@ public class Editor extends JFrame {
 	private Editor_KanjiTextField jTextFieldMenuName = new Editor_KanjiTextField();
 	private JLabel jLabelMenuHelpURL = new JLabel();
 	private JTextField jTextFieldMenuHelpURL = new JTextField();
-	private JLabel jLabelMenuCrossCheckers = new JLabel();
-	private JTextField jTextFieldMenuCrossCheckers = new JTextField();
+	private JLabel jLabelMenuPreloadedCrossCheckers = new JLabel();
+	private JTextField jTextFieldMenuPreloadedCrossCheckers = new JTextField();
+	private JLabel jLabelMenuPreloadedFunctions = new JLabel();
+	private JTextField jTextFieldMenuPreloadedFunctions = new JTextField();
 	private JTabbedPane jTabbedPaneMenu = new JTabbedPane();
 	private JPanel jPanelMenuFunctionList = new JPanel();
 	private JScrollPane jScrollPaneMenuFunctionList = new JScrollPane();
@@ -756,10 +772,17 @@ public class Editor extends JFrame {
 	private String referTableID = "";
 	private JPanel jPanelTableScriptEditButtonAndCursorPos = new JPanel();
 	private JButton jButtonTableScriptEdit = new JButton();
+	private JCheckBox jCheckBoxTableScriptHold = new JCheckBox();
 	private Action actionIndentTableScript = new AbstractAction(){
 		private static final long serialVersionUID = 1L;
 		public void actionPerformed(ActionEvent e){
 			indentRows(jScrollPaneTableScriptText);
+		}
+	};
+	private Action actionCommentTableScript = new AbstractAction(){
+		private static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			commentRows(jScrollPaneTableScriptText);
 		}
 	};
 	private Action actionUndoTableScript = new AbstractAction(){
@@ -869,6 +892,12 @@ public class Editor extends JFrame {
 		private static final long serialVersionUID = 1L;
 		public void actionPerformed(ActionEvent e){
 			indentRows(jScrollPaneFunction000Script);
+		}
+	};
+	private Action actionCommentFunction000Script = new AbstractAction(){
+		private static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			commentRows(jScrollPaneFunction000Script);
 		}
 	};
 	private Action actionPasteFunction000Script = new AbstractAction(){
@@ -3463,6 +3492,8 @@ public class Editor extends JFrame {
 		actionMap.clear();
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_DOWN_MASK), "INDENT");
 		actionMap.put("INDENT", actionIndentSystemLoginScript);
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_SLASH, KeyEvent.CTRL_DOWN_MASK), "COMMENT");
+		actionMap.put("COMMENT", actionCommentSystemLoginScript);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_DOWN_MASK), "UNDO");
 		actionMap.put("UNDO", actionUndoSystemLoginScript);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_DOWN_MASK), "REDO");
@@ -3507,6 +3538,8 @@ public class Editor extends JFrame {
 		actionMap.clear();
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_DOWN_MASK), "INDENT");
 		actionMap.put("INDENT", actionIndentSystemScriptFunctions);
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_SLASH, KeyEvent.CTRL_DOWN_MASK), "COMMENT");
+		actionMap.put("COMMENT", actionCommentSystemScriptFunctions);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_DOWN_MASK), "UNDO");
 		actionMap.put("UNDO", actionUndoSystemScriptFunctions);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_DOWN_MASK), "REDO");
@@ -3930,7 +3963,7 @@ public class Editor extends JFrame {
 	void initComponentsForMenu() {
 		jPanelMenu.setLayout(new BorderLayout());
 		jPanelMenu.setBorder(null);
-		jPanelMenuTop.setPreferredSize(new Dimension(10, 96));
+		jPanelMenuTop.setPreferredSize(new Dimension(10, 124));
 		jPanelMenuTop.setBorder(BorderFactory.createEtchedBorder());
 		jPanelMenuTop.setLayout(null);
 		jLabelMenuID.setFont(new java.awt.Font("SansSerif", 0, 12));
@@ -3948,27 +3981,36 @@ public class Editor extends JFrame {
 		jLabelMenuName.setBounds(new Rectangle(244, 12, 96, 15));
 		jTextFieldMenuName.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldMenuName.setBounds(new Rectangle(347, 9, 258, 22));
-		jLabelMenuCrossCheckers.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelMenuCrossCheckers.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelMenuCrossCheckers.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelMenuCrossCheckers.setText(res.getString("MenuCrossCheckers"));
-		jLabelMenuCrossCheckers.setBounds(new Rectangle(11, 40, 146, 15));
-		jTextFieldMenuCrossCheckers.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldMenuCrossCheckers.setBounds(new Rectangle(165, 37, 440, 22));
+		jLabelMenuPreloadedCrossCheckers.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelMenuPreloadedCrossCheckers.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelMenuPreloadedCrossCheckers.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelMenuPreloadedCrossCheckers.setText(res.getString("MenuCrossCheckers"));
+		jLabelMenuPreloadedCrossCheckers.setBounds(new Rectangle(11, 40, 146, 15));
+		jTextFieldMenuPreloadedCrossCheckers.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldMenuPreloadedCrossCheckers.setBounds(new Rectangle(165, 37, 440, 22));
+		jLabelMenuPreloadedFunctions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelMenuPreloadedFunctions.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelMenuPreloadedFunctions.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelMenuPreloadedFunctions.setText(res.getString("MenuFunctions"));
+		jLabelMenuPreloadedFunctions.setBounds(new Rectangle(11, 68, 146, 15));
+		jTextFieldMenuPreloadedFunctions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldMenuPreloadedFunctions.setBounds(new Rectangle(165, 65, 440, 22));
 		jLabelMenuHelpURL.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelMenuHelpURL.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelMenuHelpURL.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelMenuHelpURL.setText(res.getString("MenuHelpURL"));
-		jLabelMenuHelpURL.setBounds(new Rectangle(11, 68, 146, 15));
+		jLabelMenuHelpURL.setBounds(new Rectangle(11, 96, 146, 15));
 		jTextFieldMenuHelpURL.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldMenuHelpURL.setBounds(new Rectangle(165, 65, 440, 22));
+		jTextFieldMenuHelpURL.setBounds(new Rectangle(165, 93, 440, 22));
 		jPanelMenu.add(jPanelMenuTop, BorderLayout.NORTH);
 		jPanelMenuTop.add(jLabelMenuID);
 		jPanelMenuTop.add(jTextFieldMenuID);
 		jPanelMenuTop.add(jLabelMenuName);
 		jPanelMenuTop.add(jTextFieldMenuName);
-		jPanelMenuTop.add(jLabelMenuCrossCheckers);
-		jPanelMenuTop.add(jTextFieldMenuCrossCheckers);
+		jPanelMenuTop.add(jLabelMenuPreloadedCrossCheckers);
+		jPanelMenuTop.add(jTextFieldMenuPreloadedCrossCheckers);
+		jPanelMenuTop.add(jLabelMenuPreloadedFunctions);
+		jPanelMenuTop.add(jTextFieldMenuPreloadedFunctions);
 		jPanelMenuTop.add(jLabelMenuHelpURL);
 		jPanelMenuTop.add(jTextFieldMenuHelpURL);
 		jPanelMenu.add(jTabbedPaneMenu,  BorderLayout.CENTER);
@@ -4999,6 +5041,9 @@ public class Editor extends JFrame {
 		jComboBoxTableScriptEventRefer.setEnabled(false);
 		jComboBoxTableScriptEventRefer.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jComboBoxTableScriptEventRefer.setBounds(new Rectangle(115, 93, 380, 22));
+		jCheckBoxTableScriptHold.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jCheckBoxTableScriptHold.setText(res.getString("ScriptHold"));
+		jCheckBoxTableScriptHold.setBounds(new Rectangle(5, 93, 100, 22));
 		jTextAreaTableScriptText.setEnabled(false);
 		jTextAreaTableScriptText.setTabSize(4);
 		jTextAreaTableScriptText.setFont(new java.awt.Font("Monospaced", 0, 14));
@@ -5011,6 +5056,8 @@ public class Editor extends JFrame {
 		actionMap.clear();
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_DOWN_MASK), "INDENT");
 		actionMap.put("INDENT", actionIndentTableScript);
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_SLASH, KeyEvent.CTRL_DOWN_MASK), "COMMENT");
+		actionMap.put("COMMENT", actionCommentTableScript);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_DOWN_MASK), "UNDO");
 		actionMap.put("UNDO", actionUndoTableScript);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_DOWN_MASK), "REDO");
@@ -5055,6 +5102,7 @@ public class Editor extends JFrame {
 		jPanelTableScriptFields.add(jCheckBoxTableScriptEventPrimaryAU);
 		jPanelTableScriptFields.add(jCheckBoxTableScriptEventPrimaryAD);
 		jPanelTableScriptFields.add(jComboBoxTableScriptEventRefer);
+		jPanelTableScriptFields.add(jCheckBoxTableScriptHold);
 		jPanelTableScriptFields.add(jLabelTableScriptName);
 		jPanelTableScriptFields.add(jTextFieldTableScriptName);
 		jPanelTableScriptTop.setPreferredSize(new Dimension(400, 123));
@@ -5370,6 +5418,8 @@ public class Editor extends JFrame {
 		actionMap.clear();
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_DOWN_MASK), "INDENT");
 		actionMap.put("INDENT", actionIndentFunction000Script);
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_SLASH, KeyEvent.CTRL_DOWN_MASK), "COMMENT");
+		actionMap.put("COMMENT", actionCommentFunction000Script);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0), "CHECK");
 		actionMap.put("CHECK", actionCheckFunction000Script);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), "SCAN");
@@ -13921,6 +13971,7 @@ public class Editor extends JFrame {
 	    		}
 	    	}
 	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
+	    	jPopupMenuComponent.add(jMenuItemComponentToShowTips);
 			if (jTableMenuList.getRowCount() == 0) {
 				jMenuItemComponentToListCsv.setEnabled(false);
 			}
@@ -13938,12 +13989,14 @@ public class Editor extends JFrame {
 	    	jPopupMenuComponent.addSeparator();
 	    	jPopupMenuComponent.add(jMenuItemComponentToJump);
 	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
+	    	jPopupMenuComponent.add(jMenuItemComponentToShowTips);
 	    	jPopupMenuComponent.addSeparator();
 	    	jPopupMenuComponent.add(jMenuItemComponentToDelete);
 	    }
 	    //
 	    if (e.getComponent().equals(jScrollPaneMenuFunctionList)) {
 	    	componentType_jPopupMenuComponent = "MenuFunctionList";
+	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
 	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    	jPopupMenuComponent.add(jMenuItemComponentToShowTips);
 			if (jTableMenuFunctionList.getRowCount() == 0) {
@@ -13953,6 +14006,7 @@ public class Editor extends JFrame {
 	    if (e.getComponent().equals(jTableMenuFunctionList)) {
 	    	componentType_jPopupMenuComponent = "MenuFunctionList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToJump);
+	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
 	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    	jPopupMenuComponent.add(jMenuItemComponentToShowTips);
 	    	jPopupMenuComponent.addSeparator();
@@ -15091,10 +15145,8 @@ public class Editor extends JFrame {
 			changed = state;
 			if (changed) {
 				jLabelChangeState.setText(res.getString("Changed"));
-				//jMenuItemFileSave.setEnabled(true);
 			} else {
 				jLabelChangeState.setText("");
-				//jMenuItemFileSave.setEnabled(false);
 			}
 		}
 		boolean isChanged() {
@@ -15791,6 +15843,7 @@ public class Editor extends JFrame {
 						newElement.setAttribute("ID", nodeID);
 						newElement.setAttribute("Name", nodeName);
 						newElement.setAttribute("CrossCheckersToBeLoaded", "");
+						newElement.setAttribute("FunctionsToBeLoaded", "");
 						newElement.setAttribute("HelpURL", "");
 						childNode = new MainTreeNode("Menu", newElement, this.getEditor());
 						systemNode.getElement().appendChild(newElement);
@@ -16002,7 +16055,7 @@ public class Editor extends JFrame {
 			NodeList nodeList;
 			org.w3c.dom.Element newElement, workElement;
 			boolean duplicated, ready;
-			String answer;
+			String answer, currentID, wrkStr;
 			//
 			//Paste Menu//
 			if (nodeType_.equals("MenuList") && pastingElement.getTagName().equals("Menu")) {
@@ -16038,55 +16091,81 @@ public class Editor extends JFrame {
 			//
 			//Paste Table//
 			if (nodeType_.equals("TableList") && pastingElement.getTagName().equals("Table")) {
-				newElement = (org.w3c.dom.Element)pastingElement.cloneNode(false);
-				nodeList = pastingElement.getElementsByTagName("Field");
-				for (int i = 0; i < nodeList.getLength(); i++) {
-					newElement.appendChild(nodeList.item(i).cloneNode(false));
-				}
-				nodeList = pastingElement.getElementsByTagName("Key");
-				for (int i = 0; i < nodeList.getLength(); i++) {
-					newElement.appendChild(nodeList.item(i).cloneNode(false));
-				}
-				answer = newElement.getAttribute("ID");
+//				newElement = (org.w3c.dom.Element)pastingElement.cloneNode(false);
+//				nodeList = pastingElement.getElementsByTagName("Field");
+//				for (int i = 0; i < nodeList.getLength(); i++) {
+//					newElement.appendChild(nodeList.item(i).cloneNode(false));
+//				}
+//				nodeList = pastingElement.getElementsByTagName("Key");
+//				for (int i = 0; i < nodeList.getLength(); i++) {
+//					newElement.appendChild(nodeList.item(i).cloneNode(false));
+//				}
+				currentID = pastingElement.getAttribute("ID");
+				answer = currentID;
 				ready = false;
 				while (!ready) {
-					answer = JOptionPane.showInputDialog(null, res.getString("SpecifyNewIDOfTable"), answer);
+					//answer = JOptionPane.showInputDialog(null, res.getString("SpecifyNewIDOfTable"), answer);
+					answer = JOptionPane.showInputDialog(null, res.getString("SpecifyNewID"), answer);
 					if (answer == null || answer.equals("")) {
 						ready = true;
 					} else {
-						//if (answer.contains("_")) {
-						//	JOptionPane.showMessageDialog(null, res.getString("ErrorMessage105"));
-						//	ready = true;
-						//} else {
-							//answer = answer.toUpperCase();
-							answer = getCaseShiftValue(answer, "Upper");
-							duplicated = false;
-							for (int i = 0; i < subsystemListNode.getChildCount(); i++) {
-								for (int j = 0; j < subsystemListNode.getChildAt(i).getChildAt(0).getChildCount(); j++) {
-									workElement = ((MainTreeNode)subsystemListNode.getChildAt(i).getChildAt(0).getChildAt(j)).getElement();
-									if (workElement.getAttribute("ID").equals(answer)) {
-										duplicated = true;
-										break;
-									}
-								}
-								if (duplicated) {
+						answer = getCaseShiftValue(answer, "Upper");
+						duplicated = false;
+						for (int i = 0; i < subsystemListNode.getChildCount(); i++) {
+							for (int j = 0; j < subsystemListNode.getChildAt(i).getChildAt(0).getChildCount(); j++) {
+								workElement = ((MainTreeNode)subsystemListNode.getChildAt(i).getChildAt(0).getChildAt(j)).getElement();
+								if (workElement.getAttribute("ID").equals(answer)) {
+									duplicated = true;
 									break;
 								}
 							}
 							if (duplicated) {
-								JOptionPane.showMessageDialog(null, res.getString("ErrorMessage16") + answer + res.getString("ErrorMessage17"));
-							} else {
-								newElement.setAttribute("ID", answer);
-								newElement.setAttribute("Name", newElement.getAttribute("Name") + res.getString("CopiedNameExt"));
-								String subsystemID = ((MainTreeNode)this.getParent()).getElement().getAttribute("ID");
-								newElement.setAttribute("SubsystemID", subsystemID);
-								systemNode.getElement().appendChild(newElement);
-								childNode = new MainTreeNode("Table", newElement, this.getEditor());
-								childNode.setErrorStatus("ER1");
-								this.add(childNode);
-								ready = true;
+								break;
 							}
-						//}
+						}
+						if (duplicated) {
+							JOptionPane.showMessageDialog(null, res.getString("ErrorMessage16") + answer + res.getString("ErrorMessage17"));
+						} else {
+							newElement = (org.w3c.dom.Element)pastingElement.cloneNode(false);
+							newElement.setAttribute("ID", answer);
+							newElement.setAttribute("Name", newElement.getAttribute("Name") + res.getString("CopiedNameExt"));
+							String subsystemID = ((MainTreeNode)this.getParent()).getElement().getAttribute("ID");
+							newElement.setAttribute("SubsystemID", subsystemID);
+							//
+							nodeList = pastingElement.getElementsByTagName("Field");
+							for (int i = 0; i < nodeList.getLength(); i++) {
+								newElement.appendChild(nodeList.item(i).cloneNode(false));
+							}
+							//
+							nodeList = pastingElement.getElementsByTagName("Key");
+							for (int i = 0; i < nodeList.getLength(); i++) {
+								newElement.appendChild(nodeList.item(i).cloneNode(false));
+							}
+							//
+							nodeList = pastingElement.getElementsByTagName("Refer");
+							for (int i = 0; i < nodeList.getLength(); i++) {
+								workElement = (org.w3c.dom.Element)nodeList.item(i).cloneNode(false);
+								wrkStr = workElement.getAttribute("WithKeyFields");
+								wrkStr = wrkStr.replaceAll(currentID+".", answer+".");
+								workElement.setAttribute("WithKeyFields", wrkStr);
+								newElement.appendChild(workElement);
+							}
+							//
+							nodeList = pastingElement.getElementsByTagName("Script");
+							for (int i = 0; i < nodeList.getLength(); i++) {
+								workElement = (org.w3c.dom.Element)nodeList.item(i).cloneNode(false);
+								wrkStr = workElement.getAttribute("Text");
+								wrkStr = wrkStr.replaceAll(currentID+"_", answer+"_");
+								workElement.setAttribute("Text", wrkStr);
+								newElement.appendChild(workElement);
+							}
+							//
+							systemNode.getElement().appendChild(newElement);
+							childNode = new MainTreeNode("Table", newElement, this.getEditor());
+							childNode.setErrorStatus("ER1");
+							this.add(childNode);
+							ready = true;
+						}
 					}
 				}
 			}
@@ -16475,9 +16554,14 @@ public class Editor extends JFrame {
 			jTextFieldMenuID.setText(domNode_.getAttribute("ID"));
 			jTextFieldMenuName.setText(domNode_.getAttribute("Name"));
 			if (domNode_.getAttribute("CrossCheckersToBeLoaded").equals("")) {
-				jTextFieldMenuCrossCheckers.setText("*None");
+				jTextFieldMenuPreloadedCrossCheckers.setText("*None");
 			} else {
-				jTextFieldMenuCrossCheckers.setText(domNode_.getAttribute("CrossCheckersToBeLoaded"));
+				jTextFieldMenuPreloadedCrossCheckers.setText(domNode_.getAttribute("CrossCheckersToBeLoaded"));
+			}
+			if (domNode_.getAttribute("FunctionsToBeLoaded").equals("")) {
+				jTextFieldMenuPreloadedFunctions.setText("*None");
+			} else {
+				jTextFieldMenuPreloadedFunctions.setText(domNode_.getAttribute("FunctionsToBeLoaded"));
 			}
 			if (domNode_.getAttribute("HelpURL").equals("")) {
 				jTextFieldMenuHelpURL.setText("*None");
@@ -16855,7 +16939,11 @@ public class Editor extends JFrame {
 				if (isTableDataEditable) {
 					if (!getOptionList(element1.getAttribute("TypeOptions")).contains("VIRTUAL")
 							&& !element1.getAttribute("Type").equals("BLOB")) {
-						tableModelTableDataList.addColumn(element1.getAttribute("Name"));
+						if (element1.getAttribute("Name").equals("")) {
+							tableModelTableDataList.addColumn(element1.getAttribute("ID"));
+						} else {
+							tableModelTableDataList.addColumn(element1.getAttribute("Name"));
+						}
 						basicType = getBasicTypeOf(element1.getAttribute("Type"));
 						if (!element1.getAttribute("Size").equals("")) {
 							digits = Integer.parseInt(element1.getAttribute("Size"));
@@ -16948,7 +17036,11 @@ public class Editor extends JFrame {
 		    	Object[] Cell = new Object[4];
 		    	Cell[0] = new TableRowNumber(i+1, element1);
 		    	//
-		    	Cell[1] =  element1.getAttribute("Name");
+		    	if (element1.getAttribute("Hold").equals("T")) {
+		    		Cell[1] =  "<html><s>" + element1.getAttribute("Name");
+		    	} else {
+			    	Cell[1] =  element1.getAttribute("Name");
+		    	}
 				Cell[2] = getTableEventNames(element1.getAttribute("EventP"));
 				wrkInt = listTableScriptEventRefer.indexOf(element1.getAttribute("EventR"));
 				if (wrkInt == -1) {
@@ -16988,8 +17080,10 @@ public class Editor extends JFrame {
 						basicType = getBasicTypeOf(columnTypeList.get(i));
 						if (basicType.equals("INTEGER") || basicType.equals("FLOAT")) {
 							col.setCellRenderer(rendererAlignmentRightControlColor);
+							jTableTableDataList.getColumnModel().getColumn(i).setHeaderRenderer(headerRendererAlignmentRight);
 						} else {
 							col.setCellRenderer(rendererAlignmentLeftControlColor);
+							jTableTableDataList.getColumnModel().getColumn(i).setHeaderRenderer(headerRendererAlignmentLeft);
 						}
 						if (tableKeyFieldIDList.contains(editableTableFieldList.get(i-1).getFieldID())) {
 							editableTableFieldList.get(i-1).setKey(true);
@@ -20155,12 +20249,21 @@ public class Editor extends JFrame {
 			if (!domNode_.getAttribute("Name").equals(jTextFieldMenuName.getText())) {
 				valueOfFieldsChanged = true;
 			}
-			if (jTextFieldMenuCrossCheckers.getText().equals("*None") || jTextFieldMenuCrossCheckers.getText().equals("*NONE")) {
+			if (jTextFieldMenuPreloadedCrossCheckers.getText().equals("*None") || jTextFieldMenuPreloadedCrossCheckers.getText().equals("*NONE")) {
 				if (!domNode_.getAttribute("CrossCheckersToBeLoaded").equals("")) {
 					valueOfFieldsChanged = true;
 				}
 			} else {
-				if (!domNode_.getAttribute("CrossCheckersToBeLoaded").equals(jTextFieldMenuCrossCheckers.getText())) {
+				if (!domNode_.getAttribute("CrossCheckersToBeLoaded").equals(jTextFieldMenuPreloadedCrossCheckers.getText())) {
+					valueOfFieldsChanged = true;
+				}
+			}
+			if (jTextFieldMenuPreloadedFunctions.getText().equals("*None") || jTextFieldMenuPreloadedFunctions.getText().equals("*NONE")) {
+				if (!domNode_.getAttribute("FunctionsToBeLoaded").equals("")) {
+					valueOfFieldsChanged = true;
+				}
+			} else {
+				if (!domNode_.getAttribute("FunctionsToBeLoaded").equals(jTextFieldMenuPreloadedFunctions.getText())) {
 					valueOfFieldsChanged = true;
 				}
 			}
@@ -20215,10 +20318,15 @@ public class Editor extends JFrame {
 				//
 				//Update DOM element//
 				domNode_.setAttribute("Name", jTextFieldMenuName.getText());
-				if (jTextFieldMenuCrossCheckers.getText().equals("*None") || jTextFieldMenuCrossCheckers.getText().equals("*NONE")) {
+				if (jTextFieldMenuPreloadedCrossCheckers.getText().equals("*None") || jTextFieldMenuPreloadedCrossCheckers.getText().equals("*NONE")) {
 					domNode_.setAttribute("CrossCheckersToBeLoaded", "");
 				} else {
-					domNode_.setAttribute("CrossCheckersToBeLoaded", jTextFieldMenuCrossCheckers.getText());
+					domNode_.setAttribute("CrossCheckersToBeLoaded", jTextFieldMenuPreloadedCrossCheckers.getText());
+				}
+				if (jTextFieldMenuPreloadedFunctions.getText().equals("*None") || jTextFieldMenuPreloadedFunctions.getText().equals("*NONE")) {
+					domNode_.setAttribute("FunctionsToBeLoaded", "");
+				} else {
+					domNode_.setAttribute("FunctionsToBeLoaded", jTextFieldMenuPreloadedFunctions.getText());
 				}
 				if (jTextFieldMenuHelpURL.getText().equals("*None") || jTextFieldMenuHelpURL.getText().equals("*NONE")) {
 					domNode_.setAttribute("HelpURL", "");
@@ -20899,10 +21007,27 @@ public class Editor extends JFrame {
 					}
 				}
 				//
+				if (element.getAttribute("Hold").equals("") || element.getAttribute("Hold").equals("F")) {
+					if (jCheckBoxTableScriptHold.isSelected()) {
+						valueOfFieldsChanged = true;
+						element.setAttribute("Hold", "T");
+					}
+				}
+				if (element.getAttribute("Hold").equals("T")) {
+					if (!jCheckBoxTableScriptHold.isSelected()) {
+						valueOfFieldsChanged = true;
+						element.setAttribute("Hold", "F");
+					}
+				}
 				if (!element.getAttribute("Name").equals(jTextFieldTableScriptName.getText())) {
 					valueOfFieldsChanged = true;
 					element.setAttribute("Name", jTextFieldTableScriptName.getText());
+				}
+				if (element.getAttribute("Hold").equals("T")) {
+					tableModelTableScriptList.setValueAt("<html><s>" + jTextFieldTableScriptName.getText(), selectedRow_jTableTableScriptList, 1);
+				} else {
 					tableModelTableScriptList.setValueAt(jTextFieldTableScriptName.getText(), selectedRow_jTableTableScriptList, 1);
+					
 				}
 				//
 				if (jCheckBoxTableScriptEventPrimaryBR.isSelected()) {
@@ -26521,9 +26646,9 @@ public class Editor extends JFrame {
 	}
 
 	public void pasteTextToIndent(JScrollPane scrollPane) {
-		/////////////////////////////////////////////
-		// Get text data from the system clipboard //
-		/////////////////////////////////////////////
+		//////////////////////////////////////////////
+		// Get text data from the system clip-board //
+		//////////////////////////////////////////////
 		String clipboardData = "";
 		Clipboard clipboard = getToolkit().getSystemClipboard();
 		Transferable contentsReceived = clipboard.getContents(this);
@@ -26537,9 +26662,9 @@ public class Editor extends JFrame {
 		//
 		JTextArea textArea = (JTextArea)scrollPane.getViewport().getView();
 		if (textArea.getSelectionStart() < textArea.getSelectionEnd()) {
-			/////////////////////////////////////////////
-			// Replace selected text to clipboard text //
-			/////////////////////////////////////////////
+			//////////////////////////////////////////////
+			// Replace selected text to clip-board text //
+			//////////////////////////////////////////////
 			String text = textArea.getText();
 			int selectFrom = textArea.getSelectionStart();
 			int selectThru = textArea.getSelectionEnd();
@@ -26725,6 +26850,85 @@ public class Editor extends JFrame {
 			}
 			//
 			countOfRows++;
+		}
+		//
+		Point point = scrollPane.getViewport().getViewPosition();
+		int caretPos = textArea.getCaretPosition();
+		textArea.setText(buf.toString());
+		textArea.select(0, 0);
+		try {
+			textArea.setCaretPosition(caretPos + countAdjustment);
+		} catch (Exception e) {
+		}
+		scrollPane.getViewport().setViewPosition(point);
+	}
+	
+	public void commentRows(JScrollPane scrollPane) {
+		StringBuffer buf = new StringBuffer();
+		String wrkStr;
+		int pos1 = 0;
+		int pos2 = 0;
+		int wrkInt, countAdjustment = 0;
+		int selectionRowFrom = 0;
+		int selectionRowThru = 0;
+		boolean isWithinSelection = false;
+		boolean isToComenntize = false;
+		JTextArea textArea = (JTextArea)scrollPane.getViewport().getView();
+		ArrayList<String> sentenceList = new ArrayList<String>(); 
+
+		//////////////////////////////////////////////////
+		// Calculate row numbers of selection start/end //
+		//////////////////////////////////////////////////
+		wrkInt = 0;
+		while (pos2 < (textArea.getText().length() - 1)) {
+			pos2 = textArea.getText().indexOf("\n", pos1);
+			if (pos2 == -1) {
+				pos2 = textArea.getText().length() -1;
+			}
+			if (pos2 >= textArea.getSelectionStart() && pos2 < textArea.getSelectionEnd()) {
+				selectionRowThru = wrkInt;
+				if (!isWithinSelection) {
+					selectionRowFrom = wrkInt;
+					isWithinSelection = true;
+				}
+			}
+			sentenceList.add(textArea.getText().substring(pos1, pos2+1));
+			pos1 = pos2+1;
+			wrkInt++;
+		}
+
+		/////////////////////////////////////////////////////////
+		// Analyze if comment marks should be added or removed //
+		/////////////////////////////////////////////////////////
+		for (int i=0; i < sentenceList.size(); i++) {
+			if (i >= selectionRowFrom && i <= selectionRowThru) {
+				wrkStr = sentenceList.get(i).replaceAll("\t", "");
+				if (!wrkStr.startsWith("//")) {
+					isToComenntize = true;
+				}
+			}
+		}
+
+		///////////////////////////
+		// Process comment marks //
+		///////////////////////////
+		for (int i=0; i < sentenceList.size(); i++) {
+			wrkStr = sentenceList.get(i);
+			if (i >= selectionRowFrom && i <= selectionRowThru) {
+				if (isToComenntize) {
+					buf.append("//" + wrkStr);
+					countAdjustment++;
+					countAdjustment++;
+				} else {
+					if (wrkStr.contains("//")) {
+						buf.append(wrkStr.replaceFirst("//", ""));
+						countAdjustment--;
+						countAdjustment--;
+					}
+				}
+			} else {
+				buf.append(wrkStr);
+			}
 		}
 		//
 		Point point = scrollPane.getViewport().getViewPosition();
@@ -26966,7 +27170,7 @@ public class Editor extends JFrame {
 					showPopupXETreeNode(e);
 				}
 			} else {
-				if (dragSourceMainTreeNode != null) {
+				if (dragSourceMainTreeNode != null && dropTargetComponent != null) {
 					//
 					//Drag and Drop Processing//
 					boolean jTreeMainRefreshRequired = dragSourceMainTreeNode.dragAndDropNodeIntoComponent(dropTargetComponent, e);
@@ -27166,14 +27370,18 @@ public class Editor extends JFrame {
 					try{
 						setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
+						////////////////
 						//Save changes//
+						////////////////
 						if (rtn2 == 0) {
 							saveFileWithCurrentFileName();
 							undoManager.resetLog();
 							changeState.setChanged(false);
 						}
 
+						//////////////////////////////
 						//Save changes as other name//
+						//////////////////////////////
 						if (rtn2 == 1) {
 							name = specifyNameOfNewFile(res.getString("NameDialogTitle"),res.getString("SaveAsThis"), currentFileName);
 							if (!name.equals("")) {
@@ -27185,10 +27393,10 @@ public class Editor extends JFrame {
 							}
 						}
 
+						//////////////////////
 						//Setup MainTreeNode//
-						if (rtn2 == 0 || rtn2 == 1) {
-							setupMainTreeModelWithCurrentFileName();
-						}
+						//////////////////////
+						setupMainTreeModelWithCurrentFileName();
 
 					} catch(Exception exception) {
 						exception.printStackTrace();
@@ -27235,14 +27443,18 @@ public class Editor extends JFrame {
 					try{
 						setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
+						////////////////
 						//Save changes//
+						////////////////
 						if (rtn2 == 0) {
 							saveFileWithCurrentFileName();
 							undoManager.resetLog();
 							changeState.setChanged(false);
 						}
 
+						//////////////////////////////
 						//Save changes as other name//
+						//////////////////////////////
 						if (rtn2 == 1) {
 							name = specifyNameOfNewFile(res.getString("NameDialogTitle"),res.getString("SaveAsThis"), currentFileName);
 							if (!name.equals("")) {
@@ -27254,10 +27466,10 @@ public class Editor extends JFrame {
 							}
 						}
 
+						//////////////////////
 						//Setup MainTreeNode//
-						if (rtn2 == 0 || rtn2 == 1) {
-							setupMainTreeModelWithCurrentFileName();
-						}
+						//////////////////////
+						setupMainTreeModelWithCurrentFileName();
 
 					} catch(Exception exception) {
 						exception.printStackTrace();
@@ -27302,14 +27514,18 @@ public class Editor extends JFrame {
 				try {
 					setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
+					////////////////
 					//Save changes//
+					////////////////
 					if (rtn2 == 0) {
 						saveFileWithCurrentFileName();
 						undoManager.resetLog();
 						changeState.setChanged(false);
 					}
 
+					//////////////////////////////
 					//Save changes as other name//
+					//////////////////////////////
 					if (rtn2 == 1) {
 						String name = specifyNameOfNewFile(res.getString("NameDialogTitle"),res.getString("SaveAsThis"), currentFileName);
 						if (!name.equals("")) {
@@ -27321,10 +27537,10 @@ public class Editor extends JFrame {
 						}
 					}
 
+					//////////////////////
 					//Setup MainTreeNode//
-					if (rtn2 == 0 || rtn2 == 1) {
-						setupMainTreeModelWithCurrentFileName();
-					}
+					//////////////////////
+					setupMainTreeModelWithCurrentFileName();
 
 				} catch(Exception exception) {
 					exception.printStackTrace();
@@ -27864,31 +28080,6 @@ public class Editor extends JFrame {
 	void jMenuItemEditRedo_actionPerformed(ActionEvent e) {
 		undoManager.redo();
 	}
-//	/**
-//	 * Create New File
-//	 */
-//	void createtNewXeafFileWithCurrentFileName() {
-//		try {
-//			File file = new File(currentFileName);
-//			FileOutputStream fos = new FileOutputStream(file);
-//			OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
-//			String lang = Locale.getDefault().getLanguage();
-//			if (lang.equals("ja")) {
-//				osw.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
-//				osw.write("<System Descriptions=\"\" Name=\"新規システム\" Version=\"0.0.1\" FormatVersion=\"" + FORMAT_VERSION + " \">\n");
-//				osw.write("</System>\n");
-//			} else {
-//				osw.write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n");
-//				osw.write("<System Descriptions=\"\" Name=\"New System\" Version=\"0.0.1\" FormatVersion=\"" + FORMAT_VERSION + " \">\n");
-//				osw.write("</System>\n");
-//			}
-//			osw.flush();
-//			osw.close();
-//		}
-//		catch (IOException ex) {
-//			processError(ex);
-//		}
-//	}
 	/***************************************
 	 * Save edited content of current file *
 	 ***************************************/
@@ -28365,6 +28556,80 @@ public class Editor extends JFrame {
 			newElement.setAttribute("SortKey", getStringValueOfDateTime("withUnderbarAndTime"));
 		}
 		//
+		if (type.equals("MenuFunctionList")) {
+			String answer = "";
+			boolean ready = false;
+			while (!ready) {
+				answer = JOptionPane.showInputDialog(jScrollPaneMenuFunctionList, res.getString("SpecifyFunctionID"), answer);
+				if (answer == null || answer.equals("")) {
+					ready = true;
+				} else {
+					boolean isValidID = false;
+					NodeList functionList = domDocument.getElementsByTagName("Function");
+					for (int i = 0; i < functionList.getLength(); i++) {
+						element = (org.w3c.dom.Element)functionList.item(i);
+						if (element.getAttribute("ID").equals(answer)) {
+							isValidID = true;
+							break;
+						}
+					}
+					if (!isValidID) {
+						JOptionPane.showMessageDialog(jScrollPaneMenuFunctionList, res.getString("ErrorMessage126"));
+					} else {
+						boolean alreadyExist = false;
+						int lastIndex = -1;
+						int skipIndex = -1;
+						int workInt = 0;
+						NodeList nodeList = currentMainTreeNode.getElement().getElementsByTagName("Option");
+						sortingList = getSortedListModel(nodeList, "Index");
+						for (int i = 0; i < sortingList.getSize(); i++) {
+							element = (org.w3c.dom.Element)sortingList.getElementAt(i);
+							if (element.getAttribute("FunctionID").equals(answer)) {
+								alreadyExist = true;
+							}
+							workInt = Integer.parseInt(element.getAttribute("Index"));
+							lastIndex = workInt;
+							if (workInt > i) {
+								if (skipIndex == -1) {
+									skipIndex = workInt -1;
+								}
+							}
+						}
+						if (alreadyExist) {
+							JOptionPane.showMessageDialog(jScrollPaneMenuFunctionList, res.getString("ErrorMessage22"));
+						} else {
+							if (sortingList.getSize() >= 19) { 
+								JOptionPane.showMessageDialog(jScrollPaneMenuFunctionList, res.getString("ErrorMessage23"));
+							} else {
+								newElement = domDocument.createElement("Option");
+								if (lastIndex < 18) { 
+									if (lastIndex < 9) {
+										newElement.setAttribute("Index", "0" + Integer.toString(lastIndex + 1));
+									} else {
+										newElement.setAttribute("Index", Integer.toString(lastIndex + 1));
+									}
+								} else {
+									if (skipIndex > -1) {
+										if (skipIndex < 10) {
+											newElement.setAttribute("Index", "0" + Integer.toString(skipIndex));
+										} else {
+											newElement.setAttribute("Index", Integer.toString(skipIndex));
+										}
+									}
+								}
+								newElement.setAttribute("FunctionID", answer);
+								newElement.setAttribute("OptionName", "");
+								ready = true;
+							}
+						}
+					}
+				}
+			}
+			if (newElement == null) {
+				informationOnThisPageChanged = false;
+			}
+		}
+		//
 		if (type.equals("TableFieldList")) {
 			newElement = domDocument.createElement("Field");
 			if (tableModelTableFieldList.getRowCount() > 0) {
@@ -28598,7 +28863,7 @@ public class Editor extends JFrame {
 	void jMenuItemComponentToDelete_actionPerformed(ActionEvent e) {
 		MainTreeNode targetNode = null;
 		TableRowNumber tableRowNumber = null;
-		String errorMsg = "";
+		String wrkStr, errorMsg = "";
 		//
 		if (componentType_jPopupMenuComponent.equals("TableDataList")) {
 			jButtonTableDataFieldsToDelete_actionPerformed(null);
@@ -28705,12 +28970,27 @@ public class Editor extends JFrame {
 					int count = 0;
 					for (int i = 0; i < listModelTableReferFields.getSize(); i++) {
 						JCheckBox checkBox = (JCheckBox)listModelTableReferFields.getElementAt(i);
-						if (checkBox.isSelected()){
+						if (checkBox.isSelected() && !checkBox.isEnabled()){
 							count++;
 						}
 					}
 					if (count > 0) {
 						errorMsg = res.getString("ErrorMessage32") + count + res.getString("ErrorMessage33");
+					} else {
+						String tableAliasDeleted = tableRowNumber.getElement().getAttribute("TableAlias");
+						if (tableAliasDeleted.equals("")) {
+							tableAliasDeleted = tableRowNumber.getElement().getAttribute("ToTable");
+						}
+						TableRowNumber scriptRowNumber;
+						for (int i = 0; i < tableModelTableScriptList.getRowCount(); i++) {
+							scriptRowNumber = (TableRowNumber)tableModelTableScriptList.getValueAt(i,0);
+							wrkStr = scriptRowNumber.getElement().getAttribute("EventR").trim();
+							if (wrkStr.equals("BR("+tableAliasDeleted+")")
+									|| wrkStr.equals("AR("+tableAliasDeleted+")")) {
+								errorMsg = res.getString("ErrorMessage125") + "\n" + scriptRowNumber.getElement().getAttribute("Name");
+								break;
+							}
+						}
 					}
 				}
 				if (componentType_jPopupMenuComponent.equals("TableScriptList")) {
@@ -29793,23 +30073,13 @@ public class Editor extends JFrame {
 					wrkStr = getDescriptionsOfTypeOptions(fieldElement, true, function100TableElement);
 					jTextFieldFunction100FilterFieldType.setText(getDescriptionsOfTypeAndSize(fieldElement.getAttribute("Type"), fieldElement.getAttribute("Size"), fieldElement.getAttribute("Decimal")) + wrkStr);
 					String dataType = fieldElement.getAttribute("Type");
-					if (dataType.equals("INTEGER")
-							|| dataType.equals("SMALLINT")
-							|| dataType.equals("BIGINT")
-							|| dataType.equals("DOUBLE")
-							|| dataType.equals("DECIMAL")
-							|| dataType.equals("DOUBLE PRECISION")
-							|| dataType.equals("NUMERIC")
-							|| dataType.equals("REAL")	) {
-
+					if (getBasicTypeOf(dataType).equals("INTEGER") || getBasicTypeOf(dataType).equals("FLOAT")) {
 						jRadioButtonFunction100FilterOptionLE.setEnabled(true);
 						jRadioButtonFunction100FilterOptionLT.setEnabled(true);
 						jRadioButtonFunction100FilterOptionGE.setEnabled(true);
 						jRadioButtonFunction100FilterOptionGT.setEnabled(true);
-
 						jCheckBoxFunction100FilterIgnoreIfZero.setVisible(true);
 					} else {
-
 						if (dataType.equals("DATE")) {
 							jRadioButtonFunction100FilterOptionLE.setEnabled(true);
 							jRadioButtonFunction100FilterOptionLT.setEnabled(true);
@@ -30207,14 +30477,14 @@ public class Editor extends JFrame {
 	void jTableFunction110FilterList_valueChanged(ListSelectionEvent e) {
 		int pos1;
 		String wrkStr="";
-		//
+
 		if (!tableRowsAreBeingSetup) {
-			//
+
 			try {
 				if (currentMainTreeNode.updateFieldsForFunction110Filter()) {
 					informationOnThisPageChanged = true;
 				}
-				//
+
 				jLabelFunction110FilterTable.setEnabled(false);
 				jLabelFunction110FilterTableType.setEnabled(false);
 				jLabelFunction110FilterField.setEnabled(false);
@@ -30268,12 +30538,12 @@ public class Editor extends JFrame {
 				jButtonFunction110FilterPromptOptionCallFunctionExchange.setEnabled(false);
 				jCheckBoxFunction110FilterIgnoreIfZero.setSelected(false);
 				jCheckBoxFunction110FilterIgnoreIfZero.setVisible(false);
-				//
+
 				if (jTableFunction110FilterList.getSelectedRow() != -1) {
-					//
+
 					selectedRow_jTableFunction110FilterList = jTableFunction110FilterList.getSelectedRow();
 					TableRowNumber tableRowNumber = (TableRowNumber)tableModelFunction110FilterList.getValueAt(selectedRow_jTableFunction110FilterList, 0);
-					//
+
 					jLabelFunction110FilterTable.setEnabled(true);
 					jLabelFunction110FilterTableType.setEnabled(true);
 					jLabelFunction110FilterField.setEnabled(true);
@@ -30297,9 +30567,9 @@ public class Editor extends JFrame {
 					jRadioButtonFunction110FilterPromptOptionList0.setEnabled(true);
 					jTextFieldFunction110FilterValue.setEnabled(true);
 					jComboBoxFunction110FilterEditableOptions.setEnabled(true);
-					//
+
 					org.w3c.dom.Element element = tableRowNumber.getElement();
-					//
+
 					wrkStr = element.getAttribute("DataSource");
 					pos1 = wrkStr.indexOf(".");
 					String tableAlias = wrkStr.substring(0, pos1);
@@ -30309,7 +30579,7 @@ public class Editor extends JFrame {
 					org.w3c.dom.Element tableElement = tableNode.getElement();
 					jTextFieldFunction110FilterTable.setText(tableID + " " + tableElement.getAttribute("Name"));
 					org.w3c.dom.Element fieldElement = getSpecificFieldElement(tableID, fieldID);
-					//
+
 					if (tableAlias.equals(function110PrimaryTableID) && tableID.equals(function110PrimaryTableID)) {
 						jTextFieldFunction110FilterTableType.setText(res.getString("PrimaryTable"));
 					} else {
@@ -30324,28 +30594,26 @@ public class Editor extends JFrame {
 							jRadioButtonFunction110FilterPromptOptionList2.setEnabled(true);
 						}
 					}
-					//
+
 					jTextFieldFunction110FilterField.setText(fieldID + " " + fieldElement.getAttribute("Name"));
 					wrkStr = getDescriptionsOfTypeOptions(fieldElement, true, function110TableElement);
 					jTextFieldFunction110FilterFieldType.setText(getDescriptionsOfTypeAndSize(fieldElement.getAttribute("Type"), fieldElement.getAttribute("Size"), fieldElement.getAttribute("Decimal")) + wrkStr);
 					String dataType = fieldElement.getAttribute("Type");
-					if (dataType.equals("INTEGER")
-							|| dataType.equals("SMALLINT")
-							|| dataType.equals("BIGINT")
-							|| dataType.equals("DOUBLE")
-							|| dataType.equals("DECIMAL")
-							|| dataType.equals("DOUBLE PRECISION")
-							|| dataType.equals("NUMERIC")
-							|| dataType.equals("REAL")	) {
-						//
+					if (getBasicTypeOf(dataType).equals("INTEGER") || getBasicTypeOf(dataType).equals("FLOAT")) {
+//					if (dataType.equals("INTEGER")
+//							|| dataType.equals("SMALLINT")
+//							|| dataType.equals("BIGINT")
+//							|| dataType.equals("DOUBLE")
+//							|| dataType.equals("DECIMAL")
+//							|| dataType.equals("DOUBLE PRECISION")
+//							|| dataType.equals("NUMERIC")
+//							|| dataType.equals("REAL")	) {
 						jRadioButtonFunction110FilterOptionLE.setEnabled(true);
 						jRadioButtonFunction110FilterOptionLT.setEnabled(true);
 						jRadioButtonFunction110FilterOptionGE.setEnabled(true);
 						jRadioButtonFunction110FilterOptionGT.setEnabled(true);
-						//
 						jCheckBoxFunction110FilterIgnoreIfZero.setVisible(true);
 					} else {
-						//
 						if (dataType.equals("DATE")) {
 							jRadioButtonFunction110FilterOptionLE.setEnabled(true);
 							jRadioButtonFunction110FilterOptionLT.setEnabled(true);
@@ -30374,11 +30642,11 @@ public class Editor extends JFrame {
 							}
 						}
 					}
-					//
+
 					if (getOptionList(fieldElement.getAttribute("TypeOptions")).contains("VIRTUAL")) {
 						jRadioButtonFunction110FilterOptionREFLECT.setEnabled(true);
 					}
-					//
+
 					if (!getOptionValueWithKeyword(fieldElement.getAttribute("TypeOptions"), "KUBUN").equals("")) {
 						jRadioButtonFunction110FilterPromptOptionList1.setEnabled(true);
 						jRadioButtonFunction110FilterPromptOptionList2.setEnabled(true);
@@ -30386,7 +30654,7 @@ public class Editor extends JFrame {
 					if (!fieldElement.getAttribute("TypeOptions").contains("BOOLEAN(")) {
 						jRadioButtonFunction110FilterPromptOptionCall.setEnabled(true);
 					}
-					//
+
 					String operandType = getOperandType(element.getAttribute("FieldOptions"));
 					if (operandType.equals("")) {
 						jRadioButtonFunction110FilterOptionEQ.setSelected(true);
@@ -30412,9 +30680,9 @@ public class Editor extends JFrame {
 					if (operandType.equals("REFLECT")) {
 						jRadioButtonFunction110FilterOptionREFLECT.setSelected(true);
 					}
-					//
+
 					ArrayList<String> optionList = getOptionList(element.getAttribute("FieldOptions"));
-					//
+
 					jTextFieldFunction110FilterMargin.setText("*Auto");
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "VERTICAL");
 					if (wrkStr.equals("")) {
@@ -30429,7 +30697,7 @@ public class Editor extends JFrame {
 					if (!wrkStr.equals("")) {
 						jTextFieldFunction110FilterMargin.setText(wrkStr);
 					}
-					//
+
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
 					if (wrkStr.equals("")) {
 						jTextFieldFunction110FilterWidth.setText("*Auto");
@@ -30461,7 +30729,7 @@ public class Editor extends JFrame {
 					function110FilterPromptOptionCallFunctionFieldsToPutTo = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "PROMPT_CALL_TO_PUT_TO");
 					function110FilterPromptOptionCallFunctionFieldsToGet = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "PROMPT_CALL_TO_GET");
 					function110FilterPromptOptionCallFunctionFieldsToGetTo = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "PROMPT_CALL_TO_GET_TO");
-					//
+
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "CAPTION");
 					if (!wrkStr.equals("")) {
 						jRadioButtonFunction110FilterCaptionOptionValue.setSelected(true);
@@ -35841,6 +36109,8 @@ public class Editor extends JFrame {
 				jTextAreaTableScriptText.setEnabled(false);
 			    jLabelTableScriptCursorPos.setText("");
 				jButtonTableScriptEdit.setEnabled(false);
+				jCheckBoxTableScriptHold.setEnabled(false);
+				jCheckBoxTableScriptHold.setSelected(false);
 				//
 				selectedRow_jTableTableScriptList = jTableTableScriptList.getSelectedRow();
 				if (selectedRow_jTableTableScriptList != -1) {
@@ -35859,6 +36129,7 @@ public class Editor extends JFrame {
 					jLabelTableScript.setEnabled(true);
 					jTextAreaTableScriptText.setEnabled(true);
 					jButtonTableScriptEdit.setEnabled(true);
+					jCheckBoxTableScriptHold.setEnabled(true);
 					//
 					tableRowNumber = (TableRowNumber)tableModelTableScriptList.getValueAt(selectedRow_jTableTableScriptList, 0);
 					element = tableRowNumber.getElement();
@@ -35895,6 +36166,10 @@ public class Editor extends JFrame {
 						jComboBoxTableScriptEventRefer.setSelectedIndex(work);
 					}
 					//
+					if (element.getAttribute("Hold").equals("T")) {
+						jCheckBoxTableScriptHold.setSelected(true);
+					}
+					//
 					jTextFieldTableScriptName.setText(element.getAttribute("Name"));
 					jTextAreaTableScriptText.setText(substringLinesWithTokenOfEOL(element.getAttribute("Text"), "\n"));
 					jTextAreaTableScriptTextUndoManager.discardAllEdits();
@@ -35915,8 +36190,6 @@ public class Editor extends JFrame {
 		listTableScriptEventRefer.add("BR()");
 		jComboBoxTableScriptEventRefer.addItem(res.getString("EventReferBR"));
 		//
-		//for (int i = 0; i < tableReferList.getLength(); i++) {
-		//	referTableElement = (org.w3c.dom.Element)tableReferList.item(i);
 		sortingList = getSortedListModel(tableReferList, "Order");
 	    for (int i = 0; i < sortingList.getSize(); i++) {
 	    	referTableElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
@@ -37199,14 +37472,14 @@ public class Editor extends JFrame {
 	void jTableFunction300DetailFilterList_valueChanged(ListSelectionEvent e) {
 		int pos1;
 		String wrkStr="";
-		//
+
 		if (!tableRowsAreBeingSetup) {
-			//
+
 			try {
 				if (currentMainTreeNode.updateFieldsForFunction300DetailFilter()) {
 					informationOnThisPageChanged = true;
 				}
-				//
+
 				jLabelFunction300DetailFilterTable.setEnabled(false);
 				jLabelFunction300DetailFilterTableType.setEnabled(false);
 				jLabelFunction300DetailFilterField.setEnabled(false);
@@ -37260,12 +37533,12 @@ public class Editor extends JFrame {
 				jButtonFunction300DetailFilterPromptOptionCallFunctionExchange.setEnabled(false);
 				jCheckBoxFunction300DetailFilterIgnoreIfZero.setSelected(false);
 				jCheckBoxFunction300DetailFilterIgnoreIfZero.setVisible(false);
-				//
+
 				if (jTableFunction300DetailFilterList.getSelectedRow() != -1) {
-					//
+
 					selectedRow_jTableFunction300DetailFilterList = jTableFunction300DetailFilterList.getSelectedRow();
 					TableRowNumber tableRowNumber = (TableRowNumber)tableModelFunction300DetailFilterList.getValueAt(selectedRow_jTableFunction300DetailFilterList, 0);
-					//
+
 					jLabelFunction300DetailFilterTable.setEnabled(true);
 					jLabelFunction300DetailFilterTableType.setEnabled(true);
 					jLabelFunction300DetailFilterField.setEnabled(true);
@@ -37289,9 +37562,9 @@ public class Editor extends JFrame {
 					jRadioButtonFunction300DetailFilterPromptOptionList0.setEnabled(true);
 					jTextFieldFunction300DetailFilterValue.setEnabled(true);
 					jComboBoxFunction300DetailFilterEditableOptions.setEnabled(true);
-					//
+
 					org.w3c.dom.Element element = tableRowNumber.getElement();
-					//
+
 					wrkStr = element.getAttribute("DataSource");
 					pos1 = wrkStr.indexOf(".");
 					String tableAlias = wrkStr.substring(0, pos1);
@@ -37301,7 +37574,7 @@ public class Editor extends JFrame {
 					org.w3c.dom.Element tableElement = tableNode.getElement();
 					jTextFieldFunction300DetailFilterTable.setText(tableID + " " + tableElement.getAttribute("Name"));
 					org.w3c.dom.Element fieldElement = getSpecificFieldElement(tableID, fieldID);
-					//
+
 					if (tableAlias.equals(function300DetailTableID) && tableID.equals(function300DetailTableID)) {
 						jTextFieldFunction300DetailFilterTableType.setText(res.getString("PrimaryTable"));
 					} else {
@@ -37316,28 +37589,27 @@ public class Editor extends JFrame {
 							jRadioButtonFunction300DetailFilterPromptOptionList2.setEnabled(true);
 						}
 					}
-					//
+
 					jTextFieldFunction300DetailFilterField.setText(fieldID + " " + fieldElement.getAttribute("Name"));
 					wrkStr = getDescriptionsOfTypeOptions(fieldElement, true, function300DetailTableElement);
 					jTextFieldFunction300DetailFilterFieldType.setText(getDescriptionsOfTypeAndSize(fieldElement.getAttribute("Type"), fieldElement.getAttribute("Size"), fieldElement.getAttribute("Decimal")) + wrkStr);
 					String dataType = fieldElement.getAttribute("Type");
-					if (dataType.equals("INTEGER")
-							|| dataType.equals("SMALLINT")
-							|| dataType.equals("BIGINT")
-							|| dataType.equals("DOUBLE")
-							|| dataType.equals("DECIMAL")
-							|| dataType.equals("DOUBLE PRECISION")
-							|| dataType.equals("NUMERIC")
-							|| dataType.equals("REAL")	) {
-						//
+					if (getBasicTypeOf(dataType).equals("INTEGER") || getBasicTypeOf(dataType).equals("FLOAT")) {
+//					if (dataType.equals("INTEGER")
+//							|| dataType.equals("SMALLINT")
+//							|| dataType.equals("BIGINT")
+//							|| dataType.equals("DOUBLE")
+//							|| dataType.equals("DECIMAL")
+//							|| dataType.equals("DOUBLE PRECISION")
+//							|| dataType.equals("NUMERIC")
+//							|| dataType.equals("REAL")	) {
+
 						jRadioButtonFunction300DetailFilterOptionLE.setEnabled(true);
 						jRadioButtonFunction300DetailFilterOptionLT.setEnabled(true);
 						jRadioButtonFunction300DetailFilterOptionGE.setEnabled(true);
 						jRadioButtonFunction300DetailFilterOptionGT.setEnabled(true);
-						//
 						jCheckBoxFunction300DetailFilterIgnoreIfZero.setVisible(true);
 					} else {
-						//
 						if (dataType.equals("DATE")) {
 							jRadioButtonFunction300DetailFilterOptionLE.setEnabled(true);
 							jRadioButtonFunction300DetailFilterOptionLT.setEnabled(true);
@@ -37366,11 +37638,11 @@ public class Editor extends JFrame {
 							}
 						}
 					}
-					//
+
 					if (getOptionList(fieldElement.getAttribute("TypeOptions")).contains("VIRTUAL")) {
 						jRadioButtonFunction300DetailFilterOptionREFLECT.setEnabled(true);
 					}
-					//
+
 					if (!getOptionValueWithKeyword(fieldElement.getAttribute("TypeOptions"), "KUBUN").equals("")) {
 						jRadioButtonFunction300DetailFilterPromptOptionList1.setEnabled(true);
 						jRadioButtonFunction300DetailFilterPromptOptionList2.setEnabled(true);
@@ -37378,7 +37650,7 @@ public class Editor extends JFrame {
 					if (!fieldElement.getAttribute("TypeOptions").contains("BOOLEAN(")) {
 						jRadioButtonFunction300DetailFilterPromptOptionCall.setEnabled(true);
 					}
-					//
+
 					String operandType = getOperandType(element.getAttribute("FieldOptions"));
 					if (operandType.equals("")) {
 						jRadioButtonFunction300DetailFilterOptionEQ.setSelected(true);
@@ -37404,9 +37676,9 @@ public class Editor extends JFrame {
 					if (operandType.equals("REFLECT")) {
 						jRadioButtonFunction300DetailFilterOptionREFLECT.setSelected(true);
 					}
-					//
+
 					ArrayList<String> optionList = getOptionList(element.getAttribute("FieldOptions"));
-					//
+
 					jTextFieldFunction300DetailFilterMargin.setText("*Auto");
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "VERTICAL");
 					if (wrkStr.equals("")) {
@@ -37421,7 +37693,7 @@ public class Editor extends JFrame {
 					if (!wrkStr.equals("")) {
 						jTextFieldFunction300DetailFilterMargin.setText(wrkStr);
 					}
-					//
+
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
 					if (wrkStr.equals("")) {
 						jTextFieldFunction300DetailFilterWidth.setText("*Auto");
@@ -37453,7 +37725,7 @@ public class Editor extends JFrame {
 					function300DetailFilterPromptOptionCallFunctionFieldsToPutTo = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "PROMPT_CALL_TO_PUT_TO");
 					function300DetailFilterPromptOptionCallFunctionFieldsToGet = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "PROMPT_CALL_TO_GET");
 					function300DetailFilterPromptOptionCallFunctionFieldsToGetTo = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "PROMPT_CALL_TO_GET_TO");
-					//
+
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "CAPTION");
 					if (!wrkStr.equals("")) {
 						jRadioButtonFunction300DetailFilterCaptionOptionValue.setSelected(true);
@@ -38582,7 +38854,7 @@ public class Editor extends JFrame {
 				}
 				wrkStr = element.getAttribute("FieldOptions");
 				if (!wrkStr.equals("")) {
-					wrkStr = wrkStr.replaceAll("("+originalTableID+".", "("+newTableID+".");
+					wrkStr = wrkStr.replaceAll("\\("+originalTableID+".", "\\("+newTableID+".");
 					wrkStr = wrkStr.replaceAll(";"+originalTableID+".", ";"+newTableID+".");
 					element.setAttribute("FieldOptions", wrkStr);
 				}
@@ -38599,7 +38871,7 @@ public class Editor extends JFrame {
 				}
 				wrkStr = element.getAttribute("FieldOptions");
 				if (!wrkStr.equals("")) {
-					wrkStr = wrkStr.replaceAll("("+originalTableID+".", "("+newTableID+".");
+					wrkStr = wrkStr.replaceAll("\\("+originalTableID+".", "\\("+newTableID+".");
 					wrkStr = wrkStr.replaceAll(";"+originalTableID+".", ";"+newTableID+".");
 					element.setAttribute("FieldOptions", wrkStr);
 				}
@@ -38643,7 +38915,7 @@ public class Editor extends JFrame {
 				}
 				wrkStr = element.getAttribute("FieldOptions");
 				if (!wrkStr.equals("")) {
-					wrkStr = wrkStr.replaceAll("("+originalTableID+".", "("+newTableID+".");
+					wrkStr = wrkStr.replaceAll("\\("+originalTableID+".", "\\("+newTableID+".");
 					wrkStr = wrkStr.replaceAll(";"+originalTableID+".", ";"+newTableID+".");
 					element.setAttribute("FieldOptions", wrkStr);
 				}
@@ -38657,7 +38929,7 @@ public class Editor extends JFrame {
 			for (int i = 0; i < phraseList.getLength(); i++) {
 				element = (org.w3c.dom.Element)phraseList.item(i);
 				phraseValue = element.getAttribute("Value");
-				element.setAttribute("Value", phraseValue.replace("(" + originalTableID + ".", "(" + newTableID + "."));
+				element.setAttribute("Value", phraseValue.replaceAll("\\(" + originalTableID + ".", "\\(" + newTableID + "."));
 			}
 			functionElement.setAttribute("PrimaryTable", newTableID);
 		}
@@ -38676,7 +38948,7 @@ public class Editor extends JFrame {
 				}
 				wrkStr = element.getAttribute("FieldOptions");
 				if (!wrkStr.equals("")) {
-					wrkStr = wrkStr.replaceAll("("+originalTableID+".", "("+newTableID+".");
+					wrkStr = wrkStr.replaceAll("\\("+originalTableID+".", "\\("+newTableID+".");
 					wrkStr = wrkStr.replaceAll(";"+originalTableID+".", ";"+newTableID+".");
 					element.setAttribute("FieldOptions", wrkStr);
 				}
@@ -38698,7 +38970,7 @@ public class Editor extends JFrame {
 				}
 				wrkStr = element.getAttribute("FieldOptions");
 				if (!wrkStr.equals("")) {
-					wrkStr = wrkStr.replaceAll("("+originalTableID+".", "("+newTableID+".");
+					wrkStr = wrkStr.replaceAll("\\("+originalTableID+".", "\\("+newTableID+".");
 					wrkStr = wrkStr.replaceAll(";"+originalTableID+".", ";"+newTableID+".");
 					element.setAttribute("FieldOptions", wrkStr);
 				}
@@ -38712,7 +38984,7 @@ public class Editor extends JFrame {
 			for (int i = 0; i < phraseList.getLength(); i++) {
 				element = (org.w3c.dom.Element)phraseList.item(i);
 				phraseValue = element.getAttribute("Value");
-				element.setAttribute("Value", phraseValue.replace("(" + originalTableID + ".", "(" + newTableID + "."));
+				element.setAttribute("Value", phraseValue.replaceAll("\\(" + originalTableID + ".", "\\(" + newTableID + "."));
 			}
 			functionElement.setAttribute("HeaderTable", newTableID);
 		}
@@ -38803,7 +39075,7 @@ public class Editor extends JFrame {
 				}
 				wrkStr = element2.getAttribute("FieldOptions");
 				if (!wrkStr.equals("")) {
-					wrkStr = wrkStr.replaceAll("("+originalTableID+".", "("+newTableID+".");
+					wrkStr = wrkStr.replaceAll("\\("+originalTableID+".", "\\("+newTableID+".");
 					wrkStr = wrkStr.replaceAll(";"+originalTableID+".", ";"+newTableID+".");
 					element2.setAttribute("FieldOptions", wrkStr);
 				}
@@ -38852,6 +39124,9 @@ public class Editor extends JFrame {
 				bf = new StringBuffer();
 				tokenizer = new StringTokenizer(returnToDataSource, ";");
 				while (tokenizer.hasMoreTokens()) {
+					if (bf.length() > 0) {
+						bf.append(";");
+					}
 					dataSource = tokenizer.nextToken();
 					wrkInt = dataSource.indexOf(".");
 					tableID = dataSource.substring(0, wrkInt);
@@ -39105,12 +39380,13 @@ public class Editor extends JFrame {
 			+ "] - [" + tableModelTableScriptList.getValueAt(selectedRow_jTableTableScriptList, 3) + "]";
 		String text = jTextAreaTableScriptText.getText();
 		String notes = jTextAreaTableScriptNotes.getText();
+
 		String edittedText = dialogEditScript.request(subtitle, text, notes, jTextAreaTableScriptText.getCaretPosition());
-		//
 		if (!edittedText.equals(jTextAreaTableScriptText.getText())) {
 			jTextAreaTableScriptText.setText(edittedText);
 			jTextAreaTableScriptText.setCaretPosition(dialogEditScript.getCaretPosition());
 			jTextAreaTableScriptText.requestFocus();
+			changeState.setChanged(true);
 		}
 	}
 	
@@ -40423,10 +40699,11 @@ public class Editor extends JFrame {
 		StringBuffer statementBuf = null;
 		String line, text;
 		boolean noErrors = false;
-		Pattern pattern = Pattern.compile(",");
+		boolean existed;
+		Pattern pattern = Pattern.compile("\t");
 		String[] values;
 	    //
-		String csvFileName = specifyNameOfExistingFile(res.getString("ImportCsv"), "csv");
+		String csvFileName = specifyNameOfExistingFile(res.getString("ImportData"), "txt");
 		if (!csvFileName.equals("")) {
 			try {
 				setCursor(new Cursor(Cursor.WAIT_CURSOR));
@@ -40440,14 +40717,41 @@ public class Editor extends JFrame {
 					//
 					totalLineNumber++;
 					if (totalLineNumber == 1) {
-				        for (int i=0; i < values.length; i++) {
-							fieldIDList.add(values[i]);
-				        }
-				     } else {
+						for (int i=0; i < values.length; i++) {
+							//fieldIDList.add(values[i]);
+							existed = false;
+							for (int j = 0; j < editableTableFieldList.size(); j++) {
+								if (editableTableFieldList.get(j).getFieldID().equals(values[i])) {
+									if (fieldIDList.contains(values[i])) {
+										throw new Exception(res.getString("ImportDataMessage5") + "\n" + values[i]);
+									} else {
+										existed = true;
+										fieldIDList.add(values[i]);
+										break;
+									}
+								}
+								if (!existed) {
+									if (editableTableFieldList.get(j).getFieldName().equals(values[i])) {
+										if (fieldIDList.contains(editableTableFieldList.get(j).getFieldID())) {
+											throw new Exception(res.getString("ImportDataMessage5") + "\n"
+													+ values[i] + "(" + editableTableFieldList.get(j).getFieldID() + ")");
+										} else {
+											existed = true;
+											fieldIDList.add(editableTableFieldList.get(j).getFieldID());
+											break;
+										}
+									}
+								}
+							}
+							if (!existed) {
+								fieldIDList.add(values[i]);
+							}
+						}
+					} else {
 						fieldValueList.clear();
-				        for (int i=0; i < values.length; i++) {
+						for (int i=0; i < values.length; i++) {
 							fieldValueList.add(values[i]);
-				        }
+						}
 						if (fieldIDList.size() > fieldValueList.size()) {
 							fieldValueList.add("");
 						}
@@ -40472,7 +40776,7 @@ public class Editor extends JFrame {
 								if (fieldIDList.indexOf(editableTableFieldList.get(i).getFieldID()) >= 0) {
 									if (editableTableFieldList.get(i).getBasicType().equals("INTEGER")
 											|| editableTableFieldList.get(i).getBasicType().equals("FLOAT")) {
-										statementBuf.append(fieldValueList.get(fieldIDList.indexOf(editableTableFieldList.get(i).getFieldID()))) ;
+										statementBuf.append(fieldValueList.get(fieldIDList.indexOf(editableTableFieldList.get(i).getFieldID())).replaceAll("\"", "").replaceAll(",", "")) ;
 									} else {
 										text = fieldValueList.get(fieldIDList.indexOf(editableTableFieldList.get(i).getFieldID()));
 										if (dbName.contains("jdbc:mysql:")) {
@@ -40483,7 +40787,7 @@ public class Editor extends JFrame {
 										statementBuf.append("'");
 									}
 								} else {
-									throw new Exception(res.getString("ImportCsvMessage4"));
+									throw new Exception(res.getString("ImportDataMessage4"));
 								}
 								firstField = false;
 							}
@@ -40522,7 +40826,7 @@ public class Editor extends JFrame {
 								if (fieldIDList.indexOf(editableTableFieldList.get(i).getFieldID()) >= 0) {
 									if (editableTableFieldList.get(i).getBasicType().equals("INTEGER")
 											|| editableTableFieldList.get(i).getBasicType().equals("FLOAT")) {
-										statementBuf.append(fieldValueList.get(fieldIDList.indexOf(editableTableFieldList.get(i).getFieldID()))) ;
+										statementBuf.append(fieldValueList.get(fieldIDList.indexOf(editableTableFieldList.get(i).getFieldID())).replaceAll("\"", "").replaceAll(",", "")) ;
 									} else {
 										if (editableTableFieldList.get(i).getBasicType().equals("DATE")
 												|| editableTableFieldList.get(i).getBasicType().equals("DATETIME")) {
@@ -40539,13 +40843,12 @@ public class Editor extends JFrame {
 												text = text.replaceAll("\\\\", "\\\\\\\\");
 											}
 											statementBuf.append("'");
-											//statementBuf.append(fieldValueList.get(fieldIDList.indexOf(editableTableFieldList.get(i).getFieldID()))) ;
 											statementBuf.append(text);
 											statementBuf.append("'");
 										}
 									}
 								} else {
-									throw new Exception(res.getString("ImportCsvMessage4"));
+									throw new Exception(res.getString("ImportDataMessage4"));
 								}
 								firstField = false;
 							}
@@ -40562,24 +40865,15 @@ public class Editor extends JFrame {
 				//connection.commit();
 				noErrors = true;
 				jButtonTableDataSelect.doClick();
+
 			} catch (SQLException ex) {
-				//try {
-					if (statementBuf.toString() == null) {
-						jTextAreaTableDataMessages.setText(ex.getMessage());
-					} else {
-						jTextAreaTableDataMessages.setText(ex.getMessage() + "\n" + statementBuf.toString());
-					}
-					//connection.rollback();
-				//} catch (SQLException e1) {
-				//	e1.printStackTrace();
-				//}
-			} catch (Exception ex) {
-				//try {
+				if (statementBuf.toString() == null) {
 					jTextAreaTableDataMessages.setText(ex.getMessage());
-					//connection.rollback();
-				//} catch (SQLException e1) {
-				//	e1.printStackTrace();
-				//}
+				} else {
+					jTextAreaTableDataMessages.setText(ex.getMessage() + "\n" + statementBuf.toString());
+				}
+			} catch (Exception ex) {
+				jTextAreaTableDataMessages.setText(ex.getMessage());
 			} finally {
 				try {
 					if (br != null) {
@@ -40588,7 +40882,7 @@ public class Editor extends JFrame {
 				} catch (IOException e1) {
 				}
 				if (noErrors) {
-					jTextAreaTableDataMessages.setText(res.getString("ImportCsvMessage1") + numberOfInserted + res.getString("ImportCsvMessage2") + numberOfSkipped + res.getString("ImportCsvMessage3"));
+					jTextAreaTableDataMessages.setText(res.getString("ImportDataMessage1") + numberOfInserted + res.getString("ImportDataMessage2") + numberOfSkipped + res.getString("ImportDataMessage3"));
 				}
 				setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			}
@@ -42436,8 +42730,8 @@ class Editor_DialogAddRowListTableEdit extends JDialog {
 	void setTableAttribute() {
 		tableNode = null;
 		jLabelAddRowListTableName.setText("");
-		jTextFieldAddRowListTableWithFields.setText("");
-		jTextFieldHeaderTableWithFields.setText("");
+		//jTextFieldAddRowListTableWithFields.setText("");
+		//jTextFieldHeaderTableWithFields.setText("");
 		if (!jTextFieldAddRowListTableID.getText().equals("")) {
 			jLabelAddRowListTableName.setText("N/A");
 			tableNode = frame_.getSpecificXETreeNode("Table", jTextFieldAddRowListTableID.getText());
@@ -42616,6 +42910,21 @@ class LimitSizeTextField extends JTextField {
 	protected Integer max = null;
 }
 
+class Editor_HorizontalAlignmentHeaderRenderer implements TableCellRenderer{
+	private int horizontalAlignment = SwingConstants.LEFT;
+	public Editor_HorizontalAlignmentHeaderRenderer(int horizontalAlignment) {
+		this.horizontalAlignment = horizontalAlignment;
+	}
+	@Override public Component getTableCellRendererComponent(
+			JTable table, Object value, boolean isSelected,
+			boolean hasFocus, int row, int column) {
+		TableCellRenderer r = table.getTableHeader().getDefaultRenderer();
+		JLabel l = (JLabel)r.getTableCellRendererComponent(
+				table,value,isSelected,hasFocus,row,column);
+		l.setHorizontalAlignment(horizontalAlignment);
+		return l;
+	}
+}
 
 class Editor_EditableTableField extends JPanel {
 	private static final long serialVersionUID = 1L;

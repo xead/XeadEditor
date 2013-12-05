@@ -413,6 +413,7 @@ public class DialogAddFunction extends JDialog {
 	void jButtonOK_actionPerformed(ActionEvent e) {
 		org.w3c.dom.Element workElement, childElement, grandChildElement;
 		boolean noErrors = true;
+		String dataType;
 		//
 		ComboBoxItem item = (ComboBoxItem)jComboBoxType.getSelectedItem();
 		String functionType = item.getID();
@@ -500,8 +501,14 @@ public class DialogAddFunction extends JDialog {
 						workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
 						childElement = frame_.getDomDocument().createElement("Filter");
 						childElement.setAttribute("Order", frame_.getFormatted4ByteString(i * 10));
-						childElement.setAttribute("DataSource", jTextFieldTableID.getText() + "." + workElement.getAttribute("ID")); 
-						childElement.setAttribute("FieldOptions", "");
+						childElement.setAttribute("DataSource", jTextFieldTableID.getText() + "." + workElement.getAttribute("ID"));
+						dataType = workElement.getAttribute("Type");
+						if (frame_.getBasicTypeOf(dataType).equals("INTEGER")
+								|| frame_.getBasicTypeOf(dataType).equals("FLOAT")) {
+							childElement.setAttribute("FieldOptions", "IGNORE_IF_ZERO");	
+						} else {
+							childElement.setAttribute("FieldOptions", "");
+						}
 						element.appendChild(childElement);
 					} else {
 						break;
@@ -561,7 +568,13 @@ public class DialogAddFunction extends JDialog {
 						childElement = frame_.getDomDocument().createElement("Filter");
 						childElement.setAttribute("Order", frame_.getFormatted4ByteString(i * 10));
 						childElement.setAttribute("DataSource", jTextFieldTableID.getText() + "." + workElement.getAttribute("ID")); 
-						childElement.setAttribute("FieldOptions", "");
+						dataType = workElement.getAttribute("Type");
+						if (frame_.getBasicTypeOf(dataType).equals("INTEGER")
+								|| frame_.getBasicTypeOf(dataType).equals("FLOAT")) {
+							childElement.setAttribute("FieldOptions", "IGNORE_IF_ZERO");	
+						} else {
+							childElement.setAttribute("FieldOptions", "");
+						}
 						element.appendChild(childElement);
 					} else {
 						break;
@@ -1019,17 +1032,6 @@ public class DialogAddFunction extends JDialog {
 
 			}
 		}
-//		//
-//		detailRowNoID = "";
-//		if (noErrors) {
-//			int workInt = detailKeyList.size() - headerKeyList.size();
-//			if (workInt == 1) {
-//				workElement1 = frame_.getSpecificFieldElement(jTextFieldDetailTableID.getText(), detailKeyList.get(detailKeyList.size() - 1));
-//				if (workElement1.getAttribute("Type").equals("INTEGER") || workElement1.getAttribute("Type").equals("SMALLINT")) {
-//					detailRowNoID = detailKeyList.get(detailKeyList.size() - 1);			
-//				}
-//			}
-//		}
 		//
 		return noErrors;
 	}

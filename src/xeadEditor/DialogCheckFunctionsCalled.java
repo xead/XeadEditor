@@ -37,6 +37,8 @@ import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.event.*;
 import java.util.ResourceBundle;
+import java.util.StringTokenizer;
+
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
@@ -158,9 +160,11 @@ public class DialogCheckFunctionsCalled extends JDialog {
 		NodeList nodeList1, nodeList2;
 		int numberOfInvalidCalls = 0;
 		boolean isNotCalledByAnyElement;
+		boolean isNotExisting;
 		int pos1, pos2;
 		MainTreeNode node;
 		String wrkStr;
+		StringTokenizer tokenizer;
 		//
 		if (tableModelCheckResult.getRowCount() > 0) {
 			int rowCount = tableModelCheckResult.getRowCount();
@@ -227,6 +231,52 @@ public class DialogCheckFunctionsCalled extends JDialog {
 							}
 						}
 					}
+				}
+			}
+		}
+		//
+		for (int i = 0; i < menuNodeList.getSize(); i++) {
+			element1 = (org.w3c.dom.Element)menuNodeList.getElementAt(i);
+			tokenizer = new StringTokenizer(element1.getAttribute("CrossCheckersToBeLoaded"), ";" );
+			while (tokenizer.hasMoreTokens()) {
+				wrkStr = tokenizer.nextToken();
+				isNotExisting = true;
+				for (int j = 0; j < tableNodeList.getSize(); j++) {
+					element2 = (org.w3c.dom.Element)tableNodeList.getElementAt(j);
+					if (element2.getAttribute("ID").equals(wrkStr)) {
+						isNotExisting = false;
+						break;
+					}
+				}
+				if (isNotExisting) {
+					numberOfInvalidCalls++;
+					Object[] Cell = new Object[4];
+					Cell[0] = numberOfInvalidCalls;
+					Cell[1] = res.getString("MenuDefinition");
+					Cell[2] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+					Cell[3] = res.getString("CheckFunctionsCalledMessage12") + " " + wrkStr;
+					tableModelCheckResult.addRow(Cell);
+				}
+			}
+			tokenizer = new StringTokenizer(element1.getAttribute("FunctionsToBeLoaded"), ";" );
+			while (tokenizer.hasMoreTokens()) {
+				wrkStr = tokenizer.nextToken();
+				isNotExisting = true;
+				for (int j = 0; j < functionNodeList1.getSize(); j++) {
+					element2 = (org.w3c.dom.Element)functionNodeList1.getElementAt(j);
+					if (element2.getAttribute("ID").equals(wrkStr)) {
+						isNotExisting = false;
+						break;
+					}
+				}
+				if (isNotExisting) {
+					numberOfInvalidCalls++;
+					Object[] Cell = new Object[4];
+					Cell[0] = numberOfInvalidCalls;
+					Cell[1] = res.getString("MenuDefinition");
+					Cell[2] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+					Cell[3] = res.getString("CheckFunctionsCalledMessage13") + " " + wrkStr;
+					tableModelCheckResult.addRow(Cell);
 				}
 			}
 		}

@@ -332,6 +332,14 @@ public class DialogAddFieldToFunction extends JDialog {
 					} else {
 						newElement.setAttribute("DataSource", checkBox.getDataSourceName());
 						newElement.setAttribute("FieldOptions", "");
+
+						if (tableType_.equals("Function100FilterList")
+								|| tableType_.equals("Function110FilterList")
+								|| tableType_.equals("Function300DetailFilterList")) {
+							if (checkBox.isNumeric()) {
+								newElement.setAttribute("FieldOptions", "IGNORE_IF_ZERO");	
+							}
+						}
 						if (tableType_.equals("Function390DetailFieldList")) {
 							newElement.setAttribute("Width", "10");
 							if (checkBox.isNumeric()) {

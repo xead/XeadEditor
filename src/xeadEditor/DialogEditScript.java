@@ -89,6 +89,12 @@ public class DialogEditScript extends JDialog {
 			indentRows();
 		}
 	};
+	private Action commentAction = new AbstractAction(){
+		private static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			commentRows();
+		}
+	};
 	private Action pasteAction = new AbstractAction(){
 		private static final long serialVersionUID = 1L;
 		public void actionPerformed(ActionEvent e){
@@ -215,6 +221,8 @@ public class DialogEditScript extends JDialog {
 		actionMap.put("SCAN", scanAction);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_DOWN_MASK), "INDENT");
 		actionMap.put("INDENT", indentAction);
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_SLASH, KeyEvent.CTRL_DOWN_MASK), "COMMENT");
+		actionMap.put("COMMENT", commentAction);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_DOWN_MASK), "UNDO");
 		actionMap.put("UNDO", undoAction);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_DOWN_MASK), "REDO");
@@ -318,6 +326,10 @@ public class DialogEditScript extends JDialog {
 	
 	public void indentRows() {
 		frame_.indentRows(jScrollPaneStatement);
+	}
+	
+	public void commentRows() {
+		frame_.commentRows(jScrollPaneStatement);
 	}
 	
 	public void undo() {

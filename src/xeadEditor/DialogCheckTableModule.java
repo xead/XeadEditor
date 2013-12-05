@@ -846,7 +846,9 @@ public class DialogCheckTableModule extends JDialog {
 					}
 				}
 				if (dataTypeDefiition.equals("BIGINT")) {
-					if (dataTypeModule.equals("int8")) {
+					if (dataTypeModule.equals("int8")
+						|| dataTypeModule.equals("bigserial")
+						|| dataTypeModule.equals("BIGSERIAL")) {
 						isEquivalent = true;
 					}
 				}
@@ -938,7 +940,11 @@ public class DialogCheckTableModule extends JDialog {
 						buf.append(" ");
 						buf.append(getDataTypeOfField(fieldListToBeNullable.get(i)));
 					}
-					buf.append(" NULL");
+					if (databaseName.contains("jdbc:postgresql")) {
+						buf.append(" DROP NOT NULL");
+					} else {
+						buf.append(" NULL");
+					}
 					statement.executeUpdate(buf.toString());
 				}
 
@@ -963,7 +969,11 @@ public class DialogCheckTableModule extends JDialog {
 						buf.append(" ");
 						buf.append(getDataTypeOfField(fieldListToBeNotNull.get(i)));
 					}
-					buf.append(" NOT NULL");
+					if (databaseName.contains("jdbc:postgresql")) {
+						buf.append(" SET NOT NULL");
+					} else {
+						buf.append(" NOT NULL");
+					}
 					statement.executeUpdate(buf.toString());
 				}
 
