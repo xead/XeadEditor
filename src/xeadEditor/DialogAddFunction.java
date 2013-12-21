@@ -666,7 +666,7 @@ public class DialogAddFunction extends JDialog {
 				element.setAttribute("PrimaryTable", jTextFieldTableID.getText());
 				element.setAttribute("KeyFields", tableKeys);
 				element.setAttribute("PageSize", "A4");
-				element.setAttribute("Direction", "");
+				element.setAttribute("Direction", "NORMAL");
 				element.setAttribute("Margins", "50;50;50;50");
 				element.setAttribute("WithPageNumber", "F");
 				//
@@ -901,7 +901,7 @@ public class DialogAddFunction extends JDialog {
 					element.setAttribute("DetailTable", jTextFieldDetailTableID.getText());
 					element.setAttribute("DetailKeyFields", detailTableKeys);
 					element.setAttribute("PageSize", "A4");
-					element.setAttribute("Direction", "");
+					element.setAttribute("Direction", "LANDSCAPE");
 					element.setAttribute("Margins", "50;50;50;50");
 					element.setAttribute("WithPageNumber", "T");
 					element.setAttribute("TableFontID", defaultFontID);

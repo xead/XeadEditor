@@ -34,6 +34,7 @@ package xeadEditor;
 import java.awt.*;
 
 import javax.swing.*;
+
 import org.w3c.dom.NodeList;
 import java.awt.event.*;
 import java.sql.Connection;
@@ -317,7 +318,7 @@ public class DialogCheckTableModule extends JDialog {
 							if (isEquivalentDataType(element.getAttribute("Type"), sizeOfDefinitionField, rs2.getString("TYPE_NAME"))) {
 								if (element.getAttribute("Type").equals("CHAR")
 										|| element.getAttribute("Type").equals("DECIMAL")
-										|| element.getAttribute("Type").equals("NUMERIC")) {
+										|| (element.getAttribute("Type").equals("NUMERIC") && !rs2.getString("TYPE_NAME").equals("NUMBER"))) {
 									if (sizeOfDefinitionField != sizeOfModuleField
 											|| decimalOfDefinitionField != decimalOfModuleField) {
 										countOfErrors++;
@@ -461,13 +462,13 @@ public class DialogCheckTableModule extends JDialog {
 						indexFieldsList.set(workIndex, indexFieldsList.get(workIndex) + ";" + frame_.getCaseShiftValue(rs4.getString("COLUMN_NAME"), "Upper"));
 					}
 					if (indexAscDescList.get(workIndex).equals("")) {
-						if (rs4.getString("ASC_OR_DESC").equals("D")) {
+						if (rs4.getString("ASC_OR_DESC") != null && rs4.getString("ASC_OR_DESC").equals("D")) {
 							indexAscDescList.set(workIndex, "D");
 						} else {
 							indexAscDescList.set(workIndex, "A");
 						}
 					} else {
-						if (rs4.getString("ASC_OR_DESC").equals("D")) {
+						if (rs4.getString("ASC_OR_DESC") != null && rs4.getString("ASC_OR_DESC").equals("D")) {
 							indexAscDescList.set(workIndex, indexAscDescList.get(workIndex) + ";D");
 						} else {
 							indexAscDescList.set(workIndex, indexAscDescList.get(workIndex) + ";A");
@@ -828,7 +829,8 @@ public class DialogCheckTableModule extends JDialog {
 				isEquivalent = true;
 			} else {
 				if (dataTypeDefiition.equals("SMALLINT")) {
-					if (dataTypeModule.equals("int2")) {
+					if (dataTypeModule.equals("int2")
+							|| dataTypeModule.equals("NUMBER")) {
 						isEquivalent = true;
 					}
 				}
@@ -836,6 +838,7 @@ public class DialogCheckTableModule extends JDialog {
 					if (dataTypeModule.equals("INT")
 							|| dataTypeModule.equals("INT SIGNED")
 							|| dataTypeModule.equals("INT UNSIGNED")
+							|| dataTypeModule.equals("NUMBER")
 							|| dataTypeModule.equals("SERIAL")) {
 						isEquivalent = true;
 					}
@@ -848,7 +851,8 @@ public class DialogCheckTableModule extends JDialog {
 				if (dataTypeDefiition.equals("BIGINT")) {
 					if (dataTypeModule.equals("int8")
 						|| dataTypeModule.equals("bigserial")
-						|| dataTypeModule.equals("BIGSERIAL")) {
+						|| dataTypeModule.equals("BIGSERIAL")
+						|| dataTypeModule.equals("NUMBER")) {
 						isEquivalent = true;
 					}
 				}
@@ -863,7 +867,8 @@ public class DialogCheckTableModule extends JDialog {
 					}
 				}
 				if (dataTypeDefiition.equals("NUMERIC")) {
-					if (dataTypeModule.equals("DECIMAL")) {
+					if (dataTypeModule.equals("DECIMAL")
+							|| dataTypeModule.equals("NUMBER")) {
 						isEquivalent = true;
 					}
 				}
@@ -873,7 +878,9 @@ public class DialogCheckTableModule extends JDialog {
 					}
 				}
 				if (dataTypeDefiition.equals("CHAR")) {
-					if (dataTypeModule.equals("bpchar") || dataTypeModule.equals("bool")) {
+					if (dataTypeModule.equals("bpchar")
+							|| dataTypeModule.equals("bool")
+							|| dataTypeModule.equals("NVARCHAR2")) {
 						isEquivalent = true;
 					}
 					if (size == 19 && dataTypeModule.equals("DATETIME")) {
@@ -881,7 +888,8 @@ public class DialogCheckTableModule extends JDialog {
 					}
 				}
 				if (dataTypeDefiition.equals("LONG VARCHAR")) {
-					if (dataTypeModule.equals("MEDIUMTEXT")) {
+					if (dataTypeModule.equals("MEDIUMTEXT")
+							|| dataTypeModule.equals("CLOB")) {
 						isEquivalent = true;
 					}
 					if (dataTypeModule.equals("text")) {
@@ -889,7 +897,9 @@ public class DialogCheckTableModule extends JDialog {
 					}
 				}
 				if (dataTypeDefiition.equals("VARCHAR")) {
-					if (dataTypeModule.equals("text") || dataTypeModule.equals("character varying")) {
+					if (dataTypeModule.equals("text")
+							|| dataTypeModule.equals("VARCHAR2")
+							|| dataTypeModule.equals("character varying")) {
 						isEquivalent = true;
 					}
 				}
@@ -897,6 +907,10 @@ public class DialogCheckTableModule extends JDialog {
 					if (dataTypeModule.equals("bytea")) {
 						isEquivalent = true;
 					}
+				}
+				if (dataTypeDefiition.startsWith("TIMESTAMP")
+						&& dataTypeModule.startsWith("TIMESTAMP")) {
+					isEquivalent = true;
 				}
 			}
 		}

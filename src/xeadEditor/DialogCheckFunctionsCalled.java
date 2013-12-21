@@ -94,7 +94,7 @@ public class DialogCheckFunctionsCalled extends JDialog {
 		//
 		panelMain.setLayout(borderLayoutMain);
 		panelMain.setPreferredSize(new Dimension(880, 300));
-		panelMain.setBorder(BorderFactory.createEtchedBorder());
+		panelMain.setBorder(null);
 		panelMain.add(jPanelSouth, BorderLayout.SOUTH);
 		panelMain.add(jScrollPaneCheckResult, BorderLayout.CENTER);
 		//

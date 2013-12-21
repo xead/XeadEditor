@@ -222,6 +222,9 @@ public class DialogAddReferTable extends JDialog {
 			JOptionPane.showMessageDialog(this, res.getString("ErrorMessage90"));
 			jTextFieldID.requestFocus();
 		} else {
+			if (jTextFieldAlias.getText().equals("")) {
+				jTextFieldAlias.setText("*TableID");
+			}
 			String firstChar = jTextFieldAlias.getText().substring(0, 1);
 			if (jTextFieldAlias.getText().equals("") || firstChar.equals("*")) {
 				jTextFieldAlias.setText("*TableID");

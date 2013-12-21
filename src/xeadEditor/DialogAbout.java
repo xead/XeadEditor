@@ -43,7 +43,14 @@ public class DialogAbout extends JDialog implements ActionListener {
 	 * Application Information
 	 */
 	public static final String APPLICATION_NAME  = "XEAD Editor 1.1";
-	public static final String FULL_VERSION  = "V1.R1.M22";
+	public static final String FULL_VERSION  = "V1.R1.M23";
+	//23
+	//・検索メニューに「フィールド定義の走査」を追加した
+	//・英語の言語リソースの抜けを補った
+	//・XF390の用紙方向の初期値をLANDSCAPEに変更した
+	//・テーブル定義を修正したとき、選択中のフィールド定義の使途要素も即時に更新されるようにした
+	//・エラーログの冒頭にバージョン情報を出力するようにした
+	//・Oracleに対応した
 	//
 	//22
 	//・XF100,110,200,300,310でテーブルＩＤを置換した場合のフィールド定義のFieldOptionsに含まれるテーブルＩＤを置換するステップのバグを修正

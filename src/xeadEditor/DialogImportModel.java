@@ -1399,7 +1399,7 @@ public class DialogImportModel extends JDialog {
 			newElementToBeAdded.setAttribute("PrimaryTable", primaryTableID);
 			newElementToBeAdded.setAttribute("KeyFields", "");
 			newElementToBeAdded.setAttribute("PageSize", "A4");
-			newElementToBeAdded.setAttribute("Direction", "");
+			newElementToBeAdded.setAttribute("Direction", "NORMAL");
 			newElementToBeAdded.setAttribute("Margins", "50;50;50;50");
 			newElementToBeAdded.setAttribute("WithPageNumber", "F");
 			//
@@ -1682,7 +1682,7 @@ public class DialogImportModel extends JDialog {
 			newElementToBeAdded.setAttribute("DetailTable", detailTableIDList.get(0));
 			newElementToBeAdded.setAttribute("DetailKeyFields", detailKeyFields);
 			newElementToBeAdded.setAttribute("PageSize", "A4");
-			newElementToBeAdded.setAttribute("Direction", "");
+			newElementToBeAdded.setAttribute("Direction", "LANDSCAPE");
 			newElementToBeAdded.setAttribute("Margins", "50;50;50;50");
 			newElementToBeAdded.setAttribute("WithPageNumber", "T");
 			newElementToBeAdded.setAttribute("TableFontID", defaultFontID);
