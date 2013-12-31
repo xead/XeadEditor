@@ -17122,7 +17122,8 @@ public class Editor extends JFrame {
 		    //////////////////////////////////////
 			selectedRow_jTableTableFieldList = -1;
 			if (tableModelTableFieldList.getRowCount() > 0) {
-				if ((tableModelTableFieldList.getRowCount()-1) < targetRow_jTableTableFieldList) {
+				if ((tableModelTableFieldList.getRowCount()-1) < targetRow_jTableTableFieldList
+						|| targetRow_jTableTableFieldList < 0) {
 					targetRow_jTableTableFieldList = tableModelTableFieldList.getRowCount() - 1;
 				}
 				jTableTableFieldList.setRowSelectionInterval(targetRow_jTableTableFieldList, targetRow_jTableTableFieldList);
@@ -17131,7 +17132,8 @@ public class Editor extends JFrame {
 			}
 			selectedRow_jTableTableKeyList = -1;
 			if (tableModelTableKeyList.getRowCount() > 0) {
-				if ((tableModelTableKeyList.getRowCount()-1) < targetRow_jTableTableKeyList) {
+				if ((tableModelTableKeyList.getRowCount()-1) < targetRow_jTableTableKeyList
+						|| targetRow_jTableTableKeyList < 0) {
 					targetRow_jTableTableKeyList = tableModelTableKeyList.getRowCount() - 1;
 				}
 				jTableTableKeyList.setRowSelectionInterval(targetRow_jTableTableKeyList, targetRow_jTableTableKeyList);
@@ -17140,7 +17142,8 @@ public class Editor extends JFrame {
 			}
 			selectedRow_jTableTableReferList = -1;
 			if (tableModelTableReferList.getRowCount() > 0) {
-				if ((tableModelTableReferList.getRowCount()-1) < targetRow_jTableTableReferList) {
+				if ((tableModelTableReferList.getRowCount()-1) < targetRow_jTableTableReferList
+						|| targetRow_jTableTableReferList < 0) {
 					targetRow_jTableTableReferList = tableModelTableReferList.getRowCount() - 1;
 				}
 				jTableTableReferList.setRowSelectionInterval(targetRow_jTableTableReferList, targetRow_jTableTableReferList);
@@ -17149,7 +17152,8 @@ public class Editor extends JFrame {
 			}
 			selectedRow_jTableTableScriptList = -1;
 			if (tableModelTableScriptList.getRowCount() > 0) {
-				if ((tableModelTableScriptList.getRowCount()-1) < targetRow_jTableTableScriptList) {
+				if ((tableModelTableScriptList.getRowCount()-1) < targetRow_jTableTableScriptList
+						|| targetRow_jTableTableScriptList < 0) {
 					targetRow_jTableTableScriptList = tableModelTableScriptList.getRowCount() - 1;
 				}
 				jTableTableScriptList.setRowSelectionInterval(targetRow_jTableTableScriptList, targetRow_jTableTableScriptList);
@@ -39066,7 +39070,7 @@ public class Editor extends JFrame {
 	}
 	
 	void replaceDetailTableID(org.w3c.dom.Element functionElement, int tabIndex, String newTableID) {
-		NodeList detailTableList, detailFieldList;
+		NodeList detailTableList, detailFieldList, detailFilterList;
 		org.w3c.dom.Element element1, element2;
 		String dataSource, tableID, fieldID, originalTableID, wrkStr;
 		boolean isAscendingOrder, isDescendingOrder;
@@ -39081,9 +39085,22 @@ public class Editor extends JFrame {
 		    	if (i == tabIndex) {
 			        element1 = (org.w3c.dom.Element)sortingList.getElementAt(i);
 					originalTableID = element1.getAttribute("Table");
+
 					detailFieldList = element1.getElementsByTagName("Column");
 					for (int j = 0; j < detailFieldList.getLength(); j++) {
 						element2 = (org.w3c.dom.Element)detailFieldList.item(j);
+						dataSource = element2.getAttribute("DataSource");
+						wrkInt = dataSource.indexOf(".");
+						tableID = dataSource.substring(0, wrkInt);
+						fieldID = dataSource.substring(wrkInt+1, dataSource.length());
+						if (tableID.equals(originalTableID)) {
+							element2.setAttribute("DataSource", newTableID + "." + fieldID);
+						}
+					}
+
+					detailFilterList = element1.getElementsByTagName("Filter");
+					for (int j = 0; j < detailFilterList.getLength(); j++) {
+						element2 = (org.w3c.dom.Element)detailFilterList.item(j);
 						dataSource = element2.getAttribute("DataSource");
 						wrkInt = dataSource.indexOf(".");
 						tableID = dataSource.substring(0, wrkInt);

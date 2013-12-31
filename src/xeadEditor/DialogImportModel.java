@@ -1212,7 +1212,7 @@ public class DialogImportModel extends JDialog {
 				workElement = (org.w3c.dom.Element)nodeList.item(0);
 				newElementToBeAdded.setAttribute("DetailFunction", convertFunctionInternalIDToExternalID(workElement.getAttribute("FunctionID")));
 			} else {
-				newElementToBeAdded.setAttribute("DetailFunction", "XXXXXX");
+				newElementToBeAdded.setAttribute("DetailFunction", "NONE");
 			}
 			//
 			nodeList = primaryTableElement.getElementsByTagName("Field");

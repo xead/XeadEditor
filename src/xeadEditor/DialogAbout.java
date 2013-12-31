@@ -43,7 +43,13 @@ public class DialogAbout extends JDialog implements ActionListener {
 	 * Application Information
 	 */
 	public static final String APPLICATION_NAME  = "XEAD Editor 1.1";
-	public static final String FULL_VERSION  = "V1.R1.M23";
+	public static final String FULL_VERSION  = "V1.R1.M24";
+	//24
+	//・XF300の明細テーブルを差し替えた場合、検索条件のテーブルIDも置き換えるようにした
+	//・テーブル定義に１件目の結合テーブル定義を追加するとエラーになる問題を修正した
+	//・モデルからXF100をインポートした場合、起動機能が設定されていなければ"XXXXX"ではなく"NONE"を指定するようにした
+	//・LONG VARCHARにOracleのLONGを対応させるとともに、ALTER文もOracleに合わせた
+	//
 	//23
 	//・検索メニューに「フィールド定義の走査」を追加した
 	//・英語の言語リソースの抜けを補った

@@ -281,7 +281,7 @@ public class DialogEditDetailTableKey extends JDialog {
 		int countOfFieldErrors = 0;
 		String dataSource;
 		org.w3c.dom.Element element1, element2;
-		NodeList detailList, detailFieldList;
+		NodeList detailList, detailFieldList, detailFilterList;
 		StringTokenizer tokenizer;
 
 		StringBuffer buf = new StringBuffer();
@@ -307,6 +307,13 @@ public class DialogEditDetailTableKey extends JDialog {
 					for (int j = 0; j < detailFieldList.getLength(); j++) {
 						element2 = (org.w3c.dom.Element)detailFieldList.item(j);
 						if (isInvalidFieldElement(element2, buf, detailReferList, headerReferList, res.getString("Columns"))) {
+							countOfFieldErrors++;
+						}
+					}
+					detailFilterList = element1.getElementsByTagName("Filter");
+					for (int j = 0; j < detailFilterList.getLength(); j++) {
+						element2 = (org.w3c.dom.Element)detailFilterList.item(j);
+						if (isInvalidFieldElement(element2, buf, detailReferList, headerReferList, res.getString("Filters"))) {
 							countOfFieldErrors++;
 						}
 					}
