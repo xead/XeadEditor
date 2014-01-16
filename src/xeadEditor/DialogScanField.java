@@ -221,6 +221,10 @@ public class DialogScanField extends JDialog {
 	}
 
 	public void request() {
+		if (tableModelScanResult.getRowCount() > 0) {
+			int rowCount = tableModelScanResult.getRowCount();
+			for (int i = 0; i < rowCount; i++) {tableModelScanResult.removeRow(0);}
+		}
 		super.setVisible(true);
 	}
 

@@ -192,11 +192,12 @@ public class DialogCheckLayout extends JDialog {
 		//////////////////////////////////////////////
 		// Setup the primary table and refer tables //
 		//////////////////////////////////////////////
+		org.w3c.dom.Element element;
 		primaryTable = new DialogCheckLayoutPrimaryTable(functionElement, this, false);
 		NodeList referNodeList = primaryTable.getTableElement().getElementsByTagName("Refer");
 		sortableList = editor.getSortedListModel(referNodeList, "Order");
 		for (int i = 0; i < sortableList.getSize(); i++) {
-			org.w3c.dom.Element element = (org.w3c.dom.Element)sortableList.getElementAt(i);
+			element = (org.w3c.dom.Element)sortableList.getElementAt(i);
 			referTableList1.add(new DialogCheckLayoutReferTable(element));
 		}
 		if (panelType_.equals("Function300DetailFieldList")
@@ -204,7 +205,7 @@ public class DialogCheckLayout extends JDialog {
 			referNodeList = detailTable.getTableElement().getElementsByTagName("Refer");
 			sortableList = editor.getSortedListModel(referNodeList, "Order");
 			for (int i = 0; i < sortableList.getSize(); i++) {
-				org.w3c.dom.Element element = (org.w3c.dom.Element)sortableList.getElementAt(i);
+				element = (org.w3c.dom.Element)sortableList.getElementAt(i);
 				referTableList2.add(new DialogCheckLayoutReferTable(element));
 			}
 		}
@@ -212,13 +213,17 @@ public class DialogCheckLayout extends JDialog {
 		////////////////////////////
 		// Setup columns on table //
 		////////////////////////////
+		ArrayList<String> optionList;
 		DialogCheckLayoutColumn field;
 		int posX, posY;
 		columnList = new ArrayList<DialogCheckLayoutColumn>();
 		sortableList = editor.getSortedListModel(functionColumnList, "Order");
 		for (int i = 0; i < sortableList.getSize(); i++) {
-			field = new DialogCheckLayoutColumn((org.w3c.dom.Element)sortableList.getElementAt(i), this);
-			columnList.add(field);
+			optionList = editor.getOptionList(((org.w3c.dom.Element)sortableList.getElementAt(i)).getAttribute("FieldOptions"));
+			if (!optionList.contains("HIDDEN")) {
+				field = new DialogCheckLayoutColumn((org.w3c.dom.Element)sortableList.getElementAt(i), this);
+				columnList.add(field);
+			}
 		}
 		TableModelReadOnlyList tableModel = editor.new TableModelReadOnlyList();
 		jTableMain.setModel(tableModel);
@@ -2118,11 +2123,15 @@ class DialogCheckLayoutTextField extends JTextField {
 			} else {
 				if (basicType_.equals("INTEGER") || basicType_.equals("FLOAT")) {
 					value = dialog_.getStringData("NUMBER", digits, decimal_, dataTypeOptionList.contains("ACCEPT_MINUS"));
-					//fieldWidth = value.length() * 7 + 21;
 					fieldWidth = value.length() * 7 + 21;
 				} else {
-					value = dialog_.getStringData("STRING", digits, 0, false);
-					fieldWidth = digits_ * 7 + 10;
+					if (basicType_.equals("DATETIME")) {
+						value = "9999/99/99 HH:MM:SS.SSS";
+						fieldWidth = 24 * 7;
+					} else {
+						value = dialog_.getStringData("STRING", digits, 0, false);
+						fieldWidth = digits_ * 7 + 10;
+					}
 				}
 			}
 		}

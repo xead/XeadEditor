@@ -1125,6 +1125,7 @@ public class DialogCheckTableModule extends JDialog {
 												buf.append("(");
 												buf.append(element.getAttribute("Size"));
 												buf.append(")");
+												buf.append(" DEFAULT ''");
 											}
 										} else {
 											if (getBasicTypeOf(element.getAttribute("Type")).equals("INTEGER")) {
@@ -1342,32 +1343,44 @@ public class DialogCheckTableModule extends JDialog {
 			}
 		}
 		if (basicType.equals("STRING")) {
-			wrkStr1 = value.toString().trim();
-			returnValue = "'" + wrkStr1 + "'";
-			if (sizeNew < sizeOld) {
-				if (wrkStr1.length() > sizeNew) {
-					returnValue = "'" + wrkStr1.substring(0, sizeNew) + "'";
+			if (value == null) {
+				returnValue = "''";
+			} else {
+				wrkStr1 = value.toString().trim();
+				returnValue = "'" + wrkStr1 + "'";
+				if (sizeNew < sizeOld) {
+					if (wrkStr1.length() > sizeNew) {
+						returnValue = "'" + wrkStr1.substring(0, sizeNew) + "'";
+					}
 				}
 			}
 		}
 		if (basicType.equals("DATE")) {
-			String strDate = (String)value;
-			if (strDate == null || strDate.equals("")) {
+			if (value == null) {
 				returnValue = "NULL";
 			} else {
-				returnValue = "'" + strDate + "'";
+				String strDate = (String)value;
+				if (strDate == null || strDate.equals("")) {
+					returnValue = "NULL";
+				} else {
+					returnValue = "'" + strDate + "'";
+				}
 			}
 		}
 		if (basicType.equals("DATETIME")) {
-			String timeDate = (String)value;
-			if (timeDate == null || timeDate.equals("")) {
+			if (value == null) {
 				returnValue = "NULL";
 			} else {
-				if (timeDate.equals("CURRENT_TIMESTAMP")) {
-					returnValue = timeDate;
+				String timeDate = (String)value;
+				if (timeDate == null || timeDate.equals("")) {
+					returnValue = "NULL";
 				} else {
-					timeDate = timeDate.replace("/", "-");
-					returnValue = "'" + timeDate + "'";
+					if (timeDate.equals("CURRENT_TIMESTAMP")) {
+						returnValue = timeDate;
+					} else {
+						timeDate = timeDate.replace("/", "-");
+						returnValue = "'" + timeDate + "'";
+					}
 				}
 			}
 		}

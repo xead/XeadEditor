@@ -43,7 +43,17 @@ public class DialogAbout extends JDialog implements ActionListener {
 	 * Application Information
 	 */
 	public static final String APPLICATION_NAME  = "XEAD Editor 1.1";
-	public static final String FULL_VERSION  = "V1.R1.M24";
+	public static final String FULL_VERSION  = "V1.R1.M25";
+	//25
+	//・ファイル選択ダイアログの拡張子設定を改善した
+	//・モジュールチェックでフィールド桁変更に失敗することのあるバグを改善した
+	//・レイアウト確認ダイアログでの日時フィールド長設定のミスを修正した
+	//・結合フィールドの使途要素に関数交換フィールドを含めるようにした
+	//・関数交換フィールドのバリデーションを改善した
+	//・XF100,XF300の明細フィールドに「非表示」のオプションを設けた
+	//・テーブル定義の「削除操作」と「有効行Where」とを個々に指定できるようにした（それまでは同時に指定しなければ反映されなかった）
+	//・検索メニューの「フィールド定義の走査」の表示前に前回の検索結果をクリアするようにした
+	//
 	//24
 	//・XF300の明細テーブルを差し替えた場合、検索条件のテーブルIDも置き換えるようにした
 	//・テーブル定義に１件目の結合テーブル定義を追加するとエラーになる問題を修正した
