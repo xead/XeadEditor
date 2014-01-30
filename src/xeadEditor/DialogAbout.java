@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2012 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2014 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -43,7 +43,14 @@ public class DialogAbout extends JDialog implements ActionListener {
 	 * Application Information
 	 */
 	public static final String APPLICATION_NAME  = "XEAD Editor 1.1";
-	public static final String FULL_VERSION  = "V1.R1.M25";
+	public static final String FULL_VERSION  = "V1.R1.M26";
+	//26
+	//・メニュー一覧上にプリロードの欄を追加した
+	//・システム定義に「プリロードをスキップ」のチェックボックスを設けた
+	//・テーブル一覧上にクロスチェック対象かどうかの欄を追加した
+	//・結合テーブル一覧上にオプショナルかどうかの欄を追加した
+	//・一部の一覧でCSV出力できなかった問題を修正した
+	//
 	//25
 	//・ファイル選択ダイアログの拡張子設定を改善した
 	//・モジュールチェックでフィールド桁変更に失敗することのあるバグを改善した
@@ -146,7 +153,7 @@ public class DialogAbout extends JDialog implements ActionListener {
 	//・結合フィールドの使途情報について、XF110での利用状況が不正確に示されていた問題を修正した
 	public static final String FORMAT_VERSION  = "1.1";
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
-	public static final String COPYRIGHT = "Copyright 2013 DBC,Ltd.";
+	public static final String COPYRIGHT = "Copyright 2014 DBC,Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
 	/**
 	 * Components on dialog

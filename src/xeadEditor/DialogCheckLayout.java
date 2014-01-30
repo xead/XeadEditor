@@ -1989,11 +1989,11 @@ class DialogCheckLayoutComboBox extends JComboBox {
 		fieldID =workTokenizer.nextToken();
 		dialog_ = dialog;
 		//
-		jTextField.setFont(new java.awt.Font("Dialog", 0, 14));
+		jTextField.setFont(new java.awt.Font("Monospaced", 0, 14));
 		jTextField.setEditable(false);
 		jTextField.setFocusable(false);
-		FontMetrics metrics = jTextField.getFontMetrics(new java.awt.Font("Dialog", 0, 14));
-		this.setFont(new java.awt.Font("Dialog", 0, 14));
+		FontMetrics metrics = jTextField.getFontMetrics(new java.awt.Font("Monospaced", 0, 14));
+		this.setFont(new java.awt.Font("Monospaced", 0, 14));
 		this.setFocusable(false);
 		//
 		strWrk = dialog_.getEditor().getOptionValueWithKeyword(dataTypeOptions_, "VALUES");

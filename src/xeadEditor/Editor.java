@@ -52,7 +52,6 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.*;
 import java.util.regex.Pattern;
-
 import javax.script.Compilable;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -71,13 +70,11 @@ import javax.swing.text.InternationalFormatter;
 import javax.swing.text.PlainDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.tree.*;
-
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.*;
 import org.apache.xerces.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.*;
-
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
@@ -377,6 +374,7 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldSystemEditorUserPassword = new JTextField();
 	private JLabel jLabelSystemDriverVMOptions = new JLabel();
 	private JTextField jTextFieldSystemDriverVMOptions = new JTextField();
+	private JCheckBox jCheckBoxSystemSkipPreload = new JCheckBox();
 	private JLabel jLabelSystemSmtpHost = new JLabel();
 	private JTextField jTextFieldSystemSmtpHost = new JTextField();
 	private JLabel jLabelSystemSmtpPort = new JLabel();
@@ -3519,6 +3517,9 @@ public class Editor extends JFrame {
 		jLabelSystemDriverVMOptions.setBounds(new Rectangle(384, 124, 90, 15));
 		jTextFieldSystemDriverVMOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldSystemDriverVMOptions.setBounds(new Rectangle(478, 121, 280, 22));
+		jCheckBoxSystemSkipPreload.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jCheckBoxSystemSkipPreload.setText(res.getString("SkipPreload"));
+		jCheckBoxSystemSkipPreload.setBounds(new Rectangle(770, 121, 170, 22));
 		jLabelSystemSmtpHost.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemSmtpHost.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSmtpHost.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -3565,6 +3566,7 @@ public class Editor extends JFrame {
 		jPanelSystemOtherConfigTop.add(jTextFieldSystemEditorUserPassword);
 		jPanelSystemOtherConfigTop.add(jLabelSystemDriverVMOptions);
 		jPanelSystemOtherConfigTop.add(jTextFieldSystemDriverVMOptions);
+		jPanelSystemOtherConfigTop.add(jCheckBoxSystemSkipPreload);
 		jPanelSystemOtherConfigTop.add(jLabelSystemSmtpHost);
 		jPanelSystemOtherConfigTop.add(jTextFieldSystemSmtpHost);
 		jPanelSystemOtherConfigTop.add(jLabelSystemSmtpPort);
@@ -3806,15 +3808,23 @@ public class Editor extends JFrame {
 		tableModelMenuList.addColumn("NO.");
 		tableModelMenuList.addColumn("ID");
 		tableModelMenuList.addColumn(res.getString("MenuName"));
+		tableModelMenuList.addColumn(res.getString("MenuCrossCheckers"));
+		tableModelMenuList.addColumn(res.getString("MenuFunctions"));
 		column0 = jTableMenuList.getColumnModel().getColumn(0);
 		column1 = jTableMenuList.getColumnModel().getColumn(1);
 		column2 = jTableMenuList.getColumnModel().getColumn(2);
+		column3 = jTableMenuList.getColumnModel().getColumn(3);
+		column4 = jTableMenuList.getColumnModel().getColumn(4);
 		column0.setPreferredWidth(37);
 		column1.setPreferredWidth(37);
-		column2.setPreferredWidth(250);
+		column2.setPreferredWidth(220);
+		column3.setPreferredWidth(220);
+		column4.setPreferredWidth(450);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentCenterControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
+		column3.setCellRenderer(rendererAlignmentLeftControlColor);
+		column4.setCellRenderer(rendererAlignmentLeftControlColor);
 		jTableMenuList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableMenuList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
@@ -4069,22 +4079,27 @@ public class Editor extends JFrame {
 		tableModelTableList.addColumn("ID");
 		tableModelTableList.addColumn(res.getString("TableName"));
 		tableModelTableList.addColumn(res.getString("PKey"));
+		tableModelTableList.addColumn("X.CHK");
 		tableModelTableList.addColumn(res.getString("Remarks"));
 		column0 = jTableTableList.getColumnModel().getColumn(0);
 		column1 = jTableTableList.getColumnModel().getColumn(1);
 		column2 = jTableTableList.getColumnModel().getColumn(2);
 		column3 = jTableTableList.getColumnModel().getColumn(3);
 		column4 = jTableTableList.getColumnModel().getColumn(4);
+		column5 = jTableTableList.getColumnModel().getColumn(5);
 		column0.setPreferredWidth(37);
 		column1.setPreferredWidth(80);
 		column2.setPreferredWidth(150);
 		column3.setPreferredWidth(220);
-		column4.setPreferredWidth(500);
+		column4.setPreferredWidth(52);
+		column5.setPreferredWidth(500);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		column4.setCellRenderer(rendererAlignmentLeftControlColor);
+		CheckBoxRenderer checkBoxRenderer = new CheckBoxRenderer();
+		column4.setCellRenderer(checkBoxRenderer);
+		column5.setCellRenderer(rendererAlignmentLeftControlColor);
 		jTableTableList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableTableList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
@@ -4317,22 +4332,27 @@ public class Editor extends JFrame {
 		tableModelTableReferList.addColumn(res.getString("JoinTable"));
 		tableModelTableReferList.addColumn(res.getString("Alias"));
 		tableModelTableReferList.addColumn(res.getString("JoinWithKeys"));
+		tableModelTableReferList.addColumn("OPT");
 		tableModelTableReferList.addColumn(res.getString("JoinFields"));
 		column0 = jTableTableReferList.getColumnModel().getColumn(0);
 		column1 = jTableTableReferList.getColumnModel().getColumn(1);
 		column2 = jTableTableReferList.getColumnModel().getColumn(2);
 		column3 = jTableTableReferList.getColumnModel().getColumn(3);
 		column4 = jTableTableReferList.getColumnModel().getColumn(4);
+		column5 = jTableTableReferList.getColumnModel().getColumn(5);
 		column0.setPreferredWidth(37);
 		column1.setPreferredWidth(300);
 		column2.setPreferredWidth(80);
 		column3.setPreferredWidth(220);
-		column4.setPreferredWidth(400);
+		column4.setPreferredWidth(42);
+		column5.setPreferredWidth(400);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		column4.setCellRenderer(rendererAlignmentLeftControlColor);
+		CheckBoxRenderer checkBoxRenderer = new CheckBoxRenderer();
+		column4.setCellRenderer(checkBoxRenderer);
+		column5.setCellRenderer(rendererAlignmentLeftControlColor);
 		jTableTableReferList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableTableReferList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
@@ -13333,6 +13353,9 @@ public class Editor extends JFrame {
 	    	jPopupMenuComponent.add(jMenuItemComponentToDelete);
 	    	jMenuItemComponentToAddPK.setEnabled(isLackOfPK());
 	    }
+	    if (e.getComponent().equals(jScrollPaneTableKeyRelationshipList)) {
+	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
+	    }
 	    if (e.getComponent().equals(jTableTableKeyRelationshipList)) {
 	    	componentType_jPopupMenuComponent = "TableKeyRelationshipList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToJump);
@@ -14309,6 +14332,27 @@ public class Editor extends JFrame {
 		}
 		boolean isChanged() {
 			return changed;
+		}
+	}
+	/**
+	 * Class of Renderer for CheckBox
+	 */
+	class CheckBoxRenderer extends JCheckBox implements TableCellRenderer {
+		private static final long serialVersionUID = 1L;
+		CheckBoxRenderer() {
+			setHorizontalAlignment(SwingConstants.CENTER);
+		}
+		public Component getTableCellRendererComponent(JTable table,
+				Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+			if (isSelected) {
+				setForeground(table.getSelectionForeground());
+				setBackground(table.getSelectionBackground());
+			} else {
+				setForeground(table.getForeground());
+				setBackground(table.getBackground());
+			}
+			setSelected((value != null && ((Boolean)value).booleanValue()));
+			return this;
 		}
 	}
 	/**
@@ -15522,6 +15566,11 @@ public class Editor extends JFrame {
 			jTextFieldSystemEditorUser.setText(domNode_.getAttribute("EditorUser"));
 			jTextFieldSystemEditorUserPassword.setText(domNode_.getAttribute("EditorUserPassword"));
 			jTextFieldSystemDriverVMOptions.setText(domNode_.getAttribute("DriverVMOptions"));
+			if (domNode_.getAttribute("SkipPreload").equals("T")) {
+				jCheckBoxSystemSkipPreload.setSelected(true);
+			} else {
+				jCheckBoxSystemSkipPreload.setSelected(false);
+			}
 			jTextFieldSystemSmtpHost.setText(domNode_.getAttribute("SmtpHost"));
 			jTextFieldSystemSmtpPort.setText(domNode_.getAttribute("SmtpPort"));
 			jTextFieldSystemSmtpUser.setText(domNode_.getAttribute("SmtpUser"));
@@ -15606,10 +15655,20 @@ public class Editor extends JFrame {
 			for (int i = 0; i < this.getChildCount(); i++) {
 				node = (MainTreeNode)this.getChildAt(i);
 				element = (org.w3c.dom.Element)node.getElement();
-				Object[] Cell = new Object[3];
+				Object[] Cell = new Object[5];
 				Cell[0] =  new TableRowNumber(i+1, element);
-				Cell[1] = node.getElement().getAttribute("ID");
-				Cell[2] = node.getElement().getAttribute("Name");
+				Cell[1] = element.getAttribute("ID");
+				Cell[2] = element.getAttribute("Name");
+				if (element.getAttribute("CrossCheckersToBeLoaded").equals("")) {
+					Cell[3] = "*None";
+				} else {
+					Cell[3] = element.getAttribute("CrossCheckersToBeLoaded");
+				}
+				if (element.getAttribute("FunctionsToBeLoaded").equals("")) {
+					Cell[4] = "*None";
+				} else {
+					Cell[4] = element.getAttribute("FunctionsToBeLoaded");
+				}
 				tableModelMenuList.addRow(Cell);
 			}
 			return "jPanelMenuList";
@@ -15768,7 +15827,7 @@ public class Editor extends JFrame {
 			for (int i = 0; i < this.getChildCount(); i++) {
 				node = (MainTreeNode)this.getChildAt(i);
 				element1 = (org.w3c.dom.Element)node.getElement();
-				Object[] Cell = new Object[5];
+				Object[] Cell = new Object[6];
 				Cell[0] = new TableRowNumber(i+1, element1);
 				Cell[1] = element1.getAttribute("ID");
 				Cell[2] = element1.getAttribute("Name");
@@ -15779,7 +15838,12 @@ public class Editor extends JFrame {
 						Cell[3] = getFieldNames(element1.getAttribute("ID"), element2.getAttribute("Fields"), " + ", false);
 					}
 				}
-				Cell[4] = getFirstParagraph(element1.getAttribute("Remarks"));
+				if (element1.getAttribute("SkipReferCheck").equals("T")) {
+					Cell[4] = Boolean.FALSE;
+				} else {
+					Cell[4] = Boolean.TRUE;
+				}
+				Cell[5] = getFirstParagraph(element1.getAttribute("Remarks"));
 				tableModelTableList.addRow(Cell);
 			}
 			return "jPanelTableList";
@@ -16061,7 +16125,7 @@ public class Editor extends JFrame {
 			sortingList = getSortedListModel(tableReferList, "Order");
 		    for (int i = 0; i < sortingList.getSize(); i++) {
 		        element = (org.w3c.dom.Element)sortingList.getElementAt(i);
-				Object[] Cell = new Object[5];
+				Object[] Cell = new Object[6];
 				Cell[0] = new TableRowNumber(i+1, element);
 		        tableNode = getSpecificXETreeNode("Table", element.getAttribute("ToTable"));
 		        tableElement = tableNode.getElement();
@@ -16074,10 +16138,15 @@ public class Editor extends JFrame {
 					Cell[2] = element.getAttribute("TableAlias");
 				}
 				Cell[3] = getWithKeyFieldNames(element.getAttribute("WithKeyFields"), tableReferList);
-				if (element.getAttribute("Fields").equals("")) {
-					Cell[4] = "*None";
+				if (element.getAttribute("Optional").equals("T")) {
+					Cell[4] = Boolean.TRUE;
 				} else {
-					Cell[4] = getFieldNames(element.getAttribute("ToTable"), element.getAttribute("Fields"), res.getString("Comma"), false);
+					Cell[4] = Boolean.FALSE;
+				}
+				if (element.getAttribute("Fields").equals("")) {
+					Cell[5] = "*None";
+				} else {
+					Cell[5] = getFieldNames(element.getAttribute("ToTable"), element.getAttribute("Fields"), res.getString("Comma"), false);
 				}
 				tableModelTableReferList.addRow(Cell);
 				if (element == targetElement) {
@@ -18764,6 +18833,15 @@ public class Editor extends JFrame {
 			if (!domNode_.getAttribute("DriverVMOptions").equals(jTextFieldSystemDriverVMOptions.getText())) {
 				valueOfFieldsChanged = true;
 			}
+			if (domNode_.getAttribute("SkipPreload").equals("T")) {
+				if (!jCheckBoxSystemSkipPreload.isSelected()) {
+					valueOfFieldsChanged = true;
+				}
+			} else {
+				if (jCheckBoxSystemSkipPreload.isSelected()) {
+					valueOfFieldsChanged = true;
+				}
+			}
 			if (!domNode_.getAttribute("SmtpHost").equals(jTextFieldSystemSmtpHost.getText())) {
 				valueOfFieldsChanged = true;
 			}
@@ -18803,7 +18881,6 @@ public class Editor extends JFrame {
 				domNode_.setAttribute("DatabaseName", jTextFieldSystemDBName.getText());
 				domNode_.setAttribute("DatabaseUser", jTextFieldSystemDBUser.getText());
 				domNode_.setAttribute("DatabasePassword", jTextFieldSystemDBPassword.getText());
-				//domNode_.setAttribute("DatabaseDisconnect", jTextFieldSystemDBDisconnect.getText());
 				if (jCheckBoxSystemAutoConnectToEdit.isSelected()) {
 					domNode_.setAttribute("AutoConnectToEdit", "T");
 				} else {
@@ -18824,6 +18901,11 @@ public class Editor extends JFrame {
 				domNode_.setAttribute("EditorUser", jTextFieldSystemEditorUser.getText());
 				domNode_.setAttribute("EditorUserPassword", jTextFieldSystemEditorUserPassword.getText());
 				domNode_.setAttribute("DriverVMOptions", jTextFieldSystemDriverVMOptions.getText());
+				if (jCheckBoxSystemSkipPreload.isSelected()) {
+					domNode_.setAttribute("SkipPreload", "T");
+				} else {
+					domNode_.setAttribute("SkipPreload", "F");
+				}
 				//
 				domNode_.setAttribute("SmtpHost", jTextFieldSystemSmtpHost.getText());
 				domNode_.setAttribute("SmtpPort", jTextFieldSystemSmtpPort.getText());
@@ -19678,10 +19760,12 @@ public class Editor extends JFrame {
 				if (element.getAttribute("Optional").equals("T") && !jCheckBoxTableReferOptional.isSelected()) {
 					valueOfFieldsChanged = true;
 					element.setAttribute("Optional", "F");
+					tableModelTableReferList.setValueAt(Boolean.FALSE, selectedRow_jTableTableReferList, 4);
 				}
 				if (!element.getAttribute("Optional").equals("T") && jCheckBoxTableReferOptional.isSelected()) {
 					valueOfFieldsChanged = true;
 					element.setAttribute("Optional", "T");
+					tableModelTableReferList.setValueAt(Boolean.TRUE, selectedRow_jTableTableReferList, 4);
 				}
 				//
 				if (valueOfFieldsChanged) {
@@ -19703,9 +19787,9 @@ public class Editor extends JFrame {
 					}
 					element.setAttribute("Fields", buf.toString());
 					if (element.getAttribute("Fields").equals("")) {
-						tableModelTableReferList.setValueAt("*None", selectedRow_jTableTableReferList, 4);
+						tableModelTableReferList.setValueAt("*None", selectedRow_jTableTableReferList, 5);
 					} else {
-						tableModelTableReferList.setValueAt(getFieldNames(element.getAttribute("ToTable"), element.getAttribute("Fields"), res.getString("Comma"), false), selectedRow_jTableTableReferList, 4);
+						tableModelTableReferList.setValueAt(getFieldNames(element.getAttribute("ToTable"), element.getAttribute("Fields"), res.getString("Comma"), false), selectedRow_jTableTableReferList, 5);
 					}
 					//
 				    setupTableScriptNotes(domNode_);
@@ -26159,6 +26243,9 @@ public class Editor extends JFrame {
 						bf.append("\"");
 					}
 				}
+				if (jCheckBoxSystemSkipPreload.isSelected()) {
+					bf.append(" \"SKIP_PRELOAD\"");
+				}
 				command = bf.toString();
 				rt.exec(command);
 			} catch (Exception e1) {
@@ -27766,49 +27853,155 @@ public class Editor extends JFrame {
 	    BufferedWriter bufferedWriter = null;
 	    TableModel tableModel = null;
 	    String csvFileName = "";
-	    //
+		Boolean checkBoxValue;
 	    currentMainTreeNode.updateFields();
-		//
+
+		if (componentType_jPopupMenuComponent.equals("SystemSubDBList")) {
+			tableModel = tableModelSystemSubDBList;
+		}
+		if (componentType_jPopupMenuComponent.equals("SystemSubDBUsageList")) {
+			tableModel = tableModelSystemSubDBUsageList;
+		}
 		if (componentType_jPopupMenuComponent.equals("SystemPrintFontList")) {
 			tableModel = tableModelSystemPrintFontList;
 		}
-		//
 		if (componentType_jPopupMenuComponent.equals("SystemPrintFontUsageList")) {
 			tableModel = tableModelSystemPrintFontUsageList;
 		}
-		//
 		if (componentType_jPopupMenuComponent.equals("SystemMaintenanceLog")) {
 			tableModel = tableModelSystemMaintenanceLog;
 		}
-		//
+
 		if (componentType_jPopupMenuComponent.equals("MenuList")) {
 			tableModel = tableModelMenuList;
 		}
-		//
 		if (componentType_jPopupMenuComponent.equals("MenuFunctionList")) {
 			tableModel = tableModelMenuFunctionList;
 		}
-		//
+
 		if (componentType_jPopupMenuComponent.equals("SubsystemList")) {
 			tableModel = tableModelSubsystemList;
 		}
-		//
+
 		if (componentType_jPopupMenuComponent.equals("TableList")) {
 			tableModel = tableModelTableList;
 		}
-		//
 		if (componentType_jPopupMenuComponent.equals("TableFieldList")) {
 			tableModel = tableModelTableFieldList;
 		}
-		//
 		if (componentType_jPopupMenuComponent.equals("TableFieldUsageList")) {
 			tableModel = tableModelTableFieldUsageList;
 		}
-		//
+		if (componentType_jPopupMenuComponent.equals("TableKeyList")) {
+			tableModel = tableModelTableKeyList;
+		}
+		if (componentType_jPopupMenuComponent.equals("TableKeyRelationshipList")) {
+			tableModel = tableModelTableKeyRelationshipList;
+		}
+		if (componentType_jPopupMenuComponent.equals("TableReferList")) {
+			tableModel = tableModelTableReferList;
+		}
+		if (componentType_jPopupMenuComponent.equals("TableScriptList")) {
+			tableModel = tableModelTableScriptList;
+		}
+		if (componentType_jPopupMenuComponent.equals("TableUsageList")) {
+			tableModel = tableModelTableUsageList;
+		}
+
 		if (componentType_jPopupMenuComponent.equals("FunctionList")) {
 			tableModel = tableModelFunctionList;
 		}
-	    //
+	    if (componentType_jPopupMenuComponent.equals("Function000UsageList")) {
+			tableModel = tableModelFunction000UsageList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function100ColumnList")) {
+			tableModel = tableModelFunction100ColumnList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function100FilterList")) {
+			tableModel = tableModelFunction100FilterList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function100ButtonList")) {
+			tableModel = tableModelFunction100ButtonList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function100UsageList")) {
+			tableModel = tableModelFunction100UsageList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function110ColumnList")) {
+			tableModel = tableModelFunction110ColumnList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function110FilterList")) {
+			tableModel = tableModelFunction110FilterList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function110BatchFieldList")) {
+			tableModel = tableModelFunction110BatchFieldList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function110ButtonList")) {
+			tableModel = tableModelFunction110ButtonList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function110UsageList")) {
+			tableModel = tableModelFunction110UsageList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function200FieldList")) {
+			tableModel = tableModelFunction200FieldList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function200TabList")) {
+			tableModel = tableModelFunction200TabList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function200TabFieldList")) {
+			tableModel = tableModelFunction200TabFieldList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function200ButtonList")) {
+			tableModel = tableModelFunction200ButtonList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function200UsageList")) {
+			tableModel = tableModelFunction200UsageList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function290UsageList")) {
+			tableModel = tableModelFunction290UsageList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function300HeaderFieldList")) {
+			tableModel = tableModelFunction300HeaderFieldList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function300DetailList")) {
+			tableModel = tableModelFunction300DetailList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function300DetailFieldList")) {
+			tableModel = tableModelFunction300DetailFieldList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function300DetailFilterList")) {
+			tableModel = tableModelFunction300DetailFilterList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function300DetailButtonList")) {
+			tableModel = tableModelFunction300DetailButtonList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function300UsageList")) {
+			tableModel = tableModelFunction300UsageList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function310HeaderFieldList")) {
+			tableModel = tableModelFunction310HeaderFieldList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function310DetailFieldList")) {
+			tableModel = tableModelFunction310DetailFieldList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function310AddRowListColumnList")) {
+			tableModel = tableModelFunction310AddRowListColumnList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function310AddRowListButtonList")) {
+			tableModel = tableModelFunction310AddRowListButtonList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function310ButtonList")) {
+			tableModel = tableModelFunction310ButtonList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function310UsageList")) {
+			tableModel = tableModelFunction310UsageList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function390DetailFieldList")) {
+			tableModel = tableModelFunction390DetailFieldList;
+	    }
+	    if (componentType_jPopupMenuComponent.equals("Function390UsageList")) {
+			tableModel = tableModelFunction390UsageList;
+	    }
+		
 		if (tableModel != null) {
 			try {
 				File tempCsvFile = File.createTempFile("xeadTemp" + getStringValueOfDateTime("withTime"), ".csv");
@@ -27830,7 +28023,22 @@ public class Editor extends JFrame {
 							bufferedWriter.write(Integer.toString(i + 1));
 						} else {
 							bufferedWriter.write(",");
-							bufferedWriter.write(tableModel.getValueAt(i,j).toString().replace("<html><strong>", "*"));
+							//bufferedWriter.write(tableModel.getValueAt(i,j).toString().replace("<html><strong>", "*"));
+							if (componentType_jPopupMenuComponent.equals("TableReferList")
+									|| componentType_jPopupMenuComponent.equals("TableList")) {
+								if (j == 4) {
+									checkBoxValue = (Boolean)tableModel.getValueAt(i,j);
+									if (checkBoxValue.booleanValue()) {
+										bufferedWriter.write(res.getString("CheckMark"));
+									} else {
+										bufferedWriter.write("");
+									}
+								} else {
+									bufferedWriter.write(tableModel.getValueAt(i,j).toString());
+								}
+							} else {
+								bufferedWriter.write(tableModel.getValueAt(i,j).toString().replace("<html><strong>", "*"));
+							}
 						}
 					}
 					bufferedWriter.write("\n");
@@ -33514,14 +33722,12 @@ public class Editor extends JFrame {
 		NodeList nodeList1;
 		ArrayList<String> referFieldsList = new ArrayList<String>();
 		ArrayList<String> tableFieldsList = new ArrayList<String>();
-		//
+
 		if (!tableRowsAreBeingSetup) {
-			//
 			try {
 				if (currentMainTreeNode.updateFieldsForTableRefer()) {
 					informationOnThisPageChanged = true;
 				}
-				//
 				jLabelTableReferToTable.setEnabled(false);
 				jTextFieldTableReferToTable.setEnabled(false);
 				jTextFieldTableReferToTable.setText("");
@@ -33543,10 +33749,10 @@ public class Editor extends JFrame {
 				jCheckBoxTableReferOptional.setSelected(false);
 				jLabelTableReferFields.setEnabled(false);
 				listModelTableReferFields.removeAllElements();
-				//
+
 				selectedRow_jTableTableReferList = jTableTableReferList.getSelectedRow();
 				if (selectedRow_jTableTableReferList != -1) {
-					//
+
 					jLabelTableReferToTable.setEnabled(true);
 					jTextFieldTableReferToTable.setEnabled(true);
 					jLabelTableReferToKeyFields.setEnabled(true);
@@ -33561,13 +33767,13 @@ public class Editor extends JFrame {
 					jLabelTableReferOptional.setEnabled(true);
 					jCheckBoxTableReferOptional.setEnabled(true);
 					jLabelTableReferFields.setEnabled(true);
-					//
+
 					tableRowNumber = (TableRowNumber)tableModelTableReferList.getValueAt(selectedRow_jTableTableReferList, 0);
 					element = tableRowNumber.getElement();
-					//
+
 					MainTreeNode toTableNode = getSpecificXETreeNode("Table", element.getAttribute("ToTable"));
 					org.w3c.dom.Element tablePKElement = getSpecificPKElement(element.getAttribute("ToTable"));
-					//
+
 					String primaryKeys = getFieldNames(element.getAttribute("ToTable"), tablePKElement.getAttribute("Fields"), " + ", false);
 					jTextFieldTableReferToTable.setText(element.getAttribute("ToTable") + " " + toTableNode.getElement().getAttribute("Name") + " PK:" + primaryKeys);
 					if (element.getAttribute("TableAlias").equals("")) {
@@ -33580,7 +33786,7 @@ public class Editor extends JFrame {
 					} else {
 						jTextFieldTableReferToKeyFields.setText(getFieldNames(element.getAttribute("ToTable"), element.getAttribute("ToKeyFields"), " + ", false));
 					}
-					//
+
 					referTableID = element.getAttribute("ToTable");
 					if (element.getAttribute("OrderBy").equals("")) {
 						jTextFieldTableReferOrderByFields.setText("*None");
@@ -33592,38 +33798,14 @@ public class Editor extends JFrame {
 							tableReferOrderByFields = element.getAttribute("OrderBy");
 						}
 					}
-					//
+
 					if (element.getAttribute("Optional").equals("T")) {
 						jCheckBoxTableReferOptional.setSelected(true);
 					}
-					//
+
 					tableReferWithKeyFields = element.getAttribute("WithKeyFields");
-//					int wrkInt;
-//					int count = -1;
-//					String tableAlias, tableID, fieldID;
-//					StringBuffer sb = new StringBuffer();
-//					StringTokenizer workTokenizer = new StringTokenizer(tableReferWithKeyFields, ";" );
-//					while (workTokenizer.hasMoreTokens()) {
-//						wrkStr = workTokenizer.nextToken();
-//						wrkInt = wrkStr.indexOf(".");
-//						tableAlias = wrkStr.substring(0, wrkInt);
-//						tableID = getTableIDOfTableAlias(tableAlias, tableReferList, null);
-//						fieldID = wrkStr.substring(wrkInt+1, wrkStr.length());
-//						fieldElement = getSpecificFieldElement(tableID, fieldID);
-//						count++;
-//						if (count > 0) {
-//							sb.append(" + ");
-//						}
-//						wrkStr = fieldElement.getAttribute("Name");
-//						if (wrkStr.equals("")) {
-//							sb.append(tableAlias + "." + fieldID);
-//						} else {
-//							sb.append(tableAlias + "." + wrkStr);
-//						}
-//					}
-//					jTextFieldTableReferWithKeyFields.setText(sb.toString());
 					jTextFieldTableReferWithKeyFields.setText(getDataSourceNames(referTableID, tableReferList, tableReferWithKeyFields, " + "));
-					//
+
 					referFieldsList.clear();
 					StringTokenizer workTokenizer = new StringTokenizer(element.getAttribute("Fields"), ";" );
 					while (workTokenizer.hasMoreTokens()) {
@@ -33636,7 +33818,7 @@ public class Editor extends JFrame {
 						fieldElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
 						tableFieldsList.add(fieldElement.getAttribute("ID"));
 					}
-					//
+
 					for (int i = 0; i < referFieldsList.size(); i++) {
 						fieldElement = getSpecificFieldElement(element.getAttribute("ToTable"), referFieldsList.get(i));
 						JCheckBox checkBox = new JCheckBox();
