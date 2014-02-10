@@ -55,6 +55,7 @@ public class DialogCheckTableModule extends JDialog {
 	private JButton jButtonAlter = new JButton();
 	private JButton jButtonDelete = new JButton();
 	private JButton jButtonClose = new JButton();
+	private JButton jButtonPut = new JButton();
 	private JScrollPane jScrollPaneMessage = new JScrollPane();
 	private JTextArea jTextAreaMessage = new JTextArea();
 	private Editor frame_;
@@ -70,6 +71,11 @@ public class DialogCheckTableModule extends JDialog {
 	private ArrayList<Integer> fieldSizeListToBeConvertedNew = new ArrayList<Integer>();
 	private ArrayList<Integer> fieldDecimalListToBeConvertedOld = new ArrayList<Integer>();
 	private ArrayList<Integer> fieldDecimalListToBeConvertedNew = new ArrayList<Integer>();
+	private ArrayList<String> fieldListToBePut = new ArrayList<String>();
+	private ArrayList<String> fieldTypeListToBePut = new ArrayList<String>();
+	private ArrayList<Integer> fieldSizeListToBePut = new ArrayList<Integer>();
+	private ArrayList<Integer> fieldDecimalListToBePut = new ArrayList<Integer>();
+	private ArrayList<String> fieldNullableListToBePut = new ArrayList<String>();
 	private ArrayList<ArrayList<Object>> keyValueList = new ArrayList<ArrayList<Object>>();
 	private ArrayList<ArrayList<Object>> fieldValueList = new ArrayList<ArrayList<Object>>();
 	private ArrayList<String> fieldListToBeNullable = new ArrayList<String>();
@@ -109,21 +115,25 @@ public class DialogCheckTableModule extends JDialog {
 		jScrollPaneMessage.getViewport().add(jTextAreaMessage);
 
 		jButtonClose.setText(res.getString("Close"));
-		jButtonClose.setBounds(new Rectangle(30, 8, 80, 25));
+		jButtonClose.setBounds(new Rectangle(20, 8, 80, 25));
 		jButtonClose.setFont(new java.awt.Font("Dialog", 0, 12));
 		jButtonClose.addActionListener(new DialogCheckTableModule_jButtonClose_actionAdapter(this));
 		jButtonAlter.setText(res.getString("ModuleModify"));
-		jButtonAlter.setBounds(new Rectangle(140, 8, 130, 25));
+		jButtonAlter.setBounds(new Rectangle(120, 8, 130, 25));
 		jButtonAlter.setFont(new java.awt.Font("Dialog", 0, 12));
 		jButtonAlter.addActionListener(new DialogCheckTableModule_jButtonAlter_actionAdapter(this));
 		jButtonCreate.setText(res.getString("ModuleCreate"));
-		jButtonCreate.setBounds(new Rectangle(300, 8, 130, 25));
+		jButtonCreate.setBounds(new Rectangle(270, 8, 130, 25));
 		jButtonCreate.setFont(new java.awt.Font("Dialog", 0, 12));
 		jButtonCreate.addActionListener(new DialogCheckTableModule_jButtonCreate_actionAdapter(this));
 		jButtonDelete.setText(res.getString("ModuleDelete"));
-		jButtonDelete.setBounds(new Rectangle(460, 8, 130, 25));
+		jButtonDelete.setBounds(new Rectangle(420, 8, 130, 25));
 		jButtonDelete.setFont(new java.awt.Font("Dialog", 0, 12));
 		jButtonDelete.addActionListener(new DialogCheckTableModule_jButtonDelete_actionAdapter(this));
+		jButtonPut.setText(res.getString("ModulePut"));
+		jButtonPut.setBounds(new Rectangle(570, 8, 130, 25));
+		jButtonPut.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonPut.addActionListener(new DialogCheckTableModule_jButtonPut_actionAdapter(this));
 		jPanelButtons.setBorder(BorderFactory.createEtchedBorder());
 		jPanelButtons.setPreferredSize(new Dimension(400, 41));
 		jPanelButtons.setLayout(null);
@@ -131,11 +141,12 @@ public class DialogCheckTableModule extends JDialog {
 		jPanelButtons.add(jButtonAlter, null);
 		jPanelButtons.add(jButtonCreate, null);
 		jPanelButtons.add(jButtonDelete, null);
+		jPanelButtons.add(jButtonPut, null);
 
 		this.setTitle(res.getString("ModuleCheck"));
 		this.getContentPane().add(jPanelButtons,  BorderLayout.SOUTH);
 		this.setResizable(false);
-		this.setPreferredSize(new Dimension(620, 300));
+		this.setPreferredSize(new Dimension(730, 300));
 		this.getContentPane().add(jScrollPaneMessage,  BorderLayout.CENTER);
 	}
 
@@ -201,6 +212,11 @@ public class DialogCheckTableModule extends JDialog {
 			fieldTypeListToBeConverted.clear();
 			fieldSizeListToBeConvertedOld.clear();
 			fieldSizeListToBeConvertedNew.clear();
+			fieldListToBePut.clear();
+			fieldTypeListToBePut.clear();
+			fieldSizeListToBePut.clear();
+			fieldDecimalListToBePut.clear();
+			fieldNullableListToBePut.clear();
 			fieldDecimalListToBeConvertedOld.clear();
 			fieldDecimalListToBeConvertedNew.clear();
 			fieldListToBeNullable.clear();
@@ -427,6 +443,12 @@ public class DialogCheckTableModule extends JDialog {
 						countOfErrors++;
 						fieldListToBeDropped.add(frame_.getCaseShiftValue(rs3.getString("COLUMN_NAME"), "Upper"));
 						buf.append("(" + countOfErrors + ") "+ res.getString("ModuleCheckMessage16") + frame_.getCaseShiftValue(rs3.getString("COLUMN_NAME"), "Upper") + " [" + typeDescriptionsOfModuleField + "]" + res.getString("ModuleCheckMessage17"));
+
+						fieldListToBePut.add(frame_.getCaseShiftValue(rs3.getString("COLUMN_NAME"), "Upper"));
+						fieldTypeListToBePut.add(getEquivalentDataType(rs3.getString("TYPE_NAME")));
+						fieldSizeListToBePut.add(sizeOfModuleField);
+						fieldDecimalListToBePut.add(decimalOfModuleField);
+						fieldNullableListToBePut.add(rs3.getString("IS_NULLABLE"));
 					}
 				}
 				rs3.close();
@@ -776,6 +798,7 @@ public class DialogCheckTableModule extends JDialog {
 			jButtonAlter.setEnabled(false);
 			jButtonCreate.setEnabled(false);
 			jButtonDelete.setEnabled(false);
+			jButtonPut.setEnabled(false);
 
 			if (countOfErrors > 0) {
 				buf.append("\n");
@@ -794,6 +817,9 @@ public class DialogCheckTableModule extends JDialog {
 						}
 						jButtonAlter.setEnabled(true);
 					}
+				}
+				if (fieldListToBePut.size() > 0) {
+					jButtonPut.setEnabled(true);
 				}
 				jTextAreaMessage.setText(buf.toString());
 			} else {
@@ -1083,28 +1109,6 @@ public class DialogCheckTableModule extends JDialog {
 								}
 								buf.append(element.getAttribute("ID"));
 								buf.append(" ");
-//								buf.append(element.getAttribute("Type"));
-//								if (getBasicTypeOf(element.getAttribute("Type")).equals("STRING")) {
-//									buf.append("(");
-//									buf.append(element.getAttribute("Size"));
-//									buf.append(")");
-//									buf.append(" DEFAULT ''");
-//								} else {
-//									if (getBasicTypeOf(element.getAttribute("Type")).equals("INTEGER")) {
-//										buf.append(" DEFAULT 0");
-//									} else {
-//										if (getBasicTypeOf(element.getAttribute("Type")).equals("FLOAT")) {
-//											if (element.getAttribute("Type").equals("DECIMAL") || element.getAttribute("Type").equals("NUMERIC")) {
-//												buf.append("(");
-//												buf.append(element.getAttribute("Size"));
-//												buf.append(",");
-//												buf.append(element.getAttribute("Decimal"));
-//												buf.append(")");
-//											}
-//											buf.append(" DEFAULT 0.0");
-//										}
-//									}
-//								}
 								if (element.getAttribute("Type").equals("TIMETZ")) {
 									buf.append("time with time zone");
 								} else {
@@ -1451,6 +1455,36 @@ public class DialogCheckTableModule extends JDialog {
 		}
 	}
 
+	void jButtonPut_actionPerformed(ActionEvent e) {
+		Object[] bts = {res.getString("Cancel"), res.getString("Execute")};
+		int rtn = JOptionPane.showOptionDialog(this, res.getString("ModuleCheckMessage47"), res.getString("ModuleDelete") + " " + tableElement.getAttribute("ID") + " " + tableElement.getAttribute("Name"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
+		if (rtn == 1) {
+
+			/////////////////////////////////////////////////////
+			// Put field definitions into the table definition //
+			/////////////////////////////////////////////////////
+			for (int i = 0; i < fieldListToBePut.size(); i++) {
+				org.w3c.dom.Element newElement = frame_.createNewElementAccordingToType("TableFieldList");
+				if (newElement != null) {
+					newElement.setAttribute("ID", fieldListToBePut.get(i));
+					newElement.setAttribute("Name", fieldListToBePut.get(i));
+					if (!fieldTypeListToBePut.get(i).equals("")) {
+						newElement.setAttribute("Type", fieldTypeListToBePut.get(i));
+					}
+					newElement.setAttribute("Size", fieldSizeListToBePut.get(i).toString());
+					newElement.setAttribute("Decimal", fieldDecimalListToBePut.get(i).toString());
+					if (fieldNullableListToBePut.get(i).toUpperCase().equals("YES")) {
+						newElement.setAttribute("Nullable", "T");
+					} else {
+						newElement.setAttribute("Nullable", "F");
+					}
+					frame_.currentMainTreeNode.getElement().appendChild(newElement);
+				}
+			}
+			frame_.currentMainTreeNode.updateFields();
+		}
+	}
+
 	void jButtonClose_actionPerformed(ActionEvent e) {
 		this.setVisible(false);
 	}
@@ -1500,6 +1534,101 @@ public class DialogCheckTableModule extends JDialog {
 			}
 		}
 		return buf.toString();
+	}
+	
+	String getEquivalentDataType(String dataTypeModule) {
+		String dataTypeDefinition = "";
+		if (dataTypeModule.equals("DOUBLE")) {
+			dataTypeDefinition = "DOUBLE";
+		}
+		if (dataTypeModule.equals("DATE")) {
+			dataTypeDefinition = "DATE";
+		}
+		if (dataTypeModule.equals("TIME")) {
+			dataTypeDefinition = "TIME";
+		}
+		if (dataTypeModule.equals("TIMETZ")) {
+			dataTypeDefinition = "TIMETZ";
+		}
+		if (dataTypeModule.equals("TIMESTAMP")) {
+			dataTypeDefinition = "TIMESTAMP";
+		}
+		if (dataTypeModule.equals("TIMESTAMPTZ")) {
+			dataTypeDefinition = "TIMESTAMPTZ";
+		}
+		if (dataTypeModule.equals("BINARY")) {
+			dataTypeDefinition = "BINARY";
+		}
+		if (dataTypeModule.equals("VARBINARY")) {
+			dataTypeDefinition = "VARBINARY";
+		}
+		if (dataTypeModule.equals("CLOB")) {
+			dataTypeDefinition = "CLOB";
+		}
+		if (dataTypeModule.equals("BLOB")) {
+			dataTypeDefinition = "BLOB";
+		}
+		if (dataTypeModule.equals("SMALLINT")
+				|| dataTypeModule.equals("int2")
+				|| dataTypeModule.equals("NUMBER")) {
+			dataTypeDefinition = "SMALLINT";
+		}
+		if (dataTypeModule.equals("INTEGER")
+				|| dataTypeModule.equals("INT")
+				|| dataTypeModule.equals("INT SIGNED")
+				|| dataTypeModule.equals("INT UNSIGNED")
+				|| dataTypeModule.equals("NUMBER")
+				|| dataTypeModule.equals("SERIAL")
+				|| dataTypeModule.equals("int")
+				|| dataTypeModule.equals("int4")
+				|| dataTypeModule.equals("serial")) {
+			dataTypeDefinition = "INTEGER";
+		}
+		if (dataTypeModule.equals("BIGINT")
+				|| dataTypeModule.equals("int8")
+				|| dataTypeModule.equals("bigserial")
+				|| dataTypeModule.equals("BIGSERIAL")
+				|| dataTypeModule.equals("NUMBER")) {
+			dataTypeDefinition = "BIGINT";
+		}
+		if (dataTypeModule.equals("REAL")
+				|| dataTypeModule.equals("float4")) {
+			dataTypeDefinition = "REAL";
+		}
+		if (dataTypeModule.equals("DOUBLE PRECISION")
+				|| dataTypeModule.equals("float8")) {
+			dataTypeDefinition = "DOUBLE PRECISION";
+		}
+		if (dataTypeModule.equals("NUMERIC")
+				|| dataTypeModule.equals("DECIMAL")
+				|| dataTypeModule.equals("NUMBER")) {
+			dataTypeDefinition = "NUMERIC";
+		}
+		if (dataTypeModule.equals("DECIMAL")
+				|| dataTypeModule.equals("numeric")) {
+			dataTypeDefinition = "DECIMAL";
+		}
+		if (dataTypeModule.equals("CHAR")
+				|| dataTypeModule.equals("bpchar")
+				|| dataTypeModule.equals("bool")
+				|| dataTypeModule.equals("NVARCHAR2")) {
+			dataTypeDefinition = "CHAR";
+		}
+		if (dataTypeModule.equals("LONG VARCHAR")
+				|| dataTypeModule.equals("MEDIUMTEXT")
+				|| dataTypeModule.equals("CLOB")
+				|| dataTypeModule.equals("LONG")
+				|| dataTypeModule.equals("text")) {
+			dataTypeDefinition = "LONG VARCHAR";
+		}
+		if (dataTypeModule.equals("VARCHAR")
+				|| dataTypeModule.equals("text")
+				|| dataTypeModule.equals("VARCHAR2")
+				|| dataTypeModule.equals("NVARCHAR2")
+				|| dataTypeModule.equals("character varying")) {
+			dataTypeDefinition = "VARCHAR";
+		}
+		return dataTypeDefinition;
 	}
 
 	public String checkTableModule(MainTreeNode tableNode) {
@@ -1726,6 +1855,16 @@ class DialogCheckTableModule_jButtonDelete_actionAdapter implements java.awt.eve
 	}
 	public void actionPerformed(ActionEvent e) {
 		adaptee.jButtonDelete_actionPerformed(e);
+	}
+}
+
+class DialogCheckTableModule_jButtonPut_actionAdapter implements java.awt.event.ActionListener {
+	DialogCheckTableModule adaptee;
+	DialogCheckTableModule_jButtonPut_actionAdapter(DialogCheckTableModule adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jButtonPut_actionPerformed(e);
 	}
 }
 

@@ -33,13 +33,17 @@ package xeadEditor;
 
 import java.awt.*;
 import javax.swing.*;
+
+import org.w3c.dom.NodeList;
 import java.awt.event.*;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.ResourceBundle;
 
@@ -47,12 +51,14 @@ public class DialogSQL extends JDialog {
 	private static final long serialVersionUID = 1L;
 	static ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
 	private JButton jButtonCommit = new JButton();
+	private JButton jButtonListTables = new JButton();
 	private JButton jButtonClose = new JButton();
 	private JPanel jPanelStatement = new JPanel();
 	private JPanel jPanelStatementTop = new JPanel();
 	private JPanel jPanelMessage = new JPanel();
 	private JLabel jLabelConnection = new JLabel();
 	private JComboBox jComboBoxConnection = new JComboBox();
+	private ArrayList<String> dbIDList = new ArrayList<String>();
 	private JScrollPane jScrollPaneStatement = new JScrollPane();
 	private JTextArea jTextAreaStatement = new JTextArea();
 	private JLabel jLabelMessage = new JLabel();
@@ -122,6 +128,7 @@ public class DialogSQL extends JDialog {
 		jTextAreaMessage.setEditable(false);
 		jTextAreaMessage.setOpaque(false);
 		jTextAreaMessage.setLineWrap(true);
+		jTextAreaMessage.setTabSize(16);
 		jTextAreaMessage.setText(res.getString("SqlConsoleComment"));
 		jScrollPaneMessage.getViewport().add(jTextAreaMessage);
 		jPanelMessage.setLayout(new BorderLayout());
@@ -138,14 +145,19 @@ public class DialogSQL extends JDialog {
 		jButtonClose.setFont(new java.awt.Font("Dialog", 0, 12));
 		jButtonClose.addActionListener(new DialogSQL_jButtonClose_actionAdapter(this));
 		jButtonCommit.setText(res.getString("SqlCommitF5"));
-		jButtonCommit.setBounds(new Rectangle(750, 8, 100, 25));
+		jButtonCommit.setBounds(new Rectangle(375, 8, 130, 25));
 		jButtonCommit.setFont(new java.awt.Font("Dialog", 0, 12));
 		jButtonCommit.addActionListener(new DialogSQL_jButtonCommit_actionAdapter(this));
+		jButtonListTables.setText(res.getString("SqlListModules"));
+		jButtonListTables.setBounds(new Rectangle(735, 8, 130, 25));
+		jButtonListTables.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonListTables.addActionListener(new DialogSQL_jButtonListTables_actionAdapter(this));
 		jPanelButtons.setBorder(BorderFactory.createEtchedBorder());
 		jPanelButtons.setPreferredSize(new Dimension(400, 41));
 		jPanelButtons.setLayout(null);
 		jPanelButtons.add(jButtonClose, null);
 		jPanelButtons.add(jButtonCommit, null);
+		jPanelButtons.add(jButtonListTables, null);
 		//
 		this.setTitle(res.getString("SqlConsole"));
 		this.getContentPane().add(jPanelButtons,  BorderLayout.SOUTH);
@@ -160,6 +172,8 @@ public class DialogSQL extends JDialog {
 		for (int i = 0; i < frame_.getDatabaseNameList().size(); i++) {
 			jComboBoxConnection.addItem(frame_.getDatabaseNameList().get(i));
 		}
+		dbIDList.clear();
+		dbIDList = frame_.getDatabaseIDList();
 		jTextAreaStatement.requestFocus();
 		jPanelButtons.getRootPane().setDefaultButton(jButtonClose);
 		Dimension dlgSize = this.getPreferredSize();
@@ -247,6 +261,69 @@ public class DialogSQL extends JDialog {
 		}
 	}
 
+	void jButtonListTables_actionPerformed(ActionEvent e) {
+		ResultSet resultSet1, resultSet2;
+		StringBuffer bf = new StringBuffer();
+		String tableName, moduleID, wrkStr;
+		org.w3c.dom.Element tableElement;
+		NodeList tableList = frame_.getDomDocument().getElementsByTagName("Table");
+		try {
+			setCursor(new Cursor(Cursor.WAIT_CURSOR));
+			bf.append(jTextAreaMessage.getText());
+			bf.append("\n<Table module>\t<XEAD defined name>\t<Number of rows>\n");
+			Connection connection = frame_.getDatabaseConnList().get(jComboBoxConnection.getSelectedIndex());
+			Statement statement = connection.createStatement();
+			DatabaseMetaData metaData = connection.getMetaData();
+		    resultSet1 = metaData.getTables(null, null, "%", null);
+		    while (resultSet1.next()) {
+				try {
+					resultSet2= statement.executeQuery("SELECT COUNT(*) AS COUNT FROM " + resultSet1.getString(3));
+					if (resultSet2.next()) {
+						bf.append(resultSet1.getString(3));
+						bf.append("\t");
+				    	wrkStr = resultSet1.getString(3).toUpperCase();
+						tableName = "N/A";
+					    for (int i = 0; i < tableList.getLength(); i++) {
+					    	tableElement = (org.w3c.dom.Element)tableList.item(i);
+					    	if (tableElement.getAttribute("DB").equals(dbIDList.get(jComboBoxConnection.getSelectedIndex()))) {
+					    		if (tableElement.getAttribute("ModuleID").equals("")) {
+					    			moduleID = tableElement.getAttribute("ID");
+					    		} else {
+					    			moduleID = tableElement.getAttribute("ModuleID");
+					    		}
+					    		if (moduleID.equals(wrkStr)) {
+					    			tableName = tableElement.getAttribute("Name");
+					    			break;
+					    		}
+					    	}
+					    }
+						bf.append(tableName);
+						bf.append("\t");
+						bf.append(resultSet2.getInt("COUNT"));
+						bf.append("\n");
+					}
+				} catch (Exception e1) {
+				}
+			}
+			bf.append("(");
+			calendar = Calendar.getInstance();
+			bf.append(formatter.format(calendar.getTime()));
+			bf.append(")\n");
+			jTextAreaMessage.setText(bf.toString());
+		} catch (SQLException ex1) {
+			bf.append(jTextAreaMessage.getText());
+			bf.append("\n> Listing tables failed.\n");
+			bf.append(ex1.getMessage());
+			bf.append("\n(");
+			calendar = Calendar.getInstance();
+			bf.append(formatter.format(calendar.getTime()));
+			bf.append(")\n");
+			jTextAreaMessage.setText(bf.toString());
+		} finally {
+			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		}
+	}
+
 	void jButtonClose_actionPerformed(ActionEvent e) {
 		this.setVisible(false);
 	}
@@ -259,6 +336,16 @@ class DialogSQL_jButtonCommit_actionAdapter implements java.awt.event.ActionList
 	}
 	public void actionPerformed(ActionEvent e) {
 		adaptee.jButtonCommit_actionPerformed(e);
+	}
+}
+
+class DialogSQL_jButtonListTables_actionAdapter implements java.awt.event.ActionListener {
+	DialogSQL adaptee;
+	DialogSQL_jButtonListTables_actionAdapter(DialogSQL adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jButtonListTables_actionPerformed(e);
 	}
 }
 

@@ -43,7 +43,11 @@ public class DialogAbout extends JDialog implements ActionListener {
 	 * Application Information
 	 */
 	public static final String APPLICATION_NAME  = "XEAD Editor 1.1";
-	public static final String FULL_VERSION  = "V1.R1.M26";
+	public static final String FULL_VERSION  = "V1.R1.M27";
+	//27
+	//・モジュールチェックのパネルに、現在のモジュールにもとづいてフィールド定義を自動補完するためのボタンを設けた
+	//・SQLコンソールのパネルに、現在のモジュールを一覧するためのボタンを設けた
+	//
 	//26
 	//・メニュー一覧上にプリロードの欄を追加した
 	//・システム定義に「プリロードをスキップ」のチェックボックスを設けた
