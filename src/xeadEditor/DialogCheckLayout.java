@@ -2096,7 +2096,7 @@ class DialogCheckLayoutTextField extends JTextField {
 			wrkStr2 = dialog_.getEditor().getOptionValueWithKeyword(fieldOptions_, "PROMPT_CALL");
 			if (!wrkStr1.equals("") && wrkStr2.equals("")) {
 				try {
-					FontMetrics metrics = this.getFontMetrics(new java.awt.Font("Dialog", 0, 14));
+					FontMetrics metrics = this.getFontMetrics(new java.awt.Font("Monospaced", 0, 14));
 					StringBuffer buf1 = new StringBuffer();
 					buf1.append("select * from ");
 					buf1.append(dialog_.getEditor().getSystemUserVariantsTableID());
@@ -2110,14 +2110,14 @@ class DialogCheckLayoutTextField extends JTextField {
 						while (result.next()) {
 							wrkStr1 = result.getString("TXUSERKUBUN").trim();
 							if (metrics.stringWidth(wrkStr1) > fieldWidth) {
-								fieldWidth = metrics.stringWidth(wrkStr1);
+								fieldWidth = metrics.stringWidth(wrkStr1) + 12;
 							}
 							if (value.equals("")) {
 								value = wrkStr1;
 							}
 						}
 					}
-					fieldWidth = fieldWidth + 10;
+					//fieldWidth = fieldWidth + 10;
 				} catch(Exception e) {
 				}
 			} else {

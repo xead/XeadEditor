@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2012 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2014 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -15144,8 +15144,8 @@ public class Editor extends JFrame {
 				if (tableModelTableUsageList.getRowCount() == 0) {
 					Connection connection = databaseConnList.get(databaseIDList.indexOf(domNode_.getAttribute("DB")));
 					if (connection != null && !errorStatus_.equals("ER1")) {
-						setupConnectionList(true);
-						connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
+						//setupConnectionList(true);
+						//connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
 
 						Object[] bts = {res.getString("Cancel"), res.getString("DeleteTableDefinitionOnly"), res.getString("DeleteTableDefinitionAndModule")};
 						int rtn = JOptionPane.showOptionDialog(null, res.getString("DeleteTableMessage"),
@@ -15924,14 +15924,14 @@ public class Editor extends JFrame {
 
 			jComboBoxTableDB.removeAllItems();
 			jComboBoxTableDB.addItem(res.getString("DatabaseMain"));
-			databaseIDList.clear();
-			databaseIDList.add("");
+			//databaseIDList.clear();
+			//databaseIDList.add("");
 			NodeList columnList = systemNode.getElement().getElementsByTagName("SubDB");
 			sortingList = getSortedListModel(columnList, "ID");
 		    for (int i = 0; i < sortingList.getSize(); i++) {
 		        element = (org.w3c.dom.Element)sortingList.getElementAt(i);
 				jComboBoxTableDB.addItem(element.getAttribute("Description"));
-				databaseIDList.add(element.getAttribute("ID"));
+				//databaseIDList.add(element.getAttribute("ID"));
 			}
 			jComboBoxTableDB.setSelectedIndex(databaseIDList.indexOf(domNode_.getAttribute("DB")));
 			jComboBoxTableDB.setEnabled(!isSystemControlTable);
@@ -18883,8 +18883,10 @@ public class Editor extends JFrame {
 				domNode_.setAttribute("DatabasePassword", jTextFieldSystemDBPassword.getText());
 				if (jCheckBoxSystemAutoConnectToEdit.isSelected()) {
 					domNode_.setAttribute("AutoConnectToEdit", "T");
+					setupConnectionList(true);
 				} else {
 					domNode_.setAttribute("AutoConnectToEdit", "F");
+					setupConnectionList(false);
 				}
 				//
 				domNode_.setAttribute("VariantsTable", jTextFieldSystemVariantsTable.getText());
@@ -18983,6 +18985,11 @@ public class Editor extends JFrame {
 				if (valueOfFieldsChanged) {
 					tableModelSystemSubDBList.setValueAt(element.getAttribute("Name"), selectedRow_jTableSystemSubDBList, 1);
 					tableModelSystemSubDBList.setValueAt(element.getAttribute("Description"), selectedRow_jTableSystemSubDBList, 2);
+					if (systemNode.getElement().getAttribute("AutoConnectToEdit").equals("T")) {
+						setupConnectionList(true);
+					} else {
+						setupConnectionList(false);
+					}
 				}
 			}
 			//
@@ -38355,8 +38362,8 @@ public class Editor extends JFrame {
 			MainTreeNode tableNode = getSpecificXETreeNode("Table", tableID);
 			Connection connection = databaseConnList.get(databaseIDList.indexOf(tableNode.getElement().getAttribute("DB")));
 			if (connection != null && !connection.isClosed()) {
-				setupConnectionList(true);
-				connection = databaseConnList.get(databaseIDList.indexOf(tableNode.getElement().getAttribute("DB")));
+				//setupConnectionList(true);
+				//connection = databaseConnList.get(databaseIDList.indexOf(tableNode.getElement().getAttribute("DB")));
 				//
 				jTextAreaTableFieldTypeOptionKUBUN.setText("");
 				//
@@ -38474,8 +38481,8 @@ public class Editor extends JFrame {
 			int blockRows = 0;
 			TableDataRowNumber rowNumber;
 			Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
-			setupConnectionList(true);
-			connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
+			//setupConnectionList(true);
+			//connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
 			statement = connection.createStatement();
 			sql = buf.toString();
 			result = statement.executeQuery(sql);
@@ -38711,8 +38718,8 @@ public class Editor extends JFrame {
 				}
 				//
 				Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
-				setupConnectionList(true);
-				connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
+				//setupConnectionList(true);
+				//connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
 				Statement statement = connection.createStatement();
 				sql = statementBuf.toString();
 				int recordCount = statement.executeUpdate(sql);
@@ -38814,8 +38821,8 @@ public class Editor extends JFrame {
 				}
 				//
 				Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
-				setupConnectionList(true);
-				connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
+				//setupConnectionList(true);
+				//connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
 				Statement statement = connection.createStatement();
 				sql = statementBuf.toString();
 				ResultSet result = statement.executeQuery(sql);
@@ -38916,8 +38923,8 @@ public class Editor extends JFrame {
 				}
 				//
 				Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
-				setupConnectionList(true);
-				connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
+				//setupConnectionList(true);
+				//connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
 				Statement statement = connection.createStatement();
 				sql = statementBuf.toString();
 				int recordCount = statement.executeUpdate(sql);
@@ -39083,8 +39090,8 @@ public class Editor extends JFrame {
 							}
 						}
 						Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
-						setupConnectionList(true);
-						connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
+						//setupConnectionList(true);
+						//connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
 						Statement statement = connection.createStatement();
 						ResultSet result = statement.executeQuery(statementBuf.toString());
 						if (result.next()) {
