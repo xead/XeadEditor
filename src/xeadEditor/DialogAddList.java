@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2012 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2014 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -98,13 +98,13 @@ public class DialogAddList extends JDialog {
 	}
 
 	private void jbInit() throws Exception {
-		//
+
 		panelMain.setBorder(BorderFactory.createEtchedBorder());
 		this.getContentPane().setLayout(borderLayout1);
 		jPanelButtons.setBorder(BorderFactory.createEtchedBorder());
 		jPanelButtons.setPreferredSize(new Dimension(400, 43));
 		jPanelButtons.setLayout(null);
-		//
+
 		panelMain.setLayout(null);
 		panelMain.add(jLabelHeadID);
 		panelMain.add(jLabelHeadName);
@@ -138,10 +138,10 @@ public class DialogAddList extends JDialog {
 		panelMain.add(jLabelNo8);
 		panelMain.add(jLabelNo9);
 		panelMain.add(jLabelNo10);
-		//
+
 		jPanelButtons.add(jButtonOK, null);
 		jPanelButtons.add(jButtonCancel, null);
-		//
+
 		panelMain.setPreferredSize(new Dimension(400, 310));
 		jButtonOK.setBounds(new Rectangle(284, 10, 73, 25));
 		jButtonOK.setFont(new java.awt.Font("Dialog", 0, 12));
@@ -151,53 +151,53 @@ public class DialogAddList extends JDialog {
 		jButtonCancel.setFont(new java.awt.Font("Dialog", 0, 12));
 		jButtonCancel.setText(res.getString("Cancel"));
 		jButtonCancel.addActionListener(new DialogAddList_jButtonCancel_actionAdapter(this));
-		//
+
 		jLabelHeadID.setFont(new java.awt.Font("Dialog", 0, 12));
-		jLabelHeadID.setBounds(new Rectangle(46, 11, 70, 15));
+		jLabelHeadID.setBounds(new Rectangle(37, 11, 90, 15));
 		jLabelHeadName.setFont(new java.awt.Font("Dialog", 0, 12));
 		jLabelHeadName.setBounds(new Rectangle(142, 10, 150, 15));
-		//
+
 		jLabelNo1.setText("1");
-		jLabelNo1.setBounds(new Rectangle(12, 29, 19, 15));
-		jTextFieldID1.setBounds(new Rectangle(41, 28, 86, 22));
+		jLabelNo1.setBounds(new Rectangle(5, 29, 19, 15));
+		jTextFieldID1.setBounds(new Rectangle(30, 28, 100, 22));
 		jTextFieldName1.setBounds(new Rectangle(136, 28, 249, 22));
 		jTextFieldName2.setBounds(new Rectangle(136, 55, 249, 22));
-		jTextFieldID2.setBounds(new Rectangle(41, 55, 86, 22));
+		jTextFieldID2.setBounds(new Rectangle(30, 55, 100, 22));
 		jLabelNo2.setText("2");
-		jLabelNo2.setBounds(new Rectangle(12, 56, 19, 15));
+		jLabelNo2.setBounds(new Rectangle(5, 56, 19, 15));
 		jTextFieldName3.setBounds(new Rectangle(136, 82, 249, 22));
-		jTextFieldID3.setBounds(new Rectangle(41, 82, 86, 22));
-		jLabelNo3.setBounds(new Rectangle(12, 83, 19, 15));
+		jTextFieldID3.setBounds(new Rectangle(30, 82, 100, 22));
+		jLabelNo3.setBounds(new Rectangle(5, 83, 19, 15));
 		jLabelNo3.setText("3");
 		jTextFieldName4.setBounds(new Rectangle(136, 109, 249, 22));
-		jTextFieldID4.setBounds(new Rectangle(41, 109, 86, 22));
-		jLabelNo4.setBounds(new Rectangle(12, 110, 19, 15));
+		jTextFieldID4.setBounds(new Rectangle(30, 109, 100, 22));
+		jLabelNo4.setBounds(new Rectangle(5, 110, 19, 15));
 		jLabelNo4.setText("4");
 		jTextFieldName5.setBounds(new Rectangle(136, 136, 249, 22));
-		jTextFieldID5.setBounds(new Rectangle(41, 136, 86, 22));
-		jLabelNo5.setBounds(new Rectangle(12, 137, 19, 15));
+		jTextFieldID5.setBounds(new Rectangle(30, 136, 100, 22));
+		jLabelNo5.setBounds(new Rectangle(5, 137, 19, 15));
 		jLabelNo5.setText("5");
 		jTextFieldName6.setBounds(new Rectangle(136, 164, 249, 22));
-		jTextFieldID6.setBounds(new Rectangle(41, 164, 86, 22));
-		jLabelNo6.setBounds(new Rectangle(12, 165, 19, 15));
+		jTextFieldID6.setBounds(new Rectangle(30, 164, 100, 22));
+		jLabelNo6.setBounds(new Rectangle(5, 165, 19, 15));
 		jLabelNo6.setText("6");
 		jTextFieldName7.setBounds(new Rectangle(136, 191, 249, 22));
-		jTextFieldID7.setBounds(new Rectangle(41, 191, 86, 22));
-		jLabelNo7.setBounds(new Rectangle(12, 192, 19, 15));
+		jTextFieldID7.setBounds(new Rectangle(30, 191, 100, 22));
+		jLabelNo7.setBounds(new Rectangle(5, 192, 19, 15));
 		jLabelNo7.setText("7");
 		jTextFieldName8.setBounds(new Rectangle(136, 218, 249, 22));
-		jTextFieldID8.setBounds(new Rectangle(41, 218, 86, 22));
-		jLabelNo8.setBounds(new Rectangle(12, 219, 19, 15));
+		jTextFieldID8.setBounds(new Rectangle(30, 218, 100, 22));
+		jLabelNo8.setBounds(new Rectangle(5, 219, 19, 15));
 		jLabelNo8.setText("8");
 		jTextFieldName9.setBounds(new Rectangle(136, 245, 249, 22));
-		jTextFieldID9.setBounds(new Rectangle(41, 245, 86, 22));
-		jLabelNo9.setBounds(new Rectangle(12, 246, 19, 15));
+		jTextFieldID9.setBounds(new Rectangle(30, 245, 100, 22));
+		jLabelNo9.setBounds(new Rectangle(5, 246, 19, 15));
 		jLabelNo9.setText("9");
 		jTextFieldName10.setBounds(new Rectangle(136, 272, 249, 22));
-		jTextFieldID10.setBounds(new Rectangle(41, 272, 86, 22));
-		jLabelNo10.setBounds(new Rectangle(12, 273, 19, 15));
+		jTextFieldID10.setBounds(new Rectangle(30, 272, 100, 22));
+		jLabelNo10.setBounds(new Rectangle(5, 273, 19, 15));
 		jLabelNo10.setText("10");
-		//
+
 		labelList.add(jLabelNo1);
 		labelList.add(jLabelNo2);
 		labelList.add(jLabelNo3);
@@ -234,35 +234,30 @@ public class DialogAddList extends JDialog {
 			idList.get(i).setFont(new java.awt.Font("Dialog", 0, 12));
 			nameList.get(i).setFont(new java.awt.Font("Dialog", 0, 12));
 		}
-		//
+
 		this.getContentPane().add(jPanelButtons,  BorderLayout.SOUTH);
 		this.setResizable(false);
 		this.setSize(new Dimension(400, 347));
 		this.getContentPane().add(panelMain,  BorderLayout.CENTER);
 	}
-	//
+
 	public int request(String parentType) {
 		reply = 0;
 		parentType_ = parentType;
-		//
-		//for (int i = 0; i < 10; i++) {
-		//	idList.get(i).setText("");
-		//	nameList.get(i).setText("");
-		//}
-		//
+
 		if (parentType_.equals("MenuList")) {
 			this.setTitle(res.getString("AddNewMenus"));
-			jLabelHeadID.setText("ID(Max10)");
+			jLabelHeadID.setText(res.getString("IDWithLength1")+"2"+res.getString("IDWithLength2"));
 			jLabelHeadName.setText(res.getString("MenuName"));
 			for (int i = 0; i < 10; i++) {
 				idList.get(i).setText("");
-				idList.get(i).setMaxLength(10);
+				idList.get(i).setMaxLength(2);
 				nameList.get(i).setText("");
 			}
 		}
 		if (parentType_.equals("SubsystemList")) {
 			this.setTitle(res.getString("AddNewSubsystems"));
-			jLabelHeadID.setText("ID(Max10)");
+			jLabelHeadID.setText(res.getString("IDWithLength1")+"10"+res.getString("IDWithLength2"));
 			jLabelHeadName.setText(res.getString("SubsystemName"));
 			for (int i = 0; i < 10; i++) {
 				idList.get(i).setText("");
@@ -272,7 +267,7 @@ public class DialogAddList extends JDialog {
 		}
 		if (parentType_.equals("TableList")) {
 			this.setTitle(res.getString("AddNewTables"));
-			jLabelHeadID.setText("ID(Max20)");
+			jLabelHeadID.setText(res.getString("IDWithLength1")+"20"+res.getString("IDWithLength2"));
 			jLabelHeadName.setText(res.getString("TableName"));
 			for (int i = 0; i < 10; i++) {
 				idList.get(i).setText("");
@@ -282,7 +277,8 @@ public class DialogAddList extends JDialog {
 		}
 		if (parentType_.equals("TableFieldList")) {
 			this.setTitle(res.getString("AddNewFields"));
-			jLabelHeadID.setText("ID(Max40)");
+			jLabelHeadID.setText(res.getString("IDWithLength1")+"40"+res.getString("IDWithLength2"));
+			//jLabelHeadID.setText("ID(Max40)");
 			jLabelHeadName.setText(res.getString("FieldName"));
 			for (int i = 0; i < 10; i++) {
 				idList.get(i).setText("");
@@ -290,7 +286,7 @@ public class DialogAddList extends JDialog {
 				nameList.get(i).setText("");
 			}
 		}
-		//
+
 		jTextFieldID1.requestFocus();
 		jPanelButtons.getRootPane().setDefaultButton(jButtonOK);
 		Dimension dlgSize = this.getPreferredSize();
@@ -299,32 +295,23 @@ public class DialogAddList extends JDialog {
 		this.setLocation((frmSize.width - dlgSize.width) / 2 + loc.x, (frmSize.height - dlgSize.height) / 2 + loc.y);
 		this.pack();
 		super.setVisible(true);
-		//
+
 		return reply;
 	}
 
 	void jButtonOK_actionPerformed(ActionEvent e) {
 		org.w3c.dom.Element element;
-		//TableRowNumber tableRowNumber;
 		reply = 1;
 		boolean noError = true;
 		boolean duplicated;
 		NodeList nodeList;
-		//
+
 		if (noError) {
 			for (int i = 0; i < 10; i++) {
 				if (!idList.get(i).getText().equals("") && !nameList.get(i).getText().equals("")) {
 					idList.get(i).setText(frame_.getCaseShiftValue(idList.get(i).getText(), "Upper"));
 					if (parentType_.equals("TableFieldList")) {
 						duplicated = false;
-//						for (int j = 0; j < frame_.tableModelTableFieldList.getRowCount(); j++) {
-//						tableRowNumber = (TableRowNumber)frame_.tableModelTableFieldList.getValueAt(j, 0);
-//						element = tableRowNumber.getElement();
-//						if (element.getAttribute("ID").equals(idList.get(i).getText())) {
-//							duplicated = true;
-//							break;
-//						}
-//					}
 						nodeList = frame_.currentMainTreeNode.getElement().getElementsByTagName("Field");
 						for (int j = 0; j < nodeList.getLength(); j++) {
 							element = (org.w3c.dom.Element)nodeList.item(j);
@@ -349,16 +336,15 @@ public class DialogAddList extends JDialog {
 					}
 				}
 			}
-			//
 			this.setVisible(false);
 		}
 	}
-	//
+
 	void jButtonImport_actionPerformed(ActionEvent e) {
 		reply = 2;
 		this.setVisible(false);
 	}
-	//
+
 	void jButtonCancel_actionPerformed(ActionEvent e) {
 		this.setVisible(false);
 	}

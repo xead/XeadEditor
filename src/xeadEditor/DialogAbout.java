@@ -43,7 +43,11 @@ public class DialogAbout extends JDialog implements ActionListener {
 	 * Application Information
 	 */
 	public static final String APPLICATION_NAME  = "XEAD Editor 1.1";
-	public static final String FULL_VERSION  = "V1.R1.M28";
+	public static final String FULL_VERSION  = "V1.R1.M29";
+	//29
+	//・DB属性として「DBCPオプション」を追加した
+	//・メニューＩＤの最長桁をセッションログのメニューＩＤに合わせて２に制限した
+	//
 	//28
 	//・DB接続リストの設定に関してロジックを整理した
 	//・モジュールチェックのパネルのボタン配置を改善した

@@ -318,6 +318,8 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldSystemDBUser = new JTextField();
 	private JLabel jLabelSystemDBPassword = new JLabel();
 	private JTextField jTextFieldSystemDBPassword = new JTextField();
+	private JLabel jLabelSystemDBCPOptions = new JLabel();
+	private JTextField jTextFieldSystemDBCPOptions = new JTextField();
 	private JCheckBox jCheckBoxSystemAutoConnectToEdit = new JCheckBox();
 	private JLabel jLabelSystemVariantsTable = new JLabel();
 	private JTextField jTextFieldSystemVariantsTable = new JTextField();
@@ -356,6 +358,8 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldSystemSubDBUser = new JTextField();
 	private JLabel jLabelSystemSubDBPassword = new JLabel();
 	private JTextField jTextFieldSystemSubDBPassword = new JTextField();
+	private JLabel jLabelSystemSubDBCPOptions = new JLabel();
+	private JTextField jTextFieldSystemSubDBCPOptions = new JTextField();
 	private JScrollPane jScrollPaneSystemSubDBUsageList = new JScrollPane();
 	private TableModelReadOnlyList tableModelSystemSubDBUsageList = new TableModelReadOnlyList();
 	private JTable jTableSystemSubDBUsageList = new JTable(tableModelSystemSubDBUsageList);
@@ -869,10 +873,6 @@ public class Editor extends JFrame {
 	private ButtonGroup buttonGroupFunction000ConsoleOption = new ButtonGroup();
 	private JLabel jLabelFunction000TimerDefault = new JLabel();
 	private JTextField jTextFieldFunction000TimerDefault = new JTextField();
-	//private SpinnerNumberModel spinnerNumberModelHour = new SpinnerNumberModel(00, 00, 24, 1);
-	//private JSpinner jSpinnerFunction000TimerDefaultHour = new JSpinner(spinnerNumberModelHour);
-	//private SpinnerNumberModel spinnerNumberModelMinuite = new SpinnerNumberModel(00, 00, 55, 5);
-	//private JSpinner jSpinnerFunction000TimerDefaultMinuite = new JSpinner(spinnerNumberModelMinuite);
 	private JLabel jLabelFunction000TimerMessage = new JLabel();
 	private JTextField jTextFieldFunction000TimerMessage = new JTextField();
 	private JScrollPane jScrollPaneFunction000Script = new JScrollPane();
@@ -1868,8 +1868,6 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldFunction310DetailField = new JTextField();
 	private JLabel jLabelFunction310DetailFieldType = new JLabel();
 	private JTextField jTextFieldFunction310DetailFieldType = new JTextField();
-	//private JLabel jLabelFunction310DetailFieldWidth = new JLabel();
-	//private JTextField jTextFieldFunction310DetailFieldWidth = new JTextField();
 	private JLabel jLabelFunction310DetailFieldLayoutOption = new JLabel();
 	private JRadioButton jRadioButtonFunction310DetailFieldLayoutOptionVertical = new JRadioButton();
 	private JRadioButton jRadioButtonFunction310DetailFieldLayoutOptionHorizontal = new JRadioButton();
@@ -1926,8 +1924,6 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldFunction310AddRowListColumn = new JTextField();
 	private JLabel jLabelFunction310AddRowListColumnType = new JLabel();
 	private JTextField jTextFieldFunction310AddRowListColumnType = new JTextField();
-	//private JLabel jLabelFunction310AddRowListColumnWidth = new JLabel();
-	//private JTextField jTextFieldFunction310AddRowListColumnWidth = new JTextField();
 	private JLabel jLabelFunction310AddRowListColumnLayoutOption = new JLabel();
 	private JRadioButton jRadioButtonFunction310AddRowListColumnLayoutOptionVertical = new JRadioButton();
 	private JRadioButton jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal = new JRadioButton();
@@ -3082,105 +3078,112 @@ public class Editor extends JFrame {
 		jLabelSystemDBName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemDBName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemDBName.setText(res.getString("DatabaseMain"));
-		jLabelSystemDBName.setBounds(new Rectangle(11, 12, 86, 15));
+		jLabelSystemDBName.setBounds(new Rectangle(5, 12, 96, 15));
 		jTextFieldSystemDBName.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldSystemDBName.setBounds(new Rectangle(105, 9, 320, 22));
 		jLabelSystemDBUser.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemDBUser.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemDBUser.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemDBUser.setText(res.getString("User"));
-		jLabelSystemDBUser.setBounds(new Rectangle(11, 40, 86, 15));
+		jLabelSystemDBUser.setBounds(new Rectangle(447, 12, 86, 15));
 		jTextFieldSystemDBUser.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemDBUser.setBounds(new Rectangle(105, 37, 105, 22));
+		jTextFieldSystemDBUser.setBounds(new Rectangle(540, 9, 105, 22));
 		jLabelSystemDBPassword.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemDBPassword.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemDBPassword.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemDBPassword.setText(res.getString("Password"));
-		jLabelSystemDBPassword.setBounds(new Rectangle(211, 40, 86, 15));
+		jLabelSystemDBPassword.setBounds(new Rectangle(647, 12, 86, 15));
 		jTextFieldSystemDBPassword.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemDBPassword.setBounds(new Rectangle(305, 37, 120, 22));
-		jCheckBoxSystemAutoConnectToEdit.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jCheckBoxSystemAutoConnectToEdit.setBounds(new Rectangle(451, 37, 250, 22));
-		jCheckBoxSystemAutoConnectToEdit.setText(res.getString("AutoConnect"));
+		jTextFieldSystemDBPassword.setBounds(new Rectangle(740, 9, 120, 22));
+		jLabelSystemDBCPOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemDBCPOptions.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelSystemDBCPOptions.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelSystemDBCPOptions.setText(res.getString("DBCPOptions"));
+		jLabelSystemDBCPOptions.setBounds(new Rectangle(5, 40, 96, 15));
+		jTextFieldSystemDBCPOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldSystemDBCPOptions.setBounds(new Rectangle(105, 37, 320, 22));
 		jLabelSystemAppServerName.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemAppServerName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemAppServerName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemAppServerName.setText(res.getString("AppServerName"));
-		jLabelSystemAppServerName.setBounds(new Rectangle(1, 68, 96, 15));
+		jLabelSystemAppServerName.setBounds(new Rectangle(437, 40, 96, 15));
 		jTextFieldSystemAppServerName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemAppServerName.setBounds(new Rectangle(105, 65, 320, 22));
+		jTextFieldSystemAppServerName.setBounds(new Rectangle(540, 37, 320, 22));
+		jCheckBoxSystemAutoConnectToEdit.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jCheckBoxSystemAutoConnectToEdit.setBounds(new Rectangle(105, 65, 250, 22));
+		jCheckBoxSystemAutoConnectToEdit.setText(res.getString("AutoConnect"));
 		//(System Control Tables)//
 		jLabelSystemVariantsTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemVariantsTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemVariantsTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemVariantsTable.setText(res.getString("SystemVariants"));
-		jLabelSystemVariantsTable.setBounds(new Rectangle(11, 116, 86, 15));
+		jLabelSystemVariantsTable.setBounds(new Rectangle(11, 96, 86, 15));
 		jTextFieldSystemVariantsTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemVariantsTable.setBounds(new Rectangle(105, 113, 80, 22));
+		jTextFieldSystemVariantsTable.setBounds(new Rectangle(105, 93, 80, 22));
 		jLabelSystemUserTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemUserTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemUserTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemUserTable.setText(res.getString("SystemUser"));
-		jLabelSystemUserTable.setBounds(new Rectangle(191, 116, 86, 15));
+		jLabelSystemUserTable.setBounds(new Rectangle(191, 96, 86, 15));
 		jTextFieldSystemUserTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemUserTable.setBounds(new Rectangle(285, 113, 80, 22));
+		jTextFieldSystemUserTable.setBounds(new Rectangle(285, 93, 80, 22));
 		jLabelSystemNumberingTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemNumberingTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemNumberingTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemNumberingTable.setText(res.getString("SystemNumbering"));
-		jLabelSystemNumberingTable.setBounds(new Rectangle(371, 116, 86, 15));
+		jLabelSystemNumberingTable.setBounds(new Rectangle(371, 96, 86, 15));
 		jTextFieldSystemNumberingTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemNumberingTable.setBounds(new Rectangle(465, 113, 80, 22));
+		jTextFieldSystemNumberingTable.setBounds(new Rectangle(465, 93, 80, 22));
 		jLabelSystemUserVariantsTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemUserVariantsTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemUserVariantsTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemUserVariantsTable.setText(res.getString("SystemUserVariants"));
-		jLabelSystemUserVariantsTable.setBounds(new Rectangle(551, 116, 86, 15));
+		jLabelSystemUserVariantsTable.setBounds(new Rectangle(551, 96, 86, 15));
 		jTextFieldSystemUserVariantsTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemUserVariantsTable.setBounds(new Rectangle(645, 113, 80, 22));
+		jTextFieldSystemUserVariantsTable.setBounds(new Rectangle(645, 93, 80, 22));
 		jLabelSystemSessionTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemSessionTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSessionTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemSessionTable.setText(res.getString("SystemSession"));
-		jLabelSystemSessionTable.setBounds(new Rectangle(11, 144, 86, 15));
+		jLabelSystemSessionTable.setBounds(new Rectangle(731, 96, 86, 15));
 		jTextFieldSystemSessionTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemSessionTable.setBounds(new Rectangle(105, 141, 80, 22));
+		jTextFieldSystemSessionTable.setBounds(new Rectangle(825, 93, 80, 22));
 		jLabelSystemSessionDetailTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemSessionDetailTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSessionDetailTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemSessionDetailTable.setText(res.getString("SystemSessionDetail"));
-		jLabelSystemSessionDetailTable.setBounds(new Rectangle(191, 144, 86, 15));
+		jLabelSystemSessionDetailTable.setBounds(new Rectangle(11, 124, 86, 15));
 		jTextFieldSystemSessionDetailTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemSessionDetailTable.setBounds(new Rectangle(285, 141, 80, 22));
+		jTextFieldSystemSessionDetailTable.setBounds(new Rectangle(105, 121, 80, 22));
 		jLabelSystemTaxTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemTaxTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemTaxTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemTaxTable.setText(res.getString("SystemTax"));
-		jLabelSystemTaxTable.setBounds(new Rectangle(371, 144, 86, 15));
+		jLabelSystemTaxTable.setBounds(new Rectangle(191, 124, 86, 15));
 		jTextFieldSystemTaxTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemTaxTable.setBounds(new Rectangle(465, 141, 80, 22));
+		jTextFieldSystemTaxTable.setBounds(new Rectangle(285, 121, 80, 22));
 		jLabelSystemCalendarTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemCalendarTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemCalendarTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemCalendarTable.setText(res.getString("SystemCalendar"));
-		jLabelSystemCalendarTable.setBounds(new Rectangle(551, 144, 86, 15));
+		jLabelSystemCalendarTable.setBounds(new Rectangle(371, 124, 86, 15));
 		jTextFieldSystemCalendarTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemCalendarTable.setBounds(new Rectangle(645, 141, 80, 22));
+		jTextFieldSystemCalendarTable.setBounds(new Rectangle(465, 121, 80, 22));
 		jLabelSystemExchangeRateAnnualTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemExchangeRateAnnualTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemExchangeRateAnnualTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemExchangeRateAnnualTable.setText(res.getString("SystemExchangeRateAnnual"));
-		jLabelSystemExchangeRateAnnualTable.setBounds(new Rectangle(11, 172, 86, 15));
+		jLabelSystemExchangeRateAnnualTable.setBounds(new Rectangle(551, 124, 86, 15));
 		jTextFieldSystemExchangeRateAnnualTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemExchangeRateAnnualTable.setBounds(new Rectangle(105, 169, 80, 22));
+		jTextFieldSystemExchangeRateAnnualTable.setBounds(new Rectangle(645, 121, 80, 22));
 		jLabelSystemExchangeRateMonthlyTable.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemExchangeRateMonthlyTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemExchangeRateMonthlyTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemExchangeRateMonthlyTable.setText(res.getString("SystemExchangeRateMonthly"));
-		jLabelSystemExchangeRateMonthlyTable.setBounds(new Rectangle(191, 172, 86, 15));
+		jLabelSystemExchangeRateMonthlyTable.setBounds(new Rectangle(731, 124, 86, 15));
 		jTextFieldSystemExchangeRateMonthlyTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemExchangeRateMonthlyTable.setBounds(new Rectangle(285, 169, 80, 22));
-		jPanelSystemConfigTop.setPreferredSize(new Dimension(10, 202));
+		jTextFieldSystemExchangeRateMonthlyTable.setBounds(new Rectangle(825, 121, 80, 22));
+		jPanelSystemConfigTop.setPreferredSize(new Dimension(10, 154));
 		jPanelSystemConfigTop.add(jLabelSystemAppServerName);
 		jPanelSystemConfigTop.add(jTextFieldSystemAppServerName);
 		jPanelSystemConfigTop.add(jLabelSystemDBName);
@@ -3190,6 +3193,8 @@ public class Editor extends JFrame {
 		jPanelSystemConfigTop.add(jTextFieldSystemDBUser);
 		jPanelSystemConfigTop.add(jLabelSystemDBPassword);
 		jPanelSystemConfigTop.add(jTextFieldSystemDBPassword);
+		jPanelSystemConfigTop.add(jLabelSystemDBCPOptions);
+		jPanelSystemConfigTop.add(jTextFieldSystemDBCPOptions);
 		jPanelSystemConfigTop.add(jLabelSystemVariantsTable);
 		jPanelSystemConfigTop.add(jTextFieldSystemVariantsTable);
 		jPanelSystemConfigTop.add(jLabelSystemUserTable);
@@ -3215,7 +3220,7 @@ public class Editor extends JFrame {
 		jSplitPaneSystemSubDB.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneSystemSubDB.add(jScrollPaneSystemSubDBList, JSplitPane.TOP);
 		jSplitPaneSystemSubDB.add(jPanelSystemSubDB, JSplitPane.BOTTOM);
-		jSplitPaneSystemSubDB.setDividerLocation(100);
+		jSplitPaneSystemSubDB.setDividerLocation(140);
 		//(Sub-DB List)//
 		jScrollPaneSystemSubDBList.setBorder(null);
 		jScrollPaneSystemSubDBList.getViewport().add(jTableSystemSubDBList, null);
@@ -3283,42 +3288,51 @@ public class Editor extends JFrame {
 		jTextFieldSystemSubDBID.setEditable(false);
 		jTextFieldSystemSubDBID.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldSystemSubDBID.setBounds(new Rectangle(105, 9, 80, 22));
-		jLabelSystemSubDBName.setEnabled(false);
-		jLabelSystemSubDBName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelSystemSubDBName.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelSystemSubDBName.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelSystemSubDBName.setText(res.getString("DatabaseSub"));
-		jLabelSystemSubDBName.setBounds(new Rectangle(311, 12, 86, 15));
-		jTextFieldSystemSubDBName.setEnabled(false);
-		jTextFieldSystemSubDBName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemSubDBName.setBounds(new Rectangle(405, 9, 327, 22));
 		jLabelSystemSubDBDescription.setEnabled(false);
 		jLabelSystemSubDBDescription.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemSubDBDescription.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSubDBDescription.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemSubDBDescription.setText(res.getString("Descriptions"));
-		jLabelSystemSubDBDescription.setBounds(new Rectangle(11, 40, 86, 15));
+		jLabelSystemSubDBDescription.setBounds(new Rectangle(218, 12, 86, 15));
 		jTextFieldSystemSubDBDescription.setEnabled(false);
 		jTextFieldSystemSubDBDescription.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemSubDBDescription.setBounds(new Rectangle(105, 37, 200, 22));
+		jTextFieldSystemSubDBDescription.setBounds(new Rectangle(312, 9, 200, 22));
+		jLabelSystemSubDBName.setEnabled(false);
+		jLabelSystemSubDBName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemSubDBName.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelSystemSubDBName.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelSystemSubDBName.setText(res.getString("DatabaseSub"));
+		jLabelSystemSubDBName.setBounds(new Rectangle(520, 12, 96, 15));
+		jTextFieldSystemSubDBName.setEnabled(false);
+		jTextFieldSystemSubDBName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldSystemSubDBName.setBounds(new Rectangle(625, 9, 320, 22));
 		jLabelSystemSubDBUser.setEnabled(false);
 		jLabelSystemSubDBUser.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemSubDBUser.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSubDBUser.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemSubDBUser.setText(res.getString("User"));
-		jLabelSystemSubDBUser.setBounds(new Rectangle(311, 40, 86, 15));
+		jLabelSystemSubDBUser.setBounds(new Rectangle(11, 40, 86, 15));
 		jTextFieldSystemSubDBUser.setEnabled(false);
 		jTextFieldSystemSubDBUser.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemSubDBUser.setBounds(new Rectangle(405, 37, 105, 22));
+		jTextFieldSystemSubDBUser.setBounds(new Rectangle(105, 37, 105, 22));
 		jLabelSystemSubDBPassword.setEnabled(false);
 		jLabelSystemSubDBPassword.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelSystemSubDBPassword.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSubDBPassword.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemSubDBPassword.setText(res.getString("Password"));
-		jLabelSystemSubDBPassword.setBounds(new Rectangle(518, 40, 86, 15));
+		jLabelSystemSubDBPassword.setBounds(new Rectangle(218, 40, 86, 15));
 		jTextFieldSystemSubDBPassword.setEnabled(false);
 		jTextFieldSystemSubDBPassword.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemSubDBPassword.setBounds(new Rectangle(612, 37, 120, 22));
+		jTextFieldSystemSubDBPassword.setBounds(new Rectangle(312, 37, 120, 22));
+		jLabelSystemSubDBCPOptions.setEnabled(false);
+		jLabelSystemSubDBCPOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemSubDBCPOptions.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelSystemSubDBCPOptions.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelSystemSubDBCPOptions.setText(res.getString("DBCPOptions"));
+		jLabelSystemSubDBCPOptions.setBounds(new Rectangle(520, 40, 96, 15));
+		jTextFieldSystemSubDBCPOptions.setEnabled(false);
+		jTextFieldSystemSubDBCPOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldSystemSubDBCPOptions.setBounds(new Rectangle(625, 37, 320, 22));
 		jPanelSystemSubDB.setLayout(new BorderLayout());
 		jPanelSystemSubDB.add(jPanelSystemSubDBTop, BorderLayout.NORTH);
 		jPanelSystemSubDB.add(jScrollPaneSystemSubDBUsageList, BorderLayout.CENTER);
@@ -3326,14 +3340,16 @@ public class Editor extends JFrame {
 		jPanelSystemSubDBTop.setLayout(null);
 		jPanelSystemSubDBTop.add(jLabelSystemSubDBID);
 		jPanelSystemSubDBTop.add(jTextFieldSystemSubDBID);
-		jPanelSystemSubDBTop.add(jLabelSystemSubDBName);
-		jPanelSystemSubDBTop.add(jTextFieldSystemSubDBName);
 		jPanelSystemSubDBTop.add(jLabelSystemSubDBDescription);
 		jPanelSystemSubDBTop.add(jTextFieldSystemSubDBDescription);
+		jPanelSystemSubDBTop.add(jLabelSystemSubDBName);
+		jPanelSystemSubDBTop.add(jTextFieldSystemSubDBName);
 		jPanelSystemSubDBTop.add(jLabelSystemSubDBUser);
 		jPanelSystemSubDBTop.add(jTextFieldSystemSubDBUser);
 		jPanelSystemSubDBTop.add(jLabelSystemSubDBPassword);
 		jPanelSystemSubDBTop.add(jTextFieldSystemSubDBPassword);
+		jPanelSystemSubDBTop.add(jLabelSystemSubDBCPOptions);
+		jPanelSystemSubDBTop.add(jTextFieldSystemSubDBCPOptions);
 		//
 		//(Login Script)//
 		jTabbedPaneSystem.addTab(res.getString("LoginScript"), jScrollPaneSystemLoginScript);
@@ -5241,20 +5257,6 @@ public class Editor extends JFrame {
 		jLabelFunction000TimerDefault.setBounds(new Rectangle(400, 39, 96, 15));
 		jTextFieldFunction000TimerDefault.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jTextFieldFunction000TimerDefault.setBounds(new Rectangle(504, 36, 309, 22));
-//		jSpinnerFunction000TimerDefaultHour.setFont(new java.awt.Font("SansSerif", 0, 14));
-//		jSpinnerFunction000TimerDefaultHour.setBounds(new Rectangle(563, 39, 40, 18));
-//	    JSpinner.NumberEditor editorHour = new JSpinner.NumberEditor(jSpinnerFunction000TimerDefaultHour, "00");
-//	    jSpinnerFunction000TimerDefaultHour.setEditor(editorHour);
-//	    JFormattedTextField ftextHour = editorHour.getTextField();
-//	    ftextHour.setEditable(false);
-//		ftextHour.setBackground(Color.white);
-//		jSpinnerFunction000TimerDefaultMinuite.setFont(new java.awt.Font("SansSerif", 0, 14));
-//		jSpinnerFunction000TimerDefaultMinuite.setBounds(new Rectangle(603, 39, 40, 18));
-//	    JSpinner.NumberEditor editorMin = new JSpinner.NumberEditor(jSpinnerFunction000TimerDefaultMinuite, "00");
-//	    jSpinnerFunction000TimerDefaultMinuite.setEditor(editorMin);
-//	    JFormattedTextField ftextMin = editorMin.getTextField();
-//	    ftextMin.setEditable(false);
-//		ftextMin.setBackground(Color.white);
 		jLabelFunction000TimerMessage.setFont(new java.awt.Font("SansSerif", 0, 12));
 		jLabelFunction000TimerMessage.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction000TimerMessage.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -5275,8 +5277,6 @@ public class Editor extends JFrame {
 		jPanelFunction000Top.add(jRadioButtonFunction000ConsoleOptionTimer);
 		jPanelFunction000Top.add(jLabelFunction000TimerDefault);
 		jPanelFunction000Top.add(jTextFieldFunction000TimerDefault);
-		//jPanelFunction000Top.add(jSpinnerFunction000TimerDefaultHour);
-		//jPanelFunction000Top.add(jSpinnerFunction000TimerDefaultMinuite);
 		jPanelFunction000Top.add(jLabelFunction000TimerMessage);
 		jPanelFunction000Top.add(jTextFieldFunction000TimerMessage);
 		//
@@ -15223,23 +15223,27 @@ public class Editor extends JFrame {
 					if (answer == null || answer.equals("")) {
 						ready = true;
 					} else {
-						duplicated = false;
-						for (int i = 0; i < this.getChildCount(); i++) {
-							workElement = ((MainTreeNode)this.getChildAt(i)).getElement();
-							if (workElement.getAttribute("ID").equals(answer)) {
-								duplicated = true;
-								break;
-							}
-						}
-						if (duplicated) {
-							JOptionPane.showMessageDialog(null, res.getString("ErrorMessage16") + answer + res.getString("ErrorMessage17"));
+						if (answer.length() > 2) {
+							JOptionPane.showMessageDialog(null, res.getString("ErrorMessage127"));
 						} else {
-							newElement.setAttribute("ID", answer);
-							newElement.setAttribute("Name", newElement.getAttribute("Name") + res.getString("CopiedNameExt"));
-							systemNode.getElement().appendChild(newElement);
-							childNode = new MainTreeNode("Menu", newElement, this.getEditor());
-							this.add(childNode);
-							ready = true;
+							duplicated = false;
+							for (int i = 0; i < this.getChildCount(); i++) {
+								workElement = ((MainTreeNode)this.getChildAt(i)).getElement();
+								if (workElement.getAttribute("ID").equals(answer)) {
+									duplicated = true;
+									break;
+								}
+							}
+							if (duplicated) {
+								JOptionPane.showMessageDialog(null, res.getString("ErrorMessage16") + answer + res.getString("ErrorMessage17"));
+							} else {
+								newElement.setAttribute("ID", answer);
+								newElement.setAttribute("Name", newElement.getAttribute("Name") + res.getString("CopiedNameExt"));
+								systemNode.getElement().appendChild(newElement);
+								childNode = new MainTreeNode("Menu", newElement, this.getEditor());
+								this.add(childNode);
+								ready = true;
+							}
 						}
 					}
 				}
@@ -15255,62 +15259,66 @@ public class Editor extends JFrame {
 					if (answer == null || answer.equals("")) {
 						ready = true;
 					} else {
-						answer = getCaseShiftValue(answer, "Upper");
-						duplicated = false;
-						for (int i = 0; i < subsystemListNode.getChildCount(); i++) {
-							for (int j = 0; j < subsystemListNode.getChildAt(i).getChildAt(0).getChildCount(); j++) {
-								workElement = ((MainTreeNode)subsystemListNode.getChildAt(i).getChildAt(0).getChildAt(j)).getElement();
-								if (workElement.getAttribute("ID").equals(answer)) {
-									duplicated = true;
+						if (answer.length() > 20) {
+							JOptionPane.showMessageDialog(null, res.getString("ErrorMessage127"));
+						} else {
+							answer = getCaseShiftValue(answer, "Upper");
+							duplicated = false;
+							for (int i = 0; i < subsystemListNode.getChildCount(); i++) {
+								for (int j = 0; j < subsystemListNode.getChildAt(i).getChildAt(0).getChildCount(); j++) {
+									workElement = ((MainTreeNode)subsystemListNode.getChildAt(i).getChildAt(0).getChildAt(j)).getElement();
+									if (workElement.getAttribute("ID").equals(answer)) {
+										duplicated = true;
+										break;
+									}
+								}
+								if (duplicated) {
 									break;
 								}
 							}
 							if (duplicated) {
-								break;
-							}
-						}
-						if (duplicated) {
-							JOptionPane.showMessageDialog(null, res.getString("ErrorMessage16") + answer + res.getString("ErrorMessage17"));
-						} else {
-							newElement = (org.w3c.dom.Element)pastingElement.cloneNode(false);
-							newElement.setAttribute("ID", answer);
-							newElement.setAttribute("Name", newElement.getAttribute("Name") + res.getString("CopiedNameExt"));
-							String subsystemID = ((MainTreeNode)this.getParent()).getElement().getAttribute("ID");
-							newElement.setAttribute("SubsystemID", subsystemID);
+								JOptionPane.showMessageDialog(null, res.getString("ErrorMessage16") + answer + res.getString("ErrorMessage17"));
+							} else {
+								newElement = (org.w3c.dom.Element)pastingElement.cloneNode(false);
+								newElement.setAttribute("ID", answer);
+								newElement.setAttribute("Name", newElement.getAttribute("Name") + res.getString("CopiedNameExt"));
+								String subsystemID = ((MainTreeNode)this.getParent()).getElement().getAttribute("ID");
+								newElement.setAttribute("SubsystemID", subsystemID);
 
-							nodeList = pastingElement.getElementsByTagName("Field");
-							for (int i = 0; i < nodeList.getLength(); i++) {
-								newElement.appendChild(nodeList.item(i).cloneNode(false));
-							}
+								nodeList = pastingElement.getElementsByTagName("Field");
+								for (int i = 0; i < nodeList.getLength(); i++) {
+									newElement.appendChild(nodeList.item(i).cloneNode(false));
+								}
 
-							nodeList = pastingElement.getElementsByTagName("Key");
-							for (int i = 0; i < nodeList.getLength(); i++) {
-								newElement.appendChild(nodeList.item(i).cloneNode(false));
-							}
+								nodeList = pastingElement.getElementsByTagName("Key");
+								for (int i = 0; i < nodeList.getLength(); i++) {
+									newElement.appendChild(nodeList.item(i).cloneNode(false));
+								}
 
-							nodeList = pastingElement.getElementsByTagName("Refer");
-							for (int i = 0; i < nodeList.getLength(); i++) {
-								workElement = (org.w3c.dom.Element)nodeList.item(i).cloneNode(false);
-								wrkStr = workElement.getAttribute("WithKeyFields");
-								wrkStr = wrkStr.replaceAll(currentID+".", answer+".");
-								workElement.setAttribute("WithKeyFields", wrkStr);
-								newElement.appendChild(workElement);
-							}
+								nodeList = pastingElement.getElementsByTagName("Refer");
+								for (int i = 0; i < nodeList.getLength(); i++) {
+									workElement = (org.w3c.dom.Element)nodeList.item(i).cloneNode(false);
+									wrkStr = workElement.getAttribute("WithKeyFields");
+									wrkStr = wrkStr.replaceAll(currentID+".", answer+".");
+									workElement.setAttribute("WithKeyFields", wrkStr);
+									newElement.appendChild(workElement);
+								}
 
-							nodeList = pastingElement.getElementsByTagName("Script");
-							for (int i = 0; i < nodeList.getLength(); i++) {
-								workElement = (org.w3c.dom.Element)nodeList.item(i).cloneNode(false);
-								wrkStr = workElement.getAttribute("Text");
-								wrkStr = wrkStr.replaceAll(currentID+"_", answer+"_");
-								workElement.setAttribute("Text", wrkStr);
-								newElement.appendChild(workElement);
-							}
+								nodeList = pastingElement.getElementsByTagName("Script");
+								for (int i = 0; i < nodeList.getLength(); i++) {
+									workElement = (org.w3c.dom.Element)nodeList.item(i).cloneNode(false);
+									wrkStr = workElement.getAttribute("Text");
+									wrkStr = wrkStr.replaceAll(currentID+"_", answer+"_");
+									workElement.setAttribute("Text", wrkStr);
+									newElement.appendChild(workElement);
+								}
 
-							systemNode.getElement().appendChild(newElement);
-							childNode = new MainTreeNode("Table", newElement, this.getEditor());
-							childNode.setErrorStatus("ER1");
-							this.add(childNode);
-							ready = true;
+								systemNode.getElement().appendChild(newElement);
+								childNode = new MainTreeNode("Table", newElement, this.getEditor());
+								childNode.setErrorStatus("ER1");
+								this.add(childNode);
+								ready = true;
+							}
 						}
 					}
 				}
@@ -15326,30 +15334,34 @@ public class Editor extends JFrame {
 					if (answer == null || answer.equals("")) {
 						ready = true;
 					} else {
-						duplicated = false;
-						for (int i = 0; i < subsystemListNode.getChildCount(); i++) {
-							for (int j = 0; j < subsystemListNode.getChildAt(i).getChildAt(1).getChildCount(); j++) {
-								workElement = ((MainTreeNode)subsystemListNode.getChildAt(i).getChildAt(1).getChildAt(j)).getElement();
-								if (workElement.getAttribute("ID").equals(answer)) {
-									duplicated = true;
+						if (answer.length() > 10) {
+							JOptionPane.showMessageDialog(null, res.getString("ErrorMessage127"));
+						} else {
+							duplicated = false;
+							for (int i = 0; i < subsystemListNode.getChildCount(); i++) {
+								for (int j = 0; j < subsystemListNode.getChildAt(i).getChildAt(1).getChildCount(); j++) {
+									workElement = ((MainTreeNode)subsystemListNode.getChildAt(i).getChildAt(1).getChildAt(j)).getElement();
+									if (workElement.getAttribute("ID").equals(answer)) {
+										duplicated = true;
+										break;
+									}
+								}
+								if (duplicated) {
 									break;
 								}
 							}
 							if (duplicated) {
-								break;
+								JOptionPane.showMessageDialog(null, res.getString("ErrorMessage16") + answer + res.getString("ErrorMessage17"));
+							} else {
+								newElement.setAttribute("ID", answer);
+								newElement.setAttribute("Name", newElement.getAttribute("Name") + res.getString("CopiedNameExt"));
+								String subsystemID = ((MainTreeNode)this.getParent()).getElement().getAttribute("ID");
+								newElement.setAttribute("SubsystemID", subsystemID);
+								systemNode.getElement().appendChild(newElement);
+								childNode = new MainTreeNode("Function", newElement, this.getEditor());
+								this.add(childNode);
+								ready = true;
 							}
-						}
-						if (duplicated) {
-							JOptionPane.showMessageDialog(null, res.getString("ErrorMessage16") + answer + res.getString("ErrorMessage17"));
-						} else {
-							newElement.setAttribute("ID", answer);
-							newElement.setAttribute("Name", newElement.getAttribute("Name") + res.getString("CopiedNameExt"));
-							String subsystemID = ((MainTreeNode)this.getParent()).getElement().getAttribute("ID");
-							newElement.setAttribute("SubsystemID", subsystemID);
-							systemNode.getElement().appendChild(newElement);
-							childNode = new MainTreeNode("Function", newElement, this.getEditor());
-							this.add(childNode);
-							ready = true;
 						}
 					}
 				}
@@ -15496,14 +15508,20 @@ public class Editor extends JFrame {
 			jTextFieldSystemName.setText(domNode_.getAttribute("Name"));
 			jTextFieldSystemVersion.setText(domNode_.getAttribute("Version"));
 			jTextAreaSystemRemarks.setText(substringLinesWithTokenOfEOL(domNode_.getAttribute("Remarks"), "\n"));
+
+			jTextFieldSystemDBName.setText(domNode_.getAttribute("DatabaseName"));
+			jTextFieldSystemDBUser.setText(domNode_.getAttribute("DatabaseUser"));
+			jTextFieldSystemDBPassword.setText(domNode_.getAttribute("DatabasePassword"));
 			if (domNode_.getAttribute("AppServerName").equals("")) {
 				jTextFieldSystemAppServerName.setText("*None");
 			} else {
 				jTextFieldSystemAppServerName.setText(domNode_.getAttribute("AppServerName"));
 			}
-			jTextFieldSystemDBName.setText(domNode_.getAttribute("DatabaseName"));
-			jTextFieldSystemDBUser.setText(domNode_.getAttribute("DatabaseUser"));
-			jTextFieldSystemDBPassword.setText(domNode_.getAttribute("DatabasePassword"));
+			if (domNode_.getAttribute("DBCP").equals("")) {
+				jTextFieldSystemDBCPOptions.setText("*Default");
+			} else {
+				jTextFieldSystemDBCPOptions.setText(domNode_.getAttribute("DBCP"));
+			}
 			if (domNode_.getAttribute("AutoConnectToEdit").equals("T")) {
 				jCheckBoxSystemAutoConnectToEdit.setSelected(true);
 			} else {
@@ -15541,16 +15559,23 @@ public class Editor extends JFrame {
 			jLabelSystemSubDBDescription.setEnabled(false);
 			jLabelSystemSubDBUser.setEnabled(false);
 			jLabelSystemSubDBPassword.setEnabled(false);
+			jLabelSystemSubDBCPOptions.setEnabled(false);
 			jTextFieldSystemSubDBID.setEnabled(false);
 			jTextFieldSystemSubDBName.setEnabled(false);
 			jTextFieldSystemSubDBDescription.setEnabled(false);
 			jTextFieldSystemSubDBUser.setEnabled(false);
 			jTextFieldSystemSubDBPassword.setEnabled(false);
+			jTextFieldSystemSubDBCPOptions.setEnabled(false);
 			jTextFieldSystemSubDBID.setText("");
 			jTextFieldSystemSubDBDescription.setText("");
 			jTextFieldSystemSubDBName.setText("");
 			jTextFieldSystemSubDBUser.setText("");
 			jTextFieldSystemSubDBPassword.setText("");
+			jTextFieldSystemSubDBCPOptions.setText("");
+			if (tableModelSystemSubDBUsageList.getRowCount() > 0) {
+				int rowCount = tableModelSystemSubDBUsageList.getRowCount();
+				for (int i = 0; i < rowCount; i++) {tableModelSystemSubDBUsageList.removeRow(0);}
+			}
 
 			jTextFieldSystemImageFileFolder.setText(domNode_.getAttribute("ImageFileFolder"));
 			if (domNode_.getAttribute("OutputFolder").equals("")) {
@@ -18745,6 +18770,15 @@ public class Editor extends JFrame {
 				valueOfFieldsChanged = true;
 			}
 			//
+			if (!domNode_.getAttribute("DatabaseName").equals(jTextFieldSystemDBName.getText())) {
+				valueOfFieldsChanged = true;
+			}
+			if (!domNode_.getAttribute("DatabaseUser").equals(jTextFieldSystemDBUser.getText())) {
+				valueOfFieldsChanged = true;
+			}
+			if (!domNode_.getAttribute("DatabasePassword").equals(jTextFieldSystemDBPassword.getText())) {
+				valueOfFieldsChanged = true;
+			}
 			if (jTextFieldSystemAppServerName.getText().equals("")
 					|| jTextFieldSystemAppServerName.getText().toUpperCase().equals("*NONE")) {
 				if (!domNode_.getAttribute("AppServerName").equals("")) {
@@ -18755,14 +18789,15 @@ public class Editor extends JFrame {
 					valueOfFieldsChanged = true;
 				}
 			}
-			if (!domNode_.getAttribute("DatabaseName").equals(jTextFieldSystemDBName.getText())) {
-				valueOfFieldsChanged = true;
-			}
-			if (!domNode_.getAttribute("DatabaseUser").equals(jTextFieldSystemDBUser.getText())) {
-				valueOfFieldsChanged = true;
-			}
-			if (!domNode_.getAttribute("DatabasePassword").equals(jTextFieldSystemDBPassword.getText())) {
-				valueOfFieldsChanged = true;
+			if (jTextFieldSystemDBCPOptions.getText().equals("")
+					|| jTextFieldSystemDBCPOptions.getText().toUpperCase().equals("*DEFAULT")) {
+				if (!domNode_.getAttribute("DBCP").equals("")) {
+					valueOfFieldsChanged = true;
+				}
+			} else {
+				if (!domNode_.getAttribute("DBCP").equals(jTextFieldSystemDBCPOptions.getText())) {
+					valueOfFieldsChanged = true;
+				}
 			}
 			if (domNode_.getAttribute("AutoConnectToEdit").equals("T")) {
 				if (!jCheckBoxSystemAutoConnectToEdit.isSelected()) {
@@ -18873,14 +18908,19 @@ public class Editor extends JFrame {
 				//
 				domNode_.setAttribute("Remarks", concatLinesWithTokenOfEOL(jTextAreaSystemRemarks.getText()));
 				//
+				domNode_.setAttribute("DatabaseName", jTextFieldSystemDBName.getText());
+				domNode_.setAttribute("DatabaseUser", jTextFieldSystemDBUser.getText());
+				domNode_.setAttribute("DatabasePassword", jTextFieldSystemDBPassword.getText());
 				if (jTextFieldSystemAppServerName.getText().equals("") || jTextFieldSystemAppServerName.getText().toUpperCase().equals("*NONE")) {
 					domNode_.setAttribute("AppServerName", "");
 				} else {
 					domNode_.setAttribute("AppServerName", jTextFieldSystemAppServerName.getText());
 				}
-				domNode_.setAttribute("DatabaseName", jTextFieldSystemDBName.getText());
-				domNode_.setAttribute("DatabaseUser", jTextFieldSystemDBUser.getText());
-				domNode_.setAttribute("DatabasePassword", jTextFieldSystemDBPassword.getText());
+				if (jTextFieldSystemDBCPOptions.getText().equals("") || jTextFieldSystemDBCPOptions.getText().toUpperCase().equals("*DEFAULT")) {
+					domNode_.setAttribute("DBCP", "");
+				} else {
+					domNode_.setAttribute("DBCP", jTextFieldSystemDBCPOptions.getText());
+				}
 				if (jCheckBoxSystemAutoConnectToEdit.isSelected()) {
 					domNode_.setAttribute("AutoConnectToEdit", "T");
 					setupConnectionList(true);
@@ -18980,6 +19020,19 @@ public class Editor extends JFrame {
 				if (!wrkStr.equals(element.getAttribute("Password"))) {
 					valueOfFieldsChanged = true;
 					element.setAttribute("Password", wrkStr);
+				}
+				//
+				wrkStr = jTextFieldSystemSubDBCPOptions.getText();
+				if (wrkStr.equals("") || wrkStr.toUpperCase().equals("*DEFAULT")) {
+					if (!element.getAttribute("DBCP").equals("")) {
+						valueOfFieldsChanged = true;
+						element.setAttribute("DBCP", "");
+					}
+				} else {
+					if (!element.getAttribute("DBCP").equals(wrkStr)) {
+						valueOfFieldsChanged = true;
+						element.setAttribute("DBCP", wrkStr);
+					}
 				}
 				//
 				if (valueOfFieldsChanged) {
@@ -27186,28 +27239,32 @@ public class Editor extends JFrame {
 	    			if (answer == null || answer.equals("")) {
 	    				ready = true;
 	    			} else {
-	    				//answer = answer.toUpperCase();
-						answer = getCaseShiftValue(answer, "Upper");
-	    				duplicated = false;
-	    				for (int i = 0; i < tableModelTableFieldList.getRowCount(); i++) {
-	    					tableRowNumber = (TableRowNumber)tableModelTableFieldList.getValueAt(i, 0);
-	    					if (tableRowNumber.getElement().getAttribute("ID").equals(answer)) {
-	    						duplicated = true;
-	    						break;
-	    					}
-	    				}
-	    				if (duplicated) {
-	    					JOptionPane.showMessageDialog(null, res.getString("ErrorMessage16") + answer + res.getString("ErrorMessage17"));
-	    				} else {
-	    					newRowNumber = setOrderOfNewElement(jTableTableFieldList, newElement);
-	    					newElement.setAttribute("ID", answer);
-	    					newElement.setAttribute("Name", newElement.getAttribute("Name") + res.getString("CopiedNameExt"));
-	    					currentMainTreeNode.getElement().appendChild(newElement);
-	    					currentMainTreeNode.updateFields();
-	    					currentMainTreeNode.activateContentsPane(true);
-	    					jTableTableFieldList.setRowSelectionInterval(newRowNumber, newRowNumber);
-	    					ready = true;
-	    				}
+						if (answer.length() > 40) {
+							JOptionPane.showMessageDialog(null, res.getString("ErrorMessage127"));
+						} else {
+							//answer = answer.toUpperCase();
+							answer = getCaseShiftValue(answer, "Upper");
+							duplicated = false;
+							for (int i = 0; i < tableModelTableFieldList.getRowCount(); i++) {
+								tableRowNumber = (TableRowNumber)tableModelTableFieldList.getValueAt(i, 0);
+								if (tableRowNumber.getElement().getAttribute("ID").equals(answer)) {
+									duplicated = true;
+									break;
+								}
+							}
+							if (duplicated) {
+								JOptionPane.showMessageDialog(null, res.getString("ErrorMessage16") + answer + res.getString("ErrorMessage17"));
+							} else {
+								newRowNumber = setOrderOfNewElement(jTableTableFieldList, newElement);
+								newElement.setAttribute("ID", answer);
+								newElement.setAttribute("Name", newElement.getAttribute("Name") + res.getString("CopiedNameExt"));
+								currentMainTreeNode.getElement().appendChild(newElement);
+								currentMainTreeNode.updateFields();
+								currentMainTreeNode.activateContentsPane(true);
+								jTableTableFieldList.setRowSelectionInterval(newRowNumber, newRowNumber);
+								ready = true;
+							}
+						}
 	    			}
 	    		}
 	    	}
@@ -28151,16 +28208,19 @@ public class Editor extends JFrame {
 				jLabelSystemSubDBDescription.setEnabled(false);
 				jLabelSystemSubDBUser.setEnabled(false);
 				jLabelSystemSubDBPassword.setEnabled(false);
+				jLabelSystemSubDBCPOptions.setEnabled(false);
 				jTextFieldSystemSubDBID.setEnabled(false);
 				jTextFieldSystemSubDBName.setEnabled(false);
 				jTextFieldSystemSubDBDescription.setEnabled(false);
 				jTextFieldSystemSubDBUser.setEnabled(false);
 				jTextFieldSystemSubDBPassword.setEnabled(false);
+				jTextFieldSystemSubDBCPOptions.setEnabled(false);
 				jTextFieldSystemSubDBID.setText("");
 				jTextFieldSystemSubDBDescription.setText("");
 				jTextFieldSystemSubDBName.setText("");
 				jTextFieldSystemSubDBUser.setText("");
 				jTextFieldSystemSubDBPassword.setText("");
+				jTextFieldSystemSubDBCPOptions.setText("");
 				//
 				if (tableModelSystemSubDBUsageList.getRowCount() > 0) {
 					int rowCount = tableModelSystemSubDBUsageList.getRowCount();
@@ -28177,11 +28237,13 @@ public class Editor extends JFrame {
 					jLabelSystemSubDBDescription.setEnabled(true);
 					jLabelSystemSubDBUser.setEnabled(true);
 					jLabelSystemSubDBPassword.setEnabled(true);
+					jLabelSystemSubDBCPOptions.setEnabled(true);
 					jTextFieldSystemSubDBID.setEnabled(true);
 					jTextFieldSystemSubDBName.setEnabled(true);
 					jTextFieldSystemSubDBDescription.setEnabled(true);
 					jTextFieldSystemSubDBUser.setEnabled(true);
 					jTextFieldSystemSubDBPassword.setEnabled(true);
+					jTextFieldSystemSubDBCPOptions.setEnabled(true);
 					//
 					org.w3c.dom.Element element = tableRowNumber.getElement();
 					//
@@ -28190,6 +28252,11 @@ public class Editor extends JFrame {
 					jTextFieldSystemSubDBDescription.setText(element.getAttribute("Description"));
 					jTextFieldSystemSubDBUser.setText(element.getAttribute("User"));
 					jTextFieldSystemSubDBPassword.setText(element.getAttribute("Password"));
+					if (element.getAttribute("DBCP").equals("")) {
+						jTextFieldSystemSubDBCPOptions.setText("*Default");
+					} else {
+						jTextFieldSystemSubDBCPOptions.setText(element.getAttribute("DBCP"));
+					}
 					//
 					int count = 0;
 					org.w3c.dom.Element element1;
@@ -37846,7 +37913,7 @@ public class Editor extends JFrame {
 				reply = 1;
 			} catch (Exception e) {
 				Object[] bts = {res.getString("DBConnectMessage3"), res.getString("DBConnectMessage4")};
-				reply = JOptionPane.showOptionDialog(this, res.getString("DBConnectMessage1") + dbName + res.getString("DBConnectMessage2") + "\n\n" + e.getMessage(),
+				reply = JOptionPane.showOptionDialog(this, res.getString("DBConnectMessage1") + dbName + res.getString("DBConnectMessage2"),
 						res.getString("DBConnectMessage0"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
 			}
 		}
@@ -39636,17 +39703,11 @@ public class Editor extends JFrame {
 		if (jRadioButtonFunction000ConsoleOptionNo.isSelected() || jRadioButtonFunction000ConsoleOptionYes.isSelected()) {
         	jLabelFunction000TimerDefault.setEnabled(false);
 			jTextFieldFunction000TimerDefault.setEnabled(false);
-//			jSpinnerFunction000TimerDefaultHour.setEnabled(false);
-//			jSpinnerFunction000TimerDefaultMinuite.setEnabled(false);
-//			jSpinnerFunction000TimerDefaultHour.setValue(00);
-//			jSpinnerFunction000TimerDefaultMinuite.setValue(00);
         	jLabelFunction000TimerMessage.setEnabled(false);
 			jTextFieldFunction000TimerMessage.setEnabled(false);
 		} else {
         	jLabelFunction000TimerDefault.setEnabled(true);
 			jTextFieldFunction000TimerDefault.setEnabled(true);
-//			jSpinnerFunction000TimerDefaultHour.setEnabled(true);
-//			jSpinnerFunction000TimerDefaultMinuite.setEnabled(true);
         	jLabelFunction000TimerMessage.setEnabled(true);
 			jTextFieldFunction000TimerMessage.setEnabled(true);
 		}

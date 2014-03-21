@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2012 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2014 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -213,6 +213,7 @@ public class Res_ja extends java.util.ListResourceBundle {
 		{ "DBConnectMessage4", "今は接続しない" },
 		{ "DBConnectMessage5", "データベースに接続されるとともに、全テーブル定義に\nついてモジュールチェックがなされます。接続しますか？" },
 		{ "DBConnectMessage6", "接続中..." },
+		{ "DBCPOptions", "DBCPオプション" },
 		{ "Decimal", "小数桁" },
 		{ "Delete", "削除" },
 		{ "DeleteCanceled", "削除要求が取り消されました。" },
@@ -386,6 +387,7 @@ public class Res_ja extends java.util.ListResourceBundle {
 		{ "ErrorMessage124", "テーブルモジュールが存在するため、PKの変更は認可されません。「モジュール\nチェック」のオプションを用いてモジュールを削除したうえで、再試行してください。" },
 		{ "ErrorMessage125", "次のスクリプトの実行タイミングとして指定されているため、この結合テーブルは削除できません。" },
 		{ "ErrorMessage126", "機能ＩＤが正しくありません。" },
+		{ "ErrorMessage127", "ＩＤの長さが規定桁以上です。" },
 		{ "EventAC", "追加後" },
 		{ "EventAD", "削除後" },
 		{ "EventAR", "読込後" },
@@ -514,6 +516,8 @@ public class Res_ja extends java.util.ListResourceBundle {
 		{ "Hidden", "非表示" },
 		{ "HitCount", "Hit" },
 		{ "ID", "ＩＤ" },
+		{ "IDWithLength1", "ID(最長" },
+		{ "IDWithLength2", "桁)" },
 		{ "IgnoreIfZero", "0ならば無視" },
 		{ "ImageFolder", "画像フォルダ" },
 		{ "Import", "インポート" },
@@ -834,6 +838,7 @@ public class Res_ja extends java.util.ListResourceBundle {
 		{ "SelectFile", "ファイルを選んで開く" },
 		{ "SelectFromList", "（選択してください）" },
 		{ "SelectList", "選択リスト" },
+		{ "ServiceName", "サービス名" },
 		{ "SessionNo", "セッション№" },
 		{ "SizeAuto", "自動設定" },
 		{ "SizeFull", "全画面" },
