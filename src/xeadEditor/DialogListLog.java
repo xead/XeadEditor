@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2011 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2014 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -82,7 +82,6 @@ public class DialogListLog extends JDialog {
 	private JLabel jLabelTableID = new JLabel();
 	private JTextField jTextFieldTableID = new JTextField();
 	private String tableModuleID = "";
-	private JLabel jLabelTableName = new JLabel();
 	private JTextField jTextFieldTableName = new JTextField();
 	private JLabel jLabelListingOperation = new JLabel();
 	private JCheckBox jCheckBoxSelect = new JCheckBox();
@@ -120,75 +119,70 @@ public class DialogListLog extends JDialog {
 	}
 
 	private void jbInit() throws Exception {
-		//
 		panelMain.setLayout(borderLayoutMain);
-		panelMain.setPreferredSize(new Dimension(920, 570));
+		panelMain.setPreferredSize(new Dimension(1100, 700));
 		panelMain.setBorder(null);
 		panelMain.add(jPanelNorth, BorderLayout.NORTH);
 		panelMain.add(jPanelSouth, BorderLayout.SOUTH);
 		panelMain.add(jSplitPane, BorderLayout.CENTER);
-		//
+
 		jPanelNorth.setBorder(null);
-		jPanelNorth.setPreferredSize(new Dimension(800, 129));
+		jPanelNorth.setPreferredSize(new Dimension(800, 153));
 		jPanelNorth.setLayout(new BorderLayout());
-		jPanelNorth1.setPreferredSize(new Dimension(800, 38));
+		jPanelNorth1.setPreferredSize(new Dimension(800, 43));
 		jPanelNorth1.setLayout(null);
-		jLabelTableID.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableID.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelTableID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableID.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelTableID.setText(res.getString("TableID"));
-		jLabelTableID.setBounds(new Rectangle(11, 11, 96, 15));
-		jTextFieldTableID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldTableID.setBounds(new Rectangle(115, 8, 80, 22));
+		jLabelTableID.setText(res.getString("IDAndName"));
+		jLabelTableID.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldTableID.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldTableID.setBounds(new Rectangle(140, 9, 120, 25));
 		jTextFieldTableID.setEditable(false);
-		jLabelTableName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelTableName.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelTableName.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelTableName.setText(res.getString("TableName"));
-		jLabelTableName.setBounds(new Rectangle(211, 11, 96, 15));
-		jTextFieldTableName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldTableName.setBounds(new Rectangle(315, 8, 250, 22));
+		jTextFieldTableName.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldTableName.setBounds(new Rectangle(265, 9, 350, 25));
 		jTextFieldTableName.setEditable(false);
-		jButtonStartScan.setBounds(new Rectangle(650, 5, 150, 28));
-		jButtonStartScan.setFont(new java.awt.Font("Dialog", 0, 12));
+
+		jButtonStartScan.setBounds(new Rectangle(750, 8, 200, 27));
+		jButtonStartScan.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonStartScan.setText(res.getString("RetrieveLog"));
 		jButtonStartScan.addActionListener(new DialogListLog_jButtonStartScan_actionAdapter(this));
 		jButtonStartScan.setFocusCycleRoot(true);
-		jProgressBar.setBounds(new Rectangle(650, 5, 150, 28));
+		jProgressBar.setBounds(new Rectangle(750, 8, 200, 27));
 		jProgressBar.setVisible(false);
-		jScrollPaneNorth2.setPreferredSize(new Dimension(800, 38));
+
 		jScrollPaneNorth2.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 		jScrollPaneNorth2.getViewport().add(jPanelKeyFields, null);
-		jPanelNorth3.setPreferredSize(new Dimension(800, 38));
+		jPanelNorth3.setPreferredSize(new Dimension(800, 43));
 		jPanelNorth3.setLayout(null);
 		jPanelKeyFields.setLayout(null);
+
 		jLabelListingOperation.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelListingOperation.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelListingOperation.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelListingOperation.setText(res.getString("ListingOperations"));
-		jLabelListingOperation.setBounds(new Rectangle(8, 11, 90, 15));
-		jCheckBoxSelect.setBounds(new Rectangle(110, 8, 125, 22));
-		jCheckBoxSelect.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelListingOperation.setBounds(new Rectangle(5, 12, 130, 20));
+		jCheckBoxSelect.setBounds(new Rectangle(140, 9, 130, 25));
+		jCheckBoxSelect.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jCheckBoxSelect.setText("SELECT");
 		jCheckBoxSelect.setSelected(true);
-		jCheckBoxInsert.setBounds(new Rectangle(235, 8, 125, 22));
-		jCheckBoxInsert.setFont(new java.awt.Font("Dialog", 0, 12));
+		jCheckBoxInsert.setBounds(new Rectangle(270, 9, 130, 25));
+		jCheckBoxInsert.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jCheckBoxInsert.setText("INSERT");
 		jCheckBoxInsert.setSelected(true);
-		jCheckBoxUpdate.setBounds(new Rectangle(360, 8, 125, 22));
-		jCheckBoxUpdate.setFont(new java.awt.Font("Dialog", 0, 12));
+		jCheckBoxUpdate.setBounds(new Rectangle(400, 9, 130, 25));
+		jCheckBoxUpdate.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jCheckBoxUpdate.setText("UPDATE");
 		jCheckBoxUpdate.setSelected(true);
-		jCheckBoxDelete.setBounds(new Rectangle(485, 8, 125, 22));
-		jCheckBoxDelete.setFont(new java.awt.Font("Dialog", 0, 12));
+		jCheckBoxDelete.setBounds(new Rectangle(530, 9, 130, 25));
+		jCheckBoxDelete.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jCheckBoxDelete.setText("DELETE");
 		jCheckBoxDelete.setSelected(true);
-		//
+
 		jPanelNorth.add(jPanelNorth1, BorderLayout.NORTH);
 		jPanelNorth.add(jScrollPaneNorth2, BorderLayout.CENTER);
 		jPanelNorth.add(jPanelNorth3, BorderLayout.SOUTH);
 		jPanelNorth1.add(jLabelTableID);
 		jPanelNorth1.add(jTextFieldTableID);
-		jPanelNorth1.add(jLabelTableName);
 		jPanelNorth1.add(jTextFieldTableName);
 		jPanelNorth1.add(jButtonStartScan);
 		jPanelNorth1.add(jProgressBar);
@@ -197,21 +191,21 @@ public class DialogListLog extends JDialog {
 		jPanelNorth3.add(jCheckBoxInsert);
 		jPanelNorth3.add(jCheckBoxUpdate);
 		jPanelNorth3.add(jCheckBoxDelete);
-		//
+
 		jSplitPane.setBorder(null);
-		jSplitPane.setBounds(new Rectangle(11, 244, 380, 58));
 		jSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jSplitPane.setDividerLocation(300);
+		jSplitPane.setDividerLocation(400);
 		jSplitPane.setPreferredSize(new Dimension(750, 300));
 		jScrollPaneScanDetail.setBounds(new Rectangle(132, 144, 282, 51));
 		jSplitPane.add(jScrollPaneScanResult, JSplitPane.TOP);
 		jSplitPane.add(jScrollPaneScanDetail, JSplitPane.BOTTOM);
-		jTableScanResult.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableScanResult.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTableScanResult.setBackground(SystemColor.control);
 		jTableScanResult.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableScanResult.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jTableScanResult.setRowSelectionAllowed(true);
 		jTableScanResult.getSelectionModel().addListSelectionListener(new DialogListLog_jTableScanResult_listSelectionAdapter(this));
+		jTableScanResult.setRowHeight(Editor.TABLE_ROW_HEIGHT);
 		tableModelScanResult.addColumn("NO.");
 		tableModelScanResult.addColumn(res.getString("SessionNo"));
 		tableModelScanResult.addColumn(res.getString("UserID"));
@@ -226,13 +220,13 @@ public class DialogListLog extends JDialog {
 		column4 = jTableScanResult.getColumnModel().getColumn(4);
 		column5 = jTableScanResult.getColumnModel().getColumn(5);
 		column6 = jTableScanResult.getColumnModel().getColumn(6);
-		column0.setPreferredWidth(34);
-		column1.setPreferredWidth(90);
-		column2.setPreferredWidth(70);
-		column3.setPreferredWidth(150);
-		column4.setPreferredWidth(70);
-		column5.setPreferredWidth(50);
-		column6.setPreferredWidth(420);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(100);
+		column2.setPreferredWidth(80);
+		column3.setPreferredWidth(210);
+		column4.setPreferredWidth(100);
+		column5.setPreferredWidth(60);
+		column6.setPreferredWidth(470);
 		rendererAlignmentCenter.setHorizontalAlignment(0); //CENTER//
 		rendererAlignmentRight.setHorizontalAlignment(4); //RIGHT//
 		rendererAlignmentLeft.setHorizontalAlignment(2); //LEFT//
@@ -243,32 +237,32 @@ public class DialogListLog extends JDialog {
 		column4.setCellRenderer(rendererAlignmentLeft);
 		column5.setCellRenderer(rendererAlignmentLeft);
 		column6.setCellRenderer(rendererAlignmentLeft);
-		jTableScanResult.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableScanResult.getTableHeader().setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableScanResult.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(2); //LEFT//
 		jScrollPaneScanResult.getViewport().add(jTableScanResult, null);
-		jTextAreaScanDetail.setFont(new java.awt.Font("SansSerif", 0, 14));
+		jTextAreaScanDetail.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTextAreaScanDetail.setLineWrap(true);
 		jTextAreaScanDetail.setEditable(false);
 		jTextAreaScanDetail.setEditable(false);
 		jTextAreaScanDetail.setBackground(SystemColor.control);
 		jScrollPaneScanDetail.getViewport().add(jTextAreaScanDetail, null);
-		//
+
 		jPanelSouth.setBorder(BorderFactory.createEtchedBorder());
-		jPanelSouth.setPreferredSize(new Dimension(800, 40));
-		jButtonCloseDialog.setBounds(new Rectangle(20, 7, 70, 25));
-		jButtonCloseDialog.setFont(new java.awt.Font("Dialog", 0, 12));
+		jPanelSouth.setPreferredSize(new Dimension(100, 43));
+		jButtonCloseDialog.setBounds(new Rectangle(20, 8, 100, 27));
+		jButtonCloseDialog.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonCloseDialog.setText(res.getString("Close"));
 		jButtonCloseDialog.addActionListener(new DialogListLog_jButtonCloseDialog_actionAdapter(this));
-		jButtonGenerateListData.setBounds(new Rectangle(760, 7, 90, 25));
-		jButtonGenerateListData.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonGenerateListData.setBounds(new Rectangle(800, 8, 120, 27));
+		jButtonGenerateListData.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonGenerateListData.setText(res.getString("GenerateList"));
 		jButtonGenerateListData.setEnabled(false);
 		jButtonGenerateListData.addActionListener(new DialogListLog_jButtonGenerateListData_actionAdapter(this));
 		jPanelSouth.setLayout(null);
 		jPanelSouth.add(jButtonGenerateListData);
 		jPanelSouth.add(jButtonCloseDialog);
-		//
+
 		this.setResizable(false);
 		this.setTitle(res.getString("ListLogTitle"));
 		this.getContentPane().add(panelMain);
@@ -286,7 +280,7 @@ public class DialogListLog extends JDialog {
 		Editor_EditableTableField editableField;
 		Dimension dim;
 		JLabel label = new JLabel();
-		FontMetrics metrics = label.getFontMetrics(new java.awt.Font("SansSerif", 0, 12));
+		FontMetrics metrics = label.getFontMetrics(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		StringTokenizer workTokenizer;
 		//
 		jTextFieldTableID.setText(tableElement.getAttribute("ID"));

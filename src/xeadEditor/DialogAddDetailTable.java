@@ -32,10 +32,14 @@ package xeadEditor;
  */
 
 import java.awt.*;
+
 import javax.swing.*;
+
 import org.w3c.dom.NodeList;
+
 import xeadEditor.Editor.SortableDomElementListModel;
 import xeadEditor.Editor.MainTreeNode;
+
 import java.awt.event.*;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
@@ -84,34 +88,34 @@ public class DialogAddDetailTable extends JDialog {
 		this.getContentPane().setLayout(new BorderLayout());
 		//
 		jLabelID.setText(res.getString("DTLTableID"));
-		jLabelID.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelID.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelID.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelID.setBounds(new Rectangle(11, 12, 89, 15));
-		jTextFieldID.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldID.setBounds(new Rectangle(105, 9, 70, 21));
+		jLabelID.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldID.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldID.setBounds(new Rectangle(140, 9, 120, 25));
 		jTextFieldID.addKeyListener(new DialogAddDetailTable_jTextFieldID_keyAdapter(this));
-		jTextFieldName.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldName.setBounds(new Rectangle(180, 9, 305, 22));
+		jTextFieldName.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldName.setBounds(new Rectangle(265, 9, 350, 25));
 		jTextFieldName.setEditable(false);
 		jTextFieldName.setFocusable(false);
 		jLabelHdrKeyFields.setText(res.getString("HDRTableKeys"));
-		jLabelHdrKeyFields.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelHdrKeyFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelHdrKeyFields.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelHdrKeyFields.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelHdrKeyFields.setBounds(new Rectangle(11, 40, 89, 15));
-		jTextFieldHdrKeyFields.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldHdrKeyFields.setBounds(new Rectangle(105, 37, 380, 21));
+		jLabelHdrKeyFields.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldHdrKeyFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldHdrKeyFields.setBounds(new Rectangle(140, 40, 475, 25));
 		jLabelDtlKeyFields.setText(res.getString("DTLTableKeys"));
-		jLabelDtlKeyFields.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelDtlKeyFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelDtlKeyFields.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelDtlKeyFields.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelDtlKeyFields.setBounds(new Rectangle(11, 68, 89, 15));
-		jTextFieldDtlKeyFields.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldDtlKeyFields.setBounds(new Rectangle(105, 65, 380, 21));
-		jScrollPaneMessage.setBounds(new Rectangle(493, 9, 250, 77));
+		jLabelDtlKeyFields.setBounds(new Rectangle(5, 74, 130, 20));
+		jTextFieldDtlKeyFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldDtlKeyFields.setBounds(new Rectangle(140, 71, 475, 25));
+		jScrollPaneMessage.setBounds(new Rectangle(620, 9, 310, 87));
 		jScrollPaneMessage.getViewport().add(jTextAreaMessage);
-		jTextAreaMessage.setFont(new java.awt.Font("Dialog", 0, 12));
+		jTextAreaMessage.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTextAreaMessage.setLineWrap(true);
 		jTextAreaMessage.setOpaque(false);
 		jTextAreaMessage.setEditable(false);
@@ -127,13 +131,13 @@ public class DialogAddDetailTable extends JDialog {
 		panelMain.add(jScrollPaneMessage);
 		//
 		jPanelButtons.setBorder(BorderFactory.createEtchedBorder());
-		jPanelButtons.setPreferredSize(new Dimension(350, 43));
-		jButtonOK.setBounds(new Rectangle(620, 10, 73, 25));
-		jButtonOK.setFont(new java.awt.Font("Dialog", 0, 12));
+		jPanelButtons.setPreferredSize(new Dimension(100, 43));
+		jButtonOK.setBounds(new Rectangle(800, 8, 100, 27));
+		jButtonOK.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonOK.setText("OK");
 		jButtonOK.addActionListener(new DialogAddDetailTable_jButtonOK_actionAdapter(this));
-		jButtonCancel.setBounds(new Rectangle(44, 10, 73, 25));
-		jButtonCancel.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonCancel.setBounds(new Rectangle(50, 8, 100, 27));
+		jButtonCancel.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonCancel.setText(res.getString("Cancel"));
 		jButtonCancel.addActionListener(new DialogAddDetailTable_jButtonCancel_actionAdapter(this));
 		jPanelButtons.setLayout(null);
@@ -143,7 +147,7 @@ public class DialogAddDetailTable extends JDialog {
 		this.setTitle(res.getString("AddTabDialogTitle"));
 		this.getContentPane().add(jPanelButtons,  BorderLayout.SOUTH);
 		this.setResizable(false);
-		this.setPreferredSize(new Dimension(760, 171));
+		this.setPreferredSize(new Dimension(945, 190));
 		this.getContentPane().add(panelMain,  BorderLayout.CENTER);
 		jPanelButtons.getRootPane().setDefaultButton(jButtonOK);
 		this.pack();

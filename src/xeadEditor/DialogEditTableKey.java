@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2011 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2014 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -71,28 +71,30 @@ public class DialogEditTableKey extends JDialog {
 	}
 
 	private void jbInit() throws Exception {
-		panelMain.setBorder(BorderFactory.createEtchedBorder());
 		this.getContentPane().setLayout(new BorderLayout());
 
 		jLabelID.setText(res.getString("TableID"));
-		jLabelID.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelID.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelID.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelID.setBounds(new Rectangle(11, 12, 89, 15));
-		jTextFieldID.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldID.setBounds(new Rectangle(105, 9, 70, 21));
+		jLabelID.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldID.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldID.setBounds(new Rectangle(140, 9, 120, 25));
 		jTextFieldID.addKeyListener(new DialogEditTableKey_jTextFieldID_keyAdapter(this));
-		jTextFieldName.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldName.setBounds(new Rectangle(180, 9, 305, 22));
+		jTextFieldName.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldName.setBounds(new Rectangle(265, 9, 450, 25));
 		jTextFieldName.setEditable(false);
 		jTextFieldName.setFocusable(false);
+		
 		jLabelKeyFields.setText(res.getString("TableKey"));
-		jLabelKeyFields.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelKeyFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelKeyFields.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelKeyFields.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelKeyFields.setBounds(new Rectangle(11, 40, 89, 15));
-		jTextFieldKeyFields.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldKeyFields.setBounds(new Rectangle(105, 37, 380, 21));
+		jLabelKeyFields.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldKeyFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldKeyFields.setBounds(new Rectangle(140, 40, 575, 25));
+
+		panelMain.setBorder(null);
 		panelMain.setLayout(null);
 		panelMain.add(jLabelID);
 		panelMain.add(jTextFieldID);
@@ -102,14 +104,14 @@ public class DialogEditTableKey extends JDialog {
 
 		jPanelButtons.setBorder(BorderFactory.createEtchedBorder());
 		jPanelButtons.setPreferredSize(new Dimension(350, 43));
-		jButtonOK.setBounds(new Rectangle(380, 10, 73, 25));
-		jButtonOK.setFont(new java.awt.Font("Dialog", 0, 12));
-		jButtonOK.setText("OK");
-		jButtonOK.addActionListener(new DialogEditTableKey_jButtonOK_actionAdapter(this));
-		jButtonCancel.setBounds(new Rectangle(44, 10, 73, 25));
-		jButtonCancel.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonCancel.setBounds(new Rectangle(40, 8, 100, 27));
+		jButtonCancel.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonCancel.setText(res.getString("Cancel"));
 		jButtonCancel.addActionListener(new DialogEditTableKey_jButtonCancel_actionAdapter(this));
+		jButtonOK.setBounds(new Rectangle(585, 8, 100, 27));
+		jButtonOK.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jButtonOK.setText("OK");
+		jButtonOK.addActionListener(new DialogEditTableKey_jButtonOK_actionAdapter(this));
 		jPanelButtons.setLayout(null);
 		jPanelButtons.add(jButtonOK);
 		jPanelButtons.add(jButtonCancel);
@@ -117,7 +119,7 @@ public class DialogEditTableKey extends JDialog {
 		this.setTitle(res.getString("EditTableKeyTitle"));
 		this.getContentPane().add(jPanelButtons,  BorderLayout.SOUTH);
 		this.setResizable(false);
-		this.setPreferredSize(new Dimension(505, 143));
+		this.setPreferredSize(new Dimension(730, 157));
 		this.getContentPane().add(panelMain,  BorderLayout.CENTER);
 		jPanelButtons.getRootPane().setDefaultButton(jButtonOK);
 		this.pack();

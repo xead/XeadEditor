@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2012 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2014 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -86,32 +86,32 @@ public class DialogCreateTable extends JDialog {
 		jScrollPaneMessage.setBorder(BorderFactory.createEtchedBorder());
 		this.getContentPane().setLayout(new BorderLayout());
 		//
-		jLabelSubsystem.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSubsystem.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelSubsystem.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSubsystem.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSubsystem.setText(res.getString("CreateInSubsystem"));
-		jLabelSubsystem.setBounds(new Rectangle(11, 12, 116, 15));
-		jComboBoxSubsystem.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxSubsystem.setBounds(new Rectangle(135, 9, 200, 22));
+		jLabelSubsystem.setBounds(new Rectangle(5, 12, 130, 20));
+		jComboBoxSubsystem.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jComboBoxSubsystem.setBounds(new Rectangle(140, 9, 300, 25));
 		jComboBoxSubsystem.addActionListener(new DialogCreateTable_jComboBoxSubsystem_actionAdapter(this));
-		jLabelTableName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableName.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelTableName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableName.setText(res.getString("TableName"));
-		jLabelTableName.setBounds(new Rectangle(350, 12, 116, 15));
-		jTextFieldTableName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldTableName.setBounds(new Rectangle(473, 9, 200, 22));
+		jLabelTableName.setBounds(new Rectangle(450, 12, 130, 20));
+		jTextFieldTableName.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldTableName.setBounds(new Rectangle(585, 9, 240, 22));
 		jPanelTop.setLayout(null);
 		jPanelTop.setBorder(BorderFactory.createEtchedBorder());
-		jPanelTop.setPreferredSize(new Dimension(100, 40));
+		jPanelTop.setPreferredSize(new Dimension(100, 43));
 		jPanelTop.add(jLabelSubsystem, null);
 		jPanelTop.add(jComboBoxSubsystem, null);
 		jPanelTop.add(jLabelTableName, null);
 		jPanelTop.add(jTextFieldTableName, null);
-		jLabelStatement.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelStatement.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelStatement.setText(" " + res.getString("CreateTableStatement"));
-		jLabelStatement.setPreferredSize(new Dimension(100, 17));
-		jTextAreaStatement.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelStatement.setPreferredSize(new Dimension(100, 22));
+		jTextAreaStatement.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTextAreaStatement.setEditable(true);
 		jTextAreaStatement.setOpaque(true);
 		jTextAreaStatement.setLineWrap(true);
@@ -123,10 +123,10 @@ public class DialogCreateTable extends JDialog {
 		jPanelStatement.add(jLabelStatement, BorderLayout.NORTH);
 		jPanelStatement.add(jScrollPaneStatement, BorderLayout.CENTER);
 		//
-		jLabelMessage.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelMessage.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelMessage.setText(" " + res.getString("Message"));
-		jLabelMessage.setPreferredSize(new Dimension(100, 17));
-		jTextAreaMessage.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelMessage.setPreferredSize(new Dimension(100, 22));
+		jTextAreaMessage.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTextAreaMessage.setEditable(false);
 		jTextAreaMessage.setOpaque(false);
 		jTextAreaMessage.setLineWrap(true);
@@ -136,20 +136,20 @@ public class DialogCreateTable extends JDialog {
 		jPanelMessage.add(jScrollPaneMessage, BorderLayout.CENTER);
 		//
 		jSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jSplitPane.setDividerLocation(240);
+		jSplitPane.setDividerLocation(300);
 		jSplitPane.add(jPanelMain, JSplitPane.TOP);
 		jSplitPane.add(jPanelMessage, JSplitPane.BOTTOM);
 		//
 		jButtonClose.setText(res.getString("Close"));
-		jButtonClose.setBounds(new Rectangle(30, 8, 80, 25));
-		jButtonClose.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonClose.setBounds(new Rectangle(30, 8, 100, 27));
+		jButtonClose.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonClose.addActionListener(new DialogCreateTable_jButtonClose_actionAdapter(this));
 		jButtonCreate.setText(res.getString("CreateDefinition"));
-		jButtonCreate.setBounds(new Rectangle(600, 8, 110, 25));
-		jButtonCreate.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonCreate.setBounds(new Rectangle(650, 8, 150, 27));
+		jButtonCreate.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonCreate.addActionListener(new DialogCreateTable_jButtonCreate_actionAdapter(this));
 		jPanelButtons.setBorder(BorderFactory.createEtchedBorder());
-		jPanelButtons.setPreferredSize(new Dimension(400, 41));
+		jPanelButtons.setPreferredSize(new Dimension(400, 43));
 		jPanelButtons.setLayout(null);
 		jPanelButtons.add(jButtonClose, null);
 		jPanelButtons.add(jButtonCreate, null);
@@ -174,7 +174,7 @@ public class DialogCreateTable extends JDialog {
 		this.setTitle(res.getString("CreateTableTitle"));
 		this.getContentPane().add(jPanelButtons,  BorderLayout.SOUTH);
 		this.setResizable(false);
-		this.setPreferredSize(new Dimension(750, 550));
+		this.setPreferredSize(new Dimension(850, 700));
 		this.getContentPane().add(jSplitPane,  BorderLayout.CENTER);
 	}
 
@@ -229,12 +229,12 @@ public class DialogCreateTable extends JDialog {
 		String tableName = jTextFieldTableName.getText();
 		String tableAttr = "";
 		org.w3c.dom.Element tableElement;
-		//
+
 		try {
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
-			//
+
 			messageList.clear();
-			//
+
 			String statements = " " + jTextAreaStatement.getText().toUpperCase();
 			if (statements.length() > 1) {
 				if (statements.contains("CREATE TABLE ")) {
@@ -273,33 +273,29 @@ public class DialogCreateTable extends JDialog {
 							scanStartFrom = statements.length();
 						}
 					}
-					//
-					//if (tableID.contains("_")) {
-					//	messageList.add(res.getString("ErrorMessage105"));
-					//} else {
-						MainTreeNode subsystemNode = subsystemNodeList.get(jComboBoxSubsystem.getSelectedIndex());
-						tableElement = createTableDefinition(subsystemNode, tableID, tableName, tableAttr);
-						if (tableElement == null) {
-							messageList.add(res.getString("ErrorMessage97"));
-						} else {
-							if (frame_.getSpecificXETreeNode("Table", tableElement.getAttribute("ID")) == null) {
-								frame_.getSystemNode().getElement().appendChild(tableElement);
-								MainTreeNode childNode = frame_.new MainTreeNode("Table", tableElement, frame_);
-								if (childNode != null) {
-									((MainTreeNode)subsystemNode.getChildAt(0)).add(childNode);
-									frame_.getUndoManager().addLogOfAdd(childNode);
-									((MainTreeNode)subsystemNode.getChildAt(0)).sortChildNodes();
-								}
-								messageList.add(res.getString("ErrorMessage98") + tableElement.getAttribute("ID") + res.getString("ErrorMessage99"));
-								executed = true;
-							} else {
-								messageList.add(res.getString("ErrorMessage100") + tableElement.getAttribute("ID") + res.getString("ErrorMessage101"));
+
+					MainTreeNode subsystemNode = subsystemNodeList.get(jComboBoxSubsystem.getSelectedIndex());
+					tableElement = createTableDefinition(subsystemNode, tableID, tableName, tableAttr);
+					if (tableElement == null) {
+						messageList.add(res.getString("ErrorMessage97"));
+					} else {
+						if (frame_.getSpecificXETreeNode("Table", tableElement.getAttribute("ID")) == null) {
+							frame_.getSystemNode().getElement().appendChild(tableElement);
+							MainTreeNode childNode = frame_.new MainTreeNode("Table", tableElement, frame_);
+							if (childNode != null) {
+								((MainTreeNode)subsystemNode.getChildAt(0)).add(childNode);
+								frame_.getUndoManager().addLogOfAdd(childNode);
+								((MainTreeNode)subsystemNode.getChildAt(0)).sortChildNodes();
 							}
+							messageList.add(res.getString("ErrorMessage98") + tableElement.getAttribute("ID") + res.getString("ErrorMessage99"));
+							executed = true;
+						} else {
+							messageList.add(res.getString("ErrorMessage100") + tableElement.getAttribute("ID") + res.getString("ErrorMessage101"));
 						}
-					//}
+					}
 				}
 			}
-			//
+
 		} catch (Exception ex1) {
 			ex1.printStackTrace();
 			messageList.add("Creating definition of table failed.\n" + ex1.getMessage());
@@ -336,34 +332,6 @@ public class DialogCreateTable extends JDialog {
 		///////////////////////////////////
 		//Substring attributes into array//
 		///////////////////////////////////
-//		int bracketOpen = 0;
-//		int lastPosOfBracketClose = 0;
-//		int bracketClose = 0;
-//		tableAttributes = tableAttributes.replace("\n", "");
-//		tableAttributes = tableAttributes.replace("\t", " ");
-//		int posStartFrom = 0;
-//		for (int pos = 0; pos < tableAttributes.length(); pos++) {
-//			if (tableAttributes.substring(pos, pos+1).equals(",")) {
-//				if (bracketOpen == bracketClose) {
-//					attrList.add(tableAttributes.substring(posStartFrom, pos));
-//					posStartFrom = pos + 1;
-//					bracketOpen = 0;
-//					bracketClose = 0;
-//				}
-//			}
-//			if (tableAttributes.substring(pos, pos+1).equals("(")) {
-//				bracketOpen++;
-//			}
-//			if (tableAttributes.substring(pos, pos+1).equals(")")) {
-//				bracketClose++;
-//				if (bracketOpen == bracketClose) {
-//					lastPosOfBracketClose = pos;
-//				}
-//			}
-//		}
-//		if (lastPosOfBracketClose > posStartFrom) {
-//			attrList.add(tableAttributes.substring(posStartFrom, lastPosOfBracketClose + 1));
-//		}
 		int posStartFrom = 0;
 		int bracketOpen = 0;
 		int bracketClose = 0;
@@ -450,6 +418,7 @@ public class DialogCreateTable extends JDialog {
 		String comment = "";
 		int posStart = 0;
 		int posEnd = 0;
+
 		////////////////
 		//Get Field ID//
 		////////////////
@@ -457,12 +426,14 @@ public class DialogCreateTable extends JDialog {
 		if (fieldID.equals("")) {
 			return null;
 		}
+
 		////////////////
 		//Get NOT NULL//
 		////////////////
 		if (fieldAttrString.contains("NOT NULL")) {
 			nullable = "F";
 		}
+
 		////////////////
 		//Get COMMENT //
 		////////////////
@@ -482,6 +453,7 @@ public class DialogCreateTable extends JDialog {
 				comment = fieldAttrString.substring(posStart, posEnd);
 			}
 		}
+
 		////////////////////////
 		//Set field attributes//
 		////////////////////////
@@ -514,13 +486,12 @@ public class DialogCreateTable extends JDialog {
 				fieldElement.setAttribute("Decimal", "");
 			}
 		} else {
-			//if (wrkStr.equals("CHAR") || wrkStr.equals("TEXT")) {
 			if (wrkStr.equals("CHAR")) {
 				fieldElement.setAttribute("Size", "5");
 				fieldElement.setAttribute("Decimal", "");
 			}
 			if (wrkStr.equals("VARCHAR")) {
-				fieldElement.setAttribute("Size", "50");
+				fieldElement.setAttribute("Size", "0");
 				fieldElement.setAttribute("Decimal", "");
 			}
 			if (wrkStr.equals("TEXT")) {

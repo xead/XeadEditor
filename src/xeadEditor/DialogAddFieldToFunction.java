@@ -86,7 +86,7 @@ public class DialogAddFieldToFunction extends JDialog {
 		this.getContentPane().setLayout(new BorderLayout());
 		jPanelMain.setLayout(new BorderLayout());
 		jListDataSource.setBorder(null);
-		Editor_CheckBoxListRenderer renderer = new Editor_CheckBoxListRenderer();
+		Editor_CheckBoxListRenderer renderer = new Editor_CheckBoxListRenderer(frame_);
 		jListDataSource.setCellRenderer(renderer);
 		jListDataSource.setBackground(jPanelMain.getBackground());
 		jListDataSource.addMouseListener(new DialogAddFieldToFunction_jListDataSource_mouseAdapter(this));
@@ -95,22 +95,22 @@ public class DialogAddFieldToFunction extends JDialog {
 		jPanelMain.add(jScrollPaneDataSourceList, BorderLayout.CENTER);
 
 		jPanelButtons.setBorder(BorderFactory.createEtchedBorder());
-		jPanelButtons.setPreferredSize(new Dimension(350, 43));
-		jButtonOK.setBounds(new Rectangle(185, 10, 73, 25));
-		jButtonOK.setFont(new java.awt.Font("Dialog", 0, 12));
-		jButtonOK.setText(res.getString("Add"));
-		jButtonOK.addActionListener(new DialogAddFieldToFunction_jButtonOK_actionAdapter(this));
-		jButtonCancel.setBounds(new Rectangle(35, 10, 73, 25));
-		jButtonCancel.setFont(new java.awt.Font("Dialog", 0, 12));
+		jPanelButtons.setPreferredSize(new Dimension(350, 45));
+		jButtonCancel.setBounds(new Rectangle(30, 10, 100, 27));
+		jButtonCancel.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonCancel.setText(res.getString("Cancel"));
 		jButtonCancel.addActionListener(new DialogAddFieldToFunction_jButtonCancel_actionAdapter(this));
+		jButtonOK.setBounds(new Rectangle(230, 10, 100, 27));
+		jButtonOK.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jButtonOK.setText(res.getString("Add"));
+		jButtonOK.addActionListener(new DialogAddFieldToFunction_jButtonOK_actionAdapter(this));
 		jPanelButtons.setLayout(null);
-		jPanelButtons.add(jButtonOK);
 		jPanelButtons.add(jButtonCancel);
+		jPanelButtons.add(jButtonOK);
 
 		this.getContentPane().add(jPanelButtons,  BorderLayout.SOUTH);
 		this.setResizable(false);
-		this.setPreferredSize(new Dimension(300, 400));
+		this.setPreferredSize(new Dimension(360, 450));
 		this.getContentPane().add(jPanelMain,  BorderLayout.CENTER);
 		jPanelButtons.getRootPane().setDefaultButton(jButtonOK);
 		this.pack();

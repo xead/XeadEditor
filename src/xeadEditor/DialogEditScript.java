@@ -54,11 +54,6 @@ public class DialogEditScript extends JDialog {
 	private JPanel jPanelStatementHeader = new JPanel();
 	private JLabel jLabelStatementHeader = new JLabel();
 	private JLabel jLabelStatementCursorPos = new JLabel();
-	private JPanel jPanelStatementFontSizeAndCursorPos = new JPanel();
-	private JPanel jPanelStatementFontSize = new JPanel();
-	private JButton jButtonStatementFontSizeS = new JButton();
-	private JButton jButtonStatementFontSizeM = new JButton();
-	private JButton jButtonStatementFontSizeL = new JButton();
 	private JScrollPane jScrollPaneStatement = new JScrollPane();
 	private JTextArea jTextAreaStatement = new JTextArea();
 	private JScrollPane jScrollPaneFieldInformation = new JScrollPane();
@@ -137,49 +132,31 @@ public class DialogEditScript extends JDialog {
 		jPanelStatement.add(jScrollPaneStatement, BorderLayout.CENTER);
 
 		jPanelStatementHeader.setLayout(new BorderLayout());
-		jPanelStatementHeader.setPreferredSize(new Dimension(200, 20));
-		jLabelStatementHeader.setFont(new java.awt.Font("Dialog", 0, 12));
+		jPanelStatementHeader.setPreferredSize(new Dimension(200, 25));
+		jLabelStatementHeader.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelStatementHeader.setText(" " + res.getString("Script"));
-		jLabelStatementHeader.setPreferredSize(new Dimension(150, 20));
+		jLabelStatementHeader.setPreferredSize(new Dimension(150, 25));
 
-		jPanelStatementFontSizeAndCursorPos.setLayout(new BorderLayout());
-		jPanelStatementFontSizeAndCursorPos.setPreferredSize(new Dimension(200, 20));
-		jPanelStatementFontSizeAndCursorPos.add(jLabelStatementCursorPos, BorderLayout.EAST);
-		jPanelStatementFontSizeAndCursorPos.add(jPanelStatementFontSize, BorderLayout.CENTER);
-		jPanelStatementFontSize.setLayout(new GridLayout(1, 3));
-		jPanelStatementFontSize.add(jButtonStatementFontSizeS);
-		jPanelStatementFontSize.add(jButtonStatementFontSizeM);
-		jPanelStatementFontSize.add(jButtonStatementFontSizeL);
-		jButtonStatementFontSizeS.setFont(new java.awt.Font("Dialog", 0, 11));
-		jButtonStatementFontSizeS.setText("F");
-		jButtonStatementFontSizeS.addActionListener(new DialogEditScript_jButtonStatementFontSize_actionAdapter(this));
-		jButtonStatementFontSizeM.setFont(new java.awt.Font("Dialog", 0, 13));
-		jButtonStatementFontSizeM.setText("F");
-		jButtonStatementFontSizeM.setEnabled(false);
-		jButtonStatementFontSizeM.addActionListener(new DialogEditScript_jButtonStatementFontSize_actionAdapter(this));
-		jButtonStatementFontSizeL.setFont(new java.awt.Font("Dialog", 0, 15));
-		jButtonStatementFontSizeL.setText("F");
-		jButtonStatementFontSizeL.addActionListener(new DialogEditScript_jButtonStatementFontSize_actionAdapter(this));
-		jLabelStatementCursorPos.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelStatementCursorPos.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelStatementCursorPos.setHorizontalAlignment(SwingConstants.CENTER);
-		jLabelStatementCursorPos.setPreferredSize(new Dimension(70, 20));
+		jLabelStatementCursorPos.setPreferredSize(new Dimension(80, 25));
 		jLabelStatementCursorPos.setBorder(BorderFactory.createLineBorder(Color.lightGray));
 		jPanelStatementHeader.add(jLabelStatementHeader, BorderLayout.WEST);
-		jPanelStatementHeader.add(jPanelStatementFontSizeAndCursorPos, BorderLayout.EAST);
+		jPanelStatementHeader.add(jLabelStatementCursorPos, BorderLayout.EAST);
 
-		jPanelScan.setPreferredSize(new Dimension(10, 100));
+		jPanelScan.setPreferredSize(new Dimension(10, 120));
 		jPanelScan.setLayout(null);
-		jLabelScanText.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelScanText.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelScanText.setText(res.getString("ScanStringInScript"));
-		jLabelScanText.setBounds(new Rectangle(11, 10, 200, 15));
-		jTextFieldScanText.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldScanText.setBounds(new Rectangle(11, 28, 400, 22));
-		jCheckBoxScanText.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jCheckBoxScanText.setBounds(new Rectangle(11, 50, 200, 22));
+		jLabelScanText.setBounds(new Rectangle(11, 10, 200, 20));
+		jTextFieldScanText.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldScanText.setBounds(new Rectangle(11, 32, 400, 25));
+		jCheckBoxScanText.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jCheckBoxScanText.setBounds(new Rectangle(7, 63, 250, 22));
 		jCheckBoxScanText.setText(res.getString("CaseSensitive"));
-		jLabelFunctionKeys.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunctionKeys.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelFunctionKeys.setText(res.getString("ScriptEditorFunctionKeys"));
-		jLabelFunctionKeys.setBounds(new Rectangle(11, 78, 400, 15));
+		jLabelFunctionKeys.setBounds(new Rectangle(11, 94, 450, 20));
 		jPanelScan.add(jLabelScanText);
 		jPanelScan.add(jTextFieldScanText);
 		jPanelScan.add(jCheckBoxScanText);
@@ -190,7 +167,9 @@ public class DialogEditScript extends JDialog {
 		jPanelInformation.add(jPanelScan, BorderLayout.SOUTH);
 
 		jScrollPaneFieldInformation.setBorder(BorderFactory.createEtchedBorder());
-		jTextAreaStatement.setFont(new java.awt.Font("Monospaced", 0, 14));
+		jTextAreaStatement.setBackground(frame_.colorScriptBackground);
+		jTextAreaStatement.setForeground(frame_.colorScriptForeground);
+		jTextAreaStatement.setCaretColor(frame_.colorScriptCaret);
 		jTextAreaStatement.setEditable(true);
 		jTextAreaStatement.setOpaque(true);
 		jTextAreaStatement.setTabSize(4);
@@ -200,13 +179,13 @@ public class DialogEditScript extends JDialog {
 		am.put(DefaultEditorKit.pasteAction, pasteAction);
 		jScrollPaneStatement.getViewport().setView(jTextAreaStatement);
 
-		jTextAreaFieldInformation.setFont(new java.awt.Font("Dialog", 0, 12));
+		jTextAreaFieldInformation.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTextAreaFieldInformation.setEditable(false);
 		jTextAreaFieldInformation.setOpaque(false);
 		jScrollPaneFieldInformation.getViewport().add(jTextAreaFieldInformation);
 
 		jSplitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-		jSplitPane.setDividerLocation(250);
+		jSplitPane.setDividerLocation(450);
 		jSplitPane.add(jPanelStatement, JSplitPane.RIGHT);
 		jSplitPane.add(jPanelInformation, JSplitPane.LEFT);
 		InputMap inputMap = jSplitPane.getInputMap(JSplitPane.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
@@ -245,6 +224,7 @@ public class DialogEditScript extends JDialog {
 		originalText = text;
 		returnText = text;
 
+		jTextAreaStatement.setFont(new java.awt.Font(frame_.scriptFontName, 0, frame_.scriptFontSize));
 		jTextAreaStatement.setText(text);
 		jTextAreaStatement.setCaretPosition(caretPos);
 		jTextAreaStatement.requestFocus();
@@ -302,27 +282,6 @@ public class DialogEditScript extends JDialog {
 	    Point pos = frame_.getCaretPositionInText(jTextAreaStatement);
 	    jLabelStatementCursorPos.setText(pos.x + " : " + pos.y);
 	}
-
-	void jButtonjButtonStatementFontSize_actionPerformed(ActionEvent e) {
-		jButtonStatementFontSizeS.setEnabled(true);
-		jButtonStatementFontSizeM.setEnabled(true);
-		jButtonStatementFontSizeL.setEnabled(true);
-
-		if (e.getSource() == jButtonStatementFontSizeS) {
-			jTextAreaStatement.setFont(new java.awt.Font("Monospaced", 0, 12));
-			jButtonStatementFontSizeS.setEnabled(false);
-		}
-		if (e.getSource() == jButtonStatementFontSizeM) {
-			jTextAreaStatement.setFont(new java.awt.Font("Monospaced", 0, 14));
-			jButtonStatementFontSizeM.setEnabled(false);
-		}
-		if (e.getSource() == jButtonStatementFontSizeL) {
-			jTextAreaStatement.setFont(new java.awt.Font("Monospaced", 0, 16));
-			jButtonStatementFontSizeL.setEnabled(false);
-		}
-
-		jTextAreaStatement.requestFocus();
-	}
 	
 	public void indentRows() {
 		frame_.indentRows(jScrollPaneStatement);
@@ -342,16 +301,6 @@ public class DialogEditScript extends JDialog {
 		if (undoManager.canRedo()) {
 			undoManager.redo();
 		}
-	}
-}
-
-class DialogEditScript_jButtonStatementFontSize_actionAdapter implements java.awt.event.ActionListener {
-	DialogEditScript adaptee;
-	DialogEditScript_jButtonStatementFontSize_actionAdapter(DialogEditScript adaptee) {
-		this.adaptee = adaptee;
-	}
-	public void actionPerformed(ActionEvent e) {
-		adaptee.jButtonjButtonStatementFontSize_actionPerformed(e);
 	}
 }
 

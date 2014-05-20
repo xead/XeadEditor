@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2011 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2014 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -32,8 +32,10 @@ package xeadEditor;
  */
 
 import java.awt.*;
+
 import javax.swing.*;
 import javax.swing.table.*;
+
 import java.awt.event.*;
 import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
@@ -41,9 +43,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
+
 import org.apache.xerces.parsers.DOMParser;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
+
 import xeadEditor.Editor.MainTreeNode;
 import xeadEditor.Editor.SortableDomElementListModel;
 
@@ -79,6 +83,8 @@ public class DialogImport extends JDialog {
 	private JComboBox jComboBoxSubsystemInto = new JComboBox();
 	private JScrollPane jScrollPaneMessage = new JScrollPane();
 	private JTextArea jTextAreaMessage = new JTextArea();
+	private JLabel jLabelFileNameFrom = new JLabel();
+	private JTextField jTextFieldFileNameFrom = new JTextField();
 	private JLabel jLabelSystemNameFrom = new JLabel();
 	private JTextField jTextFieldSystemNameFrom = new JTextField();
 	private JLabel jLabelSystemVersionFrom = new JLabel();
@@ -119,7 +125,7 @@ public class DialogImport extends JDialog {
 		//
 		//panelMain
 		panelMain.setLayout(new BorderLayout());
-		panelMain.setPreferredSize(new Dimension(800, 620));
+		panelMain.setPreferredSize(new Dimension(1115, 800));
 		panelMain.setBorder(BorderFactory.createEtchedBorder());
 		panelMain.add(jPanelNorth, BorderLayout.NORTH);
 		panelMain.add(jPanelCenter, BorderLayout.CENTER);
@@ -127,47 +133,58 @@ public class DialogImport extends JDialog {
 		//
 		//jPanelNorth and objects on it
 		jPanelNorth.setBorder(BorderFactory.createEtchedBorder());
-		jPanelNorth.setPreferredSize(new Dimension(800, 41));
-		jLabelSystemNameFrom.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jPanelNorth.setPreferredSize(new Dimension(100, 74));
+		jLabelFileNameFrom.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jLabelFileNameFrom.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFileNameFrom.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFileNameFrom.setText(res.getString("FileNameImporting"));
+		jLabelFileNameFrom.setBounds(new Rectangle(5, 12, 180, 20));
+		jTextFieldFileNameFrom.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldFileNameFrom.setBounds(new Rectangle(190, 9, 675, 25));
+		jTextFieldFileNameFrom.setEditable(false);
+		jLabelSystemNameFrom.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelSystemNameFrom.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemNameFrom.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemNameFrom.setText(res.getString("SystemNameImporting"));
-		jLabelSystemNameFrom.setBounds(new Rectangle(6, 12, 150, 15));
-		jTextFieldSystemNameFrom.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemNameFrom.setBounds(new Rectangle(163, 9, 300, 21));
+		jLabelSystemNameFrom.setBounds(new Rectangle(5, 43, 180, 20));
+		jTextFieldSystemNameFrom.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldSystemNameFrom.setBounds(new Rectangle(190, 40, 430, 25));
 		jTextFieldSystemNameFrom.setEditable(false);
-		jLabelSystemVersionFrom.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemVersionFrom.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelSystemVersionFrom.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemVersionFrom.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemVersionFrom.setText(res.getString("SystemVersion"));
-		jLabelSystemVersionFrom.setBounds(new Rectangle(468, 12, 96, 15));
-		jTextFieldSystemVersionFrom.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemVersionFrom.setBounds(new Rectangle(571, 9, 105, 22));
+		jLabelSystemVersionFrom.setBounds(new Rectangle(630, 43, 130, 20));
+		jTextFieldSystemVersionFrom.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldSystemVersionFrom.setBounds(new Rectangle(765, 40, 100, 25));
 		jTextFieldSystemVersionFrom.setEditable(false);
+		//
 		jPanelNorth.setLayout(null);
+		jPanelNorth.add(jLabelFileNameFrom);
+		jPanelNorth.add(jTextFieldFileNameFrom);
 		jPanelNorth.add(jLabelSystemNameFrom);
 		jPanelNorth.add(jTextFieldSystemNameFrom);
 		jPanelNorth.add(jLabelSystemVersionFrom);
 		jPanelNorth.add(jTextFieldSystemVersionFrom);
 		//
 		//jPanelCenterTop and objects on it
-		jLabelSubsystemFrom.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSubsystemFrom.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelSubsystemFrom.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSubsystemFrom.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSubsystemFrom.setText(res.getString("SubsystemImportingFrom"));
-		jLabelSubsystemFrom.setBounds(new Rectangle(6, 12, 150, 15));
-		jComboBoxSubsystemFrom.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxSubsystemFrom.setBounds(new Rectangle(163, 9, 210, 22));
+		jLabelSubsystemFrom.setBounds(new Rectangle(5, 12, 180, 20));
+		jComboBoxSubsystemFrom.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jComboBoxSubsystemFrom.setBounds(new Rectangle(190, 9, 330, 25));
 		jComboBoxSubsystemFrom.addActionListener(new DialogImport_jComboBoxSubsystemFrom_actionAdapter(this));
-		jLabelSubsystemInto.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSubsystemInto.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelSubsystemInto.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSubsystemInto.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSubsystemInto.setText(res.getString("SubsystemImportingInto"));
-		jLabelSubsystemInto.setBounds(new Rectangle(11, 12, 96, 15));
-		jComboBoxSubsystemInto.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxSubsystemInto.setBounds(new Rectangle(115, 9, 210, 22));
+		jLabelSubsystemInto.setBounds(new Rectangle(5, 12, 130, 20));
+		jComboBoxSubsystemInto.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jComboBoxSubsystemInto.setBounds(new Rectangle(140, 9, 290, 25));
 		jComboBoxSubsystemInto.addActionListener(new DialogImport_jComboBoxSubsystemInto_actionAdapter(this));
-		jPanelImportFromTop.setPreferredSize(new Dimension(450, 40));
+		jPanelImportFromTop.setPreferredSize(new Dimension(570, 43));
 		jPanelImportFromTop.setBorder(BorderFactory.createEtchedBorder());
 		jPanelImportFromTop.setLayout(null);
 		jPanelImportFromTop.add(jLabelSubsystemFrom);
@@ -176,32 +193,31 @@ public class DialogImport extends JDialog {
 		jPanelImportIntoTop.setLayout(null);
 		jPanelImportIntoTop.add(jLabelSubsystemInto);
 		jPanelImportIntoTop.add(jComboBoxSubsystemInto);
-		jPanelCenterTop.setPreferredSize(new Dimension(800, 42));
+		jPanelCenterTop.setPreferredSize(new Dimension(100, 43));
 		jPanelCenterTop.setLayout(new BorderLayout());
 		jPanelCenterTop.add(jPanelImportFromTop, BorderLayout.WEST);
 		jPanelCenterTop.add(jPanelImportIntoTop, BorderLayout.CENTER);
 		//
 		//jSplitPane and objects on it
 		jSplitPane.setBorder(null);
-		jSplitPane.setBounds(new Rectangle(11, 244, 380, 58));
 		jSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPane.setDividerLocation(120);
 		jSplitPane.setPreferredSize(new Dimension(750, 400));
 		jSplitPane.add(jPanelCenterTableList, JSplitPane.TOP);
 		jSplitPane.add(jPanelCenterFunctionList, JSplitPane.BOTTOM);
-		jScrollPaneTableListFrom.setPreferredSize(new Dimension(450, 200));
+		jScrollPaneTableListFrom.setPreferredSize(new Dimension(570, 200));
 		jScrollPaneTableListFrom.getViewport().add(jTableTableListFrom, null);
 		jScrollPaneTableListInto.getViewport().add(jTableTableListInto, null);
 		jPanelCenterTableList.setLayout(new BorderLayout());
 		jPanelCenterTableList.add(jScrollPaneTableListFrom, BorderLayout.WEST);
 		jPanelCenterTableList.add(jScrollPaneTableListInto, BorderLayout.CENTER);
-		jScrollPaneFunctionListFrom.setPreferredSize(new Dimension(450, 200));
+		jScrollPaneFunctionListFrom.setPreferredSize(new Dimension(570, 200));
 		jScrollPaneFunctionListFrom.getViewport().add(jTableFunctionListFrom, null);
 		jScrollPaneFunctionListInto.getViewport().add(jTableFunctionListInto, null);
 		jPanelCenterFunctionList.setLayout(new BorderLayout());
 		jPanelCenterFunctionList.add(jScrollPaneFunctionListFrom, BorderLayout.WEST);
 		jPanelCenterFunctionList.add(jScrollPaneFunctionListInto, BorderLayout.CENTER);
-		jTextAreaMessage.setFont(new java.awt.Font("SansSerif", 0, 14));
+		jTextAreaMessage.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTextAreaMessage.setLineWrap(true);
 		jTextAreaMessage.setWrapStyleWord(true);
 		jTextAreaMessage.setEditable(false);
@@ -217,11 +233,12 @@ public class DialogImport extends JDialog {
 		rendererAlignmentRight.setHorizontalAlignment(4); //RIGHT//
 		rendererAlignmentLeft.setHorizontalAlignment(2); //LEFT//
 		//
-		jTableTableListFrom.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableTableListFrom.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTableTableListFrom.setBackground(SystemColor.control);
 		jTableTableListFrom.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableTableListFrom.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jTableTableListFrom.setRowSelectionAllowed(true);
+		jTableTableListFrom.setRowHeight(Editor.TABLE_ROW_HEIGHT);
 		tableModelTableListFrom.addColumn("NO.");
 		tableModelTableListFrom.addColumn("");
 		tableModelTableListFrom.addColumn(res.getString("TableID"));
@@ -232,11 +249,11 @@ public class DialogImport extends JDialog {
 		column2 = jTableTableListFrom.getColumnModel().getColumn(2);
 		column3 = jTableTableListFrom.getColumnModel().getColumn(3);
 		column4 = jTableTableListFrom.getColumnModel().getColumn(4);
-		column0.setPreferredWidth(34);
-		column1.setPreferredWidth(22);
-		column2.setPreferredWidth(80);
-		column3.setPreferredWidth(200);
-		column4.setPreferredWidth(80);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(30);
+		column2.setPreferredWidth(120);
+		column3.setPreferredWidth(250);
+		column4.setPreferredWidth(100);
 		column0.setCellRenderer(rendererAlignmentCenter);
 		CheckBoxRenderer checkBoxRenderer = new CheckBoxRenderer();
 		column1.setCellRenderer(checkBoxRenderer);
@@ -247,15 +264,16 @@ public class DialogImport extends JDialog {
 		column2.setCellRenderer(rendererAlignmentLeft);
 		column3.setCellRenderer(rendererAlignmentLeft);
 		column4.setCellRenderer(rendererAlignmentCenter);
-		jTableTableListFrom.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableTableListFrom.getTableHeader().setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableTableListFrom.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(2); //LEFT//
 		//
-		jTableFunctionListFrom.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunctionListFrom.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTableFunctionListFrom.setBackground(SystemColor.control);
 		jTableFunctionListFrom.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunctionListFrom.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jTableFunctionListFrom.setRowSelectionAllowed(true);
+		jTableFunctionListFrom.setRowHeight(Editor.TABLE_ROW_HEIGHT);
 		tableModelFunctionListFrom.addColumn("NO.");
 		tableModelFunctionListFrom.addColumn("");
 		tableModelFunctionListFrom.addColumn(res.getString("FunctionID"));
@@ -266,11 +284,11 @@ public class DialogImport extends JDialog {
 		column2 = jTableFunctionListFrom.getColumnModel().getColumn(2);
 		column3 = jTableFunctionListFrom.getColumnModel().getColumn(3);
 		column4 = jTableFunctionListFrom.getColumnModel().getColumn(4);
-		column0.setPreferredWidth(34);
-		column1.setPreferredWidth(22);
-		column2.setPreferredWidth(80);
-		column3.setPreferredWidth(200);
-		column4.setPreferredWidth(80);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(30);
+		column2.setPreferredWidth(120);
+		column3.setPreferredWidth(250);
+		column4.setPreferredWidth(100);
 		column0.setCellRenderer(rendererAlignmentCenter);
 		column1.setCellRenderer(checkBoxRenderer);
 		column1.setCellEditor(editorWithCheckBox);
@@ -279,61 +297,63 @@ public class DialogImport extends JDialog {
 		column2.setCellRenderer(rendererAlignmentLeft);
 		column3.setCellRenderer(rendererAlignmentLeft);
 		column4.setCellRenderer(rendererAlignmentCenter);
-		jTableFunctionListFrom.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunctionListFrom.getTableHeader().setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunctionListFrom.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(2); //LEFT//
 		//
-		jTableTableListInto.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableTableListInto.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTableTableListInto.setBackground(SystemColor.control);
 		jTableTableListInto.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableTableListInto.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jTableTableListInto.setRowSelectionAllowed(true);
+		jTableTableListInto.setRowHeight(Editor.TABLE_ROW_HEIGHT);
 		tableModelTableListInto.addColumn("NO.");
 		tableModelTableListInto.addColumn(res.getString("TableID"));
 		tableModelTableListInto.addColumn(res.getString("TableName"));
 		column0 = jTableTableListInto.getColumnModel().getColumn(0);
 		column1 = jTableTableListInto.getColumnModel().getColumn(1);
 		column2 = jTableTableListInto.getColumnModel().getColumn(2);
-		column0.setPreferredWidth(34);
-		column1.setPreferredWidth(80);
-		column2.setPreferredWidth(200);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(120);
+		column2.setPreferredWidth(250);
 		column0.setCellRenderer(rendererAlignmentCenter);
 		column1.setCellRenderer(rendererAlignmentLeft);
 		column2.setCellRenderer(rendererAlignmentLeft);
-		jTableTableListInto.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableTableListInto.getTableHeader().setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableTableListInto.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(2); //LEFT//
 		//
-		jTableFunctionListInto.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunctionListInto.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTableFunctionListInto.setBackground(SystemColor.control);
 		jTableFunctionListInto.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunctionListInto.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jTableFunctionListInto.setRowSelectionAllowed(true);
+		jTableFunctionListInto.setRowHeight(Editor.TABLE_ROW_HEIGHT);
 		tableModelFunctionListInto.addColumn("NO.");
 		tableModelFunctionListInto.addColumn(res.getString("FunctionID"));
 		tableModelFunctionListInto.addColumn(res.getString("FunctionName"));
 		column0 = jTableFunctionListInto.getColumnModel().getColumn(0);
 		column1 = jTableFunctionListInto.getColumnModel().getColumn(1);
 		column2 = jTableFunctionListInto.getColumnModel().getColumn(2);
-		column0.setPreferredWidth(34);
-		column1.setPreferredWidth(80);
-		column2.setPreferredWidth(200);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(120);
+		column2.setPreferredWidth(250);
 		column0.setCellRenderer(rendererAlignmentCenter);
 		column1.setCellRenderer(rendererAlignmentLeft);
 		column2.setCellRenderer(rendererAlignmentLeft);
-		jTableFunctionListInto.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunctionListInto.getTableHeader().setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunctionListInto.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(2); //LEFT//
 		//
 		//jPanelSouth and objects on it
 		jPanelSouth.setBorder(BorderFactory.createEtchedBorder());
-		jPanelSouth.setPreferredSize(new Dimension(800, 40));
-		jButtonCloseDialog.setBounds(new Rectangle(20, 7, 70, 25));
-		jButtonCloseDialog.setFont(new java.awt.Font("Dialog", 0, 12));
+		jPanelSouth.setPreferredSize(new Dimension(100, 43));
+		jButtonCloseDialog.setBounds(new Rectangle(20, 8, 100, 27));
+		jButtonCloseDialog.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonCloseDialog.setText(res.getString("Close"));
 		jButtonCloseDialog.addActionListener(new DialogImport_jButtonCloseDialog_actionAdapter(this));
-		jButtonImport.setBounds(new Rectangle(400, 7, 120, 25));
-		jButtonImport.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonImport.setBounds(new Rectangle(500, 8, 150, 27));
+		jButtonImport.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonImport.setText(res.getString("Import"));
 		jButtonImport.addActionListener(new DialogImport_jButtonImport_actionAdapter(this));
 		jButtonImport.setEnabled(false);
@@ -343,7 +363,9 @@ public class DialogImport extends JDialog {
 		jPanelSouth.add(jButtonImport);
 		//
 		//DialogImport
+		this.setTitle(res.getString("ImportDialogTitle"));
 		this.setResizable(false);
+		this.setPreferredSize(new Dimension(1024, 768));
 		this.getContentPane().add(panelMain);
 		Dimension scrSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension dlgSize = this.getPreferredSize();
@@ -354,11 +376,10 @@ public class DialogImport extends JDialog {
 	public boolean request(String fileName) {
 		org.w3c.dom.Element element;
 		MainTreeNode node;
-		//
 		anyElementsImported = false;
-		this.setTitle(res.getString("ImportDialogTitle1") + fileName + res.getString("ImportDialogTitle2"));
 		//
 		try {
+			jTextFieldFileNameFrom.setText(fileName);
 			DOMParser parser = new DOMParser();
 			parser.parse(new InputSource(new FileInputStream(fileName)));
 			domDocumentImportingFrom = parser.getDocument();

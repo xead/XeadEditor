@@ -38,12 +38,27 @@ import javax.swing.*;
 import javax.swing.text.html.HTMLEditorKit;
 
 public class DialogAbout extends JDialog implements ActionListener {
-	private static final long serialVersionUID = 1L;
+
 	/**
-	 * Application Information
+	 * Application Information and log of changes
 	 */
-	public static final String APPLICATION_NAME  = "XEAD Editor 1.1";
-	public static final String FULL_VERSION  = "V1.R1.M29";
+	private static final long serialVersionUID = 1L;
+	public static final String APPLICATION_NAME  = "XEAD Editor 1.2";
+	public static final String FORMAT_VERSION  = "1.2";
+	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
+	public static final String COPYRIGHT = "Copyright 2014 DBC,Ltd.";
+	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
+	public static final String FULL_VERSION  = "V1.R2.M0";
+	//
+	//1.2.0
+	//・フォントサイズを12pから16pに変更するとともに、各種定義パネルのデザインを改善した
+	//・xeadedt.propertiesでフォント名やスクリプトエディタの配色を指定できるようにした
+	//・DB接続エラーのハンドリングおよびメッセージ表示方法を改善した
+	//・Driverの表示フォントを設定するための項目をシステム定義に組み込んだ
+	//・SQL Serverに対応した
+	//・XF100,110に最大表示行数を組み込んだ
+	//・桁数をゼロにすることで桁数指定なしのVARCHAR型に対応させるようにした
+	//
 	//29
 	//・DB属性として「DBCPオプション」を追加した
 	//・メニューＩＤの最長桁をセッションログのメニューＩＤに合わせて２に制限した
@@ -164,10 +179,7 @@ public class DialogAbout extends JDialog implements ActionListener {
 	//・スクリプトの１行中に複数の'{'や'}'が含まれていると正しくインデント処理されない問題を修正した
 	//・右ペインで値を変更直後にCtrl+Sを押しても上書きされなかった問題を修正
 	//・結合フィールドの使途情報について、XF110での利用状況が不正確に示されていた問題を修正した
-	public static final String FORMAT_VERSION  = "1.1";
-	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
-	public static final String COPYRIGHT = "Copyright 2014 DBC,Ltd.";
-	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
+
 	/**
 	 * Components on dialog
 	 */
@@ -209,42 +221,43 @@ public class DialogAbout extends JDialog implements ActionListener {
 		insetsPanel2.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		insetsPanel2.setPreferredSize(new Dimension(75, 52));
 		insetsPanel2.add(imageLabel, BorderLayout.EAST);
-		//
-		labelName.setFont(new java.awt.Font("Serif", 1, 16));
+
+		labelName.setFont(new java.awt.Font(editor.mainFontName, 1, 20));
 		labelName.setHorizontalAlignment(SwingConstants.CENTER);
 		labelName.setText(PRODUCT_NAME);
-		labelName.setBounds(new Rectangle(-5, 9, 190, 18));
-		labelVersion.setFont(new java.awt.Font("Dialog", 0, 12));
+		labelName.setBounds(new Rectangle(0, 8, 240, 22));
+		labelVersion.setFont(new java.awt.Font(editor.mainFontName, 0, 16));
 		labelVersion.setHorizontalAlignment(SwingConstants.CENTER);
 		labelVersion.setText(FULL_VERSION);
-		labelVersion.setBounds(new Rectangle(-5, 32, 190, 15));
-		labelCopyright.setFont(new java.awt.Font("Dialog", 0, 12));
+		labelVersion.setBounds(new Rectangle(0, 32, 240, 20));
+		labelCopyright.setFont(new java.awt.Font(editor.mainFontName, 0, 16));
 		labelCopyright.setHorizontalAlignment(SwingConstants.CENTER);
 		labelCopyright.setText(COPYRIGHT);
-		labelCopyright.setBounds(new Rectangle(-5, 53, 190, 15));
-		labelURL.setFont(new java.awt.Font("Dialog", 0, 12));
+		labelCopyright.setBounds(new Rectangle(0, 53, 240, 20));
+		labelURL.setFont(new java.awt.Font(editor.mainFontName, 0, 14));
 		labelURL.setHorizontalAlignment(SwingConstants.CENTER);
 		labelURL.setText("<html><u><font color='blue'>" + URL_DBC);
-		labelURL.setBounds(new Rectangle(-5, 73, 190, 15));
+		labelURL.setBounds(new Rectangle(0, 75, 240, 20));
 		labelURL.addMouseListener(new DialogAbout_labelURL_mouseAdapter(this));
 		insetsPanel3.setLayout(null);
 		insetsPanel3.setBorder(BorderFactory.createEmptyBorder(10, 60, 10, 10));
-		insetsPanel3.setPreferredSize(new Dimension(190, 80));
+		insetsPanel3.setPreferredSize(new Dimension(250, 80));
 		insetsPanel3.add(labelName, null);
 		insetsPanel3.add(labelVersion, null);
 		insetsPanel3.add(labelCopyright, null);
 		insetsPanel3.add(labelURL, null);
-		//
+
 		buttonOK.setText("OK");
+		buttonOK.setFont(new java.awt.Font(editor.mainFontName, 0, 16));
 		buttonOK.addActionListener(this);
 		insetsPanel1.add(buttonOK, null);
-		//
+
 		panel1.add(insetsPanel1, BorderLayout.SOUTH);
 		panel1.add(panel2, BorderLayout.NORTH);
-		panel2.setPreferredSize(new Dimension(270, 90));
+		panel2.setPreferredSize(new Dimension(350, 100));
 		panel2.add(insetsPanel2, BorderLayout.CENTER);
 		panel2.add(insetsPanel3, BorderLayout.EAST);
-		//
+
 		this.setTitle("About XEAD Editor");
 		this.getContentPane().add(panel1, null);
 		this.setResizable(false);

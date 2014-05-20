@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2012 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2014 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -107,7 +107,7 @@ public class DialogCheckTableModule extends JDialog {
 		jScrollPaneMessage.setBorder(BorderFactory.createEtchedBorder());
 		this.getContentPane().setLayout(new BorderLayout());
 
-		jTextAreaMessage.setFont(new java.awt.Font("Dialog", 0, 12));
+		jTextAreaMessage.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTextAreaMessage.setEditable(false);
 		jTextAreaMessage.setOpaque(false);
 		jTextAreaMessage.setLineWrap(true);
@@ -115,27 +115,27 @@ public class DialogCheckTableModule extends JDialog {
 		jScrollPaneMessage.getViewport().add(jTextAreaMessage);
 
 		jButtonClose.setText(res.getString("Close"));
-		jButtonClose.setBounds(new Rectangle(20, 8, 80, 25));
-		jButtonClose.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonClose.setBounds(new Rectangle(20, 8, 100, 27));
+		jButtonClose.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonClose.addActionListener(new DialogCheckTableModule_jButtonClose_actionAdapter(this));
 		jButtonCreate.setText(res.getString("ModuleCreate"));
-		jButtonCreate.setBounds(new Rectangle(120, 8, 130, 25));
-		jButtonCreate.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonCreate.setBounds(new Rectangle(140, 8, 150, 27));
+		jButtonCreate.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonCreate.addActionListener(new DialogCheckTableModule_jButtonCreate_actionAdapter(this));
 		jButtonAlter.setText(res.getString("ModuleModify"));
-		jButtonAlter.setBounds(new Rectangle(270, 8, 130, 25));
-		jButtonAlter.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonAlter.setBounds(new Rectangle(310, 8, 150, 27));
+		jButtonAlter.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonAlter.addActionListener(new DialogCheckTableModule_jButtonAlter_actionAdapter(this));
 		jButtonPut.setText(res.getString("ModulePut"));
-		jButtonPut.setBounds(new Rectangle(420, 8, 130, 25));
-		jButtonPut.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonPut.setBounds(new Rectangle(480, 8, 150, 27));
+		jButtonPut.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonPut.addActionListener(new DialogCheckTableModule_jButtonPut_actionAdapter(this));
 		jButtonDelete.setText(res.getString("ModuleDelete"));
-		jButtonDelete.setBounds(new Rectangle(570, 8, 130, 25));
-		jButtonDelete.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonDelete.setBounds(new Rectangle(650, 8, 150, 27));
+		jButtonDelete.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonDelete.addActionListener(new DialogCheckTableModule_jButtonDelete_actionAdapter(this));
 		jPanelButtons.setBorder(BorderFactory.createEtchedBorder());
-		jPanelButtons.setPreferredSize(new Dimension(400, 41));
+		jPanelButtons.setPreferredSize(new Dimension(100, 43));
 		jPanelButtons.setLayout(null);
 		jPanelButtons.add(jButtonClose, null);
 		jPanelButtons.add(jButtonCreate, null);
@@ -146,7 +146,7 @@ public class DialogCheckTableModule extends JDialog {
 		this.setTitle(res.getString("ModuleCheck"));
 		this.getContentPane().add(jPanelButtons,  BorderLayout.SOUTH);
 		this.setResizable(false);
-		this.setPreferredSize(new Dimension(730, 300));
+		this.setPreferredSize(new Dimension(830, 600));
 		this.getContentPane().add(jScrollPaneMessage,  BorderLayout.CENTER);
 	}
 
@@ -273,28 +273,42 @@ public class DialogCheckTableModule extends JDialog {
 							isNullableOfDefinitionField = false;
 						}
 
+						// DDL FieldID and Data Type//
 						moduleBuf.append("\t" + element.getAttribute("ID") + " ");
-						moduleBuf.append(element.getAttribute("Type"));
-						if (getBasicTypeOf(element.getAttribute("Type")).equals("INTEGER")) {
-							moduleBuf.append(" Default 0");
+						if (databaseName.contains("jdbc:sqlserver")
+								&& element.getAttribute("Type").equals("CHAR")) {
+							moduleBuf.append("NCHAR");
 						} else {
-							if (getBasicTypeOf(element.getAttribute("Type")).equals("FLOAT")) {
-								if (element.getAttribute("Type").equals("DECIMAL") || element.getAttribute("Type").equals("NUMERIC")) {
-									moduleBuf.append("(");
-									moduleBuf.append(element.getAttribute("Size"));
-									moduleBuf.append(",");
-									moduleBuf.append(element.getAttribute("Decimal"));
-									moduleBuf.append(")");
-								}
-								moduleBuf.append(" Default 0.0");
+							moduleBuf.append(element.getAttribute("Type"));
+							if (getBasicTypeOf(element.getAttribute("Type")).equals("INTEGER")) {
+								moduleBuf.append(" Default 0");
 							} else {
-								if (element.getAttribute("Type").equals("CHAR") || element.getAttribute("Type").equals("VARCHAR")) {
-									moduleBuf.append("(");
-									moduleBuf.append(element.getAttribute("Size"));
-									moduleBuf.append(")");
+								if (getBasicTypeOf(element.getAttribute("Type")).equals("FLOAT")) {
+									if (element.getAttribute("Type").equals("DECIMAL") || element.getAttribute("Type").equals("NUMERIC")) {
+										moduleBuf.append("(");
+										moduleBuf.append(element.getAttribute("Size"));
+										moduleBuf.append(",");
+										moduleBuf.append(element.getAttribute("Decimal"));
+										moduleBuf.append(")");
+									}
+									moduleBuf.append(" Default 0.0");
+								} else {
+									if (element.getAttribute("Type").equals("CHAR")) {
+										moduleBuf.append("(");
+										moduleBuf.append(element.getAttribute("Size"));
+										moduleBuf.append(")");
+									}
+									if (element.getAttribute("Type").equals("VARCHAR")
+										&& !element.getAttribute("Size").equals("0")) {
+										moduleBuf.append("(");
+										moduleBuf.append(element.getAttribute("Size"));
+										moduleBuf.append(")");
+									}
 								}
 							}
 						}
+
+						// DDL Not Null and Comment //
 						if (!element.getAttribute("Nullable").equals("T")) {
 							moduleBuf.append(" Not null");
 						}
@@ -337,18 +351,32 @@ public class DialogCheckTableModule extends JDialog {
 										|| element.getAttribute("Type").equals("VARCHAR")
 										|| element.getAttribute("Type").equals("DECIMAL")
 										|| (element.getAttribute("Type").equals("NUMERIC") && !rs2.getString("TYPE_NAME").equals("NUMBER"))) {
-									if (sizeOfDefinitionField != sizeOfModuleField
-											|| decimalOfDefinitionField != decimalOfModuleField) {
+									if (databaseName.contains("jdbc:sqlserver")
+											&& element.getAttribute("Type").equals("CHAR")
+											&& frame_.getOptionList(element.getAttribute("TypeOptions")).contains("KANJI")
+											&& rs2.getString("TYPE_NAME").equals("char")) {
 										countOfErrors++;
 										fieldListToBeDropped.add(element.getAttribute("ID"));
 										fieldListToBeAdded.add(element.getAttribute("ID"));
-										fieldListToBeConverted.add(element.getAttribute("ID"));
-										fieldTypeListToBeConverted.add(element.getAttribute("Type"));
-										fieldSizeListToBeConvertedOld.add(sizeOfModuleField);
-										fieldSizeListToBeConvertedNew.add(sizeOfDefinitionField);
-										fieldDecimalListToBeConvertedOld.add(decimalOfModuleField);
-										fieldDecimalListToBeConvertedNew.add(decimalOfDefinitionField);
-										buf.append("(" + countOfErrors + ") " + res.getString("ModuleCheckMessage1") + element.getAttribute("ID") + "(" + element.getAttribute("Name") +")" + res.getString("ModuleCheckMessage2") + typeDescriptionsOfDefinitionField + res.getString("ModuleCheckMessage3") + typeDescriptionsOfModuleField + res.getString("ModuleCheckMessage4"));
+										buf.append("(" + countOfErrors + ") " + res.getString("ModuleCheckMessage1") + element.getAttribute("ID") + "(" + element.getAttribute("Name") +")" + res.getString("ModuleCheckMessage48"));
+									} else {
+										if (element.getAttribute("Type").equals("VARCHAR")
+												&& sizeOfDefinitionField == 0) {
+										} else {
+											if (sizeOfDefinitionField != sizeOfModuleField
+													|| decimalOfDefinitionField != decimalOfModuleField) {
+												countOfErrors++;
+												fieldListToBeDropped.add(element.getAttribute("ID"));
+												fieldListToBeAdded.add(element.getAttribute("ID"));
+												fieldListToBeConverted.add(element.getAttribute("ID"));
+												fieldTypeListToBeConverted.add(element.getAttribute("Type"));
+												fieldSizeListToBeConvertedOld.add(sizeOfModuleField);
+												fieldSizeListToBeConvertedNew.add(sizeOfDefinitionField);
+												fieldDecimalListToBeConvertedOld.add(decimalOfModuleField);
+												fieldDecimalListToBeConvertedNew.add(decimalOfDefinitionField);
+												buf.append("(" + countOfErrors + ") " + res.getString("ModuleCheckMessage1") + element.getAttribute("ID") + "(" + element.getAttribute("Name") +")" + res.getString("ModuleCheckMessage2") + typeDescriptionsOfDefinitionField + res.getString("ModuleCheckMessage3") + typeDescriptionsOfModuleField + res.getString("ModuleCheckMessage4"));
+											}
+										}
 									}
 								}
 							} else {
@@ -400,15 +428,12 @@ public class DialogCheckTableModule extends JDialog {
 			    	rs2.close();
 			    }
 
-				int columnCounter = 0;
-
 				///////////////////////////////////////////
 				// Field check from module to definition //
 				///////////////////////////////////////////
 				ResultSet rs3 = connection_.getMetaData().getColumns(null, null, moduleID, null);
 				while (rs3.next()) {
 
-					columnCounter++;
 					exist = false;
 					if (updateCounterID.equals(frame_.getCaseShiftValue(rs3.getString("COLUMN_NAME"), "Upper"))) {
 						exist = true;
@@ -469,15 +494,19 @@ public class DialogCheckTableModule extends JDialog {
 						workIndex = indexNameList.size() - 1;
 						indexFieldsList.add("");
 						indexAscDescList.add("");
-						if (rs4.getString("NON_UNIQUE").equals("0")
-								|| rs4.getString("NON_UNIQUE").equals("f")
-								|| rs4.getString("NON_UNIQUE").equals("false")) {
+						if (rs4.getString("NON_UNIQUE") == null) {
 							indexNotUniqueList.add("false");
-						}
-						if (rs4.getString("NON_UNIQUE").equals("1")
-								|| rs4.getString("NON_UNIQUE").equals("t")
-								|| rs4.getString("NON_UNIQUE").equals("true")) {
-							indexNotUniqueList.add("true");
+						} else {
+							if (rs4.getString("NON_UNIQUE").equals("0")
+									|| rs4.getString("NON_UNIQUE").equals("f")
+									|| rs4.getString("NON_UNIQUE").equals("false")) {
+								indexNotUniqueList.add("false");
+							}
+							if (rs4.getString("NON_UNIQUE").equals("1")
+									|| rs4.getString("NON_UNIQUE").equals("t")
+									|| rs4.getString("NON_UNIQUE").equals("true")) {
+								indexNotUniqueList.add("true");
+							}
 						}
 					}
 					if (indexFieldsList.get(workIndex).equals("")) {
@@ -843,6 +872,10 @@ public class DialogCheckTableModule extends JDialog {
 
 		} catch (SQLException e) {
 			jTextAreaMessage.setText(e.getMessage());
+			jButtonAlter.setEnabled(false);
+			jButtonCreate.setEnabled(false);
+			jButtonDelete.setEnabled(false);
+			jButtonPut.setEnabled(false);
 		} finally {
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
@@ -885,7 +918,13 @@ public class DialogCheckTableModule extends JDialog {
 					}
 				}
 				if (dataTypeDefiition.equals("REAL")) {
-					if (dataTypeModule.equals("float4")) {
+					if (dataTypeModule.equals("float4")
+							|| dataTypeModule.equals("float")) {
+						isEquivalent = true;
+					}
+				}
+				if (dataTypeDefiition.equals("DOUBLE")) {
+					if (dataTypeModule.equals("float")) {
 						isEquivalent = true;
 					}
 				}
@@ -907,8 +946,9 @@ public class DialogCheckTableModule extends JDialog {
 				}
 				if (dataTypeDefiition.equals("CHAR")) {
 					if (dataTypeModule.equals("bpchar")
-							|| dataTypeModule.equals("bool")
-							|| dataTypeModule.equals("NVARCHAR2")) {
+							|| dataTypeModule.equals("nchar")
+							|| dataTypeModule.equals("NVARCHAR2")
+							|| dataTypeModule.equals("bool")) {
 						isEquivalent = true;
 					}
 					if (size == 19 && dataTypeModule.equals("DATETIME")) {
@@ -918,7 +958,8 @@ public class DialogCheckTableModule extends JDialog {
 				if (dataTypeDefiition.equals("LONG VARCHAR")) {
 					if (dataTypeModule.equals("MEDIUMTEXT")
 							|| dataTypeModule.equals("CLOB")
-							|| dataTypeModule.equals("LONG")) {
+							|| dataTypeModule.equals("json")
+							|| dataTypeModule.equals("NVARCHAR2")) {
 						isEquivalent = true;
 					}
 					if (dataTypeModule.equals("text")) {
@@ -927,6 +968,8 @@ public class DialogCheckTableModule extends JDialog {
 				}
 				if (dataTypeDefiition.equals("VARCHAR")) {
 					if (dataTypeModule.equals("text")
+							|| dataTypeModule.equals("nvarchar")
+							|| dataTypeModule.equals("json")
 							|| dataTypeModule.equals("VARCHAR2")
 							|| dataTypeModule.equals("NVARCHAR2")
 							|| dataTypeModule.equals("character varying")) {
@@ -938,9 +981,17 @@ public class DialogCheckTableModule extends JDialog {
 						isEquivalent = true;
 					}
 				}
-				if (dataTypeDefiition.startsWith("TIMESTAMP")
-						&& dataTypeModule.startsWith("TIMESTAMP")) {
-					isEquivalent = true;
+				if (dataTypeDefiition.equals("CLOB")) {
+					if (dataTypeModule.endsWith("TEXT")) {
+						isEquivalent = true;
+					}
+				}
+				if (dataTypeDefiition.startsWith("TIMESTAMP")) {
+					if (dataTypeModule.startsWith("TIMESTAMP")
+							|| dataTypeModule.equals("DATETIME")
+							|| dataTypeModule.equals("datetime")) {
+						isEquivalent = true;
+					}
 				}
 			}
 		}
@@ -1693,9 +1744,11 @@ public class DialogCheckTableModule extends JDialog {
 						}
 						if (getBasicTypeOf(element.getAttribute("Type")).equals("STRING")) {
 							if (element.getAttribute("Type").equals("CHAR") || element.getAttribute("Type").equals("VARCHAR")) {
-								buf.append("(");
-								buf.append(element.getAttribute("Size"));
-								buf.append(")");
+								if (!element.getAttribute("Size").equals("0")) {
+									buf.append("(");
+									buf.append(element.getAttribute("Size"));
+									buf.append(")");
+								}
 							}
 						} else {
 							if (getBasicTypeOf(element.getAttribute("Type")).equals("INTEGER")) {

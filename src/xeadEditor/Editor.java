@@ -52,6 +52,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.*;
 import java.util.regex.Pattern;
+
 import javax.script.Compilable;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -70,11 +71,12 @@ import javax.swing.text.InternationalFormatter;
 import javax.swing.text.PlainDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.tree.*;
+
 import org.apache.poi.hssf.usermodel.*;
-import org.apache.poi.hssf.util.*;
 import org.apache.xerces.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.*;
+
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
@@ -91,6 +93,10 @@ public class Editor extends JFrame {
     public static final Color INACTIVE_COLOR = SystemColor.control;
 	public static final Color SELECTED_INACTIVE_COLOR = new Color(193,204,219);
 	public static final Color SELECTED_ACTIVE_COLOR = new Color(49,106,197);
+	public static final int MAIN_FONT_SIZE = 16;
+	public static final int TREE_ROW_HEIGHT = 20;
+	public static final int TABLE_ROW_HEIGHT = 22;
+	public static final int TABLE_ROW_HEIGHT_EDITABLE = 25;
 	/**
 	 * Main Panels and Labels
 	 */
@@ -193,6 +199,16 @@ public class Editor extends JFrame {
 	 */
 	private HTMLEditorKit htmlEditorKit = new HTMLEditorKit();
 	/**
+	 * Variants for Properties
+	 */
+	private Properties properties = new Properties();
+	public String mainFontName = "SansSerif";
+	public int scriptFontSize = 18;
+	public String scriptFontName = "Monospaced";
+	public Color colorScriptBackground = Color.white;
+	public Color colorScriptForeground = Color.black;
+	public Color colorScriptCaret = Color.black;
+	/**
 	 * Icons
 	 */
 	private Image imageTitle;
@@ -230,7 +246,7 @@ public class Editor extends JFrame {
 	private ImageIcon imageIconFunctionFilter;
 	private ImageIcon imageIconFunctionTab;
 	private ImageIcon imageIconFunctionUsage;
-	private ImageIcon imageIconPrompt;
+	public ImageIcon imageIconPrompt;
 	/**
 	 * Main TreeView
 	 */
@@ -267,6 +283,8 @@ public class Editor extends JFrame {
 	private JMenuItem jMenuItemComponentToDelete = new JMenuItem();
 	private JMenuItem jMenuItemComponentToJump = new JMenuItem();
 	private JMenuItem jMenuItemComponentToListCsv = new JMenuItem();
+	private JMenuItem jMenuItemComponentToListTableData = new JMenuItem();
+	private JMenuItem jMenuItemComponentToListExcel = new JMenuItem();
 	private JMenuItem jMenuItemComponentToShowTips = new JMenuItem();
 	private JMenuItem jMenuItemComponentToCheckLayout = new JMenuItem();
 	private JMenu jMenuComponentToCheckLayoutXF110 = new JMenu();
@@ -309,6 +327,7 @@ public class Editor extends JFrame {
 	private Editor_KanjiTextArea jTextAreaSystemRemarks = new Editor_KanjiTextArea();
 	//
 	private JPanel jPanelSystemConfig = new JPanel();
+	private JScrollPane jScrollPaneSystemConfigTop = new JScrollPane();
 	private JPanel jPanelSystemConfigTop = new JPanel();
 	private JLabel jLabelSystemAppServerName = new JLabel();
 	private JTextField jTextFieldSystemAppServerName = new JTextField();
@@ -346,6 +365,7 @@ public class Editor extends JFrame {
 	private JTable jTableSystemSubDBList = new JTable(tableModelSystemSubDBList);
 	private int selectedRow_jTableSystemSubDBList;
 	private JScrollPane jScrollPaneSystemSubDBList = new JScrollPane();
+	private JScrollPane jScrollPaneSystemSubDBTop = new JScrollPane();
 	private JPanel jPanelSystemSubDB = new JPanel();
 	private JPanel jPanelSystemSubDBTop = new JPanel();
 	private JLabel jLabelSystemSubDBID = new JLabel();
@@ -390,6 +410,8 @@ public class Editor extends JFrame {
 	private JLabel jLabelSystemDateFormat = new JLabel();
 	private JComboBox jComboBoxSystemDateFormat = new JComboBox();
 	private ArrayList<String> listSystemDateFormat = new ArrayList<String>();
+	private JLabel jLabelSystemFont = new JLabel();
+	private JTextField jTextFieldSystemFont = new JTextField();
 	private JSplitPane jSplitPaneSystemPrintFont = new JSplitPane();
 	private TableModelReadOnlyList tableModelSystemPrintFontList = new TableModelReadOnlyList();
 	private JTable jTableSystemPrintFontList = new JTable(tableModelSystemPrintFontList);
@@ -552,7 +574,6 @@ public class Editor extends JFrame {
 	private JPanel jPanelMenuTop = new JPanel();
 	private JLabel jLabelMenuID = new JLabel();
 	private JTextField jTextFieldMenuID = new JTextField();
-	private JLabel jLabelMenuName = new JLabel();
 	private Editor_KanjiTextField jTextFieldMenuName = new Editor_KanjiTextField();
 	private JLabel jLabelMenuHelpURL = new JLabel();
 	private JTextField jTextFieldMenuHelpURL = new JTextField();
@@ -586,7 +607,6 @@ public class Editor extends JFrame {
 	private JPanel jPanelSubsystemLabelMargin = new JPanel();
 	private Editor_KanjiTextField jTextFieldSubsystemName = new Editor_KanjiTextField();
 	private JLabel jLabelSubsystemRemarks = new JLabel();
-	private JLabel jLabelSubsystemName = new JLabel();
 	private JLabel jLabelSubsystemID = new JLabel();
 	private JTextField jTextFieldSubsystemID = new JTextField();
 	private JScrollPane jScrollPaneSubsystemRemarks = new JScrollPane();
@@ -603,10 +623,10 @@ public class Editor extends JFrame {
 	 * Definition components on jPanelTable
 	 */
 	private JPanel jPanelTable = new JPanel();
+	private JScrollPane jScrollPaneTableTop = new JScrollPane();
 	private JPanel jPanelTableTop = new JPanel();
 	private JLabel jLabelTableID = new JLabel();
 	private JTextField jTextFieldTableID = new JTextField();
-	private JLabel jLabelTableName = new JLabel();
 	private Editor_KanjiTextField jTextFieldTableName = new Editor_KanjiTextField();
 	private JLabel jLabelTableDB = new JLabel();
 	private JComboBox jComboBoxTableDB = new JComboBox();
@@ -653,6 +673,7 @@ public class Editor extends JFrame {
 	//
 	private JSplitPane jSplitPaneTableField = new JSplitPane();
 	private JPanel jPanelTableField = new JPanel();
+	private JScrollPane jScrollPaneTableFieldTop = new JScrollPane();
 	private JPanel jPanelTableFieldTop = new JPanel();
 	private JLabel jLabelTableFieldID = new JLabel();
 	private JTextField jTextFieldTableFieldID = new JTextField();
@@ -810,7 +831,7 @@ public class Editor extends JFrame {
 		}
 	};
 	//
-	private JSplitPane jSplitPaneTableData = new JSplitPane();
+	private JPanel jPanelTableData = new JPanel();
 	private JSplitPane jSplitPaneTableDataTop = new JSplitPane();
 	private JPanel jPanelTableDataList = new JPanel();
 	private JPanel jPanelTableDataSelect = new JPanel();
@@ -819,7 +840,7 @@ public class Editor extends JFrame {
 	private JLabel jLabelTableDataSelectOrderBy = new JLabel();
 	private JTextField jTextFieldTableDataSelectOrderBy = new JTextField();
 	private JButton jButtonTableDataSelect = new JButton();
-	private JCheckBox jCheckBoxTableDataOutput = new JCheckBox();
+	//private JCheckBox jCheckBoxTableDataOutput = new JCheckBox();
 	private JScrollPane jScrollPaneTableDataList = new JScrollPane();
 	private TableModelReadOnlyList tableModelTableDataList;
 	private JTable jTableTableDataList = new JTable();
@@ -840,8 +861,6 @@ public class Editor extends JFrame {
 	private JButton jButtonTableDataFieldsToCompress = new JButton();
 	private JButton jButtonTableDataFieldsToListLog = new JButton();
 	private JButton jButtonTableDataFieldsToImport = new JButton();
-	private JPanel jPanelTableDataMessages = new JPanel();
-	private JLabel jLabelTableDataMessages = new JLabel();
 	private JScrollPane jScrollPaneTableDataMessages = new JScrollPane();
 	private JTextArea jTextAreaTableDataMessages = new JTextArea();
 	private String tableEditMode = "";
@@ -862,7 +881,6 @@ public class Editor extends JFrame {
 	private JPanel jPanelFunction000Top = new JPanel();
 	private JLabel jLabelFunction000ID = new JLabel();
 	private JTextField jTextFieldFunction000ID = new JTextField();
-	private JLabel jLabelFunction000Name = new JLabel();
 	private JTextField jTextFieldFunction000Name = new JTextField();
 	private JLabel jLabelFunction000Type = new JLabel();
 	private JTextField jTextFieldFunction000Type = new JTextField();
@@ -936,10 +954,10 @@ public class Editor extends JFrame {
 	 * Definition components on jPanelFunction100
 	 */
 	private JPanel jPanelFunction100 = new JPanel();
+	private JScrollPane jScrollPaneFunction100Top = new JScrollPane();
 	private JPanel jPanelFunction100Top = new JPanel();
 	private JLabel jLabelFunction100ID = new JLabel();
 	private JTextField jTextFieldFunction100ID = new JTextField();
-	private JLabel jLabelFunction100Name = new JLabel();
 	private JTextField jTextFieldFunction100Name = new JTextField();
 	private JLabel jLabelFunction100Type = new JLabel();
 	private JTextField jTextFieldFunction100Type = new JTextField();
@@ -971,6 +989,8 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldFunction100SizeHeight = new JTextField();
 	private JLabel jLabelFunction100InitialReadCount = new JLabel();
 	private JTextField jTextFieldFunction100InitialReadCount = new JTextField();
+	private JLabel jLabelFunction100MaxReadCount = new JLabel();
+	private JTextField jTextFieldFunction100MaxReadCount = new JTextField();
 	private JLabel jLabelFunction100InitialMsg = new JLabel();
 	private JTextField jTextFieldFunction100InitialMsg = new JTextField();
 	private JTabbedPane jTabbedPaneFunction100 = new JTabbedPane();
@@ -980,8 +1000,9 @@ public class Editor extends JFrame {
 	private TableModelReadOnlyList tableModelFunction100FilterList = new TableModelReadOnlyList();
 	private JTable jTableFunction100FilterList = new JTable(tableModelFunction100FilterList);
 	private int selectedRow_jTableFunction100FilterList;
-	private JSplitPane jSplitPaneFunction100FilterList = new JSplitPane();
 	private JPanel jPanelFunction100FilterList = new JPanel();
+	private JScrollPane jScrollPaneFunction100FilterDefinition = new JScrollPane();
+	private JPanel jPanelFunction100FilterDefinition = new JPanel();
 	private JLabel jLabelFunction100FilterTable = new JLabel();
 	private JTextField jTextFieldFunction100FilterTable = new JTextField();
 	private JLabel jLabelFunction100FilterTableType = new JLabel();
@@ -1037,8 +1058,9 @@ public class Editor extends JFrame {
 	private TableModelReadOnlyList tableModelFunction100ColumnList = new TableModelReadOnlyList();
 	private JTable jTableFunction100ColumnList = new JTable(tableModelFunction100ColumnList);
 	private int selectedRow_jTableFunction100ColumnList;
-	private JSplitPane jSplitPaneFunction100ColumnList = new JSplitPane();
 	private JPanel jPanelFunction100ColumnList = new JPanel();
+	private JScrollPane jScrollPaneFunction100ColumnDefinition = new JScrollPane();
+	private JPanel jPanelFunction100ColumnDefinition = new JPanel();
 	private JLabel jLabelFunction100Table = new JLabel();
 	private JTextField jTextFieldFunction100Table = new JTextField();
 	private JLabel jLabelFunction100TableType = new JLabel();
@@ -1066,8 +1088,8 @@ public class Editor extends JFrame {
 	private TableModelReadOnlyList tableModelFunction100ButtonList = new TableModelReadOnlyList();
 	private JTable jTableFunction100ButtonList = new JTable(tableModelFunction100ButtonList);
 	private int selectedRow_jTableFunction100ButtonList;
-	private JSplitPane jSplitPaneFunction100ButtonList = new JSplitPane();
 	private JPanel jPanelFunction100ButtonList = new JPanel();
+	private JPanel jPanelFunction100ButtonDefinition = new JPanel();
 	private JLabel jLabelFunction100ButtonPosition = new JLabel();
 	private SpinnerNumberModel spinnerNumberModelFunction100ButtonPosition = new SpinnerNumberModel(0, 0, 6, 1);
 	private JSpinner jSpinnerFunction100ButtonPosition = new JSpinner(spinnerNumberModelFunction100ButtonPosition);
@@ -1093,10 +1115,10 @@ public class Editor extends JFrame {
 	 * Definition components on jPanelFunction110
 	 */
 	private JPanel jPanelFunction110 = new JPanel();
+	private JScrollPane jScrollPaneFunction110Top = new JScrollPane();
 	private JPanel jPanelFunction110Top = new JPanel();
 	private JLabel jLabelFunction110ID = new JLabel();
 	private JTextField jTextFieldFunction110ID = new JTextField();
-	private JLabel jLabelFunction110Name = new JLabel();
 	private JTextField jTextFieldFunction110Name = new JTextField();
 	private JLabel jLabelFunction110Type = new JLabel();
 	private JTextField jTextFieldFunction110Type = new JTextField();
@@ -1117,6 +1139,8 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldFunction110SizeHeight = new JTextField();
 	private JLabel jLabelFunction110InitialReadCount = new JLabel();
 	private JTextField jTextFieldFunction110InitialReadCount = new JTextField();
+	private JLabel jLabelFunction110MaxReadCount = new JLabel();
+	private JTextField jTextFieldFunction110MaxReadCount = new JTextField();
 	private JCheckBox jCheckBoxFunction110InitialListing = new JCheckBox();
 	private JLabel jLabelFunction110InitialMsg = new JLabel();
 	private JTextField jTextFieldFunction110InitialMsg = new JTextField();
@@ -1127,8 +1151,9 @@ public class Editor extends JFrame {
 	private TableModelReadOnlyList tableModelFunction110FilterList = new TableModelReadOnlyList();
 	private JTable jTableFunction110FilterList = new JTable(tableModelFunction110FilterList);
 	private int selectedRow_jTableFunction110FilterList;
-	private JSplitPane jSplitPaneFunction110FilterList = new JSplitPane();
 	private JPanel jPanelFunction110FilterList = new JPanel();
+	private JScrollPane jScrollPaneFunction110FilterDefinition = new JScrollPane();
+	private JPanel jPanelFunction110FilterDefinition = new JPanel();
 	private JLabel jLabelFunction110FilterTable = new JLabel();
 	private JTextField jTextFieldFunction110FilterTable = new JTextField();
 	private JLabel jLabelFunction110FilterTableType = new JLabel();
@@ -1184,8 +1209,9 @@ public class Editor extends JFrame {
 	private TableModelReadOnlyList tableModelFunction110ColumnList = new TableModelReadOnlyList();
 	private JTable jTableFunction110ColumnList = new JTable(tableModelFunction110ColumnList);
 	private int selectedRow_jTableFunction110ColumnList;
-	private JSplitPane jSplitPaneFunction110ColumnList = new JSplitPane();
 	private JPanel jPanelFunction110ColumnList = new JPanel();
+	private JScrollPane jScrollPaneFunction110ColumnDefinition = new JScrollPane();
+	private JPanel jPanelFunction110ColumnDefinition = new JPanel();
 	private JLabel jLabelFunction110Table = new JLabel();
 	private JTextField jTextFieldFunction110Table = new JTextField();
 	private JLabel jLabelFunction110TableType = new JLabel();
@@ -1221,6 +1247,7 @@ public class Editor extends JFrame {
 	private String function110FieldPromptOptionCallFunctionFieldsToGetTo;
 	//
 	private JPanel jPanelFunction110BatchTableAndField = new JPanel();
+	private JScrollPane jScrollPaneFunction110BatchTableAndFieldTop = new JScrollPane();
 	private JPanel jPanelFunction110BatchTableAndFieldTop = new JPanel();
 	private JLabel jLabelFunction110BatchTableName = new JLabel();
 	private JTextField jTextFieldFunction110BatchTableName = new JTextField();
@@ -1234,8 +1261,9 @@ public class Editor extends JFrame {
 	private TableModelReadOnlyList tableModelFunction110BatchFieldList = new TableModelReadOnlyList();
 	private JTable jTableFunction110BatchFieldList = new JTable(tableModelFunction110BatchFieldList);
 	private int selectedRow_jTableFunction110BatchFieldList;
-	private JSplitPane jSplitPaneFunction110BatchFieldList = new JSplitPane();
 	private JPanel jPanelFunction110BatchFieldList = new JPanel();
+	private JScrollPane jScrollPaneFunction110BatchFieldDefinition = new JScrollPane();
+	private JPanel jPanelFunction110BatchFieldDefinition = new JPanel();
 	private JLabel jLabelFunction110BatchFieldTable = new JLabel();
 	private JTextField jTextFieldFunction110BatchFieldTable = new JTextField();
 	private JLabel jLabelFunction110BatchFieldTableType = new JLabel();
@@ -1280,8 +1308,8 @@ public class Editor extends JFrame {
 	private TableModelReadOnlyList tableModelFunction110ButtonList = new TableModelReadOnlyList();
 	private JTable jTableFunction110ButtonList = new JTable(tableModelFunction110ButtonList);
 	private int selectedRow_jTableFunction110ButtonList;
-	private JSplitPane jSplitPaneFunction110ButtonList = new JSplitPane();
 	private JPanel jPanelFunction110ButtonList = new JPanel();
+	private JPanel jPanelFunction110ButtonDefinition = new JPanel();
 	private JLabel jLabelFunction110ButtonPosition = new JLabel();
 	private SpinnerNumberModel spinnerNumberModelFunction110ButtonPosition = new SpinnerNumberModel(0, 0, 6, 1);
 	private JSpinner jSpinnerFunction110ButtonPosition = new JSpinner(spinnerNumberModelFunction110ButtonPosition);
@@ -1308,10 +1336,10 @@ public class Editor extends JFrame {
 	 * Definition components on jPanelFunction200
 	 */
 	private JPanel jPanelFunction200 = new JPanel();
+	private JScrollPane jScrollPaneFunction200Top = new JScrollPane();
 	private JPanel jPanelFunction200Top = new JPanel();
 	private JLabel jLabelFunction200ID = new JLabel();
 	private JTextField jTextFieldFunction200ID = new JTextField();
-	private JLabel jLabelFunction200Name = new JLabel();
 	private JTextField jTextFieldFunction200Name = new JTextField();
 	private JLabel jLabelFunction200Type = new JLabel();
 	private JTextField jTextFieldFunction200Type = new JTextField();
@@ -1349,8 +1377,9 @@ public class Editor extends JFrame {
 	private TableModelReadOnlyList tableModelFunction200FieldList = new TableModelReadOnlyList();
 	private JTable jTableFunction200FieldList = new JTable(tableModelFunction200FieldList);
 	private int selectedRow_jTableFunction200FieldList;
-	private JSplitPane jSplitPaneFunction200FieldList = new JSplitPane();
 	private JPanel jPanelFunction200FieldList = new JPanel();
+	private JScrollPane jScrollPaneFunction200FieldDefinition = new JScrollPane();
+	private JPanel jPanelFunction200FieldDefinition = new JPanel();
 	private JLabel jLabelFunction200Table = new JLabel();
 	private JTextField jTextFieldFunction200Table = new JTextField();
 	private JLabel jLabelFunction200TableType = new JLabel();
@@ -1405,8 +1434,9 @@ public class Editor extends JFrame {
 	private TableModelReadOnlyList tableModelFunction200TabFieldList = new TableModelReadOnlyList();
 	private JTable jTableFunction200TabFieldList = new JTable(tableModelFunction200TabFieldList);
 	private int selectedRow_jTableFunction200TabFieldList;
-	private JSplitPane jSplitPaneFunction200TabFieldList = new JSplitPane();
 	private JPanel jPanelFunction200TabFieldList = new JPanel();
+	private JScrollPane jScrollPaneFunction200TabFieldDefinition = new JScrollPane();
+	private JPanel jPanelFunction200TabFieldDefinition = new JPanel();
 	private JLabel jLabelFunction200TabFieldTable = new JLabel();
 	private JTextField jTextFieldFunction200TabFieldTable = new JTextField();
 	private JLabel jLabelFunction200TabFieldTableType = new JLabel();
@@ -1451,8 +1481,8 @@ public class Editor extends JFrame {
 	private TableModelReadOnlyList tableModelFunction200ButtonList = new TableModelReadOnlyList();
 	private JTable jTableFunction200ButtonList = new JTable(tableModelFunction200ButtonList);
 	private int selectedRow_jTableFunction200ButtonList;
-	private JSplitPane jSplitPaneFunction200ButtonList = new JSplitPane();
 	private JPanel jPanelFunction200ButtonList = new JPanel();
+	private JPanel jPanelFunction200ButtonDefinition = new JPanel();
 	private JLabel jLabelFunction200ButtonPosition = new JLabel();
 	private SpinnerNumberModel spinnerNumberModelFunction200ButtonPosition = new SpinnerNumberModel(0, 0, 6, 1);
 	private JSpinner jSpinnerFunction200ButtonPosition = new JSpinner(spinnerNumberModelFunction200ButtonPosition);
@@ -1475,10 +1505,10 @@ public class Editor extends JFrame {
 	 * Definition components on jPanelFunction290
 	 */
 	private JPanel jPanelFunction290 = new JPanel();
+	private JScrollPane jScrollPaneFunction290Top = new JScrollPane();
 	private JPanel jPanelFunction290Top = new JPanel();
 	private JLabel jLabelFunction290ID = new JLabel();
 	private JTextField jTextFieldFunction290ID = new JTextField();
-	private JLabel jLabelFunction290Name = new JLabel();
 	private JTextField jTextFieldFunction290Name = new JTextField();
 	private JLabel jLabelFunction290Type = new JLabel();
 	private JTextField jTextFieldFunction290Type = new JTextField();
@@ -1501,8 +1531,9 @@ public class Editor extends JFrame {
 	private TableModelReadOnlyList tableModelFunction290PhraseList = new TableModelReadOnlyList();
 	private JTable jTableFunction290PhraseList = new JTable(tableModelFunction290PhraseList);
 	private int selectedRow_jTableFunction290PhraseList;
-	private JSplitPane jSplitPaneFunction290PhraseList = new JSplitPane();
 	private JPanel jPanelFunction290PhraseList = new JPanel();
+	private JScrollPane jScrollPaneFunction290PhraseDefinition = new JScrollPane();
+	private JPanel jPanelFunction290PhraseDefinition = new JPanel();
 	private JLabel jLabelFunction290PhraseBlockType = new JLabel();
 	private JComboBox jComboBoxFunction290PhraseBlockType = new JComboBox();
 	private JLabel jLabelFunction290PhraseAlignment = new JLabel();
@@ -1531,12 +1562,12 @@ public class Editor extends JFrame {
 	 * Definition components on jPanelFunction300
 	 */
 	private JPanel jPanelFunction300 = new JPanel();
+	private JScrollPane jScrollPaneFunction300Top = new JScrollPane();
 	private JPanel jPanelFunction300Top = new JPanel();
 	private JLabel jLabelFunction300ID = new JLabel();
 	private JTextField jTextFieldFunction300ID = new JTextField();
 	private JLabel jLabelFunction300Type = new JLabel();
 	private JTextField jTextFieldFunction300Type = new JTextField();
-	private JLabel jLabelFunction300Name = new JLabel();
 	private JTextField jTextFieldFunction300Name = new JTextField();
 	private JLabel jLabelFunction300HeaderTableName = new JLabel();
 	private JTextField jTextFieldFunction300HeaderTableName = new JTextField();
@@ -1558,6 +1589,7 @@ public class Editor extends JFrame {
 	private String function300HeaderTableKeys;
 	private String function300HeaderTablePK;
 	//
+	private JScrollPane jScrollPaneFunction300Structure = new JScrollPane();
 	private JPanel jPanelFunction300Structure = new JPanel();
 	private JLabel jLabelFunction300StructureTableName = new JLabel();
 	private JTextField jTextFieldFunction300StructureTableName = new JTextField();
@@ -1590,8 +1622,9 @@ public class Editor extends JFrame {
 	private TableModelReadOnlyList tableModelFunction300HeaderFieldList = new TableModelReadOnlyList();
 	private JTable jTableFunction300HeaderFieldList = new JTable(tableModelFunction300HeaderFieldList);
 	private int selectedRow_jTableFunction300HeaderFieldList;
-	private JSplitPane jSplitPaneFunction300HeaderFieldList = new JSplitPane();
 	private JPanel jPanelFunction300HeaderFieldList = new JPanel();
+	private JScrollPane jScrollPaneFunction300HeaderFieldDefinition = new JScrollPane();
+	private JPanel jPanelFunction300HeaderFieldDefinition = new JPanel();
 	private JLabel jLabelFunction300HeaderTable = new JLabel();
 	private JTextField jTextFieldFunction300HeaderTable = new JTextField();
 	private JLabel jLabelFunction300HeaderTableType = new JLabel();
@@ -1645,6 +1678,7 @@ public class Editor extends JFrame {
 	private JPanel jPanelFunction300DetailList = new JPanel();
 	private JPanel jPanelFunction300DetailListTop = new JPanel();
 	//
+	private JScrollPane jScrollPaneFunction300Detail = new JScrollPane();
 	private JScrollPane jScrollPaneFunction300DetailList = new JScrollPane();
 	private TableModelReadOnlyList tableModelFunction300DetailList = new TableModelReadOnlyList();
 	private JTable jTableFunction300DetailList = new JTable(tableModelFunction300DetailList);
@@ -1654,8 +1688,8 @@ public class Editor extends JFrame {
 	private TableModelReadOnlyList tableModelFunction300DetailFieldList = new TableModelReadOnlyList();
 	private JTable jTableFunction300DetailFieldList = new JTable(tableModelFunction300DetailFieldList);
 	private int selectedRow_jTableFunction300DetailFieldList;
-	private JSplitPane jSplitPaneFunction300DetailFieldList = new JSplitPane();
 	private JPanel jPanelFunction300DetailFieldList = new JPanel();
+	private JPanel jPanelFunction300DetailFieldDefinition = new JPanel();
 	private JLabel jLabelFunction300DetailTable = new JLabel();
 	private JTextField jTextFieldFunction300DetailTable = new JTextField();
 	private JLabel jLabelFunction300DetailTableType = new JLabel();
@@ -1686,8 +1720,8 @@ public class Editor extends JFrame {
 	private TableModelReadOnlyList tableModelFunction300DetailFilterList = new TableModelReadOnlyList();
 	private JTable jTableFunction300DetailFilterList = new JTable(tableModelFunction300DetailFilterList);
 	private int selectedRow_jTableFunction300DetailFilterList;
-	private JSplitPane jSplitPaneFunction300DetailFilterList = new JSplitPane();
 	private JPanel jPanelFunction300DetailFilterList = new JPanel();
+	private JPanel jPanelFunction300DetailFilterDefinition = new JPanel();
 	private JLabel jLabelFunction300DetailFilterTable = new JLabel();
 	private JTextField jTextFieldFunction300DetailFilterTable = new JTextField();
 	private JLabel jLabelFunction300DetailFilterTableType = new JLabel();
@@ -1743,8 +1777,8 @@ public class Editor extends JFrame {
 	private TableModelReadOnlyList tableModelFunction300DetailButtonList = new TableModelReadOnlyList();
 	private JTable jTableFunction300DetailButtonList = new JTable(tableModelFunction300DetailButtonList);
 	private int selectedRow_jTableFunction300DetailButtonList;
-	private JSplitPane jSplitPaneFunction300DetailButtonList = new JSplitPane();
 	private JPanel jPanelFunction300DetailButtonList = new JPanel();
+	private JPanel jPanelFunction300DetailButtonDefinition = new JPanel();
 	private JLabel jLabelFunction300DetailButtonPosition = new JLabel();
 	private SpinnerNumberModel spinnerNumberModelFunction300DetailButtonPosition = new SpinnerNumberModel(0, 0, 6, 1);
 	private JSpinner jSpinnerFunction300DetailButtonPosition = new JSpinner(spinnerNumberModelFunction300DetailButtonPosition);
@@ -1775,12 +1809,12 @@ public class Editor extends JFrame {
 	 * Definition components on jPanelFunction310
 	 */
 	private JPanel jPanelFunction310 = new JPanel();
+	private JScrollPane jScrollPaneFunction310Top = new JScrollPane();
 	private JPanel jPanelFunction310Top = new JPanel();
 	private JLabel jLabelFunction310ID = new JLabel();
 	private JTextField jTextFieldFunction310ID = new JTextField();
 	private JLabel jLabelFunction310Type = new JLabel();
 	private JTextField jTextFieldFunction310Type = new JTextField();
-	private JLabel jLabelFunction310Name = new JLabel();
 	private JTextField jTextFieldFunction310Name = new JTextField();
 	private JLabel jLabelFunction310HeaderTableName = new JLabel();
 	private JTextField jTextFieldFunction310HeaderTableName = new JTextField();
@@ -1812,8 +1846,9 @@ public class Editor extends JFrame {
 	private TableModelReadOnlyList tableModelFunction310HeaderFieldList = new TableModelReadOnlyList();
 	private JTable jTableFunction310HeaderFieldList = new JTable(tableModelFunction310HeaderFieldList);
 	private int selectedRow_jTableFunction310HeaderFieldList;
-	private JSplitPane jSplitPaneFunction310HeaderFieldList = new JSplitPane();
 	private JPanel jPanelFunction310HeaderFieldList = new JPanel();
+	private JScrollPane jScrollPaneFunction310HeaderFieldDefinition = new JScrollPane();
+	private JPanel jPanelFunction310HeaderFieldDefinition = new JPanel();
 	private JLabel jLabelFunction310HeaderTable = new JLabel();
 	private JTextField jTextFieldFunction310HeaderTable = new JTextField();
 	private JLabel jLabelFunction310HeaderTableType = new JLabel();
@@ -1858,8 +1893,9 @@ public class Editor extends JFrame {
 	private TableModelReadOnlyList tableModelFunction310DetailFieldList = new TableModelReadOnlyList();
 	private JTable jTableFunction310DetailFieldList = new JTable(tableModelFunction310DetailFieldList);
 	private int selectedRow_jTableFunction310DetailFieldList;
-	private JSplitPane jSplitPaneFunction310DetailFieldList = new JSplitPane();
 	private JPanel jPanelFunction310DetailFieldList = new JPanel();
+	private JScrollPane jScrollPaneFunction310DetailFieldDefinition = new JScrollPane();
+	private JPanel jPanelFunction310DetailFieldDefinition = new JPanel();
 	private JLabel jLabelFunction310DetailTable = new JLabel();
 	private JTextField jTextFieldFunction310DetailTable = new JTextField();
 	private JLabel jLabelFunction310DetailTableType = new JLabel();
@@ -1894,6 +1930,7 @@ public class Editor extends JFrame {
 	private String function310DetailFieldPromptOptionCallFunctionFieldsToGet;
 	private String function310DetailFieldPromptOptionCallFunctionFieldsToGetTo;
 	//
+	private JScrollPane jScrollPaneFunction310AddRowListTableAndField = new JScrollPane();
 	private JPanel jPanelFunction310AddRowListTableAndField = new JPanel();
 	private JPanel jPanelFunction310AddRowListTableAndFieldTop = new JPanel();
 	private JLabel jLabelFunction310AddRowListTableName = new JLabel();
@@ -1914,8 +1951,8 @@ public class Editor extends JFrame {
 	private TableModelReadOnlyList tableModelFunction310AddRowListColumnList = new TableModelReadOnlyList();
 	private JTable jTableFunction310AddRowListColumnList = new JTable(tableModelFunction310AddRowListColumnList);
 	private int selectedRow_jTableFunction310AddRowListColumnList;
-	private JSplitPane jSplitPaneFunction310AddRowListColumnList = new JSplitPane();
 	private JPanel jPanelFunction310AddRowListColumnList = new JPanel();
+	private JPanel jPanelFunction310AddRowListColumnDefinition = new JPanel();
 	private JLabel jLabelFunction310AddRowListColumnTable = new JLabel();
 	private JTextField jTextFieldFunction310AddRowListColumnTable = new JTextField();
 	private JLabel jLabelFunction310AddRowListColumnTableType = new JLabel();
@@ -1937,17 +1974,17 @@ public class Editor extends JFrame {
 	private JRadioButton jRadioButtonFunction310AddRowListColumnCaptionOptionValue = new JRadioButton();
 	private ButtonGroup buttonGroupFunction310AddRowListColumnCaptionOption = new ButtonGroup();
 	private Editor_KanjiTextField jTextFieldFunction310AddRowListColumnCaptionOptionValue = new Editor_KanjiTextField();
-	private Editor_DialogBatchTableEdit dialogBatchTableEdit = new Editor_DialogBatchTableEdit(this);
-	private Editor_DialogStructureTableEdit dialogStructureTableEdit = new Editor_DialogStructureTableEdit(this);
-	private Editor_DialogStructureNodeIconsEdit dialogStructureNodeIconsEdit = new Editor_DialogStructureNodeIconsEdit(this);
-	private Editor_DialogAddRowListTableEdit dialogAddRowListTableEdit = new Editor_DialogAddRowListTableEdit(this);
-	private Editor_DialogAddRowListReturnDataSourcesEdit dialogAddRowListReturnDataSourcesEdit = new Editor_DialogAddRowListReturnDataSourcesEdit(this);
+	private Editor_DialogBatchTableEdit dialogBatchTableEdit;
+	private Editor_DialogStructureTableEdit dialogStructureTableEdit;
+	private Editor_DialogStructureNodeIconsEdit dialogStructureNodeIconsEdit;
+	private Editor_DialogAddRowListTableEdit dialogAddRowListTableEdit;
+	private Editor_DialogAddRowListReturnDataSourcesEdit dialogAddRowListReturnDataSourcesEdit;
 	private JScrollPane jScrollPaneFunction310AddRowListButtonList = new JScrollPane();
 	private TableModelReadOnlyList tableModelFunction310AddRowListButtonList = new TableModelReadOnlyList();
 	private JTable jTableFunction310AddRowListButtonList = new JTable(tableModelFunction310AddRowListButtonList);
 	private int selectedRow_jTableFunction310AddRowListButtonList;
-	private JSplitPane jSplitPaneFunction310AddRowListButtonList = new JSplitPane();
 	private JPanel jPanelFunction310AddRowListButtonList = new JPanel();
+	private JPanel jPanelFunction310AddRowListButtonDefinition = new JPanel();
 	private JLabel jLabelFunction310AddRowListButtonPosition = new JLabel();
 	private SpinnerNumberModel spinnerNumberModelFunction310AddRowListButtonPosition = new SpinnerNumberModel(0, 0, 5, 1);
 	private JSpinner jSpinnerFunction310AddRowListButtonPosition = new JSpinner(spinnerNumberModelFunction310AddRowListButtonPosition);
@@ -1967,8 +2004,8 @@ public class Editor extends JFrame {
 	private TableModelReadOnlyList tableModelFunction310ButtonList = new TableModelReadOnlyList();
 	private JTable jTableFunction310ButtonList = new JTable(tableModelFunction310ButtonList);
 	private int selectedRow_jTableFunction310ButtonList;
-	private JSplitPane jSplitPaneFunction310ButtonList = new JSplitPane();
 	private JPanel jPanelFunction310ButtonList = new JPanel();
+	private JPanel jPanelFunction310ButtonDefinition = new JPanel();
 	private JLabel jLabelFunction310ButtonPosition = new JLabel();
 	private SpinnerNumberModel spinnerNumberModelFunction310ButtonPosition = new SpinnerNumberModel(0, 0, 6, 1);
 	private JSpinner jSpinnerFunction310ButtonPosition = new JSpinner(spinnerNumberModelFunction310ButtonPosition);
@@ -2003,10 +2040,10 @@ public class Editor extends JFrame {
 	 * Definition components on jPanelFunction390
 	 */
 	private JPanel jPanelFunction390 = new JPanel();
+	private JScrollPane jScrollPaneFunction390Top = new JScrollPane();
 	private JPanel jPanelFunction390Top = new JPanel();
 	private JLabel jLabelFunction390ID = new JLabel();
 	private JTextField jTextFieldFunction390ID = new JTextField();
-	private JLabel jLabelFunction390Name = new JLabel();
 	private JTextField jTextFieldFunction390Name = new JTextField();
 	private JLabel jLabelFunction390Type = new JLabel();
 	private JTextField jTextFieldFunction390Type = new JTextField();
@@ -2052,13 +2089,13 @@ public class Editor extends JFrame {
 	private TableModelReadOnlyList tableModelFunction390HeaderPhraseList = new TableModelReadOnlyList();
 	private JTable jTableFunction390HeaderPhraseList = new JTable(tableModelFunction390HeaderPhraseList);
 	private int selectedRow_jTableFunction390HeaderPhraseList;
-	private JSplitPane jSplitPaneFunction390HeaderPhraseList = new JSplitPane();
 	private JPanel jPanelFunction390HeaderPhraseList = new JPanel();
+	private JScrollPane jScrollPaneFunction390HeaderPhraseDefinition = new JScrollPane();
+	private JPanel jPanelFunction390HeaderPhraseDefinition = new JPanel();
 	private JLabel jLabelFunction390HeaderPhraseBlockType = new JLabel();
 	private JComboBox jComboBoxFunction390HeaderPhraseBlockType = new JComboBox();
 	private JLabel jLabelFunction390HeaderPhraseAlignment = new JLabel();
 	private JComboBox jComboBoxFunction390HeaderPhraseAlignment = new JComboBox();
-	//private JTextField jTextFieldFunction390HeaderPhraseAlignment = new JTextField();
 	private JLabel jLabelFunction390HeaderPhraseMargin = new JLabel();
 	private JTextField jTextFieldFunction390HeaderPhraseMarginLeft = new JTextField();
 	private JTextField jTextFieldFunction390HeaderPhraseMarginRight = new JTextField();
@@ -2080,8 +2117,9 @@ public class Editor extends JFrame {
 	private TableModelReadOnlyList tableModelFunction390DetailFieldList = new TableModelReadOnlyList();
 	private JTable jTableFunction390DetailFieldList = new JTable(tableModelFunction390DetailFieldList);
 	private int selectedRow_jTableFunction390DetailFieldList;
-	private JSplitPane jSplitPaneFunction390DetailFieldList = new JSplitPane();
 	private JPanel jPanelFunction390DetailFieldList = new JPanel();
+	private JScrollPane jScrollPaneFunction390DetailFieldDefinition = new JScrollPane();
+	private JPanel jPanelFunction390DetailFieldDefinition = new JPanel();
 	private JLabel jLabelFunction390DetailTable = new JLabel();
 	private JTextField jTextFieldFunction390DetailTable = new JTextField();
 	private JLabel jLabelFunction390DetailTableType = new JLabel();
@@ -2112,26 +2150,26 @@ public class Editor extends JFrame {
 	/**
 	 * Definition of Dialogs
 	 */
-	private Editor_DialogPromptOptionCallFunctionExchangeEdit dialogPromptOptionCallFunctionExchangeEdit = new Editor_DialogPromptOptionCallFunctionExchangeEdit(this);
-	private DialogImport dialogImport = new DialogImport(this);
-	private DialogImportModel dialogImportModel = new DialogImportModel(this);
-	private DialogScan dialogScan = new DialogScan(this);
-	private DialogScanField dialogScanField = new DialogScanField(this);
-	private DialogAddList dialogAddList = new DialogAddList(this);
-	private DialogAddReferTable dialogAddReferTable = new DialogAddReferTable(this);
-	private DialogAddFunction dialogAddFunction = new DialogAddFunction(this);
-	private DialogAddFieldToFunction dialogAddFieldToFunction = new DialogAddFieldToFunction(this);
-	private DialogAddDetailTable dialogAddDetailTable = new DialogAddDetailTable(this);
-	private DialogEditTableKey dialogEditTableKey = new DialogEditTableKey(this);
-	private DialogEditDetailTableKey dialogEditDetailTableKey = new DialogEditDetailTableKey(this);
-	private DialogCheckLayout dialogCheckLayout = new DialogCheckLayout(this);
-	private DialogCheckTableModule dialogCheckTableModule = new DialogCheckTableModule(this);
-	private DialogCreateTable dialogCreateTable = new DialogCreateTable(this);
-	private DialogSQL dialogSQL = new DialogSQL(this);
-	private DialogCheckFunctionsCalled dialogCheckFunctionsCalled = new DialogCheckFunctionsCalled(this);
-	private DialogEditScript dialogEditScript = new DialogEditScript(this);
-	private DialogListLog dialogListLog = new DialogListLog(this);
-	private DialogAbout dialogAbout = new DialogAbout(this);
+	private Editor_DialogPromptOptionCallFunctionExchangeEdit dialogPromptOptionCallFunctionExchangeEdit;
+	private DialogImport dialogImport;
+	private DialogImportModel dialogImportModel;
+	private DialogScan dialogScan;
+	private DialogScanField dialogScanField;
+	private DialogAddList dialogAddList;
+	private DialogAddReferTable dialogAddReferTable;
+	private DialogAddFunction dialogAddFunction;
+	private DialogAddFieldToFunction dialogAddFieldToFunction;
+	private DialogAddDetailTable dialogAddDetailTable;
+	private DialogEditTableKey dialogEditTableKey;
+	private DialogEditDetailTableKey dialogEditDetailTableKey;
+	private DialogCheckLayout dialogCheckLayout;
+	private DialogCheckTableModule dialogCheckTableModule;
+	private DialogCreateTable dialogCreateTable;
+	private DialogSQL dialogSQL;
+	private DialogCheckFunctionsCalled dialogCheckFunctionsCalled;
+	private DialogEditScript dialogEditScript;
+	private DialogListLog dialogListLog;
+	private DialogAbout dialogAbout;
 	/**
 	 * Definition of Exception log
 	 */
@@ -2148,14 +2186,12 @@ public class Editor extends JFrame {
 	 */
 	public Editor(String[] args, Application app) {
 		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
-		//
 		try {
 			application = app;
 			if (args.length >= 1) {
 				initComponents();
 				currentFileName = args[0];
 				setupMainTreeModelWithCurrentFileName();
-				//processContentsFile(args[0]);
 			} else {
 				JOptionPane.showMessageDialog(this, res.getString("ChooseAction"));
 				EventQueue.invokeLater(new Runnable() {
@@ -2165,7 +2201,6 @@ public class Editor extends JFrame {
 				});
 				System.exit(0);
 			}
-			//
 		} catch (Exception e) {
 			processError(e);
 		}
@@ -2185,85 +2220,6 @@ public class Editor extends JFrame {
 		}
 	}
 
-//	/**
-//	 * Process specific file
-//	 * @param nameOfFile :name of file to be processed
-//	 * @throws Exception
-//	 */
-//	void processContentsFile(String nameOfFile) throws Exception  {
-//		//
-//		currentFileName = nameOfFile;
-//		String strWrk = System.getProperty("java.class.path");
-//		fileSeparator = System.getProperty("file.separator");
-//		int pos = strWrk.lastIndexOf(fileSeparator);
-//		applicationFolder = strWrk.substring(0,pos+1);
-//		//
-//		try {
-//			setupMainTreeModelWithCurrentFileName();
-//		} catch (Exception ex) {
-//			EventQueue.invokeLater(new Runnable() {
-//				@Override public void run() {
-//					application.hideSplash();
-//				}
-//			});
-//			JOptionPane.showMessageDialog(this, res.getString("FailedToParse"));
-//			System.exit(0);
-//		}
-//	}
-//	void processContentsFile(String nameOfFile) throws Exception  {
-//		//
-//		currentFileName = nameOfFile;
-//		String strWrk = System.getProperty("java.class.path");
-//		fileSeparator = System.getProperty("file.separator");
-//		int pos = strWrk.lastIndexOf(fileSeparator);
-//		applicationFolder = strWrk.substring(0,pos+1);
-//		//
-//		// Request fileName if it is null //
-//		if (currentFileName == null || currentFileName.equals("")) {
-//			do {
-//				Object[] bts = {res.getString("SelectFile"), res.getString("Exit")};
-//				int rtn = JOptionPane.showOptionDialog(this, res.getString("ChooseAction"),
-//						res.getString("SelectContent"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
-//				//
-//				// Select existing file //
-//				if (rtn == 0) {
-//					currentFileName = specifyNameOfExistingFile(res.getString("OpenExistintContent"), "xeaf");
-//				}
-//				//
-//				// Exit //
-//				if (rtn == 1 || rtn == -1) {
-//					EventQueue.invokeLater(new Runnable() {
-//						@Override public void run() {
-//							application.hideSplash();
-//						}
-//					});
-//					System.exit(0);
-//				}
-//			} while(currentFileName.equals(""));
-//		}
-//		//
-//		// Exit if fileName is null, otherwise, setup treeView //
-//		if (currentFileName.equals("")) {
-//			EventQueue.invokeLater(new Runnable() {
-//				@Override public void run() {
-//					application.hideSplash();
-//				}
-//			});
-//			System.exit(0);
-//		} else {
-//			try {
-//				setupMainTreeModelWithCurrentFileName();
-//			} catch (Exception ex) {
-//				EventQueue.invokeLater(new Runnable() {
-//					@Override public void run() {
-//						application.hideSplash();
-//					}
-//				});
-//				JOptionPane.showMessageDialog(this, res.getString("FailedToParse"));
-//				System.exit(0);
-//			}
-//		}
-//	}
 	/**
 	 * Specify existing file in the dialog
 	 * @param dialogTitle :title of the dialog
@@ -2311,6 +2267,7 @@ public class Editor extends JFrame {
 		}
 		return name;
 	}
+
 	/**
 	 * Specify new file in the dialog
 	 * @param dialogTitle :title of the dialog
@@ -2320,27 +2277,25 @@ public class Editor extends JFrame {
 	 */
 	String specifyNameOfNewFile(String dialogTitle, String buttonText, String defaultFileName, String extention) {
 		String name = "";
-		//String extention = "";
 		int rtn = 0;
-		//
+
 		while (rtn != 2) {
-			//
+
 			if (name.equals("")) {
 				jFileChooser.setSelectedFile(new File(defaultFileName));
 				jFileChooser.resetChoosableFileFilters();
 				jFileChooser.setFileFilter(new FileNameExtensionFilter(extention, extention));
-				//extention = getExtention(jFileChooser.getSelectedFile());
 			} else {
 				jFileChooser.setSelectedFile(new File(name));
 			}
 			jFileChooser.setDialogTitle(dialogTitle);
 			int reply = jFileChooser.showDialog(this, buttonText);
-			//
+
 			if (reply == JFileChooser.CANCEL_OPTION) {
 				name = "";
 				break;
 			}
-			//
+
 			if (reply == JFileChooser.APPROVE_OPTION) {
 				File file = new File(jFileChooser.getSelectedFile().getPath());
 				if (getExtention(file) == null) {
@@ -2383,6 +2338,7 @@ public class Editor extends JFrame {
 		}
 		return name;
 	}
+
 //	/**
 //	 * Create New File
 //	 */
@@ -2408,6 +2364,7 @@ public class Editor extends JFrame {
 //			processError(ex);
 //		}
 //	}
+
 	/**
 	 * Retrieve file extension
 	 * @param file :the file which name to be processed
@@ -2500,7 +2457,7 @@ public class Editor extends JFrame {
 				domDocument = parser.getDocument();
 			}
 			//
-			// Check Format version and add node of "System"//
+			// Check Format version and add node of "System" //
 			xmlnodelist1 = domDocument.getElementsByTagName("System");
 			element1 = (org.w3c.dom.Element)xmlnodelist1.item(0);
 			float fileFormat = Float.parseFloat(element1.getAttribute("FormatVersion"));
@@ -2515,6 +2472,9 @@ public class Editor extends JFrame {
 			treeModel = new DefaultTreeModel(systemNode);
 			systemName = systemNode.getElement().getAttribute("Name");
 			systemVersion = systemNode.getElement().getAttribute("Version");
+			//
+			// Construct DialogCheckLayout //
+			dialogCheckLayout = new DialogCheckLayout(this, systemNode.getElement().getAttribute("SystemFont"));
 			//
 			// Add Node of "MenuList"//
 			menuListNode = new MainTreeNode("MenuList", null, this);
@@ -2567,14 +2527,14 @@ public class Editor extends JFrame {
 		    for (int i = 0; i < sortingList.getSize(); i++) {
 		    	progressRate = (i+1) * 100 / sortingList.getSize();
 		    	progressMessage = res.getString("SplashMessage3") + "(" + progressRate + "%)";
-				application.setTextOnSplash(progressMessage);
-				//
-		        element1 = (org.w3c.dom.Element)sortingList.getElementAt(i);
-				xETreeNode1 = getSpecificXETreeNode("Subsystem", element1.getAttribute("SubsystemID"));
-				xETreeNode1 = (MainTreeNode)xETreeNode1.getChildAt(0);
-				xETreeNode2 = new MainTreeNode("Table", element1, this);
-				xETreeNode1.add(xETreeNode2);
-				checkTableModule(xETreeNode2, false);
+		    	application.setTextOnSplash(progressMessage);
+		    	//
+		    	element1 = (org.w3c.dom.Element)sortingList.getElementAt(i);
+		    	xETreeNode1 = getSpecificXETreeNode("Subsystem", element1.getAttribute("SubsystemID"));
+		    	xETreeNode1 = (MainTreeNode)xETreeNode1.getChildAt(0);
+		    	xETreeNode2 = new MainTreeNode("Table", element1, this);
+		    	xETreeNode1.add(xETreeNode2);
+		    	checkTableModule(xETreeNode2, false);
 			}
 			//
 			// Add Node of "Function"//
@@ -2652,21 +2612,70 @@ public class Editor extends JFrame {
         Rectangle screenRect = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 		screenWidth = (int)screenRect.getWidth();
 		screenHeight = (int)screenRect.getHeight();
+
 		/**
-		 * table-cell property controller
+		 * Read xeadedt.properties
 		 */
-		rendererAlignmentCenter.setHorizontalAlignment(0); //CENTER//
-		rendererAlignmentCenter.setBackground(Color.white);
-		rendererAlignmentRight.setHorizontalAlignment(4); //RIGHT//
-		rendererAlignmentRight.setBackground(Color.white);
-		rendererAlignmentLeft.setHorizontalAlignment(2); //LEFT//
-		rendererAlignmentLeft.setBackground(Color.white);
-		rendererAlignmentCenterControlColor.setHorizontalAlignment(0); //CENTER//
-		rendererAlignmentCenterControlColor.setBackground(SystemColor.control);
-		rendererAlignmentRightControlColor.setHorizontalAlignment(4); //RIGHT//
-		rendererAlignmentRightControlColor.setBackground(SystemColor.control);
-		rendererAlignmentLeftControlColor.setHorizontalAlignment(2); //LEFT//
-		rendererAlignmentLeftControlColor.setBackground(SystemColor.control);
+		InputStream inputStream = null;
+		StringTokenizer workTokenizer;
+		String wrkStr;
+		int[] colorRGB = {0,0,0};
+		int i = 0;
+		try {
+			File file = new File("xeadedt.properties");
+			if (file.exists()) {
+				inputStream = new FileInputStream(file);
+			} else {
+				String classPath = System.getProperty("java.class.path");
+				String jarPath = classPath.substring(0, classPath.lastIndexOf(File.separator)+1);
+				inputStream = new FileInputStream(new File(jarPath + "xeadedt.properties"));
+			}
+			properties.load(inputStream);
+			wrkStr = properties.getProperty("MainFont");
+			if (!wrkStr.equals("")) {
+				mainFontName = wrkStr;
+			}
+			wrkStr = properties.getProperty("ScriptFontSize");
+			if (!wrkStr.equals("")) {
+				scriptFontSize = Integer.parseInt(wrkStr);
+			}
+			wrkStr = properties.getProperty("ScriptFont");
+			if (!wrkStr.equals("")) {
+				scriptFontName = wrkStr;
+			}
+			wrkStr = properties.getProperty("ScriptBackground");
+			if (!wrkStr.equals("")) {
+				i = 0;
+				workTokenizer = new StringTokenizer(wrkStr, ",");
+				while (workTokenizer.hasMoreTokens()) {
+					colorRGB[i] = Integer.parseInt(workTokenizer.nextToken());
+					i++;
+				}
+				colorScriptBackground = new Color(colorRGB[0], colorRGB[1], colorRGB[2]);
+			}
+			wrkStr = properties.getProperty("ScriptForeground");
+			if (!wrkStr.equals("")) {
+				i = 0;
+				workTokenizer = new StringTokenizer(wrkStr, ",");
+				while (workTokenizer.hasMoreTokens()) {
+					colorRGB[i] = Integer.parseInt(workTokenizer.nextToken());
+					i++;
+				}
+				colorScriptForeground = new Color(colorRGB[0], colorRGB[1], colorRGB[2]);
+			}
+			wrkStr = properties.getProperty("ScriptCaret");
+			if (!wrkStr.equals("")) {
+				i = 0;
+				workTokenizer = new StringTokenizer(wrkStr, ",");
+				while (workTokenizer.hasMoreTokens()) {
+					colorRGB[i] = Integer.parseInt(workTokenizer.nextToken());
+					i++;
+				}
+				colorScriptCaret = new Color(colorRGB[0], colorRGB[1], colorRGB[2]);
+			}
+		} catch (Exception e) {
+		}
+
 		/**
 		 * set image resource to icons
 		 */
@@ -2705,13 +2714,63 @@ public class Editor extends JFrame {
 	    imageIconMenu = new ImageIcon(xeadEditor.Editor.class.getResource("imenu.png"));
 	    imageIconTree = new ImageIcon(xeadEditor.Editor.class.getResource("itree.png"));
 	    imageIconPrompt = new ImageIcon(xeadEditor.Editor.class.getResource("prompt.png"));
-		/**
+
+	    /**
 		 * Title Name and Title Icon
 		 */
 	 	imageTitle = Toolkit.getDefaultToolkit().createImage(xeadEditor.Editor.class.getResource("title.png"));
 	 	this.setIconImage(imageTitle);
 		this.setSize(new Dimension(screenWidth - 80, screenHeight - 50));
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+		/**
+		 * Dialogs(1)
+		 */
+		dialogPromptOptionCallFunctionExchangeEdit = new Editor_DialogPromptOptionCallFunctionExchangeEdit(this);
+		dialogImport = new DialogImport(this);
+		dialogImportModel = new DialogImportModel(this);
+		dialogScan = new DialogScan(this);
+		dialogScanField = new DialogScanField(this);
+		dialogAddList = new DialogAddList(this);
+		dialogAddReferTable = new DialogAddReferTable(this);
+		dialogAddFunction = new DialogAddFunction(this);
+		dialogAddFieldToFunction = new DialogAddFieldToFunction(this);
+		dialogAddDetailTable = new DialogAddDetailTable(this);
+		dialogEditTableKey = new DialogEditTableKey(this);
+		dialogEditDetailTableKey = new DialogEditDetailTableKey(this);
+		dialogCheckTableModule = new DialogCheckTableModule(this);
+		dialogCreateTable = new DialogCreateTable(this);
+		dialogSQL = new DialogSQL(this);
+		dialogCheckFunctionsCalled = new DialogCheckFunctionsCalled(this);
+		dialogEditScript = new DialogEditScript(this);
+		dialogListLog = new DialogListLog(this);
+		dialogAbout = new DialogAbout(this);
+
+		/**
+		 * Dialogs(2)
+		 */
+		dialogBatchTableEdit = new Editor_DialogBatchTableEdit(this);
+		dialogStructureTableEdit = new Editor_DialogStructureTableEdit(this);
+		dialogStructureNodeIconsEdit = new Editor_DialogStructureNodeIconsEdit(this);
+		dialogAddRowListTableEdit = new Editor_DialogAddRowListTableEdit(this);
+		dialogAddRowListReturnDataSourcesEdit = new Editor_DialogAddRowListReturnDataSourcesEdit(this);
+
+		/**
+		 * table-cell property controller
+		 */
+		rendererAlignmentCenter.setHorizontalAlignment(0); //CENTER//
+		rendererAlignmentCenter.setBackground(Color.white);
+		rendererAlignmentRight.setHorizontalAlignment(4); //RIGHT//
+		rendererAlignmentRight.setBackground(Color.white);
+		rendererAlignmentLeft.setHorizontalAlignment(2); //LEFT//
+		rendererAlignmentLeft.setBackground(Color.white);
+		rendererAlignmentCenterControlColor.setHorizontalAlignment(0); //CENTER//
+		rendererAlignmentCenterControlColor.setBackground(SystemColor.control);
+		rendererAlignmentRightControlColor.setHorizontalAlignment(4); //RIGHT//
+		rendererAlignmentRightControlColor.setBackground(SystemColor.control);
+		rendererAlignmentLeftControlColor.setHorizontalAlignment(2); //LEFT//
+		rendererAlignmentLeftControlColor.setBackground(SystemColor.control);
+		
 		/**
 		 * main panels
 		 */
@@ -2724,16 +2783,16 @@ public class Editor extends JFrame {
 		borderOriginal1 = BorderFactory.createBevelBorder(BevelBorder.LOWERED,Color.white,UIManager.getColor("control"),Color.gray,UIManager.getColor("control"));
 		jProgressBar.setBorder(borderOriginal1);
 		jLabelChangeState.setBorder(jProgressBar.getBorder());
-		jLabelChangeState.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jPanelTopMargin1.setPreferredSize(new Dimension(10, 18));
+		jLabelChangeState.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE-2));
+		jPanelTopMargin1.setPreferredSize(new Dimension(10, 24));
 		jPanelTopMargin1.setLayout(new BorderLayout());
 		jPanelTopMargin1.setBorder(null);
 		GridLayout gridLayoutTopMargin = new GridLayout();
-		jPanelTopMargin2.setPreferredSize(new Dimension(160, 18));
+		jPanelTopMargin2.setPreferredSize(new Dimension(190, 18));
 		jPanelTopMargin2.setLayout(gridLayoutTopMargin);
 		jPanelTopMargin2.setBorder(null);
 		jLabelSubtitle.setBorder(jProgressBar.getBorder());
-		jLabelSubtitle.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSubtitle.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSubtitle.setPreferredSize(new Dimension(800, 17));
 		jLabelSubtitle.setText(res.getString("SystemName"));
 		jLabelChangeState.setHorizontalAlignment(SwingConstants.CENTER);
@@ -2748,10 +2807,11 @@ public class Editor extends JFrame {
 		jSplitPaneMain.add(jScrollPaneTreeView, JSplitPane.LEFT);
 		jSplitPaneMain.add(jPanelContentsPane, JSplitPane.RIGHT);
 		if (screenWidth > 1024) {
-			jSplitPaneMain.setDividerLocation(300);
+			jSplitPaneMain.setDividerLocation(350);
 		} else {
 			jSplitPaneMain.setDividerLocation(170);
 		}
+
 		/**
 		 * main menu
 		 */
@@ -2924,6 +2984,7 @@ public class Editor extends JFrame {
 		jMenuBar.add(jMenuTool);
 		jMenuBar.add(jMenuHelp);
 		this.setJMenuBar(jMenuBar);
+
 		/**
 		 * context menu
 		 */
@@ -2937,6 +2998,8 @@ public class Editor extends JFrame {
 		jMenuItemComponentToDelete.setText(res.getString("Delete"));
 		jMenuItemComponentToJump.setText(res.getString("Jump"));
 		jMenuItemComponentToListCsv.setText(res.getString("ListCsv"));
+		jMenuItemComponentToListTableData.setText(res.getString("List"));
+		jMenuItemComponentToListExcel.setText(res.getString("DataOutput"));
 		jMenuItemComponentToShowTips.setText(res.getString("TipsToEdit"));
 		jMenuItemComponentToCheckLayout.setText(res.getString("CheckLayout"));
 		jMenuComponentToAddKey.add(jMenuItemComponentToAddPK);
@@ -2947,6 +3010,7 @@ public class Editor extends JFrame {
 		jMenuItemComponentToCheckLayoutXF110_2.setText(res.getString("UpdateList"));
 		jMenuComponentToCheckLayoutXF110.add(jMenuItemComponentToCheckLayoutXF110_1);
 		jMenuComponentToCheckLayoutXF110.add(jMenuItemComponentToCheckLayoutXF110_2);
+
 		/**
 		 * access key for MainMenu if Platform is not Mac-OS
 		 */
@@ -2962,12 +3026,15 @@ public class Editor extends JFrame {
 			jMenuHelp.setText(res.getString("MainMenuHelp"));
 			jMenuHelp.setMnemonic('H');
 		}
+
 		/**
 		 * components for TreeView
 		 */
 		jScrollPaneTreeView.setMinimumSize(new Dimension(0, 0));
 		jPanelContentsPane.setLayout(cardLayoutContentsPane);
-		jTreeMain.setFont(new java.awt.Font("Dialog", 0, 12));
+		jPanelContentsPane.setMinimumSize(new Dimension(0, 0));
+		jTreeMain.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTreeMain.setRowHeight(TREE_ROW_HEIGHT);
 		jTreeMain.addKeyListener(new Editor_jTreeMain_keyAdapter(this));
 		jTreeMain.addMouseListener(new Editor_jTreeMain_mouseAdapter(this));
 		jTreeMain.addMouseMotionListener(new Editor_jTreeMain_mouseMotionAdapter(this));
@@ -2985,6 +3052,7 @@ public class Editor extends JFrame {
 		jMenuItemXETreeNodeCopy.addActionListener(new Editor_jMenuItemXETreeNodeCopy_actionAdapter(this));
 		jMenuItemXETreeNodeDelete.setText(res.getString("Delete"));
 		jMenuItemXETreeNodeDelete.addActionListener(new Editor_jMenuItemXETreeNodeDelete_actionAdapter(this));
+
 		/**
 		 * PopupMenu for Contents Pane Processing
 		 */
@@ -2997,10 +3065,13 @@ public class Editor extends JFrame {
 		jMenuItemComponentToDelete.addActionListener(new Editor_jMenuItemComponentToDelete_actionAdapter(this));
 		jMenuItemComponentToJump.addActionListener(new Editor_jMenuItemComponentToJump_actionAdapter(this));
 		jMenuItemComponentToListCsv.addActionListener(new Editor_jMenuItemComponentToListCsv_actionAdapter(this));
+		jMenuItemComponentToListTableData.addActionListener(new Editor_jMenuItemComponentToListTableData_actionAdapter(this));
+		jMenuItemComponentToListExcel.addActionListener(new Editor_jMenuItemComponentToListExcel_actionAdapter(this));
 		jMenuItemComponentToShowTips.addActionListener(new Editor_jMenuItemComponentToShowTips_actionAdapter(this));
 		jMenuItemComponentToCheckLayout.addActionListener(new Editor_jMenuItemComponentToCheckLayout_actionAdapter(this));
 		jMenuItemComponentToCheckLayoutXF110_1.addActionListener(new Editor_jMenuItemComponentToCheckLayout_actionAdapter(this));
 		jMenuItemComponentToCheckLayoutXF110_2.addActionListener(new Editor_jMenuItemComponentToCheckLayout_actionAdapter(this));
+
 		/**
 		 * components on Contents Pane
 		 */
@@ -3020,37 +3091,36 @@ public class Editor extends JFrame {
 		jPanelContentsPane.add(jPanelFunction300,  "jPanelFunction300");
 		jPanelContentsPane.add(jPanelFunction310,  "jPanelFunction310");
 		jPanelContentsPane.add(jPanelFunction390,  "jPanelFunction390");
-		//
 	}
+
 	/**
 	 * Initialize component for node of System
 	 */
 	void initComponentsForSystem() {
-		//
 		//(System Remarks)//
-		jTabbedPaneSystem.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTabbedPaneSystem.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jPanelSystem.setLayout(new BorderLayout());
 		jPanelSystemTop.setBorder(BorderFactory.createEtchedBorder());
-		jPanelSystemTop.setPreferredSize(new Dimension(10, 40));
+		jPanelSystemTop.setPreferredSize(new Dimension(10, 43));
 		jPanelSystemTop.setToolTipText("");
 		jPanelSystemTop.setLayout(null);
-		jLabelSystemName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemName.setText(res.getString("SystemName"));
-		jLabelSystemName.setBounds(new Rectangle(11, 12, 86, 15));
-		jTextFieldSystemName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemName.setBounds(new Rectangle(105, 9, 258, 22));
-		jLabelSystemVersion.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemName.setBounds(new Rectangle(11, 12, 126, 18));
+		jTextFieldSystemName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemName.setBounds(new Rectangle(145, 9, 288, 25));
+		jLabelSystemVersion.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemVersion.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemVersion.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemVersion.setText(res.getString("SystemVersion"));
-		jLabelSystemVersion.setBounds(new Rectangle(374, 12, 96, 15));
-		jTextFieldSystemVersion.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemVersion.setBounds(new Rectangle(477, 9, 105, 22));
-		jButtonSystemRun.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jButtonSystemRun.setText(res.getString("Launch") + "  F5");
-		jButtonSystemRun.setBounds(new Rectangle(620, 7, 140, 25));
+		jLabelSystemVersion.setBounds(new Rectangle(444, 12, 116, 18));
+		jTextFieldSystemVersion.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemVersion.setBounds(new Rectangle(577, 9, 115, 25));
+		jButtonSystemRun.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jButtonSystemRun.setText(res.getString("Launch") + " F5");
+		jButtonSystemRun.setBounds(new Rectangle(750, 7, 200, 28));
 		jButtonSystemRun.addActionListener(new Editor_jMenuItemFileRun_actionAdapter(this));
 		jPanelSystem.add(jPanelSystemTop, BorderLayout.NORTH);
 		jPanelSystemTop.add(jLabelSystemName);
@@ -3059,136 +3129,132 @@ public class Editor extends JFrame {
 		jPanelSystemTop.add(jTextFieldSystemVersion);
 		jPanelSystemTop.add(jButtonSystemRun);
 		jPanelSystem.add(jTabbedPaneSystem,  BorderLayout.CENTER);
-		jTextAreaSystemRemarks.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextAreaSystemRemarks.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextAreaSystemRemarks.setLineWrap(true);
 		jTextAreaSystemRemarks.setWrapStyleWord(true);
 		jScrollPaneSystemRemarks.getViewport().add(jTextAreaSystemRemarks, null);
 		jTabbedPaneSystem.add(res.getString("SystemRemarks"), jScrollPaneSystemRemarks);
 		jTabbedPaneSystem.setIconAt(0, imageIconSystem);
-		//
 		//(System DB Configurations)//
 		jTabbedPaneSystem.addTab(res.getString("SystemDatabaseConfig"), jPanelSystemConfig);
 		jTabbedPaneSystem.setIconAt(1, imageIconTable);
 		jPanelSystemConfig.setBorder(null);
 		jPanelSystemConfig.setLayout(new BorderLayout());
+		jScrollPaneSystemConfigTop.setBorder(null);
+		jScrollPaneSystemConfigTop.getViewport().add(jPanelSystemConfigTop);
 		jPanelSystemConfigTop.setBorder(BorderFactory.createEtchedBorder());
 		jPanelSystemConfigTop.setLayout(null);
-		jPanelSystemConfigTop.setPreferredSize(new Dimension(10, 126));
-		jLabelSystemDBName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemDBName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemDBName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemDBName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemDBName.setText(res.getString("DatabaseMain"));
-		jLabelSystemDBName.setBounds(new Rectangle(5, 12, 96, 15));
-		jTextFieldSystemDBName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemDBName.setBounds(new Rectangle(105, 9, 320, 22));
-		jLabelSystemDBUser.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemDBName.setBounds(new Rectangle(5, 12, 130, 18));
+		jTextFieldSystemDBName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemDBName.setBounds(new Rectangle(140, 9, 530, 25));
+		jLabelSystemDBUser.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemDBUser.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemDBUser.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemDBUser.setText(res.getString("User"));
-		jLabelSystemDBUser.setBounds(new Rectangle(447, 12, 86, 15));
-		jTextFieldSystemDBUser.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemDBUser.setBounds(new Rectangle(540, 9, 105, 22));
-		jLabelSystemDBPassword.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemDBUser.setBounds(new Rectangle(670, 12, 100, 18));
+		jTextFieldSystemDBUser.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemDBUser.setBounds(new Rectangle(775, 9, 100, 25));
+		jLabelSystemDBPassword.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemDBPassword.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemDBPassword.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemDBPassword.setText(res.getString("Password"));
-		jLabelSystemDBPassword.setBounds(new Rectangle(647, 12, 86, 15));
-		jTextFieldSystemDBPassword.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemDBPassword.setBounds(new Rectangle(740, 9, 120, 22));
-		jLabelSystemDBCPOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemDBPassword.setBounds(new Rectangle(885, 12, 100, 18));
+		jTextFieldSystemDBPassword.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemDBPassword.setBounds(new Rectangle(990, 9, 100, 25));
+		jLabelSystemDBCPOptions.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemDBCPOptions.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemDBCPOptions.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemDBCPOptions.setText(res.getString("DBCPOptions"));
-		jLabelSystemDBCPOptions.setBounds(new Rectangle(5, 40, 96, 15));
-		jTextFieldSystemDBCPOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemDBCPOptions.setBounds(new Rectangle(105, 37, 320, 22));
-		jLabelSystemAppServerName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemDBCPOptions.setBounds(new Rectangle(5, 43, 130, 18));
+		jTextFieldSystemDBCPOptions.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemDBCPOptions.setBounds(new Rectangle(140, 40, 305, 25));
+		jLabelSystemAppServerName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemAppServerName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemAppServerName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemAppServerName.setText(res.getString("AppServerName"));
-		jLabelSystemAppServerName.setBounds(new Rectangle(437, 40, 96, 15));
-		jTextFieldSystemAppServerName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemAppServerName.setBounds(new Rectangle(540, 37, 320, 22));
-		jCheckBoxSystemAutoConnectToEdit.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jCheckBoxSystemAutoConnectToEdit.setBounds(new Rectangle(105, 65, 250, 22));
-		jCheckBoxSystemAutoConnectToEdit.setText(res.getString("AutoConnect"));
+		jLabelSystemAppServerName.setBounds(new Rectangle(455, 43, 130, 18));
+		jTextFieldSystemAppServerName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemAppServerName.setBounds(new Rectangle(590, 39, 400, 25));
 		//(System Control Tables)//
-		jLabelSystemVariantsTable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemVariantsTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemVariantsTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemVariantsTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemVariantsTable.setText(res.getString("SystemVariants"));
-		jLabelSystemVariantsTable.setBounds(new Rectangle(11, 96, 86, 15));
-		jTextFieldSystemVariantsTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemVariantsTable.setBounds(new Rectangle(105, 93, 80, 22));
-		jLabelSystemUserTable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemVariantsTable.setBounds(new Rectangle(5, 90, 130, 18));
+		jTextFieldSystemVariantsTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemVariantsTable.setBounds(new Rectangle(140, 87, 80, 25));
+		jLabelSystemUserTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemUserTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemUserTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemUserTable.setText(res.getString("SystemUser"));
-		jLabelSystemUserTable.setBounds(new Rectangle(191, 96, 86, 15));
-		jTextFieldSystemUserTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemUserTable.setBounds(new Rectangle(285, 93, 80, 22));
-		jLabelSystemNumberingTable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemUserTable.setBounds(new Rectangle(230, 90, 130, 18));
+		jTextFieldSystemUserTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemUserTable.setBounds(new Rectangle(365, 87, 80, 25));
+		jLabelSystemNumberingTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemNumberingTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemNumberingTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemNumberingTable.setText(res.getString("SystemNumbering"));
-		jLabelSystemNumberingTable.setBounds(new Rectangle(371, 96, 86, 15));
-		jTextFieldSystemNumberingTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemNumberingTable.setBounds(new Rectangle(465, 93, 80, 22));
-		jLabelSystemUserVariantsTable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemNumberingTable.setBounds(new Rectangle(455, 90, 130, 18));
+		jTextFieldSystemNumberingTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemNumberingTable.setBounds(new Rectangle(590, 87, 80, 25));
+		jLabelSystemUserVariantsTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemUserVariantsTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemUserVariantsTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemUserVariantsTable.setText(res.getString("SystemUserVariants"));
-		jLabelSystemUserVariantsTable.setBounds(new Rectangle(551, 96, 86, 15));
-		jTextFieldSystemUserVariantsTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemUserVariantsTable.setBounds(new Rectangle(645, 93, 80, 22));
-		jLabelSystemSessionTable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemUserVariantsTable.setBounds(new Rectangle(680, 90, 130, 18));
+		jTextFieldSystemUserVariantsTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemUserVariantsTable.setBounds(new Rectangle(815, 87, 80, 25));
+		jLabelSystemSessionTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemSessionTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSessionTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemSessionTable.setText(res.getString("SystemSession"));
-		jLabelSystemSessionTable.setBounds(new Rectangle(731, 96, 86, 15));
-		jTextFieldSystemSessionTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemSessionTable.setBounds(new Rectangle(825, 93, 80, 22));
-		jLabelSystemSessionDetailTable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemSessionTable.setBounds(new Rectangle(905, 90, 130, 15));
+		jTextFieldSystemSessionTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemSessionTable.setBounds(new Rectangle(1040, 87, 80, 25));
+		jLabelSystemSessionDetailTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemSessionDetailTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSessionDetailTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemSessionDetailTable.setText(res.getString("SystemSessionDetail"));
-		jLabelSystemSessionDetailTable.setBounds(new Rectangle(11, 124, 86, 15));
-		jTextFieldSystemSessionDetailTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemSessionDetailTable.setBounds(new Rectangle(105, 121, 80, 22));
-		jLabelSystemTaxTable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemSessionDetailTable.setBounds(new Rectangle(5, 121, 130, 18));
+		jTextFieldSystemSessionDetailTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemSessionDetailTable.setBounds(new Rectangle(140, 118, 80, 25));
+		jLabelSystemTaxTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemTaxTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemTaxTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemTaxTable.setText(res.getString("SystemTax"));
-		jLabelSystemTaxTable.setBounds(new Rectangle(191, 124, 86, 15));
-		jTextFieldSystemTaxTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemTaxTable.setBounds(new Rectangle(285, 121, 80, 22));
-		jLabelSystemCalendarTable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemTaxTable.setBounds(new Rectangle(230, 121, 130, 18));
+		jTextFieldSystemTaxTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemTaxTable.setBounds(new Rectangle(365, 118, 80, 25));
+		jLabelSystemCalendarTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemCalendarTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemCalendarTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemCalendarTable.setText(res.getString("SystemCalendar"));
-		jLabelSystemCalendarTable.setBounds(new Rectangle(371, 124, 86, 15));
-		jTextFieldSystemCalendarTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemCalendarTable.setBounds(new Rectangle(465, 121, 80, 22));
-		jLabelSystemExchangeRateAnnualTable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemCalendarTable.setBounds(new Rectangle(455, 121, 130, 18));
+		jTextFieldSystemCalendarTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemCalendarTable.setBounds(new Rectangle(590, 118, 80, 25));
+		jLabelSystemExchangeRateAnnualTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemExchangeRateAnnualTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemExchangeRateAnnualTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemExchangeRateAnnualTable.setText(res.getString("SystemExchangeRateAnnual"));
-		jLabelSystemExchangeRateAnnualTable.setBounds(new Rectangle(551, 124, 86, 15));
-		jTextFieldSystemExchangeRateAnnualTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemExchangeRateAnnualTable.setBounds(new Rectangle(645, 121, 80, 22));
-		jLabelSystemExchangeRateMonthlyTable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemExchangeRateAnnualTable.setBounds(new Rectangle(680, 121, 130, 18));
+		jTextFieldSystemExchangeRateAnnualTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemExchangeRateAnnualTable.setBounds(new Rectangle(815, 118, 80, 25));
+		jLabelSystemExchangeRateMonthlyTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemExchangeRateMonthlyTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemExchangeRateMonthlyTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemExchangeRateMonthlyTable.setText(res.getString("SystemExchangeRateMonthly"));
-		jLabelSystemExchangeRateMonthlyTable.setBounds(new Rectangle(731, 124, 86, 15));
-		jTextFieldSystemExchangeRateMonthlyTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemExchangeRateMonthlyTable.setBounds(new Rectangle(825, 121, 80, 22));
-		jPanelSystemConfigTop.setPreferredSize(new Dimension(10, 154));
+		jLabelSystemExchangeRateMonthlyTable.setBounds(new Rectangle(905, 121, 130, 18));
+		jTextFieldSystemExchangeRateMonthlyTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemExchangeRateMonthlyTable.setBounds(new Rectangle(1040, 118, 80, 25));
+		jPanelSystemConfigTop.setPreferredSize(new Dimension(1150, 154));
 		jPanelSystemConfigTop.add(jLabelSystemAppServerName);
 		jPanelSystemConfigTop.add(jTextFieldSystemAppServerName);
 		jPanelSystemConfigTop.add(jLabelSystemDBName);
 		jPanelSystemConfigTop.add(jTextFieldSystemDBName);
-		jPanelSystemConfigTop.add(jCheckBoxSystemAutoConnectToEdit);
 		jPanelSystemConfigTop.add(jLabelSystemDBUser);
 		jPanelSystemConfigTop.add(jTextFieldSystemDBUser);
 		jPanelSystemConfigTop.add(jLabelSystemDBPassword);
@@ -3215,7 +3281,7 @@ public class Editor extends JFrame {
 		jPanelSystemConfigTop.add(jTextFieldSystemExchangeRateAnnualTable);
 		jPanelSystemConfigTop.add(jLabelSystemExchangeRateMonthlyTable);
 		jPanelSystemConfigTop.add(jTextFieldSystemExchangeRateMonthlyTable);
-		jPanelSystemConfig.add(jPanelSystemConfigTop, BorderLayout.NORTH);
+		jPanelSystemConfig.add(jScrollPaneSystemConfigTop, BorderLayout.NORTH);
 		jPanelSystemConfig.add(jSplitPaneSystemSubDB, BorderLayout.CENTER);
 		jSplitPaneSystemSubDB.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneSystemSubDB.add(jScrollPaneSystemSubDBList, JSplitPane.TOP);
@@ -3225,7 +3291,7 @@ public class Editor extends JFrame {
 		jScrollPaneSystemSubDBList.setBorder(null);
 		jScrollPaneSystemSubDBList.getViewport().add(jTableSystemSubDBList, null);
 		jScrollPaneSystemSubDBList.addMouseListener(new Editor_jScrollPaneSystemSubDBList_mouseAdapter(this));
-		jTableSystemSubDBList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableSystemSubDBList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableSystemSubDBList.setBackground(SystemColor.control);
 		jTableSystemSubDBList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableSystemSubDBList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -3235,26 +3301,28 @@ public class Editor extends JFrame {
 		jTableSystemSubDBList.addFocusListener(new Editor_FocusListener());
 		jTableSystemSubDBList.addMouseListener(new Editor_jTableSystemSubDBList_mouseAdapter(this));
 		jTableSystemSubDBList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableSystemSubDBList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelSystemSubDBList.addColumn("NO.");
 		tableModelSystemSubDBList.addColumn(res.getString("DatabaseSubReadOnly"));
 		tableModelSystemSubDBList.addColumn(res.getString("Descriptions"));
 		column0 = jTableSystemSubDBList.getColumnModel().getColumn(0);
 		column1 = jTableSystemSubDBList.getColumnModel().getColumn(1);
 		column2 = jTableSystemSubDBList.getColumnModel().getColumn(2);
-		column0.setPreferredWidth(37);
+		column0.setPreferredWidth(40);
 		column1.setPreferredWidth(320);
 		column2.setPreferredWidth(200);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableSystemSubDBList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableSystemSubDBList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableSystemSubDBList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
+		rendererTableHeader.setBorder(BorderFactory.createLineBorder(Color.black));
 		//(Sub-DB Usage List)//
 		jScrollPaneSystemSubDBUsageList.setBorder(null);
 		jScrollPaneSystemSubDBUsageList.getViewport().add(jTableSystemSubDBUsageList, null);
 		jScrollPaneSystemSubDBUsageList.addMouseListener(new Editor_jScrollPaneSystemSubDBUsageList_mouseAdapter(this));
-		jTableSystemSubDBUsageList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableSystemSubDBUsageList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableSystemSubDBUsageList.setBackground(SystemColor.control);
 		jTableSystemSubDBUsageList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableSystemSubDBUsageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -3262,81 +3330,85 @@ public class Editor extends JFrame {
 		jTableSystemSubDBUsageList.setSelectionBackground(SELECTED_INACTIVE_COLOR);
 		jTableSystemSubDBUsageList.setSelectionForeground(Color.black);
 		jTableSystemSubDBUsageList.addFocusListener(new Editor_FocusListener());
+		jTableSystemSubDBUsageList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelSystemSubDBUsageList.addColumn("NO.");
 		tableModelSystemSubDBUsageList.addColumn(res.getString("SubsystemName"));
 		tableModelSystemSubDBUsageList.addColumn(res.getString("WhereUsedTable"));
 		column0 = jTableSystemSubDBUsageList.getColumnModel().getColumn(0);
 		column1 = jTableSystemSubDBUsageList.getColumnModel().getColumn(1);
 		column2 = jTableSystemSubDBUsageList.getColumnModel().getColumn(2);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(200);
-		column2.setPreferredWidth(300);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(300);
+		column2.setPreferredWidth(400);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableSystemSubDBUsageList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableSystemSubDBUsageList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableSystemSubDBUsageList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
+		rendererTableHeader.setBorder(BorderFactory.createLineBorder(Color.black));
 		//(Sub-DB edit panel)//
 		jLabelSystemSubDBID.setEnabled(false);
-		jLabelSystemSubDBID.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemSubDBID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemSubDBID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSubDBID.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemSubDBID.setText(res.getString("ID"));
-		jLabelSystemSubDBID.setBounds(new Rectangle(11, 12, 86, 15));
+		jLabelSystemSubDBID.setBounds(new Rectangle(5, 12, 130, 18));
 		jTextFieldSystemSubDBID.setEnabled(false);
 		jTextFieldSystemSubDBID.setEditable(false);
-		jTextFieldSystemSubDBID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemSubDBID.setBounds(new Rectangle(105, 9, 80, 22));
+		jTextFieldSystemSubDBID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemSubDBID.setBounds(new Rectangle(140, 9, 100, 25));
 		jLabelSystemSubDBDescription.setEnabled(false);
-		jLabelSystemSubDBDescription.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemSubDBDescription.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemSubDBDescription.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSubDBDescription.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemSubDBDescription.setText(res.getString("Descriptions"));
-		jLabelSystemSubDBDescription.setBounds(new Rectangle(218, 12, 86, 15));
+		jLabelSystemSubDBDescription.setBounds(new Rectangle(250, 12, 130, 18));
 		jTextFieldSystemSubDBDescription.setEnabled(false);
-		jTextFieldSystemSubDBDescription.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemSubDBDescription.setBounds(new Rectangle(312, 9, 200, 22));
+		jTextFieldSystemSubDBDescription.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemSubDBDescription.setBounds(new Rectangle(385, 9, 200, 25));
 		jLabelSystemSubDBName.setEnabled(false);
-		jLabelSystemSubDBName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemSubDBName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemSubDBName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSubDBName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemSubDBName.setText(res.getString("DatabaseSub"));
-		jLabelSystemSubDBName.setBounds(new Rectangle(520, 12, 96, 15));
+		jLabelSystemSubDBName.setBounds(new Rectangle(595, 12, 130, 18));
 		jTextFieldSystemSubDBName.setEnabled(false);
-		jTextFieldSystemSubDBName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemSubDBName.setBounds(new Rectangle(625, 9, 320, 22));
+		jTextFieldSystemSubDBName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemSubDBName.setBounds(new Rectangle(730, 9, 530, 25));
 		jLabelSystemSubDBUser.setEnabled(false);
-		jLabelSystemSubDBUser.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemSubDBUser.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemSubDBUser.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSubDBUser.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemSubDBUser.setText(res.getString("User"));
-		jLabelSystemSubDBUser.setBounds(new Rectangle(11, 40, 86, 15));
+		jLabelSystemSubDBUser.setBounds(new Rectangle(5, 43, 130, 18));
 		jTextFieldSystemSubDBUser.setEnabled(false);
-		jTextFieldSystemSubDBUser.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemSubDBUser.setBounds(new Rectangle(105, 37, 105, 22));
+		jTextFieldSystemSubDBUser.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemSubDBUser.setBounds(new Rectangle(140, 40, 100, 25));
 		jLabelSystemSubDBPassword.setEnabled(false);
-		jLabelSystemSubDBPassword.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemSubDBPassword.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemSubDBPassword.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSubDBPassword.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemSubDBPassword.setText(res.getString("Password"));
-		jLabelSystemSubDBPassword.setBounds(new Rectangle(218, 40, 86, 15));
+		jLabelSystemSubDBPassword.setBounds(new Rectangle(250, 43, 130, 18));
 		jTextFieldSystemSubDBPassword.setEnabled(false);
-		jTextFieldSystemSubDBPassword.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemSubDBPassword.setBounds(new Rectangle(312, 37, 120, 22));
+		jTextFieldSystemSubDBPassword.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemSubDBPassword.setBounds(new Rectangle(385, 40, 120, 25));
 		jLabelSystemSubDBCPOptions.setEnabled(false);
-		jLabelSystemSubDBCPOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemSubDBCPOptions.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemSubDBCPOptions.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSubDBCPOptions.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemSubDBCPOptions.setText(res.getString("DBCPOptions"));
-		jLabelSystemSubDBCPOptions.setBounds(new Rectangle(520, 40, 96, 15));
+		jLabelSystemSubDBCPOptions.setBounds(new Rectangle(595, 43, 130, 18));
 		jTextFieldSystemSubDBCPOptions.setEnabled(false);
-		jTextFieldSystemSubDBCPOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemSubDBCPOptions.setBounds(new Rectangle(625, 37, 320, 22));
+		jTextFieldSystemSubDBCPOptions.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemSubDBCPOptions.setBounds(new Rectangle(730, 40, 300, 25));
+		jScrollPaneSystemSubDBTop.setBorder(null);
+		jScrollPaneSystemSubDBTop.getViewport().add(jPanelSystemSubDBTop);
 		jPanelSystemSubDB.setLayout(new BorderLayout());
-		jPanelSystemSubDB.add(jPanelSystemSubDBTop, BorderLayout.NORTH);
+		jPanelSystemSubDB.add(jScrollPaneSystemSubDBTop, BorderLayout.NORTH);
 		jPanelSystemSubDB.add(jScrollPaneSystemSubDBUsageList, BorderLayout.CENTER);
-		jPanelSystemSubDBTop.setPreferredSize(new Dimension(10, 68));
+		jPanelSystemSubDBTop.setPreferredSize(new Dimension(1290, 74));
 		jPanelSystemSubDBTop.setLayout(null);
 		jPanelSystemSubDBTop.add(jLabelSystemSubDBID);
 		jPanelSystemSubDBTop.add(jTextFieldSystemSubDBID);
@@ -3354,7 +3426,10 @@ public class Editor extends JFrame {
 		//(Login Script)//
 		jTabbedPaneSystem.addTab(res.getString("LoginScript"), jScrollPaneSystemLoginScript);
 		jTabbedPaneSystem.setIconAt(2, imageIconScript);
-		jTextAreaSystemLoginScript.setFont(new java.awt.Font("Monospaced", 0, 14));
+		jTextAreaSystemLoginScript.setFont(new java.awt.Font(scriptFontName, 0, scriptFontSize));
+		jTextAreaSystemLoginScript.setForeground(colorScriptForeground);
+		jTextAreaSystemLoginScript.setBackground(colorScriptBackground);
+		jTextAreaSystemLoginScript.setCaretColor(colorScriptCaret);
 		jTextAreaSystemLoginScript.setTabSize(4);
 		jTextAreaSystemLoginScript.addCaretListener(new Editor_jTextAreaSystemLoginScript_caretAdapter(this));
 		jTextAreaSystemLoginScript.getDocument().addUndoableEditListener(jTextAreaSystemLoginScriptUndoManager);
@@ -3380,15 +3455,18 @@ public class Editor extends JFrame {
 		actionMap.put("SCAN", actionScanSystemLoginScript);
 		jPanelSystemLoginScriptEditTool.setBorder(BorderFactory.createLineBorder(Color.gray));
 		jPanelSystemLoginScriptEditTool.setLayout(null);
+		jLabelSystemLoginScriptEditToolScan.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemLoginScriptEditToolScan.setText(res.getString("F3ToScan"));
 		jLabelSystemLoginScriptEditToolScan.setHorizontalAlignment(SwingConstants.CENTER);
-		jLabelSystemLoginScriptEditToolScan.setBounds(new Rectangle(0, 0, 50, 22));
+		jLabelSystemLoginScriptEditToolScan.setBounds(new Rectangle(0, 1, 74, 23));
 		jLabelSystemLoginScriptEditToolScan.setForeground(Color.darkGray);
-		jTextFieldSystemLoginScriptEditToolScan.setBounds(new Rectangle(50, 0, 80, 22));
+		jTextFieldSystemLoginScriptEditToolScan.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemLoginScriptEditToolScan.setBounds(new Rectangle(74, 1, 130, 23));
 		jTextFieldSystemLoginScriptEditToolScan.setForeground(Color.darkGray);
-		jCheckBoxSystemLoginScriptEditToolScanCase.setBounds(new Rectangle(130, 1, 22, 20));
+		jCheckBoxSystemLoginScriptEditToolScanCase.setBounds(new Rectangle(204, 1, 29, 23));
 		jCheckBoxSystemLoginScriptEditToolScanCase.setBackground(Color.lightGray);
-		jLabelSystemLoginScriptEditToolCursorPos.setBounds(new Rectangle(153, 0, 50, 22));
+		jLabelSystemLoginScriptEditToolCursorPos.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelSystemLoginScriptEditToolCursorPos.setBounds(new Rectangle(233, 1, 70, 23));
 		jLabelSystemLoginScriptEditToolCursorPos.setHorizontalAlignment(SwingConstants.CENTER);
 		jLabelSystemLoginScriptEditToolCursorPos.setForeground(Color.darkGray);
 		jPanelSystemLoginScriptEditTool.add(jLabelSystemLoginScriptEditToolScan);
@@ -3400,7 +3478,10 @@ public class Editor extends JFrame {
 		//(Script Functions)//
 		jTabbedPaneSystem.addTab(res.getString("ScriptFunctions"), jScrollPaneSystemScriptFunctions);
 		jTabbedPaneSystem.setIconAt(3, imageIconScript);
-		jTextAreaSystemScriptFunctions.setFont(new java.awt.Font("Monospaced", 0, 14));
+		jTextAreaSystemScriptFunctions.setFont(new java.awt.Font(scriptFontName, 0, scriptFontSize));
+		jTextAreaSystemScriptFunctions.setForeground(colorScriptForeground);
+		jTextAreaSystemScriptFunctions.setBackground(colorScriptBackground);
+		jTextAreaSystemScriptFunctions.setCaretColor(colorScriptCaret);
 		jTextAreaSystemScriptFunctions.setTabSize(4);
 		jTextAreaSystemScriptFunctions.addCaretListener(new Editor_jTextAreaSystemScriptFunctions_caretAdapter(this));
 		jTextAreaSystemScriptFunctions.getDocument().addUndoableEditListener(jTextAreaSystemScriptFunctionsUndoManager);
@@ -3426,15 +3507,18 @@ public class Editor extends JFrame {
 		actionMap.put("SCAN", actionScanSystemScriptFunctions);
 		jPanelSystemScriptFunctionsEditTool.setBorder(BorderFactory.createLineBorder(Color.gray));
 		jPanelSystemScriptFunctionsEditTool.setLayout(null);
+		jLabelSystemScriptFunctionsEditToolScan.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemScriptFunctionsEditToolScan.setText(res.getString("F3ToScan"));
 		jLabelSystemScriptFunctionsEditToolScan.setHorizontalAlignment(SwingConstants.CENTER);
-		jLabelSystemScriptFunctionsEditToolScan.setBounds(new Rectangle(0, 0, 50, 22));
+		jLabelSystemScriptFunctionsEditToolScan.setBounds(new Rectangle(0, 1, 74, 23));
 		jLabelSystemScriptFunctionsEditToolScan.setForeground(Color.darkGray);
-		jTextFieldSystemScriptFunctionsEditToolScan.setBounds(new Rectangle(50, 0, 80, 22));
+		jTextFieldSystemScriptFunctionsEditToolScan.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemScriptFunctionsEditToolScan.setBounds(new Rectangle(74, 1, 130, 23));
 		jTextFieldSystemScriptFunctionsEditToolScan.setForeground(Color.darkGray);
-		jCheckBoxSystemScriptFunctionsEditToolScanCase.setBounds(new Rectangle(130, 1, 22, 20));
+		jCheckBoxSystemScriptFunctionsEditToolScanCase.setBounds(new Rectangle(204, 1, 29, 23));
 		jCheckBoxSystemScriptFunctionsEditToolScanCase.setBackground(Color.lightGray);
-		jLabelSystemScriptFunctionsEditToolCursorPos.setBounds(new Rectangle(153, 0, 50, 22));
+		jLabelSystemScriptFunctionsEditToolCursorPos.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelSystemScriptFunctionsEditToolCursorPos.setBounds(new Rectangle(233, 1, 70, 23));
 		jLabelSystemScriptFunctionsEditToolCursorPos.setHorizontalAlignment(SwingConstants.CENTER);
 		jLabelSystemScriptFunctionsEditToolCursorPos.setForeground(Color.darkGray);
 		jPanelSystemScriptFunctionsEditTool.add(jLabelSystemScriptFunctionsEditToolScan);
@@ -3450,35 +3534,35 @@ public class Editor extends JFrame {
 		jPanelSystemOtherConfig.setLayout(new BorderLayout());
 		jPanelSystemOtherConfigTop.setBorder(BorderFactory.createEtchedBorder());
 		jPanelSystemOtherConfigTop.setLayout(null);
-		jPanelSystemOtherConfigTop.setPreferredSize(new Dimension(10, 182));
-		jLabelSystemImageFileFolder.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jPanelSystemOtherConfigTop.setPreferredSize(new Dimension(10, 197));
+		jLabelSystemImageFileFolder.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemImageFileFolder.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemImageFileFolder.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemImageFileFolder.setText(res.getString("ImageFolder"));
-		jLabelSystemImageFileFolder.setBounds(new Rectangle(11, 12, 86, 15));
-		jTextFieldSystemImageFileFolder.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemImageFileFolder.setBounds(new Rectangle(105, 9, 400, 22));
-		jLabelSystemWelcomePageURL.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemImageFileFolder.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldSystemImageFileFolder.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemImageFileFolder.setBounds(new Rectangle(140, 9, 635, 25));
+		jLabelSystemWelcomePageURL.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemWelcomePageURL.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemWelcomePageURL.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemWelcomePageURL.setText(res.getString("WelcomePageURL"));
-		jLabelSystemWelcomePageURL.setBounds(new Rectangle(11, 40, 86, 15));
-		jTextFieldSystemWelcomePageURL.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemWelcomePageURL.setBounds(new Rectangle(105, 37, 400, 22));
-		jLabelSystemOutputFolder.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemWelcomePageURL.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldSystemWelcomePageURL.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemWelcomePageURL.setBounds(new Rectangle(140, 40, 635, 25));
+		jLabelSystemOutputFolder.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemOutputFolder.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemOutputFolder.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemOutputFolder.setText(res.getString("OutputFolder"));
-		jLabelSystemOutputFolder.setBounds(new Rectangle(11, 68, 86, 15));
-		jTextFieldSystemOutputFolder.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemOutputFolder.setBounds(new Rectangle(105, 65, 400, 22));
-		jLabelSystemDateFormat.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemOutputFolder.setBounds(new Rectangle(5, 74, 130, 20));
+		jTextFieldSystemOutputFolder.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemOutputFolder.setBounds(new Rectangle(140, 71, 635, 25));
+		jLabelSystemDateFormat.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemDateFormat.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemDateFormat.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemDateFormat.setText(res.getString("DateFormat"));
-		jLabelSystemDateFormat.setBounds(new Rectangle(11, 96, 86, 15));
-		jComboBoxSystemDateFormat.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxSystemDateFormat.setBounds(new Rectangle(105, 93, 180, 22));
+		jLabelSystemDateFormat.setBounds(new Rectangle(5, 105, 130, 20));
+		jComboBoxSystemDateFormat.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jComboBoxSystemDateFormat.setBounds(new Rectangle(140, 102, 240, 25));
 		jComboBoxSystemDateFormat.setEditable(false);
 		jComboBoxSystemDateFormat.addItem("en00 06/17/10");
 		jComboBoxSystemDateFormat.addItem("en01 Thur,06/17/01");
@@ -3512,58 +3596,68 @@ public class Editor extends JFrame {
 		listSystemDateFormat.add("jp41");
 		listSystemDateFormat.add("jp50");
 		listSystemDateFormat.add("jp51");
-		jLabelSystemEditorUser.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemFont.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelSystemFont.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelSystemFont.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelSystemFont.setText(res.getString("Font"));
+		jLabelSystemFont.setBounds(new Rectangle(390, 105, 130, 20));
+		jTextFieldSystemFont.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemFont.setBounds(new Rectangle(525, 102, 250, 25));
+		jCheckBoxSystemAutoConnectToEdit.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxSystemAutoConnectToEdit.setBounds(new Rectangle(795, 102, 250, 25));
+		jCheckBoxSystemAutoConnectToEdit.setText(res.getString("AutoConnect"));
+		jLabelSystemEditorUser.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemEditorUser.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemEditorUser.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemEditorUser.setText(res.getString("EditorUser"));
-		jLabelSystemEditorUser.setBounds(new Rectangle(11, 124, 86, 15));
-		jTextFieldSystemEditorUser.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemEditorUser.setBounds(new Rectangle(105, 121, 55, 22));
-		jLabelSystemEditorUserPassword.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemEditorUser.setBounds(new Rectangle(5, 136, 130, 20));
+		jTextFieldSystemEditorUser.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemEditorUser.setBounds(new Rectangle(140, 133, 80, 25));
+		jLabelSystemEditorUserPassword.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemEditorUserPassword.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemEditorUserPassword.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemEditorUserPassword.setText(res.getString("Password"));
-		jLabelSystemEditorUserPassword.setBounds(new Rectangle(164, 124, 86, 15));
-		jTextFieldSystemEditorUserPassword.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemEditorUserPassword.setBounds(new Rectangle(258, 121, 120, 22));
-		jLabelSystemDriverVMOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemEditorUserPassword.setBounds(new Rectangle(230, 136, 130, 20));
+		jTextFieldSystemEditorUserPassword.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemEditorUserPassword.setBounds(new Rectangle(365, 133, 120, 25));
+		jLabelSystemDriverVMOptions.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemDriverVMOptions.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemDriverVMOptions.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemDriverVMOptions.setText(res.getString("DriverVMOptions"));
-		jLabelSystemDriverVMOptions.setBounds(new Rectangle(384, 124, 90, 15));
-		jTextFieldSystemDriverVMOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemDriverVMOptions.setBounds(new Rectangle(478, 121, 280, 22));
-		jCheckBoxSystemSkipPreload.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemDriverVMOptions.setBounds(new Rectangle(495, 136, 110, 20));
+		jTextFieldSystemDriverVMOptions.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemDriverVMOptions.setBounds(new Rectangle(610, 133, 225, 25));
+		jCheckBoxSystemSkipPreload.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jCheckBoxSystemSkipPreload.setText(res.getString("SkipPreload"));
-		jCheckBoxSystemSkipPreload.setBounds(new Rectangle(770, 121, 170, 22));
-		jLabelSystemSmtpHost.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jCheckBoxSystemSkipPreload.setBounds(new Rectangle(855, 133, 250, 25));
+		jLabelSystemSmtpHost.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemSmtpHost.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSmtpHost.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemSmtpHost.setText(res.getString("SmtpHost"));
-		jLabelSystemSmtpHost.setBounds(new Rectangle(11, 152, 86, 15));
-		jTextFieldSystemSmtpHost.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemSmtpHost.setBounds(new Rectangle(105, 149, 120, 22));
-		jLabelSystemSmtpPort.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemSmtpHost.setBounds(new Rectangle(5, 167, 130, 20));
+		jTextFieldSystemSmtpHost.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemSmtpHost.setBounds(new Rectangle(140, 164, 150, 25));
+		jLabelSystemSmtpPort.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemSmtpPort.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSmtpPort.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemSmtpPort.setText(res.getString("SmtpPort"));
-		jLabelSystemSmtpPort.setBounds(new Rectangle(230, 152, 90, 15));
-		jTextFieldSystemSmtpPort.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemSmtpPort.setBounds(new Rectangle(328, 149, 50, 22));
-		jLabelSystemSmtpUser.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemSmtpPort.setBounds(new Rectangle(300, 167, 100, 20));
+		jTextFieldSystemSmtpPort.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemSmtpPort.setBounds(new Rectangle(405, 164, 80, 25));
+		jLabelSystemSmtpUser.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemSmtpUser.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSmtpUser.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemSmtpUser.setText(res.getString("SmtpUser"));
-		jLabelSystemSmtpUser.setBounds(new Rectangle(380, 152, 90, 15));
-		jTextFieldSystemSmtpUser.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemSmtpUser.setBounds(new Rectangle(478, 149, 80, 22));
-		jLabelSystemSmtpPassword.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemSmtpUser.setBounds(new Rectangle(495, 167, 110, 20));
+		jTextFieldSystemSmtpUser.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemSmtpUser.setBounds(new Rectangle(610, 164, 100, 25));
+		jLabelSystemSmtpPassword.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemSmtpPassword.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSmtpPassword.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemSmtpPassword.setText(res.getString("SmtpPassword"));
-		jLabelSystemSmtpPassword.setBounds(new Rectangle(560, 152, 90, 15));
-		jTextFieldSystemSmtpPassword.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemSmtpPassword.setBounds(new Rectangle(658, 149, 100, 22));
+		jLabelSystemSmtpPassword.setBounds(new Rectangle(720, 167, 110, 20));
+		jTextFieldSystemSmtpPassword.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemSmtpPassword.setBounds(new Rectangle(835, 164, 120, 25));
 		jSplitPaneSystemPrintFont.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneSystemPrintFont.add(jScrollPaneSystemPrintFontList, JSplitPane.TOP);
 		jSplitPaneSystemPrintFont.add(jPanelSystemPrintFont, JSplitPane.BOTTOM);
@@ -3576,6 +3670,9 @@ public class Editor extends JFrame {
 		jPanelSystemOtherConfigTop.add(jLabelSystemOutputFolder);
 		jPanelSystemOtherConfigTop.add(jComboBoxSystemDateFormat);
 		jPanelSystemOtherConfigTop.add(jLabelSystemDateFormat);
+		jPanelSystemOtherConfigTop.add(jLabelSystemFont);
+		jPanelSystemOtherConfigTop.add(jTextFieldSystemFont);
+		jPanelSystemOtherConfigTop.add(jCheckBoxSystemAutoConnectToEdit);
 		jPanelSystemOtherConfigTop.add(jLabelSystemEditorUser);
 		jPanelSystemOtherConfigTop.add(jTextFieldSystemEditorUser);
 		jPanelSystemOtherConfigTop.add(jLabelSystemEditorUserPassword);
@@ -3597,7 +3694,7 @@ public class Editor extends JFrame {
 		jScrollPaneSystemPrintFontList.setBorder(null);
 		jScrollPaneSystemPrintFontList.getViewport().add(jTableSystemPrintFontList, null);
 		jScrollPaneSystemPrintFontList.addMouseListener(new Editor_jScrollPaneSystemPrintFontList_mouseAdapter(this));
-		jTableSystemPrintFontList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableSystemPrintFontList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableSystemPrintFontList.setBackground(SystemColor.control);
 		jTableSystemPrintFontList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableSystemPrintFontList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -3607,6 +3704,7 @@ public class Editor extends JFrame {
 		jTableSystemPrintFontList.addFocusListener(new Editor_FocusListener());
 		jTableSystemPrintFontList.addMouseListener(new Editor_jTableSystemPrintFontList_mouseAdapter(this));
 		jTableSystemPrintFontList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableSystemPrintFontList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelSystemPrintFontList.addColumn("NO.");
 		tableModelSystemPrintFontList.addColumn(res.getString("PrintFont"));
 		tableModelSystemPrintFontList.addColumn("PDF Font Name");
@@ -3615,22 +3713,22 @@ public class Editor extends JFrame {
 		column1 = jTableSystemPrintFontList.getColumnModel().getColumn(1);
 		column2 = jTableSystemPrintFontList.getColumnModel().getColumn(2);
 		column3 = jTableSystemPrintFontList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(150);
-		column2.setPreferredWidth(150);
-		column3.setPreferredWidth(150);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(200);
+		column2.setPreferredWidth(200);
+		column3.setPreferredWidth(200);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableSystemPrintFontList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableSystemPrintFontList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableSystemPrintFontList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
 		//(Print Font Usage List)//
 		jScrollPaneSystemPrintFontUsageList.setBorder(null);
 		jScrollPaneSystemPrintFontUsageList.getViewport().add(jTableSystemPrintFontUsageList, null);
 		jScrollPaneSystemPrintFontUsageList.addMouseListener(new Editor_jScrollPaneSystemPrintFontUsageList_mouseAdapter(this));
-		jTableSystemPrintFontUsageList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableSystemPrintFontUsageList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableSystemPrintFontUsageList.setBackground(SystemColor.control);
 		jTableSystemPrintFontUsageList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableSystemPrintFontUsageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -3638,60 +3736,61 @@ public class Editor extends JFrame {
 		jTableSystemPrintFontUsageList.setSelectionBackground(SELECTED_INACTIVE_COLOR);
 		jTableSystemPrintFontUsageList.setSelectionForeground(Color.black);
 		jTableSystemPrintFontUsageList.addFocusListener(new Editor_FocusListener());
+		jTableSystemPrintFontUsageList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelSystemPrintFontUsageList.addColumn("NO.");
 		tableModelSystemPrintFontUsageList.addColumn(res.getString("WhereUsed"));
 		tableModelSystemPrintFontUsageList.addColumn(res.getString("Type"));
 		column0 = jTableSystemPrintFontUsageList.getColumnModel().getColumn(0);
 		column1 = jTableSystemPrintFontUsageList.getColumnModel().getColumn(1);
 		column2 = jTableSystemPrintFontUsageList.getColumnModel().getColumn(2);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(300);
-		column2.setPreferredWidth(60);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(350);
+		column2.setPreferredWidth(90);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableSystemPrintFontUsageList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableSystemPrintFontUsageList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableSystemPrintFontUsageList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
 		//(Print Font edit panel)//
 		jLabelSystemPrintFontID.setEnabled(false);
-		jLabelSystemPrintFontID.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemPrintFontID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemPrintFontID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemPrintFontID.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemPrintFontID.setText(res.getString("ID"));
-		jLabelSystemPrintFontID.setBounds(new Rectangle(11, 12, 96, 15));
+		jLabelSystemPrintFontID.setBounds(new Rectangle(5, 12, 130, 20));
 		jTextFieldSystemPrintFontID.setEditable(false);
 		jTextFieldSystemPrintFontID.setEnabled(false);
-		jTextFieldSystemPrintFontID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemPrintFontID.setBounds(new Rectangle(115, 9, 80, 22));
+		jTextFieldSystemPrintFontID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemPrintFontID.setBounds(new Rectangle(140, 9, 100, 25));
 		jLabelSystemPrintFontName.setEnabled(false);
-		jLabelSystemPrintFontName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemPrintFontName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemPrintFontName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemPrintFontName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemPrintFontName.setText(res.getString("PrintFont"));
-		jLabelSystemPrintFontName.setBounds(new Rectangle(281, 12, 96, 15));
-		jTextFieldSystemPrintFontName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemPrintFontName.setBounds(new Rectangle(385, 9, 150, 22));
+		jLabelSystemPrintFontName.setBounds(new Rectangle(350, 12, 130, 20));
+		jTextFieldSystemPrintFontName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemPrintFontName.setBounds(new Rectangle(485, 9, 200, 25));
 		jLabelSystemPrintPDFFontName.setEnabled(false);
-		jLabelSystemPrintPDFFontName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemPrintPDFFontName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemPrintPDFFontName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemPrintPDFFontName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemPrintPDFFontName.setText("PDF Font Name");
-		jLabelSystemPrintPDFFontName.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldSystemPrintPDFFontName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemPrintPDFFontName.setBounds(new Rectangle(115, 37, 150, 22));
+		jLabelSystemPrintPDFFontName.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldSystemPrintPDFFontName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemPrintPDFFontName.setBounds(new Rectangle(140, 40, 200, 25));
 		jLabelSystemPrintPDFEncoding.setEnabled(false);
-		jLabelSystemPrintPDFEncoding.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemPrintPDFEncoding.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemPrintPDFEncoding.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemPrintPDFEncoding.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemPrintPDFEncoding.setText("PDF Encoding");
-		jLabelSystemPrintPDFEncoding.setBounds(new Rectangle(281, 40, 96, 15));
-		jTextFieldSystemPrintPDFEncoding.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemPrintPDFEncoding.setBounds(new Rectangle(385, 37, 150, 22));
+		jLabelSystemPrintPDFEncoding.setBounds(new Rectangle(350, 43, 130, 20));
+		jTextFieldSystemPrintPDFEncoding.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemPrintPDFEncoding.setBounds(new Rectangle(485, 40, 170, 25));
 		jPanelSystemPrintFont.setLayout(new BorderLayout());
 		jPanelSystemPrintFont.add(jPanelSystemPrintFontTop, BorderLayout.NORTH);
 		jPanelSystemPrintFont.add(jScrollPaneSystemPrintFontUsageList, BorderLayout.CENTER);
-		jPanelSystemPrintFontTop.setPreferredSize(new Dimension(10, 68));
+		jPanelSystemPrintFontTop.setPreferredSize(new Dimension(10, 74));
 		jPanelSystemPrintFontTop.setLayout(null);
 		jPanelSystemPrintFontTop.add(jLabelSystemPrintFontID);
 		jPanelSystemPrintFontTop.add(jTextFieldSystemPrintFontID);
@@ -3715,35 +3814,35 @@ public class Editor extends JFrame {
 		jPanelSystemMaintenanceLog.setBorder(BorderFactory.createEtchedBorder());
 		jPanelSystemMaintenanceLog1.setLayout(null);
 		jPanelSystemMaintenanceLog1.setBorder(null);
-		jPanelSystemMaintenanceLog1.setPreferredSize(new Dimension(10, 38));
+		jPanelSystemMaintenanceLog1.setPreferredSize(new Dimension(10, 41));
 		jPanelSystemMaintenanceLog2.setLayout(new BorderLayout());
 		jPanelSystemMaintenanceLog2.setBorder(null);
 		jPanelSystemMaintenanceLog3.setLayout(null);
 		jPanelSystemMaintenanceLog3.setBorder(null);
-		jPanelSystemMaintenanceLog3.setPreferredSize(new Dimension(105, 10));
-		jLabelSystemMaintenanceLogHeadder.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jPanelSystemMaintenanceLog3.setPreferredSize(new Dimension(140, 10));
+		jLabelSystemMaintenanceLogHeadder.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemMaintenanceLogHeadder.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemMaintenanceLogHeadder.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemMaintenanceLogHeadder.setText(res.getString("SystemMaintenanceLogVersion"));
-		jLabelSystemMaintenanceLogHeadder.setBounds(new Rectangle(11, 12, 86, 15));
-		jTextFieldSystemMaintenanceLogHeadder.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemMaintenanceLogHeadder.setBounds(new Rectangle(105, 9, 258, 22));
-		jLabelSystemMaintenanceLogSortKey.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemMaintenanceLogHeadder.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldSystemMaintenanceLogHeadder.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemMaintenanceLogHeadder.setBounds(new Rectangle(140, 9, 300, 25));
+		jLabelSystemMaintenanceLogSortKey.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemMaintenanceLogSortKey.setRequestFocusEnabled(true);
 		jLabelSystemMaintenanceLogSortKey.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemMaintenanceLogSortKey.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemMaintenanceLogSortKey.setText(res.getString("SystemMaintenanceLogSortKey"));
-		jLabelSystemMaintenanceLogSortKey.setBounds(new Rectangle(394, 12, 101, 15));
-		jTextFieldSystemMaintenanceLogSortKey.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSystemMaintenanceLogSortKey.setBounds(new Rectangle(502, 9, 120, 22));
-		jLabelSystemMaintenanceLogDescriptions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemMaintenanceLogSortKey.setBounds(new Rectangle(450, 12, 130, 20));
+		jTextFieldSystemMaintenanceLogSortKey.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemMaintenanceLogSortKey.setBounds(new Rectangle(585, 9, 150, 25));
+		jLabelSystemMaintenanceLogDescriptions.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemMaintenanceLogDescriptions.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemMaintenanceLogDescriptions.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemMaintenanceLogDescriptions.setText(res.getString("SystemMaintenanceLogRemarks"));
-		jLabelSystemMaintenanceLogDescriptions.setBounds(new Rectangle(11, 2, 86, 15));
-		jTextAreaSystemMaintenanceLogDescriptions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSystemMaintenanceLogDescriptions.setBounds(new Rectangle(5, 2, 130, 20));
+		jTextAreaSystemMaintenanceLogDescriptions.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextAreaSystemMaintenanceLogDescriptions.setLineWrap(true);
-		jScrollPaneSystemMaintenanceLogDescriptions.setBounds(new Rectangle(105, 35, 600, 42));
+		jScrollPaneSystemMaintenanceLogDescriptions.setBounds(new Rectangle(140, 38, 600, 42));
 		jScrollPaneSystemMaintenanceLogDescriptions.getViewport().add(jTextAreaSystemMaintenanceLogDescriptions, null);
 		jPanelSystemMaintenanceLog.add(jPanelSystemMaintenanceLog1, BorderLayout.NORTH);
 		jPanelSystemMaintenanceLog.add(jPanelSystemMaintenanceLog2, BorderLayout.CENTER);
@@ -3758,7 +3857,7 @@ public class Editor extends JFrame {
 		jSplitPaneSystemMaintenanceLog.add(jScrollPaneSystemMaintenanceLog, JSplitPane.TOP);
 		jSplitPaneSystemMaintenanceLog.add(jPanelSystemMaintenanceLog, JSplitPane.BOTTOM);
 		//
-		jTableSystemMaintenanceLog.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableSystemMaintenanceLog.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableSystemMaintenanceLog.setBackground(SystemColor.control);
 		jTableSystemMaintenanceLog.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableSystemMaintenanceLog.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -3766,6 +3865,7 @@ public class Editor extends JFrame {
 		jTableSystemMaintenanceLog.addMouseListener(new Editor_jTableSystemMaintenanceLog_mouseAdapter(this));
 		jTableSystemMaintenanceLog.addFocusListener(new Editor_FocusListener());
 		jTableSystemMaintenanceLog.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableSystemMaintenanceLog.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelSystemMaintenanceLog.addColumn("NO.");
 		tableModelSystemMaintenanceLog.addColumn(res.getString("SystemMaintenanceLogDateTime"));
 		tableModelSystemMaintenanceLog.addColumn(res.getString("SystemMaintenanceLogVersion"));
@@ -3774,15 +3874,15 @@ public class Editor extends JFrame {
 		column1 = jTableSystemMaintenanceLog.getColumnModel().getColumn(1);
 		column2 = jTableSystemMaintenanceLog.getColumnModel().getColumn(2);
 		column3 = jTableSystemMaintenanceLog.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(120);
-		column2.setPreferredWidth(100);
-		column3.setPreferredWidth(600);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(150);
+		column2.setPreferredWidth(150);
+		column3.setPreferredWidth(700);
 		column0.setCellRenderer(rendererAlignmentCenter);
 		column1.setCellRenderer(rendererAlignmentLeft);
 		column2.setCellRenderer(rendererAlignmentLeft);
 		column3.setCellRenderer(rendererAlignmentLeft);
-		jTableSystemMaintenanceLog.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableSystemMaintenanceLog.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableSystemMaintenanceLog.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(2); //LEFT//
 	}
@@ -3790,14 +3890,14 @@ public class Editor extends JFrame {
 		public void stateChanged(javax.swing.event.ChangeEvent event) {
 			int width = jScrollPaneSystemLoginScript.getViewport().getWidth();
 			Point point = jScrollPaneSystemLoginScript.getViewport().getViewPosition();
-			jPanelSystemLoginScriptEditTool.setBounds(new Rectangle(width - 203 + point.x, point.y, 203, 22));
+			jPanelSystemLoginScriptEditTool.setBounds(new Rectangle(width - 303 + point.x, point.y, 303, 25));
 		}
 	}
 	class JScrollPaneSystemScriptFunctionsChangeListener implements javax.swing.event.ChangeListener {
 		public void stateChanged(javax.swing.event.ChangeEvent event) {
 			int width = jScrollPaneSystemScriptFunctions.getViewport().getWidth();
 			Point point = jScrollPaneSystemScriptFunctions.getViewport().getViewPosition();
-			jPanelSystemScriptFunctionsEditTool.setBounds(new Rectangle(width - 203 + point.x, point.y, 203, 22));
+			jPanelSystemScriptFunctionsEditTool.setBounds(new Rectangle(width - 303 + point.x, point.y, 303, 25));
 		}
 	}
 
@@ -3812,7 +3912,7 @@ public class Editor extends JFrame {
 		jViewportMenuList = jScrollPaneMenuList.getViewport();
 		jViewportMenuList.add(jTableMenuList, null);
 		jScrollPaneMenuList.addMouseListener(new Editor_jScrollPaneMenuList_mouseAdapter(this));
-		jTableMenuList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableMenuList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableMenuList.setBackground(SystemColor.control);
 		jTableMenuList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableMenuList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -3821,6 +3921,7 @@ public class Editor extends JFrame {
 		jTableMenuList.setSelectionForeground(Color.black);
 		jTableMenuList.addFocusListener(new Editor_FocusListener());
 		jTableMenuList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableMenuList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelMenuList.addColumn("NO.");
 		tableModelMenuList.addColumn("ID");
 		tableModelMenuList.addColumn(res.getString("MenuName"));
@@ -3831,17 +3932,17 @@ public class Editor extends JFrame {
 		column2 = jTableMenuList.getColumnModel().getColumn(2);
 		column3 = jTableMenuList.getColumnModel().getColumn(3);
 		column4 = jTableMenuList.getColumnModel().getColumn(4);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(37);
-		column2.setPreferredWidth(220);
-		column3.setPreferredWidth(220);
-		column4.setPreferredWidth(450);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(40);
+		column2.setPreferredWidth(250);
+		column3.setPreferredWidth(250);
+		column4.setPreferredWidth(600);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentCenterControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
 		column4.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableMenuList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableMenuList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableMenuList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
 	}
@@ -3851,49 +3952,43 @@ public class Editor extends JFrame {
 	void initComponentsForMenu() {
 		jPanelMenu.setLayout(new BorderLayout());
 		jPanelMenu.setBorder(null);
-		jPanelMenuTop.setPreferredSize(new Dimension(10, 124));
+		jPanelMenuTop.setPreferredSize(new Dimension(10, 136));
 		jPanelMenuTop.setBorder(BorderFactory.createEtchedBorder());
 		jPanelMenuTop.setLayout(null);
-		jLabelMenuID.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelMenuID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelMenuID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelMenuID.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelMenuID.setText(res.getString("MenuID"));
-		jLabelMenuID.setBounds(new Rectangle(11, 12, 146, 15));
-		jTextFieldMenuID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldMenuID.setBounds(new Rectangle(165, 9, 40, 22));
+		jLabelMenuID.setText(res.getString("MenuIDAndName"));
+		jLabelMenuID.setBounds(new Rectangle(5, 12, 180, 20));
+		jTextFieldMenuID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldMenuID.setBounds(new Rectangle(190, 9, 40, 25));
 		jTextFieldMenuID.setEditable(false);
-		jLabelMenuName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelMenuName.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelMenuName.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelMenuName.setText(res.getString("MenuName"));
-		jLabelMenuName.setBounds(new Rectangle(244, 12, 96, 15));
-		jTextFieldMenuName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldMenuName.setBounds(new Rectangle(347, 9, 258, 22));
-		jLabelMenuPreloadedCrossCheckers.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldMenuName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldMenuName.setBounds(new Rectangle(235, 9, 310, 25));
+		jLabelMenuPreloadedCrossCheckers.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelMenuPreloadedCrossCheckers.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelMenuPreloadedCrossCheckers.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelMenuPreloadedCrossCheckers.setText(res.getString("MenuCrossCheckers"));
-		jLabelMenuPreloadedCrossCheckers.setBounds(new Rectangle(11, 40, 146, 15));
-		jTextFieldMenuPreloadedCrossCheckers.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldMenuPreloadedCrossCheckers.setBounds(new Rectangle(165, 37, 440, 22));
-		jLabelMenuPreloadedFunctions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelMenuPreloadedCrossCheckers.setBounds(new Rectangle(5, 43, 180, 20));
+		jTextFieldMenuPreloadedCrossCheckers.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldMenuPreloadedCrossCheckers.setBounds(new Rectangle(190, 40, 700, 25));
+		jLabelMenuPreloadedFunctions.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelMenuPreloadedFunctions.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelMenuPreloadedFunctions.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelMenuPreloadedFunctions.setText(res.getString("MenuFunctions"));
-		jLabelMenuPreloadedFunctions.setBounds(new Rectangle(11, 68, 146, 15));
-		jTextFieldMenuPreloadedFunctions.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldMenuPreloadedFunctions.setBounds(new Rectangle(165, 65, 440, 22));
-		jLabelMenuHelpURL.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelMenuPreloadedFunctions.setBounds(new Rectangle(5, 74, 180, 20));
+		jTextFieldMenuPreloadedFunctions.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldMenuPreloadedFunctions.setBounds(new Rectangle(190, 71, 700, 25));
+		jLabelMenuHelpURL.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelMenuHelpURL.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelMenuHelpURL.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelMenuHelpURL.setText(res.getString("MenuHelpURL"));
-		jLabelMenuHelpURL.setBounds(new Rectangle(11, 96, 146, 15));
-		jTextFieldMenuHelpURL.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldMenuHelpURL.setBounds(new Rectangle(165, 93, 440, 22));
+		jLabelMenuHelpURL.setBounds(new Rectangle(5, 105, 180, 20));
+		jTextFieldMenuHelpURL.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldMenuHelpURL.setBounds(new Rectangle(190, 102, 700, 25));
 		jPanelMenu.add(jPanelMenuTop, BorderLayout.NORTH);
 		jPanelMenuTop.add(jLabelMenuID);
 		jPanelMenuTop.add(jTextFieldMenuID);
-		jPanelMenuTop.add(jLabelMenuName);
 		jPanelMenuTop.add(jTextFieldMenuName);
 		jPanelMenuTop.add(jLabelMenuPreloadedCrossCheckers);
 		jPanelMenuTop.add(jTextFieldMenuPreloadedCrossCheckers);
@@ -3915,8 +4010,9 @@ public class Editor extends JFrame {
 		jTableMenuFunctionList.setSelectionForeground(Color.black);
 		jTableMenuFunctionList.addFocusListener(new Editor_FocusListener());
 		jTableMenuFunctionList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableMenuFunctionList.setRowHeight(TABLE_ROW_HEIGHT_EDITABLE);
 		//
-		jTabbedPaneMenu.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTabbedPaneMenu.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTabbedPaneMenu.add(res.getString("MenuOptions"), jScrollPaneMenuFunctionList);
 		jTabbedPaneMenu.setIconAt(0, imageIconMenu);
 		jTabbedPaneMenu.add(res.getString("MenuTree"), jScrollPaneMenuTreeView);
@@ -3924,7 +4020,7 @@ public class Editor extends JFrame {
 	    jTabbedPaneMenu.addChangeListener(new JTabbedPaneMenuChangeListener());
 		//
 		JTextField editFieldLeft = new JTextField();
-		editFieldLeft.setFont(new java.awt.Font("SansSerif", 0, 11));
+		editFieldLeft.setFont(new java.awt.Font(mainFontName, 0, 14));
 		cellEditorLeft = new DefaultCellEditor(editFieldLeft);
 		cellEditorLeft.setClickCountToStart(1);
 		//
@@ -3948,17 +4044,18 @@ public class Editor extends JFrame {
 		jComboBox.addItem("16");
 		jComboBox.addItem("17");
 		jComboBox.addItem("18");
-		jComboBox.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jComboBox.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jComboBox.setEditable(false);
 		editorMenuOptionIndex = new DefaultCellEditor(jComboBox);
 		editorMenuOptionIndex.setClickCountToStart(1);
 		//
-		jTreeMenu.setFont(new java.awt.Font("Dialog", 0, 12));
+		jTreeMenu.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 	    jTreeMenu.addTreeWillExpandListener(new Editor_jTreeMenu_treeWillExpandAdapter(this));
 		jTreeMenu.addMouseListener(new Editor_jTreeMenu_mouseAdapter(this));
 		jTreeMenu.setCellRenderer(menuTreeRenderer);
 	    jTreeMenu.setModel(treeModelMenu);
 		jTreeMenu.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		jTreeMenu.setRowHeight(TREE_ROW_HEIGHT);
 		jScrollPaneMenuTreeView.getViewport().add(jTreeMenu, null);
 
 	}
@@ -3985,7 +4082,7 @@ public class Editor extends JFrame {
 		jScrollPaneSubsystemList.setBorder(null);
 		jScrollPaneSubsystemList.getViewport().add(jTableSubsystemList, null);
 		jScrollPaneSubsystemList.addMouseListener(new Editor_jScrollPaneSubsystemList_mouseAdapter(this));
-		jTableSubsystemList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableSubsystemList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableSubsystemList.setBackground(SystemColor.control);
 		jTableSubsystemList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableSubsystemList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -3994,6 +4091,7 @@ public class Editor extends JFrame {
 		jTableSubsystemList.setSelectionForeground(Color.black);
 		jTableSubsystemList.addFocusListener(new Editor_FocusListener());
 		jTableSubsystemList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableSubsystemList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelSubsystemList.addColumn("NO.");
 		tableModelSubsystemList.addColumn("ID");
 		tableModelSubsystemList.addColumn(res.getString("SubsystemName"));
@@ -4006,19 +4104,19 @@ public class Editor extends JFrame {
 		column3 = jTableSubsystemList.getColumnModel().getColumn(3);
 		column4 = jTableSubsystemList.getColumnModel().getColumn(4);
 		column5 = jTableSubsystemList.getColumnModel().getColumn(5);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(37);
-		column2.setPreferredWidth(200);
-		column3.setPreferredWidth(30);
-		column4.setPreferredWidth(30);
-		column5.setPreferredWidth(490);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(60);
+		column2.setPreferredWidth(250);
+		column3.setPreferredWidth(40);
+		column4.setPreferredWidth(40);
+		column5.setPreferredWidth(750);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentCenterControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentRightControlColor);
 		column4.setCellRenderer(rendererAlignmentRightControlColor);
 		column5.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableSubsystemList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableSubsystemList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableSubsystemList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
 	}
@@ -4028,42 +4126,36 @@ public class Editor extends JFrame {
 	void initComponentsForSubsystem() {
 		jPanelSubsystem.setLayout(new BorderLayout());
 		jPanelSubsystemTop.setBorder(BorderFactory.createEtchedBorder());
-		jPanelSubsystemTop.setPreferredSize(new Dimension(10, 40));
+		jPanelSubsystemTop.setPreferredSize(new Dimension(10, 43));
 		jPanelSubsystemTop.setToolTipText("");
 		jPanelSubsystemTop.setLayout(null);
-		jLabelSubsystemID.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSubsystemID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSubsystemID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSubsystemID.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelSubsystemID.setText(res.getString("SubsystemID"));
-		jLabelSubsystemID.setBounds(new Rectangle(11, 12, 86, 15));
-		jTextFieldSubsystemID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSubsystemID.setBounds(new Rectangle(105, 9, 40, 22));
+		jLabelSubsystemID.setText(res.getString("SubsystemIDAndName"));
+		jLabelSubsystemID.setBounds(new Rectangle(5, 12, 180, 20));
+		jTextFieldSubsystemID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSubsystemID.setBounds(new Rectangle(190, 9, 80, 25));
 		jTextFieldSubsystemID.setEditable(false);
-		jLabelSubsystemName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelSubsystemName.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelSubsystemName.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelSubsystemName.setText(res.getString("SubsystemName"));
-		jLabelSubsystemName.setBounds(new Rectangle(180, 12, 100, 15));
-		jTextFieldSubsystemName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldSubsystemName.setBounds(new Rectangle(287, 9, 258, 22));
+		jTextFieldSubsystemName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSubsystemName.setBounds(new Rectangle(275, 9, 300, 25));
 		jPanelSubsystem.add(jPanelSubsystemTop, BorderLayout.NORTH);
 		jPanelSubsystemTop.add(jLabelSubsystemID);
-		jPanelSubsystemTop.add(jLabelSubsystemName);
 		jPanelSubsystemTop.add(jTextFieldSubsystemID);
 		jPanelSubsystemTop.add(jTextFieldSubsystemName);
 		jPanelSubsystem.add(jPanelSubsystemCenter,  BorderLayout.CENTER);
 		//(Subsystem Remarks)//
 		jPanelSubsystemCenter.setBorder(BorderFactory.createEtchedBorder());
 		jPanelSubsystemCenter.setLayout(new BorderLayout());
-		jLabelSubsystemRemarks.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelSubsystemRemarks.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSubsystemRemarks.setHorizontalAlignment(SwingConstants.LEFT);
 		jLabelSubsystemRemarks.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSubsystemRemarks.setText(res.getString("SubsystemRemarks"));
-		jLabelSubsystemRemarks.setBounds(new Rectangle(5, 4, 150, 15));
-		jPanelSubsystemLabelMargin.setPreferredSize(new Dimension(10, 20));
+		jLabelSubsystemRemarks.setBounds(new Rectangle(5, 1, 150, 20));
+		jPanelSubsystemLabelMargin.setPreferredSize(new Dimension(10, 22));
 		jPanelSubsystemLabelMargin.setLayout(null);
 		jPanelSubsystemLabelMargin.add(jLabelSubsystemRemarks);
-		jTextAreaSubsystemRemarks.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextAreaSubsystemRemarks.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextAreaSubsystemRemarks.setLineWrap(true);
 		jTextAreaSubsystemRemarks.setWrapStyleWord(true);
 		jScrollPaneSubsystemRemarks.getViewport().add(jTextAreaSubsystemRemarks, null);
@@ -4082,7 +4174,7 @@ public class Editor extends JFrame {
 		jViewportTableList = jScrollPaneTableList.getViewport();
 		jViewportTableList.add(jTableTableList, null);
 		jScrollPaneTableList.addMouseListener(new Editor_jScrollPaneTableList_mouseAdapter(this));
-		jTableTableList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableTableList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableTableList.setBackground(SystemColor.control);
 		jTableTableList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableTableList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -4091,6 +4183,7 @@ public class Editor extends JFrame {
 		jTableTableList.setSelectionForeground(Color.black);
 		jTableTableList.addFocusListener(new Editor_FocusListener());
 		jTableTableList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableTableList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelTableList.addColumn("NO.");
 		tableModelTableList.addColumn("ID");
 		tableModelTableList.addColumn(res.getString("TableName"));
@@ -4103,12 +4196,12 @@ public class Editor extends JFrame {
 		column3 = jTableTableList.getColumnModel().getColumn(3);
 		column4 = jTableTableList.getColumnModel().getColumn(4);
 		column5 = jTableTableList.getColumnModel().getColumn(5);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(80);
-		column2.setPreferredWidth(150);
-		column3.setPreferredWidth(220);
-		column4.setPreferredWidth(52);
-		column5.setPreferredWidth(500);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(140);
+		column2.setPreferredWidth(250);
+		column3.setPreferredWidth(400);
+		column4.setPreferredWidth(63);
+		column5.setPreferredWidth(600);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
@@ -4116,7 +4209,7 @@ public class Editor extends JFrame {
 		CheckBoxRenderer checkBoxRenderer = new CheckBoxRenderer();
 		column4.setCellRenderer(checkBoxRenderer);
 		column5.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableTableList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableTableList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableTableList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
 	}
@@ -4125,104 +4218,99 @@ public class Editor extends JFrame {
 	 */
 	void initComponentsForTable() {
 		jPanelTable.setLayout(new BorderLayout());
+		jScrollPaneTableTop.setBorder(null);
+		jScrollPaneTableTop.getViewport().add(jPanelTableTop);
 		jPanelTableTop.setBorder(BorderFactory.createEtchedBorder());
-		jPanelTableTop.setPreferredSize(new Dimension(10, 170));
-		jPanelTableTop.setMinimumSize(new Dimension(30, 37));
+		jPanelTableTop.setPreferredSize(new Dimension(1200, 190));
 		jPanelTableTop.setLayout(null);
-		jLabelTableID.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableID.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelTableID.setText(res.getString("TableID"));
-		jLabelTableID.setBounds(new Rectangle(11, 12, 96, 15));
-		jTextFieldTableID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldTableID.setBounds(new Rectangle(115, 9, 150, 22));
+		jLabelTableID.setText(res.getString("TableIDAndName"));
+		jLabelTableID.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldTableID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldTableID.setBounds(new Rectangle(140, 9, 160, 25));
 		jTextFieldTableID.setEditable(false);
 		Insets m = jTextFieldTableID.getMargin();
 		jTextFieldTableID.setMargin(new Insets(m.top, m.left+imageIconTable.getIconWidth()+2, m.bottom, m.right)); 
-		jLabelTableName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelTableName.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelTableName.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelTableName.setText(res.getString("TableName"));
-		jLabelTableName.setBounds(new Rectangle(265, 12, 96, 15));
-		jTextFieldTableName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldTableName.setBounds(new Rectangle(369, 9, 196, 22));
-		jLabelTableModuleID.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldTableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldTableName.setBounds(new Rectangle(305, 9, 390, 25));
+		jLabelTableModuleID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableModuleID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableModuleID.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableModuleID.setText(res.getString("TableModuleID"));
-		jLabelTableModuleID.setBounds(new Rectangle(571, 12, 96, 15));
-		jTextFieldTableModuleID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldTableModuleID.setBounds(new Rectangle(675, 9, 150, 22));
-		jButtonTableModuleCheck.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableModuleID.setBounds(new Rectangle(705, 12, 130, 20));
+		jTextFieldTableModuleID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldTableModuleID.setBounds(new Rectangle(840, 9, 150, 25));
+		jButtonTableModuleCheck.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jButtonTableModuleCheck.setText(res.getString("TableModuleCheck"));
-		jButtonTableModuleCheck.setBounds(new Rectangle(829, 7, 160, 24));
+		jButtonTableModuleCheck.setBounds(new Rectangle(1000, 8, 200, 27));
 		jButtonTableModuleCheck.addActionListener(new Editor_jButtonTableModuleCheck_actionAdapter(this));
-		jLabelTablePK.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTablePK.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTablePK.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTablePK.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTablePK.setText(res.getString("PKey"));
-		jLabelTablePK.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldTablePK.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldTablePK.setBounds(new Rectangle(115, 37, 450, 22));
+		jLabelTablePK.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldTablePK.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldTablePK.setBounds(new Rectangle(140, 40, 555, 25));
 		jTextFieldTablePK.setEditable(false);
-		jLabelTableDB.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableDB.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableDB.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableDB.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableDB.setText(res.getString("Database"));
-		jLabelTableDB.setBounds(new Rectangle(571, 40, 96, 15));
-		jComboBoxTableDB.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxTableDB.setBounds(new Rectangle(675, 37, 150, 22));
+		jLabelTableDB.setBounds(new Rectangle(705, 43, 130, 20));
+		jComboBoxTableDB.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jComboBoxTableDB.setBounds(new Rectangle(840, 40, 150, 25));
 		jComboBoxTableDB.addActionListener(new Editor_jComboBoxTableDB_actionAdapter(this));
-		jCheckBoxTableReferCheck.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jCheckBoxTableReferCheck.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jCheckBoxTableReferCheck.setText(res.getString("TableReferCheck"));
-		jCheckBoxTableReferCheck.setBounds(new Rectangle(840, 37, 150, 22));
-		jLabelTableRangeKeyFields.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jCheckBoxTableReferCheck.setBounds(new Rectangle(1000, 40, 200, 25));
+		jLabelTableRangeKeyFields.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableRangeKeyFields.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableRangeKeyFields.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableRangeKeyFields.setText(res.getString("RangeKeys"));
-		jLabelTableRangeKeyFields.setBounds(new Rectangle(11, 68, 96, 15));
-		jTextFieldTableRangeKeyFields.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldTableRangeKeyFields.setBounds(new Rectangle(115, 65, 422, 22));
+		jLabelTableRangeKeyFields.setBounds(new Rectangle(5, 74, 130, 20));
+		jTextFieldTableRangeKeyFields.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldTableRangeKeyFields.setBounds(new Rectangle(140, 71, 525, 25));
 		jTextFieldTableRangeKeyFields.setEditable(false);
 		jButtonTableRangeKeyFieldsEdit.setIcon(imageIconPrompt);
-		jButtonTableRangeKeyFieldsEdit.setBounds(new Rectangle(537, 64, 28, 23));
+		jButtonTableRangeKeyFieldsEdit.setBounds(new Rectangle(667, 70, 28, 27));
 		jButtonTableRangeKeyFieldsEdit.addActionListener(new Editor_jButtonTableRangeKeyFieldsEdit_actionAdapter(this));
-		jLabelTableUpdateCounter.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableUpdateCounter.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableUpdateCounter.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableUpdateCounter.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableUpdateCounter.setText(res.getString("UpdateCounter"));
-		jLabelTableUpdateCounter.setBounds(new Rectangle(571, 68, 96, 15));
-		jTextFieldTableUpdateCounter.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldTableUpdateCounter.setBounds(new Rectangle(675, 65, 150, 22));
-		jLabelTableDeleteOperation.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableUpdateCounter.setBounds(new Rectangle(705, 74, 130, 20));
+		jTextFieldTableUpdateCounter.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldTableUpdateCounter.setBounds(new Rectangle(840, 71, 150, 25));
+		jLabelTableDeleteOperation.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableDeleteOperation.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableDeleteOperation.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableDeleteOperation.setText(res.getString("DeleteOperation"));
-		jLabelTableDeleteOperation.setBounds(new Rectangle(11, 96, 96, 15));
-		jTextFieldTableDeleteOperation.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldTableDeleteOperation.setBounds(new Rectangle(115, 93, 300, 22));
-		jLabelTableActiveWhere.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableDeleteOperation.setBounds(new Rectangle(5, 105, 130, 20));
+		jTextFieldTableDeleteOperation.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldTableDeleteOperation.setBounds(new Rectangle(140, 102, 350, 25));
+		jLabelTableActiveWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableActiveWhere.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableActiveWhere.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableActiveWhere.setText(res.getString("ActiveWhere"));
-		jLabelTableActiveWhere.setBounds(new Rectangle(421, 96, 96, 15));
-		jTextFieldTableActiveWhere.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldTableActiveWhere.setBounds(new Rectangle(525, 93, 300, 22));
-		jLabelTableRemarks.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableActiveWhere.setBounds(new Rectangle(500, 105, 130, 20));
+		jTextFieldTableActiveWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldTableActiveWhere.setBounds(new Rectangle(635, 102, 355, 25));
+		jLabelTableRemarks.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableRemarks.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableRemarks.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableRemarks.setText(res.getString("Remarks"));
-		jLabelTableRemarks.setBounds(new Rectangle(11, 124, 96, 15));
-		jTextAreaTableRemarks.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableRemarks.setBounds(new Rectangle(5, 136, 130, 20));
+		jTextAreaTableRemarks.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextAreaTableRemarks.setLineWrap(true);
 		jTextAreaTableRemarks.setWrapStyleWord(true);
 		jScrollPaneTableRemarks.getViewport().add(jTextAreaTableRemarks, null);
-		jScrollPaneTableRemarks.setBounds(new Rectangle(115, 121, 710, 40));
-		jPanelTable.add(jPanelTableTop, BorderLayout.NORTH);
+		jScrollPaneTableRemarks.setBounds(new Rectangle(140, 133, 850, 49));
+		jPanelTable.add(jScrollPaneTableTop, BorderLayout.NORTH);
 		jPanelTable.add(jTabbedPaneTable, BorderLayout.CENTER);
 		jPanelTableTop.add(jLabelTableID);
 		jPanelTableTop.add(jTextFieldTableID);
-		jPanelTableTop.add(jLabelTableName);
 		jPanelTableTop.add(jTextFieldTableName);
 		jPanelTableTop.add(jLabelTableModuleID);
 		jPanelTableTop.add(jTextFieldTableModuleID);
@@ -4245,7 +4333,7 @@ public class Editor extends JFrame {
 		jPanelTableTop.add(jLabelTableRemarks);
 		//
 		jTabbedPaneTable.addChangeListener(new Editor_jTabbedPaneTable_changeAdapter(this));
-		jTabbedPaneTable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTabbedPaneTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTabbedPaneTable.add(res.getString("Fields"), jSplitPaneTableField);
 		jTabbedPaneTable.setIconAt(0, imageIconField);
 		jTabbedPaneTable.add(res.getString("Keys"), jSplitPaneTableKey);
@@ -4256,13 +4344,13 @@ public class Editor extends JFrame {
 		jTabbedPaneTable.setIconAt(3, imageIconScript);
 		jTabbedPaneTable.add(res.getString("WhereUsed"), jScrollPaneTableUsageList);
 		jTabbedPaneTable.setIconAt(4, imageIconFunctionUsage);
-		jTabbedPaneTable.add(res.getString("Data"), jSplitPaneTableData);
+		jTabbedPaneTable.add(res.getString("Data"), jPanelTableData);
 		jTabbedPaneTable.setIconAt(5, imageIconTableEdit);
 		//
 		jScrollPaneTableFieldList.setBorder(null);
 		jScrollPaneTableFieldList.getViewport().add(jTableTableFieldList, null);
 		jScrollPaneTableFieldList.addMouseListener(new Editor_jScrollPaneTableFieldList_mouseAdapter(this));
-		jTableTableFieldList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableTableFieldList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableTableFieldList.setBackground(SystemColor.control);
 		jTableTableFieldList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableTableFieldList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -4273,6 +4361,7 @@ public class Editor extends JFrame {
 		jTableTableFieldList.setSelectionForeground(Color.black);
 		jTableTableFieldList.addFocusListener(new Editor_FocusListener());
 		jTableTableFieldList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableTableFieldList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelTableFieldList.addColumn("NO.");
 		tableModelTableFieldList.addColumn("ID");
 		tableModelTableFieldList.addColumn(res.getString("FieldName"));
@@ -4285,26 +4374,26 @@ public class Editor extends JFrame {
 		column3 = jTableTableFieldList.getColumnModel().getColumn(3);
 		column4 = jTableTableFieldList.getColumnModel().getColumn(4);
 		column5 = jTableTableFieldList.getColumnModel().getColumn(5);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(140);
-		column2.setPreferredWidth(180);
-		column3.setPreferredWidth(100);
-		column4.setPreferredWidth(200);
-		column5.setPreferredWidth(300);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(200);
+		column2.setPreferredWidth(250);
+		column3.setPreferredWidth(150);
+		column4.setPreferredWidth(230);
+		column5.setPreferredWidth(550);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
 		column4.setCellRenderer(rendererAlignmentLeftControlColor);
 		column5.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableTableFieldList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableTableFieldList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableTableFieldList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
 		//
 		jScrollPaneTableKeyList.setBorder(null);
 		jScrollPaneTableKeyList.getViewport().add(jTableTableKeyList, null);
 		jScrollPaneTableKeyList.addMouseListener(new Editor_jScrollPaneTableKeyList_mouseAdapter(this));
-		jTableTableKeyList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableTableKeyList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableTableKeyList.setBackground(SystemColor.control);
 		jTableTableKeyList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableTableKeyList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -4314,26 +4403,27 @@ public class Editor extends JFrame {
 		jTableTableKeyList.addMouseListener(new Editor_jTableTableKeyList_mouseAdapter(this));
 		jTableTableKeyList.addFocusListener(new Editor_FocusListener());
 		jTableTableKeyList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableTableKeyList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelTableKeyList.addColumn("NO.");
 		tableModelTableKeyList.addColumn(res.getString("KeyType"));
 		tableModelTableKeyList.addColumn(res.getString("KeyFields"));
 		column0 = jTableTableKeyList.getColumnModel().getColumn(0);
 		column1 = jTableTableKeyList.getColumnModel().getColumn(1);
 		column2 = jTableTableKeyList.getColumnModel().getColumn(2);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(100);
-		column2.setPreferredWidth(250);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(120);
+		column2.setPreferredWidth(500);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableTableKeyList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableTableKeyList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableTableKeyList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
 		//
 		jScrollPaneTableReferList.setBorder(null);
 		jScrollPaneTableReferList.getViewport().add(jTableTableReferList, null);
 		jScrollPaneTableReferList.addMouseListener(new Editor_jScrollPaneTableReferList_mouseAdapter(this));
-		jTableTableReferList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableTableReferList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableTableReferList.setBackground(SystemColor.control);
 		jTableTableReferList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableTableReferList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -4344,6 +4434,7 @@ public class Editor extends JFrame {
 		jTableTableReferList.setSelectionForeground(Color.black);
 		jTableTableReferList.addFocusListener(new Editor_FocusListener());
 		jTableTableReferList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableTableReferList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelTableReferList.addColumn("NO.");
 		tableModelTableReferList.addColumn(res.getString("JoinTable"));
 		tableModelTableReferList.addColumn(res.getString("Alias"));
@@ -4356,12 +4447,12 @@ public class Editor extends JFrame {
 		column3 = jTableTableReferList.getColumnModel().getColumn(3);
 		column4 = jTableTableReferList.getColumnModel().getColumn(4);
 		column5 = jTableTableReferList.getColumnModel().getColumn(5);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(300);
-		column2.setPreferredWidth(80);
-		column3.setPreferredWidth(220);
-		column4.setPreferredWidth(42);
-		column5.setPreferredWidth(400);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(400);
+		column2.setPreferredWidth(140);
+		column3.setPreferredWidth(300);
+		column4.setPreferredWidth(50);
+		column5.setPreferredWidth(500);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
@@ -4369,14 +4460,14 @@ public class Editor extends JFrame {
 		CheckBoxRenderer checkBoxRenderer = new CheckBoxRenderer();
 		column4.setCellRenderer(checkBoxRenderer);
 		column5.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableTableReferList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableTableReferList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableTableReferList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
 		//
 		jScrollPaneTableScriptList.setBorder(null);
 		jScrollPaneTableScriptList.getViewport().add(jTableTableScriptList, null);
 		jScrollPaneTableScriptList.addMouseListener(new Editor_jScrollPaneTableScriptList_mouseAdapter(this));
-		jTableTableScriptList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableTableScriptList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableTableScriptList.setBackground(SystemColor.control);
 		jTableTableScriptList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableTableScriptList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -4387,6 +4478,7 @@ public class Editor extends JFrame {
 		jTableTableScriptList.setSelectionForeground(Color.black);
 		jTableTableScriptList.addFocusListener(new Editor_FocusListener());
 		jTableTableScriptList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableTableScriptList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelTableScriptList.addColumn("NO.");
 		tableModelTableScriptList.addColumn(res.getString("Name"));
 		tableModelTableScriptList.addColumn(res.getString("ExecuteWhen"));
@@ -4395,21 +4487,21 @@ public class Editor extends JFrame {
 		column1 = jTableTableScriptList.getColumnModel().getColumn(1);
 		column2 = jTableTableScriptList.getColumnModel().getColumn(2);
 		column3 = jTableTableScriptList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(300);
-		column2.setPreferredWidth(230);
-		column3.setPreferredWidth(230);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(350);
+		column2.setPreferredWidth(300);
+		column3.setPreferredWidth(300);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableTableScriptList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableTableScriptList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableTableScriptList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
 		//
 		jScrollPaneTableUsageList.setBorder(null);
 		jScrollPaneTableUsageList.getViewport().add(jTableTableUsageList, null);
-		jTableTableUsageList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableTableUsageList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableTableUsageList.setBackground(SystemColor.control);
 		jTableTableUsageList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableTableUsageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -4417,6 +4509,7 @@ public class Editor extends JFrame {
 		jTableTableUsageList.setSelectionBackground(SELECTED_INACTIVE_COLOR);
 		jTableTableUsageList.setSelectionForeground(Color.black);
 		jTableTableUsageList.addFocusListener(new Editor_FocusListener());
+		jTableTableUsageList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelTableUsageList.addColumn("NO.");
 		tableModelTableUsageList.addColumn(res.getString("WhereUsed"));
 		tableModelTableUsageList.addColumn(res.getString("Type"));
@@ -4425,46 +4518,43 @@ public class Editor extends JFrame {
 		column1 = jTableTableUsageList.getColumnModel().getColumn(1);
 		column2 = jTableTableUsageList.getColumnModel().getColumn(2);
 		column3 = jTableTableUsageList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(300);
-		column2.setPreferredWidth(60);
-		column3.setPreferredWidth(420);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(400);
+		column2.setPreferredWidth(80);
+		column3.setPreferredWidth(550);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableTableUsageList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableTableUsageList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableTableUsageList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
 		//
 		jSplitPaneTableField.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneTableField.add(jScrollPaneTableFieldList, JSplitPane.TOP);
 		jSplitPaneTableField.add(jPanelTableField, JSplitPane.BOTTOM);
-		jSplitPaneTableField.setDividerLocation(screenHeight - 568);
+		jSplitPaneTableField.setDividerLocation(350);
 		jPanelTableField.setLayout(new BorderLayout());
-		jPanelTableFieldTop.setBorder(BorderFactory.createEtchedBorder());
-		jPanelTableFieldTop.setPreferredSize(new Dimension(10, 189));
-		jPanelTableFieldTop.setLayout(null);
 		//
-		jLabelTableFieldID.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableFieldID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableFieldID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableFieldID.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableFieldID.setText(res.getString("FieldID"));
-		jLabelTableFieldID.setBounds(new Rectangle(11, 12, 100, 15));
-		jTextFieldTableFieldID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldTableFieldID.setBounds(new Rectangle(119, 9, 150, 22));
+		jLabelTableFieldID.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldTableFieldID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldTableFieldID.setBounds(new Rectangle(140, 9, 200, 25));
 		jTextFieldTableFieldID.setEditable(false);
-		jCheckBoxTableFieldPhysical.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jCheckBoxTableFieldPhysical.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jCheckBoxTableFieldPhysical.setText(res.getString("PhysicalField"));
-		jCheckBoxTableFieldPhysical.setBounds(new Rectangle(274, 12, 120, 15));
-		jLabelTableFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jCheckBoxTableFieldPhysical.setBounds(new Rectangle(342, 9, 158, 25));
+		jLabelTableFieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableFieldType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableFieldType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableFieldType.setText(res.getString("FieldType"));
-		jLabelTableFieldType.setBounds(new Rectangle(400, 12, 100, 15));
+		jLabelTableFieldType.setBounds(new Rectangle(510, 12, 130, 20));
 		jComboBoxTableFieldType.setEditable(false);
-		jComboBoxTableFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxTableFieldType.setBounds(new Rectangle(508, 9, 130, 22));
+		jComboBoxTableFieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jComboBoxTableFieldType.setBounds(new Rectangle(645, 9, 180, 25));
 		jComboBoxTableFieldType.addActionListener(new Editor_jComboBoxTableFieldType_actionAdapter(this));
 		jComboBoxTableFieldType.addItem("CHAR");
 		jComboBoxTableFieldType.addItem("VARCHAR");
@@ -4486,31 +4576,31 @@ public class Editor extends JFrame {
 		jComboBoxTableFieldType.addItem("VARBINARY");
 		jComboBoxTableFieldType.addItem("CLOB");
 		jComboBoxTableFieldType.addItem("BLOB");
-		jLabelTableFieldSize.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableFieldSize.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableFieldSize.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableFieldSize.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableFieldSize.setText(res.getString("FieldSize"));
-		jLabelTableFieldSize.setBounds(new Rectangle(640, 12, 80, 15));
-		jSpinnerTableFieldSize.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jSpinnerTableFieldSize.setBounds(new Rectangle(725, 9, 45, 22));
+		jLabelTableFieldSize.setBounds(new Rectangle(835, 12, 130, 20));
+		jSpinnerTableFieldSize.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jSpinnerTableFieldSize.setBounds(new Rectangle(970, 9, 60, 25));
 		XEditor_FieldSizeSpinnerEditor editor1 = new XEditor_FieldSizeSpinnerEditor(jSpinnerTableFieldSize, "#,##0");
 	    jSpinnerTableFieldSize.setEditor(editor1);
 	    jSpinnerTableFieldSize.addChangeListener(new Editor_jSpinnerTableFieldSize_changeAdapter(this));
-		jCheckBoxTableFieldAcceptMinus.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jCheckBoxTableFieldAcceptMinus.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jCheckBoxTableFieldAcceptMinus.setText(res.getString("AcceptMinus"));
-		jCheckBoxTableFieldAcceptMinus.setBounds(new Rectangle(775, 12, 100, 15));
-		jComboBoxTableFieldEditType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxTableFieldEditType.setBounds(new Rectangle(880, 9, 105, 22));
+		jCheckBoxTableFieldAcceptMinus.setBounds(new Rectangle(1040, 9, 150, 25));
+		jComboBoxTableFieldEditType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jComboBoxTableFieldEditType.setBounds(new Rectangle(1200, 9, 120, 25));
 		jComboBoxTableFieldEditType.addItem(res.getString("EditTypeNormal"));
 		jComboBoxTableFieldEditType.addItem(res.getString("EditTypeNoEdit"));
 		jComboBoxTableFieldEditType.addItem(res.getString("EditTypeZeroSuppress"));
-		jLabelTableFieldDecimal.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableFieldDecimal.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableFieldDecimal.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableFieldDecimal.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableFieldDecimal.setText(res.getString("Decimal"));
-		jLabelTableFieldDecimal.setBounds(new Rectangle(640, 40, 80, 15));
-		jSpinnerTableFieldDecimal.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jSpinnerTableFieldDecimal.setBounds(new Rectangle(725, 37, 45, 22));
+		jLabelTableFieldDecimal.setBounds(new Rectangle(835, 43, 130, 20));
+		jSpinnerTableFieldDecimal.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jSpinnerTableFieldDecimal.setBounds(new Rectangle(970, 40, 60, 25));
 	    JSpinner.NumberEditor editor2 = new JSpinner.NumberEditor(jSpinnerTableFieldDecimal, "#,##0");
 	    jSpinnerTableFieldDecimal.setEditor(editor2);
 	    JFormattedTextField ftext2 = editor2.getTextField();
@@ -4518,89 +4608,88 @@ public class Editor extends JFrame {
 		ftext2.setBackground(Color.white);
 	    jSpinnerTableFieldDecimal.addChangeListener(new Editor_jSpinnerTableFieldDecimal_changeAdapter(this));
 		//
-		jLabelTableFieldName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableFieldName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableFieldName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableFieldName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableFieldName.setText(res.getString("FieldName"));
-		jLabelTableFieldName.setBounds(new Rectangle(11, 40, 100, 15));
-		jTextFieldTableFieldName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldTableFieldName.setBounds(new Rectangle(119, 37, 258, 22));
-		jCheckBoxTableFieldNullable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableFieldName.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldTableFieldName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldTableFieldName.setBounds(new Rectangle(140, 40, 300, 25));
+		jCheckBoxTableFieldNullable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jCheckBoxTableFieldNullable.setText(res.getString("Nullable"));
-		jCheckBoxTableFieldNullable.setBounds(new Rectangle(508, 37, 100, 15));
+		jCheckBoxTableFieldNullable.setBounds(new Rectangle(640, 40, 150, 25));
 		//
-		jLabelTableFieldTypeOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableFieldTypeOptions.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableFieldTypeOptions.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableFieldTypeOptions.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableFieldTypeOptions.setText(res.getString("FieldExtType"));
-		jLabelTableFieldTypeOptions.setBounds(new Rectangle(11, 68, 100, 15));
+		jLabelTableFieldTypeOptions.setBounds(new Rectangle(5, 74, 130, 20));
 		//
-		jRadioButtonFieldTypeOptionNONE.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFieldTypeOptionNONE.setBounds(new Rectangle(115, 65, 100, 22));
+		jRadioButtonFieldTypeOptionNONE.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFieldTypeOptionNONE.setBounds(new Rectangle(140, 71, 130, 25));
 		jRadioButtonFieldTypeOptionNONE.setText(res.getString("None"));
-		jRadioButtonFieldTypeOptionKANJI.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFieldTypeOptionKANJI.setBounds(new Rectangle(225, 65, 100, 22));
+		jRadioButtonFieldTypeOptionKANJI.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFieldTypeOptionKANJI.setBounds(new Rectangle(270, 71, 130, 25));
 		jRadioButtonFieldTypeOptionKANJI.setText(res.getString("FieldKanji"));
-		jRadioButtonFieldTypeOptionKATAKANA.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFieldTypeOptionKATAKANA.setBounds(new Rectangle(335, 65, 100, 22));
+		jRadioButtonFieldTypeOptionKATAKANA.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFieldTypeOptionKATAKANA.setBounds(new Rectangle(400, 71, 130, 25));
 		jRadioButtonFieldTypeOptionKATAKANA.setText(res.getString("FieldKana"));
-		jRadioButtonFieldTypeOptionAUTO_NUMBER.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFieldTypeOptionAUTO_NUMBER.setBounds(new Rectangle(445, 65, 100, 22));
+		jRadioButtonFieldTypeOptionAUTO_NUMBER.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFieldTypeOptionAUTO_NUMBER.setBounds(new Rectangle(530, 71, 130, 25));
 		jRadioButtonFieldTypeOptionAUTO_NUMBER.setText(res.getString("AutoNumberID"));
 		jRadioButtonFieldTypeOptionAUTO_NUMBER.addChangeListener(new Editor_jRadioButtonFieldTypeOptionAUTO_NUMBER_changeAdapter(this));
-		jTextFieldTableFieldTypeOptionAUTO_NUMBER.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldTableFieldTypeOptionAUTO_NUMBER.setBounds(new Rectangle(550, 65, 155, 22));
-		jRadioButtonFieldTypeOptionKUBUN.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFieldTypeOptionKUBUN.setBounds(new Rectangle(725, 65, 100, 22));
+		jTextFieldTableFieldTypeOptionAUTO_NUMBER.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldTableFieldTypeOptionAUTO_NUMBER.setBounds(new Rectangle(660, 71, 200, 25));
+		jRadioButtonFieldTypeOptionKUBUN.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFieldTypeOptionKUBUN.setBounds(new Rectangle(900, 71, 130, 25));
 		jRadioButtonFieldTypeOptionKUBUN.setText(res.getString("FieldKubunID"));
 		jRadioButtonFieldTypeOptionKUBUN.addChangeListener(new Editor_jRadioButtonFieldTypeOptionKUBUN_changeAdapter(this));
-		jTextFieldTableFieldTypeOptionKUBUN.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldTableFieldTypeOptionKUBUN.setBounds(new Rectangle(830, 65, 155, 22));
+		jTextFieldTableFieldTypeOptionKUBUN.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldTableFieldTypeOptionKUBUN.setBounds(new Rectangle(1030, 71, 200, 25));
 		jTextFieldTableFieldTypeOptionKUBUN.addKeyListener(new Editor_jTextFieldTableFieldTypeOptionKUBUN_keyAdapter(this));
-		//
-		jRadioButtonFieldTypeOptionURL.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFieldTypeOptionURL.setBounds(new Rectangle(115, 89, 100, 22));
-		jRadioButtonFieldTypeOptionURL.setText(res.getString("FieldURL"));
-		jRadioButtonFieldTypeOptionZIPNO.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFieldTypeOptionZIPNO.setBounds(new Rectangle(225, 89, 100, 22));
-		jRadioButtonFieldTypeOptionZIPNO.setText(res.getString("FieldZipNo"));
-		jRadioButtonFieldTypeOptionZIPADRS.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFieldTypeOptionZIPADRS.setBounds(new Rectangle(335, 89, 100, 22));
-		jRadioButtonFieldTypeOptionZIPADRS.setText(res.getString("FieldZipAdrs"));
-		jRadioButtonFieldTypeOptionDIAL.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFieldTypeOptionDIAL.setBounds(new Rectangle(445, 89, 100, 22));
-		jRadioButtonFieldTypeOptionDIAL.setText(res.getString("FieldDialNo"));
-		jRadioButtonFieldTypeOptionBOOLEAN.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFieldTypeOptionBOOLEAN.setBounds(new Rectangle(555, 89, 100, 22));
-		jRadioButtonFieldTypeOptionBOOLEAN.setText(res.getString("FieldBoolean"));
-		jRadioButtonFieldTypeOptionBOOLEAN.addChangeListener(new Editor_jRadioButtonFieldTypeOptionBOOLEAN_changeAdapter(this));
-		jTextFieldTableFieldTypeOptionBOOLEAN.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldTableFieldTypeOptionBOOLEAN.setBounds(new Rectangle(660, 89, 165, 22));
-		//
-		jRadioButtonFieldTypeOptionYMONTH.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFieldTypeOptionYMONTH.setBounds(new Rectangle(115, 113, 100, 22));
-		jRadioButtonFieldTypeOptionYMONTH.setText(res.getString("FieldYearMonth"));
-		jRadioButtonFieldTypeOptionFYEAR.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFieldTypeOptionFYEAR.setBounds(new Rectangle(225, 113, 100, 22));
-		jRadioButtonFieldTypeOptionFYEAR.setText(res.getString("FieldFiscalYear"));
-		jRadioButtonFieldTypeOptionMSEQ.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFieldTypeOptionMSEQ.setBounds(new Rectangle(335, 113, 100, 22));
-		jRadioButtonFieldTypeOptionMSEQ.setText(res.getString("FieldMonthSeq"));
-		jRadioButtonFieldTypeOptionIMAGE.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFieldTypeOptionIMAGE.setBounds(new Rectangle(445, 113, 100, 22));
-		jRadioButtonFieldTypeOptionIMAGE.setText(res.getString("FieldImageFile"));
-		jRadioButtonFieldTypeOptionVALUES.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFieldTypeOptionVALUES.setBounds(new Rectangle(555, 113, 100, 22));
-		jRadioButtonFieldTypeOptionVALUES.setText(res.getString("FieldValueList"));
-		jRadioButtonFieldTypeOptionVALUES.addChangeListener(new Editor_jRadioButtonFieldTypeOptionVALUES_changeAdapter(this));
-		jTextFieldTableFieldTypeOptionVALUES.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldTableFieldTypeOptionVALUES.setBounds(new Rectangle(660, 113, 165, 22));
-		//
-		jTextAreaTableFieldTypeOptionKUBUN.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextAreaTableFieldTypeOptionKUBUN.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextAreaTableFieldTypeOptionKUBUN.setEditable(false);
 		jTextAreaTableFieldTypeOptionKUBUN.setBackground(SystemColor.control);
 		jScrollPaneTableFieldTypeOptionKUBUN.getViewport().setView(jTextAreaTableFieldTypeOptionKUBUN);
-		jScrollPaneTableFieldTypeOptionKUBUN.setBounds(new Rectangle(830, 89, 155, 91));
+		jScrollPaneTableFieldTypeOptionKUBUN.setBounds(new Rectangle(1030, 102, 200, 111));
+		//
+		jRadioButtonFieldTypeOptionURL.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFieldTypeOptionURL.setBounds(new Rectangle(140, 102, 130, 25));
+		jRadioButtonFieldTypeOptionURL.setText(res.getString("FieldURL"));
+		jRadioButtonFieldTypeOptionZIPNO.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFieldTypeOptionZIPNO.setBounds(new Rectangle(270, 102, 130, 25));
+		jRadioButtonFieldTypeOptionZIPNO.setText(res.getString("FieldZipNo"));
+		jRadioButtonFieldTypeOptionZIPADRS.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFieldTypeOptionZIPADRS.setBounds(new Rectangle(400, 102, 130, 25));
+		jRadioButtonFieldTypeOptionZIPADRS.setText(res.getString("FieldZipAdrs"));
+		jRadioButtonFieldTypeOptionDIAL.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFieldTypeOptionDIAL.setBounds(new Rectangle(530, 102, 130, 25));
+		jRadioButtonFieldTypeOptionDIAL.setText(res.getString("FieldDialNo"));
+		jRadioButtonFieldTypeOptionBOOLEAN.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFieldTypeOptionBOOLEAN.setBounds(new Rectangle(660, 102, 130, 25));
+		jRadioButtonFieldTypeOptionBOOLEAN.setText(res.getString("FieldBoolean"));
+		jRadioButtonFieldTypeOptionBOOLEAN.addChangeListener(new Editor_jRadioButtonFieldTypeOptionBOOLEAN_changeAdapter(this));
+		jTextFieldTableFieldTypeOptionBOOLEAN.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldTableFieldTypeOptionBOOLEAN.setBounds(new Rectangle(790, 102, 200, 22));
+		//
+		jRadioButtonFieldTypeOptionYMONTH.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFieldTypeOptionYMONTH.setBounds(new Rectangle(140, 133, 130, 25));
+		jRadioButtonFieldTypeOptionYMONTH.setText(res.getString("FieldYearMonth"));
+		jRadioButtonFieldTypeOptionFYEAR.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFieldTypeOptionFYEAR.setBounds(new Rectangle(270, 133, 130, 25));
+		jRadioButtonFieldTypeOptionFYEAR.setText(res.getString("FieldFiscalYear"));
+		jRadioButtonFieldTypeOptionMSEQ.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFieldTypeOptionMSEQ.setBounds(new Rectangle(400, 133, 130, 25));
+		jRadioButtonFieldTypeOptionMSEQ.setText(res.getString("FieldMonthSeq"));
+		jRadioButtonFieldTypeOptionIMAGE.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFieldTypeOptionIMAGE.setBounds(new Rectangle(530, 133, 130, 25));
+		jRadioButtonFieldTypeOptionIMAGE.setText(res.getString("FieldImageFile"));
+		jRadioButtonFieldTypeOptionVALUES.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFieldTypeOptionVALUES.setBounds(new Rectangle(660, 133, 130, 25));
+		jRadioButtonFieldTypeOptionVALUES.setText(res.getString("FieldValueList"));
+		jRadioButtonFieldTypeOptionVALUES.addChangeListener(new Editor_jRadioButtonFieldTypeOptionVALUES_changeAdapter(this));
+		jTextFieldTableFieldTypeOptionVALUES.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldTableFieldTypeOptionVALUES.setBounds(new Rectangle(790, 133, 200, 25));
 		//
 		buttonGroupTypeOption.add(jRadioButtonFieldTypeOptionNONE);
 		buttonGroupTypeOption.add(jRadioButtonFieldTypeOptionAUTO_NUMBER);
@@ -4618,19 +4707,24 @@ public class Editor extends JFrame {
 		buttonGroupTypeOption.add(jRadioButtonFieldTypeOptionVALUES);
 		buttonGroupTypeOption.add(jRadioButtonFieldTypeOptionMSEQ);
 		//
-		jLabelTableFieldRemarks.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableFieldRemarks.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableFieldRemarks.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableFieldRemarks.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableFieldRemarks.setText(res.getString("Remarks"));
-		jLabelTableFieldRemarks.setBounds(new Rectangle(11, 143, 96, 15));
-		jTextAreaTableFieldRemarks.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableFieldRemarks.setBounds(new Rectangle(5, 167, 130, 20));
+		jTextAreaTableFieldRemarks.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextAreaTableFieldRemarks.setLineWrap(true);
 		jTextAreaTableFieldRemarks.setWrapStyleWord(true);
 		jScrollPaneTableFieldRemarks.getViewport().add(jTextAreaTableFieldRemarks, null);
-		jScrollPaneTableFieldRemarks.setBounds(new Rectangle(115, 140, 710, 40));
+		jScrollPaneTableFieldRemarks.setBounds(new Rectangle(140, 164, 850, 49));
 		//
-		jPanelTableField.add(jPanelTableFieldTop, BorderLayout.NORTH);
+		jPanelTableField.add(jScrollPaneTableFieldTop, BorderLayout.NORTH);
 		jPanelTableField.add(jScrollPaneTableFieldUsageList, BorderLayout.CENTER);
+		jScrollPaneTableFieldTop.setBorder(null);
+		jScrollPaneTableFieldTop.getViewport().add(jPanelTableFieldTop);
+		jPanelTableFieldTop.setBorder(BorderFactory.createEtchedBorder());
+		jPanelTableFieldTop.setPreferredSize(new Dimension(1250, 222));
+		jPanelTableFieldTop.setLayout(null);
 		jPanelTableFieldTop.add(jLabelTableFieldID);
 		jPanelTableFieldTop.add(jLabelTableFieldName);
 		jPanelTableFieldTop.add(jCheckBoxTableFieldPhysical);
@@ -4673,7 +4767,7 @@ public class Editor extends JFrame {
 		jScrollPaneTableFieldList.getViewport().add(jTableTableFieldList, null);
 		jScrollPaneTableFieldUsageList.setBorder(null);
 		jScrollPaneTableFieldUsageList.getViewport().add(jTableTableFieldUsageList, null);
-		jTableTableFieldUsageList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableTableFieldUsageList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableTableFieldUsageList.setBackground(SystemColor.control);
 		jTableTableFieldUsageList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableTableFieldUsageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -4681,6 +4775,7 @@ public class Editor extends JFrame {
 		jTableTableFieldUsageList.setSelectionBackground(SELECTED_INACTIVE_COLOR);
 		jTableTableFieldUsageList.setSelectionForeground(Color.black);
 		jTableTableFieldUsageList.addFocusListener(new Editor_FocusListener());
+		jTableTableFieldUsageList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelTableFieldUsageList.addColumn("NO.");
 		tableModelTableFieldUsageList.addColumn(res.getString("WhereUsed"));
 		tableModelTableFieldUsageList.addColumn(res.getString("Type"));
@@ -4689,46 +4784,46 @@ public class Editor extends JFrame {
 		column1 = jTableTableFieldUsageList.getColumnModel().getColumn(1);
 		column2 = jTableTableFieldUsageList.getColumnModel().getColumn(2);
 		column3 = jTableTableFieldUsageList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(300);
-		column2.setPreferredWidth(60);
-		column3.setPreferredWidth(420);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(400);
+		column2.setPreferredWidth(80);
+		column3.setPreferredWidth(550);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableTableFieldUsageList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableTableFieldUsageList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableTableFieldUsageList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
 		//
 		jSplitPaneTableKey.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneTableKey.add(jScrollPaneTableKeyList, JSplitPane.TOP);
 		jSplitPaneTableKey.add(jPanelTableKey, JSplitPane.BOTTOM);
-		jSplitPaneTableKey.setDividerLocation(110);
+		jSplitPaneTableKey.setDividerLocation(160);
 		jPanelTableKeyTop.setBorder(BorderFactory.createEtchedBorder());
 		jPanelTableKeyTop.setLayout(null);
-		jPanelTableKeyTop.setPreferredSize(new Dimension(400, 68));
-		jLabelTableKeyType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jPanelTableKeyTop.setPreferredSize(new Dimension(400, 74));
+		jLabelTableKeyType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableKeyType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableKeyType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableKeyType.setText(res.getString("KeyType"));
-		jLabelTableKeyType.setBounds(new Rectangle(11, 12, 100, 15));
-		jTextFieldTableKeyType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldTableKeyType.setBounds(new Rectangle(119, 9, 100, 22));
+		jLabelTableKeyType.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldTableKeyType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldTableKeyType.setBounds(new Rectangle(140, 9, 150, 25));
 		jTextFieldTableKeyType.setEditable(false);
-		jCheckBoxTableDetailRowNumberAuto.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jCheckBoxTableDetailRowNumberAuto.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jCheckBoxTableDetailRowNumberAuto.setText(res.getString("DetailRowNumber"));
-		jCheckBoxTableDetailRowNumberAuto.setBounds(new Rectangle(250, 12, 350, 15));
-		jLabelTableKeyFields.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jCheckBoxTableDetailRowNumberAuto.setBounds(new Rectangle(300, 9, 420, 25));
+		jLabelTableKeyFields.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableKeyFields.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableKeyFields.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableKeyFields.setText(res.getString("KeyFields"));
-		jLabelTableKeyFields.setBounds(new Rectangle(11, 40, 100, 15));
-		jTextFieldTableKeyFields.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldTableKeyFields.setBounds(new Rectangle(119, 37, 500, 22));
+		jLabelTableKeyFields.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldTableKeyFields.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldTableKeyFields.setBounds(new Rectangle(140, 40, 600, 25));
 		jTextFieldTableKeyFields.setEditable(false);
 		jButtonTableKeyFieldsEdit.setIcon(imageIconPrompt);
-		jButtonTableKeyFieldsEdit.setBounds(new Rectangle(619, 36, 28, 23));
+		jButtonTableKeyFieldsEdit.setBounds(new Rectangle(742, 39, 30, 27));
 		jButtonTableKeyFieldsEdit.addActionListener(new Editor_jButtonTableKeyFieldsEdit_actionAdapter(this));
 		jPanelTableKeyTop.add(jLabelTableKeyType, null);
 		jPanelTableKeyTop.add(jTextFieldTableKeyType, null);
@@ -4743,7 +4838,7 @@ public class Editor extends JFrame {
 		jPanelTableKey.add(jScrollPaneTableKeyRelationshipList, BorderLayout.CENTER);
 		jScrollPaneTableKeyRelationshipList.setBorder(null);
 		jScrollPaneTableKeyRelationshipList.getViewport().add(jTableTableKeyRelationshipList, null);
-		jTableTableKeyRelationshipList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableTableKeyRelationshipList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableTableKeyRelationshipList.setBackground(SystemColor.control);
 		jTableTableKeyRelationshipList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableTableKeyRelationshipList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -4751,6 +4846,7 @@ public class Editor extends JFrame {
 		jTableTableKeyRelationshipList.setSelectionBackground(SELECTED_INACTIVE_COLOR);
 		jTableTableKeyRelationshipList.setSelectionForeground(Color.black);
 		jTableTableKeyRelationshipList.addFocusListener(new Editor_FocusListener());
+		jTableTableKeyRelationshipList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelTableKeyRelationshipList.addColumn("NO.");
 		tableModelTableKeyRelationshipList.addColumn(res.getString("JoinTable"));
 		tableModelTableKeyRelationshipList.addColumn(res.getString("Alias"));
@@ -4761,96 +4857,96 @@ public class Editor extends JFrame {
 		column2 = jTableTableKeyRelationshipList.getColumnModel().getColumn(2);
 		column3 = jTableTableKeyRelationshipList.getColumnModel().getColumn(3);
 		column4 = jTableTableKeyRelationshipList.getColumnModel().getColumn(4);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(300);
-		column2.setPreferredWidth(80);
-		column3.setPreferredWidth(220);
-		column4.setPreferredWidth(400);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(400);
+		column2.setPreferredWidth(120);
+		column3.setPreferredWidth(300);
+		column4.setPreferredWidth(600);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
 		column4.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableTableKeyRelationshipList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableTableKeyRelationshipList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableTableKeyRelationshipList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
 		//
 		jSplitPaneTableRefer.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneTableRefer.add(jScrollPaneTableReferList, JSplitPane.TOP);
 		jSplitPaneTableRefer.add(jPanelTableRefer, JSplitPane.BOTTOM);
-		jSplitPaneTableRefer.setDividerLocation(screenHeight - 478);
+		jSplitPaneTableRefer.setDividerLocation(200);
 		jPanelTableRefer.setBorder(BorderFactory.createEtchedBorder());
 		jPanelTableRefer.setLayout(null);
 		//
-		jLabelTableReferToTable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableReferToTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableReferToTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableReferToTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableReferToTable.setText(res.getString("JoinTable"));
-		jLabelTableReferToTable.setBounds(new Rectangle(11, 12, 96, 15));
-		jTextFieldTableReferToTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldTableReferToTable.setBounds(new Rectangle(115, 9, 450, 22));
+		jLabelTableReferToTable.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldTableReferToTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldTableReferToTable.setBounds(new Rectangle(140, 9, 600, 25));
 		jTextFieldTableReferToTable.setEditable(false);
-		jLabelTableReferAlias.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableReferAlias.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableReferAlias.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableReferAlias.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableReferAlias.setText(res.getString("Alias"));
-		jLabelTableReferAlias.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldTableReferAlias.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldTableReferAlias.setBounds(new Rectangle(115, 37, 100, 22));
+		jLabelTableReferAlias.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldTableReferAlias.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldTableReferAlias.setBounds(new Rectangle(140, 40, 150, 25));
 		jTextFieldTableReferAlias.setEditable(false);
-		jLabelTableReferToKeyFields.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableReferToKeyFields.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableReferToKeyFields.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableReferToKeyFields.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableReferToKeyFields.setText(res.getString("JoinToKeys"));
-		jLabelTableReferToKeyFields.setBounds(new Rectangle(11, 68, 96, 15));
-		jTextFieldTableReferToKeyFields.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldTableReferToKeyFields.setBounds(new Rectangle(115, 65, 450, 22));
+		jLabelTableReferToKeyFields.setBounds(new Rectangle(5, 74, 130, 20));
+		jTextFieldTableReferToKeyFields.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldTableReferToKeyFields.setBounds(new Rectangle(140, 71, 600, 25));
 		jTextFieldTableReferToKeyFields.setEditable(false);
-		jLabelTableReferWithKeyFields.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableReferWithKeyFields.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableReferWithKeyFields.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableReferWithKeyFields.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableReferWithKeyFields.setText(res.getString("JoinWithKeys"));
-		jLabelTableReferWithKeyFields.setBounds(new Rectangle(11, 96, 96, 15));
-		jTextFieldTableReferWithKeyFields.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldTableReferWithKeyFields.setBounds(new Rectangle(115, 93, 422, 22));
+		jLabelTableReferWithKeyFields.setBounds(new Rectangle(5, 105, 130, 20));
+		jTextFieldTableReferWithKeyFields.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldTableReferWithKeyFields.setBounds(new Rectangle(140, 102, 570, 25));
 		jTextFieldTableReferWithKeyFields.setEditable(false);
 		jButtonTableReferWithKeyFieldsEdit.setIcon(imageIconPrompt);
-		jButtonTableReferWithKeyFieldsEdit.setBounds(new Rectangle(537, 92, 28, 23));
+		jButtonTableReferWithKeyFieldsEdit.setBounds(new Rectangle(712, 101, 28, 27));
 		jButtonTableReferWithKeyFieldsEdit.addActionListener(new Editor_jButtonTableReferWithKeyFieldsEdit_actionAdapter(this));
-		jLabelTableReferOrderByFields.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableReferOrderByFields.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableReferOrderByFields.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableReferOrderByFields.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableReferOrderByFields.setText(res.getString("JoinOrderBy"));
-		jLabelTableReferOrderByFields.setBounds(new Rectangle(11, 124, 96, 15));
-		jTextFieldTableReferOrderByFields.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldTableReferOrderByFields.setBounds(new Rectangle(115, 121, 422, 22));
+		jLabelTableReferOrderByFields.setBounds(new Rectangle(5, 136, 130, 20));
+		jTextFieldTableReferOrderByFields.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldTableReferOrderByFields.setBounds(new Rectangle(140, 133, 570, 25));
 		jTextFieldTableReferOrderByFields.setEditable(false);
 		jButtonTableReferOrderByFieldsEdit.setIcon(imageIconPrompt);
-		jButtonTableReferOrderByFieldsEdit.setBounds(new Rectangle(537, 120, 28, 23));
+		jButtonTableReferOrderByFieldsEdit.setBounds(new Rectangle(712, 132, 28, 27));
 		jButtonTableReferOrderByFieldsEdit.addActionListener(new Editor_jButtonToEditOrderByFields_actionAdapter(this));
-		jLabelTableReferOptional.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableReferOptional.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableReferOptional.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableReferOptional.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableReferOptional.setText(res.getString("JoinRecordExist"));
-		jLabelTableReferOptional.setBounds(new Rectangle(11, 152, 96, 15));
-		jCheckBoxTableReferOptional.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jCheckBoxTableReferOptional.setBounds(new Rectangle(111, 149, 200, 22));
+		jLabelTableReferOptional.setBounds(new Rectangle(5, 167, 130, 20));
+		jCheckBoxTableReferOptional.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxTableReferOptional.setBounds(new Rectangle(140, 164, 300, 25));
 		jCheckBoxTableReferOptional.setText(res.getString("JoinRecordOptional"));
+		jLabelTableReferFields.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableReferFields.setText(res.getString("JoinFields"));
 		jLabelTableReferFields.setVerticalAlignment(SwingConstants.BOTTOM);
-		jLabelTableReferFields.setPreferredSize(new Dimension(10, 20));
-		jLabelTableReferFields.setBounds(new Rectangle(520, 12, 96, 15));
+		jLabelTableReferFields.setPreferredSize(new Dimension(10, 22));
+		//jLabelTableReferFields.setBounds(new Rectangle(520, 12, 96, 15));
 		jListTableReferFields.setBorder(null);
-		Editor_CheckBoxListRenderer renderer = new Editor_CheckBoxListRenderer();
+		Editor_CheckBoxListRenderer renderer = new Editor_CheckBoxListRenderer(this);
 		jListTableReferFields.setCellRenderer(renderer);
 		jListTableReferFields.setBackground(jPanelTableRefer.getBackground());
 		jListTableReferFields.addMouseListener(new Editor_jListTableReferFields_mouseAdapter(this));
 		jListTableReferFields.addMouseMotionListener(new Editor_jListTableReferFields_mouseMotionAdapter(this));
 		jScrollPaneTableReferFields.setBorder(BorderFactory.createEtchedBorder());
-		jScrollPaneTableReferFields.setBounds(new Rectangle(624, 9, 300, 215));
 		jScrollPaneTableReferFields.getViewport().add(jListTableReferFields, null);
 		jPanelTableReferLeft.setLayout(null);
-		jPanelTableReferLeft.setPreferredSize(new Dimension(580, 10));
+		jPanelTableReferLeft.setPreferredSize(new Dimension(750, 10));
 		jPanelTableReferLeft.setBorder(null);
 		jPanelTableReferLeft.add(jLabelTableReferToTable);
 		jPanelTableReferLeft.add(jTextFieldTableReferToTable);
@@ -4877,74 +4973,77 @@ public class Editor extends JFrame {
 		jSplitPaneTableScript.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneTableScript.add(jScrollPaneTableScriptList, JSplitPane.TOP);
 		jSplitPaneTableScript.add(jPanelTableScript, JSplitPane.BOTTOM);
-		jSplitPaneTableScript.setDividerLocation(110);
+		jSplitPaneTableScript.setDividerLocation(250);
 		jTextAreaTableScriptNotes.setBorder(BorderFactory.createEmptyBorder());
 		jTextAreaTableScriptNotes.setBackground(jPanelTableScriptTop.getBackground());
-		jTextAreaTableScriptNotes.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextAreaTableScriptNotes.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextAreaTableScriptNotes.setEditable(false);
 		jScrollPaneTableScriptNotes.setBorder(BorderFactory.createEtchedBorder());
 		jScrollPaneTableScriptNotes.getViewport().add(jTextAreaTableScriptNotes, null);
 		jLabelTableScriptName.setEnabled(false);
-		jLabelTableScriptName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableScriptName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableScriptName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableScriptName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableScriptName.setText(res.getString("Name"));
-		jLabelTableScriptName.setBounds(new Rectangle(11, 12, 96, 15));
+		jLabelTableScriptName.setBounds(new Rectangle(5, 12, 130, 20));
 		jTextFieldTableScriptName.setEnabled(false);
-		jTextFieldTableScriptName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldTableScriptName.setBounds(new Rectangle(115, 9, 380, 22));
+		jTextFieldTableScriptName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldTableScriptName.setBounds(new Rectangle(140, 9, 400, 25));
+		jCheckBoxTableScriptHold.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxTableScriptHold.setText(res.getString("ScriptHold"));
+		jCheckBoxTableScriptHold.setBounds(new Rectangle(545, 9, 110, 25));
 		jLabelTableScriptEvent.setEnabled(false);
-		jLabelTableScriptEvent.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableScriptEvent.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableScriptEvent.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableScriptEvent.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableScriptEvent.setText(res.getString("ExecuteWhen"));
-		jLabelTableScriptEvent.setBounds(new Rectangle(11, 40, 96, 15));
+		jLabelTableScriptEvent.setBounds(new Rectangle(5, 43, 130, 20));
 		jCheckBoxTableScriptEventPrimaryBR.setText(res.getString("EventBR"));
 		jCheckBoxTableScriptEventPrimaryBR.setEnabled(false);
-		jCheckBoxTableScriptEventPrimaryBR.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jCheckBoxTableScriptEventPrimaryBR.setBounds(new Rectangle(115, 40, 93, 15));
+		jCheckBoxTableScriptEventPrimaryBR.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxTableScriptEventPrimaryBR.setBounds(new Rectangle(140, 40, 120, 25));
 		jCheckBoxTableScriptEventPrimaryBC.setText(res.getString("EventBC"));
 		jCheckBoxTableScriptEventPrimaryBC.setEnabled(false);
-		jCheckBoxTableScriptEventPrimaryBC.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jCheckBoxTableScriptEventPrimaryBC.setBounds(new Rectangle(210, 40, 93, 15));
+		jCheckBoxTableScriptEventPrimaryBC.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxTableScriptEventPrimaryBC.setBounds(new Rectangle(260, 40, 120, 25));
 		jCheckBoxTableScriptEventPrimaryBC.addChangeListener(new Editor_jCheckBoxTableScriptEventPrimary_changeAdapter(this));
 		jCheckBoxTableScriptEventPrimaryBU.setText(res.getString("EventBU"));
 		jCheckBoxTableScriptEventPrimaryBU.setEnabled(false);
-		jCheckBoxTableScriptEventPrimaryBU.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jCheckBoxTableScriptEventPrimaryBU.setBounds(new Rectangle(305, 40, 93, 15));
+		jCheckBoxTableScriptEventPrimaryBU.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxTableScriptEventPrimaryBU.setBounds(new Rectangle(380, 40, 120, 25));
 		jCheckBoxTableScriptEventPrimaryBU.addChangeListener(new Editor_jCheckBoxTableScriptEventPrimary_changeAdapter(this));
 		jCheckBoxTableScriptEventPrimaryBD.setText(res.getString("EventBD"));
 		jCheckBoxTableScriptEventPrimaryBD.setEnabled(false);
-		jCheckBoxTableScriptEventPrimaryBD.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jCheckBoxTableScriptEventPrimaryBD.setBounds(new Rectangle(400, 40, 93, 15));
+		jCheckBoxTableScriptEventPrimaryBD.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxTableScriptEventPrimaryBD.setBounds(new Rectangle(500, 40, 120, 25));
 		jCheckBoxTableScriptEventPrimaryBD.addChangeListener(new Editor_jCheckBoxTableScriptEventPrimary_changeAdapter(this));
 		jCheckBoxTableScriptEventPrimaryAR.setText(res.getString("EventAR"));
 		jCheckBoxTableScriptEventPrimaryAR.setEnabled(false);
-		jCheckBoxTableScriptEventPrimaryAR.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jCheckBoxTableScriptEventPrimaryAR.setBounds(new Rectangle(115, 68, 93, 15));
+		jCheckBoxTableScriptEventPrimaryAR.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxTableScriptEventPrimaryAR.setBounds(new Rectangle(140, 71, 120, 25));
 		jCheckBoxTableScriptEventPrimaryAR.addChangeListener(new Editor_jCheckBoxTableScriptEventPrimary_changeAdapter(this));
 		jCheckBoxTableScriptEventPrimaryAC.setText(res.getString("EventAC"));
 		jCheckBoxTableScriptEventPrimaryAC.setEnabled(false);
-		jCheckBoxTableScriptEventPrimaryAC.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jCheckBoxTableScriptEventPrimaryAC.setBounds(new Rectangle(210, 68, 93, 15));
+		jCheckBoxTableScriptEventPrimaryAC.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxTableScriptEventPrimaryAC.setBounds(new Rectangle(260, 71, 120, 25));
 		jCheckBoxTableScriptEventPrimaryAU.setText(res.getString("EventAU"));
 		jCheckBoxTableScriptEventPrimaryAU.setEnabled(false);
-		jCheckBoxTableScriptEventPrimaryAU.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jCheckBoxTableScriptEventPrimaryAU.setBounds(new Rectangle(305, 68, 93, 15));
+		jCheckBoxTableScriptEventPrimaryAU.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxTableScriptEventPrimaryAU.setBounds(new Rectangle(380, 71, 120, 25));
 		jCheckBoxTableScriptEventPrimaryAD.setText(res.getString("EventAD"));
 		jCheckBoxTableScriptEventPrimaryAD.setEnabled(false);
-		jCheckBoxTableScriptEventPrimaryAD.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jCheckBoxTableScriptEventPrimaryAD.setBounds(new Rectangle(400, 68, 93, 15));
+		jCheckBoxTableScriptEventPrimaryAD.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxTableScriptEventPrimaryAD.setBounds(new Rectangle(500, 71, 120, 25));
 		jComboBoxTableScriptEventRefer.setEditable(false);
 		jComboBoxTableScriptEventRefer.setEnabled(false);
-		jComboBoxTableScriptEventRefer.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxTableScriptEventRefer.setBounds(new Rectangle(115, 93, 380, 22));
-		jCheckBoxTableScriptHold.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jCheckBoxTableScriptHold.setText(res.getString("ScriptHold"));
-		jCheckBoxTableScriptHold.setBounds(new Rectangle(5, 93, 100, 22));
+		jComboBoxTableScriptEventRefer.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jComboBoxTableScriptEventRefer.setBounds(new Rectangle(140, 102, 430, 25));
 		jTextAreaTableScriptText.setEnabled(false);
+		jTextAreaTableScriptText.setForeground(colorScriptForeground);
+		jTextAreaTableScriptText.setBackground(colorScriptBackground);
+		jTextAreaTableScriptText.setCaretColor(colorScriptCaret);
 		jTextAreaTableScriptText.setTabSize(4);
-		jTextAreaTableScriptText.setFont(new java.awt.Font("Monospaced", 0, 14));
+		jTextAreaTableScriptText.setFont(new java.awt.Font(scriptFontName, 0, scriptFontSize));
 		jTextAreaTableScriptText.addCaretListener(new Editor_jTextAreaTableScriptText_caretAdapter(this));
 		jTextAreaTableScriptText.getDocument().addUndoableEditListener(jTextAreaTableScriptTextUndoManager);
 		jScrollPaneTableScriptText.getViewport().add(jTextAreaTableScriptText, null);
@@ -4965,23 +5064,23 @@ public class Editor extends JFrame {
 		jPanelTableScriptCenter.setBorder(BorderFactory.createEtchedBorder());
 		jPanelTableScriptCenter.setLayout(new BorderLayout());
 		jLabelTableScript.setEnabled(false);
-		jLabelTableScript.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableScript.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableScript.setHorizontalAlignment(SwingConstants.LEFT);
 		jLabelTableScript.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableScript.setText(" " + res.getString("Script"));
 		jLabelTableScript.setBounds(new Rectangle(5, 4, 150, 15));
 		jLabelTableScript.setPreferredSize(new Dimension(150, 20));
-		jLabelTableScriptCursorPos.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableScriptCursorPos.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableScriptCursorPos.setHorizontalAlignment(SwingConstants.CENTER);
-		jLabelTableScriptCursorPos.setPreferredSize(new Dimension(70, 20));
+		jLabelTableScriptCursorPos.setPreferredSize(new Dimension(80, 20));
 		jLabelTableScriptCursorPos.setBorder(BorderFactory.createLineBorder(Color.lightGray));
-		jPanelTableScriptLabelMargin.setPreferredSize(new Dimension(10, 20));
+		jPanelTableScriptLabelMargin.setPreferredSize(new Dimension(10, 23));
 		jPanelTableScriptLabelMargin.setLayout(new BorderLayout());
 		jPanelTableScriptLabelMargin.add(jLabelTableScript, BorderLayout.WEST);
 		jPanelTableScriptLabelMargin.add(jPanelTableScriptEditButtonAndCursorPos, BorderLayout.EAST);
 		jButtonTableScriptEdit.setIcon(imageIconPrompt);
 		jButtonTableScriptEdit.addActionListener(new Editor_jButtonTableScriptEdit_actionAdapter(this));
-		jPanelTableScriptEditButtonAndCursorPos.setPreferredSize(new Dimension(100, 23));
+		jPanelTableScriptEditButtonAndCursorPos.setPreferredSize(new Dimension(120, 23));
 		jPanelTableScriptEditButtonAndCursorPos.setLayout(new BorderLayout());
 		jPanelTableScriptEditButtonAndCursorPos.add(jButtonTableScriptEdit, BorderLayout.CENTER);
 		jPanelTableScriptEditButtonAndCursorPos.add(jLabelTableScriptCursorPos, BorderLayout.EAST);
@@ -4989,7 +5088,7 @@ public class Editor extends JFrame {
 		jPanelTableScriptCenter.add(jScrollPaneTableScriptText,  BorderLayout.CENTER);
 		jPanelTableScriptFields.setLayout(null);
 		jPanelTableScriptFields.setBorder(BorderFactory.createEmptyBorder());
-		jPanelTableScriptFields.setPreferredSize(new Dimension(505, 151));
+		jPanelTableScriptFields.setPreferredSize(new Dimension(680, 160));
 		jPanelTableScriptFields.add(jLabelTableScriptEvent);
 		jPanelTableScriptFields.add(jCheckBoxTableScriptEventPrimaryBR);
 		jPanelTableScriptFields.add(jCheckBoxTableScriptEventPrimaryBC);
@@ -5003,7 +5102,7 @@ public class Editor extends JFrame {
 		jPanelTableScriptFields.add(jCheckBoxTableScriptHold);
 		jPanelTableScriptFields.add(jLabelTableScriptName);
 		jPanelTableScriptFields.add(jTextFieldTableScriptName);
-		jPanelTableScriptTop.setPreferredSize(new Dimension(400, 123));
+		jPanelTableScriptTop.setPreferredSize(new Dimension(400, 135));
 		jPanelTableScriptTop.setLayout(new BorderLayout());
 		jPanelTableScriptTop.add(jPanelTableScriptFields, BorderLayout.WEST);
 		jPanelTableScriptTop.add(jPanelTableScriptNotes, BorderLayout.CENTER);
@@ -5017,52 +5116,48 @@ public class Editor extends JFrame {
 		jPanelTableScript.add(jPanelTableScriptTop, BorderLayout.NORTH);
 		jPanelTableScript.add(jPanelTableScriptCenter, BorderLayout.CENTER);
 		//
-		jSplitPaneTableData.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jSplitPaneTableData.add(jSplitPaneTableDataTop, JSplitPane.TOP);
-		jSplitPaneTableData.add(jPanelTableDataMessages, JSplitPane.BOTTOM);
-		jSplitPaneTableData.setDividerLocation(screenHeight - 336);
+		jPanelTableData.setLayout(new BorderLayout());
+		jPanelTableData.add(jSplitPaneTableDataTop, BorderLayout.CENTER);
+		jPanelTableData.add(jScrollPaneTableDataMessages, BorderLayout.SOUTH);
 		jSplitPaneTableDataTop.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneTableDataTop.add(jPanelTableDataList, JSplitPane.TOP);
 		jSplitPaneTableDataTop.add(jPanelTableDataFieldsEdit, JSplitPane.BOTTOM);
-		jSplitPaneTableDataTop.setDividerLocation(200);
+		jSplitPaneTableDataTop.setDividerLocation(250);
 		jPanelTableDataList.setLayout(new BorderLayout());
 		jPanelTableDataList.add(jPanelTableDataSelect, BorderLayout.NORTH);
 		jPanelTableDataList.add(jScrollPaneTableDataList, BorderLayout.CENTER);
 		jPanelTableDataSelect.setBorder(null);
 		jPanelTableDataSelect.setLayout(null);
-		jPanelTableDataSelect.setPreferredSize(new Dimension(400, 38));
-		jLabelTableDataSelectWhere.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jPanelTableDataSelect.setPreferredSize(new Dimension(400, 42));
+		jLabelTableDataSelectWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableDataSelectWhere.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableDataSelectWhere.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableDataSelectWhere.setText("Select Where");
-		jLabelTableDataSelectWhere.setBounds(new Rectangle(11, 12, 90, 15));
-		jTextFieldTableDataSelectWhere.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldTableDataSelectWhere.setBounds(new Rectangle(109, 9, 260, 22));
+		jLabelTableDataSelectWhere.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldTableDataSelectWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldTableDataSelectWhere.setBounds(new Rectangle(140, 9, 355, 25));
 		jTextFieldTableDataSelectWhere.setText("*All");
-		jLabelTableDataSelectOrderBy.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelTableDataSelectOrderBy.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableDataSelectOrderBy.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableDataSelectOrderBy.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableDataSelectOrderBy.setText("Order By");
-		jLabelTableDataSelectOrderBy.setBounds(new Rectangle(371, 12, 70, 15));
-		jTextFieldTableDataSelectOrderBy.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldTableDataSelectOrderBy.setBounds(new Rectangle(449, 9, 240, 22));
+		jLabelTableDataSelectOrderBy.setBounds(new Rectangle(505, 12, 130, 20));
+		jTextFieldTableDataSelectOrderBy.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldTableDataSelectOrderBy.setBounds(new Rectangle(640, 9, 355, 25));
 		jTextFieldTableDataSelectOrderBy.setText("*Key");
-		jButtonTableDataSelect.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jButtonTableDataSelect.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jButtonTableDataSelect.setText(res.getString("List"));
-		jButtonTableDataSelect.setBounds(new Rectangle(705, 8, 75, 23));
+		jButtonTableDataSelect.setBounds(new Rectangle(1010, 8, 100, 27));
 		jButtonTableDataSelect.addActionListener(new Editor_jButtonTableDataSelect_actionAdapter(this));
-		jCheckBoxTableDataOutput.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jCheckBoxTableDataOutput.setText(res.getString("DataOutput"));
-		jCheckBoxTableDataOutput.setBounds(new Rectangle(785, 8, 180, 23));
 		jPanelTableDataSelect.add(jLabelTableDataSelectWhere);
 		jPanelTableDataSelect.add(jTextFieldTableDataSelectWhere);
 		jPanelTableDataSelect.add(jLabelTableDataSelectOrderBy);
 		jPanelTableDataSelect.add(jTextFieldTableDataSelectOrderBy);
 		jPanelTableDataSelect.add(jButtonTableDataSelect);
-		jPanelTableDataSelect.add(jCheckBoxTableDataOutput);
 		jScrollPaneTableDataList.setBorder(null);
 		jScrollPaneTableDataList.getViewport().add(jTableTableDataList, null);
-		jTableTableDataList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jScrollPaneTableDataList.addMouseListener(new Editor_jScrollPaneTableDataList_mouseAdapter(this));
+		jTableTableDataList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableTableDataList.setBackground(SystemColor.control);
 		jTableTableDataList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableTableDataList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -5073,7 +5168,8 @@ public class Editor extends JFrame {
 		jTableTableDataList.setSelectionForeground(Color.black);
 		jTableTableDataList.addFocusListener(new Editor_FocusListener());
 		jTableTableDataList.addKeyListener(new Editor_TableKeyAdapter(this));
-		jTableTableDataList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableTableDataList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTableTableDataList.setRowHeight(TABLE_ROW_HEIGHT);
 		rendererTableHeader = (DefaultTableCellRenderer)jTableTableDataList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
 		jPanelTableDataFieldsEdit.setLayout(new BorderLayout());
@@ -5082,44 +5178,38 @@ public class Editor extends JFrame {
 		jScrollPaneTableDataFieldsList.setBorder(null);
 		jScrollPaneTableDataFieldsList.getViewport().add(jPanelTableDataFieldsList, null);
 		jPanelTableDataFieldsList.setLayout(null);
-		jPanelTableDataFieldsEditButtons.setLayout(null);
+		GridLayout layout = new GridLayout();
+		layout.setColumns(9);
+		layout.setRows(1);
+		jPanelTableDataFieldsEditButtons.setLayout(layout);
 		jPanelTableDataFieldsEditButtons.setPreferredSize(new Dimension(400, 38));
 		jPanelTableDataFieldsEditButtons.setBorder(BorderFactory.createEtchedBorder());
-		jButtonTableDataFieldsToChangeLabel.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jButtonTableDataFieldsToChangeLabel.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jButtonTableDataFieldsToChangeLabel.setText(res.getString("ChangeLabel"));
-		jButtonTableDataFieldsToChangeLabel.setBounds(new Rectangle(20, 8, 100, 23));
 		jButtonTableDataFieldsToChangeLabel.addActionListener(new Editor_jButtonTableDataFieldsToChangeLabel_actionAdapter(this));
-		jButtonTableDataFieldsToEditMode.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jButtonTableDataFieldsToEditMode.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jButtonTableDataFieldsToEditMode.setText(res.getString("EditMode"));
-		jButtonTableDataFieldsToEditMode.setBounds(new Rectangle(130, 8, 100, 23));
 		jButtonTableDataFieldsToEditMode.addActionListener(new Editor_jButtonTableDataFieldsToEditMode_actionAdapter(this));
-		jButtonTableDataFieldsToAddMode.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jButtonTableDataFieldsToAddMode.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jButtonTableDataFieldsToAddMode.setText(res.getString("AddMode"));
-		jButtonTableDataFieldsToAddMode.setBounds(new Rectangle(240, 8, 100, 23));
 		jButtonTableDataFieldsToAddMode.addActionListener(new Editor_jButtonTableDataFieldsToAddMode_actionAdapter(this));
-		jButtonTableDataFieldsToClear.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jButtonTableDataFieldsToClear.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jButtonTableDataFieldsToClear.setText(res.getString("ClearValues"));
-		jButtonTableDataFieldsToClear.setBounds(new Rectangle(350, 8, 100, 23));
 		jButtonTableDataFieldsToClear.addActionListener(new Editor_jButtonTableDataFieldsToClear_actionAdapter(this));
-		jButtonTableDataFieldsToUpdate.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jButtonTableDataFieldsToUpdate.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jButtonTableDataFieldsToUpdate.setText(res.getString("Commit"));
-		jButtonTableDataFieldsToUpdate.setBounds(new Rectangle(460, 8, 100, 23));
 		jButtonTableDataFieldsToUpdate.addActionListener(new Editor_jButtonTableDataFieldsToUpdate_actionAdapter(this));
-		jButtonTableDataFieldsToDelete.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jButtonTableDataFieldsToDelete.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jButtonTableDataFieldsToDelete.setText(res.getString("Delete"));
-		jButtonTableDataFieldsToDelete.setBounds(new Rectangle(570, 8, 100, 23));
 		jButtonTableDataFieldsToDelete.addActionListener(new Editor_jButtonTableDataFieldsToDelete_actionAdapter(this));
-		jButtonTableDataFieldsToCompress.setFont(new java.awt.Font("SansSerif", 0, 11));
+		jButtonTableDataFieldsToCompress.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jButtonTableDataFieldsToCompress.setText(res.getString("Compress"));
-		jButtonTableDataFieldsToCompress.setBounds(new Rectangle(680, 8, 100, 23));
 		jButtonTableDataFieldsToCompress.addActionListener(new Editor_jButtonTableDataFieldsToCompress_actionAdapter(this));
-		jButtonTableDataFieldsToListLog.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jButtonTableDataFieldsToListLog.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jButtonTableDataFieldsToListLog.setText(res.getString("ListLog"));
-		jButtonTableDataFieldsToListLog.setBounds(new Rectangle(790, 8, 100, 23));
 		jButtonTableDataFieldsToListLog.addActionListener(new Editor_jButtonTableDataFieldsToListLog_actionAdapter(this));
-		jButtonTableDataFieldsToImport.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jButtonTableDataFieldsToImport.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jButtonTableDataFieldsToImport.setText(res.getString("Import"));
-		jButtonTableDataFieldsToImport.setBounds(new Rectangle(900, 8, 100, 23));
 		jButtonTableDataFieldsToImport.addActionListener(new Editor_jButtonTableDataFieldsToImport_actionAdapter(this));
 		jPanelTableDataFieldsEditButtons.add(jButtonTableDataFieldsToChangeLabel);
 		jPanelTableDataFieldsEditButtons.add(jButtonTableDataFieldsToAddMode);
@@ -5130,15 +5220,10 @@ public class Editor extends JFrame {
 		jPanelTableDataFieldsEditButtons.add(jButtonTableDataFieldsToCompress);
 		jPanelTableDataFieldsEditButtons.add(jButtonTableDataFieldsToListLog);
 		jPanelTableDataFieldsEditButtons.add(jButtonTableDataFieldsToImport);
-		jPanelTableDataMessages.setLayout(new BorderLayout());
-		jPanelTableDataMessages.add(jLabelTableDataMessages, BorderLayout.NORTH);
-		jPanelTableDataMessages.add(jScrollPaneTableDataMessages, BorderLayout.CENTER);
-		jLabelTableDataMessages.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelTableDataMessages.setText(" " + res.getString("Message"));
-		jLabelTableDataMessages.setPreferredSize(new Dimension(400, 17));
+		jScrollPaneTableDataMessages.setPreferredSize(new Dimension(100,50));
 		jScrollPaneTableDataMessages.setBorder(null);
 		jScrollPaneTableDataMessages.getViewport().add(jTextAreaTableDataMessages, null);
-		jTextAreaTableDataMessages.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextAreaTableDataMessages.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextAreaTableDataMessages.setBorder(BorderFactory.createEtchedBorder());
 		jTextAreaTableDataMessages.setEditable(false);
 		jTextAreaTableDataMessages.setLineWrap(true);
@@ -5155,7 +5240,7 @@ public class Editor extends JFrame {
 		jViewportFunctionList = jScrollPaneFunctionList.getViewport();
 		jViewportFunctionList.add(jTableFunctionList, null);
 		jScrollPaneFunctionList.addMouseListener(new Editor_jScrollPaneFunctionList_mouseAdapter(this));
-		jTableFunctionList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunctionList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunctionList.setBackground(SystemColor.control);
 		jTableFunctionList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunctionList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -5164,6 +5249,7 @@ public class Editor extends JFrame {
 		jTableFunctionList.addFocusListener(new Editor_FocusListener());
 		jTableFunctionList.addMouseListener(new Editor_jTableFunctionList_mouseAdapter(this));
 		jTableFunctionList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableFunctionList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunctionList.addColumn("NO.");
 		tableModelFunctionList.addColumn("ID");
 		tableModelFunctionList.addColumn(res.getString("FunctionName"));
@@ -5174,17 +5260,17 @@ public class Editor extends JFrame {
 		column2 = jTableFunctionList.getColumnModel().getColumn(2);
 		column3 = jTableFunctionList.getColumnModel().getColumn(3);
 		column4 = jTableFunctionList.getColumnModel().getColumn(4);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(80);
-		column2.setPreferredWidth(250);
-		column3.setPreferredWidth(170);
-		column4.setPreferredWidth(210);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(100);
+		column2.setPreferredWidth(350);
+		column3.setPreferredWidth(200);
+		column4.setPreferredWidth(350);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
 		column4.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunctionList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunctionList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunctionList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
 	}
@@ -5196,16 +5282,16 @@ public class Editor extends JFrame {
 		jPanelFunction000.setLayout(new BorderLayout());
 		//
 		jPanelFunction000Top.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction000Top.setMinimumSize(new Dimension(10, 37));
+		jPanelFunction000Top.setMinimumSize(new Dimension(10, 34));
 		jPanelFunction000Top.setLayout(null);
 		//
-		jLabelFunction000Type.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction000Type.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction000Type.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction000Type.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction000Type.setText(res.getString("FunctionType"));
-		jLabelFunction000Type.setBounds(new Rectangle(11, 12, 96, 15));
-		jTextFieldFunction000Type.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction000Type.setBounds(new Rectangle(115, 9, 170, 22));
+		jLabelFunction000Type.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldFunction000Type.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction000Type.setBounds(new Rectangle(140, 9, 250, 25));
 		jTextFieldFunction000Type.setEditable(false);
 		jTextFieldFunction000Type.setText(res.getString("FunctionTypeXF000"));
 		Insets m = jTextFieldFunction000Type.getMargin();
@@ -5214,60 +5300,55 @@ public class Editor extends JFrame {
 		label.setBorder(null);
 		label.setBounds(m.left, m.top, imageIconFunction000.getIconWidth(), imageIconFunction000.getIconHeight()); 
 		jTextFieldFunction000Type.add(label);
-		jLabelFunction000ID.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction000ID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction000ID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction000ID.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction000ID.setText(res.getString("FunctionID"));
-		jLabelFunction000ID.setBounds(new Rectangle(295, 12, 76, 15));
-		jTextFieldFunction000ID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction000ID.setBounds(new Rectangle(379, 9, 80, 22));
+		jLabelFunction000ID.setText(res.getString("IDAndName"));
+		jLabelFunction000ID.setBounds(new Rectangle(400, 12, 100, 20));
+		jTextFieldFunction000ID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction000ID.setBounds(new Rectangle(505, 9, 120, 25));
 		jTextFieldFunction000ID.setEditable(false);
-		jLabelFunction000Name.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelFunction000Name.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction000Name.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction000Name.setText(res.getString("FunctionName"));
-		jLabelFunction000Name.setBounds(new Rectangle(469, 12, 86, 15));
-		jTextFieldFunction000Name.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction000Name.setBounds(new Rectangle(563, 9, 250, 22));
+		jTextFieldFunction000Name.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction000Name.setBounds(new Rectangle(630, 9, 350, 25));
 		//
-		jLabelFunction000ConsoleOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction000ConsoleOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction000ConsoleOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction000ConsoleOption.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction000ConsoleOption.setText(res.getString("ConsoleOption"));
-		jLabelFunction000ConsoleOption.setBounds(new Rectangle(11, 40, 96, 15));
+		jLabelFunction000ConsoleOption.setBounds(new Rectangle(5, 43, 130, 20));
 		jRadioButtonFunction000ConsoleOptionNo.setText(res.getString("None"));
-		jRadioButtonFunction000ConsoleOptionNo.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction000ConsoleOptionNo.setBounds(new Rectangle(115, 37, 90, 22));
+		jRadioButtonFunction000ConsoleOptionNo.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction000ConsoleOptionNo.setBounds(new Rectangle(140, 40, 110, 25));
 		jRadioButtonFunction000ConsoleOptionNo.addChangeListener(new Editor_jRadioButtonFunction000ConsoleOption_changeAdapter(this));
 		jRadioButtonFunction000ConsoleOptionYes.setText(res.getString("ConsoleOptionYes"));
-		jRadioButtonFunction000ConsoleOptionYes.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction000ConsoleOptionYes.setBounds(new Rectangle(210, 37, 90, 22));
+		jRadioButtonFunction000ConsoleOptionYes.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction000ConsoleOptionYes.setBounds(new Rectangle(250, 40, 110, 25));
 		jRadioButtonFunction000ConsoleOptionYes.addChangeListener(new Editor_jRadioButtonFunction000ConsoleOption_changeAdapter(this));
 		jRadioButtonFunction000ConsoleOptionTimer.setText(res.getString("ConsoleOptionTimer"));
-		jRadioButtonFunction000ConsoleOptionTimer.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction000ConsoleOptionTimer.setBounds(new Rectangle(305, 37, 90, 22));
+		jRadioButtonFunction000ConsoleOptionTimer.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction000ConsoleOptionTimer.setBounds(new Rectangle(360, 40, 90, 25));
 		jRadioButtonFunction000ConsoleOptionTimer.addChangeListener(new Editor_jRadioButtonFunction000ConsoleOption_changeAdapter(this));
 		buttonGroupFunction000ConsoleOption.add(jRadioButtonFunction000ConsoleOptionNo);
 		buttonGroupFunction000ConsoleOption.add(jRadioButtonFunction000ConsoleOptionYes);
 		buttonGroupFunction000ConsoleOption.add(jRadioButtonFunction000ConsoleOptionTimer);
-		jLabelFunction000TimerDefault.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction000TimerDefault.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction000TimerDefault.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction000TimerDefault.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction000TimerDefault.setText(res.getString("TimerDefault"));
-		jLabelFunction000TimerDefault.setBounds(new Rectangle(400, 39, 96, 15));
-		jTextFieldFunction000TimerDefault.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction000TimerDefault.setBounds(new Rectangle(504, 36, 309, 22));
-		jLabelFunction000TimerMessage.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction000TimerDefault.setBounds(new Rectangle(450, 43, 130, 20));
+		jTextFieldFunction000TimerDefault.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction000TimerDefault.setBounds(new Rectangle(585, 40, 395, 25));
+		//
+		jLabelFunction000TimerMessage.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction000TimerMessage.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction000TimerMessage.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction000TimerMessage.setText(res.getString("TimerMessage"));
-		jLabelFunction000TimerMessage.setBounds(new Rectangle(11, 68, 96, 15));
-		jTextFieldFunction000TimerMessage.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction000TimerMessage.setBounds(new Rectangle(115, 65, 698, 22));
+		jLabelFunction000TimerMessage.setBounds(new Rectangle(5, 74, 130, 20));
+		jTextFieldFunction000TimerMessage.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction000TimerMessage.setBounds(new Rectangle(140, 71, 840, 25));
 		//
 		jPanelFunction000Top.add(jLabelFunction000ID);
 		jPanelFunction000Top.add(jTextFieldFunction000ID);
-		jPanelFunction000Top.add(jLabelFunction000Name);
 		jPanelFunction000Top.add(jTextFieldFunction000Name);
 		jPanelFunction000Top.add(jLabelFunction000Type);
 		jPanelFunction000Top.add(jTextFieldFunction000Type);
@@ -5286,7 +5367,7 @@ public class Editor extends JFrame {
 		jSplitPaneFunction000.add(jPanelFunction000Top, JSplitPane.TOP);
 		jSplitPaneFunction000.add(jTabbedPaneFunction000, JSplitPane.BOTTOM);
 		//
-		jTabbedPaneFunction000.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTabbedPaneFunction000.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTabbedPaneFunction000.add(res.getString("Script"), jScrollPaneFunction000Script);
 		jTabbedPaneFunction000.setIconAt(0, imageIconScript);
 		jTabbedPaneFunction000.add(res.getString("FunctionsWhereUsed"), jScrollPaneFunction000UsageList);
@@ -5310,23 +5391,30 @@ public class Editor extends JFrame {
 		actionMap.put("UNDO", actionUndoFunction000Script);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_DOWN_MASK), "REDO");
 		actionMap.put("REDO", actionRedoFunction000Script);
-		jTextAreaFunction000Script.setFont(new java.awt.Font("Monospaced", 0, 14));
+		jTextAreaFunction000Script.setFont(new java.awt.Font(scriptFontName, 0, scriptFontSize));
+		jTextAreaFunction000Script.setForeground(colorScriptForeground);
+		jTextAreaFunction000Script.setBackground(colorScriptBackground);
+		jTextAreaFunction000Script.setCaretColor(colorScriptCaret);
 		jTextAreaFunction000Script.setTabSize(4);
 		jTextAreaFunction000Script.addCaretListener(new Editor_jTextAreaFunction000Script_caretAdapter(this));
 		jTextAreaFunction000Script.getDocument().addUndoableEditListener(jTextAreaFunction000ScriptUndoManager);
 		actionMap = jTextAreaFunction000Script.getActionMap();
 		actionMap.put(DefaultEditorKit.pasteAction, actionPasteFunction000Script);
+		//
 		jPanelFunction000ScriptEditTool.setBorder(BorderFactory.createLineBorder(Color.gray));
 		jPanelFunction000ScriptEditTool.setLayout(null);
+		jLabelFunction000ScriptEditToolScan.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction000ScriptEditToolScan.setText(res.getString("F3ToScan"));
 		jLabelFunction000ScriptEditToolScan.setHorizontalAlignment(SwingConstants.CENTER);
-		jLabelFunction000ScriptEditToolScan.setBounds(new Rectangle(0, 0, 50, 22));
+		jLabelFunction000ScriptEditToolScan.setBounds(new Rectangle(0, 1, 74, 23));
 		jLabelFunction000ScriptEditToolScan.setForeground(Color.darkGray);
-		jTextFieldFunction000ScriptEditToolScan.setBounds(new Rectangle(50, 0, 80, 22));
+		jTextFieldFunction000ScriptEditToolScan.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction000ScriptEditToolScan.setBounds(new Rectangle(74, 1, 130, 23));
 		jTextFieldFunction000ScriptEditToolScan.setForeground(Color.darkGray);
-		jCheckBoxFunction000ScriptEditToolScanCase.setBounds(new Rectangle(130, 1, 22, 20));
+		jCheckBoxFunction000ScriptEditToolScanCase.setBounds(new Rectangle(204, 1, 29, 23));
 		jCheckBoxFunction000ScriptEditToolScanCase.setBackground(Color.lightGray);
-		jLabelFunction000ScriptEditToolCursorPos.setBounds(new Rectangle(153, 0, 50, 22));
+		jLabelFunction000ScriptEditToolCursorPos.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelFunction000ScriptEditToolCursorPos.setBounds(new Rectangle(233, 1, 70, 23));
 		jLabelFunction000ScriptEditToolCursorPos.setHorizontalAlignment(SwingConstants.CENTER);
 		jLabelFunction000ScriptEditToolCursorPos.setForeground(Color.darkGray);
 		jPanelFunction000ScriptEditTool.add(jLabelFunction000ScriptEditToolScan);
@@ -5337,7 +5425,7 @@ public class Editor extends JFrame {
 		//
 		jScrollPaneFunction000UsageList.setBorder(null);
 		jScrollPaneFunction000UsageList.getViewport().add(jTableFunction000UsageList, null);
-		jTableFunction000UsageList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction000UsageList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction000UsageList.setBackground(SystemColor.control);
 		jTableFunction000UsageList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction000UsageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -5345,6 +5433,7 @@ public class Editor extends JFrame {
 		jTableFunction000UsageList.setSelectionForeground(Color.black);
 		jTableFunction000UsageList.addFocusListener(new Editor_FocusListener());
 		jTableFunction000UsageList.addMouseListener(new Editor_jTableFunction000UsageList_mouseAdapter(this));
+		jTableFunction000UsageList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction000UsageList.addColumn("NO.");
 		tableModelFunction000UsageList.addColumn(res.getString("FunctionsWhereUsed"));
 		tableModelFunction000UsageList.addColumn(res.getString("Type"));
@@ -5353,15 +5442,15 @@ public class Editor extends JFrame {
 		column1 = jTableFunction000UsageList.getColumnModel().getColumn(1);
 		column2 = jTableFunction000UsageList.getColumnModel().getColumn(2);
 		column3 = jTableFunction000UsageList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(300);
-		column2.setPreferredWidth(160);
-		column3.setPreferredWidth(280);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(400);
+		column2.setPreferredWidth(200);
+		column3.setPreferredWidth(400);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction000UsageList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction000UsageList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction000UsageList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
 	}
@@ -5369,7 +5458,7 @@ public class Editor extends JFrame {
 		public void stateChanged(javax.swing.event.ChangeEvent event) {
 			int width = jScrollPaneFunction000Script.getViewport().getWidth();
 			Point point = jScrollPaneFunction000Script.getViewport().getViewPosition();
-			jPanelFunction000ScriptEditTool.setBounds(new Rectangle(width - 203 + point.x, point.y, 203, 22));
+			jPanelFunction000ScriptEditTool.setBounds(new Rectangle(width - 303 + point.x, point.y, 303, 25));
 		}
 	}
 	/**
@@ -5377,18 +5466,20 @@ public class Editor extends JFrame {
 	 */
 	void initComponentsForFunction100() {
 		jPanelFunction100.setLayout(new BorderLayout());
+		jScrollPaneFunction100Top.setBorder(null);
+		jScrollPaneFunction100Top.getViewport().add(jPanelFunction100Top);
 		jPanelFunction100Top.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction100Top.setPreferredSize(new Dimension(10, 235));
+		jPanelFunction100Top.setPreferredSize(new Dimension(1210, 229));
 		jPanelFunction100Top.setToolTipText("");
 		jPanelFunction100Top.setLayout(null);
 		//
-		jLabelFunction100Type.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100Type.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100Type.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100Type.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100Type.setText(res.getString("FunctionType"));
-		jLabelFunction100Type.setBounds(new Rectangle(11, 12, 96, 15));
-		jTextFieldFunction100Type.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100Type.setBounds(new Rectangle(115, 9, 170, 22));
+		jLabelFunction100Type.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldFunction100Type.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100Type.setBounds(new Rectangle(140, 9, 250, 25));
 		jTextFieldFunction100Type.setEditable(false);
 		jTextFieldFunction100Type.setText(res.getString("FunctionTypeXF100"));
 		Insets m = jTextFieldFunction100Type.getMargin();
@@ -5397,136 +5488,137 @@ public class Editor extends JFrame {
 		label.setBorder(null); 
 		label.setBounds(m.left, m.top, imageIconFunction100.getIconWidth(), imageIconFunction100.getIconHeight()); 
 		jTextFieldFunction100Type.add(label);
-		jLabelFunction100ID.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100ID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100ID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100ID.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction100ID.setText(res.getString("FunctionID"));
-		jLabelFunction100ID.setBounds(new Rectangle(295, 12, 76, 15));
-		jTextFieldFunction100ID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100ID.setBounds(new Rectangle(379, 9, 80, 22));
+		jLabelFunction100ID.setText(res.getString("IDAndName"));
+		jLabelFunction100ID.setBounds(new Rectangle(400, 12, 100, 20));
+		jTextFieldFunction100ID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100ID.setBounds(new Rectangle(505, 9, 120, 25));
 		jTextFieldFunction100ID.setEditable(false);
-		jLabelFunction100Name.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelFunction100Name.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction100Name.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction100Name.setText(res.getString("FunctionName"));
-		jLabelFunction100Name.setBounds(new Rectangle(469, 12, 86, 15));
-		jTextFieldFunction100Name.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100Name.setBounds(new Rectangle(563, 9, 250, 22));
+		jTextFieldFunction100Name.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100Name.setBounds(new Rectangle(630, 9, 350, 25));
 		//
-		jLabelFunction100TableName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100TableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100TableName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100TableName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100TableName.setText(res.getString("PrimaryTable"));
-		jLabelFunction100TableName.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldFunction100TableName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100TableName.setBounds(new Rectangle(115, 37, 600, 22));
+		jLabelFunction100TableName.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldFunction100TableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100TableName.setBounds(new Rectangle(140, 40, 840, 25));
 		jTextFieldFunction100TableName.setEditable(false);
 		jButtonFunction100TableKeyFieldsEdit.setIcon(imageIconPrompt);
-		jButtonFunction100TableKeyFieldsEdit.setBounds(new Rectangle(715, 36, 28, 23));
+		jButtonFunction100TableKeyFieldsEdit.setBounds(new Rectangle(980, 39, 28, 27));
 		jButtonFunction100TableKeyFieldsEdit.addActionListener(new Editor_jButtonToEditKeyFields_actionAdapter(this));
-		jLabelFunction100TableOrderByFields.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction100TableOrderByFields.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100TableOrderByFields.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100TableOrderByFields.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100TableOrderByFields.setText(res.getString("OrderByFields"));
-		jLabelFunction100TableOrderByFields.setBounds(new Rectangle(11, 68, 96, 15));
-		jTextFieldFunction100TableOrderByFields.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100TableOrderByFields.setBounds(new Rectangle(115, 65, 600, 22));
+		jLabelFunction100TableOrderByFields.setBounds(new Rectangle(5, 74, 130, 20));
+		jTextFieldFunction100TableOrderByFields.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100TableOrderByFields.setBounds(new Rectangle(140, 71, 840, 25));
 		jTextFieldFunction100TableOrderByFields.setEditable(false);
 		jButtonFunction100TableOrderByFieldsEdit.setIcon(imageIconPrompt);
-		jButtonFunction100TableOrderByFieldsEdit.setBounds(new Rectangle(715, 64, 28, 23));
+		jButtonFunction100TableOrderByFieldsEdit.setBounds(new Rectangle(980, 70, 28, 27));
 		jButtonFunction100TableOrderByFieldsEdit.addActionListener(new Editor_jButtonToEditOrderByFields_actionAdapter(this));
-		jLabelFunction100FixedWhere.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction100FixedWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100FixedWhere.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100FixedWhere.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100FixedWhere.setText(res.getString("FixedWhere"));
-		jLabelFunction100FixedWhere.setBounds(new Rectangle(11, 96, 96, 15));
-		jTextFieldFunction100FixedWhere.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100FixedWhere.setBounds(new Rectangle(115, 93, 600, 22));
+		jLabelFunction100FixedWhere.setBounds(new Rectangle(5, 105, 130, 20));
+		jTextFieldFunction100FixedWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100FixedWhere.setBounds(new Rectangle(140, 102, 840, 25));
+		jCheckBoxFunction100InitialListing.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxFunction100InitialListing.setText(res.getString("InitialListing"));
+		jCheckBoxFunction100InitialListing.setBounds(new Rectangle(1000, 102, 200, 25));
 		//
-		jLabelFunction100RowSelectionAction.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100RowSelectionAction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100RowSelectionAction.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100RowSelectionAction.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100RowSelectionAction.setText(res.getString("RowAction"));
-		jLabelFunction100RowSelectionAction.setBounds(new Rectangle(11, 124, 96, 15));
+		jLabelFunction100RowSelectionAction.setBounds(new Rectangle(5, 136, 130, 20));
 		jRadioButtonFunction100RowSelectionActionReturn.setText(res.getString("RowActionReturn"));
-		jRadioButtonFunction100RowSelectionActionReturn.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100RowSelectionActionReturn.setBounds(new Rectangle(115, 121, 100, 22));
+		jRadioButtonFunction100RowSelectionActionReturn.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100RowSelectionActionReturn.setBounds(new Rectangle(140, 133, 130, 25));
 		jRadioButtonFunction100RowSelectionActionReturn.addChangeListener(new Editor_jRadioButtonFunction100RowSelectionAction_changeAdapter(this));
 		jRadioButtonFunction100RowSelectionActionCall.setText(res.getString("RowActionCall"));
-		jRadioButtonFunction100RowSelectionActionCall.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100RowSelectionActionCall.setBounds(new Rectangle(225, 121, 110, 22));
+		jRadioButtonFunction100RowSelectionActionCall.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100RowSelectionActionCall.setBounds(new Rectangle(270, 133, 130, 25));
 		jRadioButtonFunction100RowSelectionActionCall.addChangeListener(new Editor_jRadioButtonFunction100RowSelectionAction_changeAdapter(this));
 		buttonGroupFunction100RowSelectionAction.add(jRadioButtonFunction100RowSelectionActionReturn);
 		buttonGroupFunction100RowSelectionAction.add(jRadioButtonFunction100RowSelectionActionCall);
-		jTextFieldFunction100FunctionIDCalled.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100FunctionIDCalled.setBounds(new Rectangle(335, 121, 80, 22));
+		jTextFieldFunction100FunctionIDCalled.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100FunctionIDCalled.setBounds(new Rectangle(410, 133, 110, 25));
 		jTextFieldFunction100FunctionIDCalled.addKeyListener(new Editor_jTextFieldFunction100FunctionIDCalled_keyAdapter(this));
-		jTextFieldFunction100FunctionNameCalled.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100FunctionNameCalled.setBounds(new Rectangle(420, 121, 295, 22));
+		jTextFieldFunction100FunctionNameCalled.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100FunctionNameCalled.setBounds(new Rectangle(525, 133, 315, 25));
 		jTextFieldFunction100FunctionNameCalled.setEditable(false);
-		//
-		jLabelFunction100ParmType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100ParmType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100ParmType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100ParmType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100ParmType.setText(res.getString("Parameters"));
-		jLabelFunction100ParmType.setBounds(new Rectangle(11, 152, 96, 15));
+		jLabelFunction100ParmType.setBounds(new Rectangle(850, 136, 100, 20));
 		jRadioButtonFunction100ParmTypeKeys.setText("KEYS");
-		jRadioButtonFunction100ParmTypeKeys.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100ParmTypeKeys.setBounds(new Rectangle(115, 149, 100, 22));
+		jRadioButtonFunction100ParmTypeKeys.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100ParmTypeKeys.setBounds(new Rectangle(955, 133, 90, 25));
 		jRadioButtonFunction100ParmTypeColumns.setText("COLUMNS");
-		jRadioButtonFunction100ParmTypeColumns.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100ParmTypeColumns.setBounds(new Rectangle(225, 149, 110, 22));
+		jRadioButtonFunction100ParmTypeColumns.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100ParmTypeColumns.setBounds(new Rectangle(1045, 133, 120, 25));
 		jRadioButtonFunction100ParmTypeColumns.addChangeListener(new Editor_jRadioButtonFunction100RowSelectionAction_changeAdapter(this));
 		buttonGroupFunction100ParmType.add(jRadioButtonFunction100ParmTypeKeys);
 		buttonGroupFunction100ParmType.add(jRadioButtonFunction100ParmTypeColumns);
-		jCheckBoxFunction100InitialListing.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jCheckBoxFunction100InitialListing.setText(res.getString("InitialListing"));
-		jCheckBoxFunction100InitialListing.setBounds(new Rectangle(350, 149, 150, 22));
 		//
-		jLabelFunction100Size.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100Size.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100Size.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100Size.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100Size.setText(res.getString("PanelSize"));
-		jLabelFunction100Size.setBounds(new Rectangle(11, 180, 96, 15));
+		jLabelFunction100Size.setBounds(new Rectangle(5, 167, 130, 20));
 		jRadioButtonFunction100SizeFull.setText(res.getString("SizeFull"));
-		jRadioButtonFunction100SizeFull.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100SizeFull.setBounds(new Rectangle(115, 177, 100, 22));
+		jRadioButtonFunction100SizeFull.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100SizeFull.setBounds(new Rectangle(140, 164, 130, 25));
 		jRadioButtonFunction100SizeFull.addChangeListener(new Editor_jRadioButtonFunction100Size_changeAdapter(this));
 		jRadioButtonFunction100SizeAuto.setText(res.getString("SizeAuto"));
-		jRadioButtonFunction100SizeAuto.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100SizeAuto.setBounds(new Rectangle(225, 177, 100, 22));
+		jRadioButtonFunction100SizeAuto.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100SizeAuto.setBounds(new Rectangle(270, 164, 130, 25));
 		jRadioButtonFunction100SizeAuto.addChangeListener(new Editor_jRadioButtonFunction200Size_changeAdapter(this));
 		jRadioButtonFunction100SizeSpecify.setText(res.getString("SizeSpecified"));
-		jRadioButtonFunction100SizeSpecify.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100SizeSpecify.setBounds(new Rectangle(325, 177, 110, 22));
+		jRadioButtonFunction100SizeSpecify.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100SizeSpecify.setBounds(new Rectangle(400, 164, 160, 25));
 		jRadioButtonFunction100SizeSpecify.addChangeListener(new Editor_jRadioButtonFunction100Size_changeAdapter(this));
 		buttonGroupFunction100Size.add(jRadioButtonFunction100SizeFull);
 		buttonGroupFunction100Size.add(jRadioButtonFunction100SizeAuto);
 		buttonGroupFunction100Size.add(jRadioButtonFunction100SizeSpecify);
-		jTextFieldFunction100SizeWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100SizeWidth.setBounds(new Rectangle(435, 177, 50, 22));
-		jTextFieldFunction100SizeHeight.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100SizeHeight.setBounds(new Rectangle(490, 177, 50, 22));
-		jLabelFunction100InitialReadCount.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldFunction100SizeWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100SizeWidth.setBounds(new Rectangle(560, 164, 60, 25));
+		jTextFieldFunction100SizeHeight.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100SizeHeight.setBounds(new Rectangle(625, 164, 60, 25));
+		jLabelFunction100InitialReadCount.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100InitialReadCount.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100InitialReadCount.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100InitialReadCount.setText(res.getString("InitialReadCount"));
-		jLabelFunction100InitialReadCount.setBounds(new Rectangle(566, 180, 100, 15));
-		jTextFieldFunction100InitialReadCount.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100InitialReadCount.setBounds(new Rectangle(674, 177, 41, 22));
-		jTextFieldFunction100InitialReadCount.setText("*All");
+		jLabelFunction100InitialReadCount.setBounds(new Rectangle(695, 167, 130, 20));
+		jTextFieldFunction100InitialReadCount.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100InitialReadCount.setBounds(new Rectangle(830, 164, 60, 25));
+		jLabelFunction100MaxReadCount.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelFunction100MaxReadCount.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction100MaxReadCount.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction100MaxReadCount.setText(res.getString("MaxReadCount"));
+		jLabelFunction100MaxReadCount.setBounds(new Rectangle(900, 167, 130, 20));
+		jTextFieldFunction100MaxReadCount.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100MaxReadCount.setBounds(new Rectangle(1035, 164, 80, 25));
 		//
-		jLabelFunction100InitialMsg.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100InitialMsg.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100InitialMsg.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100InitialMsg.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100InitialMsg.setText(res.getString("InitialMessage"));
-		jLabelFunction100InitialMsg.setBounds(new Rectangle(11, 208, 96, 15));
-		jTextFieldFunction100InitialMsg.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100InitialMsg.setBounds(new Rectangle(115, 205, 600, 22));
+		jLabelFunction100InitialMsg.setBounds(new Rectangle(5, 198, 130, 20));
+		jTextFieldFunction100InitialMsg.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100InitialMsg.setBounds(new Rectangle(140, 195, 840, 25));
 		//
 		jPanelFunction100Top.add(jLabelFunction100ID);
 		jPanelFunction100Top.add(jTextFieldFunction100ID);
-		jPanelFunction100Top.add(jLabelFunction100Name);
 		jPanelFunction100Top.add(jTextFieldFunction100Name);
 		jPanelFunction100Top.add(jLabelFunction100Type);
 		jPanelFunction100Top.add(jTextFieldFunction100Type);
@@ -5554,17 +5646,20 @@ public class Editor extends JFrame {
 		jPanelFunction100Top.add(jTextFieldFunction100SizeWidth);
 		jPanelFunction100Top.add(jTextFieldFunction100SizeHeight);
 		jPanelFunction100Top.add(jLabelFunction100InitialReadCount);
+		jPanelFunction100Top.add(jLabelFunction100MaxReadCount);
 		jPanelFunction100Top.add(jTextFieldFunction100InitialReadCount);
+		jPanelFunction100Top.add(jLabelFunction100MaxReadCount);
+		jPanelFunction100Top.add(jTextFieldFunction100MaxReadCount);
 		jPanelFunction100Top.add(jLabelFunction100InitialMsg);
 		jPanelFunction100Top.add(jTextFieldFunction100InitialMsg);
-		jPanelFunction100.add(jPanelFunction100Top, BorderLayout.NORTH);
+		jPanelFunction100.add(jScrollPaneFunction100Top, BorderLayout.NORTH);
 		jPanelFunction100.add(jTabbedPaneFunction100, BorderLayout.CENTER);
-		jTabbedPaneFunction100.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTabbedPaneFunction100.add(res.getString("Columns"), jSplitPaneFunction100ColumnList);
+		jTabbedPaneFunction100.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTabbedPaneFunction100.add(res.getString("Columns"), jPanelFunction100ColumnList);
 		jTabbedPaneFunction100.setIconAt(0, imageIconDetailField);
-		jTabbedPaneFunction100.add(res.getString("Filters"), jSplitPaneFunction100FilterList);
+		jTabbedPaneFunction100.add(res.getString("Filters"), jPanelFunction100FilterList);
 		jTabbedPaneFunction100.setIconAt(1, imageIconFunctionFilter);
-		jTabbedPaneFunction100.add(res.getString("FunctionKeys"), jSplitPaneFunction100ButtonList);
+		jTabbedPaneFunction100.add(res.getString("FunctionKeys"), jPanelFunction100ButtonList);
 		jTabbedPaneFunction100.setIconAt(2, imageIconFunctionButton);
 		jTabbedPaneFunction100.add(res.getString("FunctionsWhereUsed"), jScrollPaneFunction100UsageList);
 		jTabbedPaneFunction100.setIconAt(3, imageIconFunctionUsage);
@@ -5572,7 +5667,7 @@ public class Editor extends JFrame {
 		jScrollPaneFunction100ColumnList.setBorder(null);
 		jScrollPaneFunction100ColumnList.getViewport().add(jTableFunction100ColumnList, null);
 		jScrollPaneFunction100ColumnList.addMouseListener(new Editor_jScrollPaneFunction100ColumnList_mouseAdapter(this));
-		jTableFunction100ColumnList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction100ColumnList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction100ColumnList.setBackground(SystemColor.control);
 		jTableFunction100ColumnList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction100ColumnList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -5583,6 +5678,7 @@ public class Editor extends JFrame {
 		jTableFunction100ColumnList.addMouseListener(new Editor_jTableFunction100ColumnList_mouseAdapter(this));
 	    jTableFunction100ColumnList.addMouseMotionListener(new Editor_jTableFunction100ColumnList_mouseMotionAdapter(this));
 		jTableFunction100ColumnList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableFunction100ColumnList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction100ColumnList.addColumn("NO.");
 		tableModelFunction100ColumnList.addColumn(res.getString("DataSource"));
 		tableModelFunction100ColumnList.addColumn(res.getString("FieldType"));
@@ -5591,147 +5687,144 @@ public class Editor extends JFrame {
 		column1 = jTableFunction100ColumnList.getColumnModel().getColumn(1);
 		column2 = jTableFunction100ColumnList.getColumnModel().getColumn(2);
 		column3 = jTableFunction100ColumnList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(160);
-		column2.setPreferredWidth(250);
-		column3.setPreferredWidth(350);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(250);
+		column2.setPreferredWidth(350);
+		column3.setPreferredWidth(450);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction100ColumnList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction100ColumnList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction100ColumnList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		jSplitPaneFunction100ColumnList.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jSplitPaneFunction100ColumnList.add(jScrollPaneFunction100ColumnList, JSplitPane.TOP);
-		jSplitPaneFunction100ColumnList.add(jPanelFunction100ColumnList, JSplitPane.BOTTOM);
-		jSplitPaneFunction100ColumnList.setDividerLocation(screenHeight - 495);
-		jLabelFunction100Table.setEnabled(false);
-		jLabelFunction100Table.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jPanelFunction100ColumnList.setLayout(new BorderLayout());
+		jPanelFunction100ColumnList.add(jScrollPaneFunction100ColumnList, BorderLayout.CENTER);
+		jPanelFunction100ColumnList.add(jScrollPaneFunction100ColumnDefinition, BorderLayout.SOUTH);
+		//
+		jLabelFunction100Table.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100Table.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100Table.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100Table.setText(res.getString("Table"));
-		jLabelFunction100Table.setBounds(new Rectangle(11, 12, 96, 15));
-		jTextFieldFunction100Table.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100Table.setBounds(new Rectangle(115, 9, 300, 22));
+		jLabelFunction100Table.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldFunction100Table.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100Table.setBounds(new Rectangle(140, 9, 350, 25));
 		jTextFieldFunction100Table.setEditable(false);
-		jLabelFunction100TableType.setEnabled(false);
-		jLabelFunction100TableType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100TableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100TableType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100TableType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100TableType.setText(res.getString("Type"));
-		jLabelFunction100TableType.setBounds(new Rectangle(430, 12, 76, 15));
-		jTextFieldFunction100TableType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100TableType.setBounds(new Rectangle(514, 9, 250, 22));
+		jLabelFunction100TableType.setBounds(new Rectangle(500, 12, 100, 20));
+		jTextFieldFunction100TableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100TableType.setBounds(new Rectangle(605, 9, 330, 25));
 		jTextFieldFunction100TableType.setEditable(false);
-		jLabelFunction100Field.setEnabled(false);
-		jLabelFunction100Field.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction100Field.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100Field.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100Field.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100Field.setText(res.getString("Field"));
-		jLabelFunction100Field.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldFunction100Field.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100Field.setBounds(new Rectangle(115, 37, 300, 22));
+		jLabelFunction100Field.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldFunction100Field.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100Field.setBounds(new Rectangle(140, 40, 350, 25));
 		jTextFieldFunction100Field.setEditable(false);
-		jLabelFunction100FieldType.setEnabled(false);
-		jLabelFunction100FieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100FieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100FieldType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100FieldType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100FieldType.setText(res.getString("Type"));
-		jLabelFunction100FieldType.setBounds(new Rectangle(430, 40, 76, 15));
-		jTextFieldFunction100FieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100FieldType.setBounds(new Rectangle(514, 37, 250, 22));
+		jLabelFunction100FieldType.setBounds(new Rectangle(500, 43, 100, 20));
+		jTextFieldFunction100FieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100FieldType.setBounds(new Rectangle(605, 40, 330, 25));
 		jTextFieldFunction100FieldType.setEditable(false);
-		jLabelFunction100FieldLayoutOption.setEnabled(false);
+		//
 		jLabelFunction100FieldLayoutOption.setText(res.getString("LayoutOption"));
-		jLabelFunction100FieldLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100FieldLayoutOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100FieldLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100FieldLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction100FieldLayoutOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction100FieldLayoutOption.setBounds(new Rectangle(5, 74, 130, 20));
 		jRadioButtonFunction100FieldLayoutOptionVertical.setText(res.getString("LayoutVertical"));
-		jRadioButtonFunction100FieldLayoutOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FieldLayoutOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
-		jRadioButtonFunction100FieldLayoutOptionVertical.setEnabled(false);
+		jRadioButtonFunction100FieldLayoutOptionVertical.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100FieldLayoutOptionVertical.setBounds(new Rectangle(140, 71, 130, 25));
 		jRadioButtonFunction100FieldLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
-		jRadioButtonFunction100FieldLayoutOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FieldLayoutOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
-		jRadioButtonFunction100FieldLayoutOptionHorizontal.setEnabled(false);
+		jRadioButtonFunction100FieldLayoutOptionHorizontal.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100FieldLayoutOptionHorizontal.setBounds(new Rectangle(270, 71, 130, 25));
 		jRadioButtonFunction100FieldLayoutOptionHidden.setText(res.getString("LayoutHidden"));
-		jRadioButtonFunction100FieldLayoutOptionHidden.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FieldLayoutOptionHidden.setBounds(new Rectangle(335, 65, 90, 22));
-		jRadioButtonFunction100FieldLayoutOptionHorizontal.setEnabled(false);
+		jRadioButtonFunction100FieldLayoutOptionHidden.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100FieldLayoutOptionHidden.setBounds(new Rectangle(400, 71, 100, 25));
 		buttonGroupFunction100FieldLayoutOption.add(jRadioButtonFunction100FieldLayoutOptionVertical);
 		buttonGroupFunction100FieldLayoutOption.add(jRadioButtonFunction100FieldLayoutOptionHorizontal);
 		buttonGroupFunction100FieldLayoutOption.add(jRadioButtonFunction100FieldLayoutOptionHidden);
-		jLabelFunction100FieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100FieldWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100FieldWidth.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100FieldWidth.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100FieldWidth.setText(res.getString("FieldWidth"));
-		jLabelFunction100FieldWidth.setBounds(new Rectangle(430, 68, 76, 15));
-		jLabelFunction100FieldWidth.setEnabled(false);
-		jTextFieldFunction100FieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100FieldWidth.setBounds(new Rectangle(514, 65, 45, 22));
+		jLabelFunction100FieldWidth.setBounds(new Rectangle(500, 74, 100, 20));
+		jTextFieldFunction100FieldWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100FieldWidth.setBounds(new Rectangle(605, 71, 60, 25));
 		jTextFieldFunction100FieldWidth.setEnabled(false);
 		jTextFieldFunction100FieldWidth.setText("");
-		jLabelFunction100FieldRows.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100FieldRows.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100FieldRows.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100FieldRows.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100FieldRows.setText(res.getString("FieldRows"));
-		jLabelFunction100FieldRows.setBounds(new Rectangle(564, 68, 45, 15));
-		jLabelFunction100FieldRows.setEnabled(false);
-		jTextFieldFunction100FieldRows.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100FieldRows.setBounds(new Rectangle(614, 65, 45, 22));
+		jLabelFunction100FieldRows.setBounds(new Rectangle(675, 74, 60, 20));
+		jTextFieldFunction100FieldRows.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100FieldRows.setBounds(new Rectangle(740, 71, 60, 25));
 		jTextFieldFunction100FieldRows.setText("");
-		jTextFieldFunction100FieldRows.setEnabled(false);
+		//
 		jLabelFunction100FieldCaptionOption.setEnabled(false);
 		jLabelFunction100FieldCaptionOption.setText(res.getString("Caption"));
-		jLabelFunction100FieldCaptionOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100FieldCaptionOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100FieldCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100FieldCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction100FieldCaptionOption.setBounds(new Rectangle(11, 96, 96, 15));
+		jLabelFunction100FieldCaptionOption.setBounds(new Rectangle(5, 105, 130, 20));
 		jRadioButtonFunction100FieldCaptionOptionName.setText(res.getString("FieldName"));
-		jRadioButtonFunction100FieldCaptionOptionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FieldCaptionOptionName.setBounds(new Rectangle(115, 93, 100, 22));
+		jRadioButtonFunction100FieldCaptionOptionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100FieldCaptionOptionName.setBounds(new Rectangle(140, 103, 130, 25));
 		jRadioButtonFunction100FieldCaptionOptionName.setEnabled(false);
 		jRadioButtonFunction100FieldCaptionOptionName.addChangeListener(new Editor_jRadioButtonFunction100FieldCaptionOption_changeAdapter(this));
 		jRadioButtonFunction100FieldCaptionOptionValue.setText(res.getString("ValueSpecified"));
-		jRadioButtonFunction100FieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FieldCaptionOptionValue.setBounds(new Rectangle(225, 93, 63, 22));
+		jRadioButtonFunction100FieldCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100FieldCaptionOptionValue.setBounds(new Rectangle(270, 103, 130, 25));
 		jRadioButtonFunction100FieldCaptionOptionValue.setEnabled(false);
 		jRadioButtonFunction100FieldCaptionOptionValue.addChangeListener(new Editor_jRadioButtonFunction100FieldCaptionOption_changeAdapter(this));
 		buttonGroupFunction100FieldCaptionOption.add(jRadioButtonFunction100FieldCaptionOptionName);
 		buttonGroupFunction100FieldCaptionOption.add(jRadioButtonFunction100FieldCaptionOptionValue);
-		jTextFieldFunction100FieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100FieldCaptionOptionValue.setBounds(new Rectangle(300, 93, 220, 22));
+		jTextFieldFunction100FieldCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100FieldCaptionOptionValue.setBounds(new Rectangle(400, 103, 265, 25));
 		jTextFieldFunction100FieldCaptionOptionValue.setEnabled(false);
 		jTextFieldFunction100FieldCaptionOptionValue.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
-		jPanelFunction100ColumnList.setLayout(null);
-		jPanelFunction100ColumnList.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction100ColumnList.add(jLabelFunction100Table);
-		jPanelFunction100ColumnList.add(jTextFieldFunction100Table);
-		jPanelFunction100ColumnList.add(jLabelFunction100TableType);
-		jPanelFunction100ColumnList.add(jTextFieldFunction100TableType);
-		jPanelFunction100ColumnList.add(jLabelFunction100Field);
-		jPanelFunction100ColumnList.add(jTextFieldFunction100Field);
-		jPanelFunction100ColumnList.add(jLabelFunction100FieldType);
-		jPanelFunction100ColumnList.add(jTextFieldFunction100FieldType);
-		jPanelFunction100ColumnList.add(jLabelFunction100FieldLayoutOption);
-		jPanelFunction100ColumnList.add(jRadioButtonFunction100FieldLayoutOptionVertical);
-		jPanelFunction100ColumnList.add(jRadioButtonFunction100FieldLayoutOptionHorizontal);
-		jPanelFunction100ColumnList.add(jRadioButtonFunction100FieldLayoutOptionHidden);
-		jPanelFunction100ColumnList.add(jLabelFunction100FieldWidth);
-		jPanelFunction100ColumnList.add(jTextFieldFunction100FieldWidth);
-		jPanelFunction100ColumnList.add(jLabelFunction100FieldRows);
-		jPanelFunction100ColumnList.add(jTextFieldFunction100FieldRows);
-		jPanelFunction100ColumnList.add(jLabelFunction100FieldCaptionOption);
-		jPanelFunction100ColumnList.add(jRadioButtonFunction100FieldCaptionOptionName);
-		jPanelFunction100ColumnList.add(jRadioButtonFunction100FieldCaptionOptionValue);
-		jPanelFunction100ColumnList.add(jTextFieldFunction100FieldCaptionOptionValue);
+		//
+		jScrollPaneFunction100ColumnDefinition.setBorder(null);
+		jScrollPaneFunction100ColumnDefinition.getViewport().add(jPanelFunction100ColumnDefinition);
+		jPanelFunction100ColumnDefinition.setPreferredSize(new Dimension(950, 135));
+		jPanelFunction100ColumnDefinition.setLayout(null);
+		jPanelFunction100ColumnDefinition.setBorder(null);
+		jPanelFunction100ColumnDefinition.add(jLabelFunction100Table);
+		jPanelFunction100ColumnDefinition.add(jTextFieldFunction100Table);
+		jPanelFunction100ColumnDefinition.add(jLabelFunction100TableType);
+		jPanelFunction100ColumnDefinition.add(jTextFieldFunction100TableType);
+		jPanelFunction100ColumnDefinition.add(jLabelFunction100Field);
+		jPanelFunction100ColumnDefinition.add(jTextFieldFunction100Field);
+		jPanelFunction100ColumnDefinition.add(jLabelFunction100FieldType);
+		jPanelFunction100ColumnDefinition.add(jTextFieldFunction100FieldType);
+		jPanelFunction100ColumnDefinition.add(jLabelFunction100FieldLayoutOption);
+		jPanelFunction100ColumnDefinition.add(jRadioButtonFunction100FieldLayoutOptionVertical);
+		jPanelFunction100ColumnDefinition.add(jRadioButtonFunction100FieldLayoutOptionHorizontal);
+		jPanelFunction100ColumnDefinition.add(jRadioButtonFunction100FieldLayoutOptionHidden);
+		jPanelFunction100ColumnDefinition.add(jLabelFunction100FieldWidth);
+		jPanelFunction100ColumnDefinition.add(jTextFieldFunction100FieldWidth);
+		jPanelFunction100ColumnDefinition.add(jLabelFunction100FieldRows);
+		jPanelFunction100ColumnDefinition.add(jTextFieldFunction100FieldRows);
+		jPanelFunction100ColumnDefinition.add(jLabelFunction100FieldCaptionOption);
+		jPanelFunction100ColumnDefinition.add(jRadioButtonFunction100FieldCaptionOptionName);
+		jPanelFunction100ColumnDefinition.add(jRadioButtonFunction100FieldCaptionOptionValue);
+		jPanelFunction100ColumnDefinition.add(jTextFieldFunction100FieldCaptionOptionValue);
 		//
 		jScrollPaneFunction100FilterList.setBorder(null);
 		jScrollPaneFunction100FilterList.getViewport().add(jTableFunction100FilterList, null);
 		jScrollPaneFunction100FilterList.addMouseListener(new Editor_jScrollPaneFunction100FilterList_mouseAdapter(this));
-		jTableFunction100FilterList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction100FilterList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction100FilterList.setBackground(SystemColor.control);
 		jTableFunction100FilterList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction100FilterList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -5742,6 +5835,7 @@ public class Editor extends JFrame {
 		jTableFunction100FilterList.addMouseListener(new Editor_jTableFunction100FilterList_mouseAdapter(this));
 	    jTableFunction100FilterList.addMouseMotionListener(new Editor_jTableFunction100FilterList_mouseMotionAdapter(this));
 		jTableFunction100FilterList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableFunction100FilterList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction100FilterList.addColumn("NO.");
 		tableModelFunction100FilterList.addColumn(res.getString("DataSource"));
 		tableModelFunction100FilterList.addColumn(res.getString("FieldType"));
@@ -5750,142 +5844,125 @@ public class Editor extends JFrame {
 		column1 = jTableFunction100FilterList.getColumnModel().getColumn(1);
 		column2 = jTableFunction100FilterList.getColumnModel().getColumn(2);
 		column3 = jTableFunction100FilterList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(160);
-		column2.setPreferredWidth(250);
-		column3.setPreferredWidth(350);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(250);
+		column2.setPreferredWidth(350);
+		column3.setPreferredWidth(450);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction100FilterList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction100FilterList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction100FilterList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		jSplitPaneFunction100FilterList.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jSplitPaneFunction100FilterList.add(jScrollPaneFunction100FilterList, JSplitPane.TOP);
-		jSplitPaneFunction100FilterList.add(jPanelFunction100FilterList, JSplitPane.BOTTOM);
-		jSplitPaneFunction100FilterList.setDividerLocation(screenHeight - 549);
-		jLabelFunction100FilterTable.setEnabled(false);
-		jLabelFunction100FilterTable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jPanelFunction100FilterList.setLayout(new BorderLayout());
+		jPanelFunction100FilterList.add(jScrollPaneFunction100FilterList, BorderLayout.CENTER);
+		jPanelFunction100FilterList.add(jScrollPaneFunction100FilterDefinition, BorderLayout.SOUTH);
+		//
+		jLabelFunction100FilterTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100FilterTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100FilterTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100FilterTable.setText(res.getString("Table"));
-		jLabelFunction100FilterTable.setBounds(new Rectangle(11, 12, 96, 15));
-		jTextFieldFunction100FilterTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100FilterTable.setBounds(new Rectangle(115, 9, 300, 22));
+		jLabelFunction100FilterTable.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldFunction100FilterTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100FilterTable.setBounds(new Rectangle(140, 9, 350, 25));
 		jTextFieldFunction100FilterTable.setEditable(false);
-		jLabelFunction100FilterTableType.setEnabled(false);
-		jLabelFunction100FilterTableType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100FilterTableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100FilterTableType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100FilterTableType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100FilterTableType.setText(res.getString("Type"));
-		jLabelFunction100FilterTableType.setBounds(new Rectangle(430, 12, 76, 15));
-		jTextFieldFunction100FilterTableType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100FilterTableType.setBounds(new Rectangle(514, 9, 250, 22));
+		jLabelFunction100FilterTableType.setBounds(new Rectangle(500, 12, 100, 20));
+		jTextFieldFunction100FilterTableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100FilterTableType.setBounds(new Rectangle(605, 9, 330, 25));
 		jTextFieldFunction100FilterTableType.setEditable(false);
-		jLabelFunction100FilterField.setEnabled(false);
-		jLabelFunction100FilterField.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction100FilterField.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100FilterField.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100FilterField.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100FilterField.setText(res.getString("Field"));
-		jLabelFunction100FilterField.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldFunction100FilterField.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100FilterField.setBounds(new Rectangle(115, 37, 300, 22));
+		jLabelFunction100FilterField.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldFunction100FilterField.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100FilterField.setBounds(new Rectangle(140, 40, 350, 25));
 		jTextFieldFunction100FilterField.setEditable(false);
-		jLabelFunction100FilterFieldType.setEnabled(false);
-		jLabelFunction100FilterFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100FilterFieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100FilterFieldType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100FilterFieldType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100FilterFieldType.setText(res.getString("Type"));
-		jLabelFunction100FilterFieldType.setBounds(new Rectangle(430, 40, 76, 15));
-		jTextFieldFunction100FilterFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100FilterFieldType.setBounds(new Rectangle(514, 37, 250, 22));
+		jLabelFunction100FilterFieldType.setBounds(new Rectangle(500, 43, 100, 20));
+		jTextFieldFunction100FilterFieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100FilterFieldType.setBounds(new Rectangle(605, 40, 330, 25));
 		jTextFieldFunction100FilterFieldType.setEditable(false);
-		jLabelFunction100FilterLayoutOption.setEnabled(false);
+		//
 		jLabelFunction100FilterLayoutOption.setText(res.getString("LayoutOption"));
-		jLabelFunction100FilterLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100FilterLayoutOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100FilterLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100FilterLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction100FilterLayoutOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction100FilterLayoutOption.setBounds(new Rectangle(5, 74, 130, 20));
 		jRadioButtonFunction100FilterLayoutOptionVertical.setText(res.getString("LayoutVertical"));
-		jRadioButtonFunction100FilterLayoutOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterLayoutOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
-		jRadioButtonFunction100FilterLayoutOptionVertical.setEnabled(false);
+		jRadioButtonFunction100FilterLayoutOptionVertical.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100FilterLayoutOptionVertical.setBounds(new Rectangle(140, 71, 130, 25));
 		jRadioButtonFunction100FilterLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
-		jRadioButtonFunction100FilterLayoutOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterLayoutOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
-		jRadioButtonFunction100FilterLayoutOptionHorizontal.setEnabled(false);
+		jRadioButtonFunction100FilterLayoutOptionHorizontal.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100FilterLayoutOptionHorizontal.setBounds(new Rectangle(270, 71, 130, 25));
 		buttonGroupFunction100FilterLayoutOption.add(jRadioButtonFunction100FilterLayoutOptionVertical);
 		buttonGroupFunction100FilterLayoutOption.add(jRadioButtonFunction100FilterLayoutOptionHorizontal);
-		jLabelFunction100FilterWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100FilterWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100FilterWidth.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100FilterWidth.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100FilterWidth.setText(res.getString("FieldWidth"));
-		jLabelFunction100FilterWidth.setBounds(new Rectangle(430, 68, 76, 15));
-		jLabelFunction100FilterWidth.setEnabled(false);
-		jTextFieldFunction100FilterWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100FilterWidth.setBounds(new Rectangle(514, 65, 45, 22));
-		jTextFieldFunction100FilterWidth.setEnabled(false);
+		jLabelFunction100FilterWidth.setBounds(new Rectangle(500, 74, 100, 20));
+		jTextFieldFunction100FilterWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100FilterWidth.setBounds(new Rectangle(605, 71, 60, 22));
 		jTextFieldFunction100FilterWidth.setText("");
-		jLabelFunction100FilterMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100FilterMargin.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100FilterMargin.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100FilterMargin.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100FilterMargin.setText(res.getString("FieldMargin"));
-		jLabelFunction100FilterMargin.setBounds(new Rectangle(564, 68, 45, 15));
-		jLabelFunction100FilterMargin.setEnabled(false);
-		jTextFieldFunction100FilterMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100FilterMargin.setBounds(new Rectangle(614, 65, 45, 22));
+		jLabelFunction100FilterMargin.setBounds(new Rectangle(675, 74, 60, 20));
+		jTextFieldFunction100FilterMargin.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100FilterMargin.setBounds(new Rectangle(740, 71, 60, 25));
 		jTextFieldFunction100FilterMargin.setText("");
-		jTextFieldFunction100FilterMargin.setEnabled(false);
-		jLabelFunction100FilterEditableOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100FilterEditableOptions.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100FilterEditableOptions.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100FilterEditableOptions.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100FilterEditableOptions.setText(res.getString("EditableOptions"));
-		jLabelFunction100FilterEditableOptions.setBounds(new Rectangle(664, 68, 100, 15));
-		jLabelFunction100FilterEditableOptions.setEnabled(false);
-		jComboBoxFunction100FilterEditableOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100FilterEditableOptions.setBounds(new Rectangle(810, 74, 130, 20));
+		jComboBoxFunction100FilterEditableOptions.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jComboBoxFunction100FilterEditableOptions.addItem(res.getString("Editable"));
 		jComboBoxFunction100FilterEditableOptions.addItem(res.getString("NonEditable"));
 		jComboBoxFunction100FilterEditableOptions.addItem(res.getString("Hidden"));
-		jComboBoxFunction100FilterEditableOptions.setBounds(new Rectangle(769, 65, 100, 22));
-		jLabelFunction100FilterOption.setEnabled(false);
+		jComboBoxFunction100FilterEditableOptions.setBounds(new Rectangle(945, 71, 150, 25));
+		//
 		jLabelFunction100FilterOption.setText(res.getString("FilterOption"));
-		jLabelFunction100FilterOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100FilterOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100FilterOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100FilterOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction100FilterOption.setBounds(new Rectangle(11, 96, 96, 15));
+		jLabelFunction100FilterOption.setBounds(new Rectangle(5, 105, 130, 20));
 		jRadioButtonFunction100FilterOptionEQ.setText("EQ");
-		jRadioButtonFunction100FilterOptionEQ.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterOptionEQ.setBounds(new Rectangle(115, 93, 60, 22));
-		jRadioButtonFunction100FilterOptionEQ.setEnabled(false);
+		jRadioButtonFunction100FilterOptionEQ.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100FilterOptionEQ.setBounds(new Rectangle(140, 102, 130, 25));
 		jRadioButtonFunction100FilterOptionSCAN.setText("SCAN");
-		jRadioButtonFunction100FilterOptionSCAN.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterOptionSCAN.setBounds(new Rectangle(185, 93, 60, 22));
-		jRadioButtonFunction100FilterOptionSCAN.setEnabled(false);
+		jRadioButtonFunction100FilterOptionSCAN.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100FilterOptionSCAN.setBounds(new Rectangle(270, 102, 130, 25));
 		jRadioButtonFunction100FilterOptionGENERIC.setText("GENERIC");
-		jRadioButtonFunction100FilterOptionGENERIC.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterOptionGENERIC.setBounds(new Rectangle(255, 93, 80, 22));
-		jRadioButtonFunction100FilterOptionGENERIC.setEnabled(false);
+		jRadioButtonFunction100FilterOptionGENERIC.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100FilterOptionGENERIC.setBounds(new Rectangle(400, 102, 130, 25));
 		jRadioButtonFunction100FilterOptionLE.setText("LE");
-		jRadioButtonFunction100FilterOptionLE.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterOptionLE.setBounds(new Rectangle(345, 93, 60, 22));
-		jRadioButtonFunction100FilterOptionLE.setEnabled(false);
+		jRadioButtonFunction100FilterOptionLE.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100FilterOptionLE.setBounds(new Rectangle(530, 102, 130, 25));
 		jRadioButtonFunction100FilterOptionLT.setText("LT");
-		jRadioButtonFunction100FilterOptionLT.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterOptionLT.setBounds(new Rectangle(415, 93, 60, 22));
-		jRadioButtonFunction100FilterOptionLT.setEnabled(false);
+		jRadioButtonFunction100FilterOptionLT.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100FilterOptionLT.setBounds(new Rectangle(660, 102, 130, 25));
 		jRadioButtonFunction100FilterOptionGE.setText("GE");
-		jRadioButtonFunction100FilterOptionGE.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterOptionGE.setBounds(new Rectangle(485, 93, 60, 22));
-		jRadioButtonFunction100FilterOptionGE.setEnabled(false);
+		jRadioButtonFunction100FilterOptionGE.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100FilterOptionGE.setBounds(new Rectangle(790, 102, 130, 25));
 		jRadioButtonFunction100FilterOptionGT.setText("GT");
-		jRadioButtonFunction100FilterOptionGT.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterOptionGT.setBounds(new Rectangle(555, 93, 60, 22));
-		jRadioButtonFunction100FilterOptionGT.setEnabled(false);
+		jRadioButtonFunction100FilterOptionGT.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100FilterOptionGT.setBounds(new Rectangle(920, 102, 130, 25));
 		jRadioButtonFunction100FilterOptionREFLECT.setText("REFLECT");
-		jRadioButtonFunction100FilterOptionREFLECT.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterOptionREFLECT.setBounds(new Rectangle(625, 93, 80, 22));
-		jRadioButtonFunction100FilterOptionREFLECT.setEnabled(false);
+		jRadioButtonFunction100FilterOptionREFLECT.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100FilterOptionREFLECT.setBounds(new Rectangle(1050, 102, 130, 25));
 		buttonGroupFunction100FilterOption.add(jRadioButtonFunction100FilterOptionEQ);
 		buttonGroupFunction100FilterOption.add(jRadioButtonFunction100FilterOptionSCAN);
 		buttonGroupFunction100FilterOption.add(jRadioButtonFunction100FilterOptionGENERIC);
@@ -5894,136 +5971,129 @@ public class Editor extends JFrame {
 		buttonGroupFunction100FilterOption.add(jRadioButtonFunction100FilterOptionGE);
 		buttonGroupFunction100FilterOption.add(jRadioButtonFunction100FilterOptionGT);
 		buttonGroupFunction100FilterOption.add(jRadioButtonFunction100FilterOptionREFLECT);
-		jCheckBoxFunction100FilterIgnoreIfZero.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jCheckBoxFunction100FilterIgnoreIfZero.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jCheckBoxFunction100FilterIgnoreIfZero.setText(res.getString("IgnoreIfZero"));
-		jCheckBoxFunction100FilterIgnoreIfZero.setBounds(new Rectangle(769, 93, 100, 22));
-		jLabelFunction100FilterCaptionOption.setEnabled(false);
+		jCheckBoxFunction100FilterIgnoreIfZero.setBounds(new Rectangle(1190, 102, 150, 25));
+		//
 		jLabelFunction100FilterCaptionOption.setText(res.getString("Caption"));
-		jLabelFunction100FilterCaptionOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100FilterCaptionOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100FilterCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100FilterCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction100FilterCaptionOption.setBounds(new Rectangle(11, 124, 96, 15));
+		jLabelFunction100FilterCaptionOption.setBounds(new Rectangle(5, 136, 130, 20));
 		jRadioButtonFunction100FilterCaptionOptionName.setText(res.getString("FieldName"));
-		jRadioButtonFunction100FilterCaptionOptionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterCaptionOptionName.setBounds(new Rectangle(115, 121, 100, 22));
-		jRadioButtonFunction100FilterCaptionOptionName.setEnabled(false);
+		jRadioButtonFunction100FilterCaptionOptionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100FilterCaptionOptionName.setBounds(new Rectangle(140, 133, 130, 25));
 		jRadioButtonFunction100FilterCaptionOptionName.addChangeListener(new Editor_jRadioButtonFunction100FilterCaptionOption_changeAdapter(this));
 		jRadioButtonFunction100FilterCaptionOptionValue.setText(res.getString("ValueSpecified"));
-		jRadioButtonFunction100FilterCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterCaptionOptionValue.setBounds(new Rectangle(225, 121, 63, 22));
-		jRadioButtonFunction100FilterCaptionOptionValue.setEnabled(false);
+		jRadioButtonFunction100FilterCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100FilterCaptionOptionValue.setBounds(new Rectangle(270, 133, 125, 25));
 		jRadioButtonFunction100FilterCaptionOptionValue.addChangeListener(new Editor_jRadioButtonFunction100FilterCaptionOption_changeAdapter(this));
 		buttonGroupFunction100FilterCaptionOption.add(jRadioButtonFunction100FilterCaptionOptionName);
 		buttonGroupFunction100FilterCaptionOption.add(jRadioButtonFunction100FilterCaptionOptionValue);
-		jTextFieldFunction100FilterCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100FilterCaptionOptionValue.setBounds(new Rectangle(300, 121, 220, 22));
-		jTextFieldFunction100FilterCaptionOptionValue.setEnabled(false);
+		jTextFieldFunction100FilterCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100FilterCaptionOptionValue.setBounds(new Rectangle(395, 133, 250, 25));
 		jTextFieldFunction100FilterCaptionOptionValue.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
-		jLabelFunction100FilterValue.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100FilterValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100FilterValue.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100FilterValue.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100FilterValue.setText(res.getString("InitialValue"));
-		jLabelFunction100FilterValue.setBounds(new Rectangle(526, 124, 96, 15));
-		jTextFieldFunction100FilterValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100FilterValue.setBounds(new Rectangle(630, 121, 264, 22));
+		jLabelFunction100FilterValue.setBounds(new Rectangle(655, 136, 130, 20));
+		jTextFieldFunction100FilterValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100FilterValue.setBounds(new Rectangle(790, 133, 385, 25));
+		//
 		jLabelFunction100FilterPromptOption.setText(res.getString("Prompt"));
-		jLabelFunction100FilterPromptOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100FilterPromptOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100FilterPromptOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100FilterPromptOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction100FilterPromptOption.setBounds(new Rectangle(11, 152, 96, 15));
-		jLabelFunction100FilterPromptOption.setEnabled(false);
+		jLabelFunction100FilterPromptOption.setBounds(new Rectangle(5, 167, 130, 20));
 		jRadioButtonFunction100FilterPromptOptionNone.setText(res.getString("None"));
-		jRadioButtonFunction100FilterPromptOptionNone.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterPromptOptionNone.setBounds(new Rectangle(115, 149, 60, 22));
-		jRadioButtonFunction100FilterPromptOptionNone.setEnabled(false);
+		jRadioButtonFunction100FilterPromptOptionNone.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100FilterPromptOptionNone.setBounds(new Rectangle(140, 164, 130, 25));
 		jRadioButtonFunction100FilterPromptOptionNone.addChangeListener(new Editor_jRadioButtonFunction100FilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction100FilterPromptOptionList0.setText(res.getString("InputAssistList"));
-		jRadioButtonFunction100FilterPromptOptionList0.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterPromptOptionList0.setBounds(new Rectangle(175, 149, 100, 22));
-		jRadioButtonFunction100FilterPromptOptionList0.setEnabled(false);
+		jRadioButtonFunction100FilterPromptOptionList0.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100FilterPromptOptionList0.setBounds(new Rectangle(270, 164, 130, 25));
 		jRadioButtonFunction100FilterPromptOptionList0.addChangeListener(new Editor_jRadioButtonFunction100FilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction100FilterPromptOptionList1.setText(res.getString("OptionalList"));
-		jRadioButtonFunction100FilterPromptOptionList1.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterPromptOptionList1.setBounds(new Rectangle(285, 149, 100, 22));
-		jRadioButtonFunction100FilterPromptOptionList1.setEnabled(false);
+		jRadioButtonFunction100FilterPromptOptionList1.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100FilterPromptOptionList1.setBounds(new Rectangle(400, 164, 130, 25));
 		jRadioButtonFunction100FilterPromptOptionList1.addChangeListener(new Editor_jRadioButtonFunction100FilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction100FilterPromptOptionList2.setText(res.getString("RequiredList"));
-		jRadioButtonFunction100FilterPromptOptionList2.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterPromptOptionList2.setBounds(new Rectangle(395, 149, 100, 22));
-		jRadioButtonFunction100FilterPromptOptionList2.setEnabled(false);
+		jRadioButtonFunction100FilterPromptOptionList2.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100FilterPromptOptionList2.setBounds(new Rectangle(530, 164, 130, 25));
 		jRadioButtonFunction100FilterPromptOptionList2.addChangeListener(new Editor_jRadioButtonFunction100FilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction100FilterPromptOptionCall.setText(res.getString("CallPromptFunction"));
-		jRadioButtonFunction100FilterPromptOptionCall.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction100FilterPromptOptionCall.setBounds(new Rectangle(505, 149, 78, 22));
-		jRadioButtonFunction100FilterPromptOptionCall.setEnabled(false);
+		jRadioButtonFunction100FilterPromptOptionCall.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction100FilterPromptOptionCall.setBounds(new Rectangle(660, 164, 130, 25));
 		jRadioButtonFunction100FilterPromptOptionCall.addChangeListener(new Editor_jRadioButtonFunction100FilterPromptOption_changeAdapter(this));
 		buttonGroupFunction100FilterPromptOption.add(jRadioButtonFunction100FilterPromptOptionNone);
 		buttonGroupFunction100FilterPromptOption.add(jRadioButtonFunction100FilterPromptOptionList0);
 		buttonGroupFunction100FilterPromptOption.add(jRadioButtonFunction100FilterPromptOptionList1);
 		buttonGroupFunction100FilterPromptOption.add(jRadioButtonFunction100FilterPromptOptionList2);
 		buttonGroupFunction100FilterPromptOption.add(jRadioButtonFunction100FilterPromptOptionCall);
-		jTextFieldFunction100FilterPromptOptionCallFunctionID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100FilterPromptOptionCallFunctionID.setBounds(new Rectangle(585, 149, 80, 22));
-		jTextFieldFunction100FilterPromptOptionCallFunctionID.setEnabled(false);
+		jTextFieldFunction100FilterPromptOptionCallFunctionID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100FilterPromptOptionCallFunctionID.setBounds(new Rectangle(790, 164, 100, 25));
 		jTextFieldFunction100FilterPromptOptionCallFunctionID.addKeyListener(new Editor_jTextFieldFunction100FilterPromptOptionCallFunctionID_keyAdapter(this));
-		jTextFieldFunction100FilterPromptOptionCallFunctionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100FilterPromptOptionCallFunctionName.setBounds(new Rectangle(670, 149, 204, 22));
-		jTextFieldFunction100FilterPromptOptionCallFunctionName.setEnabled(false);
+		jTextFieldFunction100FilterPromptOptionCallFunctionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100FilterPromptOptionCallFunctionName.setBounds(new Rectangle(895, 164, 280, 25));
 		jTextFieldFunction100FilterPromptOptionCallFunctionName.setEditable(false);
-		jButtonFunction100FilterPromptOptionCallFunctionExchange.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jButtonFunction100FilterPromptOptionCallFunctionExchange.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jButtonFunction100FilterPromptOptionCallFunctionExchange.setText(res.getString("ExchangeParms"));
-		jButtonFunction100FilterPromptOptionCallFunctionExchange.setBounds(new Rectangle(874, 148, 60, 23));
-		jButtonFunction100FilterPromptOptionCallFunctionExchange.setEnabled(false);
+		jButtonFunction100FilterPromptOptionCallFunctionExchange.setBounds(new Rectangle(1175, 163, 100, 27));
 		jButtonFunction100FilterPromptOptionCallFunctionExchange.addActionListener(new Editor_jButtonToEditPromptOptionCallFunctionExchange_actionAdapter(this));
-		jPanelFunction100FilterList.setLayout(null);
-		jPanelFunction100FilterList.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction100FilterList.add(jLabelFunction100FilterTable);
-		jPanelFunction100FilterList.add(jTextFieldFunction100FilterTable);
-		jPanelFunction100FilterList.add(jLabelFunction100FilterTableType);
-		jPanelFunction100FilterList.add(jTextFieldFunction100FilterTableType);
-		jPanelFunction100FilterList.add(jLabelFunction100FilterField);
-		jPanelFunction100FilterList.add(jTextFieldFunction100FilterField);
-		jPanelFunction100FilterList.add(jLabelFunction100FilterFieldType);
-		jPanelFunction100FilterList.add(jTextFieldFunction100FilterFieldType);
-		jPanelFunction100FilterList.add(jLabelFunction100FilterLayoutOption);
-		jPanelFunction100FilterList.add(jRadioButtonFunction100FilterLayoutOptionVertical);
-		jPanelFunction100FilterList.add(jRadioButtonFunction100FilterLayoutOptionHorizontal);
-		jPanelFunction100FilterList.add(jLabelFunction100FilterWidth);
-		jPanelFunction100FilterList.add(jTextFieldFunction100FilterWidth);
-		jPanelFunction100FilterList.add(jLabelFunction100FilterMargin);
-		jPanelFunction100FilterList.add(jTextFieldFunction100FilterMargin);
-		jPanelFunction100FilterList.add(jLabelFunction100FilterEditableOptions);
-		jPanelFunction100FilterList.add(jComboBoxFunction100FilterEditableOptions);
-		jPanelFunction100FilterList.add(jLabelFunction100FilterOption);
-		jPanelFunction100FilterList.add(jRadioButtonFunction100FilterOptionEQ);
-		jPanelFunction100FilterList.add(jRadioButtonFunction100FilterOptionSCAN);
-		jPanelFunction100FilterList.add(jRadioButtonFunction100FilterOptionGENERIC);
-		jPanelFunction100FilterList.add(jRadioButtonFunction100FilterOptionLE);
-		jPanelFunction100FilterList.add(jRadioButtonFunction100FilterOptionLT);
-		jPanelFunction100FilterList.add(jRadioButtonFunction100FilterOptionGE);
-		jPanelFunction100FilterList.add(jRadioButtonFunction100FilterOptionGT);
-		jPanelFunction100FilterList.add(jRadioButtonFunction100FilterOptionREFLECT);
-		jPanelFunction100FilterList.add(jLabelFunction100FilterCaptionOption);
-		jPanelFunction100FilterList.add(jRadioButtonFunction100FilterCaptionOptionName);
-		jPanelFunction100FilterList.add(jRadioButtonFunction100FilterCaptionOptionValue);
-		jPanelFunction100FilterList.add(jTextFieldFunction100FilterCaptionOptionValue);
-		jPanelFunction100FilterList.add(jLabelFunction100FilterPromptOption);
-		jPanelFunction100FilterList.add(jRadioButtonFunction100FilterPromptOptionNone);
-		jPanelFunction100FilterList.add(jRadioButtonFunction100FilterPromptOptionList0);
-		jPanelFunction100FilterList.add(jRadioButtonFunction100FilterPromptOptionList1);
-		jPanelFunction100FilterList.add(jRadioButtonFunction100FilterPromptOptionList2);
-		jPanelFunction100FilterList.add(jRadioButtonFunction100FilterPromptOptionCall);
-		jPanelFunction100FilterList.add(jTextFieldFunction100FilterPromptOptionCallFunctionID);
-		jPanelFunction100FilterList.add(jTextFieldFunction100FilterPromptOptionCallFunctionName);
-		jPanelFunction100FilterList.add(jButtonFunction100FilterPromptOptionCallFunctionExchange);
-		jPanelFunction100FilterList.add(jLabelFunction100FilterValue);
-		jPanelFunction100FilterList.add(jTextFieldFunction100FilterValue);
-		jPanelFunction100FilterList.add(jCheckBoxFunction100FilterIgnoreIfZero);
+		//
+		jScrollPaneFunction100FilterDefinition.setBorder(null);
+		jScrollPaneFunction100FilterDefinition.getViewport().add(jPanelFunction100FilterDefinition);
+		jPanelFunction100FilterDefinition.setPreferredSize(new Dimension(1370, 196));
+		jPanelFunction100FilterDefinition.setLayout(null);
+		jPanelFunction100FilterDefinition.setBorder(null);
+		jPanelFunction100FilterDefinition.add(jLabelFunction100FilterTable);
+		jPanelFunction100FilterDefinition.add(jTextFieldFunction100FilterTable);
+		jPanelFunction100FilterDefinition.add(jLabelFunction100FilterTableType);
+		jPanelFunction100FilterDefinition.add(jTextFieldFunction100FilterTableType);
+		jPanelFunction100FilterDefinition.add(jLabelFunction100FilterField);
+		jPanelFunction100FilterDefinition.add(jTextFieldFunction100FilterField);
+		jPanelFunction100FilterDefinition.add(jLabelFunction100FilterFieldType);
+		jPanelFunction100FilterDefinition.add(jTextFieldFunction100FilterFieldType);
+		jPanelFunction100FilterDefinition.add(jLabelFunction100FilterLayoutOption);
+		jPanelFunction100FilterDefinition.add(jRadioButtonFunction100FilterLayoutOptionVertical);
+		jPanelFunction100FilterDefinition.add(jRadioButtonFunction100FilterLayoutOptionHorizontal);
+		jPanelFunction100FilterDefinition.add(jLabelFunction100FilterWidth);
+		jPanelFunction100FilterDefinition.add(jTextFieldFunction100FilterWidth);
+		jPanelFunction100FilterDefinition.add(jLabelFunction100FilterMargin);
+		jPanelFunction100FilterDefinition.add(jTextFieldFunction100FilterMargin);
+		jPanelFunction100FilterDefinition.add(jLabelFunction100FilterEditableOptions);
+		jPanelFunction100FilterDefinition.add(jComboBoxFunction100FilterEditableOptions);
+		jPanelFunction100FilterDefinition.add(jLabelFunction100FilterOption);
+		jPanelFunction100FilterDefinition.add(jRadioButtonFunction100FilterOptionEQ);
+		jPanelFunction100FilterDefinition.add(jRadioButtonFunction100FilterOptionSCAN);
+		jPanelFunction100FilterDefinition.add(jRadioButtonFunction100FilterOptionGENERIC);
+		jPanelFunction100FilterDefinition.add(jRadioButtonFunction100FilterOptionLE);
+		jPanelFunction100FilterDefinition.add(jRadioButtonFunction100FilterOptionLT);
+		jPanelFunction100FilterDefinition.add(jRadioButtonFunction100FilterOptionGE);
+		jPanelFunction100FilterDefinition.add(jRadioButtonFunction100FilterOptionGT);
+		jPanelFunction100FilterDefinition.add(jRadioButtonFunction100FilterOptionREFLECT);
+		jPanelFunction100FilterDefinition.add(jLabelFunction100FilterCaptionOption);
+		jPanelFunction100FilterDefinition.add(jRadioButtonFunction100FilterCaptionOptionName);
+		jPanelFunction100FilterDefinition.add(jRadioButtonFunction100FilterCaptionOptionValue);
+		jPanelFunction100FilterDefinition.add(jTextFieldFunction100FilterCaptionOptionValue);
+		jPanelFunction100FilterDefinition.add(jLabelFunction100FilterPromptOption);
+		jPanelFunction100FilterDefinition.add(jRadioButtonFunction100FilterPromptOptionNone);
+		jPanelFunction100FilterDefinition.add(jRadioButtonFunction100FilterPromptOptionList0);
+		jPanelFunction100FilterDefinition.add(jRadioButtonFunction100FilterPromptOptionList1);
+		jPanelFunction100FilterDefinition.add(jRadioButtonFunction100FilterPromptOptionList2);
+		jPanelFunction100FilterDefinition.add(jRadioButtonFunction100FilterPromptOptionCall);
+		jPanelFunction100FilterDefinition.add(jTextFieldFunction100FilterPromptOptionCallFunctionID);
+		jPanelFunction100FilterDefinition.add(jTextFieldFunction100FilterPromptOptionCallFunctionName);
+		jPanelFunction100FilterDefinition.add(jButtonFunction100FilterPromptOptionCallFunctionExchange);
+		jPanelFunction100FilterDefinition.add(jLabelFunction100FilterValue);
+		jPanelFunction100FilterDefinition.add(jTextFieldFunction100FilterValue);
+		jPanelFunction100FilterDefinition.add(jCheckBoxFunction100FilterIgnoreIfZero);
 		//
 		jScrollPaneFunction100ButtonList.setBorder(null);
 		jScrollPaneFunction100ButtonList.getViewport().add(jTableFunction100ButtonList, null);
 		jScrollPaneFunction100ButtonList.addMouseListener(new Editor_jScrollPaneFunction100ButtonList_mouseAdapter(this));
-		jTableFunction100ButtonList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction100ButtonList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction100ButtonList.setBackground(SystemColor.control);
 		jTableFunction100ButtonList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction100ButtonList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -6033,6 +6103,7 @@ public class Editor extends JFrame {
 		jTableFunction100ButtonList.addFocusListener(new Editor_FocusListener());
 		jTableFunction100ButtonList.addMouseListener(new Editor_jTableFunction100ButtonList_mouseAdapter(this));
 		jTableFunction100ButtonList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableFunction100ButtonList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction100ButtonList.addColumn("NO.");
 		tableModelFunction100ButtonList.addColumn(res.getString("Pos_short"));
 		tableModelFunction100ButtonList.addColumn(res.getString("Caption"));
@@ -6041,99 +6112,92 @@ public class Editor extends JFrame {
 		column1 = jTableFunction100ButtonList.getColumnModel().getColumn(1);
 		column2 = jTableFunction100ButtonList.getColumnModel().getColumn(2);
 		column3 = jTableFunction100ButtonList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
+		column0.setPreferredWidth(40);
 		column1.setPreferredWidth(50);
-		column2.setPreferredWidth(150);
-		column3.setPreferredWidth(210);
+		column2.setPreferredWidth(200);
+		column3.setPreferredWidth(300);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentCenterControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction100ButtonList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction100ButtonList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction100ButtonList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		jSplitPaneFunction100ButtonList.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jSplitPaneFunction100ButtonList.add(jScrollPaneFunction100ButtonList, JSplitPane.TOP);
-		jSplitPaneFunction100ButtonList.add(jPanelFunction100ButtonList, JSplitPane.BOTTOM);
-		jSplitPaneFunction100ButtonList.setDividerLocation(screenHeight - 493);
-		jLabelFunction100ButtonPosition.setEnabled(false);
-		jLabelFunction100ButtonPosition.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jPanelFunction100ButtonList.setLayout(new BorderLayout());
+		jPanelFunction100ButtonList.add(jScrollPaneFunction100ButtonList, BorderLayout.CENTER);
+		jPanelFunction100ButtonList.add(jPanelFunction100ButtonDefinition, BorderLayout.SOUTH);
+		//
+		jLabelFunction100ButtonPosition.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100ButtonPosition.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100ButtonPosition.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100ButtonPosition.setText(res.getString("Position"));
-		jLabelFunction100ButtonPosition.setBounds(new Rectangle(11, 12, 96, 15));
-		jSpinnerFunction100ButtonPosition.setFont(new java.awt.Font("SansSerif", 0, 13));
-		jSpinnerFunction100ButtonPosition.setBounds(new Rectangle(115, 9, 40, 22));
-		jSpinnerFunction100ButtonPosition.setEnabled(false);
-		jLabelFunction100ButtonPositionComment.setEnabled(false);
-		jLabelFunction100ButtonPositionComment.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100ButtonPosition.setBounds(new Rectangle(5, 12, 130, 20));
+		jSpinnerFunction100ButtonPosition.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jSpinnerFunction100ButtonPosition.setBounds(new Rectangle(140, 9, 40, 25));
+		jLabelFunction100ButtonPositionComment.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100ButtonPositionComment.setText(res.getString("ButtonPositionComment"));
-		jLabelFunction100ButtonPositionComment.setBounds(new Rectangle(165, 12, 200, 15));
-		jLabelFunction100ButtonKey.setEnabled(false);
-		jLabelFunction100ButtonKey.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100ButtonPositionComment.setBounds(new Rectangle(185, 12, 230, 20));
+		jLabelFunction100ButtonKey.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100ButtonKey.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100ButtonKey.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100ButtonKey.setText(res.getString("FunctionKeyNo"));
-		jLabelFunction100ButtonKey.setBounds(new Rectangle(11, 40, 96, 15));
-		jSpinnerFunction100ButtonKey.setFont(new java.awt.Font("SansSerif", 0, 13));
-		jSpinnerFunction100ButtonKey.setBounds(new Rectangle(115, 37, 40, 22));
-		jSpinnerFunction100ButtonKey.setEnabled(false);
-		jLabelFunction100ButtonCaption.setEnabled(false);
-		jLabelFunction100ButtonCaption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100ButtonKey.setBounds(new Rectangle(415, 12, 130, 20));
+		jSpinnerFunction100ButtonKey.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jSpinnerFunction100ButtonKey.setBounds(new Rectangle(550, 9, 40, 25));
+		jLabelFunction100ButtonCaption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100ButtonCaption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100ButtonCaption.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100ButtonCaption.setText(res.getString("Caption"));
-		jLabelFunction100ButtonCaption.setBounds(new Rectangle(161, 40, 96, 15));
-		jTextFieldFunction100ButtonCaption.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100ButtonCaption.setBounds(new Rectangle(265, 37, 100, 22));
-		jTextFieldFunction100ButtonCaption.setEnabled(false);
-		jLabelFunction100ButtonAction.setEnabled(false);
-		jLabelFunction100ButtonAction.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100ButtonCaption.setBounds(new Rectangle(600, 12, 130, 20));
+		jTextFieldFunction100ButtonCaption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100ButtonCaption.setBounds(new Rectangle(735, 9, 100, 25));
+		//
+		jLabelFunction100ButtonAction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100ButtonAction.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100ButtonAction.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100ButtonAction.setText(res.getString("Action"));
-		jLabelFunction100ButtonAction.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction100ButtonAction.setBounds(new Rectangle(5, 43, 130, 20));
 		jComboBoxFunction100ButtonAction.setEditable(false);
-		jComboBoxFunction100ButtonAction.setEnabled(false);
-		jComboBoxFunction100ButtonAction.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxFunction100ButtonAction.setBounds(new Rectangle(115, 65, 210, 22));
+		jComboBoxFunction100ButtonAction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jComboBoxFunction100ButtonAction.setBounds(new Rectangle(140, 40, 265, 25));
 		jComboBoxFunction100ButtonAction.addActionListener(new Editor_jComboBoxFunction100ButtonAction_actionAdapter(this));
 		jComboBoxFunction100ButtonAction.addItem(res.getString("ActionExit"));
 		jComboBoxFunction100ButtonAction.addItem(res.getString("ActionCallDTLFunctionToAdd"));
 		jComboBoxFunction100ButtonAction.addItem(res.getString("ActionOutputEXCEL"));
 		jComboBoxFunction100ButtonAction.addItem(res.getString("ActionCallFunction"));
 		jComboBoxFunction100ButtonAction.addItem(res.getString("ActionReturnNull"));
-		jLabelFunction100ButtonActionCallFunction.setEnabled(false);
-		jLabelFunction100ButtonActionCallFunction.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction100ButtonActionCallFunction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100ButtonActionCallFunction.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100ButtonActionCallFunction.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100ButtonActionCallFunction.setText(res.getString("FunctionID"));
-		jLabelFunction100ButtonActionCallFunction.setBounds(new Rectangle(11, 96, 96, 15));
-		jTextFieldFunction100ButtonActionCallFunctionID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100ButtonActionCallFunctionID.setBounds(new Rectangle(115, 93, 100, 22));
-		jTextFieldFunction100ButtonActionCallFunctionID.setEnabled(false);
+		jLabelFunction100ButtonActionCallFunction.setBounds(new Rectangle(415, 43, 130, 20));
+		jTextFieldFunction100ButtonActionCallFunctionID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100ButtonActionCallFunctionID.setBounds(new Rectangle(550, 40, 120, 25));
 		jTextFieldFunction100ButtonActionCallFunctionID.addKeyListener(new Editor_jTextFieldFunction100ButtonActionCallFunctionID_keyAdapter(this));
-		jTextFieldFunction100ButtonActionCallFunctionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction100ButtonActionCallFunctionName.setBounds(new Rectangle(220, 93, 400, 22));
+		jTextFieldFunction100ButtonActionCallFunctionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100ButtonActionCallFunctionName.setBounds(new Rectangle(675, 40, 400, 25));
 		jTextFieldFunction100ButtonActionCallFunctionName.setEditable(false);
-		jPanelFunction100ButtonList.setLayout(null);
-		jPanelFunction100ButtonList.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction100ButtonList.add(jLabelFunction100ButtonPosition);
-		jPanelFunction100ButtonList.add(jSpinnerFunction100ButtonPosition);
-		jPanelFunction100ButtonList.add(jLabelFunction100ButtonPositionComment);
-		jPanelFunction100ButtonList.add(jLabelFunction100ButtonKey);
-		jPanelFunction100ButtonList.add(jSpinnerFunction100ButtonKey);
-		jPanelFunction100ButtonList.add(jLabelFunction100ButtonCaption);
-		jPanelFunction100ButtonList.add(jTextFieldFunction100ButtonCaption);
-		jPanelFunction100ButtonList.add(jLabelFunction100ButtonAction);
-		jPanelFunction100ButtonList.add(jComboBoxFunction100ButtonAction);
-		jPanelFunction100ButtonList.add(jLabelFunction100ButtonActionCallFunction);
-		jPanelFunction100ButtonList.add(jTextFieldFunction100ButtonActionCallFunctionID);
-		jPanelFunction100ButtonList.add(jTextFieldFunction100ButtonActionCallFunctionName);
+		//
+		jPanelFunction100ButtonDefinition.setLayout(null);
+		jPanelFunction100ButtonDefinition.setPreferredSize(new Dimension(100, 72));
+		jPanelFunction100ButtonDefinition.setBorder(null);
+		jPanelFunction100ButtonDefinition.add(jLabelFunction100ButtonPosition);
+		jPanelFunction100ButtonDefinition.add(jSpinnerFunction100ButtonPosition);
+		jPanelFunction100ButtonDefinition.add(jLabelFunction100ButtonPositionComment);
+		jPanelFunction100ButtonDefinition.add(jLabelFunction100ButtonKey);
+		jPanelFunction100ButtonDefinition.add(jSpinnerFunction100ButtonKey);
+		jPanelFunction100ButtonDefinition.add(jLabelFunction100ButtonCaption);
+		jPanelFunction100ButtonDefinition.add(jTextFieldFunction100ButtonCaption);
+		jPanelFunction100ButtonDefinition.add(jLabelFunction100ButtonAction);
+		jPanelFunction100ButtonDefinition.add(jComboBoxFunction100ButtonAction);
+		jPanelFunction100ButtonDefinition.add(jLabelFunction100ButtonActionCallFunction);
+		jPanelFunction100ButtonDefinition.add(jTextFieldFunction100ButtonActionCallFunctionID);
+		jPanelFunction100ButtonDefinition.add(jTextFieldFunction100ButtonActionCallFunctionName);
 		//
 		jScrollPaneFunction100UsageList.setBorder(null);
 		jScrollPaneFunction100UsageList.getViewport().add(jTableFunction100UsageList, null);
-		jTableFunction100UsageList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction100UsageList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction100UsageList.setBackground(SystemColor.control);
 		jTableFunction100UsageList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction100UsageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -6141,6 +6205,7 @@ public class Editor extends JFrame {
 		jTableFunction100UsageList.setSelectionForeground(Color.black);
 		jTableFunction100UsageList.addFocusListener(new Editor_FocusListener());
 		jTableFunction100UsageList.addMouseListener(new Editor_jTableFunction100UsageList_mouseAdapter(this));
+		jTableFunction100UsageList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction100UsageList.addColumn("NO.");
 		tableModelFunction100UsageList.addColumn(res.getString("FunctionsWhereUsed"));
 		tableModelFunction100UsageList.addColumn(res.getString("Type"));
@@ -6149,15 +6214,15 @@ public class Editor extends JFrame {
 		column1 = jTableFunction100UsageList.getColumnModel().getColumn(1);
 		column2 = jTableFunction100UsageList.getColumnModel().getColumn(2);
 		column3 = jTableFunction100UsageList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(300);
-		column2.setPreferredWidth(160);
-		column3.setPreferredWidth(280);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(400);
+		column2.setPreferredWidth(250);
+		column3.setPreferredWidth(380);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction100UsageList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction100UsageList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction100UsageList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
 	}
@@ -6166,18 +6231,20 @@ public class Editor extends JFrame {
 	 */
 	void initComponentsForFunction110() {
 		jPanelFunction110.setLayout(new BorderLayout());
+		jScrollPaneFunction110Top.setBorder(null);
+		jScrollPaneFunction110Top.getViewport().add(jPanelFunction110Top);
 		jPanelFunction110Top.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction110Top.setPreferredSize(new Dimension(10, 179));
+		jPanelFunction110Top.setPreferredSize(new Dimension(1210, 198));
 		jPanelFunction110Top.setToolTipText("");
 		jPanelFunction110Top.setLayout(null);
 		//
-		jLabelFunction110Type.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110Type.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110Type.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110Type.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110Type.setText(res.getString("FunctionType"));
-		jLabelFunction110Type.setBounds(new Rectangle(11, 12, 96, 15));
-		jTextFieldFunction110Type.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110Type.setBounds(new Rectangle(115, 9, 170, 22));
+		jLabelFunction110Type.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldFunction110Type.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110Type.setBounds(new Rectangle(140, 9, 250, 25));
 		jTextFieldFunction110Type.setEditable(false);
 		jTextFieldFunction110Type.setText(res.getString("FunctionTypeXF110"));
 		Insets m = jTextFieldFunction110Type.getMargin();
@@ -6186,99 +6253,102 @@ public class Editor extends JFrame {
 		label.setBorder(null); 
 		label.setBounds(m.left, m.top, imageIconFunction110.getIconWidth(), imageIconFunction110.getIconHeight()); 
 		jTextFieldFunction110Type.add(label);
-		jLabelFunction110ID.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110ID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110ID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110ID.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction110ID.setText(res.getString("FunctionID"));
-		jLabelFunction110ID.setBounds(new Rectangle(295, 12, 76, 15));
-		jTextFieldFunction110ID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110ID.setBounds(new Rectangle(379, 9, 80, 22));
+		jLabelFunction110ID.setText(res.getString("IDAndName"));
+		jLabelFunction110ID.setBounds(new Rectangle(400, 12, 100, 20));
+		jTextFieldFunction110ID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110ID.setBounds(new Rectangle(505, 9, 120, 25));
 		jTextFieldFunction110ID.setEditable(false);
-		jLabelFunction110Name.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelFunction110Name.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction110Name.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction110Name.setText(res.getString("FunctionName"));
-		jLabelFunction110Name.setBounds(new Rectangle(469, 12, 86, 15));
-		jTextFieldFunction110Name.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110Name.setBounds(new Rectangle(563, 9, 250, 22));
+		jTextFieldFunction110Name.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110Name.setBounds(new Rectangle(630, 9, 350, 25));
 		//
-		jLabelFunction110TableName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110TableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110TableName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110TableName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110TableName.setText(res.getString("PrimaryTable"));
-		jLabelFunction110TableName.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldFunction110TableName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110TableName.setBounds(new Rectangle(115, 37, 600, 22));
+		jLabelFunction110TableName.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldFunction110TableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110TableName.setBounds(new Rectangle(140, 40, 840, 25));
 		jTextFieldFunction110TableName.setEditable(false);
 		jButtonFunction110TableKeyFieldsEdit.setIcon(imageIconPrompt);
-		jButtonFunction110TableKeyFieldsEdit.setBounds(new Rectangle(715, 36, 28, 23));
+		jButtonFunction110TableKeyFieldsEdit.setBounds(new Rectangle(980, 39, 28, 27));
 		jButtonFunction110TableKeyFieldsEdit.addActionListener(new Editor_jButtonToEditKeyFields_actionAdapter(this));
-		jLabelFunction110TableOrderByFields.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction110TableOrderByFields.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110TableOrderByFields.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110TableOrderByFields.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110TableOrderByFields.setText(res.getString("OrderByFields"));
-		jLabelFunction110TableOrderByFields.setBounds(new Rectangle(11, 68, 96, 15));
-		jTextFieldFunction110TableOrderByFields.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110TableOrderByFields.setBounds(new Rectangle(115, 65, 600, 22));
+		jLabelFunction110TableOrderByFields.setBounds(new Rectangle(5, 74, 130, 20));
+		jTextFieldFunction110TableOrderByFields.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110TableOrderByFields.setBounds(new Rectangle(140, 71, 840, 25));
 		jTextFieldFunction110TableOrderByFields.setEditable(false);
 		jButtonFunction110TableOrderByFieldsEdit.setIcon(imageIconPrompt);
-		jButtonFunction110TableOrderByFieldsEdit.setBounds(new Rectangle(715, 64, 28, 23));
+		jButtonFunction110TableOrderByFieldsEdit.setBounds(new Rectangle(980, 70, 28, 27));
 		jButtonFunction110TableOrderByFieldsEdit.addActionListener(new Editor_jButtonToEditOrderByFields_actionAdapter(this));
-		jLabelFunction110FixedWhere.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction110FixedWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110FixedWhere.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110FixedWhere.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110FixedWhere.setText(res.getString("FixedWhere"));
-		jLabelFunction110FixedWhere.setBounds(new Rectangle(11, 96, 96, 15));
-		jTextFieldFunction110FixedWhere.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110FixedWhere.setBounds(new Rectangle(115, 93, 600, 22));
+		jLabelFunction110FixedWhere.setBounds(new Rectangle(5, 105, 130, 20));
+		jTextFieldFunction110FixedWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110FixedWhere.setBounds(new Rectangle(140, 102, 840, 25));
+		jCheckBoxFunction110InitialListing.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxFunction110InitialListing.setText(res.getString("InitialListing"));
+		jCheckBoxFunction110InitialListing.setBounds(new Rectangle(1000, 102, 200, 25));
 		//
-		jLabelFunction110Size.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110Size.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110Size.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110Size.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110Size.setText(res.getString("PanelSize"));
-		jLabelFunction110Size.setBounds(new Rectangle(11, 124, 96, 15));
+		jLabelFunction110Size.setBounds(new Rectangle(5, 136, 130, 20));
 		jRadioButtonFunction110SizeFull.setText(res.getString("SizeFull"));
-		jRadioButtonFunction110SizeFull.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110SizeFull.setBounds(new Rectangle(115, 121, 100, 22));
+		jRadioButtonFunction110SizeFull.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110SizeFull.setBounds(new Rectangle(140, 133, 130, 25));
 		jRadioButtonFunction110SizeFull.addChangeListener(new Editor_jRadioButtonFunction110Size_changeAdapter(this));
 		jRadioButtonFunction110SizeAuto.setText(res.getString("SizeAuto"));
-		jRadioButtonFunction110SizeAuto.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110SizeAuto.setBounds(new Rectangle(225, 121, 100, 22));
+		jRadioButtonFunction110SizeAuto.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110SizeAuto.setBounds(new Rectangle(270, 133, 130, 25));
 		jRadioButtonFunction110SizeAuto.addChangeListener(new Editor_jRadioButtonFunction200Size_changeAdapter(this));
 		jRadioButtonFunction110SizeSpecify.setText(res.getString("SizeSpecified"));
-		jRadioButtonFunction110SizeSpecify.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110SizeSpecify.setBounds(new Rectangle(325, 121, 110, 22));
+		jRadioButtonFunction110SizeSpecify.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110SizeSpecify.setBounds(new Rectangle(400, 133, 160, 25));
 		jRadioButtonFunction110SizeSpecify.addChangeListener(new Editor_jRadioButtonFunction110Size_changeAdapter(this));
 		buttonGroupFunction110Size.add(jRadioButtonFunction110SizeFull);
 		buttonGroupFunction110Size.add(jRadioButtonFunction110SizeAuto);
 		buttonGroupFunction110Size.add(jRadioButtonFunction110SizeSpecify);
-		jTextFieldFunction110SizeWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110SizeWidth.setBounds(new Rectangle(435, 121, 50, 22));
-		jTextFieldFunction110SizeHeight.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110SizeHeight.setBounds(new Rectangle(490, 121, 50, 22));
-		jLabelFunction110InitialReadCount.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextFieldFunction110SizeWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110SizeWidth.setBounds(new Rectangle(560, 133, 60, 25));
+		jTextFieldFunction110SizeHeight.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110SizeHeight.setBounds(new Rectangle(625, 133, 60, 25));
+		jLabelFunction110InitialReadCount.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110InitialReadCount.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110InitialReadCount.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110InitialReadCount.setText(res.getString("InitialReadCount"));
-		jLabelFunction110InitialReadCount.setBounds(new Rectangle(566, 124, 100, 15));
-		jTextFieldFunction110InitialReadCount.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110InitialReadCount.setBounds(new Rectangle(674, 121, 41, 22));
+		jLabelFunction110InitialReadCount.setBounds(new Rectangle(695, 136, 130, 20));
+		jTextFieldFunction110InitialReadCount.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110InitialReadCount.setBounds(new Rectangle(830, 133, 60, 25));
 		jTextFieldFunction110InitialReadCount.setText("*All");
-		jCheckBoxFunction110InitialListing.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jCheckBoxFunction110InitialListing.setText(res.getString("InitialListing"));
-		jCheckBoxFunction110InitialListing.setBounds(new Rectangle(730, 121, 150, 22));
+		jLabelFunction110MaxReadCount.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelFunction110MaxReadCount.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction110MaxReadCount.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction110MaxReadCount.setText(res.getString("MaxReadCount"));
+		jLabelFunction110MaxReadCount.setBounds(new Rectangle(900, 136, 130, 20));
+		jTextFieldFunction110MaxReadCount.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110MaxReadCount.setBounds(new Rectangle(1035, 133, 80, 25));
 		//
-		jLabelFunction110InitialMsg.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110InitialMsg.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110InitialMsg.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110InitialMsg.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110InitialMsg.setText(res.getString("UpdateMessage"));
-		jLabelFunction110InitialMsg.setBounds(new Rectangle(5, 152, 102, 15));
-		jTextFieldFunction110InitialMsg.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110InitialMsg.setBounds(new Rectangle(115, 149, 600, 22));
+		jLabelFunction110InitialMsg.setBounds(new Rectangle(5, 167, 130, 20));
+		jTextFieldFunction110InitialMsg.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110InitialMsg.setBounds(new Rectangle(140, 164, 840, 25));
 		//
 		jPanelFunction110Top.add(jLabelFunction110ID);
 		jPanelFunction110Top.add(jTextFieldFunction110ID);
-		jPanelFunction110Top.add(jLabelFunction110Name);
 		jPanelFunction110Top.add(jTextFieldFunction110Name);
 		jPanelFunction110Top.add(jLabelFunction110Type);
 		jPanelFunction110Top.add(jTextFieldFunction110Type);
@@ -6298,19 +6368,21 @@ public class Editor extends JFrame {
 		jPanelFunction110Top.add(jTextFieldFunction110SizeHeight);
 		jPanelFunction110Top.add(jLabelFunction110InitialReadCount);
 		jPanelFunction110Top.add(jTextFieldFunction110InitialReadCount);
+		jPanelFunction110Top.add(jLabelFunction110MaxReadCount);
+		jPanelFunction110Top.add(jTextFieldFunction110MaxReadCount);
 		jPanelFunction110Top.add(jCheckBoxFunction110InitialListing);
 		jPanelFunction110Top.add(jLabelFunction110InitialMsg);
 		jPanelFunction110Top.add(jTextFieldFunction110InitialMsg);
-		jPanelFunction110.add(jPanelFunction110Top, BorderLayout.NORTH);
+		jPanelFunction110.add(jScrollPaneFunction110Top, BorderLayout.NORTH);
 		jPanelFunction110.add(jTabbedPaneFunction110, BorderLayout.CENTER);
-		jTabbedPaneFunction110.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTabbedPaneFunction110.add(res.getString("Columns"), jSplitPaneFunction110ColumnList);
+		jTabbedPaneFunction110.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTabbedPaneFunction110.add(res.getString("Columns"), jPanelFunction110ColumnList);
 		jTabbedPaneFunction110.setIconAt(0, imageIconDetailField);
-		jTabbedPaneFunction110.add(res.getString("Filters"), jSplitPaneFunction110FilterList);
+		jTabbedPaneFunction110.add(res.getString("Filters"), jPanelFunction110FilterList);
 		jTabbedPaneFunction110.setIconAt(1, imageIconFunctionFilter);
 		jTabbedPaneFunction110.add(res.getString("BatchTable"), jPanelFunction110BatchTableAndField);
 		jTabbedPaneFunction110.setIconAt(2, imageIconRefer);
-		jTabbedPaneFunction110.add(res.getString("FunctionKeys"), jSplitPaneFunction110ButtonList);
+		jTabbedPaneFunction110.add(res.getString("FunctionKeys"), jPanelFunction110ButtonList);
 		jTabbedPaneFunction110.setIconAt(3, imageIconFunctionButton);
 		jTabbedPaneFunction110.add(res.getString("FunctionsWhereUsed"), jScrollPaneFunction110UsageList);
 		jTabbedPaneFunction110.setIconAt(4, imageIconFunctionUsage);
@@ -6318,7 +6390,7 @@ public class Editor extends JFrame {
 		jScrollPaneFunction110ColumnList.setBorder(null);
 		jScrollPaneFunction110ColumnList.getViewport().add(jTableFunction110ColumnList, null);
 		jScrollPaneFunction110ColumnList.addMouseListener(new Editor_jScrollPaneFunction110ColumnList_mouseAdapter(this));
-		jTableFunction110ColumnList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction110ColumnList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction110ColumnList.setBackground(SystemColor.control);
 		jTableFunction110ColumnList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction110ColumnList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -6329,6 +6401,7 @@ public class Editor extends JFrame {
 		jTableFunction110ColumnList.addMouseListener(new Editor_jTableFunction110ColumnList_mouseAdapter(this));
 	    jTableFunction110ColumnList.addMouseMotionListener(new Editor_jTableFunction110ColumnList_mouseMotionAdapter(this));
 		jTableFunction110ColumnList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableFunction110ColumnList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction110ColumnList.addColumn("NO.");
 		tableModelFunction110ColumnList.addColumn(res.getString("DataSource"));
 		tableModelFunction110ColumnList.addColumn(res.getString("FieldType"));
@@ -6337,185 +6410,172 @@ public class Editor extends JFrame {
 		column1 = jTableFunction110ColumnList.getColumnModel().getColumn(1);
 		column2 = jTableFunction110ColumnList.getColumnModel().getColumn(2);
 		column3 = jTableFunction110ColumnList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(160);
-		column2.setPreferredWidth(250);
-		column3.setPreferredWidth(350);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(250);
+		column2.setPreferredWidth(350);
+		column3.setPreferredWidth(450);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction110ColumnList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction110ColumnList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction110ColumnList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		jSplitPaneFunction110ColumnList.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jSplitPaneFunction110ColumnList.add(jScrollPaneFunction110ColumnList, JSplitPane.TOP);
-		jSplitPaneFunction110ColumnList.add(jPanelFunction110ColumnList, JSplitPane.BOTTOM);
-		jSplitPaneFunction110ColumnList.setDividerLocation(screenHeight - 466);
-		jLabelFunction110Table.setEnabled(false);
-		jLabelFunction110Table.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jPanelFunction110ColumnList.setLayout(new BorderLayout());
+		jPanelFunction110ColumnList.add(jScrollPaneFunction110ColumnList, BorderLayout.CENTER);
+		jPanelFunction110ColumnList.add(jScrollPaneFunction110ColumnDefinition, BorderLayout.SOUTH);
+		//
+		jLabelFunction110Table.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110Table.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110Table.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110Table.setText(res.getString("Table"));
-		jLabelFunction110Table.setBounds(new Rectangle(11, 12, 96, 15));
-		jTextFieldFunction110Table.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110Table.setBounds(new Rectangle(115, 9, 300, 22));
+		jLabelFunction110Table.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldFunction110Table.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110Table.setBounds(new Rectangle(140, 9, 350, 25));
 		jTextFieldFunction110Table.setEditable(false);
-		jLabelFunction110TableType.setEnabled(false);
-		jLabelFunction110TableType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110TableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110TableType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110TableType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110TableType.setText(res.getString("Type"));
-		jLabelFunction110TableType.setBounds(new Rectangle(430, 12, 76, 15));
-		jTextFieldFunction110TableType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110TableType.setBounds(new Rectangle(514, 9, 250, 22));
+		jLabelFunction110TableType.setBounds(new Rectangle(500, 12, 100, 20));
+		jTextFieldFunction110TableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110TableType.setBounds(new Rectangle(605, 9, 330, 25));
 		jTextFieldFunction110TableType.setEditable(false);
-		jLabelFunction110Field.setEnabled(false);
-		jLabelFunction110Field.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction110Field.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110Field.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110Field.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110Field.setText(res.getString("Field"));
-		jLabelFunction110Field.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldFunction110Field.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110Field.setBounds(new Rectangle(115, 37, 300, 22));
+		jLabelFunction110Field.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldFunction110Field.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110Field.setBounds(new Rectangle(140, 40, 350, 25));
 		jTextFieldFunction110Field.setEditable(false);
-		jLabelFunction110FieldType.setEnabled(false);
-		jLabelFunction110FieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110FieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110FieldType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110FieldType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110FieldType.setText(res.getString("Type"));
-		jLabelFunction110FieldType.setBounds(new Rectangle(430, 40, 76, 15));
-		jTextFieldFunction110FieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110FieldType.setBounds(new Rectangle(514, 37, 250, 22));
+		jLabelFunction110FieldType.setBounds(new Rectangle(500, 43, 100, 20));
+		jTextFieldFunction110FieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110FieldType.setBounds(new Rectangle(605, 40, 330, 25));
 		jTextFieldFunction110FieldType.setEditable(false);
-		jLabelFunction110FieldLayoutOption.setEnabled(false);
+		//
 		jLabelFunction110FieldLayoutOption.setText(res.getString("LayoutOption"));
-		jLabelFunction110FieldLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110FieldLayoutOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110FieldLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110FieldLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction110FieldLayoutOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction110FieldLayoutOption.setBounds(new Rectangle(5, 74, 130, 20));
 		jRadioButtonFunction110FieldLayoutOptionVertical.setText(res.getString("LayoutVertical"));
-		jRadioButtonFunction110FieldLayoutOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FieldLayoutOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
-		jRadioButtonFunction110FieldLayoutOptionVertical.setEnabled(false);
+		jRadioButtonFunction110FieldLayoutOptionVertical.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110FieldLayoutOptionVertical.setBounds(new Rectangle(140, 71, 130, 25));
 		jRadioButtonFunction110FieldLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
-		jRadioButtonFunction110FieldLayoutOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FieldLayoutOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
-		jRadioButtonFunction110FieldLayoutOptionHorizontal.setEnabled(false);
+		jRadioButtonFunction110FieldLayoutOptionHorizontal.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110FieldLayoutOptionHorizontal.setBounds(new Rectangle(270, 71, 130, 25));
 		buttonGroupFunction110FieldLayoutOption.add(jRadioButtonFunction110FieldLayoutOptionVertical);
 		buttonGroupFunction110FieldLayoutOption.add(jRadioButtonFunction110FieldLayoutOptionHorizontal);
-		jLabelFunction110FieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110FieldWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110FieldWidth.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110FieldWidth.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110FieldWidth.setText(res.getString("FieldWidth"));
-		jLabelFunction110FieldWidth.setBounds(new Rectangle(430, 68, 76, 15));
-		jLabelFunction110FieldWidth.setEnabled(false);
-		jTextFieldFunction110FieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110FieldWidth.setBounds(new Rectangle(514, 65, 45, 22));
-		jTextFieldFunction110FieldWidth.setEnabled(false);
+		jLabelFunction110FieldWidth.setBounds(new Rectangle(500, 74, 100, 20));
+		jTextFieldFunction110FieldWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110FieldWidth.setBounds(new Rectangle(605, 71, 60, 25));
 		jTextFieldFunction110FieldWidth.setText("");
-		jLabelFunction110FieldRows.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110FieldRows.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110FieldRows.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110FieldRows.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110FieldRows.setText(res.getString("FieldRows"));
-		jLabelFunction110FieldRows.setBounds(new Rectangle(564, 68, 45, 15));
-		jLabelFunction110FieldRows.setEnabled(false);
-		jTextFieldFunction110FieldRows.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110FieldRows.setBounds(new Rectangle(614, 65, 45, 22));
+		jLabelFunction110FieldRows.setBounds(new Rectangle(675, 74, 60, 20));
+		jTextFieldFunction110FieldRows.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110FieldRows.setBounds(new Rectangle(740, 71, 60, 25));
 		jTextFieldFunction110FieldRows.setText("");
-		jTextFieldFunction110FieldRows.setEnabled(false);
-		jLabelFunction110FieldCaptionOption.setEnabled(false);
+		//
 		jLabelFunction110FieldCaptionOption.setText(res.getString("Caption"));
-		jLabelFunction110FieldCaptionOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110FieldCaptionOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110FieldCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110FieldCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction110FieldCaptionOption.setBounds(new Rectangle(11, 96, 96, 15));
+		jLabelFunction110FieldCaptionOption.setBounds(new Rectangle(5, 105, 130, 20));
 		jRadioButtonFunction110FieldCaptionOptionName.setText(res.getString("FieldName"));
-		jRadioButtonFunction110FieldCaptionOptionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FieldCaptionOptionName.setBounds(new Rectangle(115, 93, 100, 22));
-		jRadioButtonFunction110FieldCaptionOptionName.setEnabled(false);
+		jRadioButtonFunction110FieldCaptionOptionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110FieldCaptionOptionName.setBounds(new Rectangle(140, 102, 130, 25));
 		jRadioButtonFunction110FieldCaptionOptionName.addChangeListener(new Editor_jRadioButtonFunction110FieldCaptionOption_changeAdapter(this));
 		jRadioButtonFunction110FieldCaptionOptionValue.setText(res.getString("ValueSpecified"));
-		jRadioButtonFunction110FieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FieldCaptionOptionValue.setBounds(new Rectangle(225, 93, 63, 22));
-		jRadioButtonFunction110FieldCaptionOptionValue.setEnabled(false);
+		jRadioButtonFunction110FieldCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110FieldCaptionOptionValue.setBounds(new Rectangle(270, 102, 130, 25));
 		jRadioButtonFunction110FieldCaptionOptionValue.addChangeListener(new Editor_jRadioButtonFunction110FieldCaptionOption_changeAdapter(this));
 		buttonGroupFunction110FieldCaptionOption.add(jRadioButtonFunction110FieldCaptionOptionName);
 		buttonGroupFunction110FieldCaptionOption.add(jRadioButtonFunction110FieldCaptionOptionValue);
-		jTextFieldFunction110FieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110FieldCaptionOptionValue.setBounds(new Rectangle(300, 93, 220, 22));
-		jTextFieldFunction110FieldCaptionOptionValue.setEnabled(false);
+		jTextFieldFunction110FieldCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110FieldCaptionOptionValue.setBounds(new Rectangle(400, 102, 265, 25));
 		jTextFieldFunction110FieldCaptionOptionValue.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
+		//
 		jLabelFunction110FieldPromptOption.setText(res.getString("Prompt"));
-		jLabelFunction110FieldPromptOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110FieldPromptOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110FieldPromptOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110FieldPromptOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction110FieldPromptOption.setBounds(new Rectangle(11, 124, 96, 15));
-		jLabelFunction110FieldPromptOption.setEnabled(false);
+		jLabelFunction110FieldPromptOption.setBounds(new Rectangle(5, 136, 130, 20));
 		jRadioButtonFunction110FieldPromptOptionNone.setText(res.getString("None"));
-		jRadioButtonFunction110FieldPromptOptionNone.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FieldPromptOptionNone.setBounds(new Rectangle(115, 121, 100, 22));
-		jRadioButtonFunction110FieldPromptOptionNone.setEnabled(false);
+		jRadioButtonFunction110FieldPromptOptionNone.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110FieldPromptOptionNone.setBounds(new Rectangle(140, 133, 130, 25));
 		jRadioButtonFunction110FieldPromptOptionNone.addChangeListener(new Editor_jRadioButtonFunction110FieldPromptOption_changeAdapter(this));
 		jRadioButtonFunction110FieldPromptOptionList.setText(res.getString("ListBox"));
-		jRadioButtonFunction110FieldPromptOptionList.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FieldPromptOptionList.setBounds(new Rectangle(225, 121, 110, 22));
-		jRadioButtonFunction110FieldPromptOptionList.setEnabled(false);
+		jRadioButtonFunction110FieldPromptOptionList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110FieldPromptOptionList.setBounds(new Rectangle(270, 133, 130, 25));
 		jRadioButtonFunction110FieldPromptOptionList.addChangeListener(new Editor_jRadioButtonFunction110FieldPromptOption_changeAdapter(this));
 		jRadioButtonFunction110FieldPromptOptionCall.setText(res.getString("CallPromptFunction"));
-		jRadioButtonFunction110FieldPromptOptionCall.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FieldPromptOptionCall.setBounds(new Rectangle(335, 121, 78, 22));
-		jRadioButtonFunction110FieldPromptOptionCall.setEnabled(false);
+		jRadioButtonFunction110FieldPromptOptionCall.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110FieldPromptOptionCall.setBounds(new Rectangle(400, 133, 130, 25));
 		jRadioButtonFunction110FieldPromptOptionCall.addChangeListener(new Editor_jRadioButtonFunction110FieldPromptOption_changeAdapter(this));
 		buttonGroupFunction110FieldPromptOption.add(jRadioButtonFunction110FieldPromptOptionNone);
 		buttonGroupFunction110FieldPromptOption.add(jRadioButtonFunction110FieldPromptOptionList);
 		buttonGroupFunction110FieldPromptOption.add(jRadioButtonFunction110FieldPromptOptionCall);
-		jTextFieldFunction110FieldPromptOptionCallFunctionID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110FieldPromptOptionCallFunctionID.setBounds(new Rectangle(415, 121, 80, 22));
-		jTextFieldFunction110FieldPromptOptionCallFunctionID.setEnabled(false);
+		jTextFieldFunction110FieldPromptOptionCallFunctionID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110FieldPromptOptionCallFunctionID.setBounds(new Rectangle(530, 133, 135, 25));
 		jTextFieldFunction110FieldPromptOptionCallFunctionID.addKeyListener(new Editor_jTextFieldFunction110FieldPromptOptionCallFunctionID_keyAdapter(this));
-		jTextFieldFunction110FieldPromptOptionCallFunctionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110FieldPromptOptionCallFunctionName.setBounds(new Rectangle(500, 121, 204, 22));
-		jTextFieldFunction110FieldPromptOptionCallFunctionName.setEnabled(false);
+		jTextFieldFunction110FieldPromptOptionCallFunctionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110FieldPromptOptionCallFunctionName.setBounds(new Rectangle(670, 133, 265, 25));
 		jTextFieldFunction110FieldPromptOptionCallFunctionName.setEditable(false);
-		jButtonFunction110FieldPromptOptionCallFunctionExchange.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jButtonFunction110FieldPromptOptionCallFunctionExchange.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jButtonFunction110FieldPromptOptionCallFunctionExchange.setText(res.getString("ExchangeParms"));
-		jButtonFunction110FieldPromptOptionCallFunctionExchange.setBounds(new Rectangle(704, 120, 60, 23));
-		jButtonFunction110FieldPromptOptionCallFunctionExchange.setEnabled(false);
+		jButtonFunction110FieldPromptOptionCallFunctionExchange.setBounds(new Rectangle(935, 132, 80, 27));
 		jButtonFunction110FieldPromptOptionCallFunctionExchange.addActionListener(new Editor_jButtonToEditPromptOptionCallFunctionExchange_actionAdapter(this));
-		jPanelFunction110ColumnList.setLayout(null);
-		jPanelFunction110ColumnList.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction110ColumnList.add(jLabelFunction110Table);
-		jPanelFunction110ColumnList.add(jTextFieldFunction110Table);
-		jPanelFunction110ColumnList.add(jLabelFunction110TableType);
-		jPanelFunction110ColumnList.add(jTextFieldFunction110TableType);
-		jPanelFunction110ColumnList.add(jLabelFunction110Field);
-		jPanelFunction110ColumnList.add(jTextFieldFunction110Field);
-		jPanelFunction110ColumnList.add(jLabelFunction110FieldType);
-		jPanelFunction110ColumnList.add(jTextFieldFunction110FieldType);
-		jPanelFunction110ColumnList.add(jLabelFunction110FieldLayoutOption);
-		jPanelFunction110ColumnList.add(jRadioButtonFunction110FieldLayoutOptionVertical);
-		jPanelFunction110ColumnList.add(jRadioButtonFunction110FieldLayoutOptionHorizontal);
-		jPanelFunction110ColumnList.add(jLabelFunction110FieldWidth);
-		jPanelFunction110ColumnList.add(jTextFieldFunction110FieldWidth);
-		jPanelFunction110ColumnList.add(jLabelFunction110FieldRows);
-		jPanelFunction110ColumnList.add(jTextFieldFunction110FieldRows);
-		jPanelFunction110ColumnList.add(jLabelFunction110FieldCaptionOption);
-		jPanelFunction110ColumnList.add(jRadioButtonFunction110FieldCaptionOptionName);
-		jPanelFunction110ColumnList.add(jRadioButtonFunction110FieldCaptionOptionValue);
-		jPanelFunction110ColumnList.add(jTextFieldFunction110FieldCaptionOptionValue);
-		jPanelFunction110ColumnList.add(jLabelFunction110FieldPromptOption);
-		jPanelFunction110ColumnList.add(jRadioButtonFunction110FieldPromptOptionNone);
-		jPanelFunction110ColumnList.add(jRadioButtonFunction110FieldPromptOptionList);
-		jPanelFunction110ColumnList.add(jRadioButtonFunction110FieldPromptOptionCall);
-		jPanelFunction110ColumnList.add(jTextFieldFunction110FieldPromptOptionCallFunctionID);
-		jPanelFunction110ColumnList.add(jTextFieldFunction110FieldPromptOptionCallFunctionName);
-		jPanelFunction110ColumnList.add(jButtonFunction110FieldPromptOptionCallFunctionExchange);
+		//
+		jScrollPaneFunction110ColumnDefinition.setBorder(null);
+		jScrollPaneFunction110ColumnDefinition.getViewport().add(jPanelFunction110ColumnDefinition);
+		jPanelFunction110ColumnDefinition.setPreferredSize(new Dimension(1040, 168));
+		jPanelFunction110ColumnDefinition.setLayout(null);
+		jPanelFunction110ColumnDefinition.setBorder(null);
+		jPanelFunction110ColumnDefinition.add(jLabelFunction110Table);
+		jPanelFunction110ColumnDefinition.add(jTextFieldFunction110Table);
+		jPanelFunction110ColumnDefinition.add(jLabelFunction110TableType);
+		jPanelFunction110ColumnDefinition.add(jTextFieldFunction110TableType);
+		jPanelFunction110ColumnDefinition.add(jLabelFunction110Field);
+		jPanelFunction110ColumnDefinition.add(jTextFieldFunction110Field);
+		jPanelFunction110ColumnDefinition.add(jLabelFunction110FieldType);
+		jPanelFunction110ColumnDefinition.add(jTextFieldFunction110FieldType);
+		jPanelFunction110ColumnDefinition.add(jLabelFunction110FieldLayoutOption);
+		jPanelFunction110ColumnDefinition.add(jRadioButtonFunction110FieldLayoutOptionVertical);
+		jPanelFunction110ColumnDefinition.add(jRadioButtonFunction110FieldLayoutOptionHorizontal);
+		jPanelFunction110ColumnDefinition.add(jLabelFunction110FieldWidth);
+		jPanelFunction110ColumnDefinition.add(jTextFieldFunction110FieldWidth);
+		jPanelFunction110ColumnDefinition.add(jLabelFunction110FieldRows);
+		jPanelFunction110ColumnDefinition.add(jTextFieldFunction110FieldRows);
+		jPanelFunction110ColumnDefinition.add(jLabelFunction110FieldCaptionOption);
+		jPanelFunction110ColumnDefinition.add(jRadioButtonFunction110FieldCaptionOptionName);
+		jPanelFunction110ColumnDefinition.add(jRadioButtonFunction110FieldCaptionOptionValue);
+		jPanelFunction110ColumnDefinition.add(jTextFieldFunction110FieldCaptionOptionValue);
+		jPanelFunction110ColumnDefinition.add(jLabelFunction110FieldPromptOption);
+		jPanelFunction110ColumnDefinition.add(jRadioButtonFunction110FieldPromptOptionNone);
+		jPanelFunction110ColumnDefinition.add(jRadioButtonFunction110FieldPromptOptionList);
+		jPanelFunction110ColumnDefinition.add(jRadioButtonFunction110FieldPromptOptionCall);
+		jPanelFunction110ColumnDefinition.add(jTextFieldFunction110FieldPromptOptionCallFunctionID);
+		jPanelFunction110ColumnDefinition.add(jTextFieldFunction110FieldPromptOptionCallFunctionName);
+		jPanelFunction110ColumnDefinition.add(jButtonFunction110FieldPromptOptionCallFunctionExchange);
 		//
 		jScrollPaneFunction110FilterList.setBorder(null);
 		jScrollPaneFunction110FilterList.getViewport().add(jTableFunction110FilterList, null);
 		jScrollPaneFunction110FilterList.addMouseListener(new Editor_jScrollPaneFunction110FilterList_mouseAdapter(this));
-		jTableFunction110FilterList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction110FilterList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction110FilterList.setBackground(SystemColor.control);
 		jTableFunction110FilterList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction110FilterList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -6526,6 +6586,7 @@ public class Editor extends JFrame {
 		jTableFunction110FilterList.addMouseListener(new Editor_jTableFunction110FilterList_mouseAdapter(this));
 	    jTableFunction110FilterList.addMouseMotionListener(new Editor_jTableFunction110FilterList_mouseMotionAdapter(this));
 		jTableFunction110FilterList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableFunction110FilterList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction110FilterList.addColumn("NO.");
 		tableModelFunction110FilterList.addColumn(res.getString("DataSource"));
 		tableModelFunction110FilterList.addColumn(res.getString("FieldType"));
@@ -6534,142 +6595,125 @@ public class Editor extends JFrame {
 		column1 = jTableFunction110FilterList.getColumnModel().getColumn(1);
 		column2 = jTableFunction110FilterList.getColumnModel().getColumn(2);
 		column3 = jTableFunction110FilterList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(160);
-		column2.setPreferredWidth(250);
-		column3.setPreferredWidth(350);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(250);
+		column2.setPreferredWidth(350);
+		column3.setPreferredWidth(450);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction110FilterList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction110FilterList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction110FilterList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		jSplitPaneFunction110FilterList.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jSplitPaneFunction110FilterList.add(jScrollPaneFunction110FilterList, JSplitPane.TOP);
-		jSplitPaneFunction110FilterList.add(jPanelFunction110FilterList, JSplitPane.BOTTOM);
-		jSplitPaneFunction110FilterList.setDividerLocation(screenHeight - 493);
-		jLabelFunction110FilterTable.setEnabled(false);
-		jLabelFunction110FilterTable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jPanelFunction110FilterList.setLayout(new BorderLayout());
+		jPanelFunction110FilterList.add(jScrollPaneFunction110FilterList, BorderLayout.CENTER);
+		jPanelFunction110FilterList.add(jScrollPaneFunction110FilterDefinition, BorderLayout.SOUTH);
+		//
+		jLabelFunction110FilterTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110FilterTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110FilterTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110FilterTable.setText(res.getString("Table"));
-		jLabelFunction110FilterTable.setBounds(new Rectangle(11, 12, 96, 15));
-		jTextFieldFunction110FilterTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110FilterTable.setBounds(new Rectangle(115, 9, 300, 22));
+		jLabelFunction110FilterTable.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldFunction110FilterTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110FilterTable.setBounds(new Rectangle(140, 9, 350, 25));
 		jTextFieldFunction110FilterTable.setEditable(false);
-		jLabelFunction110FilterTableType.setEnabled(false);
-		jLabelFunction110FilterTableType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110FilterTableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110FilterTableType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110FilterTableType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110FilterTableType.setText(res.getString("Type"));
-		jLabelFunction110FilterTableType.setBounds(new Rectangle(430, 12, 76, 15));
-		jTextFieldFunction110FilterTableType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110FilterTableType.setBounds(new Rectangle(514, 9, 250, 22));
+		jLabelFunction110FilterTableType.setBounds(new Rectangle(500, 12, 100, 20));
+		jTextFieldFunction110FilterTableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110FilterTableType.setBounds(new Rectangle(605, 9, 330, 25));
 		jTextFieldFunction110FilterTableType.setEditable(false);
-		jLabelFunction110FilterField.setEnabled(false);
-		jLabelFunction110FilterField.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction110FilterField.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110FilterField.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110FilterField.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110FilterField.setText(res.getString("Field"));
-		jLabelFunction110FilterField.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldFunction110FilterField.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110FilterField.setBounds(new Rectangle(115, 37, 300, 22));
+		jLabelFunction110FilterField.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldFunction110FilterField.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110FilterField.setBounds(new Rectangle(140, 40, 350, 25));
 		jTextFieldFunction110FilterField.setEditable(false);
-		jLabelFunction110FilterFieldType.setEnabled(false);
-		jLabelFunction110FilterFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110FilterFieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110FilterFieldType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110FilterFieldType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110FilterFieldType.setText(res.getString("Type"));
-		jLabelFunction110FilterFieldType.setBounds(new Rectangle(430, 40, 76, 15));
-		jTextFieldFunction110FilterFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110FilterFieldType.setBounds(new Rectangle(514, 37, 250, 22));
+		jLabelFunction110FilterFieldType.setBounds(new Rectangle(500, 43, 100, 20));
+		jTextFieldFunction110FilterFieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110FilterFieldType.setBounds(new Rectangle(605, 40, 330, 25));
 		jTextFieldFunction110FilterFieldType.setEditable(false);
-		jLabelFunction110FilterLayoutOption.setEnabled(false);
+		//
 		jLabelFunction110FilterLayoutOption.setText(res.getString("LayoutOption"));
-		jLabelFunction110FilterLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110FilterLayoutOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110FilterLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110FilterLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction110FilterLayoutOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction110FilterLayoutOption.setBounds(new Rectangle(5, 74, 130, 20));
 		jRadioButtonFunction110FilterLayoutOptionVertical.setText(res.getString("LayoutVertical"));
-		jRadioButtonFunction110FilterLayoutOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterLayoutOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
-		jRadioButtonFunction110FilterLayoutOptionVertical.setEnabled(false);
+		jRadioButtonFunction110FilterLayoutOptionVertical.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110FilterLayoutOptionVertical.setBounds(new Rectangle(140, 71, 130, 25));
 		jRadioButtonFunction110FilterLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
-		jRadioButtonFunction110FilterLayoutOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterLayoutOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
-		jRadioButtonFunction110FilterLayoutOptionHorizontal.setEnabled(false);
+		jRadioButtonFunction110FilterLayoutOptionHorizontal.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110FilterLayoutOptionHorizontal.setBounds(new Rectangle(270, 71, 130, 25));
 		buttonGroupFunction110FilterLayoutOption.add(jRadioButtonFunction110FilterLayoutOptionVertical);
 		buttonGroupFunction110FilterLayoutOption.add(jRadioButtonFunction110FilterLayoutOptionHorizontal);
-		jLabelFunction110FilterWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110FilterWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110FilterWidth.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110FilterWidth.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110FilterWidth.setText(res.getString("FieldWidth"));
-		jLabelFunction110FilterWidth.setBounds(new Rectangle(430, 68, 76, 15));
-		jLabelFunction110FilterWidth.setEnabled(false);
-		jTextFieldFunction110FilterWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110FilterWidth.setBounds(new Rectangle(514, 65, 45, 22));
-		jTextFieldFunction110FilterWidth.setEnabled(false);
+		jLabelFunction110FilterWidth.setBounds(new Rectangle(500, 74, 100, 20));
+		jTextFieldFunction110FilterWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110FilterWidth.setBounds(new Rectangle(605, 71, 60, 25));
 		jTextFieldFunction110FilterWidth.setText("");
-		jLabelFunction110FilterMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110FilterMargin.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110FilterMargin.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110FilterMargin.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110FilterMargin.setText(res.getString("FieldMargin"));
-		jLabelFunction110FilterMargin.setBounds(new Rectangle(564, 68, 45, 15));
-		jLabelFunction110FilterMargin.setEnabled(false);
-		jTextFieldFunction110FilterMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110FilterMargin.setBounds(new Rectangle(614, 65, 45, 22));
+		jLabelFunction110FilterMargin.setBounds(new Rectangle(675, 74, 60, 20));
+		jTextFieldFunction110FilterMargin.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110FilterMargin.setBounds(new Rectangle(740, 71, 60, 25));
 		jTextFieldFunction110FilterMargin.setText("");
-		jTextFieldFunction110FilterMargin.setEnabled(false);
-		jLabelFunction110FilterEditableOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110FilterEditableOptions.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110FilterEditableOptions.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110FilterEditableOptions.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110FilterEditableOptions.setText(res.getString("EditableOptions"));
-		jLabelFunction110FilterEditableOptions.setBounds(new Rectangle(664, 68, 100, 15));
-		jLabelFunction110FilterEditableOptions.setEnabled(false);
-		jComboBoxFunction110FilterEditableOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110FilterEditableOptions.setBounds(new Rectangle(810, 74, 130, 20));
+		jComboBoxFunction110FilterEditableOptions.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jComboBoxFunction110FilterEditableOptions.addItem(res.getString("Editable"));
 		jComboBoxFunction110FilterEditableOptions.addItem(res.getString("NonEditable"));
 		jComboBoxFunction110FilterEditableOptions.addItem(res.getString("Hidden"));
-		jComboBoxFunction110FilterEditableOptions.setBounds(new Rectangle(769, 65, 100, 22));
-		jLabelFunction110FilterOption.setEnabled(false);
+		jComboBoxFunction110FilterEditableOptions.setBounds(new Rectangle(945, 71, 150, 25));
+		//
 		jLabelFunction110FilterOption.setText(res.getString("FilterOption"));
-		jLabelFunction110FilterOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110FilterOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110FilterOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110FilterOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction110FilterOption.setBounds(new Rectangle(11, 96, 96, 15));
+		jLabelFunction110FilterOption.setBounds(new Rectangle(5, 105, 130, 20));
 		jRadioButtonFunction110FilterOptionEQ.setText("EQ");
-		jRadioButtonFunction110FilterOptionEQ.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterOptionEQ.setBounds(new Rectangle(115, 93, 60, 22));
-		jRadioButtonFunction110FilterOptionEQ.setEnabled(false);
+		jRadioButtonFunction110FilterOptionEQ.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110FilterOptionEQ.setBounds(new Rectangle(140, 102, 130, 25));
 		jRadioButtonFunction110FilterOptionSCAN.setText("SCAN");
-		jRadioButtonFunction110FilterOptionSCAN.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterOptionSCAN.setBounds(new Rectangle(185, 93, 60, 22));
-		jRadioButtonFunction110FilterOptionSCAN.setEnabled(false);
+		jRadioButtonFunction110FilterOptionSCAN.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110FilterOptionSCAN.setBounds(new Rectangle(270, 102, 130, 25));
 		jRadioButtonFunction110FilterOptionGENERIC.setText("GENERIC");
-		jRadioButtonFunction110FilterOptionGENERIC.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterOptionGENERIC.setBounds(new Rectangle(255, 93, 80, 22));
-		jRadioButtonFunction110FilterOptionGENERIC.setEnabled(false);
+		jRadioButtonFunction110FilterOptionGENERIC.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110FilterOptionGENERIC.setBounds(new Rectangle(400, 102, 130, 25));
 		jRadioButtonFunction110FilterOptionLE.setText("LE");
-		jRadioButtonFunction110FilterOptionLE.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterOptionLE.setBounds(new Rectangle(345, 93, 60, 22));
-		jRadioButtonFunction110FilterOptionLE.setEnabled(false);
+		jRadioButtonFunction110FilterOptionLE.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110FilterOptionLE.setBounds(new Rectangle(530, 102, 130, 25));
 		jRadioButtonFunction110FilterOptionLT.setText("LT");
-		jRadioButtonFunction110FilterOptionLT.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterOptionLT.setBounds(new Rectangle(415, 93, 60, 22));
-		jRadioButtonFunction110FilterOptionLT.setEnabled(false);
+		jRadioButtonFunction110FilterOptionLT.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110FilterOptionLT.setBounds(new Rectangle(660, 102, 130, 25));
 		jRadioButtonFunction110FilterOptionGE.setText("GE");
-		jRadioButtonFunction110FilterOptionGE.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterOptionGE.setBounds(new Rectangle(485, 93, 60, 22));
-		jRadioButtonFunction110FilterOptionGE.setEnabled(false);
+		jRadioButtonFunction110FilterOptionGE.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110FilterOptionGE.setBounds(new Rectangle(790, 102, 130, 25));
 		jRadioButtonFunction110FilterOptionGT.setText("GT");
-		jRadioButtonFunction110FilterOptionGT.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterOptionGT.setBounds(new Rectangle(555, 93, 60, 22));
-		jRadioButtonFunction110FilterOptionGT.setEnabled(false);
+		jRadioButtonFunction110FilterOptionGT.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110FilterOptionGT.setBounds(new Rectangle(920, 102, 130, 25));
 		jRadioButtonFunction110FilterOptionREFLECT.setText("REFLECT");
-		jRadioButtonFunction110FilterOptionREFLECT.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterOptionREFLECT.setBounds(new Rectangle(625, 93, 80, 22));
-		jRadioButtonFunction110FilterOptionREFLECT.setEnabled(false);
+		jRadioButtonFunction110FilterOptionREFLECT.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110FilterOptionREFLECT.setBounds(new Rectangle(1050, 102, 130, 25));
 		buttonGroupFunction110FilterOption.add(jRadioButtonFunction110FilterOptionEQ);
 		buttonGroupFunction110FilterOption.add(jRadioButtonFunction110FilterOptionSCAN);
 		buttonGroupFunction110FilterOption.add(jRadioButtonFunction110FilterOptionGENERIC);
@@ -6678,166 +6722,165 @@ public class Editor extends JFrame {
 		buttonGroupFunction110FilterOption.add(jRadioButtonFunction110FilterOptionGE);
 		buttonGroupFunction110FilterOption.add(jRadioButtonFunction110FilterOptionGT);
 		buttonGroupFunction110FilterOption.add(jRadioButtonFunction110FilterOptionREFLECT);
-		jCheckBoxFunction110FilterIgnoreIfZero.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jCheckBoxFunction110FilterIgnoreIfZero.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jCheckBoxFunction110FilterIgnoreIfZero.setText(res.getString("IgnoreIfZero"));
-		jCheckBoxFunction110FilterIgnoreIfZero.setBounds(new Rectangle(769, 93, 100, 22));
-		jLabelFunction110FilterCaptionOption.setEnabled(false);
+		jCheckBoxFunction110FilterIgnoreIfZero.setBounds(new Rectangle(1190, 102, 150, 25));
+		//
 		jLabelFunction110FilterCaptionOption.setText(res.getString("Caption"));
-		jLabelFunction110FilterCaptionOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110FilterCaptionOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110FilterCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110FilterCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction110FilterCaptionOption.setBounds(new Rectangle(11, 124, 96, 15));
+		jLabelFunction110FilterCaptionOption.setBounds(new Rectangle(5, 136, 130, 20));
 		jRadioButtonFunction110FilterCaptionOptionName.setText(res.getString("FieldName"));
-		jRadioButtonFunction110FilterCaptionOptionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterCaptionOptionName.setBounds(new Rectangle(115, 121, 100, 22));
-		jRadioButtonFunction110FilterCaptionOptionName.setEnabled(false);
+		jRadioButtonFunction110FilterCaptionOptionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110FilterCaptionOptionName.setBounds(new Rectangle(140, 133, 130, 25));
 		jRadioButtonFunction110FilterCaptionOptionName.addChangeListener(new Editor_jRadioButtonFunction110FilterCaptionOption_changeAdapter(this));
 		jRadioButtonFunction110FilterCaptionOptionValue.setText(res.getString("ValueSpecified"));
-		jRadioButtonFunction110FilterCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterCaptionOptionValue.setBounds(new Rectangle(225, 121, 63, 22));
-		jRadioButtonFunction110FilterCaptionOptionValue.setEnabled(false);
+		jRadioButtonFunction110FilterCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110FilterCaptionOptionValue.setBounds(new Rectangle(270, 133, 125, 25));
 		jRadioButtonFunction110FilterCaptionOptionValue.addChangeListener(new Editor_jRadioButtonFunction110FilterCaptionOption_changeAdapter(this));
 		buttonGroupFunction110FilterCaptionOption.add(jRadioButtonFunction110FilterCaptionOptionName);
 		buttonGroupFunction110FilterCaptionOption.add(jRadioButtonFunction110FilterCaptionOptionValue);
-		jTextFieldFunction110FilterCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110FilterCaptionOptionValue.setBounds(new Rectangle(300, 121, 220, 22));
-		jTextFieldFunction110FilterCaptionOptionValue.setEnabled(false);
+		jTextFieldFunction110FilterCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110FilterCaptionOptionValue.setBounds(new Rectangle(395, 133, 250, 25));
 		jTextFieldFunction110FilterCaptionOptionValue.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
-		jLabelFunction110FilterValue.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110FilterValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110FilterValue.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110FilterValue.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110FilterValue.setText(res.getString("InitialValue"));
-		jLabelFunction110FilterValue.setBounds(new Rectangle(526, 124, 96, 15));
-		jTextFieldFunction110FilterValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110FilterValue.setBounds(new Rectangle(630, 121, 264, 22));
+		jLabelFunction110FilterValue.setBounds(new Rectangle(655, 136, 130, 20));
+		jTextFieldFunction110FilterValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110FilterValue.setBounds(new Rectangle(790, 133, 385, 25));
+		//
 		jLabelFunction110FilterPromptOption.setText(res.getString("Prompt"));
-		jLabelFunction110FilterPromptOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110FilterPromptOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110FilterPromptOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110FilterPromptOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction110FilterPromptOption.setBounds(new Rectangle(11, 152, 96, 15));
-		jLabelFunction110FilterPromptOption.setEnabled(false);
+		jLabelFunction110FilterPromptOption.setBounds(new Rectangle(5, 167, 130, 20));
 		jRadioButtonFunction110FilterPromptOptionNone.setText(res.getString("None"));
-		jRadioButtonFunction110FilterPromptOptionNone.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterPromptOptionNone.setBounds(new Rectangle(115, 149, 60, 22));
-		jRadioButtonFunction110FilterPromptOptionNone.setEnabled(false);
+		jRadioButtonFunction110FilterPromptOptionNone.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110FilterPromptOptionNone.setBounds(new Rectangle(140, 164, 130, 25));
 		jRadioButtonFunction110FilterPromptOptionNone.addChangeListener(new Editor_jRadioButtonFunction110FilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction110FilterPromptOptionList0.setText(res.getString("InputAssistList"));
-		jRadioButtonFunction110FilterPromptOptionList0.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterPromptOptionList0.setBounds(new Rectangle(175, 149, 100, 22));
-		jRadioButtonFunction110FilterPromptOptionList0.setEnabled(false);
+		jRadioButtonFunction110FilterPromptOptionList0.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110FilterPromptOptionList0.setBounds(new Rectangle(270, 164, 130, 25));
 		jRadioButtonFunction110FilterPromptOptionList0.addChangeListener(new Editor_jRadioButtonFunction110FilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction110FilterPromptOptionList1.setText(res.getString("OptionalList"));
-		jRadioButtonFunction110FilterPromptOptionList1.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterPromptOptionList1.setBounds(new Rectangle(285, 149, 100, 22));
-		jRadioButtonFunction110FilterPromptOptionList1.setEnabled(false);
+		jRadioButtonFunction110FilterPromptOptionList1.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110FilterPromptOptionList1.setBounds(new Rectangle(400, 164, 130, 25));
 		jRadioButtonFunction110FilterPromptOptionList1.addChangeListener(new Editor_jRadioButtonFunction110FilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction110FilterPromptOptionList2.setText(res.getString("RequiredList"));
-		jRadioButtonFunction110FilterPromptOptionList2.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterPromptOptionList2.setBounds(new Rectangle(395, 149, 100, 22));
-		jRadioButtonFunction110FilterPromptOptionList2.setEnabled(false);
+		jRadioButtonFunction110FilterPromptOptionList2.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110FilterPromptOptionList2.setBounds(new Rectangle(530, 164, 130, 25));
 		jRadioButtonFunction110FilterPromptOptionList2.addChangeListener(new Editor_jRadioButtonFunction110FilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction110FilterPromptOptionCall.setText(res.getString("CallPromptFunction"));
-		jRadioButtonFunction110FilterPromptOptionCall.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110FilterPromptOptionCall.setBounds(new Rectangle(505, 149, 78, 22));
-		jRadioButtonFunction110FilterPromptOptionCall.setEnabled(false);
+		jRadioButtonFunction110FilterPromptOptionCall.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110FilterPromptOptionCall.setBounds(new Rectangle(660, 164, 130, 25));
 		jRadioButtonFunction110FilterPromptOptionCall.addChangeListener(new Editor_jRadioButtonFunction110FilterPromptOption_changeAdapter(this));
 		buttonGroupFunction110FilterPromptOption.add(jRadioButtonFunction110FilterPromptOptionNone);
 		buttonGroupFunction110FilterPromptOption.add(jRadioButtonFunction110FilterPromptOptionList0);
 		buttonGroupFunction110FilterPromptOption.add(jRadioButtonFunction110FilterPromptOptionList1);
 		buttonGroupFunction110FilterPromptOption.add(jRadioButtonFunction110FilterPromptOptionList2);
 		buttonGroupFunction110FilterPromptOption.add(jRadioButtonFunction110FilterPromptOptionCall);
-		jTextFieldFunction110FilterPromptOptionCallFunctionID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110FilterPromptOptionCallFunctionID.setBounds(new Rectangle(585, 149, 80, 22));
-		jTextFieldFunction110FilterPromptOptionCallFunctionID.setEnabled(false);
+		jTextFieldFunction110FilterPromptOptionCallFunctionID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110FilterPromptOptionCallFunctionID.setBounds(new Rectangle(790, 164, 100, 25));
 		jTextFieldFunction110FilterPromptOptionCallFunctionID.addKeyListener(new Editor_jTextFieldFunction110FilterPromptOptionCallFunctionID_keyAdapter(this));
-		jTextFieldFunction110FilterPromptOptionCallFunctionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110FilterPromptOptionCallFunctionName.setBounds(new Rectangle(670, 149, 204, 22));
-		jTextFieldFunction110FilterPromptOptionCallFunctionName.setEnabled(false);
+		jTextFieldFunction110FilterPromptOptionCallFunctionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110FilterPromptOptionCallFunctionName.setBounds(new Rectangle(895, 164, 280, 25));
 		jTextFieldFunction110FilterPromptOptionCallFunctionName.setEditable(false);
-		jButtonFunction110FilterPromptOptionCallFunctionExchange.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jButtonFunction110FilterPromptOptionCallFunctionExchange.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jButtonFunction110FilterPromptOptionCallFunctionExchange.setText(res.getString("ExchangeParms"));
-		jButtonFunction110FilterPromptOptionCallFunctionExchange.setBounds(new Rectangle(874, 148, 60, 23));
-		jButtonFunction110FilterPromptOptionCallFunctionExchange.setEnabled(false);
+		jButtonFunction110FilterPromptOptionCallFunctionExchange.setBounds(new Rectangle(1175, 163, 100, 27));
 		jButtonFunction110FilterPromptOptionCallFunctionExchange.addActionListener(new Editor_jButtonToEditPromptOptionCallFunctionExchange_actionAdapter(this));
-		jPanelFunction110FilterList.setLayout(null);
-		jPanelFunction110FilterList.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction110FilterList.add(jLabelFunction110FilterTable);
-		jPanelFunction110FilterList.add(jTextFieldFunction110FilterTable);
-		jPanelFunction110FilterList.add(jLabelFunction110FilterTableType);
-		jPanelFunction110FilterList.add(jTextFieldFunction110FilterTableType);
-		jPanelFunction110FilterList.add(jLabelFunction110FilterField);
-		jPanelFunction110FilterList.add(jTextFieldFunction110FilterField);
-		jPanelFunction110FilterList.add(jLabelFunction110FilterFieldType);
-		jPanelFunction110FilterList.add(jTextFieldFunction110FilterFieldType);
-		jPanelFunction110FilterList.add(jLabelFunction110FilterLayoutOption);
-		jPanelFunction110FilterList.add(jRadioButtonFunction110FilterLayoutOptionVertical);
-		jPanelFunction110FilterList.add(jRadioButtonFunction110FilterLayoutOptionHorizontal);
-		jPanelFunction110FilterList.add(jLabelFunction110FilterWidth);
-		jPanelFunction110FilterList.add(jTextFieldFunction110FilterWidth);
-		jPanelFunction110FilterList.add(jLabelFunction110FilterMargin);
-		jPanelFunction110FilterList.add(jTextFieldFunction110FilterMargin);
-		jPanelFunction110FilterList.add(jLabelFunction110FilterEditableOptions);
-		jPanelFunction110FilterList.add(jComboBoxFunction110FilterEditableOptions);
-		jPanelFunction110FilterList.add(jLabelFunction110FilterOption);
-		jPanelFunction110FilterList.add(jRadioButtonFunction110FilterOptionEQ);
-		jPanelFunction110FilterList.add(jRadioButtonFunction110FilterOptionSCAN);
-		jPanelFunction110FilterList.add(jRadioButtonFunction110FilterOptionGENERIC);
-		jPanelFunction110FilterList.add(jRadioButtonFunction110FilterOptionLE);
-		jPanelFunction110FilterList.add(jRadioButtonFunction110FilterOptionLT);
-		jPanelFunction110FilterList.add(jRadioButtonFunction110FilterOptionGE);
-		jPanelFunction110FilterList.add(jRadioButtonFunction110FilterOptionGT);
-		jPanelFunction110FilterList.add(jRadioButtonFunction110FilterOptionREFLECT);
-		jPanelFunction110FilterList.add(jLabelFunction110FilterCaptionOption);
-		jPanelFunction110FilterList.add(jRadioButtonFunction110FilterCaptionOptionName);
-		jPanelFunction110FilterList.add(jRadioButtonFunction110FilterCaptionOptionValue);
-		jPanelFunction110FilterList.add(jTextFieldFunction110FilterCaptionOptionValue);
-		jPanelFunction110FilterList.add(jLabelFunction110FilterPromptOption);
-		jPanelFunction110FilterList.add(jRadioButtonFunction110FilterPromptOptionNone);
-		jPanelFunction110FilterList.add(jRadioButtonFunction110FilterPromptOptionList0);
-		jPanelFunction110FilterList.add(jRadioButtonFunction110FilterPromptOptionList1);
-		jPanelFunction110FilterList.add(jRadioButtonFunction110FilterPromptOptionList2);
-		jPanelFunction110FilterList.add(jRadioButtonFunction110FilterPromptOptionCall);
-		jPanelFunction110FilterList.add(jTextFieldFunction110FilterPromptOptionCallFunctionID);
-		jPanelFunction110FilterList.add(jTextFieldFunction110FilterPromptOptionCallFunctionName);
-		jPanelFunction110FilterList.add(jButtonFunction110FilterPromptOptionCallFunctionExchange);
-		jPanelFunction110FilterList.add(jLabelFunction110FilterValue);
-		jPanelFunction110FilterList.add(jTextFieldFunction110FilterValue);
-		jPanelFunction110FilterList.add(jCheckBoxFunction110FilterIgnoreIfZero);
+		//
+		jScrollPaneFunction110FilterDefinition.setBorder(null);
+		jScrollPaneFunction110FilterDefinition.getViewport().add(jPanelFunction110FilterDefinition);
+		jPanelFunction110FilterDefinition.setPreferredSize(new Dimension(1360,198));
+		jPanelFunction110FilterDefinition.setLayout(null);
+		jPanelFunction110FilterDefinition.setBorder(null);
+		jPanelFunction110FilterDefinition.add(jLabelFunction110FilterTable);
+		jPanelFunction110FilterDefinition.add(jTextFieldFunction110FilterTable);
+		jPanelFunction110FilterDefinition.add(jLabelFunction110FilterTableType);
+		jPanelFunction110FilterDefinition.add(jTextFieldFunction110FilterTableType);
+		jPanelFunction110FilterDefinition.add(jLabelFunction110FilterField);
+		jPanelFunction110FilterDefinition.add(jTextFieldFunction110FilterField);
+		jPanelFunction110FilterDefinition.add(jLabelFunction110FilterFieldType);
+		jPanelFunction110FilterDefinition.add(jTextFieldFunction110FilterFieldType);
+		jPanelFunction110FilterDefinition.add(jLabelFunction110FilterLayoutOption);
+		jPanelFunction110FilterDefinition.add(jRadioButtonFunction110FilterLayoutOptionVertical);
+		jPanelFunction110FilterDefinition.add(jRadioButtonFunction110FilterLayoutOptionHorizontal);
+		jPanelFunction110FilterDefinition.add(jLabelFunction110FilterWidth);
+		jPanelFunction110FilterDefinition.add(jTextFieldFunction110FilterWidth);
+		jPanelFunction110FilterDefinition.add(jLabelFunction110FilterMargin);
+		jPanelFunction110FilterDefinition.add(jTextFieldFunction110FilterMargin);
+		jPanelFunction110FilterDefinition.add(jLabelFunction110FilterEditableOptions);
+		jPanelFunction110FilterDefinition.add(jComboBoxFunction110FilterEditableOptions);
+		jPanelFunction110FilterDefinition.add(jLabelFunction110FilterOption);
+		jPanelFunction110FilterDefinition.add(jRadioButtonFunction110FilterOptionEQ);
+		jPanelFunction110FilterDefinition.add(jRadioButtonFunction110FilterOptionSCAN);
+		jPanelFunction110FilterDefinition.add(jRadioButtonFunction110FilterOptionGENERIC);
+		jPanelFunction110FilterDefinition.add(jRadioButtonFunction110FilterOptionLE);
+		jPanelFunction110FilterDefinition.add(jRadioButtonFunction110FilterOptionLT);
+		jPanelFunction110FilterDefinition.add(jRadioButtonFunction110FilterOptionGE);
+		jPanelFunction110FilterDefinition.add(jRadioButtonFunction110FilterOptionGT);
+		jPanelFunction110FilterDefinition.add(jRadioButtonFunction110FilterOptionREFLECT);
+		jPanelFunction110FilterDefinition.add(jLabelFunction110FilterCaptionOption);
+		jPanelFunction110FilterDefinition.add(jRadioButtonFunction110FilterCaptionOptionName);
+		jPanelFunction110FilterDefinition.add(jRadioButtonFunction110FilterCaptionOptionValue);
+		jPanelFunction110FilterDefinition.add(jTextFieldFunction110FilterCaptionOptionValue);
+		jPanelFunction110FilterDefinition.add(jLabelFunction110FilterPromptOption);
+		jPanelFunction110FilterDefinition.add(jRadioButtonFunction110FilterPromptOptionNone);
+		jPanelFunction110FilterDefinition.add(jRadioButtonFunction110FilterPromptOptionList0);
+		jPanelFunction110FilterDefinition.add(jRadioButtonFunction110FilterPromptOptionList1);
+		jPanelFunction110FilterDefinition.add(jRadioButtonFunction110FilterPromptOptionList2);
+		jPanelFunction110FilterDefinition.add(jRadioButtonFunction110FilterPromptOptionCall);
+		jPanelFunction110FilterDefinition.add(jTextFieldFunction110FilterPromptOptionCallFunctionID);
+		jPanelFunction110FilterDefinition.add(jTextFieldFunction110FilterPromptOptionCallFunctionName);
+		jPanelFunction110FilterDefinition.add(jButtonFunction110FilterPromptOptionCallFunctionExchange);
+		jPanelFunction110FilterDefinition.add(jLabelFunction110FilterValue);
+		jPanelFunction110FilterDefinition.add(jTextFieldFunction110FilterValue);
+		jPanelFunction110FilterDefinition.add(jCheckBoxFunction110FilterIgnoreIfZero);
 		//
 		jPanelFunction110BatchTableAndField.setLayout(new BorderLayout());
 		jPanelFunction110BatchTableAndField.setBorder(null);
+		jScrollPaneFunction110BatchTableAndFieldTop.setBorder(null);
+		jScrollPaneFunction110BatchTableAndFieldTop.getViewport().add(jPanelFunction110BatchTableAndFieldTop);
 		jPanelFunction110BatchTableAndFieldTop.setLayout(null);
-		jPanelFunction110BatchTableAndFieldTop.setPreferredSize(new Dimension(10, 95));
-		jPanelFunction110BatchTableAndFieldTop.setBorder(BorderFactory.createEtchedBorder());
-		jLabelFunction110BatchTableName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jPanelFunction110BatchTableAndFieldTop.setPreferredSize(new Dimension(1030, 105));
+		jPanelFunction110BatchTableAndFieldTop.setBorder(null);
+		//
+		jLabelFunction110BatchTableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110BatchTableName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110BatchTableName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110BatchTableName.setText(res.getString("BatchTable"));
-		jLabelFunction110BatchTableName.setBounds(new Rectangle(11, 12, 96, 15));
-		jTextFieldFunction110BatchTableName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110BatchTableName.setBounds(new Rectangle(115, 9, 600, 22));
+		jLabelFunction110BatchTableName.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldFunction110BatchTableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110BatchTableName.setBounds(new Rectangle(140, 9, 840, 25));
 		jTextFieldFunction110BatchTableName.setEditable(false);
 		jButtonFunction110BatchTableEdit.setIcon(imageIconPrompt);
-		jButtonFunction110BatchTableEdit.setBounds(new Rectangle(715, 8, 28, 23));
+		jButtonFunction110BatchTableEdit.setBounds(new Rectangle(980, 8, 28, 27));
 		jButtonFunction110BatchTableEdit.addActionListener(new Editor_jButtonFunction110BatchTableEdit_actionAdapter(this));
-		jLabelFunction110BatchRecordCallID.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction110BatchRecordCallID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110BatchRecordCallID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110BatchRecordCallID.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110BatchRecordCallID.setText(res.getString("BatchRecordCallID"));
-		jLabelFunction110BatchRecordCallID.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldFunction110BatchRecordCallID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110BatchRecordCallID.setBounds(new Rectangle(115, 37, 100, 22));
+		jLabelFunction110BatchRecordCallID.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldFunction110BatchRecordCallID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110BatchRecordCallID.setBounds(new Rectangle(140, 40, 120, 25));
 		jTextFieldFunction110BatchRecordCallID.addKeyListener(new Editor_jTextFieldFunction110BatchRecordCallID_keyAdapter(this));
-		jTextFieldFunction110BatchRecordCallName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110BatchRecordCallName.setBounds(new Rectangle(220, 37, 400, 22));
+		jTextFieldFunction110BatchRecordCallName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110BatchRecordCallName.setBounds(new Rectangle(265, 40, 400, 25));
 		jTextFieldFunction110BatchRecordCallName.setEditable(false);
-		jLabelFunction110BatchRecordCallMsg.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction110BatchRecordCallMsg.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110BatchRecordCallMsg.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110BatchRecordCallMsg.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110BatchRecordCallMsg.setText(res.getString("BatchRecordCallMsg"));
-		jLabelFunction110BatchRecordCallMsg.setBounds(new Rectangle(11, 68, 96, 15));
-		jTextFieldFunction110BatchRecordCallMsg.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110BatchRecordCallMsg.setBounds(new Rectangle(115, 65, 505, 22));
+		jLabelFunction110BatchRecordCallMsg.setBounds(new Rectangle(5, 74, 130, 20));
+		jTextFieldFunction110BatchRecordCallMsg.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110BatchRecordCallMsg.setBounds(new Rectangle(140, 71, 525, 25));
+		//
 		jPanelFunction110BatchTableAndFieldTop.add(jLabelFunction110BatchTableName, null);
 		jPanelFunction110BatchTableAndFieldTop.add(jTextFieldFunction110BatchTableName, null);
 		jPanelFunction110BatchTableAndFieldTop.add(jButtonFunction110BatchTableEdit, null);
@@ -6846,10 +6889,11 @@ public class Editor extends JFrame {
 		jPanelFunction110BatchTableAndFieldTop.add(jTextFieldFunction110BatchRecordCallName, null);
 		jPanelFunction110BatchTableAndFieldTop.add(jLabelFunction110BatchRecordCallMsg, null);
 		jPanelFunction110BatchTableAndFieldTop.add(jTextFieldFunction110BatchRecordCallMsg, null);
+		//
 		jScrollPaneFunction110BatchFieldList.setBorder(null);
 		jScrollPaneFunction110BatchFieldList.getViewport().add(jTableFunction110BatchFieldList, null);
 		jScrollPaneFunction110BatchFieldList.addMouseListener(new Editor_jScrollPaneFunction110BatchFieldList_mouseAdapter(this));
-		jTableFunction110BatchFieldList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction110BatchFieldList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction110BatchFieldList.setBackground(SystemColor.control);
 		jTableFunction110BatchFieldList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction110BatchFieldList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -6860,6 +6904,7 @@ public class Editor extends JFrame {
 		jTableFunction110BatchFieldList.addMouseListener(new Editor_jTableFunction110BatchFieldList_mouseAdapter(this));
 	    jTableFunction110BatchFieldList.addMouseMotionListener(new Editor_jTableFunction110BatchFieldList_mouseMotionAdapter(this));
 		jTableFunction110BatchFieldList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableFunction110BatchFieldList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction110BatchFieldList.addColumn("NO.");
 		tableModelFunction110BatchFieldList.addColumn(res.getString("DataSource"));
 		tableModelFunction110BatchFieldList.addColumn(res.getString("FieldType"));
@@ -6868,222 +6913,205 @@ public class Editor extends JFrame {
 		column1 = jTableFunction110BatchFieldList.getColumnModel().getColumn(1);
 		column2 = jTableFunction110BatchFieldList.getColumnModel().getColumn(2);
 		column3 = jTableFunction110BatchFieldList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(160);
-		column2.setPreferredWidth(250);
-		column3.setPreferredWidth(350);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(250);
+		column2.setPreferredWidth(350);
+		column3.setPreferredWidth(450);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction110BatchFieldList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction110BatchFieldList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction110BatchFieldList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		jSplitPaneFunction110BatchFieldList.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jSplitPaneFunction110BatchFieldList.add(jScrollPaneFunction110BatchFieldList, JSplitPane.TOP);
-		jSplitPaneFunction110BatchFieldList.add(jPanelFunction110BatchFieldList, JSplitPane.BOTTOM);
-		jSplitPaneFunction110BatchFieldList.setDividerLocation(screenHeight - 588);
-		jLabelFunction110BatchFieldTable.setEnabled(false);
-		jLabelFunction110BatchFieldTable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jPanelFunction110BatchFieldList.setLayout(new BorderLayout());
+		jPanelFunction110BatchFieldList.add(jScrollPaneFunction110BatchFieldList, BorderLayout.CENTER);
+		jPanelFunction110BatchFieldList.add(jScrollPaneFunction110BatchFieldDefinition, BorderLayout.SOUTH);
+		//
+		jLabelFunction110BatchFieldTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110BatchFieldTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110BatchFieldTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110BatchFieldTable.setText(res.getString("Table"));
-		jLabelFunction110BatchFieldTable.setBounds(new Rectangle(11, 12, 96, 15));
-		jTextFieldFunction110BatchFieldTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110BatchFieldTable.setBounds(new Rectangle(115, 9, 300, 22));
+		jLabelFunction110BatchFieldTable.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldFunction110BatchFieldTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110BatchFieldTable.setBounds(new Rectangle(140, 9, 350, 25));
 		jTextFieldFunction110BatchFieldTable.setEditable(false);
-		jLabelFunction110BatchFieldTableType.setEnabled(false);
-		jLabelFunction110BatchFieldTableType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110BatchFieldTableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110BatchFieldTableType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110BatchFieldTableType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110BatchFieldTableType.setText(res.getString("Type"));
-		jLabelFunction110BatchFieldTableType.setBounds(new Rectangle(430, 12, 76, 15));
-		jTextFieldFunction110BatchFieldTableType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110BatchFieldTableType.setBounds(new Rectangle(514, 9, 250, 22));
+		jLabelFunction110BatchFieldTableType.setBounds(new Rectangle(500, 12, 100, 20));
+		jTextFieldFunction110BatchFieldTableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110BatchFieldTableType.setBounds(new Rectangle(605, 9, 330, 25));
 		jTextFieldFunction110BatchFieldTableType.setEditable(false);
-		jLabelFunction110BatchField.setEnabled(false);
-		jLabelFunction110BatchField.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction110BatchField.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110BatchField.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110BatchField.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110BatchField.setText(res.getString("Field"));
-		jLabelFunction110BatchField.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldFunction110BatchField.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110BatchField.setBounds(new Rectangle(115, 37, 300, 22));
+		jLabelFunction110BatchField.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldFunction110BatchField.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110BatchField.setBounds(new Rectangle(140, 40, 350, 25));
 		jTextFieldFunction110BatchField.setEditable(false);
-		jLabelFunction110BatchFieldType.setEnabled(false);
-		jLabelFunction110BatchFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110BatchFieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110BatchFieldType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110BatchFieldType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110BatchFieldType.setText(res.getString("Type"));
-		jLabelFunction110BatchFieldType.setBounds(new Rectangle(430, 40, 76, 15));
-		jTextFieldFunction110BatchFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110BatchFieldType.setBounds(new Rectangle(514, 37, 250, 22));
+		jLabelFunction110BatchFieldType.setBounds(new Rectangle(500, 43, 100, 20));
+		jTextFieldFunction110BatchFieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110BatchFieldType.setBounds(new Rectangle(605, 40, 330, 25));
 		jTextFieldFunction110BatchFieldType.setEditable(false);
-		jLabelFunction110BatchFieldLayoutOption.setEnabled(false);
+		//
 		jLabelFunction110BatchFieldLayoutOption.setText(res.getString("LayoutOption"));
-		jLabelFunction110BatchFieldLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110BatchFieldLayoutOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110BatchFieldLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110BatchFieldLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction110BatchFieldLayoutOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction110BatchFieldLayoutOption.setBounds(new Rectangle(5, 74, 130, 20));
 		jRadioButtonFunction110BatchFieldLayoutOptionVertical.setText(res.getString("LayoutVertical"));
-		jRadioButtonFunction110BatchFieldLayoutOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110BatchFieldLayoutOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
-		jRadioButtonFunction110BatchFieldLayoutOptionVertical.setEnabled(false);
+		jRadioButtonFunction110BatchFieldLayoutOptionVertical.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110BatchFieldLayoutOptionVertical.setBounds(new Rectangle(140, 71, 130, 25));
 		jRadioButtonFunction110BatchFieldLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
-		jRadioButtonFunction110BatchFieldLayoutOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110BatchFieldLayoutOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
-		jRadioButtonFunction110BatchFieldLayoutOptionHorizontal.setEnabled(false);
+		jRadioButtonFunction110BatchFieldLayoutOptionHorizontal.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110BatchFieldLayoutOptionHorizontal.setBounds(new Rectangle(270, 71, 130, 25));
 		buttonGroupFunction110BatchFieldLayoutOption.add(jRadioButtonFunction110BatchFieldLayoutOptionVertical);
 		buttonGroupFunction110BatchFieldLayoutOption.add(jRadioButtonFunction110BatchFieldLayoutOptionHorizontal);
-		jLabelFunction110BatchFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110BatchFieldWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110BatchFieldWidth.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110BatchFieldWidth.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110BatchFieldWidth.setText(res.getString("FieldWidth"));
-		jLabelFunction110BatchFieldWidth.setBounds(new Rectangle(430, 68, 76, 15));
-		jLabelFunction110BatchFieldWidth.setEnabled(false);
-		jTextFieldFunction110BatchFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110BatchFieldWidth.setBounds(new Rectangle(514, 65, 45, 22));
-		jTextFieldFunction110BatchFieldWidth.setEnabled(false);
+		jLabelFunction110BatchFieldWidth.setBounds(new Rectangle(500, 74, 100, 20));
+		jTextFieldFunction110BatchFieldWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110BatchFieldWidth.setBounds(new Rectangle(605, 71, 60, 25));
 		jTextFieldFunction110BatchFieldWidth.setText("");
-		jLabelFunction110BatchFieldRows.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110BatchFieldRows.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110BatchFieldRows.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110BatchFieldRows.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110BatchFieldRows.setText(res.getString("FieldRows"));
-		jLabelFunction110BatchFieldRows.setBounds(new Rectangle(564, 68, 45, 15));
-		jLabelFunction110BatchFieldRows.setEnabled(false);
-		jTextFieldFunction110BatchFieldRows.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110BatchFieldRows.setBounds(new Rectangle(614, 65, 45, 22));
+		jLabelFunction110BatchFieldRows.setBounds(new Rectangle(675, 74, 60, 20));
+		jTextFieldFunction110BatchFieldRows.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110BatchFieldRows.setBounds(new Rectangle(740, 71, 60, 25));
 		jTextFieldFunction110BatchFieldRows.setText("");
-		jTextFieldFunction110BatchFieldRows.setEnabled(false);
-		jLabelFunction110BatchFieldMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110BatchFieldMargin.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110BatchFieldMargin.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110BatchFieldMargin.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110BatchFieldMargin.setText(res.getString("FieldMargin"));
-		jLabelFunction110BatchFieldMargin.setBounds(new Rectangle(664, 68, 45, 15));
-		jLabelFunction110BatchFieldMargin.setEnabled(false);
-		jTextFieldFunction110BatchFieldMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110BatchFieldMargin.setBounds(new Rectangle(714, 65, 45, 22));
+		jLabelFunction110BatchFieldMargin.setBounds(new Rectangle(810, 74, 60, 20));
+		jTextFieldFunction110BatchFieldMargin.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110BatchFieldMargin.setBounds(new Rectangle(875, 71, 60, 25));
 		jTextFieldFunction110BatchFieldMargin.setText("");
-		jTextFieldFunction110BatchFieldMargin.setEnabled(false);
-		jLabelFunction110BatchFieldCaptionOption.setEnabled(false);
+		//
 		jLabelFunction110BatchFieldCaptionOption.setText(res.getString("Caption"));
-		jLabelFunction110BatchFieldCaptionOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110BatchFieldCaptionOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110BatchFieldCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110BatchFieldCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction110BatchFieldCaptionOption.setBounds(new Rectangle(11, 96, 96, 15));
+		jLabelFunction110BatchFieldCaptionOption.setBounds(new Rectangle(5, 105, 130, 20));
 		jRadioButtonFunction110BatchFieldCaptionOptionName.setText(res.getString("FieldName"));
-		jRadioButtonFunction110BatchFieldCaptionOptionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110BatchFieldCaptionOptionName.setBounds(new Rectangle(115, 93, 100, 22));
-		jRadioButtonFunction110BatchFieldCaptionOptionName.setEnabled(false);
+		jRadioButtonFunction110BatchFieldCaptionOptionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110BatchFieldCaptionOptionName.setBounds(new Rectangle(140, 102, 130, 25));
 		jRadioButtonFunction110BatchFieldCaptionOptionName.addChangeListener(new Editor_jRadioButtonFunction110BatchFieldCaptionOption_changeAdapter(this));
-		jRadioButtonFunction110BatchFieldCaptionOptionValue.setText(res.getString("ValueSpecified"));
-		jRadioButtonFunction110BatchFieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110BatchFieldCaptionOptionValue.setBounds(new Rectangle(335, 93, 63, 22));
-		jRadioButtonFunction110BatchFieldCaptionOptionValue.setEnabled(false);
-		jRadioButtonFunction110BatchFieldCaptionOptionValue.addChangeListener(new Editor_jRadioButtonFunction110BatchFieldCaptionOption_changeAdapter(this));
 		jRadioButtonFunction110BatchFieldCaptionOptionNone.setText(res.getString("None"));
-		jRadioButtonFunction110BatchFieldCaptionOptionNone.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110BatchFieldCaptionOptionNone.setBounds(new Rectangle(225, 93, 63, 22));
-		jRadioButtonFunction110BatchFieldCaptionOptionNone.setEnabled(false);
+		jRadioButtonFunction110BatchFieldCaptionOptionNone.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110BatchFieldCaptionOptionNone.setBounds(new Rectangle(270, 102, 130, 25));
 		jRadioButtonFunction110BatchFieldCaptionOptionNone.addChangeListener(new Editor_jRadioButtonFunction110BatchFieldCaptionOption_changeAdapter(this));
+		jRadioButtonFunction110BatchFieldCaptionOptionValue.setText(res.getString("ValueSpecified"));
+		jRadioButtonFunction110BatchFieldCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110BatchFieldCaptionOptionValue.setBounds(new Rectangle(400, 102, 130, 25));
+		jRadioButtonFunction110BatchFieldCaptionOptionValue.addChangeListener(new Editor_jRadioButtonFunction110BatchFieldCaptionOption_changeAdapter(this));
 		buttonGroupFunction110BatchFieldCaptionOption.add(jRadioButtonFunction110BatchFieldCaptionOptionName);
 		buttonGroupFunction110BatchFieldCaptionOption.add(jRadioButtonFunction110BatchFieldCaptionOptionValue);
 		buttonGroupFunction110BatchFieldCaptionOption.add(jRadioButtonFunction110BatchFieldCaptionOptionNone);
-		jTextFieldFunction110BatchFieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110BatchFieldCaptionOptionValue.setBounds(new Rectangle(415, 93, 200, 22));
-		jTextFieldFunction110BatchFieldCaptionOptionValue.setEnabled(false);
+		jTextFieldFunction110BatchFieldCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110BatchFieldCaptionOptionValue.setBounds(new Rectangle(530, 102, 200, 25));
 		jTextFieldFunction110BatchFieldCaptionOptionValue.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
-		jCheckBoxFunction110BatchFieldCaptionLengthVariable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jCheckBoxFunction110BatchFieldCaptionLengthVariable.setBounds(new Rectangle(650, 93, 150, 22));
+		jCheckBoxFunction110BatchFieldCaptionLengthVariable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxFunction110BatchFieldCaptionLengthVariable.setBounds(new Rectangle(760, 102, 200, 25));
 		jCheckBoxFunction110BatchFieldCaptionLengthVariable.setText(res.getString("CaptionLengthVariable"));
-		jCheckBoxFunction110BatchFieldCaptionLengthVariable.setEnabled(false);
+		//
 		jLabelFunction110BatchFieldPromptOption.setText(res.getString("Prompt"));
-		jLabelFunction110BatchFieldPromptOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110BatchFieldPromptOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110BatchFieldPromptOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110BatchFieldPromptOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction110BatchFieldPromptOption.setBounds(new Rectangle(11, 124, 96, 15));
-		jLabelFunction110BatchFieldPromptOption.setEnabled(false);
+		jLabelFunction110BatchFieldPromptOption.setBounds(new Rectangle(5, 136, 130, 20));
 		jRadioButtonFunction110BatchFieldPromptOptionNone.setText(res.getString("None"));
-		jRadioButtonFunction110BatchFieldPromptOptionNone.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110BatchFieldPromptOptionNone.setBounds(new Rectangle(115, 121, 100, 22));
-		jRadioButtonFunction110BatchFieldPromptOptionNone.setEnabled(false);
+		jRadioButtonFunction110BatchFieldPromptOptionNone.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110BatchFieldPromptOptionNone.setBounds(new Rectangle(140, 133, 130, 25));
 		jRadioButtonFunction110BatchFieldPromptOptionNone.addChangeListener(new Editor_jRadioButtonFunction110BatchFieldPromptOption_changeAdapter(this));
 		jRadioButtonFunction110BatchFieldPromptOptionList.setText(res.getString("ListBox"));
-		jRadioButtonFunction110BatchFieldPromptOptionList.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110BatchFieldPromptOptionList.setBounds(new Rectangle(225, 121, 110, 22));
-		jRadioButtonFunction110BatchFieldPromptOptionList.setEnabled(false);
+		jRadioButtonFunction110BatchFieldPromptOptionList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110BatchFieldPromptOptionList.setBounds(new Rectangle(270, 133, 130, 25));
 		jRadioButtonFunction110BatchFieldPromptOptionList.addChangeListener(new Editor_jRadioButtonFunction110BatchFieldPromptOption_changeAdapter(this));
 		jRadioButtonFunction110BatchFieldPromptOptionCall.setText(res.getString("CallPromptFunction"));
-		jRadioButtonFunction110BatchFieldPromptOptionCall.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction110BatchFieldPromptOptionCall.setBounds(new Rectangle(335, 121, 78, 22));
-		jRadioButtonFunction110BatchFieldPromptOptionCall.setEnabled(false);
+		jRadioButtonFunction110BatchFieldPromptOptionCall.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction110BatchFieldPromptOptionCall.setBounds(new Rectangle(400, 133, 130, 25));
 		jRadioButtonFunction110BatchFieldPromptOptionCall.addChangeListener(new Editor_jRadioButtonFunction110BatchFieldPromptOption_changeAdapter(this));
 		buttonGroupFunction110BatchFieldPromptOption.add(jRadioButtonFunction110BatchFieldPromptOptionNone);
 		buttonGroupFunction110BatchFieldPromptOption.add(jRadioButtonFunction110BatchFieldPromptOptionList);
 		buttonGroupFunction110BatchFieldPromptOption.add(jRadioButtonFunction110BatchFieldPromptOptionCall);
-		jTextFieldFunction110BatchFieldPromptOptionCallFunctionID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110BatchFieldPromptOptionCallFunctionID.setBounds(new Rectangle(415, 121, 80, 22));
-		jTextFieldFunction110BatchFieldPromptOptionCallFunctionID.setEnabled(false);
+		jTextFieldFunction110BatchFieldPromptOptionCallFunctionID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110BatchFieldPromptOptionCallFunctionID.setBounds(new Rectangle(530, 133, 120, 25));
 		jTextFieldFunction110BatchFieldPromptOptionCallFunctionID.addKeyListener(new Editor_jTextFieldFunction110BatchFieldPromptOptionCallFunctionID_keyAdapter(this));
-		jTextFieldFunction110BatchFieldPromptOptionCallFunctionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110BatchFieldPromptOptionCallFunctionName.setBounds(new Rectangle(500, 121, 204, 22));
-		jTextFieldFunction110BatchFieldPromptOptionCallFunctionName.setEnabled(false);
+		jTextFieldFunction110BatchFieldPromptOptionCallFunctionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110BatchFieldPromptOptionCallFunctionName.setBounds(new Rectangle(655, 133, 280, 25));
 		jTextFieldFunction110BatchFieldPromptOptionCallFunctionName.setEditable(false);
-		jButtonFunction110BatchFieldPromptOptionCallFunctionExchange.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jButtonFunction110BatchFieldPromptOptionCallFunctionExchange.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jButtonFunction110BatchFieldPromptOptionCallFunctionExchange.setText(res.getString("ExchangeParms"));
-		jButtonFunction110BatchFieldPromptOptionCallFunctionExchange.setBounds(new Rectangle(704, 120, 60, 23));
-		jButtonFunction110BatchFieldPromptOptionCallFunctionExchange.setEnabled(false);
+		jButtonFunction110BatchFieldPromptOptionCallFunctionExchange.setBounds(new Rectangle(935, 132, 100, 27));
 		jButtonFunction110BatchFieldPromptOptionCallFunctionExchange.addActionListener(new Editor_jButtonToEditPromptOptionCallFunctionExchange_actionAdapter(this));
-		jLabelFunction110BatchFieldComment.setEnabled(false);
-		jLabelFunction110BatchFieldComment.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction110BatchFieldComment.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110BatchFieldComment.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110BatchFieldComment.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110BatchFieldComment.setText(res.getString("Comment"));
-		jLabelFunction110BatchFieldComment.setBounds(new Rectangle(11, 152, 96, 15));
-		jTextFieldFunction110BatchFieldComment.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110BatchFieldComment.setBounds(new Rectangle(115, 149, 430, 22));
+		jLabelFunction110BatchFieldComment.setBounds(new Rectangle(5, 167, 130, 20));
+		jTextFieldFunction110BatchFieldComment.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110BatchFieldComment.setBounds(new Rectangle(140, 164, 795, 25));
 		jTextFieldFunction110BatchFieldComment.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
-		jPanelFunction110BatchFieldList.setLayout(null);
-		jPanelFunction110BatchFieldList.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction110BatchFieldList.add(jLabelFunction110BatchFieldTable);
-		jPanelFunction110BatchFieldList.add(jTextFieldFunction110BatchFieldTable);
-		jPanelFunction110BatchFieldList.add(jLabelFunction110BatchFieldTableType);
-		jPanelFunction110BatchFieldList.add(jTextFieldFunction110BatchFieldTableType);
-		jPanelFunction110BatchFieldList.add(jLabelFunction110BatchField);
-		jPanelFunction110BatchFieldList.add(jTextFieldFunction110BatchField);
-		jPanelFunction110BatchFieldList.add(jLabelFunction110BatchFieldType);
-		jPanelFunction110BatchFieldList.add(jTextFieldFunction110BatchFieldType);
-		jPanelFunction110BatchFieldList.add(jLabelFunction110BatchFieldLayoutOption);
-		jPanelFunction110BatchFieldList.add(jRadioButtonFunction110BatchFieldLayoutOptionVertical);
-		jPanelFunction110BatchFieldList.add(jRadioButtonFunction110BatchFieldLayoutOptionHorizontal);
-		jPanelFunction110BatchFieldList.add(jLabelFunction110BatchFieldWidth);
-		jPanelFunction110BatchFieldList.add(jTextFieldFunction110BatchFieldWidth);
-		jPanelFunction110BatchFieldList.add(jLabelFunction110BatchFieldRows);
-		jPanelFunction110BatchFieldList.add(jTextFieldFunction110BatchFieldRows);
-		jPanelFunction110BatchFieldList.add(jLabelFunction110BatchFieldMargin);
-		jPanelFunction110BatchFieldList.add(jTextFieldFunction110BatchFieldMargin);
-		jPanelFunction110BatchFieldList.add(jLabelFunction110BatchFieldCaptionOption);
-		jPanelFunction110BatchFieldList.add(jRadioButtonFunction110BatchFieldCaptionOptionName);
-		jPanelFunction110BatchFieldList.add(jRadioButtonFunction110BatchFieldCaptionOptionValue);
-		jPanelFunction110BatchFieldList.add(jRadioButtonFunction110BatchFieldCaptionOptionNone);
-		jPanelFunction110BatchFieldList.add(jTextFieldFunction110BatchFieldCaptionOptionValue);
-		jPanelFunction110BatchFieldList.add(jCheckBoxFunction110BatchFieldCaptionLengthVariable);
-		jPanelFunction110BatchFieldList.add(jLabelFunction110BatchFieldPromptOption);
-		jPanelFunction110BatchFieldList.add(jRadioButtonFunction110BatchFieldPromptOptionNone);
-		jPanelFunction110BatchFieldList.add(jRadioButtonFunction110BatchFieldPromptOptionList);
-		jPanelFunction110BatchFieldList.add(jRadioButtonFunction110BatchFieldPromptOptionCall);
-		jPanelFunction110BatchFieldList.add(jTextFieldFunction110BatchFieldPromptOptionCallFunctionID);
-		jPanelFunction110BatchFieldList.add(jTextFieldFunction110BatchFieldPromptOptionCallFunctionName);
-		jPanelFunction110BatchFieldList.add(jButtonFunction110BatchFieldPromptOptionCallFunctionExchange);
-		jPanelFunction110BatchFieldList.add(jLabelFunction110BatchFieldComment);
-		jPanelFunction110BatchFieldList.add(jTextFieldFunction110BatchFieldComment);
-		jPanelFunction110BatchTableAndField.add(jPanelFunction110BatchTableAndFieldTop, BorderLayout.NORTH);
-		jPanelFunction110BatchTableAndField.add(jSplitPaneFunction110BatchFieldList, BorderLayout.CENTER);
+		//
+		jScrollPaneFunction110BatchFieldDefinition.setBorder(null);
+		jScrollPaneFunction110BatchFieldDefinition.getViewport().add(jPanelFunction110BatchFieldDefinition);
+		jPanelFunction110BatchFieldDefinition.setPreferredSize(new Dimension(1050,198));
+		jPanelFunction110BatchFieldDefinition.setLayout(null);
+		jPanelFunction110BatchFieldDefinition.setBorder(null);
+		jPanelFunction110BatchFieldDefinition.add(jLabelFunction110BatchFieldTable);
+		jPanelFunction110BatchFieldDefinition.add(jTextFieldFunction110BatchFieldTable);
+		jPanelFunction110BatchFieldDefinition.add(jLabelFunction110BatchFieldTableType);
+		jPanelFunction110BatchFieldDefinition.add(jTextFieldFunction110BatchFieldTableType);
+		jPanelFunction110BatchFieldDefinition.add(jLabelFunction110BatchField);
+		jPanelFunction110BatchFieldDefinition.add(jTextFieldFunction110BatchField);
+		jPanelFunction110BatchFieldDefinition.add(jLabelFunction110BatchFieldType);
+		jPanelFunction110BatchFieldDefinition.add(jTextFieldFunction110BatchFieldType);
+		jPanelFunction110BatchFieldDefinition.add(jLabelFunction110BatchFieldLayoutOption);
+		jPanelFunction110BatchFieldDefinition.add(jRadioButtonFunction110BatchFieldLayoutOptionVertical);
+		jPanelFunction110BatchFieldDefinition.add(jRadioButtonFunction110BatchFieldLayoutOptionHorizontal);
+		jPanelFunction110BatchFieldDefinition.add(jLabelFunction110BatchFieldWidth);
+		jPanelFunction110BatchFieldDefinition.add(jTextFieldFunction110BatchFieldWidth);
+		jPanelFunction110BatchFieldDefinition.add(jLabelFunction110BatchFieldRows);
+		jPanelFunction110BatchFieldDefinition.add(jTextFieldFunction110BatchFieldRows);
+		jPanelFunction110BatchFieldDefinition.add(jLabelFunction110BatchFieldMargin);
+		jPanelFunction110BatchFieldDefinition.add(jTextFieldFunction110BatchFieldMargin);
+		jPanelFunction110BatchFieldDefinition.add(jLabelFunction110BatchFieldCaptionOption);
+		jPanelFunction110BatchFieldDefinition.add(jRadioButtonFunction110BatchFieldCaptionOptionName);
+		jPanelFunction110BatchFieldDefinition.add(jRadioButtonFunction110BatchFieldCaptionOptionValue);
+		jPanelFunction110BatchFieldDefinition.add(jRadioButtonFunction110BatchFieldCaptionOptionNone);
+		jPanelFunction110BatchFieldDefinition.add(jTextFieldFunction110BatchFieldCaptionOptionValue);
+		jPanelFunction110BatchFieldDefinition.add(jCheckBoxFunction110BatchFieldCaptionLengthVariable);
+		jPanelFunction110BatchFieldDefinition.add(jLabelFunction110BatchFieldPromptOption);
+		jPanelFunction110BatchFieldDefinition.add(jRadioButtonFunction110BatchFieldPromptOptionNone);
+		jPanelFunction110BatchFieldDefinition.add(jRadioButtonFunction110BatchFieldPromptOptionList);
+		jPanelFunction110BatchFieldDefinition.add(jRadioButtonFunction110BatchFieldPromptOptionCall);
+		jPanelFunction110BatchFieldDefinition.add(jTextFieldFunction110BatchFieldPromptOptionCallFunctionID);
+		jPanelFunction110BatchFieldDefinition.add(jTextFieldFunction110BatchFieldPromptOptionCallFunctionName);
+		jPanelFunction110BatchFieldDefinition.add(jButtonFunction110BatchFieldPromptOptionCallFunctionExchange);
+		jPanelFunction110BatchFieldDefinition.add(jLabelFunction110BatchFieldComment);
+		jPanelFunction110BatchFieldDefinition.add(jTextFieldFunction110BatchFieldComment);
+		jPanelFunction110BatchTableAndField.add(jScrollPaneFunction110BatchTableAndFieldTop, BorderLayout.NORTH);
+		jPanelFunction110BatchTableAndField.add(jPanelFunction110BatchFieldList, BorderLayout.CENTER);
 		//
 		jScrollPaneFunction110ButtonList.setBorder(null);
 		jScrollPaneFunction110ButtonList.getViewport().add(jTableFunction110ButtonList, null);
 		jScrollPaneFunction110ButtonList.addMouseListener(new Editor_jScrollPaneFunction110ButtonList_mouseAdapter(this));
-		jTableFunction110ButtonList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction110ButtonList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction110ButtonList.setBackground(SystemColor.control);
 		jTableFunction110ButtonList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction110ButtonList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -7093,6 +7121,7 @@ public class Editor extends JFrame {
 		jTableFunction110ButtonList.addFocusListener(new Editor_FocusListener());
 		jTableFunction110ButtonList.addMouseListener(new Editor_jTableFunction110ButtonList_mouseAdapter(this));
 		jTableFunction110ButtonList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableFunction110ButtonList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction110ButtonList.addColumn("NO.");
 		tableModelFunction110ButtonList.addColumn(res.getString("Pos_short"));
 		tableModelFunction110ButtonList.addColumn(res.getString("Caption"));
@@ -7101,82 +7130,77 @@ public class Editor extends JFrame {
 		column1 = jTableFunction110ButtonList.getColumnModel().getColumn(1);
 		column2 = jTableFunction110ButtonList.getColumnModel().getColumn(2);
 		column3 = jTableFunction110ButtonList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
+		column0.setPreferredWidth(40);
 		column1.setPreferredWidth(50);
-		column2.setPreferredWidth(150);
-		column3.setPreferredWidth(210);
+		column2.setPreferredWidth(200);
+		column3.setPreferredWidth(300);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentCenterControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction110ButtonList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction110ButtonList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction110ButtonList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		jSplitPaneFunction110ButtonList.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jSplitPaneFunction110ButtonList.add(jScrollPaneFunction110ButtonList, JSplitPane.TOP);
-		jSplitPaneFunction110ButtonList.add(jPanelFunction110ButtonList, JSplitPane.BOTTOM);
-		jSplitPaneFunction110ButtonList.setDividerLocation(screenHeight - 409);
-		jLabelFunction110ButtonPosition.setEnabled(false);
-		jLabelFunction110ButtonPosition.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jPanelFunction110ButtonList.setLayout(new BorderLayout());
+		jPanelFunction110ButtonList.add(jScrollPaneFunction110ButtonList, BorderLayout.CENTER);
+		jPanelFunction110ButtonList.add(jPanelFunction110ButtonDefinition, BorderLayout.SOUTH);
+		//
+		jLabelFunction110ButtonPosition.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110ButtonPosition.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110ButtonPosition.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110ButtonPosition.setText(res.getString("Position"));
-		jLabelFunction110ButtonPosition.setBounds(new Rectangle(11, 12, 96, 15));
-		jSpinnerFunction110ButtonPosition.setFont(new java.awt.Font("SansSerif", 0, 13));
-		jSpinnerFunction110ButtonPosition.setBounds(new Rectangle(115, 9, 40, 22));
-		jSpinnerFunction110ButtonPosition.setEnabled(false);
-		jLabelFunction110ButtonPositionComment.setEnabled(false);
-		jLabelFunction110ButtonPositionComment.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110ButtonPosition.setBounds(new Rectangle(5, 12, 130, 20));
+		jSpinnerFunction110ButtonPosition.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jSpinnerFunction110ButtonPosition.setBounds(new Rectangle(140, 9, 40, 25));
+		jLabelFunction110ButtonPositionComment.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110ButtonPositionComment.setText(res.getString("ButtonPositionComment"));
-		jLabelFunction110ButtonPositionComment.setBounds(new Rectangle(165, 12, 200, 15));
-		jLabelFunction110ButtonKey.setEnabled(false);
-		jLabelFunction110ButtonKey.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110ButtonPositionComment.setBounds(new Rectangle(185, 12, 230, 20));
+		jLabelFunction110ButtonKey.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110ButtonKey.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110ButtonKey.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110ButtonKey.setText(res.getString("FunctionKeyNo"));
-		jLabelFunction110ButtonKey.setBounds(new Rectangle(11, 40, 96, 15));
-		jSpinnerFunction110ButtonKey.setFont(new java.awt.Font("SansSerif", 0, 13));
-		jSpinnerFunction110ButtonKey.setBounds(new Rectangle(115, 37, 40, 22));
-		jSpinnerFunction110ButtonKey.setEnabled(false);
-		jLabelFunction110ButtonCaption.setEnabled(false);
-		jLabelFunction110ButtonCaption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110ButtonKey.setBounds(new Rectangle(415, 12, 130, 20));
+		jSpinnerFunction110ButtonKey.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jSpinnerFunction110ButtonKey.setBounds(new Rectangle(550, 9, 40, 25));
+		jLabelFunction110ButtonCaption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110ButtonCaption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110ButtonCaption.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110ButtonCaption.setText(res.getString("Caption"));
-		jLabelFunction110ButtonCaption.setBounds(new Rectangle(161, 40, 96, 15));
-		jTextFieldFunction110ButtonCaption.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction110ButtonCaption.setBounds(new Rectangle(265, 37, 100, 22));
-		jTextFieldFunction110ButtonCaption.setEnabled(false);
-		jLabelFunction110ButtonAction.setEnabled(false);
-		jLabelFunction110ButtonAction.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction110ButtonCaption.setBounds(new Rectangle(600, 12, 130, 20));
+		jTextFieldFunction110ButtonCaption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110ButtonCaption.setBounds(new Rectangle(735, 9, 100, 25));
+		//
+		jLabelFunction110ButtonAction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110ButtonAction.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110ButtonAction.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110ButtonAction.setText(res.getString("Action"));
-		jLabelFunction110ButtonAction.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction110ButtonAction.setBounds(new Rectangle(5, 43, 130, 20));
 		jComboBoxFunction110ButtonAction.setEditable(false);
-		jComboBoxFunction110ButtonAction.setEnabled(false);
-		jComboBoxFunction110ButtonAction.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxFunction110ButtonAction.setBounds(new Rectangle(115, 65, 210, 22));
+		jComboBoxFunction110ButtonAction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jComboBoxFunction110ButtonAction.setBounds(new Rectangle(140, 40, 265, 25));
 		jComboBoxFunction110ButtonAction.addItem(res.getString("ActionExit"));
 		jComboBoxFunction110ButtonAction.addItem(res.getString("ActionBackToSelectList"));
 		jComboBoxFunction110ButtonAction.addItem(res.getString("ActionGoToUpdateList"));
 		jComboBoxFunction110ButtonAction.addItem(res.getString("ActionUpdate"));
 		jComboBoxFunction110ButtonAction.addItem(res.getString("ActionOutputEXCEL"));
-		jPanelFunction110ButtonList.setLayout(null);
-		jPanelFunction110ButtonList.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction110ButtonList.add(jLabelFunction110ButtonPosition);
-		jPanelFunction110ButtonList.add(jSpinnerFunction110ButtonPosition);
-		jPanelFunction110ButtonList.add(jLabelFunction110ButtonPositionComment);
-		jPanelFunction110ButtonList.add(jLabelFunction110ButtonKey);
-		jPanelFunction110ButtonList.add(jSpinnerFunction110ButtonKey);
-		jPanelFunction110ButtonList.add(jLabelFunction110ButtonCaption);
-		jPanelFunction110ButtonList.add(jTextFieldFunction110ButtonCaption);
-		jPanelFunction110ButtonList.add(jLabelFunction110ButtonAction);
-		jPanelFunction110ButtonList.add(jComboBoxFunction110ButtonAction);
+		//
+		jPanelFunction110ButtonDefinition.setPreferredSize(new Dimension(100,72));
+		jPanelFunction110ButtonDefinition.setLayout(null);
+		jPanelFunction110ButtonDefinition.setBorder(null);
+		jPanelFunction110ButtonDefinition.add(jLabelFunction110ButtonPosition);
+		jPanelFunction110ButtonDefinition.add(jSpinnerFunction110ButtonPosition);
+		jPanelFunction110ButtonDefinition.add(jLabelFunction110ButtonPositionComment);
+		jPanelFunction110ButtonDefinition.add(jLabelFunction110ButtonKey);
+		jPanelFunction110ButtonDefinition.add(jSpinnerFunction110ButtonKey);
+		jPanelFunction110ButtonDefinition.add(jLabelFunction110ButtonCaption);
+		jPanelFunction110ButtonDefinition.add(jTextFieldFunction110ButtonCaption);
+		jPanelFunction110ButtonDefinition.add(jLabelFunction110ButtonAction);
+		jPanelFunction110ButtonDefinition.add(jComboBoxFunction110ButtonAction);
 		//
 		jScrollPaneFunction110UsageList.setBorder(null);
 		jScrollPaneFunction110UsageList.getViewport().add(jTableFunction110UsageList, null);
-		jTableFunction110UsageList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction110UsageList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction110UsageList.setBackground(SystemColor.control);
 		jTableFunction110UsageList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction110UsageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -7184,6 +7208,7 @@ public class Editor extends JFrame {
 		jTableFunction110UsageList.setSelectionForeground(Color.black);
 		jTableFunction110UsageList.addFocusListener(new Editor_FocusListener());
 		jTableFunction110UsageList.addMouseListener(new Editor_jTableFunction110UsageList_mouseAdapter(this));
+		jTableFunction110UsageList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction110UsageList.addColumn("NO.");
 		tableModelFunction110UsageList.addColumn(res.getString("FunctionsWhereUsed"));
 		tableModelFunction110UsageList.addColumn(res.getString("Type"));
@@ -7192,15 +7217,15 @@ public class Editor extends JFrame {
 		column1 = jTableFunction110UsageList.getColumnModel().getColumn(1);
 		column2 = jTableFunction110UsageList.getColumnModel().getColumn(2);
 		column3 = jTableFunction110UsageList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(300);
-		column2.setPreferredWidth(160);
-		column3.setPreferredWidth(280);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(400);
+		column2.setPreferredWidth(250);
+		column3.setPreferredWidth(380);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction110UsageList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction110UsageList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction110UsageList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
 	}
@@ -7209,18 +7234,20 @@ public class Editor extends JFrame {
 	 */
 	void initComponentsForFunction200() {
 		jPanelFunction200.setLayout(new BorderLayout());
+		jScrollPaneFunction200Top.setBorder(null);
+		jScrollPaneFunction200Top.getViewport().add(jPanelFunction200Top);
 		jPanelFunction200Top.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction200Top.setPreferredSize(new Dimension(10, 179));
+		jPanelFunction200Top.setPreferredSize(new Dimension(1050, 198));
 		jPanelFunction200Top.setToolTipText("");
 		jPanelFunction200Top.setLayout(null);
 		//
-		jLabelFunction200Type.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200Type.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200Type.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200Type.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200Type.setText(res.getString("FunctionType"));
-		jLabelFunction200Type.setBounds(new Rectangle(11, 12, 96, 15));
-		jTextFieldFunction200Type.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200Type.setBounds(new Rectangle(115, 9, 170, 22));
+		jLabelFunction200Type.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldFunction200Type.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200Type.setBounds(new Rectangle(140, 9, 250, 25));
 		jTextFieldFunction200Type.setEditable(false);
 		jTextFieldFunction200Type.setText(res.getString("FunctionTypeXF200"));
 		Insets m = jTextFieldFunction200Type.getMargin();
@@ -7229,113 +7256,108 @@ public class Editor extends JFrame {
 		label.setBorder(null); 
 		label.setBounds(m.left, m.top, imageIconFunction200.getIconWidth(), imageIconFunction200.getIconHeight()); 
 		jTextFieldFunction200Type.add(label);
-		jLabelFunction200ID.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200ID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200ID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200ID.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction200ID.setText(res.getString("FunctionID"));
-		jLabelFunction200ID.setBounds(new Rectangle(295, 12, 76, 15));
-		jTextFieldFunction200ID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200ID.setBounds(new Rectangle(379, 9, 80, 22));
+		jLabelFunction200ID.setText(res.getString("IDAndName"));
+		jLabelFunction200ID.setBounds(new Rectangle(400, 12, 100, 20));
+		jTextFieldFunction200ID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200ID.setBounds(new Rectangle(505, 9, 120, 25));
 		jTextFieldFunction200ID.setEditable(false);
-		jLabelFunction200Name.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelFunction200Name.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction200Name.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction200Name.setText(res.getString("FunctionName"));
-		jLabelFunction200Name.setBounds(new Rectangle(469, 12, 86, 15));
-		jTextFieldFunction200Name.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200Name.setBounds(new Rectangle(563, 9, 250, 22));
+		jTextFieldFunction200Name.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200Name.setBounds(new Rectangle(630, 9, 350, 25));
 		//
-		jLabelFunction200TableName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200TableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200TableName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200TableName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200TableName.setText(res.getString("PrimaryTable"));
-		jLabelFunction200TableName.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldFunction200TableName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200TableName.setBounds(new Rectangle(115, 37, 600, 22));
+		jLabelFunction200TableName.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldFunction200TableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200TableName.setBounds(new Rectangle(140, 40, 840, 25));
 		jTextFieldFunction200TableName.setEditable(false);
 		jButtonFunction200TableKeyFieldsEdit.setIcon(imageIconPrompt);
-		jButtonFunction200TableKeyFieldsEdit.setBounds(new Rectangle(715, 36, 28, 23));
+		jButtonFunction200TableKeyFieldsEdit.setBounds(new Rectangle(980, 39, 28, 27));
 		jButtonFunction200TableKeyFieldsEdit.addActionListener(new Editor_jButtonToEditKeyFields_actionAdapter(this));
-		jLabelFunction200FixedWhere.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction200FixedWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200FixedWhere.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200FixedWhere.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200FixedWhere.setText(res.getString("FixedWhere"));
-		jLabelFunction200FixedWhere.setBounds(new Rectangle(11, 68, 96, 15));
-		jTextFieldFunction200FixedWhere.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200FixedWhere.setBounds(new Rectangle(115, 65, 600, 22));
+		jLabelFunction200FixedWhere.setBounds(new Rectangle(5, 74, 130, 20));
+		jTextFieldFunction200FixedWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200FixedWhere.setBounds(new Rectangle(140, 71, 500, 25));
+		jLabelFunction200DataName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelFunction200DataName.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction200DataName.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction200DataName.setText(res.getString("DataName"));
+		jLabelFunction200DataName.setBounds(new Rectangle(650, 74, 125, 20));
+		jTextFieldFunction200DataName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200DataName.setBounds(new Rectangle(780, 71, 200, 25));
 		//
-		jLabelFunction200ActionAfterInsert.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200ActionAfterInsert.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200ActionAfterInsert.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200ActionAfterInsert.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200ActionAfterInsert.setText(res.getString("ActionAfterInsert"));
-		jLabelFunction200ActionAfterInsert.setBounds(new Rectangle(11, 96, 96, 15));
+		jLabelFunction200ActionAfterInsert.setBounds(new Rectangle(5, 105, 130, 20));
 		jRadioButtonFunction200ActionAfterInsertReturn.setText(res.getString("Return"));
-		jRadioButtonFunction200ActionAfterInsertReturn.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction200ActionAfterInsertReturn.setBounds(new Rectangle(115, 93, 100, 22));
+		jRadioButtonFunction200ActionAfterInsertReturn.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction200ActionAfterInsertReturn.setBounds(new Rectangle(140, 102, 130, 25));
 		jRadioButtonFunction200ActionAfterInsertReturn.addChangeListener(new Editor_jRadioButtonFunction200ActionAfterInsert_changeAdapter(this));
 		jRadioButtonFunction200ActionAfterInsertCall.setText(res.getString("CallFunction"));
-		jRadioButtonFunction200ActionAfterInsertCall.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction200ActionAfterInsertCall.setBounds(new Rectangle(225, 93, 110, 22));
+		jRadioButtonFunction200ActionAfterInsertCall.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction200ActionAfterInsertCall.setBounds(new Rectangle(270, 102, 130, 25));
 		jRadioButtonFunction200ActionAfterInsertCall.addChangeListener(new Editor_jRadioButtonFunction200ActionAfterInsert_changeAdapter(this));
 		buttonGroupFunction200ActionAfterInsert.add(jRadioButtonFunction200ActionAfterInsertReturn);
 		buttonGroupFunction200ActionAfterInsert.add(jRadioButtonFunction200ActionAfterInsertCall);
-		jTextFieldFunction200FunctionIDCalled.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200FunctionIDCalled.setBounds(new Rectangle(335, 93, 80, 22));
+		jTextFieldFunction200FunctionIDCalled.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200FunctionIDCalled.setBounds(new Rectangle(400, 102, 100, 25));
 		jTextFieldFunction200FunctionIDCalled.addKeyListener(new Editor_jTextFieldFunction200FunctionIDCalled_keyAdapter(this));
-		jTextFieldFunction200FunctionNameCalled.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200FunctionNameCalled.setBounds(new Rectangle(420, 93, 295, 22));
+		jTextFieldFunction200FunctionNameCalled.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200FunctionNameCalled.setBounds(new Rectangle(505, 102, 300, 25));
 		jTextFieldFunction200FunctionNameCalled.setEditable(false);
+		jCheckBoxFunction200ContinueAdd.setText(res.getString("CheckContinueAdding"));
+		jCheckBoxFunction200ContinueAdd.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxFunction200ContinueAdd.setBounds(new Rectangle(825, 102, 200, 25));
 		//
-		jLabelFunction200Size.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200Size.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200Size.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200Size.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200Size.setText(res.getString("PanelSize"));
-		jLabelFunction200Size.setBounds(new Rectangle(11, 124, 96, 15));
+		jLabelFunction200Size.setBounds(new Rectangle(5, 136, 130, 20));
 		jRadioButtonFunction200SizeFull.setText(res.getString("SizeFull"));
-		jRadioButtonFunction200SizeFull.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction200SizeFull.setBounds(new Rectangle(115, 121, 100, 22));
+		jRadioButtonFunction200SizeFull.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction200SizeFull.setBounds(new Rectangle(140, 133, 130, 25));
 		jRadioButtonFunction200SizeFull.addChangeListener(new Editor_jRadioButtonFunction200Size_changeAdapter(this));
 		jRadioButtonFunction200SizeAuto.setText(res.getString("SizeAuto"));
-		jRadioButtonFunction200SizeAuto.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction200SizeAuto.setBounds(new Rectangle(225, 121, 100, 22));
+		jRadioButtonFunction200SizeAuto.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction200SizeAuto.setBounds(new Rectangle(270, 133, 130, 25));
 		jRadioButtonFunction200SizeAuto.addChangeListener(new Editor_jRadioButtonFunction200Size_changeAdapter(this));
 		jRadioButtonFunction200SizeSpecify.setText(res.getString("SizeSpecified"));
-		jRadioButtonFunction200SizeSpecify.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction200SizeSpecify.setBounds(new Rectangle(335, 121, 110, 22));
+		jRadioButtonFunction200SizeSpecify.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction200SizeSpecify.setBounds(new Rectangle(400, 133, 160, 25));
 		jRadioButtonFunction200SizeSpecify.addChangeListener(new Editor_jRadioButtonFunction200Size_changeAdapter(this));
 		buttonGroupFunction200Size.add(jRadioButtonFunction200SizeFull);
 		buttonGroupFunction200Size.add(jRadioButtonFunction200SizeAuto);
 		buttonGroupFunction200Size.add(jRadioButtonFunction200SizeSpecify);
-		jTextFieldFunction200SizeWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200SizeWidth.setBounds(new Rectangle(445, 121, 50, 22));
-		jTextFieldFunction200SizeHeight.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200SizeHeight.setBounds(new Rectangle(500, 121, 50, 22));
+		jTextFieldFunction200SizeWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200SizeWidth.setBounds(new Rectangle(560, 133, 60, 25));
+		jTextFieldFunction200SizeHeight.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200SizeHeight.setBounds(new Rectangle(625, 133, 60, 25));
 		jCheckBoxFunction200UpdateOnly.setText(res.getString("CheckUpdateOnly"));
-		jCheckBoxFunction200UpdateOnly.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jCheckBoxFunction200UpdateOnly.setBounds(new Rectangle(590, 121, 120, 22));
+		jCheckBoxFunction200UpdateOnly.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxFunction200UpdateOnly.setBounds(new Rectangle(705, 133, 150, 25));
 		jCheckBoxFunction200UpdateOnly.addChangeListener(new Editor_jCheckBoxFunction200UpdateOnly_changeAdapter(this));
-		jCheckBoxFunction200ContinueAdd.setText(res.getString("CheckContinueAdding"));
-		jCheckBoxFunction200ContinueAdd.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jCheckBoxFunction200ContinueAdd.setBounds(new Rectangle(710, 121, 150, 22));
 		//
-		jLabelFunction200InitialMsg.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200InitialMsg.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200InitialMsg.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200InitialMsg.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200InitialMsg.setText(res.getString("InitialMessage"));
-		jLabelFunction200InitialMsg.setBounds(new Rectangle(11, 152, 96, 15));
-		jTextFieldFunction200InitialMsg.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200InitialMsg.setBounds(new Rectangle(115, 149, 450, 22));
-		jLabelFunction200DataName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelFunction200DataName.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction200DataName.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction200DataName.setText(res.getString("DataName"));
-		jLabelFunction200DataName.setBounds(new Rectangle(565, 152, 90, 15));
-		jTextFieldFunction200DataName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200DataName.setBounds(new Rectangle(663, 149, 150, 22));
+		jLabelFunction200InitialMsg.setBounds(new Rectangle(5, 167, 130, 20));
+		jTextFieldFunction200InitialMsg.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200InitialMsg.setBounds(new Rectangle(140, 164, 840, 25));
 		//
 		jPanelFunction200Top.add(jLabelFunction200ID);
 		jPanelFunction200Top.add(jTextFieldFunction200ID);
-		jPanelFunction200Top.add(jLabelFunction200Name);
 		jPanelFunction200Top.add(jTextFieldFunction200Name);
 		jPanelFunction200Top.add(jLabelFunction200Type);
 		jPanelFunction200Top.add(jTextFieldFunction200Type);
@@ -7361,15 +7383,15 @@ public class Editor extends JFrame {
 		jPanelFunction200Top.add(jTextFieldFunction200InitialMsg);
 		jPanelFunction200Top.add(jLabelFunction200DataName);
 		jPanelFunction200Top.add(jTextFieldFunction200DataName);
-		jPanelFunction200.add(jPanelFunction200Top, BorderLayout.NORTH);
+		jPanelFunction200.add(jScrollPaneFunction200Top, BorderLayout.NORTH);
 		jPanelFunction200.add(jTabbedPaneFunction200, BorderLayout.CENTER);
 		//
-		jTabbedPaneFunction200.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTabbedPaneFunction200.add(res.getString("Fields"), jSplitPaneFunction200FieldList);
+		jTabbedPaneFunction200.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTabbedPaneFunction200.add(res.getString("Fields"), jPanelFunction200FieldList);
 		jTabbedPaneFunction200.setIconAt(0, imageIconField);
 		jTabbedPaneFunction200.add(res.getString("TabbedFields"), jSplitPaneFunction200TabList);
 		jTabbedPaneFunction200.setIconAt(1, imageIconFunctionTab);
-		jTabbedPaneFunction200.add(res.getString("FunctionKeys"), jSplitPaneFunction200ButtonList);
+		jTabbedPaneFunction200.add(res.getString("FunctionKeys"), jPanelFunction200ButtonList);
 		jTabbedPaneFunction200.setIconAt(2, imageIconFunctionButton);
 		jTabbedPaneFunction200.add(res.getString("FunctionsWhereUsed"), jScrollPaneFunction200UsageList);
 		jTabbedPaneFunction200.setIconAt(3, imageIconFunctionUsage);
@@ -7377,7 +7399,7 @@ public class Editor extends JFrame {
 		jScrollPaneFunction200FieldList.setBorder(null);
 		jScrollPaneFunction200FieldList.getViewport().add(jTableFunction200FieldList, null);
 		jScrollPaneFunction200FieldList.addMouseListener(new Editor_jScrollPaneFunction200FieldList_mouseAdapter(this));
-		jTableFunction200FieldList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction200FieldList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction200FieldList.setBackground(SystemColor.control);
 		jTableFunction200FieldList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction200FieldList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -7388,6 +7410,7 @@ public class Editor extends JFrame {
 		jTableFunction200FieldList.addMouseListener(new Editor_jTableFunction200FieldList_mouseAdapter(this));
 	    jTableFunction200FieldList.addMouseMotionListener(new Editor_jTableFunction200FieldList_mouseMotionAdapter(this));
 		jTableFunction200FieldList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableFunction200FieldList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction200FieldList.addColumn("NO.");
 		tableModelFunction200FieldList.addColumn(res.getString("DataSource"));
 		tableModelFunction200FieldList.addColumn(res.getString("FieldType"));
@@ -7396,216 +7419,207 @@ public class Editor extends JFrame {
 		column1 = jTableFunction200FieldList.getColumnModel().getColumn(1);
 		column2 = jTableFunction200FieldList.getColumnModel().getColumn(2);
 		column3 = jTableFunction200FieldList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(160);
-		column2.setPreferredWidth(250);
-		column3.setPreferredWidth(350);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(250);
+		column2.setPreferredWidth(350);
+		column3.setPreferredWidth(450);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction200FieldList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction200FieldList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction200FieldList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		jSplitPaneFunction200FieldList.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jSplitPaneFunction200FieldList.add(jScrollPaneFunction200FieldList, JSplitPane.TOP);
-		jSplitPaneFunction200FieldList.add(jPanelFunction200FieldList, JSplitPane.BOTTOM);
-		jSplitPaneFunction200FieldList.setDividerLocation(screenHeight - 493);
-		jLabelFunction200Table.setEnabled(false);
-		jLabelFunction200Table.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jScrollPaneFunction200FieldDefinition.setBorder(null);
+		jScrollPaneFunction200FieldDefinition.getViewport().add(jPanelFunction200FieldDefinition);
+		jPanelFunction200FieldList.setLayout(new BorderLayout());
+		jPanelFunction200FieldList.add(jScrollPaneFunction200FieldList, BorderLayout.CENTER);
+		jPanelFunction200FieldList.add(jScrollPaneFunction200FieldDefinition, BorderLayout.SOUTH);
+		//
+		jLabelFunction200Table.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200Table.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200Table.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200Table.setText(res.getString("Table"));
-		jLabelFunction200Table.setBounds(new Rectangle(11, 12, 96, 15));
-		jTextFieldFunction200Table.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200Table.setBounds(new Rectangle(115, 9, 300, 22));
+		jLabelFunction200Table.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldFunction200Table.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200Table.setBounds(new Rectangle(140, 9, 350, 25));
 		jTextFieldFunction200Table.setEditable(false);
-		jLabelFunction200TableType.setEnabled(false);
-		jLabelFunction200TableType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200TableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200TableType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200TableType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200TableType.setText(res.getString("Type"));
-		jLabelFunction200TableType.setBounds(new Rectangle(430, 12, 76, 15));
-		jTextFieldFunction200TableType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200TableType.setBounds(new Rectangle(514, 9, 250, 22));
+		jLabelFunction200TableType.setBounds(new Rectangle(500, 12, 100, 20));
+		jTextFieldFunction200TableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200TableType.setBounds(new Rectangle(605, 9, 330, 25));
 		jTextFieldFunction200TableType.setEditable(false);
-		jLabelFunction200Field.setEnabled(false);
-		jLabelFunction200Field.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction200Field.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200Field.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200Field.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200Field.setText(res.getString("Field"));
-		jLabelFunction200Field.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldFunction200Field.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200Field.setBounds(new Rectangle(115, 37, 300, 22));
+		jLabelFunction200Field.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldFunction200Field.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200Field.setBounds(new Rectangle(140, 40, 350, 25));
 		jTextFieldFunction200Field.setEditable(false);
-		jLabelFunction200FieldType.setEnabled(false);
-		jLabelFunction200FieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200FieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200FieldType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200FieldType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200FieldType.setText(res.getString("Type"));
-		jLabelFunction200FieldType.setBounds(new Rectangle(430, 40, 76, 15));
-		jTextFieldFunction200FieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200FieldType.setBounds(new Rectangle(514, 37, 250, 22));
+		jLabelFunction200FieldType.setBounds(new Rectangle(500, 43, 100, 20));
+		jTextFieldFunction200FieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200FieldType.setBounds(new Rectangle(605, 40, 330, 25));
 		jTextFieldFunction200FieldType.setEditable(false);
-		jLabelFunction200FieldLayoutOption.setEnabled(false);
+		//
 		jLabelFunction200FieldLayoutOption.setText(res.getString("LayoutOption"));
-		jLabelFunction200FieldLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200FieldLayoutOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200FieldLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200FieldLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction200FieldLayoutOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction200FieldLayoutOption.setBounds(new Rectangle(5, 74, 130, 20));
 		jRadioButtonFunction200FieldLayoutOptionVertical.setText(res.getString("LayoutVertical"));
-		jRadioButtonFunction200FieldLayoutOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction200FieldLayoutOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
-		jRadioButtonFunction200FieldLayoutOptionVertical.setEnabled(false);
+		jRadioButtonFunction200FieldLayoutOptionVertical.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction200FieldLayoutOptionVertical.setBounds(new Rectangle(140, 71, 130, 25));
 		jRadioButtonFunction200FieldLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
-		jRadioButtonFunction200FieldLayoutOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction200FieldLayoutOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
-		jRadioButtonFunction200FieldLayoutOptionHorizontal.setEnabled(false);
+		jRadioButtonFunction200FieldLayoutOptionHorizontal.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction200FieldLayoutOptionHorizontal.setBounds(new Rectangle(270, 71, 130, 25));
 		buttonGroupFunction200FieldLayoutOption.add(jRadioButtonFunction200FieldLayoutOptionVertical);
 		buttonGroupFunction200FieldLayoutOption.add(jRadioButtonFunction200FieldLayoutOptionHorizontal);
-		jLabelFunction200FieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200FieldWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200FieldWidth.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200FieldWidth.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200FieldWidth.setText(res.getString("FieldWidth"));
-		jLabelFunction200FieldWidth.setBounds(new Rectangle(430, 68, 76, 15));
-		jLabelFunction200FieldWidth.setEnabled(false);
-		jTextFieldFunction200FieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200FieldWidth.setBounds(new Rectangle(514, 65, 45, 22));
-		jTextFieldFunction200FieldWidth.setEnabled(false);
+		jLabelFunction200FieldWidth.setBounds(new Rectangle(500, 74, 100, 20));
+		jTextFieldFunction200FieldWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200FieldWidth.setBounds(new Rectangle(605, 71, 60, 25));
 		jTextFieldFunction200FieldWidth.setText("");
-		jLabelFunction200FieldRows.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200FieldRows.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200FieldRows.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200FieldRows.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200FieldRows.setText(res.getString("FieldRows"));
-		jLabelFunction200FieldRows.setBounds(new Rectangle(564, 68, 45, 15));
-		jLabelFunction200FieldRows.setEnabled(false);
-		jTextFieldFunction200FieldRows.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200FieldRows.setBounds(new Rectangle(614, 65, 45, 22));
+		jLabelFunction200FieldRows.setBounds(new Rectangle(675, 74, 60, 20));
+		jTextFieldFunction200FieldRows.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200FieldRows.setBounds(new Rectangle(740, 71, 60, 25));
 		jTextFieldFunction200FieldRows.setText("");
-		jTextFieldFunction200FieldRows.setEnabled(false);
-		jLabelFunction200FieldMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200FieldMargin.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200FieldMargin.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200FieldMargin.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200FieldMargin.setText(res.getString("FieldMargin"));
-		jLabelFunction200FieldMargin.setBounds(new Rectangle(664, 68, 45, 15));
-		jLabelFunction200FieldMargin.setEnabled(false);
-		jTextFieldFunction200FieldMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200FieldMargin.setBounds(new Rectangle(714, 65, 45, 22));
+		jLabelFunction200FieldMargin.setBounds(new Rectangle(810, 74, 60, 20));
+		jTextFieldFunction200FieldMargin.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200FieldMargin.setBounds(new Rectangle(875, 71, 60, 25));
 		jTextFieldFunction200FieldMargin.setText("");
-		jTextFieldFunction200FieldMargin.setEnabled(false);
-		jLabelFunction200FieldCaptionOption.setEnabled(false);
+		//
 		jLabelFunction200FieldCaptionOption.setText(res.getString("Caption"));
-		jLabelFunction200FieldCaptionOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200FieldCaptionOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200FieldCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200FieldCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction200FieldCaptionOption.setBounds(new Rectangle(11, 96, 96, 15));
+		jLabelFunction200FieldCaptionOption.setBounds(new Rectangle(5, 105, 130, 20));
 		jRadioButtonFunction200FieldCaptionOptionName.setText(res.getString("FieldName"));
-		jRadioButtonFunction200FieldCaptionOptionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction200FieldCaptionOptionName.setBounds(new Rectangle(115, 93, 100, 22));
-		jRadioButtonFunction200FieldCaptionOptionName.setEnabled(false);
+		jRadioButtonFunction200FieldCaptionOptionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction200FieldCaptionOptionName.setBounds(new Rectangle(140, 102, 130, 25));
 		jRadioButtonFunction200FieldCaptionOptionName.addChangeListener(new Editor_jRadioButtonFunction200FieldCaptionOption_changeAdapter(this));
 		jRadioButtonFunction200FieldCaptionOptionNone.setText(res.getString("None"));
-		jRadioButtonFunction200FieldCaptionOptionNone.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction200FieldCaptionOptionNone.setBounds(new Rectangle(225, 93, 100, 22));
-		jRadioButtonFunction200FieldCaptionOptionNone.setEnabled(false);
+		jRadioButtonFunction200FieldCaptionOptionNone.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction200FieldCaptionOptionNone.setBounds(new Rectangle(270, 102, 130, 25));
 		jRadioButtonFunction200FieldCaptionOptionNone.addChangeListener(new Editor_jRadioButtonFunction200FieldCaptionOption_changeAdapter(this));
 		jRadioButtonFunction200FieldCaptionOptionValue.setText(res.getString("ValueSpecified"));
-		jRadioButtonFunction200FieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction200FieldCaptionOptionValue.setBounds(new Rectangle(335, 93, 63, 22));
-		jRadioButtonFunction200FieldCaptionOptionValue.setEnabled(false);
+		jRadioButtonFunction200FieldCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction200FieldCaptionOptionValue.setBounds(new Rectangle(400, 102, 130, 25));
 		jRadioButtonFunction200FieldCaptionOptionValue.addChangeListener(new Editor_jRadioButtonFunction200FieldCaptionOption_changeAdapter(this));
 		buttonGroupFunction200FieldCaptionOption.add(jRadioButtonFunction200FieldCaptionOptionName);
 		buttonGroupFunction200FieldCaptionOption.add(jRadioButtonFunction200FieldCaptionOptionValue);
 		buttonGroupFunction200FieldCaptionOption.add(jRadioButtonFunction200FieldCaptionOptionNone);
-		jTextFieldFunction200FieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200FieldCaptionOptionValue.setBounds(new Rectangle(415, 93, 200, 22));
-		jTextFieldFunction200FieldCaptionOptionValue.setEnabled(false);
+		jTextFieldFunction200FieldCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200FieldCaptionOptionValue.setBounds(new Rectangle(530, 102, 200, 22));
 		jTextFieldFunction200FieldCaptionOptionValue.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
-		jCheckBoxFunction200FieldCaptionLengthVariable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jCheckBoxFunction200FieldCaptionLengthVariable.setBounds(new Rectangle(650, 93, 150, 22));
+		jCheckBoxFunction200FieldCaptionLengthVariable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxFunction200FieldCaptionLengthVariable.setBounds(new Rectangle(760, 102, 200, 25));
 		jCheckBoxFunction200FieldCaptionLengthVariable.setText(res.getString("CaptionLengthVariable"));
-		jCheckBoxFunction200FieldCaptionLengthVariable.setEnabled(false);
+		//
 		jLabelFunction200FieldPromptOption.setText(res.getString("Prompt"));
-		jLabelFunction200FieldPromptOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200FieldPromptOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200FieldPromptOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200FieldPromptOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction200FieldPromptOption.setBounds(new Rectangle(11, 124, 96, 15));
+		jLabelFunction200FieldPromptOption.setBounds(new Rectangle(5, 136, 130, 20));
 		jLabelFunction200FieldPromptOption.setEnabled(false);
 		jRadioButtonFunction200FieldPromptOptionNone.setText(res.getString("None"));
-		jRadioButtonFunction200FieldPromptOptionNone.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction200FieldPromptOptionNone.setBounds(new Rectangle(115, 121, 100, 22));
+		jRadioButtonFunction200FieldPromptOptionNone.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction200FieldPromptOptionNone.setBounds(new Rectangle(140, 133, 130, 25));
 		jRadioButtonFunction200FieldPromptOptionNone.setEnabled(false);
 		jRadioButtonFunction200FieldPromptOptionNone.addChangeListener(new Editor_jRadioButtonFunction200FieldPromptOption_changeAdapter(this));
 		jRadioButtonFunction200FieldPromptOptionList.setText(res.getString("ListBox"));
-		jRadioButtonFunction200FieldPromptOptionList.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction200FieldPromptOptionList.setBounds(new Rectangle(225, 121, 110, 22));
+		jRadioButtonFunction200FieldPromptOptionList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction200FieldPromptOptionList.setBounds(new Rectangle(270, 133, 130, 25));
 		jRadioButtonFunction200FieldPromptOptionList.setEnabled(false);
 		jRadioButtonFunction200FieldPromptOptionList.addChangeListener(new Editor_jRadioButtonFunction200FieldPromptOption_changeAdapter(this));
 		jRadioButtonFunction200FieldPromptOptionCall.setText(res.getString("CallPromptFunction"));
-		jRadioButtonFunction200FieldPromptOptionCall.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction200FieldPromptOptionCall.setBounds(new Rectangle(335, 121, 78, 22));
+		jRadioButtonFunction200FieldPromptOptionCall.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction200FieldPromptOptionCall.setBounds(new Rectangle(400, 133, 130, 25));
 		jRadioButtonFunction200FieldPromptOptionCall.setEnabled(false);
 		jRadioButtonFunction200FieldPromptOptionCall.addChangeListener(new Editor_jRadioButtonFunction200FieldPromptOption_changeAdapter(this));
 		buttonGroupFunction200FieldPromptOption.add(jRadioButtonFunction200FieldPromptOptionNone);
 		buttonGroupFunction200FieldPromptOption.add(jRadioButtonFunction200FieldPromptOptionList);
 		buttonGroupFunction200FieldPromptOption.add(jRadioButtonFunction200FieldPromptOptionCall);
-		jTextFieldFunction200FieldPromptOptionCallFunctionID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200FieldPromptOptionCallFunctionID.setBounds(new Rectangle(415, 121, 80, 22));
+		jTextFieldFunction200FieldPromptOptionCallFunctionID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200FieldPromptOptionCallFunctionID.setBounds(new Rectangle(530, 133, 120, 25));
 		jTextFieldFunction200FieldPromptOptionCallFunctionID.setEnabled(false);
 		jTextFieldFunction200FieldPromptOptionCallFunctionID.addKeyListener(new Editor_jTextFieldFunction200FieldPromptOptionCallFunctionID_keyAdapter(this));
-		jTextFieldFunction200FieldPromptOptionCallFunctionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200FieldPromptOptionCallFunctionName.setBounds(new Rectangle(500, 121, 204, 22));
+		jTextFieldFunction200FieldPromptOptionCallFunctionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200FieldPromptOptionCallFunctionName.setBounds(new Rectangle(655, 133, 280, 25));
 		jTextFieldFunction200FieldPromptOptionCallFunctionName.setEnabled(false);
 		jTextFieldFunction200FieldPromptOptionCallFunctionName.setEditable(false);
-		jButtonFunction200FieldPromptOptionCallFunctionExchange.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jButtonFunction200FieldPromptOptionCallFunctionExchange.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jButtonFunction200FieldPromptOptionCallFunctionExchange.setText(res.getString("ExchangeParms"));
-		jButtonFunction200FieldPromptOptionCallFunctionExchange.setBounds(new Rectangle(704, 120, 60, 23));
+		jButtonFunction200FieldPromptOptionCallFunctionExchange.setBounds(new Rectangle(935, 132, 100, 27));
 		jButtonFunction200FieldPromptOptionCallFunctionExchange.setEnabled(false);
 		jButtonFunction200FieldPromptOptionCallFunctionExchange.addActionListener(new Editor_jButtonToEditPromptOptionCallFunctionExchange_actionAdapter(this));
+		//
 		jLabelFunction200FieldComment.setEnabled(false);
-		jLabelFunction200FieldComment.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200FieldComment.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200FieldComment.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200FieldComment.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200FieldComment.setText(res.getString("Comment"));
-		jLabelFunction200FieldComment.setBounds(new Rectangle(11, 152, 96, 15));
+		jLabelFunction200FieldComment.setBounds(new Rectangle(5, 167, 130, 20));
 		jTextFieldFunction200FieldComment.setEnabled(false);
-		jTextFieldFunction200FieldComment.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200FieldComment.setBounds(new Rectangle(115, 149, 430, 22));
+		jTextFieldFunction200FieldComment.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200FieldComment.setBounds(new Rectangle(140, 164, 795, 25));
 		jTextFieldFunction200FieldComment.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
-		jPanelFunction200FieldList.setLayout(null);
-		jPanelFunction200FieldList.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction200FieldList.add(jLabelFunction200Table);
-		jPanelFunction200FieldList.add(jTextFieldFunction200Table);
-		jPanelFunction200FieldList.add(jLabelFunction200TableType);
-		jPanelFunction200FieldList.add(jTextFieldFunction200TableType);
-		jPanelFunction200FieldList.add(jLabelFunction200Field);
-		jPanelFunction200FieldList.add(jTextFieldFunction200Field);
-		jPanelFunction200FieldList.add(jLabelFunction200FieldType);
-		jPanelFunction200FieldList.add(jTextFieldFunction200FieldType);
-		jPanelFunction200FieldList.add(jLabelFunction200FieldLayoutOption);
-		jPanelFunction200FieldList.add(jRadioButtonFunction200FieldLayoutOptionVertical);
-		jPanelFunction200FieldList.add(jRadioButtonFunction200FieldLayoutOptionHorizontal);
-		jPanelFunction200FieldList.add(jLabelFunction200FieldWidth);
-		jPanelFunction200FieldList.add(jTextFieldFunction200FieldWidth);
-		jPanelFunction200FieldList.add(jLabelFunction200FieldRows);
-		jPanelFunction200FieldList.add(jTextFieldFunction200FieldRows);
-		jPanelFunction200FieldList.add(jLabelFunction200FieldMargin);
-		jPanelFunction200FieldList.add(jTextFieldFunction200FieldMargin);
-		jPanelFunction200FieldList.add(jLabelFunction200FieldCaptionOption);
-		jPanelFunction200FieldList.add(jRadioButtonFunction200FieldCaptionOptionName);
-		jPanelFunction200FieldList.add(jRadioButtonFunction200FieldCaptionOptionNone);
-		jPanelFunction200FieldList.add(jRadioButtonFunction200FieldCaptionOptionValue);
-		jPanelFunction200FieldList.add(jTextFieldFunction200FieldCaptionOptionValue);
-		jPanelFunction200FieldList.add(jCheckBoxFunction200FieldCaptionLengthVariable);
-		jPanelFunction200FieldList.add(jLabelFunction200FieldPromptOption);
-		jPanelFunction200FieldList.add(jRadioButtonFunction200FieldPromptOptionNone);
-		jPanelFunction200FieldList.add(jRadioButtonFunction200FieldPromptOptionList);
-		jPanelFunction200FieldList.add(jRadioButtonFunction200FieldPromptOptionCall);
-		jPanelFunction200FieldList.add(jTextFieldFunction200FieldPromptOptionCallFunctionID);
-		jPanelFunction200FieldList.add(jTextFieldFunction200FieldPromptOptionCallFunctionName);
-		jPanelFunction200FieldList.add(jButtonFunction200FieldPromptOptionCallFunctionExchange);
-		jPanelFunction200FieldList.add(jLabelFunction200FieldComment);
-		jPanelFunction200FieldList.add(jTextFieldFunction200FieldComment);
+		//
+		jPanelFunction200FieldDefinition.setPreferredSize(new Dimension(1050,198));
+		jPanelFunction200FieldDefinition.setLayout(null);
+		jPanelFunction200FieldDefinition.setBorder(null);
+		jPanelFunction200FieldDefinition.add(jLabelFunction200Table);
+		jPanelFunction200FieldDefinition.add(jTextFieldFunction200Table);
+		jPanelFunction200FieldDefinition.add(jLabelFunction200TableType);
+		jPanelFunction200FieldDefinition.add(jTextFieldFunction200TableType);
+		jPanelFunction200FieldDefinition.add(jLabelFunction200Field);
+		jPanelFunction200FieldDefinition.add(jTextFieldFunction200Field);
+		jPanelFunction200FieldDefinition.add(jLabelFunction200FieldType);
+		jPanelFunction200FieldDefinition.add(jTextFieldFunction200FieldType);
+		jPanelFunction200FieldDefinition.add(jLabelFunction200FieldLayoutOption);
+		jPanelFunction200FieldDefinition.add(jRadioButtonFunction200FieldLayoutOptionVertical);
+		jPanelFunction200FieldDefinition.add(jRadioButtonFunction200FieldLayoutOptionHorizontal);
+		jPanelFunction200FieldDefinition.add(jLabelFunction200FieldWidth);
+		jPanelFunction200FieldDefinition.add(jTextFieldFunction200FieldWidth);
+		jPanelFunction200FieldDefinition.add(jLabelFunction200FieldRows);
+		jPanelFunction200FieldDefinition.add(jTextFieldFunction200FieldRows);
+		jPanelFunction200FieldDefinition.add(jLabelFunction200FieldMargin);
+		jPanelFunction200FieldDefinition.add(jTextFieldFunction200FieldMargin);
+		jPanelFunction200FieldDefinition.add(jLabelFunction200FieldCaptionOption);
+		jPanelFunction200FieldDefinition.add(jRadioButtonFunction200FieldCaptionOptionName);
+		jPanelFunction200FieldDefinition.add(jRadioButtonFunction200FieldCaptionOptionNone);
+		jPanelFunction200FieldDefinition.add(jRadioButtonFunction200FieldCaptionOptionValue);
+		jPanelFunction200FieldDefinition.add(jTextFieldFunction200FieldCaptionOptionValue);
+		jPanelFunction200FieldDefinition.add(jCheckBoxFunction200FieldCaptionLengthVariable);
+		jPanelFunction200FieldDefinition.add(jLabelFunction200FieldPromptOption);
+		jPanelFunction200FieldDefinition.add(jRadioButtonFunction200FieldPromptOptionNone);
+		jPanelFunction200FieldDefinition.add(jRadioButtonFunction200FieldPromptOptionList);
+		jPanelFunction200FieldDefinition.add(jRadioButtonFunction200FieldPromptOptionCall);
+		jPanelFunction200FieldDefinition.add(jTextFieldFunction200FieldPromptOptionCallFunctionID);
+		jPanelFunction200FieldDefinition.add(jTextFieldFunction200FieldPromptOptionCallFunctionName);
+		jPanelFunction200FieldDefinition.add(jButtonFunction200FieldPromptOptionCallFunctionExchange);
+		jPanelFunction200FieldDefinition.add(jLabelFunction200FieldComment);
+		jPanelFunction200FieldDefinition.add(jTextFieldFunction200FieldComment);
 		//
 		jSplitPaneFunction200TabList.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneFunction200TabList.add(jScrollPaneFunction200TabList, JSplitPane.TOP);
@@ -7616,7 +7630,7 @@ public class Editor extends JFrame {
 		jScrollPaneFunction200TabList.getViewport().add(jTableFunction200TabList, null);
 		jScrollPaneFunction200TabList.addMouseListener(new Editor_jScrollPaneFunction200TabList_mouseAdapter(this));
 		jTableFunction200TabList.getSelectionModel().addListSelectionListener(new Editor_jTableFunction200TabList_listSelectionAdapter(this));
-		jTableFunction200TabList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction200TabList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction200TabList.setBackground(SystemColor.control);
 		jTableFunction200TabList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction200TabList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -7626,41 +7640,42 @@ public class Editor extends JFrame {
 		jTableFunction200TabList.addMouseListener(new Editor_jTableFunction200TabList_mouseAdapter(this));
 	    jTableFunction200TabList.addMouseMotionListener(new Editor_jTableFunction200TabList_mouseMotionAdapter(this));
 		jTableFunction200TabList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableFunction200TabList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction200TabList.addColumn("NO.");
 		tableModelFunction200TabList.addColumn(res.getString("Caption"));
 		column0 = jTableFunction200TabList.getColumnModel().getColumn(0);
 		column1 = jTableFunction200TabList.getColumnModel().getColumn(1);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(200);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(250);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction200TabList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction200TabList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction200TabList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
 		//
 		jPanelFunction200TabList.setLayout(new BorderLayout());
 		jPanelFunction200TabListTop.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction200TabListTop.setPreferredSize(new Dimension(10, 41));
+		jPanelFunction200TabListTop.setPreferredSize(new Dimension(10, 43));
 		jPanelFunction200TabListTop.setToolTipText("");
 		jPanelFunction200TabListTop.setLayout(null);
-		jLabelFunction200TabCaption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200TabCaption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200TabCaption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200TabCaption.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200TabCaption.setText(res.getString("Caption"));
-		jLabelFunction200TabCaption.setBounds(new Rectangle(11, 12, 96, 15));
+		jLabelFunction200TabCaption.setBounds(new Rectangle(5, 12, 130, 20));
 		jLabelFunction200TabCaption.setEnabled(false);
-		jTextFieldFunction200TabCaption.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200TabCaption.setBounds(new Rectangle(115, 9, 180, 22));
+		jTextFieldFunction200TabCaption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200TabCaption.setBounds(new Rectangle(140, 9, 250, 25));
 		jTextFieldFunction200TabCaption.setEnabled(false);
 		jPanelFunction200TabListTop.add(jLabelFunction200TabCaption);
 		jPanelFunction200TabListTop.add(jTextFieldFunction200TabCaption);
 		jPanelFunction200TabList.add(jPanelFunction200TabListTop, BorderLayout.NORTH);
-		jPanelFunction200TabList.add(jSplitPaneFunction200TabFieldList, BorderLayout.CENTER);
+		jPanelFunction200TabList.add(jPanelFunction200TabFieldList, BorderLayout.CENTER);
 		//
 		jScrollPaneFunction200TabFieldList.setBorder(null);
 		jScrollPaneFunction200TabFieldList.getViewport().add(jTableFunction200TabFieldList, null);
 		jScrollPaneFunction200TabFieldList.addMouseListener(new Editor_jScrollPaneFunction200TabFieldList_mouseAdapter(this));
-		jTableFunction200TabFieldList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction200TabFieldList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction200TabFieldList.setBackground(SystemColor.control);
 		jTableFunction200TabFieldList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction200TabFieldList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -7671,6 +7686,7 @@ public class Editor extends JFrame {
 		jTableFunction200TabFieldList.addMouseListener(new Editor_jTableFunction200TabFieldList_mouseAdapter(this));
 	    jTableFunction200TabFieldList.addMouseMotionListener(new Editor_jTableFunction200TabFieldList_mouseMotionAdapter(this));
 		jTableFunction200TabFieldList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableFunction200TabFieldList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction200TabFieldList.addColumn("NO.");
 		tableModelFunction200TabFieldList.addColumn(res.getString("DataSource"));
 		tableModelFunction200TabFieldList.addColumn(res.getString("FieldType"));
@@ -7679,222 +7695,212 @@ public class Editor extends JFrame {
 		column1 = jTableFunction200TabFieldList.getColumnModel().getColumn(1);
 		column2 = jTableFunction200TabFieldList.getColumnModel().getColumn(2);
 		column3 = jTableFunction200TabFieldList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(160);
-		column2.setPreferredWidth(250);
-		column3.setPreferredWidth(350);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(250);
+		column2.setPreferredWidth(350);
+		column3.setPreferredWidth(450);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction200TabFieldList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction200TabFieldList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction200TabFieldList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		jSplitPaneFunction200TabFieldList.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jSplitPaneFunction200TabFieldList.add(jScrollPaneFunction200TabFieldList, JSplitPane.TOP);
-		jSplitPaneFunction200TabFieldList.add(jPanelFunction200TabFieldList, JSplitPane.BOTTOM);
-		jSplitPaneFunction200TabFieldList.setDividerLocation(screenHeight - 638);
 		//
-		jLabelFunction200TabFieldTable.setEnabled(false);
-		jLabelFunction200TabFieldTable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jScrollPaneFunction200TabFieldDefinition.setBorder(null);
+		jScrollPaneFunction200TabFieldDefinition.getViewport().add(jPanelFunction200TabFieldDefinition);
+		jPanelFunction200TabFieldList.setLayout(new BorderLayout());
+		jPanelFunction200TabFieldList.add(jScrollPaneFunction200TabFieldList, BorderLayout.CENTER);
+		jPanelFunction200TabFieldList.add(jScrollPaneFunction200TabFieldDefinition, BorderLayout.SOUTH);
+		//
+		jLabelFunction200TabFieldTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200TabFieldTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200TabFieldTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200TabFieldTable.setText(res.getString("Table"));
-		jLabelFunction200TabFieldTable.setBounds(new Rectangle(11, 12, 96, 15));
-		jTextFieldFunction200TabFieldTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200TabFieldTable.setBounds(new Rectangle(115, 9, 300, 22));
+		jLabelFunction200TabFieldTable.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldFunction200TabFieldTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200TabFieldTable.setBounds(new Rectangle(140, 9, 350, 25));
 		jTextFieldFunction200TabFieldTable.setEditable(false);
-		jLabelFunction200TabFieldTableType.setEnabled(false);
-		jLabelFunction200TabFieldTableType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200TabFieldTableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200TabFieldTableType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200TabFieldTableType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200TabFieldTableType.setText(res.getString("Type"));
-		jLabelFunction200TabFieldTableType.setBounds(new Rectangle(430, 12, 76, 15));
-		jTextFieldFunction200TabFieldTableType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200TabFieldTableType.setBounds(new Rectangle(514, 9, 250, 22));
+		jLabelFunction200TabFieldTableType.setBounds(new Rectangle(500, 12, 100, 20));
+		jTextFieldFunction200TabFieldTableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200TabFieldTableType.setBounds(new Rectangle(605, 9, 330, 25));
 		jTextFieldFunction200TabFieldTableType.setEditable(false);
-		jLabelFunction200TabField.setEnabled(false);
-		jLabelFunction200TabField.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction200TabField.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200TabField.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200TabField.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200TabField.setText(res.getString("Field"));
-		jLabelFunction200TabField.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldFunction200TabField.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200TabField.setBounds(new Rectangle(115, 37, 300, 22));
+		jLabelFunction200TabField.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldFunction200TabField.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200TabField.setBounds(new Rectangle(140, 40, 350, 25));
 		jTextFieldFunction200TabField.setEditable(false);
-		jLabelFunction200TabFieldType.setEnabled(false);
-		jLabelFunction200TabFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200TabFieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200TabFieldType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200TabFieldType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200TabFieldType.setText(res.getString("Type"));
-		jLabelFunction200TabFieldType.setBounds(new Rectangle(430, 40, 76, 15));
-		jTextFieldFunction200TabFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200TabFieldType.setBounds(new Rectangle(514, 37, 250, 22));
+		jLabelFunction200TabFieldType.setBounds(new Rectangle(500, 43, 100, 20));
+		jTextFieldFunction200TabFieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200TabFieldType.setBounds(new Rectangle(605, 40, 330, 25));
 		jTextFieldFunction200TabFieldType.setEditable(false);
-		jLabelFunction200TabFieldLayoutOption.setEnabled(false);
+		//
 		jLabelFunction200TabFieldLayoutOption.setText(res.getString("LayoutOption"));
-		jLabelFunction200TabFieldLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200TabFieldLayoutOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200TabFieldLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200TabFieldLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction200TabFieldLayoutOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction200TabFieldLayoutOption.setBounds(new Rectangle(5, 74, 130, 20));
 		jRadioButtonFunction200TabFieldLayoutOptionVertical.setText(res.getString("LayoutVertical"));
-		jRadioButtonFunction200TabFieldLayoutOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction200TabFieldLayoutOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
-		jRadioButtonFunction200TabFieldLayoutOptionVertical.setEnabled(false);
+		jRadioButtonFunction200TabFieldLayoutOptionVertical.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction200TabFieldLayoutOptionVertical.setBounds(new Rectangle(140, 71, 130, 25));
 		jRadioButtonFunction200TabFieldLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
-		jRadioButtonFunction200TabFieldLayoutOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction200TabFieldLayoutOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
-		jRadioButtonFunction200TabFieldLayoutOptionHorizontal.setEnabled(false);
+		jRadioButtonFunction200TabFieldLayoutOptionHorizontal.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction200TabFieldLayoutOptionHorizontal.setBounds(new Rectangle(270, 71, 130, 25));
 		buttonGroupFunction200TabFieldLayoutOption.add(jRadioButtonFunction200TabFieldLayoutOptionVertical);
 		buttonGroupFunction200TabFieldLayoutOption.add(jRadioButtonFunction200TabFieldLayoutOptionHorizontal);
-		jLabelFunction200TabFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200TabFieldWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200TabFieldWidth.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200TabFieldWidth.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200TabFieldWidth.setText(res.getString("FieldWidth"));
-		jLabelFunction200TabFieldWidth.setBounds(new Rectangle(430, 68, 76, 15));
-		jLabelFunction200TabFieldWidth.setEnabled(false);
-		jTextFieldFunction200TabFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200TabFieldWidth.setBounds(new Rectangle(514, 65, 45, 22));
-		jTextFieldFunction200TabFieldWidth.setEnabled(false);
+		jLabelFunction200TabFieldWidth.setBounds(new Rectangle(500, 74, 100, 20));
+		jTextFieldFunction200TabFieldWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200TabFieldWidth.setBounds(new Rectangle(605, 71, 60, 25));
 		jTextFieldFunction200TabFieldWidth.setText("");
-		jLabelFunction200TabFieldRows.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200TabFieldRows.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200TabFieldRows.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200TabFieldRows.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200TabFieldRows.setText(res.getString("FieldRows"));
-		jLabelFunction200TabFieldRows.setBounds(new Rectangle(564, 68, 45, 15));
-		jLabelFunction200TabFieldRows.setEnabled(false);
-		jTextFieldFunction200TabFieldRows.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200TabFieldRows.setBounds(new Rectangle(614, 65, 45, 22));
+		jLabelFunction200TabFieldRows.setBounds(new Rectangle(675, 74, 60, 20));
+		jTextFieldFunction200TabFieldRows.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200TabFieldRows.setBounds(new Rectangle(740, 71, 60, 25));
 		jTextFieldFunction200TabFieldRows.setText("");
-		jTextFieldFunction200TabFieldRows.setEnabled(false);
-		jLabelFunction200TabFieldMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200TabFieldMargin.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200TabFieldMargin.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200TabFieldMargin.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200TabFieldMargin.setText(res.getString("FieldMargin"));
-		jLabelFunction200TabFieldMargin.setBounds(new Rectangle(664, 68, 45, 15));
-		jLabelFunction200TabFieldMargin.setEnabled(false);
-		jTextFieldFunction200TabFieldMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200TabFieldMargin.setBounds(new Rectangle(714, 65, 45, 22));
+		jLabelFunction200TabFieldMargin.setBounds(new Rectangle(810, 74, 60, 20));
+		jTextFieldFunction200TabFieldMargin.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200TabFieldMargin.setBounds(new Rectangle(875, 71, 60, 25));
 		jTextFieldFunction200TabFieldMargin.setText("");
-		jTextFieldFunction200TabFieldMargin.setEnabled(false);
-		jLabelFunction200TabFieldCaptionOption.setEnabled(false);
+		//
 		jLabelFunction200TabFieldCaptionOption.setText(res.getString("Caption"));
-		jLabelFunction200TabFieldCaptionOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200TabFieldCaptionOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200TabFieldCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200TabFieldCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction200TabFieldCaptionOption.setBounds(new Rectangle(11, 96, 96, 15));
+		jLabelFunction200TabFieldCaptionOption.setBounds(new Rectangle(5, 105, 130, 20));
 		jRadioButtonFunction200TabFieldCaptionOptionName.setText(res.getString("FieldName"));
-		jRadioButtonFunction200TabFieldCaptionOptionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction200TabFieldCaptionOptionName.setBounds(new Rectangle(115, 93, 100, 22));
-		jRadioButtonFunction200TabFieldCaptionOptionName.setEnabled(false);
+		jRadioButtonFunction200TabFieldCaptionOptionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction200TabFieldCaptionOptionName.setBounds(new Rectangle(140, 102, 130, 25));
 		jRadioButtonFunction200TabFieldCaptionOptionName.addChangeListener(new Editor_jRadioButtonFunction200TabFieldCaptionOption_changeAdapter(this));
 		jRadioButtonFunction200TabFieldCaptionOptionNone.setText(res.getString("None"));
-		jRadioButtonFunction200TabFieldCaptionOptionNone.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction200TabFieldCaptionOptionNone.setBounds(new Rectangle(225, 93, 100, 22));
-		jRadioButtonFunction200TabFieldCaptionOptionNone.setEnabled(false);
+		jRadioButtonFunction200TabFieldCaptionOptionNone.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction200TabFieldCaptionOptionNone.setBounds(new Rectangle(270, 102, 130, 25));
 		jRadioButtonFunction200TabFieldCaptionOptionNone.addChangeListener(new Editor_jRadioButtonFunction200TabFieldCaptionOption_changeAdapter(this));
 		jRadioButtonFunction200TabFieldCaptionOptionValue.setText(res.getString("ValueSpecified"));
-		jRadioButtonFunction200TabFieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction200TabFieldCaptionOptionValue.setBounds(new Rectangle(335, 93, 63, 22));
-		jRadioButtonFunction200TabFieldCaptionOptionValue.setEnabled(false);
+		jRadioButtonFunction200TabFieldCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction200TabFieldCaptionOptionValue.setBounds(new Rectangle(400, 102, 130, 25));
 		jRadioButtonFunction200TabFieldCaptionOptionValue.addChangeListener(new Editor_jRadioButtonFunction200TabFieldCaptionOption_changeAdapter(this));
 		buttonGroupFunction200TabFieldCaptionOption.add(jRadioButtonFunction200TabFieldCaptionOptionName);
 		buttonGroupFunction200TabFieldCaptionOption.add(jRadioButtonFunction200TabFieldCaptionOptionValue);
 		buttonGroupFunction200TabFieldCaptionOption.add(jRadioButtonFunction200TabFieldCaptionOptionNone);
-		jTextFieldFunction200TabFieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200TabFieldCaptionOptionValue.setBounds(new Rectangle(415, 93, 200, 22));
-		jTextFieldFunction200TabFieldCaptionOptionValue.setEnabled(false);
+		jTextFieldFunction200TabFieldCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200TabFieldCaptionOptionValue.setBounds(new Rectangle(530, 102, 200, 22));
 		jTextFieldFunction200TabFieldCaptionOptionValue.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
-		jCheckBoxFunction200TabFieldCaptionLengthVariable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jCheckBoxFunction200TabFieldCaptionLengthVariable.setBounds(new Rectangle(650, 93, 150, 22));
+		jCheckBoxFunction200TabFieldCaptionLengthVariable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxFunction200TabFieldCaptionLengthVariable.setBounds(new Rectangle(760, 102, 200, 25));
 		jCheckBoxFunction200TabFieldCaptionLengthVariable.setText(res.getString("CaptionLengthVariable"));
-		jCheckBoxFunction200TabFieldCaptionLengthVariable.setEnabled(false);
+		//
 		jLabelFunction200TabFieldPromptOption.setText(res.getString("Prompt"));
-		jLabelFunction200TabFieldPromptOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200TabFieldPromptOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200TabFieldPromptOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200TabFieldPromptOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction200TabFieldPromptOption.setBounds(new Rectangle(11, 124, 96, 15));
+		jLabelFunction200TabFieldPromptOption.setBounds(new Rectangle(5, 136, 130, 20));
 		jLabelFunction200TabFieldPromptOption.setEnabled(false);
 		jRadioButtonFunction200TabFieldPromptOptionNone.setText(res.getString("None"));
-		jRadioButtonFunction200TabFieldPromptOptionNone.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction200TabFieldPromptOptionNone.setBounds(new Rectangle(115, 121, 100, 22));
+		jRadioButtonFunction200TabFieldPromptOptionNone.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction200TabFieldPromptOptionNone.setBounds(new Rectangle(140, 133, 130, 25));
 		jRadioButtonFunction200TabFieldPromptOptionNone.setEnabled(false);
 		jRadioButtonFunction200TabFieldPromptOptionNone.addChangeListener(new Editor_jRadioButtonFunction200TabFieldPromptOption_changeAdapter(this));
 		jRadioButtonFunction200TabFieldPromptOptionList.setText(res.getString("ListBox"));
-		jRadioButtonFunction200TabFieldPromptOptionList.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction200TabFieldPromptOptionList.setBounds(new Rectangle(225, 121, 110, 22));
+		jRadioButtonFunction200TabFieldPromptOptionList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction200TabFieldPromptOptionList.setBounds(new Rectangle(270, 133, 130, 25));
 		jRadioButtonFunction200TabFieldPromptOptionList.setEnabled(false);
 		jRadioButtonFunction200TabFieldPromptOptionList.addChangeListener(new Editor_jRadioButtonFunction200TabFieldPromptOption_changeAdapter(this));
 		jRadioButtonFunction200TabFieldPromptOptionCall.setText(res.getString("CallPromptFunction"));
-		jRadioButtonFunction200TabFieldPromptOptionCall.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction200TabFieldPromptOptionCall.setBounds(new Rectangle(335, 121, 78, 22));
+		jRadioButtonFunction200TabFieldPromptOptionCall.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction200TabFieldPromptOptionCall.setBounds(new Rectangle(400, 133, 130, 25));
 		jRadioButtonFunction200TabFieldPromptOptionCall.setEnabled(false);
 		jRadioButtonFunction200TabFieldPromptOptionCall.addChangeListener(new Editor_jRadioButtonFunction200TabFieldPromptOption_changeAdapter(this));
 		buttonGroupFunction200TabFieldPromptOption.add(jRadioButtonFunction200TabFieldPromptOptionNone);
 		buttonGroupFunction200TabFieldPromptOption.add(jRadioButtonFunction200TabFieldPromptOptionList);
 		buttonGroupFunction200TabFieldPromptOption.add(jRadioButtonFunction200TabFieldPromptOptionCall);
-		jTextFieldFunction200TabFieldPromptOptionCallFunctionID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200TabFieldPromptOptionCallFunctionID.setBounds(new Rectangle(415, 121, 80, 22));
+		jTextFieldFunction200TabFieldPromptOptionCallFunctionID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200TabFieldPromptOptionCallFunctionID.setBounds(new Rectangle(530, 133, 120, 25));
 		jTextFieldFunction200TabFieldPromptOptionCallFunctionID.setEnabled(false);
 		jTextFieldFunction200TabFieldPromptOptionCallFunctionID.addKeyListener(new Editor_jTextFieldFunction200TabFieldPromptOptionCallFunctionID_keyAdapter(this));
-		jTextFieldFunction200TabFieldPromptOptionCallFunctionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200TabFieldPromptOptionCallFunctionName.setBounds(new Rectangle(500, 121, 204, 22));
+		jTextFieldFunction200TabFieldPromptOptionCallFunctionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200TabFieldPromptOptionCallFunctionName.setBounds(new Rectangle(655, 133, 280, 25));
 		jTextFieldFunction200TabFieldPromptOptionCallFunctionName.setEnabled(false);
 		jTextFieldFunction200TabFieldPromptOptionCallFunctionName.setEditable(false);
-		jButtonFunction200TabFieldPromptOptionCallFunctionExchange.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jButtonFunction200TabFieldPromptOptionCallFunctionExchange.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jButtonFunction200TabFieldPromptOptionCallFunctionExchange.setText(res.getString("ExchangeParms"));
-		jButtonFunction200TabFieldPromptOptionCallFunctionExchange.setBounds(new Rectangle(704, 120, 60, 23));
+		jButtonFunction200TabFieldPromptOptionCallFunctionExchange.setBounds(new Rectangle(935, 132, 100, 27));
 		jButtonFunction200TabFieldPromptOptionCallFunctionExchange.setEnabled(false);
 		jButtonFunction200TabFieldPromptOptionCallFunctionExchange.addActionListener(new Editor_jButtonToEditPromptOptionCallFunctionExchange_actionAdapter(this));
+		//
 		jLabelFunction200TabFieldComment.setEnabled(false);
-		jLabelFunction200TabFieldComment.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200TabFieldComment.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200TabFieldComment.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200TabFieldComment.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200TabFieldComment.setText(res.getString("Comment"));
-		jLabelFunction200TabFieldComment.setBounds(new Rectangle(11, 152, 96, 15));
+		jLabelFunction200TabFieldComment.setBounds(new Rectangle(5, 167, 130, 20));
 		jTextFieldFunction200TabFieldComment.setEnabled(false);
-		jTextFieldFunction200TabFieldComment.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200TabFieldComment.setBounds(new Rectangle(115, 149, 430, 22));
+		jTextFieldFunction200TabFieldComment.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200TabFieldComment.setBounds(new Rectangle(140, 164, 795, 25));
 		jTextFieldFunction200TabFieldComment.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
-		jPanelFunction200TabFieldList.setLayout(null);
-		jPanelFunction200TabFieldList.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction200TabFieldList.add(jLabelFunction200TabFieldTable);
-		jPanelFunction200TabFieldList.add(jTextFieldFunction200TabFieldTable);
-		jPanelFunction200TabFieldList.add(jLabelFunction200TabFieldTableType);
-		jPanelFunction200TabFieldList.add(jTextFieldFunction200TabFieldTableType);
-		jPanelFunction200TabFieldList.add(jLabelFunction200TabField);
-		jPanelFunction200TabFieldList.add(jTextFieldFunction200TabField);
-		jPanelFunction200TabFieldList.add(jLabelFunction200TabFieldType);
-		jPanelFunction200TabFieldList.add(jTextFieldFunction200TabFieldType);
-		jPanelFunction200TabFieldList.add(jLabelFunction200TabFieldLayoutOption);
-		jPanelFunction200TabFieldList.add(jRadioButtonFunction200TabFieldLayoutOptionVertical);
-		jPanelFunction200TabFieldList.add(jRadioButtonFunction200TabFieldLayoutOptionHorizontal);
-		jPanelFunction200TabFieldList.add(jLabelFunction200TabFieldWidth);
-		jPanelFunction200TabFieldList.add(jTextFieldFunction200TabFieldWidth);
-		jPanelFunction200TabFieldList.add(jLabelFunction200TabFieldRows);
-		jPanelFunction200TabFieldList.add(jTextFieldFunction200TabFieldRows);
-		jPanelFunction200TabFieldList.add(jLabelFunction200TabFieldMargin);
-		jPanelFunction200TabFieldList.add(jTextFieldFunction200TabFieldMargin);
-		jPanelFunction200TabFieldList.add(jLabelFunction200TabFieldCaptionOption);
-		jPanelFunction200TabFieldList.add(jRadioButtonFunction200TabFieldCaptionOptionName);
-		jPanelFunction200TabFieldList.add(jRadioButtonFunction200TabFieldCaptionOptionNone);
-		jPanelFunction200TabFieldList.add(jRadioButtonFunction200TabFieldCaptionOptionValue);
-		jPanelFunction200TabFieldList.add(jTextFieldFunction200TabFieldCaptionOptionValue);
-		jPanelFunction200TabFieldList.add(jCheckBoxFunction200TabFieldCaptionLengthVariable);
-		jPanelFunction200TabFieldList.add(jLabelFunction200TabFieldPromptOption);
-		jPanelFunction200TabFieldList.add(jRadioButtonFunction200TabFieldPromptOptionNone);
-		jPanelFunction200TabFieldList.add(jRadioButtonFunction200TabFieldPromptOptionList);
-		jPanelFunction200TabFieldList.add(jRadioButtonFunction200TabFieldPromptOptionCall);
-		jPanelFunction200TabFieldList.add(jTextFieldFunction200TabFieldPromptOptionCallFunctionID);
-		jPanelFunction200TabFieldList.add(jTextFieldFunction200TabFieldPromptOptionCallFunctionName);
-		jPanelFunction200TabFieldList.add(jButtonFunction200TabFieldPromptOptionCallFunctionExchange);
-		jPanelFunction200TabFieldList.add(jLabelFunction200TabFieldComment);
-		jPanelFunction200TabFieldList.add(jTextFieldFunction200TabFieldComment);
+		//
+		jPanelFunction200TabFieldDefinition.setPreferredSize(new Dimension(1050,198));
+		jPanelFunction200TabFieldDefinition.setLayout(null);
+		jPanelFunction200TabFieldDefinition.setBorder(null);
+		jPanelFunction200TabFieldDefinition.add(jLabelFunction200TabFieldTable);
+		jPanelFunction200TabFieldDefinition.add(jTextFieldFunction200TabFieldTable);
+		jPanelFunction200TabFieldDefinition.add(jLabelFunction200TabFieldTableType);
+		jPanelFunction200TabFieldDefinition.add(jTextFieldFunction200TabFieldTableType);
+		jPanelFunction200TabFieldDefinition.add(jLabelFunction200TabField);
+		jPanelFunction200TabFieldDefinition.add(jTextFieldFunction200TabField);
+		jPanelFunction200TabFieldDefinition.add(jLabelFunction200TabFieldType);
+		jPanelFunction200TabFieldDefinition.add(jTextFieldFunction200TabFieldType);
+		jPanelFunction200TabFieldDefinition.add(jLabelFunction200TabFieldLayoutOption);
+		jPanelFunction200TabFieldDefinition.add(jRadioButtonFunction200TabFieldLayoutOptionVertical);
+		jPanelFunction200TabFieldDefinition.add(jRadioButtonFunction200TabFieldLayoutOptionHorizontal);
+		jPanelFunction200TabFieldDefinition.add(jLabelFunction200TabFieldWidth);
+		jPanelFunction200TabFieldDefinition.add(jTextFieldFunction200TabFieldWidth);
+		jPanelFunction200TabFieldDefinition.add(jLabelFunction200TabFieldRows);
+		jPanelFunction200TabFieldDefinition.add(jTextFieldFunction200TabFieldRows);
+		jPanelFunction200TabFieldDefinition.add(jLabelFunction200TabFieldMargin);
+		jPanelFunction200TabFieldDefinition.add(jTextFieldFunction200TabFieldMargin);
+		jPanelFunction200TabFieldDefinition.add(jLabelFunction200TabFieldCaptionOption);
+		jPanelFunction200TabFieldDefinition.add(jRadioButtonFunction200TabFieldCaptionOptionName);
+		jPanelFunction200TabFieldDefinition.add(jRadioButtonFunction200TabFieldCaptionOptionNone);
+		jPanelFunction200TabFieldDefinition.add(jRadioButtonFunction200TabFieldCaptionOptionValue);
+		jPanelFunction200TabFieldDefinition.add(jTextFieldFunction200TabFieldCaptionOptionValue);
+		jPanelFunction200TabFieldDefinition.add(jCheckBoxFunction200TabFieldCaptionLengthVariable);
+		jPanelFunction200TabFieldDefinition.add(jLabelFunction200TabFieldPromptOption);
+		jPanelFunction200TabFieldDefinition.add(jRadioButtonFunction200TabFieldPromptOptionNone);
+		jPanelFunction200TabFieldDefinition.add(jRadioButtonFunction200TabFieldPromptOptionList);
+		jPanelFunction200TabFieldDefinition.add(jRadioButtonFunction200TabFieldPromptOptionCall);
+		jPanelFunction200TabFieldDefinition.add(jTextFieldFunction200TabFieldPromptOptionCallFunctionID);
+		jPanelFunction200TabFieldDefinition.add(jTextFieldFunction200TabFieldPromptOptionCallFunctionName);
+		jPanelFunction200TabFieldDefinition.add(jButtonFunction200TabFieldPromptOptionCallFunctionExchange);
+		jPanelFunction200TabFieldDefinition.add(jLabelFunction200TabFieldComment);
+		jPanelFunction200TabFieldDefinition.add(jTextFieldFunction200TabFieldComment);
 		//
 		jScrollPaneFunction200ButtonList.setBorder(null);
 		jScrollPaneFunction200ButtonList.getViewport().add(jTableFunction200ButtonList, null);
 		jScrollPaneFunction200ButtonList.addMouseListener(new Editor_jScrollPaneFunction200ButtonList_mouseAdapter(this));
-		jTableFunction200ButtonList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction200ButtonList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction200ButtonList.setBackground(SystemColor.control);
 		jTableFunction200ButtonList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction200ButtonList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -7904,6 +7910,7 @@ public class Editor extends JFrame {
 		jTableFunction200ButtonList.addFocusListener(new Editor_FocusListener());
 		jTableFunction200ButtonList.addMouseListener(new Editor_jTableFunction200ButtonList_mouseAdapter(this));
 		jTableFunction200ButtonList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableFunction200ButtonList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction200ButtonList.addColumn("NO.");
 		tableModelFunction200ButtonList.addColumn(res.getString("Pos_short"));
 		tableModelFunction200ButtonList.addColumn(res.getString("Caption"));
@@ -7912,62 +7919,55 @@ public class Editor extends JFrame {
 		column1 = jTableFunction200ButtonList.getColumnModel().getColumn(1);
 		column2 = jTableFunction200ButtonList.getColumnModel().getColumn(2);
 		column3 = jTableFunction200ButtonList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
+		column0.setPreferredWidth(40);
 		column1.setPreferredWidth(50);
-		column2.setPreferredWidth(150);
-		column3.setPreferredWidth(210);
+		column2.setPreferredWidth(200);
+		column3.setPreferredWidth(300);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentCenterControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction200ButtonList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction200ButtonList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction200ButtonList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		jSplitPaneFunction200ButtonList.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jSplitPaneFunction200ButtonList.add(jScrollPaneFunction200ButtonList, JSplitPane.TOP);
-		jSplitPaneFunction200ButtonList.add(jPanelFunction200ButtonList, JSplitPane.BOTTOM);
-		jSplitPaneFunction200ButtonList.setDividerLocation(screenHeight - 437);
-		jLabelFunction200ButtonPosition.setEnabled(false);
-		jLabelFunction200ButtonPosition.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jPanelFunction200ButtonList.setLayout(new BorderLayout());
+		jPanelFunction200ButtonList.add(jScrollPaneFunction200ButtonList, BorderLayout.CENTER);
+		jPanelFunction200ButtonList.add(jPanelFunction200ButtonDefinition, BorderLayout.SOUTH);
+		//
+		jLabelFunction200ButtonPosition.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200ButtonPosition.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200ButtonPosition.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200ButtonPosition.setText(res.getString("Position"));
-		jLabelFunction200ButtonPosition.setBounds(new Rectangle(11, 12, 96, 15));
-		jSpinnerFunction200ButtonPosition.setFont(new java.awt.Font("SansSerif", 0, 13));
-		jSpinnerFunction200ButtonPosition.setBounds(new Rectangle(115, 9, 40, 22));
-		jSpinnerFunction200ButtonPosition.setEnabled(false);
-		jLabelFunction200ButtonPositionComment.setEnabled(false);
-		jLabelFunction200ButtonPositionComment.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200ButtonPosition.setBounds(new Rectangle(5, 12, 130, 20));
+		jSpinnerFunction200ButtonPosition.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jSpinnerFunction200ButtonPosition.setBounds(new Rectangle(140, 9, 40, 25));
+		jLabelFunction200ButtonPositionComment.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200ButtonPositionComment.setText(res.getString("ButtonPositionComment"));
-		jLabelFunction200ButtonPositionComment.setBounds(new Rectangle(165, 12, 200, 15));
-		jLabelFunction200ButtonKey.setEnabled(false);
-		jLabelFunction200ButtonKey.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200ButtonPositionComment.setBounds(new Rectangle(185, 12, 230, 20));
+		jLabelFunction200ButtonKey.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200ButtonKey.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200ButtonKey.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200ButtonKey.setText(res.getString("FunctionKeyNo"));
-		jLabelFunction200ButtonKey.setBounds(new Rectangle(11, 40, 96, 15));
-		jSpinnerFunction200ButtonKey.setFont(new java.awt.Font("SansSerif", 0, 13));
-		jSpinnerFunction200ButtonKey.setBounds(new Rectangle(115, 37, 40, 22));
-		jSpinnerFunction200ButtonKey.setEnabled(false);
-		jLabelFunction200ButtonCaption.setEnabled(false);
-		jLabelFunction200ButtonCaption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200ButtonKey.setBounds(new Rectangle(415, 12, 130, 20));
+		jSpinnerFunction200ButtonKey.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jSpinnerFunction200ButtonKey.setBounds(new Rectangle(550, 9, 40, 25));
+		jLabelFunction200ButtonCaption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200ButtonCaption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200ButtonCaption.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200ButtonCaption.setText(res.getString("Caption"));
-		jLabelFunction200ButtonCaption.setBounds(new Rectangle(161, 40, 96, 15));
-		jTextFieldFunction200ButtonCaption.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200ButtonCaption.setBounds(new Rectangle(265, 37, 100, 22));
-		jTextFieldFunction200ButtonCaption.setEnabled(false);
-		jLabelFunction200ButtonAction.setEnabled(false);
-		jLabelFunction200ButtonAction.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200ButtonCaption.setBounds(new Rectangle(600, 12, 130, 20));
+		jTextFieldFunction200ButtonCaption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200ButtonCaption.setBounds(new Rectangle(735, 9, 100, 25));
+		//
+		jLabelFunction200ButtonAction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200ButtonAction.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200ButtonAction.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200ButtonAction.setText(res.getString("Action"));
-		jLabelFunction200ButtonAction.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction200ButtonAction.setBounds(new Rectangle(5, 43, 130, 20));
 		jComboBoxFunction200ButtonAction.setEditable(false);
-		jComboBoxFunction200ButtonAction.setEnabled(false);
-		jComboBoxFunction200ButtonAction.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxFunction200ButtonAction.setBounds(new Rectangle(115, 65, 210, 22));
+		jComboBoxFunction200ButtonAction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jComboBoxFunction200ButtonAction.setBounds(new Rectangle(140, 40, 265, 25));
 		jComboBoxFunction200ButtonAction.addActionListener(new Editor_jComboBoxFunction200ButtonAction_actionAdapter(this));
 		jComboBoxFunction200ButtonAction.addItem(res.getString("ActionExit"));
 		jComboBoxFunction200ButtonAction.addItem(res.getString("ActionGoToCopyMode"));
@@ -7975,37 +7975,37 @@ public class Editor extends JFrame {
 		jComboBoxFunction200ButtonAction.addItem(res.getString("ActionDelete"));
 		jComboBoxFunction200ButtonAction.addItem(res.getString("ActionOutputEXCEL"));
 		jComboBoxFunction200ButtonAction.addItem(res.getString("ActionCallFunction"));
-		jLabelFunction200ButtonActionCallFunction.setEnabled(false);
-		jLabelFunction200ButtonActionCallFunction.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction200ButtonActionCallFunction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200ButtonActionCallFunction.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200ButtonActionCallFunction.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200ButtonActionCallFunction.setText(res.getString("FunctionID"));
-		jLabelFunction200ButtonActionCallFunction.setBounds(new Rectangle(11, 96, 96, 15));
-		jTextFieldFunction200ButtonActionCallFunctionID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200ButtonActionCallFunctionID.setBounds(new Rectangle(115, 93, 100, 22));
-		jTextFieldFunction200ButtonActionCallFunctionID.setEnabled(false);
+		jLabelFunction200ButtonActionCallFunction.setBounds(new Rectangle(415, 43, 130, 20));
+		jTextFieldFunction200ButtonActionCallFunctionID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200ButtonActionCallFunctionID.setBounds(new Rectangle(550, 40, 120, 25));
 		jTextFieldFunction200ButtonActionCallFunctionID.addKeyListener(new Editor_jTextFieldFunction200ButtonActionCallFunctionID_keyAdapter(this));
-		jTextFieldFunction200ButtonActionCallFunctionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction200ButtonActionCallFunctionName.setBounds(new Rectangle(220, 93, 400, 22));
+		jTextFieldFunction200ButtonActionCallFunctionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200ButtonActionCallFunctionName.setBounds(new Rectangle(675, 40, 400, 25));
 		jTextFieldFunction200ButtonActionCallFunctionName.setEditable(false);
-		jPanelFunction200ButtonList.setLayout(null);
-		jPanelFunction200ButtonList.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction200ButtonList.add(jLabelFunction200ButtonPosition);
-		jPanelFunction200ButtonList.add(jSpinnerFunction200ButtonPosition);
-		jPanelFunction200ButtonList.add(jLabelFunction200ButtonPositionComment);
-		jPanelFunction200ButtonList.add(jLabelFunction200ButtonKey);
-		jPanelFunction200ButtonList.add(jSpinnerFunction200ButtonKey);
-		jPanelFunction200ButtonList.add(jLabelFunction200ButtonCaption);
-		jPanelFunction200ButtonList.add(jTextFieldFunction200ButtonCaption);
-		jPanelFunction200ButtonList.add(jLabelFunction200ButtonAction);
-		jPanelFunction200ButtonList.add(jComboBoxFunction200ButtonAction);
-		jPanelFunction200ButtonList.add(jLabelFunction200ButtonActionCallFunction);
-		jPanelFunction200ButtonList.add(jTextFieldFunction200ButtonActionCallFunctionID);
-		jPanelFunction200ButtonList.add(jTextFieldFunction200ButtonActionCallFunctionName);
+		//
+		jPanelFunction200ButtonDefinition.setPreferredSize(new Dimension(100,74));
+		jPanelFunction200ButtonDefinition.setLayout(null);
+		jPanelFunction200ButtonDefinition.setBorder(null);
+		jPanelFunction200ButtonDefinition.add(jLabelFunction200ButtonPosition);
+		jPanelFunction200ButtonDefinition.add(jSpinnerFunction200ButtonPosition);
+		jPanelFunction200ButtonDefinition.add(jLabelFunction200ButtonPositionComment);
+		jPanelFunction200ButtonDefinition.add(jLabelFunction200ButtonKey);
+		jPanelFunction200ButtonDefinition.add(jSpinnerFunction200ButtonKey);
+		jPanelFunction200ButtonDefinition.add(jLabelFunction200ButtonCaption);
+		jPanelFunction200ButtonDefinition.add(jTextFieldFunction200ButtonCaption);
+		jPanelFunction200ButtonDefinition.add(jLabelFunction200ButtonAction);
+		jPanelFunction200ButtonDefinition.add(jComboBoxFunction200ButtonAction);
+		jPanelFunction200ButtonDefinition.add(jLabelFunction200ButtonActionCallFunction);
+		jPanelFunction200ButtonDefinition.add(jTextFieldFunction200ButtonActionCallFunctionID);
+		jPanelFunction200ButtonDefinition.add(jTextFieldFunction200ButtonActionCallFunctionName);
 		//
 		jScrollPaneFunction200UsageList.setBorder(null);
 		jScrollPaneFunction200UsageList.getViewport().add(jTableFunction200UsageList, null);
-		jTableFunction200UsageList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction200UsageList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction200UsageList.setBackground(SystemColor.control);
 		jTableFunction200UsageList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction200UsageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -8013,6 +8013,7 @@ public class Editor extends JFrame {
 		jTableFunction200UsageList.setSelectionForeground(Color.black);
 		jTableFunction200UsageList.addFocusListener(new Editor_FocusListener());
 		jTableFunction200UsageList.addMouseListener(new Editor_jTableFunction200UsageList_mouseAdapter(this));
+		jTableFunction200UsageList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction200UsageList.addColumn("NO.");
 		tableModelFunction200UsageList.addColumn(res.getString("FunctionsWhereUsed"));
 		tableModelFunction200UsageList.addColumn(res.getString("Type"));
@@ -8021,15 +8022,15 @@ public class Editor extends JFrame {
 		column1 = jTableFunction200UsageList.getColumnModel().getColumn(1);
 		column2 = jTableFunction200UsageList.getColumnModel().getColumn(2);
 		column3 = jTableFunction200UsageList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(300);
-		column2.setPreferredWidth(160);
-		column3.setPreferredWidth(280);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(400);
+		column2.setPreferredWidth(250);
+		column3.setPreferredWidth(380);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction200UsageList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction200UsageList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction200UsageList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
 	}
@@ -8038,18 +8039,20 @@ public class Editor extends JFrame {
 	 */
 	void initComponentsForFunction290() {
 		jPanelFunction290.setLayout(new BorderLayout());
+		jScrollPaneFunction290Top.setBorder(null);
+		jScrollPaneFunction290Top.getViewport().add(jPanelFunction290Top);
 		jPanelFunction290Top.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction290Top.setPreferredSize(new Dimension(10, 95));
+		jPanelFunction290Top.setPreferredSize(new Dimension(1080, 105));
 		jPanelFunction290Top.setToolTipText("");
 		jPanelFunction290Top.setLayout(null);
 		//
-		jLabelFunction290Type.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction290Type.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction290Type.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction290Type.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction290Type.setText(res.getString("FunctionType"));
-		jLabelFunction290Type.setBounds(new Rectangle(11, 12, 96, 15));
-		jTextFieldFunction290Type.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction290Type.setBounds(new Rectangle(115, 9, 170, 22));
+		jLabelFunction290Type.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldFunction290Type.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction290Type.setBounds(new Rectangle(140, 9, 250, 25));
 		jTextFieldFunction290Type.setEditable(false);
 		jTextFieldFunction290Type.setText(res.getString("FunctionTypeXF290"));
 		Insets m = jTextFieldFunction290Type.getMargin();
@@ -8058,40 +8061,36 @@ public class Editor extends JFrame {
 		label.setBorder(null); 
 		label.setBounds(m.left, m.top, imageIconFunction290.getIconWidth(), imageIconFunction290.getIconHeight()); 
 		jTextFieldFunction290Type.add(label);
-		jLabelFunction290ID.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction290ID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction290ID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction290ID.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction290ID.setText(res.getString("FunctionID"));
-		jLabelFunction290ID.setBounds(new Rectangle(295, 12, 76, 15));
-		jTextFieldFunction290ID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction290ID.setBounds(new Rectangle(379, 9, 80, 22));
+		jLabelFunction290ID.setText(res.getString("IDAndName"));
+		jLabelFunction290ID.setBounds(new Rectangle(400, 12, 100, 20));
+		jTextFieldFunction290ID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction290ID.setBounds(new Rectangle(505, 9, 120, 25));
 		jTextFieldFunction290ID.setEditable(false);
-		jLabelFunction290Name.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelFunction290Name.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction290Name.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction290Name.setText(res.getString("FunctionName"));
-		jLabelFunction290Name.setBounds(new Rectangle(469, 12, 86, 15));
-		jTextFieldFunction290Name.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction290Name.setBounds(new Rectangle(563, 9, 250, 22));
+		jTextFieldFunction290Name.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction290Name.setBounds(new Rectangle(630, 9, 350, 25));
 		//
-		jLabelFunction290TableName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction290TableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction290TableName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction290TableName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction290TableName.setText(res.getString("PrimaryTable"));
-		jLabelFunction290TableName.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldFunction290TableName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction290TableName.setBounds(new Rectangle(115, 37, 600, 22));
+		jLabelFunction290TableName.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldFunction290TableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction290TableName.setBounds(new Rectangle(140, 40, 840, 25));
 		jTextFieldFunction290TableName.setEditable(false);
 		jButtonFunction290TableKeyFieldsEdit.setIcon(imageIconPrompt);
-		jButtonFunction290TableKeyFieldsEdit.setBounds(new Rectangle(715, 36, 28, 23));
+		jButtonFunction290TableKeyFieldsEdit.setBounds(new Rectangle(980, 39, 28, 27));
 		jButtonFunction290TableKeyFieldsEdit.addActionListener(new Editor_jButtonToEditKeyFields_actionAdapter(this));
-		jLabelFunction290PageSize.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction290PageSize.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction290PageSize.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction290PageSize.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction290PageSize.setText(res.getString("PageSize"));
-		jLabelFunction290PageSize.setBounds(new Rectangle(11, 68, 96, 15));
-		jComboBoxFunction290PageSize.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxFunction290PageSize.setBounds(new Rectangle(115, 65, 75, 22));
+		jLabelFunction290PageSize.setBounds(new Rectangle(5, 74, 130, 20));
+		jComboBoxFunction290PageSize.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jComboBoxFunction290PageSize.setBounds(new Rectangle(140, 71, 100, 25));
 		jComboBoxFunction290PageSize.addItem("A2");
 		jComboBoxFunction290PageSize.addItem("A3");
 		jComboBoxFunction290PageSize.addItem("A4");
@@ -8103,29 +8102,28 @@ public class Editor extends JFrame {
 		jComboBoxFunction290PageSize.addItem("B5");
 		jComboBoxFunction290PageSize.addItem("B6");
 		jComboBoxFunction290PageSize.addItem("LETTER");
-		jLabelFunction290Direction.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction290Direction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction290Direction.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction290Direction.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction290Direction.setText(res.getString("PageDirection"));
-		jLabelFunction290Direction.setBounds(new Rectangle(191, 68, 96, 15));
-		jComboBoxFunction290Direction.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxFunction290Direction.setBounds(new Rectangle(295, 65, 100, 22));
+		jLabelFunction290Direction.setBounds(new Rectangle(250, 74, 130, 20));
+		jComboBoxFunction290Direction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jComboBoxFunction290Direction.setBounds(new Rectangle(385, 71, 130, 25));
 		jComboBoxFunction290Direction.addItem("NORMAL");
 		jComboBoxFunction290Direction.addItem("LANDSCAPE");
-		jLabelFunction290Margins.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction290Margins.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction290Margins.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction290Margins.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction290Margins.setText(res.getString("PageMargins"));
-		jLabelFunction290Margins.setBounds(new Rectangle(421, 68, 96, 15));
-		jTextFieldFunction290Margins.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction290Margins.setBounds(new Rectangle(525, 65, 110, 22));
-		jCheckBoxFunction290WithPageNumber.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction290Margins.setBounds(new Rectangle(525, 74, 160, 20));
+		jTextFieldFunction290Margins.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction290Margins.setBounds(new Rectangle(690, 71, 150, 25));
+		jCheckBoxFunction290WithPageNumber.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jCheckBoxFunction290WithPageNumber.setText(res.getString("PageNo"));
-		jCheckBoxFunction290WithPageNumber.setBounds(new Rectangle(670, 65, 120, 22));
+		jCheckBoxFunction290WithPageNumber.setBounds(new Rectangle(860, 71, 200, 25));
 		//
 		jPanelFunction290Top.add(jLabelFunction290ID);
 		jPanelFunction290Top.add(jTextFieldFunction290ID);
-		jPanelFunction290Top.add(jLabelFunction290Name);
 		jPanelFunction290Top.add(jTextFieldFunction290Name);
 		jPanelFunction290Top.add(jLabelFunction290Type);
 		jPanelFunction290Top.add(jTextFieldFunction290Type);
@@ -8139,13 +8137,13 @@ public class Editor extends JFrame {
 		jPanelFunction290Top.add(jLabelFunction290Margins);
 		jPanelFunction290Top.add(jTextFieldFunction290Margins);
 		jPanelFunction290Top.add(jCheckBoxFunction290WithPageNumber);
-		jPanelFunction290.add(jPanelFunction290Top, BorderLayout.NORTH);
+		jPanelFunction290.add(jScrollPaneFunction290Top, BorderLayout.NORTH);
 		jPanelFunction290.add(jTabbedPaneFunction290, BorderLayout.CENTER);
 		//
 		jScrollPaneFunction290PhraseList.setBorder(null);
 		jScrollPaneFunction290PhraseList.getViewport().add(jTableFunction290PhraseList, null);
 		jScrollPaneFunction290PhraseList.addMouseListener(new Editor_jScrollPaneFunction290PhraseList_mouseAdapter(this));
-		jTableFunction290PhraseList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction290PhraseList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction290PhraseList.setBackground(SystemColor.control);
 		jTableFunction290PhraseList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction290PhraseList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -8156,6 +8154,7 @@ public class Editor extends JFrame {
 		jTableFunction290PhraseList.addMouseListener(new Editor_jTableFunction290PhraseList_mouseAdapter(this));
 	    jTableFunction290PhraseList.addMouseMotionListener(new Editor_jTableFunction290PhraseList_mouseMotionAdapter(this));
 		jTableFunction290PhraseList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableFunction290PhraseList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction290PhraseList.addColumn("NO.");
 		tableModelFunction290PhraseList.addColumn("B");
 		tableModelFunction290PhraseList.addColumn(res.getString("PhraseFormula"));
@@ -8170,13 +8169,13 @@ public class Editor extends JFrame {
 		column4 = jTableFunction290PhraseList.getColumnModel().getColumn(4);
 		column5 = jTableFunction290PhraseList.getColumnModel().getColumn(5);
 		column6 = jTableFunction290PhraseList.getColumnModel().getColumn(6);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(30);
-		column2.setPreferredWidth(550);
-		column3.setPreferredWidth(60);
-		column4.setPreferredWidth(60);
-		column5.setPreferredWidth(40);
-		column6.setPreferredWidth(130);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(35);
+		column2.setPreferredWidth(800);
+		column3.setPreferredWidth(80);
+		column4.setPreferredWidth(80);
+		column5.setPreferredWidth(50);
+		column6.setPreferredWidth(170);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentCenterControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
@@ -8184,142 +8183,145 @@ public class Editor extends JFrame {
 		column4.setCellRenderer(rendererAlignmentCenterControlColor);
 		column5.setCellRenderer(rendererAlignmentRightControlColor);
 		column6.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction290PhraseList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction290PhraseList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction290PhraseList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		jSplitPaneFunction290PhraseList.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jSplitPaneFunction290PhraseList.add(jScrollPaneFunction290PhraseList, JSplitPane.TOP);
-		jSplitPaneFunction290PhraseList.add(jPanelFunction290PhraseList, JSplitPane.BOTTOM);
-		jSplitPaneFunction290PhraseList.setDividerLocation(screenHeight - 371);
-		jLabelFunction290PhraseBlockType.setEnabled(false);
-		jLabelFunction290PhraseBlockType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jPanelFunction290PhraseList.setLayout(new BorderLayout());
+		jPanelFunction290PhraseList.add(jScrollPaneFunction290PhraseList, BorderLayout.CENTER);
+		jPanelFunction290PhraseList.add(jScrollPaneFunction290PhraseDefinition, BorderLayout.SOUTH);
+		jScrollPaneFunction290PhraseDefinition.setBorder(null);
+		jScrollPaneFunction290PhraseDefinition.getViewport().add(jPanelFunction290PhraseDefinition);
+		//
+		jLabelFunction290PhraseBlockType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction290PhraseBlockType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction290PhraseBlockType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction290PhraseBlockType.setText(res.getString("PhraseBlock"));
-		jLabelFunction290PhraseBlockType.setBounds(new Rectangle(11, 12, 96, 15));
+		jLabelFunction290PhraseBlockType.setBounds(new Rectangle(5, 12, 130, 20));
 		jComboBoxFunction290PhraseBlockType.setEditable(false);
-		jComboBoxFunction290PhraseBlockType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxFunction290PhraseBlockType.setBounds(new Rectangle(115, 9, 110, 22));
+		jComboBoxFunction290PhraseBlockType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jComboBoxFunction290PhraseBlockType.setBounds(new Rectangle(140, 9, 150, 25));
 		jComboBoxFunction290PhraseBlockType.addActionListener(new Editor_jComboBoxFunction290PhraseBlockType_actionAdapter(this));
 		jComboBoxFunction290PhraseBlockType.addItem("HEADER");
 		jComboBoxFunction290PhraseBlockType.addItem("PARAGRAPH");
-		jLabelFunction290PhraseAlignment.setEnabled(false);
-		jLabelFunction290PhraseAlignment.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction290PhraseAlignment.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction290PhraseAlignment.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction290PhraseAlignment.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction290PhraseAlignment.setText(res.getString("Alignment"));
-		jLabelFunction290PhraseAlignment.setBounds(new Rectangle(261, 12, 96, 15));
+		jLabelFunction290PhraseAlignment.setBounds(new Rectangle(300, 12, 130, 20));
 		jComboBoxFunction290PhraseAlignment.setEditable(false);
-		jComboBoxFunction290PhraseAlignment.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxFunction290PhraseAlignment.setBounds(new Rectangle(365, 9, 90, 22));
+		jComboBoxFunction290PhraseAlignment.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jComboBoxFunction290PhraseAlignment.setBounds(new Rectangle(435, 9, 100, 25));
 		jComboBoxFunction290PhraseAlignment.addItem("LEFT");
 		jComboBoxFunction290PhraseAlignment.addItem("CENTER");
 		jComboBoxFunction290PhraseAlignment.addItem("RIGHT");
-		jLabelFunction290PhraseMargin.setEnabled(false);
-		jLabelFunction290PhraseMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction290PhraseMargin.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction290PhraseMargin.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction290PhraseMargin.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction290PhraseMargin.setText(res.getString("Margin"));
-		jLabelFunction290PhraseMargin.setBounds(new Rectangle(491, 12, 96, 15));
-		jTextFieldFunction290PhraseMarginLeft.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction290PhraseMarginLeft.setBounds(new Rectangle(595, 9, 40, 22));
-		jTextFieldFunction290PhraseMarginRight.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction290PhraseMarginRight.setBounds(new Rectangle(645, 9, 40, 22));
-		jLabelFunction290PhraseSpacingAfter.setEnabled(false);
-		jLabelFunction290PhraseSpacingAfter.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction290PhraseMargin.setBounds(new Rectangle(545, 12, 130, 20));
+		jTextFieldFunction290PhraseMarginLeft.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction290PhraseMarginLeft.setBounds(new Rectangle(680, 9, 60, 25));
+		jTextFieldFunction290PhraseMarginRight.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction290PhraseMarginRight.setBounds(new Rectangle(745, 9, 60, 25));
+		jLabelFunction290PhraseSpacingAfter.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction290PhraseSpacingAfter.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction290PhraseSpacingAfter.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction290PhraseSpacingAfter.setText(res.getString("PhraseSpacingAfter"));
-		jLabelFunction290PhraseSpacingAfter.setBounds(new Rectangle(692, 12, 96, 15));
-		jTextFieldFunction290PhraseSpacingAfter.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction290PhraseSpacingAfter.setBounds(new Rectangle(796, 9, 60, 22));
-		jLabelFunction290PhraseValue.setEnabled(false);
-		jLabelFunction290PhraseValue.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction290PhraseSpacingAfter.setBounds(new Rectangle(815, 12, 130, 20));
+		jTextFieldFunction290PhraseSpacingAfter.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction290PhraseSpacingAfter.setBounds(new Rectangle(950, 9, 60, 25));
+		//
+		jLabelFunction290PhraseValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction290PhraseValue.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction290PhraseValue.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction290PhraseValue.setText(res.getString("PhraseFormula"));
-		jLabelFunction290PhraseValue.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldFunction290PhraseValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction290PhraseValue.setBounds(new Rectangle(115, 37, 741, 22));
+		jLabelFunction290PhraseValue.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldFunction290PhraseValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction290PhraseValue.setBounds(new Rectangle(140, 40, 1000, 25));
+		//
 		jLabelFunction290PhraseValueKeywords.setEnabled(false);
-		jLabelFunction290PhraseValueKeywords.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction290PhraseValueKeywords.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction290PhraseValueKeywords.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction290PhraseValueKeywords.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction290PhraseValueKeywords.setText(res.getString("KeywordList"));
-		jLabelFunction290PhraseValueKeywords.setBounds(new Rectangle(11, 68, 96, 15));
-		jTextAreaFunction290PhraseValueKeywords.setFont(new java.awt.Font("Monospaced", 0, 12));
-		jTextAreaFunction290PhraseValueKeywords.setBounds(new Rectangle(115, 65, 741, 38));
+		jLabelFunction290PhraseValueKeywords.setBounds(new Rectangle(5, 74, 130, 20));
+		jTextAreaFunction290PhraseValueKeywords.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextAreaFunction290PhraseValueKeywords.setBounds(new Rectangle(140, 71, 1000, 50));
 		jTextAreaFunction290PhraseValueKeywords.setEditable(false);
 		jTextAreaFunction290PhraseValueKeywords.setBorder(BorderFactory.createLineBorder(Color.gray));
 		jTextAreaFunction290PhraseValueKeywords.setText(" &Text(text)   &DataSource(name;format)   &DataSourceImage(name;x;y;w;h)   &Line(x1;y1;x2;y2)   &Rect(x1;y1;x2;y2)\n &SystemVariant(id)   &Date(format)   &DateTime(format)   &Image(name;x;y;w;h)   &Barcode(name;type)");
 		jTextAreaFunction290PhraseValueKeywords.setOpaque(false);
+		//
 		jLabelFunction290PhraseFontName.setEnabled(false);
-		jLabelFunction290PhraseFontName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction290PhraseFontName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction290PhraseFontName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction290PhraseFontName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction290PhraseFontName.setText(res.getString("Font"));
-		jLabelFunction290PhraseFontName.setBounds(new Rectangle(11, 112, 96, 15));
+		jLabelFunction290PhraseFontName.setBounds(new Rectangle(5, 130, 130, 20));
 		jComboBoxFunction290PhraseFontName.setEditable(false);
-		jComboBoxFunction290PhraseFontName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxFunction290PhraseFontName.setBounds(new Rectangle(115, 109, 130, 22));
+		jComboBoxFunction290PhraseFontName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jComboBoxFunction290PhraseFontName.setBounds(new Rectangle(140, 127, 160, 25));
 		jLabelFunction290PhraseFontSize.setEnabled(false);
-		jLabelFunction290PhraseFontSize.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction290PhraseFontSize.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction290PhraseFontSize.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction290PhraseFontSize.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction290PhraseFontSize.setText(res.getString("FontSize"));
-		jLabelFunction290PhraseFontSize.setBounds(new Rectangle(261, 112, 96, 15));
-		jSpinnerFunction290PhraseFontSize.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jSpinnerFunction290PhraseFontSize.setBounds(new Rectangle(365, 109, 50, 22));
+		jLabelFunction290PhraseFontSize.setBounds(new Rectangle(310, 130, 130, 20));
+		jSpinnerFunction290PhraseFontSize.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jSpinnerFunction290PhraseFontSize.setBounds(new Rectangle(445, 127, 50, 25));
 	    JSpinner.NumberEditor editor1 = new JSpinner.NumberEditor(jSpinnerFunction290PhraseFontSize, "#0");
 	    jSpinnerFunction290PhraseFontSize.setEditor(editor1);
 	    JFormattedTextField ftext1 = editor1.getTextField();
 	    ftext1.setEditable(false);
 		ftext1.setBackground(Color.white);
 		jLabelFunction290PhraseFontStyle.setEnabled(false);
-		jLabelFunction290PhraseFontStyle.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction290PhraseFontStyle.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction290PhraseFontStyle.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction290PhraseFontStyle.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction290PhraseFontStyle.setText(res.getString("FontStyle"));
-		jLabelFunction290PhraseFontStyle.setBounds(new Rectangle(431, 112, 96, 15));
+		jLabelFunction290PhraseFontStyle.setBounds(new Rectangle(505, 130, 130, 20));
 		jComboBoxFunction290PhraseFontStyle.setEditable(false);
-		jComboBoxFunction290PhraseFontStyle.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxFunction290PhraseFontStyle.setBounds(new Rectangle(530, 109, 90, 22));
+		jComboBoxFunction290PhraseFontStyle.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jComboBoxFunction290PhraseFontStyle.setBounds(new Rectangle(640, 127, 150, 25));
 		jComboBoxFunction290PhraseFontStyle.addItem(res.getString("FontStyleNormal"));
 		jComboBoxFunction290PhraseFontStyle.addItem(res.getString("FontStyleBold"));
 		jComboBoxFunction290PhraseFontStyle.addItem(res.getString("FontStyleItalic"));
 		jComboBoxFunction290PhraseFontStyle.addItem(res.getString("FontStyleBoldItalic"));
 		jComboBoxFunction290PhraseFontStyle.addItem(res.getString("FontStyleUnderlined"));
-		jPanelFunction290PhraseList.setLayout(null);
-		jPanelFunction290PhraseList.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction290PhraseList.add(jLabelFunction290PhraseBlockType);
-		jPanelFunction290PhraseList.add(jComboBoxFunction290PhraseBlockType);
-		jPanelFunction290PhraseList.add(jLabelFunction290PhraseAlignment);
-		jPanelFunction290PhraseList.add(jComboBoxFunction290PhraseAlignment);
-		jPanelFunction290PhraseList.add(jLabelFunction290PhraseMargin);
-		jPanelFunction290PhraseList.add(jTextFieldFunction290PhraseMarginLeft);
-		jPanelFunction290PhraseList.add(jTextFieldFunction290PhraseMarginRight);
-		jPanelFunction290PhraseList.add(jLabelFunction290PhraseSpacingAfter);
-		jPanelFunction290PhraseList.add(jTextFieldFunction290PhraseSpacingAfter);
-		jPanelFunction290PhraseList.add(jLabelFunction290PhraseValue);
-		jPanelFunction290PhraseList.add(jTextFieldFunction290PhraseValue);
-		jPanelFunction290PhraseList.add(jLabelFunction290PhraseValueKeywords);
-		jPanelFunction290PhraseList.add(jTextAreaFunction290PhraseValueKeywords);
-		jPanelFunction290PhraseList.add(jLabelFunction290PhraseFontName);
-		jPanelFunction290PhraseList.add(jComboBoxFunction290PhraseFontName);
-		jPanelFunction290PhraseList.add(jLabelFunction290PhraseFontSize);
-		jPanelFunction290PhraseList.add(jSpinnerFunction290PhraseFontSize);
-		jPanelFunction290PhraseList.add(jLabelFunction290PhraseFontStyle);
-		jPanelFunction290PhraseList.add(jComboBoxFunction290PhraseFontStyle);
 		//
-		jTabbedPaneFunction290.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTabbedPaneFunction290.add(res.getString("Fields"), jSplitPaneFunction290PhraseList);
+		jPanelFunction290PhraseDefinition.setPreferredSize(new Dimension(1160,161));
+		jPanelFunction290PhraseDefinition.setLayout(null);
+		jPanelFunction290PhraseDefinition.setBorder(null);
+		jPanelFunction290PhraseDefinition.add(jLabelFunction290PhraseBlockType);
+		jPanelFunction290PhraseDefinition.add(jComboBoxFunction290PhraseBlockType);
+		jPanelFunction290PhraseDefinition.add(jLabelFunction290PhraseAlignment);
+		jPanelFunction290PhraseDefinition.add(jComboBoxFunction290PhraseAlignment);
+		jPanelFunction290PhraseDefinition.add(jLabelFunction290PhraseMargin);
+		jPanelFunction290PhraseDefinition.add(jTextFieldFunction290PhraseMarginLeft);
+		jPanelFunction290PhraseDefinition.add(jTextFieldFunction290PhraseMarginRight);
+		jPanelFunction290PhraseDefinition.add(jLabelFunction290PhraseSpacingAfter);
+		jPanelFunction290PhraseDefinition.add(jTextFieldFunction290PhraseSpacingAfter);
+		jPanelFunction290PhraseDefinition.add(jLabelFunction290PhraseValue);
+		jPanelFunction290PhraseDefinition.add(jTextFieldFunction290PhraseValue);
+		jPanelFunction290PhraseDefinition.add(jLabelFunction290PhraseValueKeywords);
+		jPanelFunction290PhraseDefinition.add(jTextAreaFunction290PhraseValueKeywords);
+		jPanelFunction290PhraseDefinition.add(jLabelFunction290PhraseFontName);
+		jPanelFunction290PhraseDefinition.add(jComboBoxFunction290PhraseFontName);
+		jPanelFunction290PhraseDefinition.add(jLabelFunction290PhraseFontSize);
+		jPanelFunction290PhraseDefinition.add(jSpinnerFunction290PhraseFontSize);
+		jPanelFunction290PhraseDefinition.add(jLabelFunction290PhraseFontStyle);
+		jPanelFunction290PhraseDefinition.add(jComboBoxFunction290PhraseFontStyle);
+		//
+		jTabbedPaneFunction290.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTabbedPaneFunction290.add(res.getString("Fields"), jPanelFunction290PhraseList);
 		jTabbedPaneFunction290.setIconAt(0, imageIconField);
 		jTabbedPaneFunction290.add(res.getString("FunctionsWhereUsed"), jScrollPaneFunction290UsageList);
 		jTabbedPaneFunction290.setIconAt(1, imageIconFunctionUsage);
 		//
 		jScrollPaneFunction290UsageList.setBorder(null);
 		jScrollPaneFunction290UsageList.getViewport().add(jTableFunction290UsageList, null);
-		jTableFunction290UsageList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction290UsageList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction290UsageList.setBackground(SystemColor.control);
 		jTableFunction290UsageList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction290UsageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -8327,6 +8329,7 @@ public class Editor extends JFrame {
 		jTableFunction290UsageList.setSelectionForeground(Color.black);
 		jTableFunction290UsageList.addFocusListener(new Editor_FocusListener());
 		jTableFunction290UsageList.addMouseListener(new Editor_jTableFunction290UsageList_mouseAdapter(this));
+		jTableFunction290UsageList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction290UsageList.addColumn("NO.");
 		tableModelFunction290UsageList.addColumn(res.getString("FunctionsWhereUsed"));
 		tableModelFunction290UsageList.addColumn(res.getString("Type"));
@@ -8335,15 +8338,15 @@ public class Editor extends JFrame {
 		column1 = jTableFunction290UsageList.getColumnModel().getColumn(1);
 		column2 = jTableFunction290UsageList.getColumnModel().getColumn(2);
 		column3 = jTableFunction290UsageList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(300);
-		column2.setPreferredWidth(160);
-		column3.setPreferredWidth(280);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(400);
+		column2.setPreferredWidth(250);
+		column3.setPreferredWidth(380);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction290UsageList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction290UsageList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction290UsageList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
 	}
@@ -8352,18 +8355,20 @@ public class Editor extends JFrame {
 	 */
 	void initComponentsForFunction300() {
 		jPanelFunction300.setLayout(new BorderLayout());
+		jScrollPaneFunction300Top.setBorder(null);
+		jScrollPaneFunction300Top.getViewport().add(jPanelFunction300Top);
 		jPanelFunction300Top.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction300Top.setPreferredSize(new Dimension(10, 151));
+		jPanelFunction300Top.setPreferredSize(new Dimension(1030, 167));
 		jPanelFunction300Top.setToolTipText("");
 		jPanelFunction300Top.setLayout(null);
 		//
-		jLabelFunction300Type.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300Type.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300Type.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300Type.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300Type.setText(res.getString("FunctionType"));
-		jLabelFunction300Type.setBounds(new Rectangle(11, 12, 96, 15));
-		jTextFieldFunction300Type.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300Type.setBounds(new Rectangle(115, 9, 170, 22));
+		jLabelFunction300Type.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldFunction300Type.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300Type.setBounds(new Rectangle(140, 9, 250, 25));
 		jTextFieldFunction300Type.setEditable(false);
 		jTextFieldFunction300Type.setText(res.getString("FunctionTypeXF300"));
 		Insets m = jTextFieldFunction300Type.getMargin();
@@ -8372,81 +8377,76 @@ public class Editor extends JFrame {
 		label.setBorder(null); 
 		label.setBounds(m.left, m.top, imageIconFunction300.getIconWidth(), imageIconFunction300.getIconHeight()); 
 		jTextFieldFunction300Type.add(label);
-		jLabelFunction300ID.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300ID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300ID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300ID.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction300ID.setText(res.getString("FunctionID"));
-		jLabelFunction300ID.setBounds(new Rectangle(295, 12, 76, 15));
-		jTextFieldFunction300ID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300ID.setBounds(new Rectangle(379, 9, 80, 22));
+		jLabelFunction300ID.setText(res.getString("IDAndName"));
+		jLabelFunction300ID.setBounds(new Rectangle(400, 12, 100, 20));
+		jTextFieldFunction300ID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300ID.setBounds(new Rectangle(505, 9, 120, 25));
 		jTextFieldFunction300ID.setEditable(false);
-		jLabelFunction300Name.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelFunction300Name.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction300Name.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction300Name.setText(res.getString("FunctionName"));
-		jLabelFunction300Name.setBounds(new Rectangle(469, 12, 86, 15));
-		jTextFieldFunction300Name.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300Name.setBounds(new Rectangle(563, 9, 250, 22));
+		jTextFieldFunction300Name.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300Name.setBounds(new Rectangle(630, 9, 350, 25));
 		//
-		jLabelFunction300HeaderTableName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300HeaderTableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300HeaderTableName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300HeaderTableName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300HeaderTableName.setText(res.getString("HDRTable"));
-		jLabelFunction300HeaderTableName.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldFunction300HeaderTableName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300HeaderTableName.setBounds(new Rectangle(115, 37, 600, 22));
+		jLabelFunction300HeaderTableName.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldFunction300HeaderTableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300HeaderTableName.setBounds(new Rectangle(140, 40, 840, 25));
 		jTextFieldFunction300HeaderTableName.setEditable(false);
 		jButtonFunction300HeaderTableKeyFieldsEdit.setIcon(imageIconPrompt);
-		jButtonFunction300HeaderTableKeyFieldsEdit.setBounds(new Rectangle(715, 36, 28, 23));
+		jButtonFunction300HeaderTableKeyFieldsEdit.setBounds(new Rectangle(980, 39, 28, 27));
 		jButtonFunction300HeaderTableKeyFieldsEdit.addActionListener(new Editor_jButtonToEditKeyFields_actionAdapter(this));
-		jLabelFunction300HeaderFixedWhere.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction300HeaderFixedWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300HeaderFixedWhere.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300HeaderFixedWhere.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300HeaderFixedWhere.setText(res.getString("FixedWhere"));
-		jLabelFunction300HeaderFixedWhere.setBounds(new Rectangle(11, 68, 96, 15));
-		jTextFieldFunction300HeaderFixedWhere.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300HeaderFixedWhere.setBounds(new Rectangle(115, 65, 600, 22));
+		jLabelFunction300HeaderFixedWhere.setBounds(new Rectangle(5, 74, 130, 20));
+		jTextFieldFunction300HeaderFixedWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300HeaderFixedWhere.setBounds(new Rectangle(140, 71, 840, 25));
 		//
-		jLabelFunction300HeaderFunctionIDCalled.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300HeaderFunctionIDCalled.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300HeaderFunctionIDCalled.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300HeaderFunctionIDCalled.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300HeaderFunctionIDCalled.setText(res.getString("HDRFunctionID"));
-		jLabelFunction300HeaderFunctionIDCalled.setBounds(new Rectangle(11, 96, 96, 15));
-		jTextFieldFunction300HeaderFunctionIDCalled.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300HeaderFunctionIDCalled.setBounds(new Rectangle(115, 93, 80, 22));
+		jLabelFunction300HeaderFunctionIDCalled.setBounds(new Rectangle(5, 105, 130, 20));
+		jTextFieldFunction300HeaderFunctionIDCalled.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300HeaderFunctionIDCalled.setBounds(new Rectangle(140, 103, 120, 25));
 		jTextFieldFunction300HeaderFunctionIDCalled.addKeyListener(new Editor_jTextFieldFunction300HeaderFunctionIDCalled_keyAdapter(this));
-		jTextFieldFunction300HeaderFunctionNameCalled.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300HeaderFunctionNameCalled.setBounds(new Rectangle(200, 93, 300, 22));
+		jTextFieldFunction300HeaderFunctionNameCalled.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300HeaderFunctionNameCalled.setBounds(new Rectangle(265, 103, 355, 25));
 		jTextFieldFunction300HeaderFunctionNameCalled.setEditable(false);
 		//
-		jLabelFunction300Size.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300Size.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300Size.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300Size.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300Size.setText(res.getString("PanelSize"));
-		jLabelFunction300Size.setBounds(new Rectangle(11, 124, 96, 15));
+		jLabelFunction300Size.setBounds(new Rectangle(5, 136, 130, 20));
 		jRadioButtonFunction300SizeFull.setText(res.getString("SizeFull"));
-		jRadioButtonFunction300SizeFull.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300SizeFull.setBounds(new Rectangle(115, 121, 100, 22));
+		jRadioButtonFunction300SizeFull.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300SizeFull.setBounds(new Rectangle(140, 133, 130, 25));
 		jRadioButtonFunction300SizeFull.addChangeListener(new Editor_jRadioButtonFunction300Size_changeAdapter(this));
 		jRadioButtonFunction300SizeAuto.setText(res.getString("SizeAuto"));
-		jRadioButtonFunction300SizeAuto.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300SizeAuto.setBounds(new Rectangle(225, 121, 100, 22));
+		jRadioButtonFunction300SizeAuto.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300SizeAuto.setBounds(new Rectangle(270, 133, 130, 25));
 		jRadioButtonFunction300SizeAuto.addChangeListener(new Editor_jRadioButtonFunction300Size_changeAdapter(this));
 		jRadioButtonFunction300SizeSpecify.setText(res.getString("SizeSpecified"));
-		jRadioButtonFunction300SizeSpecify.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300SizeSpecify.setBounds(new Rectangle(335, 121, 110, 22));
+		jRadioButtonFunction300SizeSpecify.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300SizeSpecify.setBounds(new Rectangle(400, 133, 160, 22));
 		jRadioButtonFunction300SizeSpecify.addChangeListener(new Editor_jRadioButtonFunction300Size_changeAdapter(this));
 		buttonGroupFunction300Size.add(jRadioButtonFunction300SizeFull);
 		buttonGroupFunction300Size.add(jRadioButtonFunction300SizeAuto);
 		buttonGroupFunction300Size.add(jRadioButtonFunction300SizeSpecify);
-		jTextFieldFunction300SizeWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300SizeWidth.setBounds(new Rectangle(445, 121, 50, 22));
-		jTextFieldFunction300SizeHeight.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300SizeHeight.setBounds(new Rectangle(500, 121, 50, 22));
+		jTextFieldFunction300SizeWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300SizeWidth.setBounds(new Rectangle(560, 133, 60, 25));
+		jTextFieldFunction300SizeHeight.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300SizeHeight.setBounds(new Rectangle(625, 133, 60, 25));
 		//
 		jPanelFunction300Top.add(jLabelFunction300ID);
 		jPanelFunction300Top.add(jTextFieldFunction300ID);
-		jPanelFunction300Top.add(jLabelFunction300Name);
 		jPanelFunction300Top.add(jTextFieldFunction300Name);
 		jPanelFunction300Top.add(jLabelFunction300Type);
 		jPanelFunction300Top.add(jTextFieldFunction300Type);
@@ -8464,84 +8464,13 @@ public class Editor extends JFrame {
 		jPanelFunction300Top.add(jRadioButtonFunction300SizeSpecify);
 		jPanelFunction300Top.add(jTextFieldFunction300SizeWidth);
 		jPanelFunction300Top.add(jTextFieldFunction300SizeHeight);
-		jPanelFunction300.add(jPanelFunction300Top, BorderLayout.NORTH);
+		jPanelFunction300.add(jScrollPaneFunction300Top, BorderLayout.NORTH);
 		jPanelFunction300.add(jTabbedPaneFunction300, BorderLayout.CENTER);
-		//
-		jPanelFunction300Structure.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction300Structure.setLayout(null);
-		jLabelFunction300StructureTableName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelFunction300StructureTableName.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction300StructureTableName.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction300StructureTableName.setText(res.getString("StructureTable"));
-		jLabelFunction300StructureTableName.setBounds(new Rectangle(11, 12, 96, 15));
-		jTextFieldFunction300StructureTableName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300StructureTableName.setBounds(new Rectangle(115, 9, 600, 22));
-		jTextFieldFunction300StructureTableName.setEditable(false);
-		jButtonFunction300StructureTableNameEdit.setIcon(imageIconPrompt);
-		jButtonFunction300StructureTableNameEdit.setBounds(new Rectangle(715, 8, 28, 23));
-		jButtonFunction300StructureTableNameEdit.addActionListener(new Editor_jButtonFunction300StructureTableNameEdit_actionAdapter(this));
-		jLabelFunction300StructureRootText.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelFunction300StructureRootText.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction300StructureRootText.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction300StructureRootText.setText(res.getString("StructureRootText"));
-		jLabelFunction300StructureRootText.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldFunction300StructureRootText.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300StructureRootText.setBounds(new Rectangle(115, 37, 600, 22));
-		jTextFieldFunction300StructureRootText.setEditable(false);
-		jButtonFunction300StructureRootTextEdit.setIcon(imageIconPrompt);
-		jButtonFunction300StructureRootTextEdit.setBounds(new Rectangle(715, 36, 28, 23));
-		jButtonFunction300StructureRootTextEdit.addActionListener(new Editor_jButtonFunction300StructureRootTextEdit_actionAdapter(this));
-		jLabelFunction300StructureNodeText.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelFunction300StructureNodeText.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction300StructureNodeText.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction300StructureNodeText.setText(res.getString("StructureNodeText"));
-		jLabelFunction300StructureNodeText.setBounds(new Rectangle(11, 68, 96, 15));
-		jTextFieldFunction300StructureNodeText.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300StructureNodeText.setBounds(new Rectangle(115, 65, 600, 22));
-		jTextFieldFunction300StructureNodeText.setEditable(false);
-		jButtonFunction300StructureNodeTextEdit.setIcon(imageIconPrompt);
-		jButtonFunction300StructureNodeTextEdit.setBounds(new Rectangle(715, 64, 28, 23));
-		jButtonFunction300StructureNodeTextEdit.addActionListener(new Editor_jButtonFunction300StructureNodeTextEdit_actionAdapter(this));
-		jLabelFunction300StructureNodeIcons.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelFunction300StructureNodeIcons.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction300StructureNodeIcons.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction300StructureNodeIcons.setText(res.getString("StructureNodeIcons"));
-		jLabelFunction300StructureNodeIcons.setBounds(new Rectangle(11, 96, 96, 15));
-		jPanelFunction300StructureNodeIcons.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction300StructureNodeIcons.setBounds(new Rectangle(115, 93, 601, 23));
-		jButtonFunction300StructureNodeIconsEdit.setIcon(imageIconPrompt);
-		jButtonFunction300StructureNodeIconsEdit.setBounds(new Rectangle(715, 92, 28, 23));
-		jButtonFunction300StructureNodeIconsEdit.addActionListener(new Editor_jButtonFunction300StructureNodeIconsEdit_actionAdapter(this));
-		jLabelFunction300StructureViewWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelFunction300StructureViewWidth.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction300StructureViewWidth.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction300StructureViewWidth.setText(res.getString("StructureViewWidth"));
-		jLabelFunction300StructureViewWidth.setBounds(new Rectangle(11, 124, 96, 15));
-		jTextFieldFunction300StructureViewWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300StructureViewWidth.setBounds(new Rectangle(115, 121, 50, 22));
-		jLabelFunction300StructureViewWidthComment.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelFunction300StructureViewWidthComment.setText("pixcel (50 - 500)");
-		jLabelFunction300StructureViewWidthComment.setBounds(new Rectangle(168, 124, 96, 15));
-		jPanelFunction300Structure.add(jLabelFunction300StructureTableName);
-		jPanelFunction300Structure.add(jTextFieldFunction300StructureTableName);
-		jPanelFunction300Structure.add(jButtonFunction300StructureTableNameEdit);
-		jPanelFunction300Structure.add(jLabelFunction300StructureRootText);
-		jPanelFunction300Structure.add(jTextFieldFunction300StructureRootText);
-		jPanelFunction300Structure.add(jButtonFunction300StructureRootTextEdit);
-		jPanelFunction300Structure.add(jLabelFunction300StructureNodeText);
-		jPanelFunction300Structure.add(jTextFieldFunction300StructureNodeText);
-		jPanelFunction300Structure.add(jButtonFunction300StructureNodeTextEdit);
-		jPanelFunction300Structure.add(jLabelFunction300StructureNodeIcons);
-		jPanelFunction300Structure.add(jPanelFunction300StructureNodeIcons);
-		jPanelFunction300Structure.add(jButtonFunction300StructureNodeIconsEdit);
-		jPanelFunction300Structure.add(jLabelFunction300StructureViewWidth);
-		jPanelFunction300Structure.add(jTextFieldFunction300StructureViewWidth);
-		jPanelFunction300Structure.add(jLabelFunction300StructureViewWidthComment);
 		//
 		jScrollPaneFunction300HeaderFieldList.setBorder(null);
 		jScrollPaneFunction300HeaderFieldList.getViewport().add(jTableFunction300HeaderFieldList, null);
 		jScrollPaneFunction300HeaderFieldList.addMouseListener(new Editor_jScrollPaneFunction300HeaderFieldList_mouseAdapter(this));
-		jTableFunction300HeaderFieldList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction300HeaderFieldList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction300HeaderFieldList.setBackground(SystemColor.control);
 		jTableFunction300HeaderFieldList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction300HeaderFieldList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -8552,6 +8481,7 @@ public class Editor extends JFrame {
 		jTableFunction300HeaderFieldList.addMouseListener(new Editor_jTableFunction300HeaderFieldList_mouseAdapter(this));
 	    jTableFunction300HeaderFieldList.addMouseMotionListener(new Editor_jTableFunction300HeaderFieldList_mouseMotionAdapter(this));
 		jTableFunction300HeaderFieldList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableFunction300HeaderFieldList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction300HeaderFieldList.addColumn("NO.");
 		tableModelFunction300HeaderFieldList.addColumn(res.getString("DataSource"));
 		tableModelFunction300HeaderFieldList.addColumn(res.getString("FieldType"));
@@ -8560,264 +8490,254 @@ public class Editor extends JFrame {
 		column1 = jTableFunction300HeaderFieldList.getColumnModel().getColumn(1);
 		column2 = jTableFunction300HeaderFieldList.getColumnModel().getColumn(2);
 		column3 = jTableFunction300HeaderFieldList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(160);
-		column2.setPreferredWidth(250);
-		column3.setPreferredWidth(350);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(250);
+		column2.setPreferredWidth(350);
+		column3.setPreferredWidth(450);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction300HeaderFieldList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction300HeaderFieldList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction300HeaderFieldList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		jSplitPaneFunction300HeaderFieldList.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jSplitPaneFunction300HeaderFieldList.add(jScrollPaneFunction300HeaderFieldList, JSplitPane.TOP);
-		jSplitPaneFunction300HeaderFieldList.add(jPanelFunction300HeaderFieldList, JSplitPane.BOTTOM);
-		jSplitPaneFunction300HeaderFieldList.setDividerLocation(screenHeight - 437);
-		jLabelFunction300HeaderTable.setEnabled(false);
-		jLabelFunction300HeaderTable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jScrollPaneFunction300HeaderFieldDefinition.setBorder(null);
+		jScrollPaneFunction300HeaderFieldDefinition.getViewport().add(jPanelFunction300HeaderFieldDefinition);
+		jPanelFunction300HeaderFieldList.setLayout(new BorderLayout());
+		jPanelFunction300HeaderFieldList.add(jScrollPaneFunction300HeaderFieldList, BorderLayout.CENTER);
+		jPanelFunction300HeaderFieldList.add(jScrollPaneFunction300HeaderFieldDefinition, BorderLayout.SOUTH);
+		//
+		jLabelFunction300HeaderTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300HeaderTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300HeaderTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300HeaderTable.setText(res.getString("Table"));
-		jLabelFunction300HeaderTable.setBounds(new Rectangle(11, 12, 96, 15));
-		jTextFieldFunction300HeaderTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300HeaderTable.setBounds(new Rectangle(115, 9, 300, 22));
+		jLabelFunction300HeaderTable.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldFunction300HeaderTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300HeaderTable.setBounds(new Rectangle(140, 9, 350, 25));
 		jTextFieldFunction300HeaderTable.setEditable(false);
-		jLabelFunction300HeaderTableType.setEnabled(false);
-		jLabelFunction300HeaderTableType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300HeaderTableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300HeaderTableType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300HeaderTableType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300HeaderTableType.setText(res.getString("Type"));
-		jLabelFunction300HeaderTableType.setBounds(new Rectangle(430, 12, 76, 15));
-		jTextFieldFunction300HeaderTableType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300HeaderTableType.setBounds(new Rectangle(514, 9, 250, 22));
+		jLabelFunction300HeaderTableType.setBounds(new Rectangle(500, 12, 100, 20));
+		jTextFieldFunction300HeaderTableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300HeaderTableType.setBounds(new Rectangle(605, 9, 330, 25));
 		jTextFieldFunction300HeaderTableType.setEditable(false);
-		jLabelFunction300HeaderField.setEnabled(false);
-		jLabelFunction300HeaderField.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction300HeaderField.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300HeaderField.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300HeaderField.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300HeaderField.setText(res.getString("Field"));
-		jLabelFunction300HeaderField.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldFunction300HeaderField.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300HeaderField.setBounds(new Rectangle(115, 37, 300, 22));
+		jLabelFunction300HeaderField.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldFunction300HeaderField.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300HeaderField.setBounds(new Rectangle(140, 40, 350, 25));
 		jTextFieldFunction300HeaderField.setEditable(false);
-		jLabelFunction300HeaderFieldType.setEnabled(false);
-		jLabelFunction300HeaderFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300HeaderFieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300HeaderFieldType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300HeaderFieldType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300HeaderFieldType.setText(res.getString("Type"));
-		jLabelFunction300HeaderFieldType.setBounds(new Rectangle(430, 40, 76, 15));
-		jTextFieldFunction300HeaderFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300HeaderFieldType.setBounds(new Rectangle(514, 37, 250, 22));
+		jLabelFunction300HeaderFieldType.setBounds(new Rectangle(500, 43, 100, 20));
+		jTextFieldFunction300HeaderFieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300HeaderFieldType.setBounds(new Rectangle(605, 40, 330, 25));
 		jTextFieldFunction300HeaderFieldType.setEditable(false);
-		jLabelFunction300HeaderFieldLayoutOption.setEnabled(false);
+		//
 		jLabelFunction300HeaderFieldLayoutOption.setText(res.getString("LayoutOption"));
-		jLabelFunction300HeaderFieldLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300HeaderFieldLayoutOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300HeaderFieldLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300HeaderFieldLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction300HeaderFieldLayoutOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction300HeaderFieldLayoutOption.setBounds(new Rectangle(5, 74, 130, 20));
 		jRadioButtonFunction300HeaderFieldLayoutOptionVertical.setText(res.getString("LayoutVertical"));
-		jRadioButtonFunction300HeaderFieldLayoutOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300HeaderFieldLayoutOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
-		jRadioButtonFunction300HeaderFieldLayoutOptionVertical.setEnabled(false);
+		jRadioButtonFunction300HeaderFieldLayoutOptionVertical.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300HeaderFieldLayoutOptionVertical.setBounds(new Rectangle(140, 71, 130, 25));
 		jRadioButtonFunction300HeaderFieldLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
-		jRadioButtonFunction300HeaderFieldLayoutOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300HeaderFieldLayoutOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
-		jRadioButtonFunction300HeaderFieldLayoutOptionHorizontal.setEnabled(false);
+		jRadioButtonFunction300HeaderFieldLayoutOptionHorizontal.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300HeaderFieldLayoutOptionHorizontal.setBounds(new Rectangle(270, 71, 130, 25));
 		buttonGroupFunction300HeaderFieldLayoutOption.add(jRadioButtonFunction300HeaderFieldLayoutOptionVertical);
 		buttonGroupFunction300HeaderFieldLayoutOption.add(jRadioButtonFunction300HeaderFieldLayoutOptionHorizontal);
-		jLabelFunction300HeaderFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300HeaderFieldWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300HeaderFieldWidth.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300HeaderFieldWidth.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300HeaderFieldWidth.setText(res.getString("FieldWidth"));
-		jLabelFunction300HeaderFieldWidth.setBounds(new Rectangle(430, 68, 76, 15));
-		jLabelFunction300HeaderFieldWidth.setEnabled(false);
-		jTextFieldFunction300HeaderFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300HeaderFieldWidth.setBounds(new Rectangle(514, 65, 45, 22));
-		jTextFieldFunction300HeaderFieldWidth.setEnabled(false);
+		jLabelFunction300HeaderFieldWidth.setBounds(new Rectangle(500, 74, 100, 20));
+		jTextFieldFunction300HeaderFieldWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300HeaderFieldWidth.setBounds(new Rectangle(605, 71, 60, 25));
 		jTextFieldFunction300HeaderFieldWidth.setText("");
-		jLabelFunction300HeaderFieldRows.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300HeaderFieldRows.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300HeaderFieldRows.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300HeaderFieldRows.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300HeaderFieldRows.setText(res.getString("FieldRows"));
-		jLabelFunction300HeaderFieldRows.setBounds(new Rectangle(564, 68, 45, 15));
-		jLabelFunction300HeaderFieldRows.setEnabled(false);
-		jTextFieldFunction300HeaderFieldRows.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300HeaderFieldRows.setBounds(new Rectangle(614, 65, 45, 22));
+		jLabelFunction300HeaderFieldRows.setBounds(new Rectangle(675, 74, 60, 20));
+		jTextFieldFunction300HeaderFieldRows.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300HeaderFieldRows.setBounds(new Rectangle(740, 71, 60, 25));
 		jTextFieldFunction300HeaderFieldRows.setText("");
-		jTextFieldFunction300HeaderFieldRows.setEnabled(false);
-		jLabelFunction300HeaderFieldMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300HeaderFieldMargin.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300HeaderFieldMargin.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300HeaderFieldMargin.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300HeaderFieldMargin.setText(res.getString("FieldMargin"));
-		jLabelFunction300HeaderFieldMargin.setBounds(new Rectangle(664, 68, 45, 15));
-		jLabelFunction300HeaderFieldMargin.setEnabled(false);
-		jTextFieldFunction300HeaderFieldMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300HeaderFieldMargin.setBounds(new Rectangle(714, 65, 45, 22));
+		jLabelFunction300HeaderFieldMargin.setBounds(new Rectangle(810, 74, 60, 20));
+		jTextFieldFunction300HeaderFieldMargin.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300HeaderFieldMargin.setBounds(new Rectangle(875, 71, 60, 25));
 		jTextFieldFunction300HeaderFieldMargin.setText("");
-		jTextFieldFunction300HeaderFieldMargin.setEnabled(false);
-		jLabelFunction300HeaderFieldCaptionOption.setEnabled(false);
+		//
 		jLabelFunction300HeaderFieldCaptionOption.setText(res.getString("Caption"));
-		jLabelFunction300HeaderFieldCaptionOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300HeaderFieldCaptionOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300HeaderFieldCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300HeaderFieldCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction300HeaderFieldCaptionOption.setBounds(new Rectangle(11, 96, 96, 15));
+		jLabelFunction300HeaderFieldCaptionOption.setBounds(new Rectangle(5, 105, 130, 20));
 		jRadioButtonFunction300HeaderFieldCaptionOptionName.setText(res.getString("FieldName"));
-		jRadioButtonFunction300HeaderFieldCaptionOptionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300HeaderFieldCaptionOptionName.setBounds(new Rectangle(115, 93, 100, 22));
-		jRadioButtonFunction300HeaderFieldCaptionOptionName.setEnabled(false);
+		jRadioButtonFunction300HeaderFieldCaptionOptionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300HeaderFieldCaptionOptionName.setBounds(new Rectangle(140, 102, 130, 25));
 		jRadioButtonFunction300HeaderFieldCaptionOptionName.addChangeListener(new Editor_jRadioButtonFunction300HeaderFieldCaptionOption_changeAdapter(this));
-		jRadioButtonFunction300HeaderFieldCaptionOptionValue.setText(res.getString("ValueSpecified"));
-		jRadioButtonFunction300HeaderFieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300HeaderFieldCaptionOptionValue.setBounds(new Rectangle(335, 93, 63, 22));
-		jRadioButtonFunction300HeaderFieldCaptionOptionValue.setEnabled(false);
-		jRadioButtonFunction300HeaderFieldCaptionOptionValue.addChangeListener(new Editor_jRadioButtonFunction300HeaderFieldCaptionOption_changeAdapter(this));
 		jRadioButtonFunction300HeaderFieldCaptionOptionNone.setText(res.getString("None"));
-		jRadioButtonFunction300HeaderFieldCaptionOptionNone.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300HeaderFieldCaptionOptionNone.setBounds(new Rectangle(225, 93, 63, 22));
-		jRadioButtonFunction300HeaderFieldCaptionOptionNone.setEnabled(false);
+		jRadioButtonFunction300HeaderFieldCaptionOptionNone.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300HeaderFieldCaptionOptionNone.setBounds(new Rectangle(270, 102, 130, 25));
 		jRadioButtonFunction300HeaderFieldCaptionOptionNone.addChangeListener(new Editor_jRadioButtonFunction300HeaderFieldCaptionOption_changeAdapter(this));
+		jRadioButtonFunction300HeaderFieldCaptionOptionValue.setText(res.getString("ValueSpecified"));
+		jRadioButtonFunction300HeaderFieldCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300HeaderFieldCaptionOptionValue.setBounds(new Rectangle(400, 102, 130, 25));
+		jRadioButtonFunction300HeaderFieldCaptionOptionValue.addChangeListener(new Editor_jRadioButtonFunction300HeaderFieldCaptionOption_changeAdapter(this));
 		buttonGroupFunction300HeaderFieldCaptionOption.add(jRadioButtonFunction300HeaderFieldCaptionOptionName);
 		buttonGroupFunction300HeaderFieldCaptionOption.add(jRadioButtonFunction300HeaderFieldCaptionOptionValue);
 		buttonGroupFunction300HeaderFieldCaptionOption.add(jRadioButtonFunction300HeaderFieldCaptionOptionNone);
-		jTextFieldFunction300HeaderFieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300HeaderFieldCaptionOptionValue.setBounds(new Rectangle(415, 93, 200, 22));
-		jTextFieldFunction300HeaderFieldCaptionOptionValue.setEnabled(false);
+		jTextFieldFunction300HeaderFieldCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300HeaderFieldCaptionOptionValue.setBounds(new Rectangle(530, 102, 200, 22));
 		jTextFieldFunction300HeaderFieldCaptionOptionValue.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
-		jCheckBoxFunction300HeaderFieldCaptionLengthVariable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jCheckBoxFunction300HeaderFieldCaptionLengthVariable.setBounds(new Rectangle(650, 93, 150, 22));
+		jCheckBoxFunction300HeaderFieldCaptionLengthVariable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxFunction300HeaderFieldCaptionLengthVariable.setBounds(new Rectangle(760, 102, 200, 25));
 		jCheckBoxFunction300HeaderFieldCaptionLengthVariable.setText(res.getString("CaptionLengthVariable"));
-		jCheckBoxFunction300HeaderFieldCaptionLengthVariable.setEnabled(false);
+		//
 		jLabelFunction300HeaderFieldComment.setEnabled(false);
-		jLabelFunction300HeaderFieldComment.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300HeaderFieldComment.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300HeaderFieldComment.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300HeaderFieldComment.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300HeaderFieldComment.setText(res.getString("Comment"));
-		jLabelFunction300HeaderFieldComment.setBounds(new Rectangle(11, 124, 96, 15));
-		jTextFieldFunction300HeaderFieldComment.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300HeaderFieldComment.setBounds(new Rectangle(115, 121, 430, 22));
+		jLabelFunction300HeaderFieldComment.setBounds(new Rectangle(5, 136, 130, 20));
+		jTextFieldFunction300HeaderFieldComment.setEnabled(false);
+		jTextFieldFunction300HeaderFieldComment.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300HeaderFieldComment.setBounds(new Rectangle(140, 133, 795, 25));
 		jTextFieldFunction300HeaderFieldComment.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
-		jPanelFunction300HeaderFieldList.setLayout(null);
-		jPanelFunction300HeaderFieldList.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction300HeaderFieldList.add(jLabelFunction300HeaderTable);
-		jPanelFunction300HeaderFieldList.add(jTextFieldFunction300HeaderTable);
-		jPanelFunction300HeaderFieldList.add(jLabelFunction300HeaderTableType);
-		jPanelFunction300HeaderFieldList.add(jTextFieldFunction300HeaderTableType);
-		jPanelFunction300HeaderFieldList.add(jLabelFunction300HeaderField);
-		jPanelFunction300HeaderFieldList.add(jTextFieldFunction300HeaderField);
-		jPanelFunction300HeaderFieldList.add(jLabelFunction300HeaderFieldType);
-		jPanelFunction300HeaderFieldList.add(jTextFieldFunction300HeaderFieldType);
-		jPanelFunction300HeaderFieldList.add(jLabelFunction300HeaderFieldLayoutOption);
-		jPanelFunction300HeaderFieldList.add(jRadioButtonFunction300HeaderFieldLayoutOptionVertical);
-		jPanelFunction300HeaderFieldList.add(jRadioButtonFunction300HeaderFieldLayoutOptionHorizontal);
-		jPanelFunction300HeaderFieldList.add(jLabelFunction300HeaderFieldWidth);
-		jPanelFunction300HeaderFieldList.add(jTextFieldFunction300HeaderFieldWidth);
-		jPanelFunction300HeaderFieldList.add(jLabelFunction300HeaderFieldRows);
-		jPanelFunction300HeaderFieldList.add(jTextFieldFunction300HeaderFieldRows);
-		jPanelFunction300HeaderFieldList.add(jLabelFunction300HeaderFieldMargin);
-		jPanelFunction300HeaderFieldList.add(jTextFieldFunction300HeaderFieldMargin);
-		jPanelFunction300HeaderFieldList.add(jLabelFunction300HeaderFieldCaptionOption);
-		jPanelFunction300HeaderFieldList.add(jRadioButtonFunction300HeaderFieldCaptionOptionName);
-		jPanelFunction300HeaderFieldList.add(jRadioButtonFunction300HeaderFieldCaptionOptionValue);
-		jPanelFunction300HeaderFieldList.add(jRadioButtonFunction300HeaderFieldCaptionOptionNone);
-		jPanelFunction300HeaderFieldList.add(jTextFieldFunction300HeaderFieldCaptionOptionValue);
-		jPanelFunction300HeaderFieldList.add(jCheckBoxFunction300HeaderFieldCaptionLengthVariable);
-		jPanelFunction300HeaderFieldList.add(jLabelFunction300HeaderFieldComment);
-		jPanelFunction300HeaderFieldList.add(jTextFieldFunction300HeaderFieldComment);
 		//
+		jPanelFunction300HeaderFieldDefinition.setPreferredSize(new Dimension(990, 167));
+		jPanelFunction300HeaderFieldDefinition.setLayout(null);
+		jPanelFunction300HeaderFieldDefinition.setBorder(null);
+		jPanelFunction300HeaderFieldDefinition.add(jLabelFunction300HeaderTable);
+		jPanelFunction300HeaderFieldDefinition.add(jTextFieldFunction300HeaderTable);
+		jPanelFunction300HeaderFieldDefinition.add(jLabelFunction300HeaderTableType);
+		jPanelFunction300HeaderFieldDefinition.add(jTextFieldFunction300HeaderTableType);
+		jPanelFunction300HeaderFieldDefinition.add(jLabelFunction300HeaderField);
+		jPanelFunction300HeaderFieldDefinition.add(jTextFieldFunction300HeaderField);
+		jPanelFunction300HeaderFieldDefinition.add(jLabelFunction300HeaderFieldType);
+		jPanelFunction300HeaderFieldDefinition.add(jTextFieldFunction300HeaderFieldType);
+		jPanelFunction300HeaderFieldDefinition.add(jLabelFunction300HeaderFieldLayoutOption);
+		jPanelFunction300HeaderFieldDefinition.add(jRadioButtonFunction300HeaderFieldLayoutOptionVertical);
+		jPanelFunction300HeaderFieldDefinition.add(jRadioButtonFunction300HeaderFieldLayoutOptionHorizontal);
+		jPanelFunction300HeaderFieldDefinition.add(jLabelFunction300HeaderFieldWidth);
+		jPanelFunction300HeaderFieldDefinition.add(jTextFieldFunction300HeaderFieldWidth);
+		jPanelFunction300HeaderFieldDefinition.add(jLabelFunction300HeaderFieldRows);
+		jPanelFunction300HeaderFieldDefinition.add(jTextFieldFunction300HeaderFieldRows);
+		jPanelFunction300HeaderFieldDefinition.add(jLabelFunction300HeaderFieldMargin);
+		jPanelFunction300HeaderFieldDefinition.add(jTextFieldFunction300HeaderFieldMargin);
+		jPanelFunction300HeaderFieldDefinition.add(jLabelFunction300HeaderFieldCaptionOption);
+		jPanelFunction300HeaderFieldDefinition.add(jRadioButtonFunction300HeaderFieldCaptionOptionName);
+		jPanelFunction300HeaderFieldDefinition.add(jRadioButtonFunction300HeaderFieldCaptionOptionValue);
+		jPanelFunction300HeaderFieldDefinition.add(jRadioButtonFunction300HeaderFieldCaptionOptionNone);
+		jPanelFunction300HeaderFieldDefinition.add(jTextFieldFunction300HeaderFieldCaptionOptionValue);
+		jPanelFunction300HeaderFieldDefinition.add(jCheckBoxFunction300HeaderFieldCaptionLengthVariable);
+		jPanelFunction300HeaderFieldDefinition.add(jLabelFunction300HeaderFieldComment);
+		jPanelFunction300HeaderFieldDefinition.add(jTextFieldFunction300HeaderFieldComment);
+		//
+		jPanelFunction300DetailList.setBorder(null);
 		jPanelFunction300DetailList.setLayout(new BorderLayout());
 		jPanelFunction300DetailListTop.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction300DetailListTop.setPreferredSize(new Dimension(10, 151));
-		jPanelFunction300DetailListTop.setToolTipText("");
+		jPanelFunction300DetailListTop.setPreferredSize(new Dimension(10, 167));
 		jPanelFunction300DetailListTop.setLayout(null);
-		jLabelFunction300DetailCaption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction300DetailCaption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailCaption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailCaption.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailCaption.setText(res.getString("Caption"));
-		jLabelFunction300DetailCaption.setBounds(new Rectangle(11, 12, 96, 15));
-		jLabelFunction300DetailCaption.setEnabled(false);
-		jTextFieldFunction300DetailCaption.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailCaption.setBounds(new Rectangle(115, 9, 180, 22));
-		jTextFieldFunction300DetailCaption.setEnabled(false);
-		jLabelFunction300DetailInitialMsg.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailCaption.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldFunction300DetailCaption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailCaption.setBounds(new Rectangle(140, 9, 180, 25));
+		jLabelFunction300DetailInitialMsg.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailInitialMsg.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailInitialMsg.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailInitialMsg.setText(res.getString("InitialMessage"));
-		jLabelFunction300DetailInitialMsg.setBounds(new Rectangle(311, 12, 96, 15));
-		jTextFieldFunction300DetailInitialMsg.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailInitialMsg.setBounds(new Rectangle(415, 9, 398, 22));
-		jLabelFunction300DetailTableName.setEnabled(false);
-		jLabelFunction300DetailTableName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailInitialMsg.setBounds(new Rectangle(330, 12, 130, 20));
+		jTextFieldFunction300DetailInitialMsg.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailInitialMsg.setBounds(new Rectangle(465, 9, 515, 25));
+		//
+		jLabelFunction300DetailTableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailTableName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailTableName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailTableName.setText(res.getString("DTLTable"));
-		jLabelFunction300DetailTableName.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldFunction300DetailTableName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailTableName.setBounds(new Rectangle(115, 37, 600, 22));
+		jLabelFunction300DetailTableName.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldFunction300DetailTableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailTableName.setBounds(new Rectangle(140, 40, 840, 25));
 		jTextFieldFunction300DetailTableName.setEditable(false);
 		jButtonFunction300DetailTableKeyFieldsEdit.setIcon(imageIconPrompt);
-		jButtonFunction300DetailTableKeyFieldsEdit.setBounds(new Rectangle(715, 36, 28, 23));
+		jButtonFunction300DetailTableKeyFieldsEdit.setBounds(new Rectangle(980, 39, 28, 27));
 		jButtonFunction300DetailTableKeyFieldsEdit.addActionListener(new Editor_jButtonToEditKeyFields_actionAdapter(this));
-		jLabelFunction300DetailTableOrderByFields.setEnabled(false);
-		jLabelFunction300DetailTableOrderByFields.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction300DetailTableOrderByFields.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailTableOrderByFields.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailTableOrderByFields.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailTableOrderByFields.setText(res.getString("OrderByFields"));
-		jLabelFunction300DetailTableOrderByFields.setBounds(new Rectangle(11, 68, 96, 15));
-		jTextFieldFunction300DetailTableOrderByFields.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailTableOrderByFields.setBounds(new Rectangle(115, 65, 300, 22));
+		jLabelFunction300DetailTableOrderByFields.setBounds(new Rectangle(5, 74, 130, 20));
+		jTextFieldFunction300DetailTableOrderByFields.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailTableOrderByFields.setBounds(new Rectangle(140, 71, 840, 25));
 		jTextFieldFunction300DetailTableOrderByFields.setEditable(false);
 		jButtonFunction300DetailTableOrderByFieldsEdit.setIcon(imageIconPrompt);
-		jButtonFunction300DetailTableOrderByFieldsEdit.setBounds(new Rectangle(415, 64, 28, 23));
+		jButtonFunction300DetailTableOrderByFieldsEdit.setBounds(new Rectangle(980, 70, 28, 27));
 		jButtonFunction300DetailTableOrderByFieldsEdit.addActionListener(new Editor_jButtonToEditOrderByFields_actionAdapter(this));
-		jLabelFunction300DetailFixedWhere.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction300DetailFixedWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailFixedWhere.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailFixedWhere.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailFixedWhere.setText(res.getString("FixedWhere"));
-		jLabelFunction300DetailFixedWhere.setBounds(new Rectangle(451, 68, 96, 15));
-		jTextFieldFunction300DetailFixedWhere.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailFixedWhere.setBounds(new Rectangle(555, 65, 258, 22));
+		jLabelFunction300DetailFixedWhere.setBounds(new Rectangle(5, 105, 130, 20));
+		jTextFieldFunction300DetailFixedWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailFixedWhere.setBounds(new Rectangle(140, 102, 700, 25));
+		jCheckBoxFunction300InitialListing.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxFunction300InitialListing.setText(res.getString("InitialListing"));
+		jCheckBoxFunction300InitialListing.setBounds(new Rectangle(850, 102, 200, 25));
 		//
-		jLabelFunction300DetailRowSelectionAction.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailRowSelectionAction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailRowSelectionAction.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailRowSelectionAction.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailRowSelectionAction.setText(res.getString("RowAction"));
-		jLabelFunction300DetailRowSelectionAction.setBounds(new Rectangle(11, 96, 96, 15));
+		jLabelFunction300DetailRowSelectionAction.setBounds(new Rectangle(5, 136, 130, 20));
 		jRadioButtonFunction300DetailRowSelectionActionReturn.setText(res.getString("RowActionReturn"));
-		jRadioButtonFunction300DetailRowSelectionActionReturn.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailRowSelectionActionReturn.setBounds(new Rectangle(115, 93, 100, 22));
+		jRadioButtonFunction300DetailRowSelectionActionReturn.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300DetailRowSelectionActionReturn.setBounds(new Rectangle(140, 133, 130, 25));
 		jRadioButtonFunction300DetailRowSelectionActionReturn.addChangeListener(new Editor_jRadioButtonFunction300DetailRowSelectionAction_changeAdapter(this));
 		jRadioButtonFunction300DetailRowSelectionActionCall.setText(res.getString("RowActionCall"));
-		jRadioButtonFunction300DetailRowSelectionActionCall.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailRowSelectionActionCall.setBounds(new Rectangle(225, 93, 110, 22));
+		jRadioButtonFunction300DetailRowSelectionActionCall.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300DetailRowSelectionActionCall.setBounds(new Rectangle(270, 133, 130, 25));
 		jRadioButtonFunction300DetailRowSelectionActionCall.addChangeListener(new Editor_jRadioButtonFunction300DetailRowSelectionAction_changeAdapter(this));
 		buttonGroupFunction300DetailRowSelectionAction.add(jRadioButtonFunction300DetailRowSelectionActionReturn);
 		buttonGroupFunction300DetailRowSelectionAction.add(jRadioButtonFunction300DetailRowSelectionActionCall);
-		jTextFieldFunction300DetailFunctionIDCalled.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailFunctionIDCalled.setBounds(new Rectangle(335, 93, 80, 22));
+		jTextFieldFunction300DetailFunctionIDCalled.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailFunctionIDCalled.setBounds(new Rectangle(410, 133, 110, 25));
 		jTextFieldFunction300DetailFunctionIDCalled.addKeyListener(new Editor_jTextFieldFunction300DetailFunctionIDCalled_keyAdapter(this));
-		jTextFieldFunction300DetailFunctionNameCalled.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailFunctionNameCalled.setBounds(new Rectangle(420, 93, 295, 22));
+		jTextFieldFunction300DetailFunctionNameCalled.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailFunctionNameCalled.setBounds(new Rectangle(525, 133, 315, 25));
 		jTextFieldFunction300DetailFunctionNameCalled.setEditable(false);
-		//
-		jLabelFunction300DetailParmType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailParmType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailParmType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailParmType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailParmType.setText(res.getString("Parameters"));
-		jLabelFunction300DetailParmType.setBounds(new Rectangle(11, 124, 96, 15));
+		jLabelFunction300DetailParmType.setBounds(new Rectangle(850, 136, 100, 20));
 		jRadioButtonFunction300DetailParmTypeKeys.setText("KEYS");
-		jRadioButtonFunction300DetailParmTypeKeys.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailParmTypeKeys.setBounds(new Rectangle(115, 121, 100, 22));
+		jRadioButtonFunction300DetailParmTypeKeys.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300DetailParmTypeKeys.setBounds(new Rectangle(955, 133, 90, 25));
 		jRadioButtonFunction300DetailParmTypeColumns.setText("COLUMNS");
-		jRadioButtonFunction300DetailParmTypeColumns.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailParmTypeColumns.setBounds(new Rectangle(225, 121, 110, 22));
+		jRadioButtonFunction300DetailParmTypeColumns.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300DetailParmTypeColumns.setBounds(new Rectangle(1045, 133, 120, 25));
 		jRadioButtonFunction300DetailParmTypeColumns.addChangeListener(new Editor_jRadioButtonFunction300DetailRowSelectionAction_changeAdapter(this));
 		buttonGroupFunction300DetailParmType.add(jRadioButtonFunction300DetailParmTypeKeys);
 		buttonGroupFunction300DetailParmType.add(jRadioButtonFunction300DetailParmTypeColumns);
-		jCheckBoxFunction300InitialListing.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jCheckBoxFunction300InitialListing.setText(res.getString("InitialListing"));
-		jCheckBoxFunction300InitialListing.setBounds(new Rectangle(350, 121, 150, 22));
 		//
 		jPanelFunction300DetailListTop.add(jLabelFunction300DetailCaption);
 		jPanelFunction300DetailListTop.add(jTextFieldFunction300DetailCaption);
@@ -8844,11 +8764,13 @@ public class Editor extends JFrame {
 		jPanelFunction300DetailList.add(jPanelFunction300DetailListTop, BorderLayout.NORTH);
 		jPanelFunction300DetailList.add(jTabbedPaneFunction300DetailList, BorderLayout.CENTER);
 		//
+		jScrollPaneFunction300Detail.setBorder(null);
+		jScrollPaneFunction300Detail.getViewport().add(jSplitPaneFunction300DetailList);
 		jScrollPaneFunction300DetailList.setBorder(null);
 		jScrollPaneFunction300DetailList.getViewport().add(jTableFunction300DetailList, null);
 		jScrollPaneFunction300DetailList.addMouseListener(new Editor_jScrollPaneFunction300DetailList_mouseAdapter(this));
 		jTableFunction300DetailList.getSelectionModel().addListSelectionListener(new Editor_jTableFunction300DetailList_listSelectionAdapter(this));
-		jTableFunction300DetailList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction300DetailList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction300DetailList.setBackground(SystemColor.control);
 		jTableFunction300DetailList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction300DetailList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -8858,6 +8780,7 @@ public class Editor extends JFrame {
 		jTableFunction300DetailList.addMouseListener(new Editor_jTableFunction300DetailList_mouseAdapter(this));
 	    jTableFunction300DetailList.addMouseMotionListener(new Editor_jTableFunction300DetailList_mouseMotionAdapter(this));
 		jTableFunction300DetailList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableFunction300DetailList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction300DetailList.addColumn("NO.");
 		tableModelFunction300DetailList.addColumn(res.getString("Caption"));
 		tableModelFunction300DetailList.addColumn(res.getString("DTLTable"));
@@ -8866,15 +8789,15 @@ public class Editor extends JFrame {
 		column1 = jTableFunction300DetailList.getColumnModel().getColumn(1);
 		column2 = jTableFunction300DetailList.getColumnModel().getColumn(2);
 		column3 = jTableFunction300DetailList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(140);
-		column2.setPreferredWidth(380);
-		column3.setPreferredWidth(220);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(180);
+		column2.setPreferredWidth(500);
+		column3.setPreferredWidth(350);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction300DetailList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction300DetailList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction300DetailList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
 		jSplitPaneFunction300DetailList.setOrientation(JSplitPane.VERTICAL_SPLIT);
@@ -8882,11 +8805,12 @@ public class Editor extends JFrame {
 		jSplitPaneFunction300DetailList.add(jPanelFunction300DetailList, JSplitPane.BOTTOM);
 		int wrkForDividerLocation = (screenHeight -556) / 3;
 		jSplitPaneFunction300DetailList.setDividerLocation(wrkForDividerLocation);
+		jSplitPaneFunction300DetailList.setPreferredSize(new Dimension(1160, 650));
 		//
 		jScrollPaneFunction300DetailFieldList.setBorder(null);
 		jScrollPaneFunction300DetailFieldList.getViewport().add(jTableFunction300DetailFieldList, null);
 		jScrollPaneFunction300DetailFieldList.addMouseListener(new Editor_jScrollPaneFunction300DetailFieldList_mouseAdapter(this));
-		jTableFunction300DetailFieldList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction300DetailFieldList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction300DetailFieldList.setBackground(SystemColor.control);
 		jTableFunction300DetailFieldList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction300DetailFieldList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -8897,6 +8821,7 @@ public class Editor extends JFrame {
 		jTableFunction300DetailFieldList.addMouseListener(new Editor_jTableFunction300DetailFieldList_mouseAdapter(this));
 	    jTableFunction300DetailFieldList.addMouseMotionListener(new Editor_jTableFunction300DetailFieldList_mouseMotionAdapter(this));
 		jTableFunction300DetailFieldList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableFunction300DetailFieldList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction300DetailFieldList.addColumn("NO.");
 		tableModelFunction300DetailFieldList.addColumn(res.getString("DataSource"));
 		tableModelFunction300DetailFieldList.addColumn(res.getString("FieldType"));
@@ -8905,147 +8830,142 @@ public class Editor extends JFrame {
 		column1 = jTableFunction300DetailFieldList.getColumnModel().getColumn(1);
 		column2 = jTableFunction300DetailFieldList.getColumnModel().getColumn(2);
 		column3 = jTableFunction300DetailFieldList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(160);
-		column2.setPreferredWidth(250);
-		column3.setPreferredWidth(350);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(250);
+		column2.setPreferredWidth(350);
+		column3.setPreferredWidth(450);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction300DetailFieldList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction300DetailFieldList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction300DetailFieldList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		jSplitPaneFunction300DetailFieldList.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jSplitPaneFunction300DetailFieldList.add(jScrollPaneFunction300DetailFieldList, JSplitPane.TOP);
-		jSplitPaneFunction300DetailFieldList.add(jPanelFunction300DetailFieldList, JSplitPane.BOTTOM);
-		jSplitPaneFunction300DetailFieldList.setDividerLocation(screenHeight - wrkForDividerLocation - 596);
-		jLabelFunction300DetailTable.setEnabled(false);
-		jLabelFunction300DetailTable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jPanelFunction300DetailFieldList.setLayout(new BorderLayout());
+		jPanelFunction300DetailFieldList.add(jScrollPaneFunction300DetailFieldList, BorderLayout.CENTER);
+		jPanelFunction300DetailFieldList.add(jPanelFunction300DetailFieldDefinition, BorderLayout.SOUTH);
+		//
+		jLabelFunction300DetailTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailTable.setText(res.getString("Table"));
-		jLabelFunction300DetailTable.setBounds(new Rectangle(11, 12, 96, 15));
-		jTextFieldFunction300DetailTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailTable.setBounds(new Rectangle(115, 9, 300, 22));
+		jLabelFunction300DetailTable.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldFunction300DetailTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailTable.setBounds(new Rectangle(140, 9, 350, 25));
 		jTextFieldFunction300DetailTable.setEditable(false);
-		jLabelFunction300DetailTableType.setEnabled(false);
-		jLabelFunction300DetailTableType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailTableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailTableType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailTableType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailTableType.setText(res.getString("Type"));
-		jLabelFunction300DetailTableType.setBounds(new Rectangle(430, 12, 76, 15));
-		jTextFieldFunction300DetailTableType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailTableType.setBounds(new Rectangle(514, 9, 250, 22));
+		jLabelFunction300DetailTableType.setBounds(new Rectangle(500, 12, 100, 20));
+		jTextFieldFunction300DetailTableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailTableType.setBounds(new Rectangle(605, 9, 330, 25));
 		jTextFieldFunction300DetailTableType.setEditable(false);
-		jLabelFunction300DetailField.setEnabled(false);
-		jLabelFunction300DetailField.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction300DetailField.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailField.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailField.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailField.setText(res.getString("Field"));
-		jLabelFunction300DetailField.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldFunction300DetailField.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailField.setBounds(new Rectangle(115, 37, 300, 22));
+		jLabelFunction300DetailField.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldFunction300DetailField.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailField.setBounds(new Rectangle(140, 40, 350, 25));
 		jTextFieldFunction300DetailField.setEditable(false);
-		jLabelFunction300DetailFieldType.setEnabled(false);
-		jLabelFunction300DetailFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailFieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailFieldType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailFieldType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailFieldType.setText(res.getString("Type"));
-		jLabelFunction300DetailFieldType.setBounds(new Rectangle(430, 40, 76, 15));
-		jTextFieldFunction300DetailFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailFieldType.setBounds(new Rectangle(514, 37, 250, 22));
+		jLabelFunction300DetailFieldType.setBounds(new Rectangle(500, 43, 100, 20));
+		jTextFieldFunction300DetailFieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailFieldType.setBounds(new Rectangle(605, 40, 330, 25));
 		jTextFieldFunction300DetailFieldType.setEditable(false);
-		jLabelFunction300DetailFieldLayoutOption.setEnabled(false);
+		//
 		jLabelFunction300DetailFieldLayoutOption.setText(res.getString("LayoutOption"));
-		jLabelFunction300DetailFieldLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailFieldLayoutOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailFieldLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailFieldLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction300DetailFieldLayoutOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction300DetailFieldLayoutOption.setBounds(new Rectangle(5, 74, 130, 20));
 		jRadioButtonFunction300DetailFieldLayoutOptionVertical.setText(res.getString("LayoutVertical"));
-		jRadioButtonFunction300DetailFieldLayoutOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFieldLayoutOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
-		jRadioButtonFunction300DetailFieldLayoutOptionVertical.setEnabled(false);
+		jRadioButtonFunction300DetailFieldLayoutOptionVertical.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300DetailFieldLayoutOptionVertical.setBounds(new Rectangle(140, 71, 130, 25));
 		jRadioButtonFunction300DetailFieldLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
-		jRadioButtonFunction300DetailFieldLayoutOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFieldLayoutOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
-		jRadioButtonFunction300DetailFieldLayoutOptionHorizontal.setEnabled(false);
+		jRadioButtonFunction300DetailFieldLayoutOptionHorizontal.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300DetailFieldLayoutOptionHorizontal.setBounds(new Rectangle(270, 71, 130, 25));
 		jRadioButtonFunction300DetailFieldLayoutOptionHidden.setText(res.getString("LayoutHidden"));
-		jRadioButtonFunction300DetailFieldLayoutOptionHidden.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFieldLayoutOptionHidden.setBounds(new Rectangle(335, 65, 90, 22));
-		jRadioButtonFunction300DetailFieldLayoutOptionHidden.setEnabled(false);
+		jRadioButtonFunction300DetailFieldLayoutOptionHidden.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300DetailFieldLayoutOptionHidden.setBounds(new Rectangle(400, 71, 100, 25));
 		buttonGroupFunction300DetailFieldLayoutOption.add(jRadioButtonFunction300DetailFieldLayoutOptionVertical);
 		buttonGroupFunction300DetailFieldLayoutOption.add(jRadioButtonFunction300DetailFieldLayoutOptionHorizontal);
 		buttonGroupFunction300DetailFieldLayoutOption.add(jRadioButtonFunction300DetailFieldLayoutOptionHidden);
-		jLabelFunction300DetailFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailFieldWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailFieldWidth.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailFieldWidth.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailFieldWidth.setText(res.getString("FieldWidth"));
-		jLabelFunction300DetailFieldWidth.setBounds(new Rectangle(430, 68, 76, 15));
-		jLabelFunction300DetailFieldWidth.setEnabled(false);
-		jTextFieldFunction300DetailFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailFieldWidth.setBounds(new Rectangle(514, 65, 45, 22));
+		jLabelFunction300DetailFieldWidth.setBounds(new Rectangle(500, 74, 100, 20));
+		jTextFieldFunction300DetailFieldWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailFieldWidth.setBounds(new Rectangle(605, 71, 60, 25));
 		jTextFieldFunction300DetailFieldWidth.setEnabled(false);
 		jTextFieldFunction300DetailFieldWidth.setText("");
-		jLabelFunction300DetailFieldRows.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailFieldRows.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailFieldRows.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailFieldRows.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailFieldRows.setText(res.getString("FieldRows"));
-		jLabelFunction300DetailFieldRows.setBounds(new Rectangle(564, 68, 45, 15));
-		jLabelFunction300DetailFieldRows.setEnabled(false);
-		jTextFieldFunction300DetailFieldRows.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailFieldRows.setBounds(new Rectangle(614, 65, 45, 22));
+		jLabelFunction300DetailFieldRows.setBounds(new Rectangle(675, 74, 60, 20));
+		jTextFieldFunction300DetailFieldRows.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailFieldRows.setBounds(new Rectangle(740, 71, 60, 25));
 		jTextFieldFunction300DetailFieldRows.setText("");
-		jTextFieldFunction300DetailFieldRows.setEnabled(false);
+		//
 		jLabelFunction300DetailFieldCaptionOption.setEnabled(false);
 		jLabelFunction300DetailFieldCaptionOption.setText(res.getString("Caption"));
-		jLabelFunction300DetailFieldCaptionOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailFieldCaptionOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailFieldCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailFieldCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction300DetailFieldCaptionOption.setBounds(new Rectangle(11, 96, 96, 15));
+		jLabelFunction300DetailFieldCaptionOption.setBounds(new Rectangle(5, 105, 130, 20));
 		jRadioButtonFunction300DetailFieldCaptionOptionName.setText(res.getString("FieldName"));
-		jRadioButtonFunction300DetailFieldCaptionOptionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFieldCaptionOptionName.setBounds(new Rectangle(115, 93, 100, 22));
+		jRadioButtonFunction300DetailFieldCaptionOptionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300DetailFieldCaptionOptionName.setBounds(new Rectangle(140, 103, 130, 25));
 		jRadioButtonFunction300DetailFieldCaptionOptionName.setEnabled(false);
 		jRadioButtonFunction300DetailFieldCaptionOptionName.addChangeListener(new Editor_jRadioButtonFunction300DetailFieldCaptionOption_changeAdapter(this));
 		jRadioButtonFunction300DetailFieldCaptionOptionValue.setText(res.getString("ValueSpecified"));
-		jRadioButtonFunction300DetailFieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFieldCaptionOptionValue.setBounds(new Rectangle(225, 93, 63, 22));
+		jRadioButtonFunction300DetailFieldCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300DetailFieldCaptionOptionValue.setBounds(new Rectangle(270, 103, 130, 25));
 		jRadioButtonFunction300DetailFieldCaptionOptionValue.setEnabled(false);
 		jRadioButtonFunction300DetailFieldCaptionOptionValue.addChangeListener(new Editor_jRadioButtonFunction300DetailFieldCaptionOption_changeAdapter(this));
 		buttonGroupFunction300DetailFieldCaptionOption.add(jRadioButtonFunction300DetailFieldCaptionOptionName);
 		buttonGroupFunction300DetailFieldCaptionOption.add(jRadioButtonFunction300DetailFieldCaptionOptionValue);
-		jTextFieldFunction300DetailFieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailFieldCaptionOptionValue.setBounds(new Rectangle(300, 93, 220, 22));
+		jTextFieldFunction300DetailFieldCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailFieldCaptionOptionValue.setBounds(new Rectangle(400, 103, 265, 25));
 		jTextFieldFunction300DetailFieldCaptionOptionValue.setEnabled(false);
 		jTextFieldFunction300DetailFieldCaptionOptionValue.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
-		jPanelFunction300DetailFieldList.setLayout(null);
-		jPanelFunction300DetailFieldList.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction300DetailFieldList.add(jLabelFunction300DetailTable);
-		jPanelFunction300DetailFieldList.add(jTextFieldFunction300DetailTable);
-		jPanelFunction300DetailFieldList.add(jLabelFunction300DetailTableType);
-		jPanelFunction300DetailFieldList.add(jTextFieldFunction300DetailTableType);
-		jPanelFunction300DetailFieldList.add(jLabelFunction300DetailField);
-		jPanelFunction300DetailFieldList.add(jTextFieldFunction300DetailField);
-		jPanelFunction300DetailFieldList.add(jLabelFunction300DetailFieldType);
-		jPanelFunction300DetailFieldList.add(jTextFieldFunction300DetailFieldType);
-		jPanelFunction300DetailFieldList.add(jLabelFunction300DetailFieldLayoutOption);
-		jPanelFunction300DetailFieldList.add(jRadioButtonFunction300DetailFieldLayoutOptionVertical);
-		jPanelFunction300DetailFieldList.add(jRadioButtonFunction300DetailFieldLayoutOptionHorizontal);
-		jPanelFunction300DetailFieldList.add(jRadioButtonFunction300DetailFieldLayoutOptionHidden);
-		jPanelFunction300DetailFieldList.add(jLabelFunction300DetailFieldWidth);
-		jPanelFunction300DetailFieldList.add(jTextFieldFunction300DetailFieldWidth);
-		jPanelFunction300DetailFieldList.add(jLabelFunction300DetailFieldRows);
-		jPanelFunction300DetailFieldList.add(jTextFieldFunction300DetailFieldRows);
-		jPanelFunction300DetailFieldList.add(jLabelFunction300DetailFieldCaptionOption);
-		jPanelFunction300DetailFieldList.add(jRadioButtonFunction300DetailFieldCaptionOptionName);
-		jPanelFunction300DetailFieldList.add(jRadioButtonFunction300DetailFieldCaptionOptionValue);
-		jPanelFunction300DetailFieldList.add(jTextFieldFunction300DetailFieldCaptionOptionValue);
+		//
+		jPanelFunction300DetailFieldDefinition.setPreferredSize(new Dimension(100,137));
+		jPanelFunction300DetailFieldDefinition.setLayout(null);
+		jPanelFunction300DetailFieldDefinition.setBorder(null);
+		jPanelFunction300DetailFieldDefinition.add(jLabelFunction300DetailTable);
+		jPanelFunction300DetailFieldDefinition.add(jTextFieldFunction300DetailTable);
+		jPanelFunction300DetailFieldDefinition.add(jLabelFunction300DetailTableType);
+		jPanelFunction300DetailFieldDefinition.add(jTextFieldFunction300DetailTableType);
+		jPanelFunction300DetailFieldDefinition.add(jLabelFunction300DetailField);
+		jPanelFunction300DetailFieldDefinition.add(jTextFieldFunction300DetailField);
+		jPanelFunction300DetailFieldDefinition.add(jLabelFunction300DetailFieldType);
+		jPanelFunction300DetailFieldDefinition.add(jTextFieldFunction300DetailFieldType);
+		jPanelFunction300DetailFieldDefinition.add(jLabelFunction300DetailFieldLayoutOption);
+		jPanelFunction300DetailFieldDefinition.add(jRadioButtonFunction300DetailFieldLayoutOptionVertical);
+		jPanelFunction300DetailFieldDefinition.add(jRadioButtonFunction300DetailFieldLayoutOptionHorizontal);
+		jPanelFunction300DetailFieldDefinition.add(jRadioButtonFunction300DetailFieldLayoutOptionHidden);
+		jPanelFunction300DetailFieldDefinition.add(jLabelFunction300DetailFieldWidth);
+		jPanelFunction300DetailFieldDefinition.add(jTextFieldFunction300DetailFieldWidth);
+		jPanelFunction300DetailFieldDefinition.add(jLabelFunction300DetailFieldRows);
+		jPanelFunction300DetailFieldDefinition.add(jTextFieldFunction300DetailFieldRows);
+		jPanelFunction300DetailFieldDefinition.add(jLabelFunction300DetailFieldCaptionOption);
+		jPanelFunction300DetailFieldDefinition.add(jRadioButtonFunction300DetailFieldCaptionOptionName);
+		jPanelFunction300DetailFieldDefinition.add(jRadioButtonFunction300DetailFieldCaptionOptionValue);
+		jPanelFunction300DetailFieldDefinition.add(jTextFieldFunction300DetailFieldCaptionOptionValue);
 		//
 		jScrollPaneFunction300DetailFilterList.setBorder(null);
 		jScrollPaneFunction300DetailFilterList.getViewport().add(jTableFunction300DetailFilterList, null);
 		jScrollPaneFunction300DetailFilterList.addMouseListener(new Editor_jScrollPaneFunction300DetailFilterList_mouseAdapter(this));
-		jTableFunction300DetailFilterList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction300DetailFilterList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction300DetailFilterList.setBackground(SystemColor.control);
 		jTableFunction300DetailFilterList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction300DetailFilterList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -9056,6 +8976,7 @@ public class Editor extends JFrame {
 		jTableFunction300DetailFilterList.addMouseListener(new Editor_jTableFunction300DetailFilterList_mouseAdapter(this));
 	    jTableFunction300DetailFilterList.addMouseMotionListener(new Editor_jTableFunction300DetailFilterList_mouseMotionAdapter(this));
 		jTableFunction300DetailFilterList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableFunction300DetailFilterList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction300DetailFilterList.addColumn("NO.");
 		tableModelFunction300DetailFilterList.addColumn(res.getString("DataSource"));
 		tableModelFunction300DetailFilterList.addColumn(res.getString("FieldType"));
@@ -9064,142 +8985,125 @@ public class Editor extends JFrame {
 		column1 = jTableFunction300DetailFilterList.getColumnModel().getColumn(1);
 		column2 = jTableFunction300DetailFilterList.getColumnModel().getColumn(2);
 		column3 = jTableFunction300DetailFilterList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(160);
-		column2.setPreferredWidth(250);
-		column3.setPreferredWidth(350);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(250);
+		column2.setPreferredWidth(350);
+		column3.setPreferredWidth(450);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction300DetailFilterList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction300DetailFilterList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction300DetailFilterList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		jSplitPaneFunction300DetailFilterList.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jSplitPaneFunction300DetailFilterList.add(jScrollPaneFunction300DetailFilterList, JSplitPane.TOP);
-		jSplitPaneFunction300DetailFilterList.add(jPanelFunction300DetailFilterList, JSplitPane.BOTTOM);
-		jSplitPaneFunction300DetailFilterList.setDividerLocation(screenHeight - wrkForDividerLocation - 652);
-		jLabelFunction300DetailFilterTable.setEnabled(false);
-		jLabelFunction300DetailFilterTable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jPanelFunction300DetailFilterList.setLayout(new BorderLayout());
+		jPanelFunction300DetailFilterList.add(jScrollPaneFunction300DetailFilterList, BorderLayout.CENTER);
+		jPanelFunction300DetailFilterList.add(jPanelFunction300DetailFilterDefinition, BorderLayout.SOUTH);
+		//
+		jLabelFunction300DetailFilterTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailFilterTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailFilterTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailFilterTable.setText(res.getString("Table"));
-		jLabelFunction300DetailFilterTable.setBounds(new Rectangle(11, 12, 96, 15));
-		jTextFieldFunction300DetailFilterTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailFilterTable.setBounds(new Rectangle(115, 9, 300, 22));
+		jLabelFunction300DetailFilterTable.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldFunction300DetailFilterTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailFilterTable.setBounds(new Rectangle(140, 9, 350, 25));
 		jTextFieldFunction300DetailFilterTable.setEditable(false);
-		jLabelFunction300DetailFilterTableType.setEnabled(false);
-		jLabelFunction300DetailFilterTableType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailFilterTableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailFilterTableType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailFilterTableType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailFilterTableType.setText(res.getString("Type"));
-		jLabelFunction300DetailFilterTableType.setBounds(new Rectangle(430, 12, 76, 15));
-		jTextFieldFunction300DetailFilterTableType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailFilterTableType.setBounds(new Rectangle(514, 9, 250, 22));
+		jLabelFunction300DetailFilterTableType.setBounds(new Rectangle(500, 12, 100, 20));
+		jTextFieldFunction300DetailFilterTableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailFilterTableType.setBounds(new Rectangle(605, 9, 330, 25));
 		jTextFieldFunction300DetailFilterTableType.setEditable(false);
-		jLabelFunction300DetailFilterField.setEnabled(false);
-		jLabelFunction300DetailFilterField.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction300DetailFilterField.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailFilterField.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailFilterField.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailFilterField.setText(res.getString("Field"));
-		jLabelFunction300DetailFilterField.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldFunction300DetailFilterField.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailFilterField.setBounds(new Rectangle(115, 37, 300, 22));
+		jLabelFunction300DetailFilterField.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldFunction300DetailFilterField.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailFilterField.setBounds(new Rectangle(140, 40, 350, 25));
 		jTextFieldFunction300DetailFilterField.setEditable(false);
-		jLabelFunction300DetailFilterFieldType.setEnabled(false);
-		jLabelFunction300DetailFilterFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailFilterFieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailFilterFieldType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailFilterFieldType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailFilterFieldType.setText(res.getString("Type"));
-		jLabelFunction300DetailFilterFieldType.setBounds(new Rectangle(430, 40, 76, 15));
-		jTextFieldFunction300DetailFilterFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailFilterFieldType.setBounds(new Rectangle(514, 37, 250, 22));
+		jLabelFunction300DetailFilterFieldType.setBounds(new Rectangle(500, 43, 100, 20));
+		jTextFieldFunction300DetailFilterFieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailFilterFieldType.setBounds(new Rectangle(605, 40, 330, 25));
 		jTextFieldFunction300DetailFilterFieldType.setEditable(false);
-		jLabelFunction300DetailFilterLayoutOption.setEnabled(false);
+		//
 		jLabelFunction300DetailFilterLayoutOption.setText(res.getString("LayoutOption"));
-		jLabelFunction300DetailFilterLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailFilterLayoutOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailFilterLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailFilterLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction300DetailFilterLayoutOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction300DetailFilterLayoutOption.setBounds(new Rectangle(5, 74, 130, 20));
 		jRadioButtonFunction300DetailFilterLayoutOptionVertical.setText(res.getString("LayoutVertical"));
-		jRadioButtonFunction300DetailFilterLayoutOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterLayoutOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
-		jRadioButtonFunction300DetailFilterLayoutOptionVertical.setEnabled(false);
+		jRadioButtonFunction300DetailFilterLayoutOptionVertical.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300DetailFilterLayoutOptionVertical.setBounds(new Rectangle(140, 71, 130, 25));
 		jRadioButtonFunction300DetailFilterLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
-		jRadioButtonFunction300DetailFilterLayoutOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterLayoutOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
-		jRadioButtonFunction300DetailFilterLayoutOptionHorizontal.setEnabled(false);
+		jRadioButtonFunction300DetailFilterLayoutOptionHorizontal.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300DetailFilterLayoutOptionHorizontal.setBounds(new Rectangle(270, 71, 130, 25));
 		buttonGroupFunction300DetailFilterLayoutOption.add(jRadioButtonFunction300DetailFilterLayoutOptionVertical);
 		buttonGroupFunction300DetailFilterLayoutOption.add(jRadioButtonFunction300DetailFilterLayoutOptionHorizontal);
-		jLabelFunction300DetailFilterWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailFilterWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailFilterWidth.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailFilterWidth.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailFilterWidth.setText(res.getString("FieldWidth"));
-		jLabelFunction300DetailFilterWidth.setBounds(new Rectangle(430, 68, 76, 15));
-		jLabelFunction300DetailFilterWidth.setEnabled(false);
-		jTextFieldFunction300DetailFilterWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailFilterWidth.setBounds(new Rectangle(514, 65, 45, 22));
-		jTextFieldFunction300DetailFilterWidth.setEnabled(false);
+		jLabelFunction300DetailFilterWidth.setBounds(new Rectangle(500, 74, 100, 20));
+		jTextFieldFunction300DetailFilterWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailFilterWidth.setBounds(new Rectangle(605, 71, 60, 22));
 		jTextFieldFunction300DetailFilterWidth.setText("");
-		jLabelFunction300DetailFilterMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailFilterMargin.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailFilterMargin.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailFilterMargin.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailFilterMargin.setText(res.getString("FieldMargin"));
-		jLabelFunction300DetailFilterMargin.setBounds(new Rectangle(564, 68, 45, 15));
-		jLabelFunction300DetailFilterMargin.setEnabled(false);
-		jTextFieldFunction300DetailFilterMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailFilterMargin.setBounds(new Rectangle(614, 65, 45, 22));
+		jLabelFunction300DetailFilterMargin.setBounds(new Rectangle(675, 74, 60, 20));
+		jTextFieldFunction300DetailFilterMargin.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailFilterMargin.setBounds(new Rectangle(740, 71, 60, 25));
 		jTextFieldFunction300DetailFilterMargin.setText("");
-		jTextFieldFunction300DetailFilterMargin.setEnabled(false);
-		jLabelFunction300DetailFilterEditableOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailFilterEditableOptions.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailFilterEditableOptions.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailFilterEditableOptions.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailFilterEditableOptions.setText(res.getString("EditableOptions"));
-		jLabelFunction300DetailFilterEditableOptions.setBounds(new Rectangle(664, 68, 100, 15));
-		jLabelFunction300DetailFilterEditableOptions.setEnabled(false);
-		jComboBoxFunction300DetailFilterEditableOptions.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailFilterEditableOptions.setBounds(new Rectangle(810, 74, 130, 20));
+		jComboBoxFunction300DetailFilterEditableOptions.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jComboBoxFunction300DetailFilterEditableOptions.addItem(res.getString("Editable"));
 		jComboBoxFunction300DetailFilterEditableOptions.addItem(res.getString("NonEditable"));
 		jComboBoxFunction300DetailFilterEditableOptions.addItem(res.getString("Hidden"));
-		jComboBoxFunction300DetailFilterEditableOptions.setBounds(new Rectangle(769, 65, 100, 22));
-		jLabelFunction300DetailFilterOption.setEnabled(false);
+		jComboBoxFunction300DetailFilterEditableOptions.setBounds(new Rectangle(945, 71, 150, 25));
+		//
 		jLabelFunction300DetailFilterOption.setText(res.getString("FilterOption"));
-		jLabelFunction300DetailFilterOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailFilterOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailFilterOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailFilterOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction300DetailFilterOption.setBounds(new Rectangle(11, 96, 96, 15));
+		jLabelFunction300DetailFilterOption.setBounds(new Rectangle(5, 105, 130, 20));
 		jRadioButtonFunction300DetailFilterOptionEQ.setText("EQ");
-		jRadioButtonFunction300DetailFilterOptionEQ.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterOptionEQ.setBounds(new Rectangle(115, 93, 60, 22));
-		jRadioButtonFunction300DetailFilterOptionEQ.setEnabled(false);
+		jRadioButtonFunction300DetailFilterOptionEQ.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300DetailFilterOptionEQ.setBounds(new Rectangle(140, 102, 130, 25));
 		jRadioButtonFunction300DetailFilterOptionSCAN.setText("SCAN");
-		jRadioButtonFunction300DetailFilterOptionSCAN.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterOptionSCAN.setBounds(new Rectangle(185, 93, 60, 22));
-		jRadioButtonFunction300DetailFilterOptionSCAN.setEnabled(false);
+		jRadioButtonFunction300DetailFilterOptionSCAN.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300DetailFilterOptionSCAN.setBounds(new Rectangle(270, 102, 130, 25));
 		jRadioButtonFunction300DetailFilterOptionGENERIC.setText("GENERIC");
-		jRadioButtonFunction300DetailFilterOptionGENERIC.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterOptionGENERIC.setBounds(new Rectangle(255, 93, 80, 22));
-		jRadioButtonFunction300DetailFilterOptionGENERIC.setEnabled(false);
+		jRadioButtonFunction300DetailFilterOptionGENERIC.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300DetailFilterOptionGENERIC.setBounds(new Rectangle(400, 102, 130, 25));
 		jRadioButtonFunction300DetailFilterOptionLE.setText("LE");
-		jRadioButtonFunction300DetailFilterOptionLE.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterOptionLE.setBounds(new Rectangle(345, 93, 60, 22));
-		jRadioButtonFunction300DetailFilterOptionLE.setEnabled(false);
+		jRadioButtonFunction300DetailFilterOptionLE.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300DetailFilterOptionLE.setBounds(new Rectangle(530, 102, 130, 25));
 		jRadioButtonFunction300DetailFilterOptionLT.setText("LT");
-		jRadioButtonFunction300DetailFilterOptionLT.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterOptionLT.setBounds(new Rectangle(415, 93, 60, 22));
-		jRadioButtonFunction300DetailFilterOptionLT.setEnabled(false);
+		jRadioButtonFunction300DetailFilterOptionLT.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300DetailFilterOptionLT.setBounds(new Rectangle(660, 102, 130, 25));
 		jRadioButtonFunction300DetailFilterOptionGE.setText("GE");
-		jRadioButtonFunction300DetailFilterOptionGE.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterOptionGE.setBounds(new Rectangle(485, 93, 60, 22));
-		jRadioButtonFunction300DetailFilterOptionGE.setEnabled(false);
+		jRadioButtonFunction300DetailFilterOptionGE.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300DetailFilterOptionGE.setBounds(new Rectangle(790, 102, 130, 25));
 		jRadioButtonFunction300DetailFilterOptionGT.setText("GT");
-		jRadioButtonFunction300DetailFilterOptionGT.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterOptionGT.setBounds(new Rectangle(555, 93, 60, 22));
-		jRadioButtonFunction300DetailFilterOptionGT.setEnabled(false);
+		jRadioButtonFunction300DetailFilterOptionGT.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300DetailFilterOptionGT.setBounds(new Rectangle(920, 102, 130, 25));
 		jRadioButtonFunction300DetailFilterOptionREFLECT.setText("REFLECT");
-		jRadioButtonFunction300DetailFilterOptionREFLECT.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterOptionREFLECT.setBounds(new Rectangle(625, 93, 80, 22));
-		jRadioButtonFunction300DetailFilterOptionREFLECT.setEnabled(false);
+		jRadioButtonFunction300DetailFilterOptionREFLECT.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300DetailFilterOptionREFLECT.setBounds(new Rectangle(1050, 102, 130, 25));
 		buttonGroupFunction300DetailFilterOption.add(jRadioButtonFunction300DetailFilterOptionEQ);
 		buttonGroupFunction300DetailFilterOption.add(jRadioButtonFunction300DetailFilterOptionSCAN);
 		buttonGroupFunction300DetailFilterOption.add(jRadioButtonFunction300DetailFilterOptionGENERIC);
@@ -9208,136 +9112,127 @@ public class Editor extends JFrame {
 		buttonGroupFunction300DetailFilterOption.add(jRadioButtonFunction300DetailFilterOptionGE);
 		buttonGroupFunction300DetailFilterOption.add(jRadioButtonFunction300DetailFilterOptionGT);
 		buttonGroupFunction300DetailFilterOption.add(jRadioButtonFunction300DetailFilterOptionREFLECT);
-		jCheckBoxFunction300DetailFilterIgnoreIfZero.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jCheckBoxFunction300DetailFilterIgnoreIfZero.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jCheckBoxFunction300DetailFilterIgnoreIfZero.setText(res.getString("IgnoreIfZero"));
-		jCheckBoxFunction300DetailFilterIgnoreIfZero.setBounds(new Rectangle(769, 93, 100, 22));
-		jLabelFunction300DetailFilterCaptionOption.setEnabled(false);
+		jCheckBoxFunction300DetailFilterIgnoreIfZero.setBounds(new Rectangle(1190, 102, 150, 25));
+		//
 		jLabelFunction300DetailFilterCaptionOption.setText(res.getString("Caption"));
-		jLabelFunction300DetailFilterCaptionOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailFilterCaptionOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailFilterCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailFilterCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction300DetailFilterCaptionOption.setBounds(new Rectangle(11, 124, 96, 15));
+		jLabelFunction300DetailFilterCaptionOption.setBounds(new Rectangle(5, 136, 130, 20));
 		jRadioButtonFunction300DetailFilterCaptionOptionName.setText(res.getString("FieldName"));
-		jRadioButtonFunction300DetailFilterCaptionOptionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterCaptionOptionName.setBounds(new Rectangle(115, 121, 100, 22));
-		jRadioButtonFunction300DetailFilterCaptionOptionName.setEnabled(false);
+		jRadioButtonFunction300DetailFilterCaptionOptionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300DetailFilterCaptionOptionName.setBounds(new Rectangle(140, 133, 130, 25));
 		jRadioButtonFunction300DetailFilterCaptionOptionName.addChangeListener(new Editor_jRadioButtonFunction300DetailFilterCaptionOption_changeAdapter(this));
 		jRadioButtonFunction300DetailFilterCaptionOptionValue.setText(res.getString("ValueSpecified"));
-		jRadioButtonFunction300DetailFilterCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterCaptionOptionValue.setBounds(new Rectangle(225, 121, 63, 22));
-		jRadioButtonFunction300DetailFilterCaptionOptionValue.setEnabled(false);
+		jRadioButtonFunction300DetailFilterCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300DetailFilterCaptionOptionValue.setBounds(new Rectangle(270, 133, 125, 25));
 		jRadioButtonFunction300DetailFilterCaptionOptionValue.addChangeListener(new Editor_jRadioButtonFunction300DetailFilterCaptionOption_changeAdapter(this));
 		buttonGroupFunction300DetailFilterCaptionOption.add(jRadioButtonFunction300DetailFilterCaptionOptionName);
 		buttonGroupFunction300DetailFilterCaptionOption.add(jRadioButtonFunction300DetailFilterCaptionOptionValue);
-		jTextFieldFunction300DetailFilterCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailFilterCaptionOptionValue.setBounds(new Rectangle(300, 121, 220, 22));
-		jTextFieldFunction300DetailFilterCaptionOptionValue.setEnabled(false);
+		jTextFieldFunction300DetailFilterCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailFilterCaptionOptionValue.setBounds(new Rectangle(395, 133, 250, 25));
 		jTextFieldFunction300DetailFilterCaptionOptionValue.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
-		jLabelFunction300DetailFilterValue.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailFilterValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailFilterValue.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailFilterValue.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailFilterValue.setText(res.getString("InitialValue"));
-		jLabelFunction300DetailFilterValue.setBounds(new Rectangle(526, 124, 96, 15));
-		jTextFieldFunction300DetailFilterValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailFilterValue.setBounds(new Rectangle(630, 121, 264, 22));
+		jLabelFunction300DetailFilterValue.setBounds(new Rectangle(655, 136, 130, 20));
+		jTextFieldFunction300DetailFilterValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailFilterValue.setBounds(new Rectangle(790, 133, 385, 25));
+		//
 		jLabelFunction300DetailFilterPromptOption.setText(res.getString("Prompt"));
-		jLabelFunction300DetailFilterPromptOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailFilterPromptOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailFilterPromptOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailFilterPromptOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction300DetailFilterPromptOption.setBounds(new Rectangle(11, 152, 96, 15));
-		jLabelFunction300DetailFilterPromptOption.setEnabled(false);
+		jLabelFunction300DetailFilterPromptOption.setBounds(new Rectangle(5, 167, 130, 20));
 		jRadioButtonFunction300DetailFilterPromptOptionNone.setText(res.getString("None"));
-		jRadioButtonFunction300DetailFilterPromptOptionNone.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterPromptOptionNone.setBounds(new Rectangle(115, 149, 60, 22));
-		jRadioButtonFunction300DetailFilterPromptOptionNone.setEnabled(false);
+		jRadioButtonFunction300DetailFilterPromptOptionNone.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300DetailFilterPromptOptionNone.setBounds(new Rectangle(140, 164, 130, 25));
 		jRadioButtonFunction300DetailFilterPromptOptionNone.addChangeListener(new Editor_jRadioButtonFunction300DetailFilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction300DetailFilterPromptOptionList0.setText(res.getString("InputAssistList"));
-		jRadioButtonFunction300DetailFilterPromptOptionList0.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterPromptOptionList0.setBounds(new Rectangle(175, 149, 100, 22));
-		jRadioButtonFunction300DetailFilterPromptOptionList0.setEnabled(false);
+		jRadioButtonFunction300DetailFilterPromptOptionList0.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300DetailFilterPromptOptionList0.setBounds(new Rectangle(270, 164, 130, 25));
 		jRadioButtonFunction300DetailFilterPromptOptionList0.addChangeListener(new Editor_jRadioButtonFunction300DetailFilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction300DetailFilterPromptOptionList1.setText(res.getString("OptionalList"));
-		jRadioButtonFunction300DetailFilterPromptOptionList1.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterPromptOptionList1.setBounds(new Rectangle(285, 149, 100, 22));
-		jRadioButtonFunction300DetailFilterPromptOptionList1.setEnabled(false);
+		jRadioButtonFunction300DetailFilterPromptOptionList1.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300DetailFilterPromptOptionList1.setBounds(new Rectangle(400, 164, 130, 25));
 		jRadioButtonFunction300DetailFilterPromptOptionList1.addChangeListener(new Editor_jRadioButtonFunction300DetailFilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction300DetailFilterPromptOptionList2.setText(res.getString("RequiredList"));
-		jRadioButtonFunction300DetailFilterPromptOptionList2.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterPromptOptionList2.setBounds(new Rectangle(395, 149, 100, 22));
-		jRadioButtonFunction300DetailFilterPromptOptionList2.setEnabled(false);
+		jRadioButtonFunction300DetailFilterPromptOptionList2.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300DetailFilterPromptOptionList2.setBounds(new Rectangle(530, 164, 130, 25));
 		jRadioButtonFunction300DetailFilterPromptOptionList2.addChangeListener(new Editor_jRadioButtonFunction300DetailFilterPromptOption_changeAdapter(this));
 		jRadioButtonFunction300DetailFilterPromptOptionCall.setText(res.getString("CallPromptFunction"));
-		jRadioButtonFunction300DetailFilterPromptOptionCall.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction300DetailFilterPromptOptionCall.setBounds(new Rectangle(505, 149, 78, 22));
-		jRadioButtonFunction300DetailFilterPromptOptionCall.setEnabled(false);
+		jRadioButtonFunction300DetailFilterPromptOptionCall.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction300DetailFilterPromptOptionCall.setBounds(new Rectangle(660, 164, 130, 25));
 		jRadioButtonFunction300DetailFilterPromptOptionCall.addChangeListener(new Editor_jRadioButtonFunction300DetailFilterPromptOption_changeAdapter(this));
 		buttonGroupFunction300DetailFilterPromptOption.add(jRadioButtonFunction300DetailFilterPromptOptionNone);
 		buttonGroupFunction300DetailFilterPromptOption.add(jRadioButtonFunction300DetailFilterPromptOptionList0);
 		buttonGroupFunction300DetailFilterPromptOption.add(jRadioButtonFunction300DetailFilterPromptOptionList1);
 		buttonGroupFunction300DetailFilterPromptOption.add(jRadioButtonFunction300DetailFilterPromptOptionList2);
 		buttonGroupFunction300DetailFilterPromptOption.add(jRadioButtonFunction300DetailFilterPromptOptionCall);
-		jTextFieldFunction300DetailFilterPromptOptionCallFunctionID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailFilterPromptOptionCallFunctionID.setBounds(new Rectangle(585, 149, 80, 22));
-		jTextFieldFunction300DetailFilterPromptOptionCallFunctionID.setEnabled(false);
+		jTextFieldFunction300DetailFilterPromptOptionCallFunctionID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailFilterPromptOptionCallFunctionID.setBounds(new Rectangle(790, 164, 100, 25));
 		jTextFieldFunction300DetailFilterPromptOptionCallFunctionID.addKeyListener(new Editor_jTextFieldFunction300DetailFilterPromptOptionCallFunctionID_keyAdapter(this));
-		jTextFieldFunction300DetailFilterPromptOptionCallFunctionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailFilterPromptOptionCallFunctionName.setBounds(new Rectangle(670, 149, 204, 22));
-		jTextFieldFunction300DetailFilterPromptOptionCallFunctionName.setEnabled(false);
+		jTextFieldFunction300DetailFilterPromptOptionCallFunctionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailFilterPromptOptionCallFunctionName.setBounds(new Rectangle(895, 164, 280, 25));
 		jTextFieldFunction300DetailFilterPromptOptionCallFunctionName.setEditable(false);
-		jButtonFunction300DetailFilterPromptOptionCallFunctionExchange.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jButtonFunction300DetailFilterPromptOptionCallFunctionExchange.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jButtonFunction300DetailFilterPromptOptionCallFunctionExchange.setText(res.getString("ExchangeParms"));
-		jButtonFunction300DetailFilterPromptOptionCallFunctionExchange.setBounds(new Rectangle(874, 148, 60, 23));
-		jButtonFunction300DetailFilterPromptOptionCallFunctionExchange.setEnabled(false);
+		jButtonFunction300DetailFilterPromptOptionCallFunctionExchange.setBounds(new Rectangle(1178, 163, 100, 27));
 		jButtonFunction300DetailFilterPromptOptionCallFunctionExchange.addActionListener(new Editor_jButtonToEditPromptOptionCallFunctionExchange_actionAdapter(this));
-		jPanelFunction300DetailFilterList.setLayout(null);
-		jPanelFunction300DetailFilterList.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction300DetailFilterList.add(jLabelFunction300DetailFilterTable);
-		jPanelFunction300DetailFilterList.add(jTextFieldFunction300DetailFilterTable);
-		jPanelFunction300DetailFilterList.add(jLabelFunction300DetailFilterTableType);
-		jPanelFunction300DetailFilterList.add(jTextFieldFunction300DetailFilterTableType);
-		jPanelFunction300DetailFilterList.add(jLabelFunction300DetailFilterField);
-		jPanelFunction300DetailFilterList.add(jTextFieldFunction300DetailFilterField);
-		jPanelFunction300DetailFilterList.add(jLabelFunction300DetailFilterFieldType);
-		jPanelFunction300DetailFilterList.add(jTextFieldFunction300DetailFilterFieldType);
-		jPanelFunction300DetailFilterList.add(jLabelFunction300DetailFilterLayoutOption);
-		jPanelFunction300DetailFilterList.add(jRadioButtonFunction300DetailFilterLayoutOptionVertical);
-		jPanelFunction300DetailFilterList.add(jRadioButtonFunction300DetailFilterLayoutOptionHorizontal);
-		jPanelFunction300DetailFilterList.add(jLabelFunction300DetailFilterWidth);
-		jPanelFunction300DetailFilterList.add(jTextFieldFunction300DetailFilterWidth);
-		jPanelFunction300DetailFilterList.add(jLabelFunction300DetailFilterMargin);
-		jPanelFunction300DetailFilterList.add(jTextFieldFunction300DetailFilterMargin);
-		jPanelFunction300DetailFilterList.add(jLabelFunction300DetailFilterEditableOptions);
-		jPanelFunction300DetailFilterList.add(jComboBoxFunction300DetailFilterEditableOptions);
-		jPanelFunction300DetailFilterList.add(jLabelFunction300DetailFilterOption);
-		jPanelFunction300DetailFilterList.add(jRadioButtonFunction300DetailFilterOptionEQ);
-		jPanelFunction300DetailFilterList.add(jRadioButtonFunction300DetailFilterOptionSCAN);
-		jPanelFunction300DetailFilterList.add(jRadioButtonFunction300DetailFilterOptionGENERIC);
-		jPanelFunction300DetailFilterList.add(jRadioButtonFunction300DetailFilterOptionLE);
-		jPanelFunction300DetailFilterList.add(jRadioButtonFunction300DetailFilterOptionLT);
-		jPanelFunction300DetailFilterList.add(jRadioButtonFunction300DetailFilterOptionGE);
-		jPanelFunction300DetailFilterList.add(jRadioButtonFunction300DetailFilterOptionGT);
-		jPanelFunction300DetailFilterList.add(jRadioButtonFunction300DetailFilterOptionREFLECT);
-		jPanelFunction300DetailFilterList.add(jLabelFunction300DetailFilterCaptionOption);
-		jPanelFunction300DetailFilterList.add(jRadioButtonFunction300DetailFilterCaptionOptionName);
-		jPanelFunction300DetailFilterList.add(jRadioButtonFunction300DetailFilterCaptionOptionValue);
-		jPanelFunction300DetailFilterList.add(jTextFieldFunction300DetailFilterCaptionOptionValue);
-		jPanelFunction300DetailFilterList.add(jLabelFunction300DetailFilterPromptOption);
-		jPanelFunction300DetailFilterList.add(jRadioButtonFunction300DetailFilterPromptOptionNone);
-		jPanelFunction300DetailFilterList.add(jRadioButtonFunction300DetailFilterPromptOptionList0);
-		jPanelFunction300DetailFilterList.add(jRadioButtonFunction300DetailFilterPromptOptionList1);
-		jPanelFunction300DetailFilterList.add(jRadioButtonFunction300DetailFilterPromptOptionList2);
-		jPanelFunction300DetailFilterList.add(jRadioButtonFunction300DetailFilterPromptOptionCall);
-		jPanelFunction300DetailFilterList.add(jTextFieldFunction300DetailFilterPromptOptionCallFunctionID);
-		jPanelFunction300DetailFilterList.add(jTextFieldFunction300DetailFilterPromptOptionCallFunctionName);
-		jPanelFunction300DetailFilterList.add(jButtonFunction300DetailFilterPromptOptionCallFunctionExchange);
-		jPanelFunction300DetailFilterList.add(jLabelFunction300DetailFilterValue);
-		jPanelFunction300DetailFilterList.add(jTextFieldFunction300DetailFilterValue);
-		jPanelFunction300DetailFilterList.add(jCheckBoxFunction300DetailFilterIgnoreIfZero);
+		//
+		jPanelFunction300DetailFilterDefinition.setPreferredSize(new Dimension(100,196));
+		jPanelFunction300DetailFilterDefinition.setLayout(null);
+		jPanelFunction300DetailFilterDefinition.setBorder(null);
+		jPanelFunction300DetailFilterDefinition.add(jLabelFunction300DetailFilterTable);
+		jPanelFunction300DetailFilterDefinition.add(jTextFieldFunction300DetailFilterTable);
+		jPanelFunction300DetailFilterDefinition.add(jLabelFunction300DetailFilterTableType);
+		jPanelFunction300DetailFilterDefinition.add(jTextFieldFunction300DetailFilterTableType);
+		jPanelFunction300DetailFilterDefinition.add(jLabelFunction300DetailFilterField);
+		jPanelFunction300DetailFilterDefinition.add(jTextFieldFunction300DetailFilterField);
+		jPanelFunction300DetailFilterDefinition.add(jLabelFunction300DetailFilterFieldType);
+		jPanelFunction300DetailFilterDefinition.add(jTextFieldFunction300DetailFilterFieldType);
+		jPanelFunction300DetailFilterDefinition.add(jLabelFunction300DetailFilterLayoutOption);
+		jPanelFunction300DetailFilterDefinition.add(jRadioButtonFunction300DetailFilterLayoutOptionVertical);
+		jPanelFunction300DetailFilterDefinition.add(jRadioButtonFunction300DetailFilterLayoutOptionHorizontal);
+		jPanelFunction300DetailFilterDefinition.add(jLabelFunction300DetailFilterWidth);
+		jPanelFunction300DetailFilterDefinition.add(jTextFieldFunction300DetailFilterWidth);
+		jPanelFunction300DetailFilterDefinition.add(jLabelFunction300DetailFilterMargin);
+		jPanelFunction300DetailFilterDefinition.add(jTextFieldFunction300DetailFilterMargin);
+		jPanelFunction300DetailFilterDefinition.add(jLabelFunction300DetailFilterEditableOptions);
+		jPanelFunction300DetailFilterDefinition.add(jComboBoxFunction300DetailFilterEditableOptions);
+		jPanelFunction300DetailFilterDefinition.add(jLabelFunction300DetailFilterOption);
+		jPanelFunction300DetailFilterDefinition.add(jRadioButtonFunction300DetailFilterOptionEQ);
+		jPanelFunction300DetailFilterDefinition.add(jRadioButtonFunction300DetailFilterOptionSCAN);
+		jPanelFunction300DetailFilterDefinition.add(jRadioButtonFunction300DetailFilterOptionGENERIC);
+		jPanelFunction300DetailFilterDefinition.add(jRadioButtonFunction300DetailFilterOptionLE);
+		jPanelFunction300DetailFilterDefinition.add(jRadioButtonFunction300DetailFilterOptionLT);
+		jPanelFunction300DetailFilterDefinition.add(jRadioButtonFunction300DetailFilterOptionGE);
+		jPanelFunction300DetailFilterDefinition.add(jRadioButtonFunction300DetailFilterOptionGT);
+		jPanelFunction300DetailFilterDefinition.add(jRadioButtonFunction300DetailFilterOptionREFLECT);
+		jPanelFunction300DetailFilterDefinition.add(jLabelFunction300DetailFilterCaptionOption);
+		jPanelFunction300DetailFilterDefinition.add(jRadioButtonFunction300DetailFilterCaptionOptionName);
+		jPanelFunction300DetailFilterDefinition.add(jRadioButtonFunction300DetailFilterCaptionOptionValue);
+		jPanelFunction300DetailFilterDefinition.add(jTextFieldFunction300DetailFilterCaptionOptionValue);
+		jPanelFunction300DetailFilterDefinition.add(jLabelFunction300DetailFilterPromptOption);
+		jPanelFunction300DetailFilterDefinition.add(jRadioButtonFunction300DetailFilterPromptOptionNone);
+		jPanelFunction300DetailFilterDefinition.add(jRadioButtonFunction300DetailFilterPromptOptionList0);
+		jPanelFunction300DetailFilterDefinition.add(jRadioButtonFunction300DetailFilterPromptOptionList1);
+		jPanelFunction300DetailFilterDefinition.add(jRadioButtonFunction300DetailFilterPromptOptionList2);
+		jPanelFunction300DetailFilterDefinition.add(jRadioButtonFunction300DetailFilterPromptOptionCall);
+		jPanelFunction300DetailFilterDefinition.add(jTextFieldFunction300DetailFilterPromptOptionCallFunctionID);
+		jPanelFunction300DetailFilterDefinition.add(jTextFieldFunction300DetailFilterPromptOptionCallFunctionName);
+		jPanelFunction300DetailFilterDefinition.add(jButtonFunction300DetailFilterPromptOptionCallFunctionExchange);
+		jPanelFunction300DetailFilterDefinition.add(jLabelFunction300DetailFilterValue);
+		jPanelFunction300DetailFilterDefinition.add(jTextFieldFunction300DetailFilterValue);
+		jPanelFunction300DetailFilterDefinition.add(jCheckBoxFunction300DetailFilterIgnoreIfZero);
 		//
 		jScrollPaneFunction300DetailButtonList.setBorder(null);
 		jScrollPaneFunction300DetailButtonList.getViewport().add(jTableFunction300DetailButtonList, null);
 		jScrollPaneFunction300DetailButtonList.addMouseListener(new Editor_jScrollPaneFunction300DetailButtonList_mouseAdapter(this));
-		jTableFunction300DetailButtonList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction300DetailButtonList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction300DetailButtonList.setBackground(SystemColor.control);
 		jTableFunction300DetailButtonList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction300DetailButtonList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -9347,6 +9242,7 @@ public class Editor extends JFrame {
 		jTableFunction300DetailButtonList.addFocusListener(new Editor_FocusListener());
 		jTableFunction300DetailButtonList.addMouseListener(new Editor_jTableFunction300DetailButtonList_mouseAdapter(this));
 		jTableFunction300DetailButtonList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableFunction300DetailButtonList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction300DetailButtonList.addColumn("NO.");
 		tableModelFunction300DetailButtonList.addColumn(res.getString("Pos_short"));
 		tableModelFunction300DetailButtonList.addColumn(res.getString("Caption"));
@@ -9355,116 +9251,190 @@ public class Editor extends JFrame {
 		column1 = jTableFunction300DetailButtonList.getColumnModel().getColumn(1);
 		column2 = jTableFunction300DetailButtonList.getColumnModel().getColumn(2);
 		column3 = jTableFunction300DetailButtonList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
+		column0.setPreferredWidth(40);
 		column1.setPreferredWidth(50);
-		column2.setPreferredWidth(150);
-		column3.setPreferredWidth(210);
+		column2.setPreferredWidth(200);
+		column3.setPreferredWidth(300);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentCenterControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction300DetailButtonList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction300DetailButtonList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction300DetailButtonList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		jSplitPaneFunction300DetailButtonList.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jSplitPaneFunction300DetailButtonList.add(jScrollPaneFunction300DetailButtonList, JSplitPane.TOP);
-		jSplitPaneFunction300DetailButtonList.add(jPanelFunction300DetailButtonList, JSplitPane.BOTTOM);
-		jSplitPaneFunction300DetailButtonList.setDividerLocation(screenHeight - wrkForDividerLocation - 596);
-		jLabelFunction300DetailButtonPosition.setEnabled(false);
-		jLabelFunction300DetailButtonPosition.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jPanelFunction300DetailButtonList.setLayout(new BorderLayout());
+		jPanelFunction300DetailButtonList.add(jScrollPaneFunction300DetailButtonList, BorderLayout.CENTER);
+		jPanelFunction300DetailButtonList.add(jPanelFunction300DetailButtonDefinition, BorderLayout.SOUTH);
+		//
+		jLabelFunction300DetailButtonPosition.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailButtonPosition.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailButtonPosition.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailButtonPosition.setText(res.getString("Position"));
-		jLabelFunction300DetailButtonPosition.setBounds(new Rectangle(11, 12, 96, 15));
-		jSpinnerFunction300DetailButtonPosition.setFont(new java.awt.Font("SansSerif", 0, 13));
-		jSpinnerFunction300DetailButtonPosition.setBounds(new Rectangle(115, 9, 40, 22));
-		jSpinnerFunction300DetailButtonPosition.setEnabled(false);
-		jLabelFunction300DetailButtonPositionComment.setEnabled(false);
-		jLabelFunction300DetailButtonPositionComment.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailButtonPosition.setBounds(new Rectangle(5, 12, 130, 20));
+		jSpinnerFunction300DetailButtonPosition.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jSpinnerFunction300DetailButtonPosition.setBounds(new Rectangle(140, 9, 40, 25));
+		jLabelFunction300DetailButtonPositionComment.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailButtonPositionComment.setText(res.getString("ButtonPositionComment"));
-		jLabelFunction300DetailButtonPositionComment.setBounds(new Rectangle(165, 12, 200, 15));
-		jLabelFunction300DetailButtonKey.setEnabled(false);
-		jLabelFunction300DetailButtonKey.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailButtonPositionComment.setBounds(new Rectangle(185, 12, 230, 20));
+		jLabelFunction300DetailButtonKey.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailButtonKey.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailButtonKey.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailButtonKey.setText(res.getString("FunctionKeyNo"));
-		jLabelFunction300DetailButtonKey.setBounds(new Rectangle(11, 40, 96, 15));
-		jSpinnerFunction300DetailButtonKey.setFont(new java.awt.Font("SansSerif", 0, 13));
-		jSpinnerFunction300DetailButtonKey.setBounds(new Rectangle(115, 37, 40, 22));
-		jSpinnerFunction300DetailButtonKey.setEnabled(false);
-		jLabelFunction300DetailButtonCaption.setEnabled(false);
-		jLabelFunction300DetailButtonCaption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailButtonKey.setBounds(new Rectangle(415, 12, 130, 20));
+		jSpinnerFunction300DetailButtonKey.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jSpinnerFunction300DetailButtonKey.setBounds(new Rectangle(550, 9, 40, 25));
+		jLabelFunction300DetailButtonCaption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailButtonCaption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailButtonCaption.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailButtonCaption.setText(res.getString("Caption"));
-		jLabelFunction300DetailButtonCaption.setBounds(new Rectangle(161, 40, 96, 15));
-		jTextFieldFunction300DetailButtonCaption.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailButtonCaption.setBounds(new Rectangle(265, 37, 100, 22));
-		jTextFieldFunction300DetailButtonCaption.setEnabled(false);
-		jLabelFunction300DetailButtonAction.setEnabled(false);
-		jLabelFunction300DetailButtonAction.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailButtonCaption.setBounds(new Rectangle(600, 12, 130, 20));
+		jTextFieldFunction300DetailButtonCaption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailButtonCaption.setBounds(new Rectangle(735, 9, 100, 25));
+		//
+		jLabelFunction300DetailButtonAction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailButtonAction.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailButtonAction.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailButtonAction.setText(res.getString("Action"));
-		jLabelFunction300DetailButtonAction.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction300DetailButtonAction.setBounds(new Rectangle(5, 43, 130, 20));
 		jComboBoxFunction300DetailButtonAction.setEditable(false);
-		jComboBoxFunction300DetailButtonAction.setEnabled(false);
-		jComboBoxFunction300DetailButtonAction.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxFunction300DetailButtonAction.setBounds(new Rectangle(115, 65, 210, 22));
+		jComboBoxFunction300DetailButtonAction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jComboBoxFunction300DetailButtonAction.setBounds(new Rectangle(140, 40, 265, 25));
 		jComboBoxFunction300DetailButtonAction.addActionListener(new Editor_jComboBoxFunction300DetailButtonAction_actionAdapter(this));
 		jComboBoxFunction300DetailButtonAction.addItem(res.getString("ActionExit"));
 		jComboBoxFunction300DetailButtonAction.addItem(res.getString("ActionCallDTLFunctionToAdd"));
 		jComboBoxFunction300DetailButtonAction.addItem(res.getString("ActionCallHDRFunction"));
 		jComboBoxFunction300DetailButtonAction.addItem(res.getString("ActionOutputEXCEL"));
 		jComboBoxFunction300DetailButtonAction.addItem(res.getString("ActionCallFunction"));
-		jLabelFunction300DetailButtonActionCallFunction.setEnabled(false);
-		jLabelFunction300DetailButtonActionCallFunction.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction300DetailButtonActionCallFunction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailButtonActionCallFunction.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailButtonActionCallFunction.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailButtonActionCallFunction.setText(res.getString("FunctionID"));
-		jLabelFunction300DetailButtonActionCallFunction.setBounds(new Rectangle(11, 96, 96, 15));
-		jTextFieldFunction300DetailButtonActionCallFunctionID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailButtonActionCallFunctionID.setBounds(new Rectangle(115, 93, 100, 22));
-		jTextFieldFunction300DetailButtonActionCallFunctionID.setEnabled(false);
+		jLabelFunction300DetailButtonActionCallFunction.setBounds(new Rectangle(415, 43, 130, 20));
+		jTextFieldFunction300DetailButtonActionCallFunctionID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailButtonActionCallFunctionID.setBounds(new Rectangle(550, 40, 120, 25));
 		jTextFieldFunction300DetailButtonActionCallFunctionID.addKeyListener(new Editor_jTextFieldFunction300DetailButtonActionCallFunctionID_keyAdapter(this));
-		jTextFieldFunction300DetailButtonActionCallFunctionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction300DetailButtonActionCallFunctionName.setBounds(new Rectangle(220, 93, 400, 22));
+		jTextFieldFunction300DetailButtonActionCallFunctionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailButtonActionCallFunctionName.setBounds(new Rectangle(675, 40, 400, 25));
 		jTextFieldFunction300DetailButtonActionCallFunctionName.setEditable(false);
-		jPanelFunction300DetailButtonList.setLayout(null);
-		jPanelFunction300DetailButtonList.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction300DetailButtonList.add(jLabelFunction300DetailButtonPosition);
-		jPanelFunction300DetailButtonList.add(jSpinnerFunction300DetailButtonPosition);
-		jPanelFunction300DetailButtonList.add(jLabelFunction300DetailButtonPositionComment);
-		jPanelFunction300DetailButtonList.add(jLabelFunction300DetailButtonKey);
-		jPanelFunction300DetailButtonList.add(jSpinnerFunction300DetailButtonKey);
-		jPanelFunction300DetailButtonList.add(jLabelFunction300DetailButtonCaption);
-		jPanelFunction300DetailButtonList.add(jTextFieldFunction300DetailButtonCaption);
-		jPanelFunction300DetailButtonList.add(jLabelFunction300DetailButtonAction);
-		jPanelFunction300DetailButtonList.add(jComboBoxFunction300DetailButtonAction);
-		jPanelFunction300DetailButtonList.add(jLabelFunction300DetailButtonActionCallFunction);
-		jPanelFunction300DetailButtonList.add(jTextFieldFunction300DetailButtonActionCallFunctionID);
-		jPanelFunction300DetailButtonList.add(jTextFieldFunction300DetailButtonActionCallFunctionName);
 		//
-		jTabbedPaneFunction300.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTabbedPaneFunction300.add(res.getString("HDRFields"), jSplitPaneFunction300HeaderFieldList);
+		jPanelFunction300DetailButtonDefinition.setPreferredSize(new Dimension(100, 74));
+		jPanelFunction300DetailButtonDefinition.setLayout(null);
+		jPanelFunction300DetailButtonDefinition.setBorder(null);
+		jPanelFunction300DetailButtonDefinition.add(jLabelFunction300DetailButtonPosition);
+		jPanelFunction300DetailButtonDefinition.add(jSpinnerFunction300DetailButtonPosition);
+		jPanelFunction300DetailButtonDefinition.add(jLabelFunction300DetailButtonPositionComment);
+		jPanelFunction300DetailButtonDefinition.add(jLabelFunction300DetailButtonKey);
+		jPanelFunction300DetailButtonDefinition.add(jSpinnerFunction300DetailButtonKey);
+		jPanelFunction300DetailButtonDefinition.add(jLabelFunction300DetailButtonCaption);
+		jPanelFunction300DetailButtonDefinition.add(jTextFieldFunction300DetailButtonCaption);
+		jPanelFunction300DetailButtonDefinition.add(jLabelFunction300DetailButtonAction);
+		jPanelFunction300DetailButtonDefinition.add(jComboBoxFunction300DetailButtonAction);
+		jPanelFunction300DetailButtonDefinition.add(jLabelFunction300DetailButtonActionCallFunction);
+		jPanelFunction300DetailButtonDefinition.add(jTextFieldFunction300DetailButtonActionCallFunctionID);
+		jPanelFunction300DetailButtonDefinition.add(jTextFieldFunction300DetailButtonActionCallFunctionName);
+		//
+		jTabbedPaneFunction300DetailList.setBorder(null);
+		jTabbedPaneFunction300DetailList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTabbedPaneFunction300DetailList.add(res.getString("DTLFields"), jPanelFunction300DetailFieldList);
+		jTabbedPaneFunction300DetailList.setIconAt(0, imageIconDetailField);
+		jTabbedPaneFunction300DetailList.add(res.getString("Filters"), jPanelFunction300DetailFilterList);
+		jTabbedPaneFunction300DetailList.setIconAt(1, imageIconFunctionFilter);
+		jTabbedPaneFunction300DetailList.add(res.getString("FunctionKeys"), jPanelFunction300DetailButtonList);
+		jTabbedPaneFunction300DetailList.setIconAt(2, imageIconFunctionButton);
+		//
+		jTabbedPaneFunction300.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTabbedPaneFunction300.add(res.getString("HDRFields"), jPanelFunction300HeaderFieldList);
 		jTabbedPaneFunction300.setIconAt(0, imageIconField);
-		jTabbedPaneFunction300.add(res.getString("DTLTabs"), jSplitPaneFunction300DetailList);
+		jTabbedPaneFunction300.add(res.getString("DTLTabs"), jScrollPaneFunction300Detail);
 		jTabbedPaneFunction300.setIconAt(1, imageIconFunctionTab);
-		jTabbedPaneFunction300.add(res.getString("StructureView"), jPanelFunction300Structure);
+		jTabbedPaneFunction300.add(res.getString("StructureView"), jScrollPaneFunction300Structure);
 		jTabbedPaneFunction300.setIconAt(2, imageIconTree);
 		jTabbedPaneFunction300.add(res.getString("FunctionsWhereUsed"), jScrollPaneFunction300UsageList);
 		jTabbedPaneFunction300.setIconAt(3, imageIconFunctionUsage);
-		jTabbedPaneFunction300DetailList.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTabbedPaneFunction300DetailList.add(res.getString("DTLFields"), jSplitPaneFunction300DetailFieldList);
-		jTabbedPaneFunction300DetailList.setIconAt(0, imageIconDetailField);
-		jTabbedPaneFunction300DetailList.add(res.getString("Filters"), jSplitPaneFunction300DetailFilterList);
-		jTabbedPaneFunction300DetailList.setIconAt(1, imageIconFunctionFilter);
-		jTabbedPaneFunction300DetailList.add(res.getString("FunctionKeys"), jSplitPaneFunction300DetailButtonList);
-		jTabbedPaneFunction300DetailList.setIconAt(2, imageIconFunctionButton);
+		//
+		jScrollPaneFunction300Structure.setBorder(null);
+		jScrollPaneFunction300Structure.getViewport().add(jPanelFunction300Structure);
+		jPanelFunction300Structure.setBorder(BorderFactory.createEtchedBorder());
+		jPanelFunction300Structure.setLayout(null);
+		jPanelFunction300Structure.setPreferredSize(new Dimension(1030, 165));
+		jLabelFunction300StructureTableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelFunction300StructureTableName.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction300StructureTableName.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction300StructureTableName.setText(res.getString("StructureTable"));
+		jLabelFunction300StructureTableName.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldFunction300StructureTableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300StructureTableName.setBounds(new Rectangle(140, 9, 840, 25));
+		jTextFieldFunction300StructureTableName.setEditable(false);
+		jButtonFunction300StructureTableNameEdit.setIcon(imageIconPrompt);
+		jButtonFunction300StructureTableNameEdit.setBounds(new Rectangle(980, 8, 28, 27));
+		jButtonFunction300StructureTableNameEdit.addActionListener(new Editor_jButtonFunction300StructureTableNameEdit_actionAdapter(this));
+		//
+		jLabelFunction300StructureRootText.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelFunction300StructureRootText.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction300StructureRootText.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction300StructureRootText.setText(res.getString("StructureRootText"));
+		jLabelFunction300StructureRootText.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldFunction300StructureRootText.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300StructureRootText.setBounds(new Rectangle(140, 40, 840, 25));
+		jTextFieldFunction300StructureRootText.setEditable(false);
+		jButtonFunction300StructureRootTextEdit.setIcon(imageIconPrompt);
+		jButtonFunction300StructureRootTextEdit.setBounds(new Rectangle(980, 39, 28, 27));
+		jButtonFunction300StructureRootTextEdit.addActionListener(new Editor_jButtonFunction300StructureRootTextEdit_actionAdapter(this));
+		//
+		jLabelFunction300StructureNodeText.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelFunction300StructureNodeText.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction300StructureNodeText.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction300StructureNodeText.setText(res.getString("StructureNodeText"));
+		jLabelFunction300StructureNodeText.setBounds(new Rectangle(5, 74, 130, 20));
+		jTextFieldFunction300StructureNodeText.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300StructureNodeText.setBounds(new Rectangle(140, 71, 840, 25));
+		jTextFieldFunction300StructureNodeText.setEditable(false);
+		jButtonFunction300StructureNodeTextEdit.setIcon(imageIconPrompt);
+		jButtonFunction300StructureNodeTextEdit.setBounds(new Rectangle(980, 70, 28, 27));
+		jButtonFunction300StructureNodeTextEdit.addActionListener(new Editor_jButtonFunction300StructureNodeTextEdit_actionAdapter(this));
+		//
+		jLabelFunction300StructureNodeIcons.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelFunction300StructureNodeIcons.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction300StructureNodeIcons.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction300StructureNodeIcons.setText(res.getString("StructureNodeIcons"));
+		jLabelFunction300StructureNodeIcons.setBounds(new Rectangle(5, 105, 130, 20));
+		jPanelFunction300StructureNodeIcons.setBorder(BorderFactory.createEtchedBorder());
+		jPanelFunction300StructureNodeIcons.setBounds(new Rectangle(140, 102, 840, 25));
+		jButtonFunction300StructureNodeIconsEdit.setIcon(imageIconPrompt);
+		jButtonFunction300StructureNodeIconsEdit.setBounds(new Rectangle(980, 101, 28, 27));
+		jButtonFunction300StructureNodeIconsEdit.addActionListener(new Editor_jButtonFunction300StructureNodeIconsEdit_actionAdapter(this));
+		//
+		jLabelFunction300StructureViewWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelFunction300StructureViewWidth.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction300StructureViewWidth.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction300StructureViewWidth.setText(res.getString("StructureViewWidth"));
+		jLabelFunction300StructureViewWidth.setBounds(new Rectangle(5, 136, 130, 20));
+		jTextFieldFunction300StructureViewWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300StructureViewWidth.setBounds(new Rectangle(140, 133, 60, 25));
+		jLabelFunction300StructureViewWidthComment.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelFunction300StructureViewWidthComment.setText("pixcel (50 - 500)");
+		jLabelFunction300StructureViewWidthComment.setBounds(new Rectangle(205, 136, 150, 20));
+		//
+		jPanelFunction300Structure.add(jLabelFunction300StructureTableName);
+		jPanelFunction300Structure.add(jTextFieldFunction300StructureTableName);
+		jPanelFunction300Structure.add(jButtonFunction300StructureTableNameEdit);
+		jPanelFunction300Structure.add(jLabelFunction300StructureRootText);
+		jPanelFunction300Structure.add(jTextFieldFunction300StructureRootText);
+		jPanelFunction300Structure.add(jButtonFunction300StructureRootTextEdit);
+		jPanelFunction300Structure.add(jLabelFunction300StructureNodeText);
+		jPanelFunction300Structure.add(jTextFieldFunction300StructureNodeText);
+		jPanelFunction300Structure.add(jButtonFunction300StructureNodeTextEdit);
+		jPanelFunction300Structure.add(jLabelFunction300StructureNodeIcons);
+		jPanelFunction300Structure.add(jPanelFunction300StructureNodeIcons);
+		jPanelFunction300Structure.add(jButtonFunction300StructureNodeIconsEdit);
+		jPanelFunction300Structure.add(jLabelFunction300StructureViewWidth);
+		jPanelFunction300Structure.add(jTextFieldFunction300StructureViewWidth);
+		jPanelFunction300Structure.add(jLabelFunction300StructureViewWidthComment);
 		//
 		jScrollPaneFunction300UsageList.setBorder(null);
 		jScrollPaneFunction300UsageList.getViewport().add(jTableFunction300UsageList, null);
-		jTableFunction300UsageList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction300UsageList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction300UsageList.setBackground(SystemColor.control);
 		jTableFunction300UsageList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction300UsageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -9472,6 +9442,7 @@ public class Editor extends JFrame {
 		jTableFunction300UsageList.setSelectionForeground(Color.black);
 		jTableFunction300UsageList.addFocusListener(new Editor_FocusListener());
 		jTableFunction300UsageList.addMouseListener(new Editor_jTableFunction300UsageList_mouseAdapter(this));
+		jTableFunction300UsageList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction300UsageList.addColumn("NO.");
 		tableModelFunction300UsageList.addColumn(res.getString("FunctionsWhereUsed"));
 		tableModelFunction300UsageList.addColumn(res.getString("Type"));
@@ -9480,15 +9451,15 @@ public class Editor extends JFrame {
 		column1 = jTableFunction300UsageList.getColumnModel().getColumn(1);
 		column2 = jTableFunction300UsageList.getColumnModel().getColumn(2);
 		column3 = jTableFunction300UsageList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(300);
-		column2.setPreferredWidth(160);
-		column3.setPreferredWidth(280);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(400);
+		column2.setPreferredWidth(250);
+		column3.setPreferredWidth(380);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction300UsageList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction300UsageList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction300UsageList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
 	}
@@ -9497,18 +9468,20 @@ public class Editor extends JFrame {
 	 */
 	void initComponentsForFunction310() {
 		jPanelFunction310.setLayout(new BorderLayout());
+		jScrollPaneFunction310Top.setBorder(null);
+		jScrollPaneFunction310Top.getViewport().add(jPanelFunction310Top);
 		jPanelFunction310Top.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction310Top.setPreferredSize(new Dimension(10, 235));
+		jPanelFunction310Top.setPreferredSize(new Dimension(1030, 260));
 		jPanelFunction310Top.setToolTipText("");
 		jPanelFunction310Top.setLayout(null);
 		//
-		jLabelFunction310Type.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310Type.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310Type.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310Type.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310Type.setText(res.getString("FunctionType"));
-		jLabelFunction310Type.setBounds(new Rectangle(11, 12, 96, 15));
-		jTextFieldFunction310Type.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310Type.setBounds(new Rectangle(115, 9, 170, 22));
+		jLabelFunction310Type.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldFunction310Type.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310Type.setBounds(new Rectangle(140, 9, 250, 25));
 		jTextFieldFunction310Type.setEditable(false);
 		jTextFieldFunction310Type.setText(res.getString("FunctionTypeXF310"));
 		Insets m = jTextFieldFunction310Type.getMargin();
@@ -9517,107 +9490,104 @@ public class Editor extends JFrame {
 		label.setBorder(null); 
 		label.setBounds(m.left, m.top, imageIconFunction310.getIconWidth(), imageIconFunction310.getIconHeight()); 
 		jTextFieldFunction310Type.add(label);
-		jLabelFunction310ID.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310ID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310ID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310ID.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310ID.setText(res.getString("FunctionID"));
-		jLabelFunction310ID.setBounds(new Rectangle(295, 12, 76, 15));
-		jTextFieldFunction310ID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310ID.setBounds(new Rectangle(379, 9, 80, 22));
+		jLabelFunction310ID.setText(res.getString("IDAndName"));
+		jLabelFunction310ID.setBounds(new Rectangle(400, 12, 100, 20));
+		jTextFieldFunction310ID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310ID.setBounds(new Rectangle(505, 9, 120, 25));
 		jTextFieldFunction310ID.setEditable(false);
-		jLabelFunction310Name.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelFunction310Name.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction310Name.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310Name.setText(res.getString("FunctionName"));
-		jLabelFunction310Name.setBounds(new Rectangle(469, 12, 86, 15));
-		jTextFieldFunction310Name.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310Name.setBounds(new Rectangle(563, 9, 250, 22));
+		jTextFieldFunction310Name.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310Name.setBounds(new Rectangle(630, 9, 350, 25));
 		//
-		jLabelFunction310HeaderTableName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310HeaderTableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310HeaderTableName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310HeaderTableName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310HeaderTableName.setText(res.getString("HDRTable"));
-		jLabelFunction310HeaderTableName.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldFunction310HeaderTableName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310HeaderTableName.setBounds(new Rectangle(115, 37, 600, 22));
+		jLabelFunction310HeaderTableName.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldFunction310HeaderTableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310HeaderTableName.setBounds(new Rectangle(140, 40, 840, 25));
 		jTextFieldFunction310HeaderTableName.setEditable(false);
 		jButtonFunction310HeaderTableKeyFieldsEdit.setIcon(imageIconPrompt);
-		jButtonFunction310HeaderTableKeyFieldsEdit.setBounds(new Rectangle(715, 36, 28, 23));
+		jButtonFunction310HeaderTableKeyFieldsEdit.setBounds(new Rectangle(980, 39, 28, 27));
 		jButtonFunction310HeaderTableKeyFieldsEdit.addActionListener(new Editor_jButtonToEditKeyFields_actionAdapter(this));
-		jLabelFunction310HeaderFixedWhere.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction310HeaderFixedWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310HeaderFixedWhere.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310HeaderFixedWhere.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310HeaderFixedWhere.setText(res.getString("FixedWhere"));
-		jLabelFunction310HeaderFixedWhere.setBounds(new Rectangle(11, 68, 96, 15));
-		jTextFieldFunction310HeaderFixedWhere.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310HeaderFixedWhere.setBounds(new Rectangle(115, 65, 600, 22));
+		jLabelFunction310HeaderFixedWhere.setBounds(new Rectangle(5, 74, 130, 20));
+		jTextFieldFunction310HeaderFixedWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310HeaderFixedWhere.setBounds(new Rectangle(140, 71, 840, 25));
 		//
-		jLabelFunction310DetailTableName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310DetailTableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310DetailTableName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310DetailTableName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310DetailTableName.setText(res.getString("DTLTable"));
-		jLabelFunction310DetailTableName.setBounds(new Rectangle(11, 96, 96, 15));
-		jTextFieldFunction310DetailTableName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310DetailTableName.setBounds(new Rectangle(115, 93, 600, 22));
+		jLabelFunction310DetailTableName.setBounds(new Rectangle(5, 105, 130, 20));
+		jTextFieldFunction310DetailTableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310DetailTableName.setBounds(new Rectangle(140, 102, 840, 25));
 		jTextFieldFunction310DetailTableName.setEditable(false);
 		jButtonFunction310DetailTableKeyFieldsEdit.setIcon(imageIconPrompt);
-		jButtonFunction310DetailTableKeyFieldsEdit.setBounds(new Rectangle(715, 92, 28, 23));
+		jButtonFunction310DetailTableKeyFieldsEdit.setBounds(new Rectangle(980, 101, 28, 27));
 		jButtonFunction310DetailTableKeyFieldsEdit.addActionListener(new Editor_jButtonToEditKeyFields_actionAdapter(this));
-		jLabelFunction310DetailTableOrderByFields.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction310DetailTableOrderByFields.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310DetailTableOrderByFields.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310DetailTableOrderByFields.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310DetailTableOrderByFields.setText(res.getString("OrderByFields"));
-		jLabelFunction310DetailTableOrderByFields.setBounds(new Rectangle(11, 124, 96, 15));
-		jTextFieldFunction310DetailTableOrderByFields.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310DetailTableOrderByFields.setBounds(new Rectangle(115, 121, 600, 22));
+		jLabelFunction310DetailTableOrderByFields.setBounds(new Rectangle(5, 136, 130, 20));
+		jTextFieldFunction310DetailTableOrderByFields.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310DetailTableOrderByFields.setBounds(new Rectangle(140, 133, 840, 25));
 		jTextFieldFunction310DetailTableOrderByFields.setEditable(false);
 		jButtonFunction310DetailTableOrderByFieldsEdit.setIcon(imageIconPrompt);
-		jButtonFunction310DetailTableOrderByFieldsEdit.setBounds(new Rectangle(715, 120, 28, 23));
+		jButtonFunction310DetailTableOrderByFieldsEdit.setBounds(new Rectangle(980, 132, 28, 27));
 		jButtonFunction310DetailTableOrderByFieldsEdit.addActionListener(new Editor_jButtonToEditOrderByFields_actionAdapter(this));
-		jLabelFunction310DetailFixedWhere.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction310DetailFixedWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310DetailFixedWhere.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310DetailFixedWhere.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310DetailFixedWhere.setText(res.getString("FixedWhere"));
-		jLabelFunction310DetailFixedWhere.setBounds(new Rectangle(11, 152, 96, 15));
-		jTextFieldFunction310DetailFixedWhere.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310DetailFixedWhere.setBounds(new Rectangle(115, 149, 600, 22));
+		jLabelFunction310DetailFixedWhere.setBounds(new Rectangle(5, 167, 130, 20));
+		jTextFieldFunction310DetailFixedWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310DetailFixedWhere.setBounds(new Rectangle(140, 164, 840, 25));
 		//
-		jLabelFunction310Size.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310Size.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310Size.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310Size.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310Size.setText(res.getString("PanelSize"));
-		jLabelFunction310Size.setBounds(new Rectangle(11, 180, 96, 15));
+		jLabelFunction310Size.setBounds(new Rectangle(5, 198, 130, 20));
 		jRadioButtonFunction310SizeFull.setText(res.getString("SizeFull"));
-		jRadioButtonFunction310SizeFull.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310SizeFull.setBounds(new Rectangle(115, 177, 100, 22));
+		jRadioButtonFunction310SizeFull.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction310SizeFull.setBounds(new Rectangle(140, 195, 130, 25));
 		jRadioButtonFunction310SizeFull.addChangeListener(new Editor_jRadioButtonFunction310Size_changeAdapter(this));
 		jRadioButtonFunction310SizeAuto.setText(res.getString("SizeAuto"));
-		jRadioButtonFunction310SizeAuto.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310SizeAuto.setBounds(new Rectangle(225, 177, 100, 22));
+		jRadioButtonFunction310SizeAuto.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction310SizeAuto.setBounds(new Rectangle(270, 195, 130, 25));
 		jRadioButtonFunction310SizeAuto.addChangeListener(new Editor_jRadioButtonFunction300Size_changeAdapter(this));
 		jRadioButtonFunction310SizeSpecify.setText(res.getString("SizeSpecified"));
-		jRadioButtonFunction310SizeSpecify.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310SizeSpecify.setBounds(new Rectangle(335, 177, 110, 22));
+		jRadioButtonFunction310SizeSpecify.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction310SizeSpecify.setBounds(new Rectangle(400, 195, 160, 25));
 		jRadioButtonFunction310SizeSpecify.addChangeListener(new Editor_jRadioButtonFunction310Size_changeAdapter(this));
 		buttonGroupFunction310Size.add(jRadioButtonFunction310SizeFull);
 		buttonGroupFunction310Size.add(jRadioButtonFunction310SizeAuto);
 		buttonGroupFunction310Size.add(jRadioButtonFunction310SizeSpecify);
-		jTextFieldFunction310SizeWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310SizeWidth.setBounds(new Rectangle(445, 177, 50, 22));
-		jTextFieldFunction310SizeHeight.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310SizeHeight.setBounds(new Rectangle(500, 177, 50, 22));
+		jTextFieldFunction310SizeWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310SizeWidth.setBounds(new Rectangle(560, 195, 60, 25));
+		jTextFieldFunction310SizeHeight.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310SizeHeight.setBounds(new Rectangle(625, 195, 60, 25));
 		//
-		jLabelFunction310InitialMsg.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310InitialMsg.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310InitialMsg.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310InitialMsg.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310InitialMsg.setText(res.getString("InitialMessage"));
-		jLabelFunction310InitialMsg.setBounds(new Rectangle(11, 208, 96, 15));
-		jTextFieldFunction310InitialMsg.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310InitialMsg.setBounds(new Rectangle(115, 205, 600, 22));
+		jLabelFunction310InitialMsg.setBounds(new Rectangle(5, 229, 130, 20));
+		jTextFieldFunction310InitialMsg.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310InitialMsg.setBounds(new Rectangle(140, 226, 840, 25));
 		//
 		jPanelFunction310Top.add(jLabelFunction310ID);
 		jPanelFunction310Top.add(jTextFieldFunction310ID);
-		jPanelFunction310Top.add(jLabelFunction310Name);
 		jPanelFunction310Top.add(jTextFieldFunction310Name);
 		jPanelFunction310Top.add(jLabelFunction310Type);
 		jPanelFunction310Top.add(jTextFieldFunction310Type);
@@ -9642,13 +9612,13 @@ public class Editor extends JFrame {
 		jPanelFunction310Top.add(jTextFieldFunction310SizeHeight);
 		jPanelFunction310Top.add(jLabelFunction310InitialMsg);
 		jPanelFunction310Top.add(jTextFieldFunction310InitialMsg);
-		jPanelFunction310.add(jPanelFunction310Top, BorderLayout.NORTH);
+		jPanelFunction310.add(jScrollPaneFunction310Top, BorderLayout.NORTH);
 		jPanelFunction310.add(jTabbedPaneFunction310, BorderLayout.CENTER);
 		//
 		jScrollPaneFunction310HeaderFieldList.setBorder(null);
 		jScrollPaneFunction310HeaderFieldList.getViewport().add(jTableFunction310HeaderFieldList, null);
 		jScrollPaneFunction310HeaderFieldList.addMouseListener(new Editor_jScrollPaneFunction310HeaderFieldList_mouseAdapter(this));
-		jTableFunction310HeaderFieldList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction310HeaderFieldList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction310HeaderFieldList.setBackground(SystemColor.control);
 		jTableFunction310HeaderFieldList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction310HeaderFieldList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -9659,6 +9629,7 @@ public class Editor extends JFrame {
 		jTableFunction310HeaderFieldList.addMouseListener(new Editor_jTableFunction310HeaderFieldList_mouseAdapter(this));
 	    jTableFunction310HeaderFieldList.addMouseMotionListener(new Editor_jTableFunction310HeaderFieldList_mouseMotionAdapter(this));
 		jTableFunction310HeaderFieldList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableFunction310HeaderFieldList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction310HeaderFieldList.addColumn("NO.");
 		tableModelFunction310HeaderFieldList.addColumn(res.getString("DataSource"));
 		tableModelFunction310HeaderFieldList.addColumn(res.getString("FieldType"));
@@ -9667,220 +9638,212 @@ public class Editor extends JFrame {
 		column1 = jTableFunction310HeaderFieldList.getColumnModel().getColumn(1);
 		column2 = jTableFunction310HeaderFieldList.getColumnModel().getColumn(2);
 		column3 = jTableFunction310HeaderFieldList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(160);
-		column2.setPreferredWidth(250);
-		column3.setPreferredWidth(350);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(250);
+		column2.setPreferredWidth(350);
+		column3.setPreferredWidth(450);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction310HeaderFieldList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction310HeaderFieldList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction310HeaderFieldList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		jSplitPaneFunction310HeaderFieldList.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jSplitPaneFunction310HeaderFieldList.add(jScrollPaneFunction310HeaderFieldList, JSplitPane.TOP);
-		jSplitPaneFunction310HeaderFieldList.add(jPanelFunction310HeaderFieldList, JSplitPane.BOTTOM);
-		jSplitPaneFunction310HeaderFieldList.setDividerLocation(screenHeight - 551);
-		jLabelFunction310HeaderTable.setEnabled(false);
-		jLabelFunction310HeaderTable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jPanelFunction310HeaderFieldList.setLayout(new BorderLayout());
+		jPanelFunction310HeaderFieldList.add(jScrollPaneFunction310HeaderFieldList, BorderLayout.CENTER);
+		jPanelFunction310HeaderFieldList.add(jScrollPaneFunction310HeaderFieldDefinition, BorderLayout.SOUTH);
+		//
+		jLabelFunction310HeaderTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310HeaderTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310HeaderTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310HeaderTable.setText(res.getString("Table"));
-		jLabelFunction310HeaderTable.setBounds(new Rectangle(11, 12, 96, 15));
-		jTextFieldFunction310HeaderTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310HeaderTable.setBounds(new Rectangle(115, 9, 300, 22));
+		jLabelFunction310HeaderTable.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldFunction310HeaderTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310HeaderTable.setBounds(new Rectangle(140, 9, 350, 25));
 		jTextFieldFunction310HeaderTable.setEditable(false);
-		jLabelFunction310HeaderTableType.setEnabled(false);
-		jLabelFunction310HeaderTableType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310HeaderTableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310HeaderTableType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310HeaderTableType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310HeaderTableType.setText(res.getString("Type"));
-		jLabelFunction310HeaderTableType.setBounds(new Rectangle(430, 12, 76, 15));
-		jTextFieldFunction310HeaderTableType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310HeaderTableType.setBounds(new Rectangle(514, 9, 250, 22));
+		jLabelFunction310HeaderTableType.setBounds(new Rectangle(500, 12, 100, 20));
+		jTextFieldFunction310HeaderTableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310HeaderTableType.setBounds(new Rectangle(605, 9, 330, 25));
 		jTextFieldFunction310HeaderTableType.setEditable(false);
-		jLabelFunction310HeaderField.setEnabled(false);
-		jLabelFunction310HeaderField.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction310HeaderField.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310HeaderField.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310HeaderField.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310HeaderField.setText(res.getString("Field"));
-		jLabelFunction310HeaderField.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldFunction310HeaderField.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310HeaderField.setBounds(new Rectangle(115, 37, 300, 22));
+		jLabelFunction310HeaderField.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldFunction310HeaderField.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310HeaderField.setBounds(new Rectangle(140, 40, 350, 25));
 		jTextFieldFunction310HeaderField.setEditable(false);
-		jLabelFunction310HeaderFieldType.setEnabled(false);
-		jLabelFunction310HeaderFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310HeaderFieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310HeaderFieldType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310HeaderFieldType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310HeaderFieldType.setText(res.getString("Type"));
-		jLabelFunction310HeaderFieldType.setBounds(new Rectangle(430, 40, 76, 15));
-		jTextFieldFunction310HeaderFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310HeaderFieldType.setBounds(new Rectangle(514, 37, 250, 22));
+		jLabelFunction310HeaderFieldType.setBounds(new Rectangle(500, 43, 100, 20));
+		jTextFieldFunction310HeaderFieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310HeaderFieldType.setBounds(new Rectangle(605, 40, 330, 25));
 		jTextFieldFunction310HeaderFieldType.setEditable(false);
-		jLabelFunction310HeaderFieldLayoutOption.setEnabled(false);
+		//
 		jLabelFunction310HeaderFieldLayoutOption.setText(res.getString("LayoutOption"));
-		jLabelFunction310HeaderFieldLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310HeaderFieldLayoutOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310HeaderFieldLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310HeaderFieldLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310HeaderFieldLayoutOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction310HeaderFieldLayoutOption.setBounds(new Rectangle(5, 74, 130, 20));
 		jRadioButtonFunction310HeaderFieldLayoutOptionVertical.setText(res.getString("LayoutVertical"));
-		jRadioButtonFunction310HeaderFieldLayoutOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310HeaderFieldLayoutOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
-		jRadioButtonFunction310HeaderFieldLayoutOptionVertical.setEnabled(false);
+		jRadioButtonFunction310HeaderFieldLayoutOptionVertical.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction310HeaderFieldLayoutOptionVertical.setBounds(new Rectangle(140, 71, 130, 25));
 		jRadioButtonFunction310HeaderFieldLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
-		jRadioButtonFunction310HeaderFieldLayoutOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310HeaderFieldLayoutOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
-		jRadioButtonFunction310HeaderFieldLayoutOptionHorizontal.setEnabled(false);
+		jRadioButtonFunction310HeaderFieldLayoutOptionHorizontal.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction310HeaderFieldLayoutOptionHorizontal.setBounds(new Rectangle(270, 71, 130, 25));
 		buttonGroupFunction310HeaderFieldLayoutOption.add(jRadioButtonFunction310HeaderFieldLayoutOptionVertical);
 		buttonGroupFunction310HeaderFieldLayoutOption.add(jRadioButtonFunction310HeaderFieldLayoutOptionHorizontal);
-		jLabelFunction310HeaderFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310HeaderFieldWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310HeaderFieldWidth.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310HeaderFieldWidth.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310HeaderFieldWidth.setText(res.getString("FieldWidth"));
-		jLabelFunction310HeaderFieldWidth.setBounds(new Rectangle(430, 68, 76, 15));
-		jLabelFunction310HeaderFieldWidth.setEnabled(false);
-		jTextFieldFunction310HeaderFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310HeaderFieldWidth.setBounds(new Rectangle(514, 65, 45, 22));
-		jTextFieldFunction310HeaderFieldWidth.setEnabled(false);
+		jLabelFunction310HeaderFieldWidth.setBounds(new Rectangle(500, 74, 100, 20));
+		jTextFieldFunction310HeaderFieldWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310HeaderFieldWidth.setBounds(new Rectangle(605, 71, 60, 25));
 		jTextFieldFunction310HeaderFieldWidth.setText("");
-		jLabelFunction310HeaderFieldRows.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310HeaderFieldRows.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310HeaderFieldRows.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310HeaderFieldRows.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310HeaderFieldRows.setText(res.getString("FieldRows"));
-		jLabelFunction310HeaderFieldRows.setBounds(new Rectangle(564, 68, 45, 15));
-		jLabelFunction310HeaderFieldRows.setEnabled(false);
-		jTextFieldFunction310HeaderFieldRows.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310HeaderFieldRows.setBounds(new Rectangle(614, 65, 45, 22));
+		jLabelFunction310HeaderFieldRows.setBounds(new Rectangle(675, 74, 60, 20));
+		jTextFieldFunction310HeaderFieldRows.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310HeaderFieldRows.setBounds(new Rectangle(740, 71, 60, 25));
 		jTextFieldFunction310HeaderFieldRows.setText("");
-		jTextFieldFunction310HeaderFieldRows.setEnabled(false);
-		jLabelFunction310HeaderFieldMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310HeaderFieldMargin.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310HeaderFieldMargin.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310HeaderFieldMargin.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310HeaderFieldMargin.setText(res.getString("FieldMargin"));
-		jLabelFunction310HeaderFieldMargin.setBounds(new Rectangle(664, 68, 45, 15));
-		jLabelFunction310HeaderFieldMargin.setEnabled(false);
-		jTextFieldFunction310HeaderFieldMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310HeaderFieldMargin.setBounds(new Rectangle(714, 65, 45, 22));
+		jLabelFunction310HeaderFieldMargin.setBounds(new Rectangle(810, 74, 60, 20));
+		jTextFieldFunction310HeaderFieldMargin.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310HeaderFieldMargin.setBounds(new Rectangle(875, 71, 60, 25));
 		jTextFieldFunction310HeaderFieldMargin.setText("");
-		jTextFieldFunction310HeaderFieldMargin.setEnabled(false);
-		jLabelFunction310HeaderFieldCaptionOption.setEnabled(false);
+		//
 		jLabelFunction310HeaderFieldCaptionOption.setText(res.getString("Caption"));
-		jLabelFunction310HeaderFieldCaptionOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310HeaderFieldCaptionOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310HeaderFieldCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310HeaderFieldCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310HeaderFieldCaptionOption.setBounds(new Rectangle(11, 96, 96, 15));
+		jLabelFunction310HeaderFieldCaptionOption.setBounds(new Rectangle(5, 105, 130, 20));
 		jRadioButtonFunction310HeaderFieldCaptionOptionName.setText(res.getString("FieldName"));
-		jRadioButtonFunction310HeaderFieldCaptionOptionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310HeaderFieldCaptionOptionName.setBounds(new Rectangle(115, 93, 100, 22));
-		jRadioButtonFunction310HeaderFieldCaptionOptionName.setEnabled(false);
+		jRadioButtonFunction310HeaderFieldCaptionOptionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction310HeaderFieldCaptionOptionName.setBounds(new Rectangle(140, 102, 130, 25));
 		jRadioButtonFunction310HeaderFieldCaptionOptionName.addChangeListener(new Editor_jRadioButtonFunction310HeaderFieldCaptionOption_changeAdapter(this));
-		jRadioButtonFunction310HeaderFieldCaptionOptionValue.setText(res.getString("ValueSpecified"));
-		jRadioButtonFunction310HeaderFieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310HeaderFieldCaptionOptionValue.setBounds(new Rectangle(335, 93, 63, 22));
-		jRadioButtonFunction310HeaderFieldCaptionOptionValue.setEnabled(false);
-		jRadioButtonFunction310HeaderFieldCaptionOptionValue.addChangeListener(new Editor_jRadioButtonFunction310HeaderFieldCaptionOption_changeAdapter(this));
 		jRadioButtonFunction310HeaderFieldCaptionOptionNone.setText(res.getString("None"));
-		jRadioButtonFunction310HeaderFieldCaptionOptionNone.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310HeaderFieldCaptionOptionNone.setBounds(new Rectangle(225, 93, 63, 22));
-		jRadioButtonFunction310HeaderFieldCaptionOptionNone.setEnabled(false);
+		jRadioButtonFunction310HeaderFieldCaptionOptionNone.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction310HeaderFieldCaptionOptionNone.setBounds(new Rectangle(270, 102, 130, 25));
 		jRadioButtonFunction310HeaderFieldCaptionOptionNone.addChangeListener(new Editor_jRadioButtonFunction310HeaderFieldCaptionOption_changeAdapter(this));
+		jRadioButtonFunction310HeaderFieldCaptionOptionValue.setText(res.getString("ValueSpecified"));
+		jRadioButtonFunction310HeaderFieldCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction310HeaderFieldCaptionOptionValue.setBounds(new Rectangle(400, 102, 130, 25));
+		jRadioButtonFunction310HeaderFieldCaptionOptionValue.addChangeListener(new Editor_jRadioButtonFunction310HeaderFieldCaptionOption_changeAdapter(this));
 		buttonGroupFunction310HeaderFieldCaptionOption.add(jRadioButtonFunction310HeaderFieldCaptionOptionName);
 		buttonGroupFunction310HeaderFieldCaptionOption.add(jRadioButtonFunction310HeaderFieldCaptionOptionValue);
 		buttonGroupFunction310HeaderFieldCaptionOption.add(jRadioButtonFunction310HeaderFieldCaptionOptionNone);
-		jTextFieldFunction310HeaderFieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310HeaderFieldCaptionOptionValue.setBounds(new Rectangle(415, 93, 200, 22));
-		jTextFieldFunction310HeaderFieldCaptionOptionValue.setEnabled(false);
+		jTextFieldFunction310HeaderFieldCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310HeaderFieldCaptionOptionValue.setBounds(new Rectangle(530, 102, 200, 22));
 		jTextFieldFunction310HeaderFieldCaptionOptionValue.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
-		jCheckBoxFunction310HeaderFieldCaptionLengthVariable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jCheckBoxFunction310HeaderFieldCaptionLengthVariable.setBounds(new Rectangle(650, 93, 150, 22));
+		jCheckBoxFunction310HeaderFieldCaptionLengthVariable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxFunction310HeaderFieldCaptionLengthVariable.setBounds(new Rectangle(760, 102, 200, 25));
 		jCheckBoxFunction310HeaderFieldCaptionLengthVariable.setText(res.getString("CaptionLengthVariable"));
-		jCheckBoxFunction310HeaderFieldCaptionLengthVariable.setEnabled(false);
+		//
 		jLabelFunction310HeaderFieldPromptOption.setText(res.getString("Prompt"));
-		jLabelFunction310HeaderFieldPromptOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310HeaderFieldPromptOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310HeaderFieldPromptOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310HeaderFieldPromptOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310HeaderFieldPromptOption.setBounds(new Rectangle(11, 124, 96, 15));
+		jLabelFunction310HeaderFieldPromptOption.setBounds(new Rectangle(5, 136, 130, 20));
 		jLabelFunction310HeaderFieldPromptOption.setEnabled(false);
 		jRadioButtonFunction310HeaderFieldPromptOptionNone.setText(res.getString("None"));
-		jRadioButtonFunction310HeaderFieldPromptOptionNone.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310HeaderFieldPromptOptionNone.setBounds(new Rectangle(115, 121, 100, 22));
+		jRadioButtonFunction310HeaderFieldPromptOptionNone.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction310HeaderFieldPromptOptionNone.setBounds(new Rectangle(140, 133, 130, 25));
 		jRadioButtonFunction310HeaderFieldPromptOptionNone.setEnabled(false);
 		jRadioButtonFunction310HeaderFieldPromptOptionNone.addChangeListener(new Editor_jRadioButtonFunction310HeaderFieldPromptOption_changeAdapter(this));
 		jRadioButtonFunction310HeaderFieldPromptOptionList.setText(res.getString("ListBox"));
-		jRadioButtonFunction310HeaderFieldPromptOptionList.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310HeaderFieldPromptOptionList.setBounds(new Rectangle(225, 121, 110, 22));
+		jRadioButtonFunction310HeaderFieldPromptOptionList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction310HeaderFieldPromptOptionList.setBounds(new Rectangle(270, 133, 130, 25));
 		jRadioButtonFunction310HeaderFieldPromptOptionList.setEnabled(false);
 		jRadioButtonFunction310HeaderFieldPromptOptionList.addChangeListener(new Editor_jRadioButtonFunction310HeaderFieldPromptOption_changeAdapter(this));
 		jRadioButtonFunction310HeaderFieldPromptOptionCall.setText(res.getString("CallPromptFunction"));
-		jRadioButtonFunction310HeaderFieldPromptOptionCall.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310HeaderFieldPromptOptionCall.setBounds(new Rectangle(335, 121, 78, 22));
+		jRadioButtonFunction310HeaderFieldPromptOptionCall.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction310HeaderFieldPromptOptionCall.setBounds(new Rectangle(400, 133, 130, 25));
 		jRadioButtonFunction310HeaderFieldPromptOptionCall.setEnabled(false);
 		jRadioButtonFunction310HeaderFieldPromptOptionCall.addChangeListener(new Editor_jRadioButtonFunction310HeaderFieldPromptOption_changeAdapter(this));
 		buttonGroupFunction310HeaderFieldPromptOption.add(jRadioButtonFunction310HeaderFieldPromptOptionNone);
 		buttonGroupFunction310HeaderFieldPromptOption.add(jRadioButtonFunction310HeaderFieldPromptOptionList);
 		buttonGroupFunction310HeaderFieldPromptOption.add(jRadioButtonFunction310HeaderFieldPromptOptionCall);
-		jTextFieldFunction310HeaderFieldPromptOptionCallFunctionID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310HeaderFieldPromptOptionCallFunctionID.setBounds(new Rectangle(415, 121, 80, 22));
+		jTextFieldFunction310HeaderFieldPromptOptionCallFunctionID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310HeaderFieldPromptOptionCallFunctionID.setBounds(new Rectangle(530, 133, 120, 25));
 		jTextFieldFunction310HeaderFieldPromptOptionCallFunctionID.setEnabled(false);
 		jTextFieldFunction310HeaderFieldPromptOptionCallFunctionID.addKeyListener(new Editor_jTextFieldFunction310HeaderFieldPromptOptionCallFunctionID_keyAdapter(this));
-		jTextFieldFunction310HeaderFieldPromptOptionCallFunctionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310HeaderFieldPromptOptionCallFunctionName.setBounds(new Rectangle(500, 121, 204, 22));
+		jTextFieldFunction310HeaderFieldPromptOptionCallFunctionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310HeaderFieldPromptOptionCallFunctionName.setBounds(new Rectangle(655, 133, 280, 25));
 		jTextFieldFunction310HeaderFieldPromptOptionCallFunctionName.setEnabled(false);
 		jTextFieldFunction310HeaderFieldPromptOptionCallFunctionName.setEditable(false);
-		jButtonFunction310HeaderFieldPromptOptionCallFunctionExchange.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jButtonFunction310HeaderFieldPromptOptionCallFunctionExchange.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jButtonFunction310HeaderFieldPromptOptionCallFunctionExchange.setText(res.getString("ExchangeParms"));
-		jButtonFunction310HeaderFieldPromptOptionCallFunctionExchange.setBounds(new Rectangle(704, 120, 60, 23));
+		jButtonFunction310HeaderFieldPromptOptionCallFunctionExchange.setBounds(new Rectangle(935, 132, 100, 27));
 		jButtonFunction310HeaderFieldPromptOptionCallFunctionExchange.setEnabled(false);
 		jButtonFunction310HeaderFieldPromptOptionCallFunctionExchange.addActionListener(new Editor_jButtonToEditPromptOptionCallFunctionExchange_actionAdapter(this));
+		//
 		jLabelFunction310HeaderFieldComment.setEnabled(false);
-		jLabelFunction310HeaderFieldComment.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310HeaderFieldComment.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310HeaderFieldComment.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310HeaderFieldComment.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310HeaderFieldComment.setText(res.getString("Comment"));
-		jLabelFunction310HeaderFieldComment.setBounds(new Rectangle(11, 152, 96, 15));
-		jTextFieldFunction310HeaderFieldComment.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310HeaderFieldComment.setBounds(new Rectangle(115, 149, 430, 22));
+		jLabelFunction310HeaderFieldComment.setBounds(new Rectangle(5, 167, 130, 20));
+		jTextFieldFunction310HeaderFieldComment.setEnabled(false);
+		jTextFieldFunction310HeaderFieldComment.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310HeaderFieldComment.setBounds(new Rectangle(140, 164, 795, 25));
 		jTextFieldFunction310HeaderFieldComment.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
-		jPanelFunction310HeaderFieldList.setLayout(null);
-		jPanelFunction310HeaderFieldList.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction310HeaderFieldList.add(jLabelFunction310HeaderTable);
-		jPanelFunction310HeaderFieldList.add(jTextFieldFunction310HeaderTable);
-		jPanelFunction310HeaderFieldList.add(jLabelFunction310HeaderTableType);
-		jPanelFunction310HeaderFieldList.add(jTextFieldFunction310HeaderTableType);
-		jPanelFunction310HeaderFieldList.add(jLabelFunction310HeaderField);
-		jPanelFunction310HeaderFieldList.add(jTextFieldFunction310HeaderField);
-		jPanelFunction310HeaderFieldList.add(jLabelFunction310HeaderFieldType);
-		jPanelFunction310HeaderFieldList.add(jTextFieldFunction310HeaderFieldType);
-		jPanelFunction310HeaderFieldList.add(jLabelFunction310HeaderFieldLayoutOption);
-		jPanelFunction310HeaderFieldList.add(jRadioButtonFunction310HeaderFieldLayoutOptionVertical);
-		jPanelFunction310HeaderFieldList.add(jRadioButtonFunction310HeaderFieldLayoutOptionHorizontal);
-		jPanelFunction310HeaderFieldList.add(jLabelFunction310HeaderFieldWidth);
-		jPanelFunction310HeaderFieldList.add(jTextFieldFunction310HeaderFieldWidth);
-		jPanelFunction310HeaderFieldList.add(jLabelFunction310HeaderFieldRows);
-		jPanelFunction310HeaderFieldList.add(jTextFieldFunction310HeaderFieldRows);
-		jPanelFunction310HeaderFieldList.add(jLabelFunction310HeaderFieldMargin);
-		jPanelFunction310HeaderFieldList.add(jTextFieldFunction310HeaderFieldMargin);
-		jPanelFunction310HeaderFieldList.add(jLabelFunction310HeaderFieldCaptionOption);
-		jPanelFunction310HeaderFieldList.add(jRadioButtonFunction310HeaderFieldCaptionOptionName);
-		jPanelFunction310HeaderFieldList.add(jRadioButtonFunction310HeaderFieldCaptionOptionValue);
-		jPanelFunction310HeaderFieldList.add(jRadioButtonFunction310HeaderFieldCaptionOptionNone);
-		jPanelFunction310HeaderFieldList.add(jTextFieldFunction310HeaderFieldCaptionOptionValue);
-		jPanelFunction310HeaderFieldList.add(jCheckBoxFunction310HeaderFieldCaptionLengthVariable);
-		jPanelFunction310HeaderFieldList.add(jLabelFunction310HeaderFieldPromptOption);
-		jPanelFunction310HeaderFieldList.add(jRadioButtonFunction310HeaderFieldPromptOptionNone);
-		jPanelFunction310HeaderFieldList.add(jRadioButtonFunction310HeaderFieldPromptOptionList);
-		jPanelFunction310HeaderFieldList.add(jRadioButtonFunction310HeaderFieldPromptOptionCall);
-		jPanelFunction310HeaderFieldList.add(jTextFieldFunction310HeaderFieldPromptOptionCallFunctionID);
-		jPanelFunction310HeaderFieldList.add(jTextFieldFunction310HeaderFieldPromptOptionCallFunctionName);
-		jPanelFunction310HeaderFieldList.add(jButtonFunction310HeaderFieldPromptOptionCallFunctionExchange);
-		jPanelFunction310HeaderFieldList.add(jLabelFunction310HeaderFieldComment);
-		jPanelFunction310HeaderFieldList.add(jTextFieldFunction310HeaderFieldComment);
+		//
+		jScrollPaneFunction310HeaderFieldDefinition.setBorder(null);
+		jScrollPaneFunction310HeaderFieldDefinition.getViewport().add(jPanelFunction310HeaderFieldDefinition);
+		jPanelFunction310HeaderFieldDefinition.setPreferredSize(new Dimension(1050,198));
+		jPanelFunction310HeaderFieldDefinition.setLayout(null);
+		jPanelFunction310HeaderFieldDefinition.setBorder(null);
+		jPanelFunction310HeaderFieldDefinition.add(jLabelFunction310HeaderTable);
+		jPanelFunction310HeaderFieldDefinition.add(jTextFieldFunction310HeaderTable);
+		jPanelFunction310HeaderFieldDefinition.add(jLabelFunction310HeaderTableType);
+		jPanelFunction310HeaderFieldDefinition.add(jTextFieldFunction310HeaderTableType);
+		jPanelFunction310HeaderFieldDefinition.add(jLabelFunction310HeaderField);
+		jPanelFunction310HeaderFieldDefinition.add(jTextFieldFunction310HeaderField);
+		jPanelFunction310HeaderFieldDefinition.add(jLabelFunction310HeaderFieldType);
+		jPanelFunction310HeaderFieldDefinition.add(jTextFieldFunction310HeaderFieldType);
+		jPanelFunction310HeaderFieldDefinition.add(jLabelFunction310HeaderFieldLayoutOption);
+		jPanelFunction310HeaderFieldDefinition.add(jRadioButtonFunction310HeaderFieldLayoutOptionVertical);
+		jPanelFunction310HeaderFieldDefinition.add(jRadioButtonFunction310HeaderFieldLayoutOptionHorizontal);
+		jPanelFunction310HeaderFieldDefinition.add(jLabelFunction310HeaderFieldWidth);
+		jPanelFunction310HeaderFieldDefinition.add(jTextFieldFunction310HeaderFieldWidth);
+		jPanelFunction310HeaderFieldDefinition.add(jLabelFunction310HeaderFieldRows);
+		jPanelFunction310HeaderFieldDefinition.add(jTextFieldFunction310HeaderFieldRows);
+		jPanelFunction310HeaderFieldDefinition.add(jLabelFunction310HeaderFieldMargin);
+		jPanelFunction310HeaderFieldDefinition.add(jTextFieldFunction310HeaderFieldMargin);
+		jPanelFunction310HeaderFieldDefinition.add(jLabelFunction310HeaderFieldCaptionOption);
+		jPanelFunction310HeaderFieldDefinition.add(jRadioButtonFunction310HeaderFieldCaptionOptionName);
+		jPanelFunction310HeaderFieldDefinition.add(jRadioButtonFunction310HeaderFieldCaptionOptionValue);
+		jPanelFunction310HeaderFieldDefinition.add(jRadioButtonFunction310HeaderFieldCaptionOptionNone);
+		jPanelFunction310HeaderFieldDefinition.add(jTextFieldFunction310HeaderFieldCaptionOptionValue);
+		jPanelFunction310HeaderFieldDefinition.add(jCheckBoxFunction310HeaderFieldCaptionLengthVariable);
+		jPanelFunction310HeaderFieldDefinition.add(jLabelFunction310HeaderFieldPromptOption);
+		jPanelFunction310HeaderFieldDefinition.add(jRadioButtonFunction310HeaderFieldPromptOptionNone);
+		jPanelFunction310HeaderFieldDefinition.add(jRadioButtonFunction310HeaderFieldPromptOptionList);
+		jPanelFunction310HeaderFieldDefinition.add(jRadioButtonFunction310HeaderFieldPromptOptionCall);
+		jPanelFunction310HeaderFieldDefinition.add(jTextFieldFunction310HeaderFieldPromptOptionCallFunctionID);
+		jPanelFunction310HeaderFieldDefinition.add(jTextFieldFunction310HeaderFieldPromptOptionCallFunctionName);
+		jPanelFunction310HeaderFieldDefinition.add(jButtonFunction310HeaderFieldPromptOptionCallFunctionExchange);
+		jPanelFunction310HeaderFieldDefinition.add(jLabelFunction310HeaderFieldComment);
+		jPanelFunction310HeaderFieldDefinition.add(jTextFieldFunction310HeaderFieldComment);
 		//
 		jScrollPaneFunction310DetailFieldList.setBorder(null);
 		jScrollPaneFunction310DetailFieldList.getViewport().add(jTableFunction310DetailFieldList, null);
 		jScrollPaneFunction310DetailFieldList.addMouseListener(new Editor_jScrollPaneFunction310DetailFieldList_mouseAdapter(this));
-		jTableFunction310DetailFieldList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction310DetailFieldList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction310DetailFieldList.setBackground(SystemColor.control);
 		jTableFunction310DetailFieldList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction310DetailFieldList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -9891,6 +9854,7 @@ public class Editor extends JFrame {
 		jTableFunction310DetailFieldList.addMouseListener(new Editor_jTableFunction310DetailFieldList_mouseAdapter(this));
 	    jTableFunction310DetailFieldList.addMouseMotionListener(new Editor_jTableFunction310DetailFieldList_mouseMotionAdapter(this));
 		jTableFunction310DetailFieldList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableFunction310DetailFieldList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction310DetailFieldList.addColumn("NO.");
 		tableModelFunction310DetailFieldList.addColumn(res.getString("DataSource"));
 		tableModelFunction310DetailFieldList.addColumn(res.getString("FieldType"));
@@ -9899,234 +9863,232 @@ public class Editor extends JFrame {
 		column1 = jTableFunction310DetailFieldList.getColumnModel().getColumn(1);
 		column2 = jTableFunction310DetailFieldList.getColumnModel().getColumn(2);
 		column3 = jTableFunction310DetailFieldList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(160);
-		column2.setPreferredWidth(250);
-		column3.setPreferredWidth(350);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(250);
+		column2.setPreferredWidth(350);
+		column3.setPreferredWidth(450);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction310DetailFieldList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction310DetailFieldList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction310DetailFieldList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		jSplitPaneFunction310DetailFieldList.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jSplitPaneFunction310DetailFieldList.add(jScrollPaneFunction310DetailFieldList, JSplitPane.TOP);
-		jSplitPaneFunction310DetailFieldList.add(jPanelFunction310DetailFieldList, JSplitPane.BOTTOM);
-		jSplitPaneFunction310DetailFieldList.setDividerLocation(286);
-		jSplitPaneFunction310DetailFieldList.setDividerLocation(screenHeight - 520);
+		//
+		jScrollPaneFunction310DetailFieldDefinition.setBorder(null);
+		jScrollPaneFunction310DetailFieldDefinition.getViewport().add(jPanelFunction310DetailFieldDefinition);
+		jPanelFunction310DetailFieldList.setLayout(new BorderLayout());
+		jPanelFunction310DetailFieldList.add(jScrollPaneFunction310DetailFieldList, BorderLayout.CENTER);
+		jPanelFunction310DetailFieldList.add(jScrollPaneFunction310DetailFieldDefinition, BorderLayout.SOUTH);
+		//
 		jLabelFunction310DetailTable.setEnabled(false);
-		jLabelFunction310DetailTable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310DetailTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310DetailTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310DetailTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310DetailTable.setText(res.getString("Table"));
-		jLabelFunction310DetailTable.setBounds(new Rectangle(11, 12, 96, 15));
-		jTextFieldFunction310DetailTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310DetailTable.setBounds(new Rectangle(115, 9, 300, 22));
+		jLabelFunction310DetailTable.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldFunction310DetailTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310DetailTable.setBounds(new Rectangle(140, 9, 350, 22));
 		jTextFieldFunction310DetailTable.setEditable(false);
 		jLabelFunction310DetailTableType.setEnabled(false);
-		jLabelFunction310DetailTableType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310DetailTableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310DetailTableType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310DetailTableType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310DetailTableType.setText(res.getString("Type"));
-		jLabelFunction310DetailTableType.setBounds(new Rectangle(430, 12, 76, 15));
-		jTextFieldFunction310DetailTableType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310DetailTableType.setBounds(new Rectangle(514, 9, 250, 22));
+		jLabelFunction310DetailTableType.setBounds(new Rectangle(500, 12, 100, 20));
+		jTextFieldFunction310DetailTableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310DetailTableType.setBounds(new Rectangle(605, 9, 330, 25));
 		jTextFieldFunction310DetailTableType.setEditable(false);
-		jLabelFunction310DetailField.setEnabled(false);
-		jLabelFunction310DetailField.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction310DetailField.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310DetailField.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310DetailField.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310DetailField.setText(res.getString("Field"));
-		jLabelFunction310DetailField.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldFunction310DetailField.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310DetailField.setBounds(new Rectangle(115, 37, 300, 22));
+		jLabelFunction310DetailField.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldFunction310DetailField.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310DetailField.setBounds(new Rectangle(140, 40, 350, 25));
 		jTextFieldFunction310DetailField.setEditable(false);
-		jLabelFunction310DetailFieldType.setEnabled(false);
-		jLabelFunction310DetailFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310DetailFieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310DetailFieldType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310DetailFieldType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310DetailFieldType.setText(res.getString("Type"));
-		jLabelFunction310DetailFieldType.setBounds(new Rectangle(430, 40, 76, 15));
-		jTextFieldFunction310DetailFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310DetailFieldType.setBounds(new Rectangle(514, 37, 250, 22));
+		jLabelFunction310DetailFieldType.setBounds(new Rectangle(500, 43, 100, 20));
+		jTextFieldFunction310DetailFieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310DetailFieldType.setBounds(new Rectangle(605, 40, 330, 25));
 		jTextFieldFunction310DetailFieldType.setEditable(false);
-		jLabelFunction310DetailFieldLayoutOption.setEnabled(false);
+		//
 		jLabelFunction310DetailFieldLayoutOption.setText(res.getString("LayoutOption"));
-		jLabelFunction310DetailFieldLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310DetailFieldLayoutOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310DetailFieldLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310DetailFieldLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310DetailFieldLayoutOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction310DetailFieldLayoutOption.setBounds(new Rectangle(5, 74, 130, 20));
 		jRadioButtonFunction310DetailFieldLayoutOptionVertical.setText(res.getString("LayoutVertical"));
-		jRadioButtonFunction310DetailFieldLayoutOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310DetailFieldLayoutOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
-		jRadioButtonFunction310DetailFieldLayoutOptionVertical.setEnabled(false);
+		jRadioButtonFunction310DetailFieldLayoutOptionVertical.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction310DetailFieldLayoutOptionVertical.setBounds(new Rectangle(140, 71, 130, 25));
 		jRadioButtonFunction310DetailFieldLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
-		jRadioButtonFunction310DetailFieldLayoutOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310DetailFieldLayoutOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
-		jRadioButtonFunction310DetailFieldLayoutOptionHorizontal.setEnabled(false);
+		jRadioButtonFunction310DetailFieldLayoutOptionHorizontal.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction310DetailFieldLayoutOptionHorizontal.setBounds(new Rectangle(270, 71, 130, 25));
 		buttonGroupFunction310DetailFieldLayoutOption.add(jRadioButtonFunction310DetailFieldLayoutOptionVertical);
 		buttonGroupFunction310DetailFieldLayoutOption.add(jRadioButtonFunction310DetailFieldLayoutOptionHorizontal);
-		jLabelFunction310DetailFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310DetailFieldWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310DetailFieldWidth.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310DetailFieldWidth.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310DetailFieldWidth.setText(res.getString("FieldWidth"));
-		jLabelFunction310DetailFieldWidth.setBounds(new Rectangle(430, 68, 76, 15));
-		jLabelFunction310DetailFieldWidth.setEnabled(false);
-		jTextFieldFunction310DetailFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310DetailFieldWidth.setBounds(new Rectangle(514, 65, 45, 22));
-		jTextFieldFunction310DetailFieldWidth.setEnabled(false);
+		jLabelFunction310DetailFieldWidth.setBounds(new Rectangle(500, 74, 100, 20));
+		jTextFieldFunction310DetailFieldWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310DetailFieldWidth.setBounds(new Rectangle(605, 71, 60, 25));
 		jTextFieldFunction310DetailFieldWidth.setText("");
-		jLabelFunction310DetailFieldRows.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310DetailFieldRows.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310DetailFieldRows.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310DetailFieldRows.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310DetailFieldRows.setText(res.getString("FieldRows"));
-		jLabelFunction310DetailFieldRows.setBounds(new Rectangle(564, 68, 45, 15));
-		jLabelFunction310DetailFieldRows.setEnabled(false);
-		jTextFieldFunction310DetailFieldRows.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310DetailFieldRows.setBounds(new Rectangle(614, 65, 45, 22));
+		jLabelFunction310DetailFieldRows.setBounds(new Rectangle(675, 74, 60, 20));
+		jTextFieldFunction310DetailFieldRows.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310DetailFieldRows.setBounds(new Rectangle(740, 71, 60, 25));
 		jTextFieldFunction310DetailFieldRows.setText("");
-		jTextFieldFunction310DetailFieldRows.setEnabled(false);
-		jLabelFunction310DetailFieldCaptionOption.setEnabled(false);
+		//
 		jLabelFunction310DetailFieldCaptionOption.setText(res.getString("Caption"));
-		jLabelFunction310DetailFieldCaptionOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310DetailFieldCaptionOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310DetailFieldCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310DetailFieldCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310DetailFieldCaptionOption.setBounds(new Rectangle(11, 96, 96, 15));
+		jLabelFunction310DetailFieldCaptionOption.setBounds(new Rectangle(5, 105, 130, 20));
 		jRadioButtonFunction310DetailFieldCaptionOptionName.setText(res.getString("FieldName"));
-		jRadioButtonFunction310DetailFieldCaptionOptionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310DetailFieldCaptionOptionName.setBounds(new Rectangle(115, 93, 100, 22));
-		jRadioButtonFunction310DetailFieldCaptionOptionName.setEnabled(false);
+		jRadioButtonFunction310DetailFieldCaptionOptionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction310DetailFieldCaptionOptionName.setBounds(new Rectangle(140, 102, 130, 25));
 		jRadioButtonFunction310DetailFieldCaptionOptionName.addChangeListener(new Editor_jRadioButtonFunction310DetailFieldCaptionOption_changeAdapter(this));
 		jRadioButtonFunction310DetailFieldCaptionOptionValue.setText(res.getString("ValueSpecified"));
-		jRadioButtonFunction310DetailFieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310DetailFieldCaptionOptionValue.setBounds(new Rectangle(225, 93, 63, 22));
-		jRadioButtonFunction310DetailFieldCaptionOptionValue.setEnabled(false);
+		jRadioButtonFunction310DetailFieldCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction310DetailFieldCaptionOptionValue.setBounds(new Rectangle(270, 102, 130, 25));
 		jRadioButtonFunction310DetailFieldCaptionOptionValue.addChangeListener(new Editor_jRadioButtonFunction310DetailFieldCaptionOption_changeAdapter(this));
 		buttonGroupFunction310DetailFieldCaptionOption.add(jRadioButtonFunction310DetailFieldCaptionOptionName);
 		buttonGroupFunction310DetailFieldCaptionOption.add(jRadioButtonFunction310DetailFieldCaptionOptionValue);
-		jTextFieldFunction310DetailFieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310DetailFieldCaptionOptionValue.setBounds(new Rectangle(300, 93, 220, 22));
-		jTextFieldFunction310DetailFieldCaptionOptionValue.setEnabled(false);
+		jTextFieldFunction310DetailFieldCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310DetailFieldCaptionOptionValue.setBounds(new Rectangle(400, 102, 265, 25));
 		jTextFieldFunction310DetailFieldCaptionOptionValue.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
+		//
 		jLabelFunction310DetailFieldPromptOption.setText(res.getString("Prompt"));
-		jLabelFunction310DetailFieldPromptOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310DetailFieldPromptOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310DetailFieldPromptOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310DetailFieldPromptOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310DetailFieldPromptOption.setBounds(new Rectangle(11, 124, 96, 15));
-		jLabelFunction310DetailFieldPromptOption.setEnabled(false);
+		jLabelFunction310DetailFieldPromptOption.setBounds(new Rectangle(5, 136, 130, 20));
 		jRadioButtonFunction310DetailFieldPromptOptionNone.setText(res.getString("None"));
-		jRadioButtonFunction310DetailFieldPromptOptionNone.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310DetailFieldPromptOptionNone.setBounds(new Rectangle(115, 121, 100, 22));
+		jRadioButtonFunction310DetailFieldPromptOptionNone.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction310DetailFieldPromptOptionNone.setBounds(new Rectangle(140, 133, 130, 25));
 		jRadioButtonFunction310DetailFieldPromptOptionNone.setEnabled(false);
 		jRadioButtonFunction310DetailFieldPromptOptionNone.addChangeListener(new Editor_jRadioButtonFunction310DetailFieldPromptOption_changeAdapter(this));
 		jRadioButtonFunction310DetailFieldPromptOptionList.setText(res.getString("ListBox"));
-		jRadioButtonFunction310DetailFieldPromptOptionList.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310DetailFieldPromptOptionList.setBounds(new Rectangle(225, 121, 110, 22));
-		jRadioButtonFunction310DetailFieldPromptOptionList.setEnabled(false);
+		jRadioButtonFunction310DetailFieldPromptOptionList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction310DetailFieldPromptOptionList.setBounds(new Rectangle(270, 133, 130, 25));
 		jRadioButtonFunction310DetailFieldPromptOptionList.addChangeListener(new Editor_jRadioButtonFunction310DetailFieldPromptOption_changeAdapter(this));
 		jRadioButtonFunction310DetailFieldPromptOptionCall.setText(res.getString("CallPromptFunction"));
-		jRadioButtonFunction310DetailFieldPromptOptionCall.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310DetailFieldPromptOptionCall.setBounds(new Rectangle(335, 121, 78, 22));
-		jRadioButtonFunction310DetailFieldPromptOptionCall.setEnabled(false);
+		jRadioButtonFunction310DetailFieldPromptOptionCall.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction310DetailFieldPromptOptionCall.setBounds(new Rectangle(400, 133, 130, 25));
 		jRadioButtonFunction310DetailFieldPromptOptionCall.addChangeListener(new Editor_jRadioButtonFunction310DetailFieldPromptOption_changeAdapter(this));
 		buttonGroupFunction310DetailFieldPromptOption.add(jRadioButtonFunction310DetailFieldPromptOptionNone);
 		buttonGroupFunction310DetailFieldPromptOption.add(jRadioButtonFunction310DetailFieldPromptOptionList);
 		buttonGroupFunction310DetailFieldPromptOption.add(jRadioButtonFunction310DetailFieldPromptOptionCall);
-		jTextFieldFunction310DetailFieldPromptOptionCallFunctionID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310DetailFieldPromptOptionCallFunctionID.setBounds(new Rectangle(415, 121, 80, 22));
-		jTextFieldFunction310DetailFieldPromptOptionCallFunctionID.setEnabled(false);
+		jTextFieldFunction310DetailFieldPromptOptionCallFunctionID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310DetailFieldPromptOptionCallFunctionID.setBounds(new Rectangle(530, 133, 110, 25));
 		jTextFieldFunction310DetailFieldPromptOptionCallFunctionID.addKeyListener(new Editor_jTextFieldFunction310DetailFieldPromptOptionCallFunctionID_keyAdapter(this));
-		jTextFieldFunction310DetailFieldPromptOptionCallFunctionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310DetailFieldPromptOptionCallFunctionName.setBounds(new Rectangle(500, 121, 204, 22));
-		jTextFieldFunction310DetailFieldPromptOptionCallFunctionName.setEnabled(false);
+		jTextFieldFunction310DetailFieldPromptOptionCallFunctionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310DetailFieldPromptOptionCallFunctionName.setBounds(new Rectangle(645, 133, 290, 25));
 		jTextFieldFunction310DetailFieldPromptOptionCallFunctionName.setEditable(false);
-		jButtonFunction310DetailFieldPromptOptionCallFunctionExchange.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jButtonFunction310DetailFieldPromptOptionCallFunctionExchange.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jButtonFunction310DetailFieldPromptOptionCallFunctionExchange.setText(res.getString("ExchangeParms"));
-		jButtonFunction310DetailFieldPromptOptionCallFunctionExchange.setBounds(new Rectangle(704, 120, 60, 23));
-		jButtonFunction310DetailFieldPromptOptionCallFunctionExchange.setEnabled(false);
+		jButtonFunction310DetailFieldPromptOptionCallFunctionExchange.setBounds(new Rectangle(935, 132, 100, 27));
 		jButtonFunction310DetailFieldPromptOptionCallFunctionExchange.addActionListener(new Editor_jButtonToEditPromptOptionCallFunctionExchange_actionAdapter(this));
-		jPanelFunction310DetailFieldList.setLayout(null);
-		jPanelFunction310DetailFieldList.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction310DetailFieldList.add(jLabelFunction310DetailTable);
-		jPanelFunction310DetailFieldList.add(jTextFieldFunction310DetailTable);
-		jPanelFunction310DetailFieldList.add(jLabelFunction310DetailTableType);
-		jPanelFunction310DetailFieldList.add(jTextFieldFunction310DetailTableType);
-		jPanelFunction310DetailFieldList.add(jLabelFunction310DetailField);
-		jPanelFunction310DetailFieldList.add(jTextFieldFunction310DetailField);
-		jPanelFunction310DetailFieldList.add(jLabelFunction310DetailFieldType);
-		jPanelFunction310DetailFieldList.add(jTextFieldFunction310DetailFieldType);
-		jPanelFunction310DetailFieldList.add(jLabelFunction310DetailFieldLayoutOption);
-		jPanelFunction310DetailFieldList.add(jRadioButtonFunction310DetailFieldLayoutOptionVertical);
-		jPanelFunction310DetailFieldList.add(jRadioButtonFunction310DetailFieldLayoutOptionHorizontal);
-		jPanelFunction310DetailFieldList.add(jLabelFunction310DetailFieldWidth);
-		jPanelFunction310DetailFieldList.add(jTextFieldFunction310DetailFieldWidth);
-		jPanelFunction310DetailFieldList.add(jLabelFunction310DetailFieldRows);
-		jPanelFunction310DetailFieldList.add(jTextFieldFunction310DetailFieldRows);
-		jPanelFunction310DetailFieldList.add(jLabelFunction310DetailFieldCaptionOption);
-		jPanelFunction310DetailFieldList.add(jRadioButtonFunction310DetailFieldCaptionOptionName);
-		jPanelFunction310DetailFieldList.add(jRadioButtonFunction310DetailFieldCaptionOptionValue);
-		jPanelFunction310DetailFieldList.add(jTextFieldFunction310DetailFieldCaptionOptionValue);
-		jPanelFunction310DetailFieldList.add(jLabelFunction310DetailFieldPromptOption);
-		jPanelFunction310DetailFieldList.add(jRadioButtonFunction310DetailFieldPromptOptionNone);
-		jPanelFunction310DetailFieldList.add(jRadioButtonFunction310DetailFieldPromptOptionList);
-		jPanelFunction310DetailFieldList.add(jRadioButtonFunction310DetailFieldPromptOptionCall);
-		jPanelFunction310DetailFieldList.add(jTextFieldFunction310DetailFieldPromptOptionCallFunctionID);
-		jPanelFunction310DetailFieldList.add(jTextFieldFunction310DetailFieldPromptOptionCallFunctionName);
-		jPanelFunction310DetailFieldList.add(jButtonFunction310DetailFieldPromptOptionCallFunctionExchange);
 		//
+		jPanelFunction310DetailFieldDefinition.setPreferredSize(new Dimension(1050, 167));
+		jPanelFunction310DetailFieldDefinition.setLayout(null);
+		jPanelFunction310DetailFieldDefinition.setBorder(null);
+		jPanelFunction310DetailFieldDefinition.add(jLabelFunction310DetailTable);
+		jPanelFunction310DetailFieldDefinition.add(jTextFieldFunction310DetailTable);
+		jPanelFunction310DetailFieldDefinition.add(jLabelFunction310DetailTableType);
+		jPanelFunction310DetailFieldDefinition.add(jTextFieldFunction310DetailTableType);
+		jPanelFunction310DetailFieldDefinition.add(jLabelFunction310DetailField);
+		jPanelFunction310DetailFieldDefinition.add(jTextFieldFunction310DetailField);
+		jPanelFunction310DetailFieldDefinition.add(jLabelFunction310DetailFieldType);
+		jPanelFunction310DetailFieldDefinition.add(jTextFieldFunction310DetailFieldType);
+		jPanelFunction310DetailFieldDefinition.add(jLabelFunction310DetailFieldLayoutOption);
+		jPanelFunction310DetailFieldDefinition.add(jRadioButtonFunction310DetailFieldLayoutOptionVertical);
+		jPanelFunction310DetailFieldDefinition.add(jRadioButtonFunction310DetailFieldLayoutOptionHorizontal);
+		jPanelFunction310DetailFieldDefinition.add(jLabelFunction310DetailFieldWidth);
+		jPanelFunction310DetailFieldDefinition.add(jTextFieldFunction310DetailFieldWidth);
+		jPanelFunction310DetailFieldDefinition.add(jLabelFunction310DetailFieldRows);
+		jPanelFunction310DetailFieldDefinition.add(jTextFieldFunction310DetailFieldRows);
+		jPanelFunction310DetailFieldDefinition.add(jLabelFunction310DetailFieldCaptionOption);
+		jPanelFunction310DetailFieldDefinition.add(jRadioButtonFunction310DetailFieldCaptionOptionName);
+		jPanelFunction310DetailFieldDefinition.add(jRadioButtonFunction310DetailFieldCaptionOptionValue);
+		jPanelFunction310DetailFieldDefinition.add(jTextFieldFunction310DetailFieldCaptionOptionValue);
+		jPanelFunction310DetailFieldDefinition.add(jLabelFunction310DetailFieldPromptOption);
+		jPanelFunction310DetailFieldDefinition.add(jRadioButtonFunction310DetailFieldPromptOptionNone);
+		jPanelFunction310DetailFieldDefinition.add(jRadioButtonFunction310DetailFieldPromptOptionList);
+		jPanelFunction310DetailFieldDefinition.add(jRadioButtonFunction310DetailFieldPromptOptionCall);
+		jPanelFunction310DetailFieldDefinition.add(jTextFieldFunction310DetailFieldPromptOptionCallFunctionID);
+		jPanelFunction310DetailFieldDefinition.add(jTextFieldFunction310DetailFieldPromptOptionCallFunctionName);
+		jPanelFunction310DetailFieldDefinition.add(jButtonFunction310DetailFieldPromptOptionCallFunctionExchange);
+		//
+		jScrollPaneFunction310AddRowListTableAndField.setBorder(null);
+		jScrollPaneFunction310AddRowListTableAndField.getViewport().add(jPanelFunction310AddRowListTableAndField);
 		jPanelFunction310AddRowListTableAndField.setLayout(new BorderLayout());
 		jPanelFunction310AddRowListTableAndField.setBorder(null);
+		jPanelFunction310AddRowListTableAndField.setPreferredSize(new Dimension(1030, 500));
 		jPanelFunction310AddRowListTableAndFieldTop.setLayout(null);
-		jPanelFunction310AddRowListTableAndFieldTop.setPreferredSize(new Dimension(10, 151));
+		jPanelFunction310AddRowListTableAndFieldTop.setPreferredSize(new Dimension(1030, 167));
 		jPanelFunction310AddRowListTableAndFieldTop.setBorder(BorderFactory.createEtchedBorder());
-		jLabelFunction310AddRowListTableName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction310AddRowListTableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310AddRowListTableName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310AddRowListTableName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310AddRowListTableName.setText(res.getString("ListTable"));
-		jLabelFunction310AddRowListTableName.setBounds(new Rectangle(11, 12, 96, 15));
-		jTextFieldFunction310AddRowListTableName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310AddRowListTableName.setBounds(new Rectangle(115, 9, 600, 22));
+		jLabelFunction310AddRowListTableName.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldFunction310AddRowListTableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310AddRowListTableName.setBounds(new Rectangle(140, 9, 840, 25));
 		jTextFieldFunction310AddRowListTableName.setEditable(false);
 		jButtonFunction310AddRowListTableNameEdit.setIcon(imageIconPrompt);
-		jButtonFunction310AddRowListTableNameEdit.setBounds(new Rectangle(715, 8, 28, 23));
+		jButtonFunction310AddRowListTableNameEdit.setBounds(new Rectangle(980, 8, 28, 27));
 		jButtonFunction310AddRowListTableNameEdit.addActionListener(new Editor_jButtonFunction310AddRowListTableNameEdit_actionAdapter(this));
-		jLabelFunction310AddRowListReturnDataSources.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction310AddRowListReturnDataSources.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310AddRowListReturnDataSources.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310AddRowListReturnDataSources.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310AddRowListReturnDataSources.setText(res.getString("ReturnFields"));
-		jLabelFunction310AddRowListReturnDataSources.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldFunction310AddRowListReturnDataSources.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310AddRowListReturnDataSources.setBounds(new Rectangle(115, 37, 600, 22));
+		jLabelFunction310AddRowListReturnDataSources.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldFunction310AddRowListReturnDataSources.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310AddRowListReturnDataSources.setBounds(new Rectangle(140, 40, 840, 25));
 		jTextFieldFunction310AddRowListReturnDataSources.setEditable(false);
 		jButtonFunction310AddRowListReturnDataSourcesEdit.setIcon(imageIconPrompt);
-		jButtonFunction310AddRowListReturnDataSourcesEdit.setBounds(new Rectangle(715, 36, 28, 23));
+		jButtonFunction310AddRowListReturnDataSourcesEdit.setBounds(new Rectangle(980, 39, 28, 27));
 		jButtonFunction310AddRowListReturnDataSourcesEdit.addActionListener(new Editor_jButtonFunction310AddRowListReturnDataSourcesEdit_actionAdapter(this));
-		jLabelFunction310AddRowListOrderByFields.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction310AddRowListOrderByFields.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310AddRowListOrderByFields.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310AddRowListOrderByFields.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310AddRowListOrderByFields.setText(res.getString("OrderByFields"));
-		jLabelFunction310AddRowListOrderByFields.setBounds(new Rectangle(11, 68, 96, 15));
-		jTextFieldFunction310AddRowListOrderByFields.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310AddRowListOrderByFields.setBounds(new Rectangle(115, 65, 600, 22));
+		jLabelFunction310AddRowListOrderByFields.setBounds(new Rectangle(5, 74, 130, 20));
+		jTextFieldFunction310AddRowListOrderByFields.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310AddRowListOrderByFields.setBounds(new Rectangle(140, 71, 840, 25));
 		jTextFieldFunction310AddRowListOrderByFields.setEditable(false);
 		jButtonFunction310AddRowListOrderByFieldsEdit.setIcon(imageIconPrompt);
-		jButtonFunction310AddRowListOrderByFieldsEdit.setBounds(new Rectangle(715, 64, 28, 23));
+		jButtonFunction310AddRowListOrderByFieldsEdit.setBounds(new Rectangle(980, 70, 28, 27));
 		jButtonFunction310AddRowListOrderByFieldsEdit.addActionListener(new Editor_jButtonToEditOrderByFields_actionAdapter(this));
-		jLabelFunction310AddRowListWhere.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction310AddRowListWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310AddRowListWhere.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310AddRowListWhere.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310AddRowListWhere.setText(res.getString("FixedWhere"));
-		jLabelFunction310AddRowListWhere.setBounds(new Rectangle(11, 96, 96, 15));
-		jTextFieldFunction310AddRowListWhere.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310AddRowListWhere.setBounds(new Rectangle(115, 93, 600, 22));
-		jLabelFunction310AddRowListInitialMsg.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310AddRowListWhere.setBounds(new Rectangle(5, 105, 130, 20));
+		jTextFieldFunction310AddRowListWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310AddRowListWhere.setBounds(new Rectangle(140, 102, 840, 25));
+		//
+		jLabelFunction310AddRowListInitialMsg.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310AddRowListInitialMsg.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310AddRowListInitialMsg.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310AddRowListInitialMsg.setText(res.getString("InitialMessage"));
-		jLabelFunction310AddRowListInitialMsg.setBounds(new Rectangle(11, 124, 96, 15));
-		jTextFieldFunction310AddRowListInitialMsg.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310AddRowListInitialMsg.setBounds(new Rectangle(115, 121, 600, 22));
+		jLabelFunction310AddRowListInitialMsg.setBounds(new Rectangle(5, 136, 130, 20));
+		jTextFieldFunction310AddRowListInitialMsg.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310AddRowListInitialMsg.setBounds(new Rectangle(140, 133, 840, 25));
+		//
 		jPanelFunction310AddRowListTableAndFieldTop.add(jLabelFunction310AddRowListTableName);
 		jPanelFunction310AddRowListTableAndFieldTop.add(jTextFieldFunction310AddRowListTableName);
 		jPanelFunction310AddRowListTableAndFieldTop.add(jButtonFunction310AddRowListTableNameEdit);
@@ -10143,16 +10105,16 @@ public class Editor extends JFrame {
 		//
 		jPanelFunction310AddRowListTableAndField.add(jPanelFunction310AddRowListTableAndFieldTop, BorderLayout.NORTH);
 		jPanelFunction310AddRowListTableAndField.add(jTabbedPaneFunction310AddRowList, BorderLayout.CENTER);
-		jTabbedPaneFunction310AddRowList.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTabbedPaneFunction310AddRowList.add(res.getString("DTLFields"), jSplitPaneFunction310AddRowListColumnList);
+		jTabbedPaneFunction310AddRowList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTabbedPaneFunction310AddRowList.add(res.getString("DTLFields"), jPanelFunction310AddRowListColumnList);
 		jTabbedPaneFunction310AddRowList.setIconAt(0, imageIconDetailField);
-		jTabbedPaneFunction310AddRowList.add(res.getString("FunctionKeys"), jSplitPaneFunction310AddRowListButtonList);
+		jTabbedPaneFunction310AddRowList.add(res.getString("FunctionKeys"), jPanelFunction310AddRowListButtonList);
 		jTabbedPaneFunction310AddRowList.setIconAt(1, imageIconFunctionButton);
 		//
 		jScrollPaneFunction310AddRowListColumnList.setBorder(null);
 		jScrollPaneFunction310AddRowListColumnList.getViewport().add(jTableFunction310AddRowListColumnList, null);
 		jScrollPaneFunction310AddRowListColumnList.addMouseListener(new Editor_jScrollPaneFunction310AddRowListColumnList_mouseAdapter(this));
-		jTableFunction310AddRowListColumnList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction310AddRowListColumnList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction310AddRowListColumnList.setBackground(SystemColor.control);
 		jTableFunction310AddRowListColumnList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction310AddRowListColumnList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -10163,6 +10125,7 @@ public class Editor extends JFrame {
 		jTableFunction310AddRowListColumnList.addMouseListener(new Editor_jTableFunction310AddRowListColumnList_mouseAdapter(this));
 	    jTableFunction310AddRowListColumnList.addMouseMotionListener(new Editor_jTableFunction310AddRowListColumnList_mouseMotionAdapter(this));
 		jTableFunction310AddRowListColumnList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableFunction310AddRowListColumnList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction310AddRowListColumnList.addColumn("NO.");
 		tableModelFunction310AddRowListColumnList.addColumn(res.getString("DataSource"));
 		tableModelFunction310AddRowListColumnList.addColumn(res.getString("FieldType"));
@@ -10171,140 +10134,132 @@ public class Editor extends JFrame {
 		column1 = jTableFunction310AddRowListColumnList.getColumnModel().getColumn(1);
 		column2 = jTableFunction310AddRowListColumnList.getColumnModel().getColumn(2);
 		column3 = jTableFunction310AddRowListColumnList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(160);
-		column2.setPreferredWidth(250);
-		column3.setPreferredWidth(350);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(250);
+		column2.setPreferredWidth(350);
+		column3.setPreferredWidth(450);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction310AddRowListColumnList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction310AddRowListColumnList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction310AddRowListColumnList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		jSplitPaneFunction310AddRowListColumnList.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jSplitPaneFunction310AddRowListColumnList.add(jScrollPaneFunction310AddRowListColumnList, JSplitPane.TOP);
-		jSplitPaneFunction310AddRowListColumnList.add(jPanelFunction310AddRowListColumnList, JSplitPane.BOTTOM);
-		jSplitPaneFunction310AddRowListColumnList.setDividerLocation(screenHeight - 670);
-		jLabelFunction310AddRowListColumnTable.setEnabled(false);
-		jLabelFunction310AddRowListColumnTable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jPanelFunction310AddRowListColumnList.setLayout(new BorderLayout());
+		jPanelFunction310AddRowListColumnList.add(jScrollPaneFunction310AddRowListColumnList, BorderLayout.CENTER);
+		jPanelFunction310AddRowListColumnList.add(jPanelFunction310AddRowListColumnDefinition, BorderLayout.SOUTH);
+		//
+		jLabelFunction310AddRowListColumnTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310AddRowListColumnTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310AddRowListColumnTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310AddRowListColumnTable.setText(res.getString("Table"));
-		jLabelFunction310AddRowListColumnTable.setBounds(new Rectangle(11, 12, 96, 15));
-		jTextFieldFunction310AddRowListColumnTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310AddRowListColumnTable.setBounds(new Rectangle(115, 9, 300, 22));
+		jLabelFunction310AddRowListColumnTable.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldFunction310AddRowListColumnTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310AddRowListColumnTable.setBounds(new Rectangle(140, 9, 350, 25));
 		jTextFieldFunction310AddRowListColumnTable.setEditable(false);
-		jLabelFunction310AddRowListColumnTableType.setEnabled(false);
-		jLabelFunction310AddRowListColumnTableType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310AddRowListColumnTableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310AddRowListColumnTableType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310AddRowListColumnTableType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310AddRowListColumnTableType.setText(res.getString("Type"));
-		jLabelFunction310AddRowListColumnTableType.setBounds(new Rectangle(430, 12, 76, 15));
-		jTextFieldFunction310AddRowListColumnTableType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310AddRowListColumnTableType.setBounds(new Rectangle(514, 9, 250, 22));
+		jLabelFunction310AddRowListColumnTableType.setBounds(new Rectangle(500, 12, 100, 20));
+		jTextFieldFunction310AddRowListColumnTableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310AddRowListColumnTableType.setBounds(new Rectangle(605, 9, 330, 25));
 		jTextFieldFunction310AddRowListColumnTableType.setEditable(false);
-		jLabelFunction310AddRowListColumn.setEnabled(false);
-		jLabelFunction310AddRowListColumn.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction310AddRowListColumn.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310AddRowListColumn.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310AddRowListColumn.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310AddRowListColumn.setText(res.getString("Field"));
-		jLabelFunction310AddRowListColumn.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldFunction310AddRowListColumn.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310AddRowListColumn.setBounds(new Rectangle(115, 37, 300, 22));
+		jLabelFunction310AddRowListColumn.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldFunction310AddRowListColumn.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310AddRowListColumn.setBounds(new Rectangle(140, 40, 350, 25));
 		jTextFieldFunction310AddRowListColumn.setEditable(false);
-		jLabelFunction310AddRowListColumnType.setEnabled(false);
-		jLabelFunction310AddRowListColumnType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310AddRowListColumnType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310AddRowListColumnType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310AddRowListColumnType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310AddRowListColumnType.setText(res.getString("Type"));
-		jLabelFunction310AddRowListColumnType.setBounds(new Rectangle(430, 40, 76, 15));
-		jTextFieldFunction310AddRowListColumnType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310AddRowListColumnType.setBounds(new Rectangle(514, 37, 250, 22));
+		jLabelFunction310AddRowListColumnType.setBounds(new Rectangle(500, 43, 100, 20));
+		jTextFieldFunction310AddRowListColumnType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310AddRowListColumnType.setBounds(new Rectangle(605, 40, 330, 25));
 		jTextFieldFunction310AddRowListColumnType.setEditable(false);
-		jLabelFunction310AddRowListColumnLayoutOption.setEnabled(false);
+		//
 		jLabelFunction310AddRowListColumnLayoutOption.setText(res.getString("LayoutOption"));
-		jLabelFunction310AddRowListColumnLayoutOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310AddRowListColumnLayoutOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310AddRowListColumnLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310AddRowListColumnLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310AddRowListColumnLayoutOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction310AddRowListColumnLayoutOption.setBounds(new Rectangle(5, 74, 130, 20));
 		jRadioButtonFunction310AddRowListColumnLayoutOptionVertical.setText(res.getString("LayoutVertical"));
-		jRadioButtonFunction310AddRowListColumnLayoutOptionVertical.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310AddRowListColumnLayoutOptionVertical.setBounds(new Rectangle(115, 65, 100, 22));
-		jRadioButtonFunction310AddRowListColumnLayoutOptionVertical.setEnabled(false);
+		jRadioButtonFunction310AddRowListColumnLayoutOptionVertical.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction310AddRowListColumnLayoutOptionVertical.setBounds(new Rectangle(140, 71, 130, 25));
 		jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
-		jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal.setBounds(new Rectangle(225, 65, 100, 22));
-		jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal.setEnabled(false);
+		jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal.setBounds(new Rectangle(270, 71, 130, 25));
 		buttonGroupFunction310AddRowListColumnLayoutOption.add(jRadioButtonFunction310AddRowListColumnLayoutOptionVertical);
 		buttonGroupFunction310AddRowListColumnLayoutOption.add(jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal);
-		jLabelFunction310AddRowListColumnWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310AddRowListColumnWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310AddRowListColumnWidth.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310AddRowListColumnWidth.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310AddRowListColumnWidth.setText(res.getString("FieldWidth"));
-		jLabelFunction310AddRowListColumnWidth.setBounds(new Rectangle(430, 68, 76, 15));
-		jLabelFunction310AddRowListColumnWidth.setEnabled(false);
-		jTextFieldFunction310AddRowListColumnWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310AddRowListColumnWidth.setBounds(new Rectangle(514, 65, 45, 22));
-		jTextFieldFunction310AddRowListColumnWidth.setEnabled(false);
+		jLabelFunction310AddRowListColumnWidth.setBounds(new Rectangle(500, 74, 100, 20));
+		jTextFieldFunction310AddRowListColumnWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310AddRowListColumnWidth.setBounds(new Rectangle(605, 71, 60, 25));
 		jTextFieldFunction310AddRowListColumnWidth.setText("");
-		jLabelFunction310AddRowListColumnRows.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310AddRowListColumnRows.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310AddRowListColumnRows.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310AddRowListColumnRows.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310AddRowListColumnRows.setText(res.getString("FieldRows"));
-		jLabelFunction310AddRowListColumnRows.setBounds(new Rectangle(564, 68, 45, 15));
-		jLabelFunction310AddRowListColumnRows.setEnabled(false);
-		jTextFieldFunction310AddRowListColumnRows.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310AddRowListColumnRows.setBounds(new Rectangle(614, 65, 45, 22));
+		jLabelFunction310AddRowListColumnRows.setBounds(new Rectangle(675, 74, 60, 20));
+		jTextFieldFunction310AddRowListColumnRows.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310AddRowListColumnRows.setBounds(new Rectangle(740, 71, 60, 25));
 		jTextFieldFunction310AddRowListColumnRows.setText("");
-		jTextFieldFunction310AddRowListColumnRows.setEnabled(false);
-		jLabelFunction310AddRowListColumnCaptionOption.setEnabled(false);
+		//
 		jLabelFunction310AddRowListColumnCaptionOption.setText(res.getString("Caption"));
-		jLabelFunction310AddRowListColumnCaptionOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310AddRowListColumnCaptionOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310AddRowListColumnCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310AddRowListColumnCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310AddRowListColumnCaptionOption.setBounds(new Rectangle(11, 96, 96, 15));
+		jLabelFunction310AddRowListColumnCaptionOption.setBounds(new Rectangle(5, 105, 130, 20));
 		jRadioButtonFunction310AddRowListColumnCaptionOptionName.setText(res.getString("FieldName"));
-		jRadioButtonFunction310AddRowListColumnCaptionOptionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310AddRowListColumnCaptionOptionName.setBounds(new Rectangle(115, 93, 100, 22));
-		jRadioButtonFunction310AddRowListColumnCaptionOptionName.setEnabled(false);
+		jRadioButtonFunction310AddRowListColumnCaptionOptionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction310AddRowListColumnCaptionOptionName.setBounds(new Rectangle(140, 102, 130, 25));
 		jRadioButtonFunction310AddRowListColumnCaptionOptionName.addChangeListener(new Editor_jRadioButtonFunction310AddRowListColumnCaptionOption_changeAdapter(this));
 		jRadioButtonFunction310AddRowListColumnCaptionOptionValue.setText(res.getString("ValueSpecified"));
-		jRadioButtonFunction310AddRowListColumnCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction310AddRowListColumnCaptionOptionValue.setBounds(new Rectangle(225, 93, 63, 22));
-		jRadioButtonFunction310AddRowListColumnCaptionOptionValue.setEnabled(false);
+		jRadioButtonFunction310AddRowListColumnCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction310AddRowListColumnCaptionOptionValue.setBounds(new Rectangle(270, 102, 130, 25));
 		jRadioButtonFunction310AddRowListColumnCaptionOptionValue.addChangeListener(new Editor_jRadioButtonFunction310AddRowListColumnCaptionOption_changeAdapter(this));
 		buttonGroupFunction310AddRowListColumnCaptionOption.add(jRadioButtonFunction310AddRowListColumnCaptionOptionName);
 		buttonGroupFunction310AddRowListColumnCaptionOption.add(jRadioButtonFunction310AddRowListColumnCaptionOptionValue);
-		jTextFieldFunction310AddRowListColumnCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310AddRowListColumnCaptionOptionValue.setBounds(new Rectangle(300, 93, 220, 22));
-		jTextFieldFunction310AddRowListColumnCaptionOptionValue.setEnabled(false);
+		jTextFieldFunction310AddRowListColumnCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310AddRowListColumnCaptionOptionValue.setBounds(new Rectangle(400, 102, 265, 25));
 		jTextFieldFunction310AddRowListColumnCaptionOptionValue.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
-		jPanelFunction310AddRowListColumnList.setLayout(null);
-		jPanelFunction310AddRowListColumnList.add(jLabelFunction310AddRowListColumnTable);
-		jPanelFunction310AddRowListColumnList.add(jTextFieldFunction310AddRowListColumnTable);
-		jPanelFunction310AddRowListColumnList.add(jLabelFunction310AddRowListColumnTableType);
-		jPanelFunction310AddRowListColumnList.add(jTextFieldFunction310AddRowListColumnTableType);
-		jPanelFunction310AddRowListColumnList.add(jLabelFunction310AddRowListColumn);
-		jPanelFunction310AddRowListColumnList.add(jTextFieldFunction310AddRowListColumn);
-		jPanelFunction310AddRowListColumnList.add(jLabelFunction310AddRowListColumnType);
-		jPanelFunction310AddRowListColumnList.add(jTextFieldFunction310AddRowListColumnType);
-		jPanelFunction310AddRowListColumnList.add(jLabelFunction310AddRowListColumnLayoutOption);
-		jPanelFunction310AddRowListColumnList.add(jRadioButtonFunction310AddRowListColumnLayoutOptionVertical);
-		jPanelFunction310AddRowListColumnList.add(jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal);
-		jPanelFunction310AddRowListColumnList.add(jLabelFunction310AddRowListColumnWidth);
-		jPanelFunction310AddRowListColumnList.add(jTextFieldFunction310AddRowListColumnWidth);
-		jPanelFunction310AddRowListColumnList.add(jLabelFunction310AddRowListColumnRows);
-		jPanelFunction310AddRowListColumnList.add(jTextFieldFunction310AddRowListColumnRows);
-		jPanelFunction310AddRowListColumnList.add(jLabelFunction310AddRowListColumnCaptionOption);
-		jPanelFunction310AddRowListColumnList.add(jRadioButtonFunction310AddRowListColumnCaptionOptionName);
-		jPanelFunction310AddRowListColumnList.add(jRadioButtonFunction310AddRowListColumnCaptionOptionValue);
-		jPanelFunction310AddRowListColumnList.add(jTextFieldFunction310AddRowListColumnCaptionOptionValue);
+		//
+		jPanelFunction310AddRowListColumnDefinition.setPreferredSize(new Dimension(100, 136));
+		jPanelFunction310AddRowListColumnDefinition.setLayout(null);
+		jPanelFunction310AddRowListColumnDefinition.setBorder(null);
+		jPanelFunction310AddRowListColumnDefinition.add(jLabelFunction310AddRowListColumnTable);
+		jPanelFunction310AddRowListColumnDefinition.add(jTextFieldFunction310AddRowListColumnTable);
+		jPanelFunction310AddRowListColumnDefinition.add(jLabelFunction310AddRowListColumnTableType);
+		jPanelFunction310AddRowListColumnDefinition.add(jTextFieldFunction310AddRowListColumnTableType);
+		jPanelFunction310AddRowListColumnDefinition.add(jLabelFunction310AddRowListColumn);
+		jPanelFunction310AddRowListColumnDefinition.add(jTextFieldFunction310AddRowListColumn);
+		jPanelFunction310AddRowListColumnDefinition.add(jLabelFunction310AddRowListColumnType);
+		jPanelFunction310AddRowListColumnDefinition.add(jTextFieldFunction310AddRowListColumnType);
+		jPanelFunction310AddRowListColumnDefinition.add(jLabelFunction310AddRowListColumnLayoutOption);
+		jPanelFunction310AddRowListColumnDefinition.add(jRadioButtonFunction310AddRowListColumnLayoutOptionVertical);
+		jPanelFunction310AddRowListColumnDefinition.add(jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal);
+		jPanelFunction310AddRowListColumnDefinition.add(jLabelFunction310AddRowListColumnWidth);
+		jPanelFunction310AddRowListColumnDefinition.add(jTextFieldFunction310AddRowListColumnWidth);
+		jPanelFunction310AddRowListColumnDefinition.add(jLabelFunction310AddRowListColumnRows);
+		jPanelFunction310AddRowListColumnDefinition.add(jTextFieldFunction310AddRowListColumnRows);
+		jPanelFunction310AddRowListColumnDefinition.add(jLabelFunction310AddRowListColumnCaptionOption);
+		jPanelFunction310AddRowListColumnDefinition.add(jRadioButtonFunction310AddRowListColumnCaptionOptionName);
+		jPanelFunction310AddRowListColumnDefinition.add(jRadioButtonFunction310AddRowListColumnCaptionOptionValue);
+		jPanelFunction310AddRowListColumnDefinition.add(jTextFieldFunction310AddRowListColumnCaptionOptionValue);
 		//
 		jScrollPaneFunction310AddRowListButtonList.setBorder(null);
 		jScrollPaneFunction310AddRowListButtonList.getViewport().add(jTableFunction310AddRowListButtonList, null);
 		jScrollPaneFunction310AddRowListButtonList.addMouseListener(new Editor_jScrollPaneFunction310AddRowListButtonList_mouseAdapter(this));
-		jTableFunction310AddRowListButtonList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction310AddRowListButtonList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction310AddRowListButtonList.setBackground(SystemColor.control);
 		jTableFunction310AddRowListButtonList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction310AddRowListButtonList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -10314,6 +10269,7 @@ public class Editor extends JFrame {
 		jTableFunction310AddRowListButtonList.addFocusListener(new Editor_FocusListener());
 		jTableFunction310AddRowListButtonList.addMouseListener(new Editor_jTableFunction310AddRowListButtonList_mouseAdapter(this));
 		jTableFunction310AddRowListButtonList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableFunction310AddRowListButtonList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction310AddRowListButtonList.addColumn("NO.");
 		tableModelFunction310AddRowListButtonList.addColumn(res.getString("Pos_short"));
 		tableModelFunction310AddRowListButtonList.addColumn(res.getString("Caption"));
@@ -10322,99 +10278,92 @@ public class Editor extends JFrame {
 		column1 = jTableFunction310AddRowListButtonList.getColumnModel().getColumn(1);
 		column2 = jTableFunction310AddRowListButtonList.getColumnModel().getColumn(2);
 		column3 = jTableFunction310AddRowListButtonList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
+		column0.setPreferredWidth(40);
 		column1.setPreferredWidth(50);
-		column2.setPreferredWidth(150);
-		column3.setPreferredWidth(210);
+		column2.setPreferredWidth(200);
+		column3.setPreferredWidth(300);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentCenterControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction310AddRowListButtonList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction310AddRowListButtonList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction310AddRowListButtonList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		jSplitPaneFunction310AddRowListButtonList.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jSplitPaneFunction310AddRowListButtonList.add(jScrollPaneFunction310AddRowListButtonList, JSplitPane.TOP);
-		jSplitPaneFunction310AddRowListButtonList.add(jPanelFunction310AddRowListButtonList, JSplitPane.BOTTOM);
-		jSplitPaneFunction310AddRowListButtonList.setDividerLocation(screenHeight - 673);
-		jLabelFunction310AddRowListButtonPosition.setEnabled(false);
-		jLabelFunction310AddRowListButtonPosition.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jPanelFunction310AddRowListButtonList.setLayout(new BorderLayout());
+		jPanelFunction310AddRowListButtonList.add(jScrollPaneFunction310AddRowListButtonList, BorderLayout.CENTER);
+		jPanelFunction310AddRowListButtonList.add(jPanelFunction310AddRowListButtonDefinition, BorderLayout.SOUTH);
+		//
+		jLabelFunction310AddRowListButtonPosition.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310AddRowListButtonPosition.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310AddRowListButtonPosition.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310AddRowListButtonPosition.setText(res.getString("Position"));
-		jLabelFunction310AddRowListButtonPosition.setBounds(new Rectangle(11, 12, 96, 15));
-		jSpinnerFunction310AddRowListButtonPosition.setFont(new java.awt.Font("SansSerif", 0, 13));
-		jSpinnerFunction310AddRowListButtonPosition.setBounds(new Rectangle(115, 9, 40, 22));
-		jSpinnerFunction310AddRowListButtonPosition.setEnabled(false);
-		jLabelFunction310AddRowListButtonPositionComment.setEnabled(false);
-		jLabelFunction310AddRowListButtonPositionComment.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelFunction310AddRowListButtonPositionComment.setText(res.getString("ButtonPositionComment0_5"));
-		jLabelFunction310AddRowListButtonPositionComment.setBounds(new Rectangle(165, 12, 200, 15));
-		jLabelFunction310AddRowListButtonKey.setEnabled(false);
-		jLabelFunction310AddRowListButtonKey.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310AddRowListButtonPosition.setBounds(new Rectangle(5, 12, 130, 20));
+		jSpinnerFunction310AddRowListButtonPosition.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jSpinnerFunction310AddRowListButtonPosition.setBounds(new Rectangle(140, 9, 40, 25));
+		jLabelFunction310AddRowListButtonPositionComment.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelFunction310AddRowListButtonPositionComment.setText(res.getString("ButtonPositionComment"));
+		jLabelFunction310AddRowListButtonPositionComment.setBounds(new Rectangle(185, 12, 230, 20));
+		jLabelFunction310AddRowListButtonKey.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310AddRowListButtonKey.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310AddRowListButtonKey.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310AddRowListButtonKey.setText(res.getString("FunctionKeyNo"));
-		jLabelFunction310AddRowListButtonKey.setBounds(new Rectangle(11, 40, 96, 15));
-		jSpinnerFunction310AddRowListButtonKey.setFont(new java.awt.Font("SansSerif", 0, 13));
-		jSpinnerFunction310AddRowListButtonKey.setBounds(new Rectangle(115, 37, 40, 22));
-		jSpinnerFunction310AddRowListButtonKey.setEnabled(false);
-		jLabelFunction310AddRowListButtonCaption.setEnabled(false);
-		jLabelFunction310AddRowListButtonCaption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310AddRowListButtonKey.setBounds(new Rectangle(415, 12, 130, 20));
+		jSpinnerFunction310AddRowListButtonKey.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jSpinnerFunction310AddRowListButtonKey.setBounds(new Rectangle(550, 9, 40, 25));
+		jLabelFunction310AddRowListButtonCaption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310AddRowListButtonCaption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310AddRowListButtonCaption.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310AddRowListButtonCaption.setText(res.getString("Caption"));
-		jLabelFunction310AddRowListButtonCaption.setBounds(new Rectangle(161, 40, 96, 15));
-		jTextFieldFunction310AddRowListButtonCaption.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310AddRowListButtonCaption.setBounds(new Rectangle(265, 37, 100, 22));
-		jTextFieldFunction310AddRowListButtonCaption.setEnabled(false);
-		jLabelFunction310AddRowListButtonAction.setEnabled(false);
-		jLabelFunction310AddRowListButtonAction.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310AddRowListButtonCaption.setBounds(new Rectangle(600, 12, 130, 20));
+		jTextFieldFunction310AddRowListButtonCaption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310AddRowListButtonCaption.setBounds(new Rectangle(735, 9, 100, 25));
+		//
+		jLabelFunction310AddRowListButtonAction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310AddRowListButtonAction.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310AddRowListButtonAction.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310AddRowListButtonAction.setText(res.getString("Action"));
-		jLabelFunction310AddRowListButtonAction.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction310AddRowListButtonAction.setBounds(new Rectangle(5, 43, 130, 20));
 		jComboBoxFunction310AddRowListButtonAction.setEditable(false);
-		jComboBoxFunction310AddRowListButtonAction.setEnabled(false);
-		jComboBoxFunction310AddRowListButtonAction.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxFunction310AddRowListButtonAction.setBounds(new Rectangle(115, 65, 210, 22));
+		jComboBoxFunction310AddRowListButtonAction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jComboBoxFunction310AddRowListButtonAction.setBounds(new Rectangle(140, 40, 265, 25));
 		jComboBoxFunction310AddRowListButtonAction.addActionListener(new Editor_jComboBoxFunction310AddRowListButtonAction_actionAdapter(this));
 		jComboBoxFunction310AddRowListButtonAction.addItem(res.getString("ActionExit"));
 		jComboBoxFunction310AddRowListButtonAction.addItem(res.getString("ActionAddRowWithSelected"));
 		jComboBoxFunction310AddRowListButtonAction.addItem(res.getString("ActionAddBlankRow"));
 		jComboBoxFunction310AddRowListButtonAction.addItem(res.getString("ActionCallFunction"));
-		jLabelFunction310AddRowListButtonActionCallFunction.setEnabled(false);
-		jLabelFunction310AddRowListButtonActionCallFunction.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310AddRowListButtonActionCallFunction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310AddRowListButtonActionCallFunction.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310AddRowListButtonActionCallFunction.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310AddRowListButtonActionCallFunction.setText(res.getString("FunctionID"));
-		jLabelFunction310AddRowListButtonActionCallFunction.setBounds(new Rectangle(11, 96, 96, 15));
-		jTextFieldFunction310AddRowListButtonActionCallFunctionID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310AddRowListButtonActionCallFunctionID.setBounds(new Rectangle(115, 93, 100, 22));
-		jTextFieldFunction310AddRowListButtonActionCallFunctionID.setEnabled(false);
+		jLabelFunction310AddRowListButtonActionCallFunction.setBounds(new Rectangle(415, 43, 130, 20));
+		jTextFieldFunction310AddRowListButtonActionCallFunctionID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310AddRowListButtonActionCallFunctionID.setBounds(new Rectangle(550, 40, 120, 25));
 		jTextFieldFunction310AddRowListButtonActionCallFunctionID.addKeyListener(new Editor_jTextFieldFunction310AddRowListButtonActionCallFunctionID_keyAdapter(this));
-		jTextFieldFunction310AddRowListButtonActionCallFunctionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310AddRowListButtonActionCallFunctionName.setBounds(new Rectangle(220, 93, 400, 22));
+		jTextFieldFunction310AddRowListButtonActionCallFunctionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310AddRowListButtonActionCallFunctionName.setBounds(new Rectangle(675, 40, 400, 25));
 		jTextFieldFunction310AddRowListButtonActionCallFunctionName.setEditable(false);
-		jPanelFunction310AddRowListButtonList.setLayout(null);
-		jPanelFunction310AddRowListButtonList.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction310AddRowListButtonList.add(jLabelFunction310AddRowListButtonPosition);
-		jPanelFunction310AddRowListButtonList.add(jSpinnerFunction310AddRowListButtonPosition);
-		jPanelFunction310AddRowListButtonList.add(jLabelFunction310AddRowListButtonPositionComment);
-		jPanelFunction310AddRowListButtonList.add(jLabelFunction310AddRowListButtonKey);
-		jPanelFunction310AddRowListButtonList.add(jSpinnerFunction310AddRowListButtonKey);
-		jPanelFunction310AddRowListButtonList.add(jLabelFunction310AddRowListButtonCaption);
-		jPanelFunction310AddRowListButtonList.add(jTextFieldFunction310AddRowListButtonCaption);
-		jPanelFunction310AddRowListButtonList.add(jLabelFunction310AddRowListButtonAction);
-		jPanelFunction310AddRowListButtonList.add(jComboBoxFunction310AddRowListButtonAction);
-		jPanelFunction310AddRowListButtonList.add(jLabelFunction310AddRowListButtonActionCallFunction);
-		jPanelFunction310AddRowListButtonList.add(jTextFieldFunction310AddRowListButtonActionCallFunctionID);
-		jPanelFunction310AddRowListButtonList.add(jTextFieldFunction310AddRowListButtonActionCallFunctionName);
+		//
+		jPanelFunction310AddRowListButtonDefinition.setPreferredSize(new Dimension(100,74));
+		jPanelFunction310AddRowListButtonDefinition.setLayout(null);
+		jPanelFunction310AddRowListButtonDefinition.setBorder(null);
+		jPanelFunction310AddRowListButtonDefinition.add(jLabelFunction310AddRowListButtonPosition);
+		jPanelFunction310AddRowListButtonDefinition.add(jSpinnerFunction310AddRowListButtonPosition);
+		jPanelFunction310AddRowListButtonDefinition.add(jLabelFunction310AddRowListButtonPositionComment);
+		jPanelFunction310AddRowListButtonDefinition.add(jLabelFunction310AddRowListButtonKey);
+		jPanelFunction310AddRowListButtonDefinition.add(jSpinnerFunction310AddRowListButtonKey);
+		jPanelFunction310AddRowListButtonDefinition.add(jLabelFunction310AddRowListButtonCaption);
+		jPanelFunction310AddRowListButtonDefinition.add(jTextFieldFunction310AddRowListButtonCaption);
+		jPanelFunction310AddRowListButtonDefinition.add(jLabelFunction310AddRowListButtonAction);
+		jPanelFunction310AddRowListButtonDefinition.add(jComboBoxFunction310AddRowListButtonAction);
+		jPanelFunction310AddRowListButtonDefinition.add(jLabelFunction310AddRowListButtonActionCallFunction);
+		jPanelFunction310AddRowListButtonDefinition.add(jTextFieldFunction310AddRowListButtonActionCallFunctionID);
+		jPanelFunction310AddRowListButtonDefinition.add(jTextFieldFunction310AddRowListButtonActionCallFunctionName);
 		//
 		jScrollPaneFunction310ButtonList.setBorder(null);
 		jScrollPaneFunction310ButtonList.getViewport().add(jTableFunction310ButtonList, null);
 		jScrollPaneFunction310ButtonList.addMouseListener(new Editor_jScrollPaneFunction310ButtonList_mouseAdapter(this));
-		jTableFunction310ButtonList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction310ButtonList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction310ButtonList.setBackground(SystemColor.control);
 		jTableFunction310ButtonList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction310ButtonList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -10424,6 +10373,7 @@ public class Editor extends JFrame {
 		jTableFunction310ButtonList.addFocusListener(new Editor_FocusListener());
 		jTableFunction310ButtonList.addMouseListener(new Editor_jTableFunction310ButtonList_mouseAdapter(this));
 		jTableFunction310ButtonList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableFunction310ButtonList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction310ButtonList.addColumn("NO.");
 		tableModelFunction310ButtonList.addColumn(res.getString("Pos_short"));
 		tableModelFunction310ButtonList.addColumn(res.getString("Caption"));
@@ -10432,94 +10382,88 @@ public class Editor extends JFrame {
 		column1 = jTableFunction310ButtonList.getColumnModel().getColumn(1);
 		column2 = jTableFunction310ButtonList.getColumnModel().getColumn(2);
 		column3 = jTableFunction310ButtonList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
+		column0.setPreferredWidth(40);
 		column1.setPreferredWidth(50);
-		column2.setPreferredWidth(150);
-		column3.setPreferredWidth(210);
+		column2.setPreferredWidth(200);
+		column3.setPreferredWidth(300);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentCenterControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction310ButtonList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction310ButtonList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction310ButtonList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		jSplitPaneFunction310ButtonList.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jSplitPaneFunction310ButtonList.add(jScrollPaneFunction310ButtonList, JSplitPane.TOP);
-		jSplitPaneFunction310ButtonList.add(jPanelFunction310ButtonList, JSplitPane.BOTTOM);
-		jSplitPaneFunction310ButtonList.setDividerLocation(screenHeight - 465);
-		jLabelFunction310ButtonPosition.setEnabled(false);
-		jLabelFunction310ButtonPosition.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jPanelFunction310ButtonList.setLayout(new BorderLayout());
+		jPanelFunction310ButtonList.add(jScrollPaneFunction310ButtonList, BorderLayout.CENTER);
+		jPanelFunction310ButtonList.add(jPanelFunction310ButtonDefinition, BorderLayout.SOUTH);
+		jLabelFunction310ButtonPosition.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310ButtonPosition.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310ButtonPosition.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310ButtonPosition.setText(res.getString("Position"));
-		jLabelFunction310ButtonPosition.setBounds(new Rectangle(11, 12, 96, 15));
-		jSpinnerFunction310ButtonPosition.setFont(new java.awt.Font("SansSerif", 0, 13));
-		jSpinnerFunction310ButtonPosition.setBounds(new Rectangle(115, 9, 40, 22));
-		jSpinnerFunction310ButtonPosition.setEnabled(false);
-		jLabelFunction310ButtonPositionComment.setEnabled(false);
-		jLabelFunction310ButtonPositionComment.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310ButtonPosition.setBounds(new Rectangle(5, 12, 130, 20));
+		jSpinnerFunction310ButtonPosition.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jSpinnerFunction310ButtonPosition.setBounds(new Rectangle(140, 9, 40, 25));
+		jLabelFunction310ButtonPositionComment.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310ButtonPositionComment.setText(res.getString("ButtonPositionComment"));
-		jLabelFunction310ButtonPositionComment.setBounds(new Rectangle(165, 12, 200, 15));
-		jLabelFunction310ButtonKey.setEnabled(false);
-		jLabelFunction310ButtonKey.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310ButtonPositionComment.setBounds(new Rectangle(185, 12, 230, 20));
+		jLabelFunction310ButtonKey.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310ButtonKey.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310ButtonKey.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310ButtonKey.setText(res.getString("FunctionKeyNo"));
-		jLabelFunction310ButtonKey.setBounds(new Rectangle(11, 40, 96, 15));
-		jSpinnerFunction310ButtonKey.setFont(new java.awt.Font("SansSerif", 0, 13));
-		jSpinnerFunction310ButtonKey.setBounds(new Rectangle(115, 37, 40, 22));
-		jSpinnerFunction310ButtonKey.setEnabled(false);
-		jLabelFunction310ButtonCaption.setEnabled(false);
-		jLabelFunction310ButtonCaption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310ButtonKey.setBounds(new Rectangle(415, 12, 130, 20));
+		jSpinnerFunction310ButtonKey.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jSpinnerFunction310ButtonKey.setBounds(new Rectangle(550, 9, 40, 25));
+		jLabelFunction310ButtonCaption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310ButtonCaption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310ButtonCaption.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310ButtonCaption.setText(res.getString("Caption"));
-		jLabelFunction310ButtonCaption.setBounds(new Rectangle(161, 40, 96, 15));
-		jTextFieldFunction310ButtonCaption.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction310ButtonCaption.setBounds(new Rectangle(265, 37, 100, 22));
-		jTextFieldFunction310ButtonCaption.setEnabled(false);
-		jLabelFunction310ButtonAction.setEnabled(false);
-		jLabelFunction310ButtonAction.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction310ButtonCaption.setBounds(new Rectangle(600, 12, 130, 20));
+		jTextFieldFunction310ButtonCaption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310ButtonCaption.setBounds(new Rectangle(735, 9, 100, 25));
+		//
+		jLabelFunction310ButtonAction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310ButtonAction.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310ButtonAction.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310ButtonAction.setText(res.getString("Action"));
-		jLabelFunction310ButtonAction.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction310ButtonAction.setBounds(new Rectangle(5, 43, 130, 20));
 		jComboBoxFunction310ButtonAction.setEditable(false);
-		jComboBoxFunction310ButtonAction.setEnabled(false);
-		jComboBoxFunction310ButtonAction.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxFunction310ButtonAction.setBounds(new Rectangle(115, 65, 210, 22));
+		jComboBoxFunction310ButtonAction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jComboBoxFunction310ButtonAction.setBounds(new Rectangle(140, 40, 265, 25));
 		jComboBoxFunction310ButtonAction.addItem(res.getString("ActionExit"));
 		jComboBoxFunction310ButtonAction.addItem(res.getString("ActionAddRows"));
 		jComboBoxFunction310ButtonAction.addItem(res.getString("ActionRemoveRow"));
 		jComboBoxFunction310ButtonAction.addItem(res.getString("ActionUpdate"));
 		jComboBoxFunction310ButtonAction.addItem(res.getString("ActionOutputEXCEL"));
-		jPanelFunction310ButtonList.setLayout(null);
-		jPanelFunction310ButtonList.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction310ButtonList.add(jLabelFunction310ButtonPosition);
-		jPanelFunction310ButtonList.add(jSpinnerFunction310ButtonPosition);
-		jPanelFunction310ButtonList.add(jLabelFunction310ButtonPositionComment);
-		jPanelFunction310ButtonList.add(jLabelFunction310ButtonKey);
-		jPanelFunction310ButtonList.add(jSpinnerFunction310ButtonKey);
-		jPanelFunction310ButtonList.add(jLabelFunction310ButtonCaption);
-		jPanelFunction310ButtonList.add(jTextFieldFunction310ButtonCaption);
-		jPanelFunction310ButtonList.add(jLabelFunction310ButtonAction);
-		jPanelFunction310ButtonList.add(jComboBoxFunction310ButtonAction);
 		//
-		jTabbedPaneFunction310.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTabbedPaneFunction310.add(res.getString("HDRFields"), jSplitPaneFunction310HeaderFieldList);
+		jPanelFunction310ButtonDefinition.setPreferredSize(new Dimension(100, 74));
+		jPanelFunction310ButtonDefinition.setLayout(null);
+		jPanelFunction310ButtonDefinition.setBorder(null);
+		jPanelFunction310ButtonDefinition.add(jLabelFunction310ButtonPosition);
+		jPanelFunction310ButtonDefinition.add(jSpinnerFunction310ButtonPosition);
+		jPanelFunction310ButtonDefinition.add(jLabelFunction310ButtonPositionComment);
+		jPanelFunction310ButtonDefinition.add(jLabelFunction310ButtonKey);
+		jPanelFunction310ButtonDefinition.add(jSpinnerFunction310ButtonKey);
+		jPanelFunction310ButtonDefinition.add(jLabelFunction310ButtonCaption);
+		jPanelFunction310ButtonDefinition.add(jTextFieldFunction310ButtonCaption);
+		jPanelFunction310ButtonDefinition.add(jLabelFunction310ButtonAction);
+		jPanelFunction310ButtonDefinition.add(jComboBoxFunction310ButtonAction);
+		//
+		jTabbedPaneFunction310.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTabbedPaneFunction310.add(res.getString("HDRFields"), jPanelFunction310HeaderFieldList);
 		jTabbedPaneFunction310.setIconAt(0, imageIconField);
-		jTabbedPaneFunction310.add(res.getString("DTLFields"), jSplitPaneFunction310DetailFieldList);
+		jTabbedPaneFunction310.add(res.getString("DTLFields"), jPanelFunction310DetailFieldList);
 		jTabbedPaneFunction310.setIconAt(1, imageIconDetailField);
-		jTabbedPaneFunction310.add(res.getString("AddRowList"), jPanelFunction310AddRowListTableAndField);
+		jTabbedPaneFunction310.add(res.getString("AddRowList"), jScrollPaneFunction310AddRowListTableAndField);
 		jTabbedPaneFunction310.setIconAt(2, imageIconDialog);
-		jTabbedPaneFunction310.add(res.getString("FunctionKeys"), jSplitPaneFunction310ButtonList);
+		jTabbedPaneFunction310.add(res.getString("FunctionKeys"), jPanelFunction310ButtonList);
 		jTabbedPaneFunction310.setIconAt(3, imageIconFunctionButton);
 		jTabbedPaneFunction310.add(res.getString("FunctionsWhereUsed"), jScrollPaneFunction310UsageList);
 		jTabbedPaneFunction310.setIconAt(4, imageIconFunctionUsage);
 		//
 		jScrollPaneFunction310UsageList.setBorder(null);
 		jScrollPaneFunction310UsageList.getViewport().add(jTableFunction310UsageList, null);
-		jTableFunction310UsageList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction310UsageList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction310UsageList.setBackground(SystemColor.control);
 		jTableFunction310UsageList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction310UsageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -10527,6 +10471,7 @@ public class Editor extends JFrame {
 		jTableFunction310UsageList.setSelectionForeground(Color.black);
 		jTableFunction310UsageList.addFocusListener(new Editor_FocusListener());
 		jTableFunction310UsageList.addMouseListener(new Editor_jTableFunction310UsageList_mouseAdapter(this));
+		jTableFunction310UsageList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction310UsageList.addColumn("NO.");
 		tableModelFunction310UsageList.addColumn(res.getString("FunctionsWhereUsed"));
 		tableModelFunction310UsageList.addColumn(res.getString("Type"));
@@ -10535,15 +10480,15 @@ public class Editor extends JFrame {
 		column1 = jTableFunction310UsageList.getColumnModel().getColumn(1);
 		column2 = jTableFunction310UsageList.getColumnModel().getColumn(2);
 		column3 = jTableFunction310UsageList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(300);
-		column2.setPreferredWidth(160);
-		column3.setPreferredWidth(280);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(400);
+		column2.setPreferredWidth(250);
+		column3.setPreferredWidth(380);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction310UsageList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction310UsageList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction310UsageList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
 	}
@@ -10552,18 +10497,20 @@ public class Editor extends JFrame {
 	 */
 	void initComponentsForFunction390() {
 		jPanelFunction390.setLayout(new BorderLayout());
+		jScrollPaneFunction390Top.setBorder(null);
+		jScrollPaneFunction390Top.getViewport().add(jPanelFunction390Top);
 		jPanelFunction390Top.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction390Top.setPreferredSize(new Dimension(10, 207));
+		jPanelFunction390Top.setPreferredSize(new Dimension(1090, 229));
 		jPanelFunction390Top.setToolTipText("");
 		jPanelFunction390Top.setLayout(null);
 		//
-		jLabelFunction390Type.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390Type.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390Type.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390Type.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390Type.setText(res.getString("FunctionType"));
-		jLabelFunction390Type.setBounds(new Rectangle(11, 12, 96, 15));
-		jTextFieldFunction390Type.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction390Type.setBounds(new Rectangle(115, 9, 170, 22));
+		jLabelFunction390Type.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldFunction390Type.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction390Type.setBounds(new Rectangle(140, 9, 250, 25));
 		jTextFieldFunction390Type.setEditable(false);
 		jTextFieldFunction390Type.setText(res.getString("FunctionTypeXF390"));
 		Insets m = jTextFieldFunction390Type.getMargin();
@@ -10572,71 +10519,68 @@ public class Editor extends JFrame {
 		label.setBorder(null); 
 		label.setBounds(m.left, m.top, imageIconFunction390.getIconWidth(), imageIconFunction390.getIconHeight()); 
 		jTextFieldFunction390Type.add(label);
-		jLabelFunction390ID.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390ID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390ID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390ID.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction390ID.setText(res.getString("FunctionID"));
-		jLabelFunction390ID.setBounds(new Rectangle(295, 12, 76, 15));
-		jTextFieldFunction390ID.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction390ID.setBounds(new Rectangle(379, 9, 80, 22));
+		jLabelFunction390ID.setText(res.getString("IDAndName"));
+		jLabelFunction390ID.setBounds(new Rectangle(400, 12, 100, 20));
+		jTextFieldFunction390ID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction390ID.setBounds(new Rectangle(505, 9, 120, 25));
 		jTextFieldFunction390ID.setEditable(false);
-		jLabelFunction390Name.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jLabelFunction390Name.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction390Name.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction390Name.setText(res.getString("FunctionName"));
-		jLabelFunction390Name.setBounds(new Rectangle(469, 12, 86, 15));
-		jTextFieldFunction390Name.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction390Name.setBounds(new Rectangle(563, 9, 250, 22));
+		jTextFieldFunction390Name.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction390Name.setBounds(new Rectangle(630, 9, 350, 25));
 		//
-		jLabelFunction390HeaderTableName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390HeaderTableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390HeaderTableName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390HeaderTableName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390HeaderTableName.setText(res.getString("HDRTable"));
-		jLabelFunction390HeaderTableName.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldFunction390HeaderTableName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction390HeaderTableName.setBounds(new Rectangle(115, 37, 600, 22));
+		jLabelFunction390HeaderTableName.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldFunction390HeaderTableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction390HeaderTableName.setBounds(new Rectangle(140, 40, 840, 25));
 		jTextFieldFunction390HeaderTableName.setEditable(false);
 		jButtonFunction390HeaderTableKeyFieldsEdit.setIcon(imageIconPrompt);
-		jButtonFunction390HeaderTableKeyFieldsEdit.setBounds(new Rectangle(715, 36, 28, 23));
+		jButtonFunction390HeaderTableKeyFieldsEdit.setBounds(new Rectangle(980, 39, 28, 27));
 		jButtonFunction390HeaderTableKeyFieldsEdit.addActionListener(new Editor_jButtonToEditKeyFields_actionAdapter(this));
 		//
-		jLabelFunction390DetailTableName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390DetailTableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390DetailTableName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390DetailTableName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390DetailTableName.setText(res.getString("DTLTable"));
-		jLabelFunction390DetailTableName.setBounds(new Rectangle(11, 68, 96, 15));
-		jTextFieldFunction390DetailTableName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction390DetailTableName.setBounds(new Rectangle(115, 65, 600, 22));
+		jLabelFunction390DetailTableName.setBounds(new Rectangle(5, 74, 130, 20));
+		jTextFieldFunction390DetailTableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction390DetailTableName.setBounds(new Rectangle(140, 71, 840, 25));
 		jTextFieldFunction390DetailTableName.setEditable(false);
 		jButtonFunction390DetailTableKeyFieldsEdit.setIcon(imageIconPrompt);
-		jButtonFunction390DetailTableKeyFieldsEdit.setBounds(new Rectangle(715, 64, 28, 23));
+		jButtonFunction390DetailTableKeyFieldsEdit.setBounds(new Rectangle(980, 70, 28, 27));
 		jButtonFunction390DetailTableKeyFieldsEdit.addActionListener(new Editor_jButtonToEditKeyFields_actionAdapter(this));
-		jLabelFunction390DetailTableOrderByFields.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction390DetailTableOrderByFields.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390DetailTableOrderByFields.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390DetailTableOrderByFields.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390DetailTableOrderByFields.setText(res.getString("OrderByFields"));
-		jLabelFunction390DetailTableOrderByFields.setBounds(new Rectangle(11, 96, 96, 15));
-		jTextFieldFunction390DetailTableOrderByFields.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction390DetailTableOrderByFields.setBounds(new Rectangle(115, 93, 600, 22));
+		jLabelFunction390DetailTableOrderByFields.setBounds(new Rectangle(5, 105, 130, 20));
+		jTextFieldFunction390DetailTableOrderByFields.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction390DetailTableOrderByFields.setBounds(new Rectangle(140, 102, 840, 25));
 		jTextFieldFunction390DetailTableOrderByFields.setEditable(false);
 		jButtonFunction390DetailTableOrderByFieldsEdit.setIcon(imageIconPrompt);
-		jButtonFunction390DetailTableOrderByFieldsEdit.setBounds(new Rectangle(715, 92, 28, 23));
+		jButtonFunction390DetailTableOrderByFieldsEdit.setBounds(new Rectangle(980, 101, 28, 27));
 		jButtonFunction390DetailTableOrderByFieldsEdit.addActionListener(new Editor_jButtonToEditOrderByFields_actionAdapter(this));
-		jLabelFunction390DetailFixedWhere.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction390DetailFixedWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390DetailFixedWhere.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390DetailFixedWhere.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390DetailFixedWhere.setText(res.getString("FixedWhere"));
-		jLabelFunction390DetailFixedWhere.setBounds(new Rectangle(11, 124, 96, 15));
-		jTextFieldFunction390DetailFixedWhere.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction390DetailFixedWhere.setBounds(new Rectangle(115, 121, 600, 22));
+		jLabelFunction390DetailFixedWhere.setBounds(new Rectangle(5, 136, 130, 20));
+		jTextFieldFunction390DetailFixedWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction390DetailFixedWhere.setBounds(new Rectangle(140, 133, 840, 25));
 		//
-		jLabelFunction390PageSize.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390PageSize.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390PageSize.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390PageSize.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390PageSize.setText(res.getString("PageSize"));
-		jLabelFunction390PageSize.setBounds(new Rectangle(11, 152, 96, 15));
-		jComboBoxFunction390PageSize.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxFunction390PageSize.setBounds(new Rectangle(115, 149, 75, 22));
+		jLabelFunction390PageSize.setBounds(new Rectangle(5, 167, 130, 20));
+		jComboBoxFunction390PageSize.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jComboBoxFunction390PageSize.setBounds(new Rectangle(140, 164, 100, 25));
 		jComboBoxFunction390PageSize.addItem("A2");
 		jComboBoxFunction390PageSize.addItem("A3");
 		jComboBoxFunction390PageSize.addItem("A4");
@@ -10648,59 +10592,58 @@ public class Editor extends JFrame {
 		jComboBoxFunction390PageSize.addItem("B5");
 		jComboBoxFunction390PageSize.addItem("B6");
 		jComboBoxFunction390PageSize.addItem("LETTER");
-		jLabelFunction390Direction.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390Direction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390Direction.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390Direction.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390Direction.setText(res.getString("PageDirection"));
-		jLabelFunction390Direction.setBounds(new Rectangle(191, 152, 96, 15));
-		jComboBoxFunction390Direction.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxFunction390Direction.setBounds(new Rectangle(295, 149, 100, 22));
+		jLabelFunction390Direction.setBounds(new Rectangle(250, 167, 130, 20));
+		jComboBoxFunction390Direction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jComboBoxFunction390Direction.setBounds(new Rectangle(385, 164, 130, 25));
 		jComboBoxFunction390Direction.addItem("NORMAL");
 		jComboBoxFunction390Direction.addItem("LANDSCAPE");
-		jLabelFunction390Margins.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390Margins.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390Margins.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390Margins.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390Margins.setText(res.getString("PageMargins"));
-		jLabelFunction390Margins.setBounds(new Rectangle(421, 152, 96, 15));
-		jTextFieldFunction390Margins.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction390Margins.setBounds(new Rectangle(525, 149, 110, 22));
-		jCheckBoxFunction390WithPageNumber.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390Margins.setBounds(new Rectangle(525, 167, 160, 20));
+		jTextFieldFunction390Margins.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction390Margins.setBounds(new Rectangle(690, 164, 150, 25));
+		jCheckBoxFunction390WithPageNumber.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jCheckBoxFunction390WithPageNumber.setText(res.getString("PageNo"));
-		jCheckBoxFunction390WithPageNumber.setBounds(new Rectangle(670, 149, 120, 22));
+		jCheckBoxFunction390WithPageNumber.setBounds(new Rectangle(860, 164, 200, 25));
 		//
-		jLabelFunction390TableFontName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390TableFontName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390TableFontName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390TableFontName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390TableFontName.setText(res.getString("DTLFont"));
-		jLabelFunction390TableFontName.setBounds(new Rectangle(11, 180, 96, 15));
-		jComboBoxFunction390TableFontName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxFunction390TableFontName.setBounds(new Rectangle(115, 177, 130, 22));
-		jLabelFunction390TableFontSize.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390TableFontName.setBounds(new Rectangle(5, 198, 130, 20));
+		jComboBoxFunction390TableFontName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jComboBoxFunction390TableFontName.setBounds(new Rectangle(140, 195, 200, 25));
+		jLabelFunction390TableFontSize.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390TableFontSize.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390TableFontSize.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390TableFontSize.setText(res.getString("FontSize"));
-		jLabelFunction390TableFontSize.setBounds(new Rectangle(241, 180, 96, 15));
-		jSpinnerFunction390TableFontSize.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jSpinnerFunction390TableFontSize.setBounds(new Rectangle(345, 177, 50, 22));
+		jLabelFunction390TableFontSize.setBounds(new Rectangle(350, 198, 110, 20));
+		jSpinnerFunction390TableFontSize.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jSpinnerFunction390TableFontSize.setBounds(new Rectangle(465, 195, 50, 25));
 	    JSpinner.NumberEditor editor1 = new JSpinner.NumberEditor(jSpinnerFunction390TableFontSize, "#0");
 	    jSpinnerFunction390TableFontSize.setEditor(editor1);
 	    JFormattedTextField ftext1 = editor1.getTextField();
 	    ftext1.setEditable(false);
 		ftext1.setBackground(Color.white);
-		jLabelFunction390TableRowNoWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390TableRowNoWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390TableRowNoWidth.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390TableRowNoWidth.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390TableRowNoWidth.setText(res.getString("RowNoWidth"));
-		jLabelFunction390TableRowNoWidth.setBounds(new Rectangle(421, 180, 96, 15));
-		jTextFieldFunction390TableRowNoWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction390TableRowNoWidth.setBounds(new Rectangle(525, 177, 45, 22));
-		jLabelFunction390TableRowNoWidthPercentMark.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390TableRowNoWidth.setBounds(new Rectangle(555, 198, 130, 20));
+		jTextFieldFunction390TableRowNoWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction390TableRowNoWidth.setBounds(new Rectangle(690, 195, 50, 25));
+		jLabelFunction390TableRowNoWidthPercentMark.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390TableRowNoWidthPercentMark.setText("(%)");
-		jLabelFunction390TableRowNoWidthPercentMark.setBounds(new Rectangle(574, 180, 30, 15));
+		jLabelFunction390TableRowNoWidthPercentMark.setBounds(new Rectangle(740, 198, 50, 20));
 		//
 		jPanelFunction390Top.add(jLabelFunction390ID);
 		jPanelFunction390Top.add(jTextFieldFunction390ID);
-		jPanelFunction390Top.add(jLabelFunction390Name);
 		jPanelFunction390Top.add(jTextFieldFunction390Name);
 		jPanelFunction390Top.add(jLabelFunction390Type);
 		jPanelFunction390Top.add(jTextFieldFunction390Type);
@@ -10729,13 +10672,13 @@ public class Editor extends JFrame {
 		jPanelFunction390Top.add(jLabelFunction390TableRowNoWidth);
 		jPanelFunction390Top.add(jTextFieldFunction390TableRowNoWidth);
 		jPanelFunction390Top.add(jLabelFunction390TableRowNoWidthPercentMark);
-		jPanelFunction390.add(jPanelFunction390Top, BorderLayout.NORTH);
+		jPanelFunction390.add(jScrollPaneFunction390Top, BorderLayout.NORTH);
 		jPanelFunction390.add(jTabbedPaneFunction390, BorderLayout.CENTER);
 		//
 		jScrollPaneFunction390HeaderPhraseList.setBorder(null);
 		jScrollPaneFunction390HeaderPhraseList.getViewport().add(jTableFunction390HeaderPhraseList, null);
 		jScrollPaneFunction390HeaderPhraseList.addMouseListener(new Editor_jScrollPaneFunction390HeaderPhraseList_mouseAdapter(this));
-		jTableFunction390HeaderPhraseList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction390HeaderPhraseList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction390HeaderPhraseList.setBackground(SystemColor.control);
 		jTableFunction390HeaderPhraseList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction390HeaderPhraseList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -10746,6 +10689,7 @@ public class Editor extends JFrame {
 		jTableFunction390HeaderPhraseList.addMouseListener(new Editor_jTableFunction390HeaderPhraseList_mouseAdapter(this));
 	    jTableFunction390HeaderPhraseList.addMouseMotionListener(new Editor_jTableFunction390HeaderPhraseList_mouseMotionAdapter(this));
 		jTableFunction390HeaderPhraseList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableFunction390HeaderPhraseList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction390HeaderPhraseList.addColumn("NO.");
 		tableModelFunction390HeaderPhraseList.addColumn("B");
 		tableModelFunction390HeaderPhraseList.addColumn(res.getString("PhraseFormula"));
@@ -10760,13 +10704,13 @@ public class Editor extends JFrame {
 		column4 = jTableFunction390HeaderPhraseList.getColumnModel().getColumn(4);
 		column5 = jTableFunction390HeaderPhraseList.getColumnModel().getColumn(5);
 		column6 = jTableFunction390HeaderPhraseList.getColumnModel().getColumn(6);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(30);
-		column2.setPreferredWidth(550);
-		column3.setPreferredWidth(60);
-		column4.setPreferredWidth(60);
-		column5.setPreferredWidth(40);
-		column6.setPreferredWidth(130);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(35);
+		column2.setPreferredWidth(800);
+		column3.setPreferredWidth(80);
+		column4.setPreferredWidth(80);
+		column5.setPreferredWidth(50);
+		column6.setPreferredWidth(170);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentCenterControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
@@ -10774,139 +10718,141 @@ public class Editor extends JFrame {
 		column4.setCellRenderer(rendererAlignmentCenterControlColor);
 		column5.setCellRenderer(rendererAlignmentRightControlColor);
 		column6.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction390HeaderPhraseList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction390HeaderPhraseList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction390HeaderPhraseList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		jSplitPaneFunction390HeaderPhraseList.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jSplitPaneFunction390HeaderPhraseList.add(jScrollPaneFunction390HeaderPhraseList, JSplitPane.TOP);
-		jSplitPaneFunction390HeaderPhraseList.add(jPanelFunction390HeaderPhraseList, JSplitPane.BOTTOM);
-		jSplitPaneFunction390HeaderPhraseList.setDividerLocation(screenHeight - 483);
-		jLabelFunction390HeaderPhraseBlockType.setEnabled(false);
-		jLabelFunction390HeaderPhraseBlockType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jScrollPaneFunction390HeaderPhraseDefinition.setBorder(null);
+		jScrollPaneFunction390HeaderPhraseDefinition.getViewport().add(jPanelFunction390HeaderPhraseDefinition);
+		jPanelFunction390HeaderPhraseList.setLayout(new BorderLayout());
+		jPanelFunction390HeaderPhraseList.add(jScrollPaneFunction390HeaderPhraseList, BorderLayout.CENTER);
+		jPanelFunction390HeaderPhraseList.add(jScrollPaneFunction390HeaderPhraseDefinition, BorderLayout.SOUTH);
+		//
+		jLabelFunction390HeaderPhraseBlockType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390HeaderPhraseBlockType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390HeaderPhraseBlockType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390HeaderPhraseBlockType.setText(res.getString("PhraseBlock"));
-		jLabelFunction390HeaderPhraseBlockType.setBounds(new Rectangle(11, 12, 96, 15));
+		jLabelFunction390HeaderPhraseBlockType.setBounds(new Rectangle(5, 12, 130, 20));
 		jComboBoxFunction390HeaderPhraseBlockType.setEditable(false);
-		jComboBoxFunction390HeaderPhraseBlockType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxFunction390HeaderPhraseBlockType.setBounds(new Rectangle(115, 9, 110, 22));
+		jComboBoxFunction390HeaderPhraseBlockType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jComboBoxFunction390HeaderPhraseBlockType.setBounds(new Rectangle(140, 9, 150, 25));
 		jComboBoxFunction390HeaderPhraseBlockType.addActionListener(new Editor_jComboBoxFunction390HeaderPhraseBlockType_actionAdapter(this));
 		jComboBoxFunction390HeaderPhraseBlockType.addItem("HEADER");
 		jComboBoxFunction390HeaderPhraseBlockType.addItem("PARAGRAPH");
 		jComboBoxFunction390HeaderPhraseBlockType.addItem("FOOTER");
-		jLabelFunction390HeaderPhraseAlignment.setEnabled(false);
-		jLabelFunction390HeaderPhraseAlignment.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390HeaderPhraseAlignment.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390HeaderPhraseAlignment.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390HeaderPhraseAlignment.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390HeaderPhraseAlignment.setText(res.getString("Alignment"));
-		jLabelFunction390HeaderPhraseAlignment.setBounds(new Rectangle(261, 12, 96, 15));
+		jLabelFunction390HeaderPhraseAlignment.setBounds(new Rectangle(300, 12, 130, 20));
 		jComboBoxFunction390HeaderPhraseAlignment.setEditable(false);
-		jComboBoxFunction390HeaderPhraseAlignment.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxFunction390HeaderPhraseAlignment.setBounds(new Rectangle(365, 9, 90, 22));
+		jComboBoxFunction390HeaderPhraseAlignment.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jComboBoxFunction390HeaderPhraseAlignment.setBounds(new Rectangle(435, 9, 100, 25));
 		jComboBoxFunction390HeaderPhraseAlignment.addItem("LEFT");
 		jComboBoxFunction390HeaderPhraseAlignment.addItem("CENTER");
 		jComboBoxFunction390HeaderPhraseAlignment.addItem("RIGHT");
-		jLabelFunction390HeaderPhraseMargin.setEnabled(false);
-		jLabelFunction390HeaderPhraseMargin.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390HeaderPhraseMargin.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390HeaderPhraseMargin.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390HeaderPhraseMargin.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390HeaderPhraseMargin.setText(res.getString("Margin"));
-		jLabelFunction390HeaderPhraseMargin.setBounds(new Rectangle(491, 12, 96, 15));
-		jTextFieldFunction390HeaderPhraseMarginLeft.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction390HeaderPhraseMarginLeft.setBounds(new Rectangle(595, 9, 40, 22));
-		jTextFieldFunction390HeaderPhraseMarginRight.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction390HeaderPhraseMarginRight.setBounds(new Rectangle(645, 9, 40, 22));
-		jLabelFunction390HeaderPhraseSpacingAfter.setEnabled(false);
-		jLabelFunction390HeaderPhraseSpacingAfter.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390HeaderPhraseMargin.setBounds(new Rectangle(545, 12, 130, 20));
+		jTextFieldFunction390HeaderPhraseMarginLeft.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction390HeaderPhraseMarginLeft.setBounds(new Rectangle(680, 9, 60, 25));
+		jTextFieldFunction390HeaderPhraseMarginRight.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction390HeaderPhraseMarginRight.setBounds(new Rectangle(745, 9, 60, 25));
+		jLabelFunction390HeaderPhraseSpacingAfter.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390HeaderPhraseSpacingAfter.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390HeaderPhraseSpacingAfter.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390HeaderPhraseSpacingAfter.setText(res.getString("PhraseSpacingAfter"));
-		jLabelFunction390HeaderPhraseSpacingAfter.setBounds(new Rectangle(692, 12, 96, 15));
-		jTextFieldFunction390HeaderPhraseSpacingAfter.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction390HeaderPhraseSpacingAfter.setBounds(new Rectangle(796, 9, 60, 22));
-		jLabelFunction390HeaderPhraseValue.setEnabled(false);
-		jLabelFunction390HeaderPhraseValue.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390HeaderPhraseSpacingAfter.setBounds(new Rectangle(815, 12, 130, 20));
+		jTextFieldFunction390HeaderPhraseSpacingAfter.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction390HeaderPhraseSpacingAfter.setBounds(new Rectangle(950, 9, 60, 25));
+		//
+		jLabelFunction390HeaderPhraseValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390HeaderPhraseValue.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390HeaderPhraseValue.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390HeaderPhraseValue.setText(res.getString("PhraseFormula"));
-		jLabelFunction390HeaderPhraseValue.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldFunction390HeaderPhraseValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction390HeaderPhraseValue.setBounds(new Rectangle(115, 37, 741, 22));
+		jLabelFunction390HeaderPhraseValue.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldFunction390HeaderPhraseValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction390HeaderPhraseValue.setBounds(new Rectangle(140, 40, 1000, 25));
+		//
 		jLabelFunction390HeaderPhraseValueKeywords.setEnabled(false);
-		jLabelFunction390HeaderPhraseValueKeywords.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390HeaderPhraseValueKeywords.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390HeaderPhraseValueKeywords.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390HeaderPhraseValueKeywords.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390HeaderPhraseValueKeywords.setText(res.getString("KeywordList"));
-		jLabelFunction390HeaderPhraseValueKeywords.setBounds(new Rectangle(11, 68, 96, 15));
-		jTextAreaFunction390HeaderPhraseValueKeywords.setFont(new java.awt.Font("Monospaced", 0, 12));
-		jTextAreaFunction390HeaderPhraseValueKeywords.setBounds(new Rectangle(115, 65, 741, 38));
+		jLabelFunction390HeaderPhraseValueKeywords.setBounds(new Rectangle(5, 74, 130, 20));
+		jTextAreaFunction390HeaderPhraseValueKeywords.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextAreaFunction390HeaderPhraseValueKeywords.setBounds(new Rectangle(140, 71, 1000, 50));
 		jTextAreaFunction390HeaderPhraseValueKeywords.setEditable(false);
 		jTextAreaFunction390HeaderPhraseValueKeywords.setBorder(BorderFactory.createLineBorder(Color.gray));
 		jTextAreaFunction390HeaderPhraseValueKeywords.setText(" &Text(text)   &DataSource(name;format)   &DataSourceImage(name;x;y;w;h)   &Line(x1;y1;x2;y2)   &Rect(x1;y1;x2;y2)\n &SystemVariant(id)   &Date(format)   &DateTime(format)   &Image(name;x;y;w;h)   &Barcode(name;type)");
 		jTextAreaFunction390HeaderPhraseValueKeywords.setOpaque(false);
+		//
 		jLabelFunction390HeaderPhraseFontName.setEnabled(false);
-		jLabelFunction390HeaderPhraseFontName.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390HeaderPhraseFontName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390HeaderPhraseFontName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390HeaderPhraseFontName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390HeaderPhraseFontName.setText(res.getString("Font"));
-		jLabelFunction390HeaderPhraseFontName.setBounds(new Rectangle(11, 112, 96, 15));
+		jLabelFunction390HeaderPhraseFontName.setBounds(new Rectangle(5, 130, 130, 20));
 		jComboBoxFunction390HeaderPhraseFontName.setEditable(false);
-		jComboBoxFunction390HeaderPhraseFontName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxFunction390HeaderPhraseFontName.setBounds(new Rectangle(115, 109, 130, 22));
+		jComboBoxFunction390HeaderPhraseFontName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jComboBoxFunction390HeaderPhraseFontName.setBounds(new Rectangle(140, 127, 160, 25));
 		jLabelFunction390HeaderPhraseFontSize.setEnabled(false);
-		jLabelFunction390HeaderPhraseFontSize.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390HeaderPhraseFontSize.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390HeaderPhraseFontSize.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390HeaderPhraseFontSize.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390HeaderPhraseFontSize.setText(res.getString("FontSize"));
-		jLabelFunction390HeaderPhraseFontSize.setBounds(new Rectangle(261, 112, 96, 15));
-		jSpinnerFunction390HeaderPhraseFontSize.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jSpinnerFunction390HeaderPhraseFontSize.setBounds(new Rectangle(365, 109, 50, 22));
+		jLabelFunction390HeaderPhraseFontSize.setBounds(new Rectangle(310, 130, 130, 20));
+		jSpinnerFunction390HeaderPhraseFontSize.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jSpinnerFunction390HeaderPhraseFontSize.setBounds(new Rectangle(445, 127, 50, 25));
 	    JSpinner.NumberEditor editor2 = new JSpinner.NumberEditor(jSpinnerFunction390HeaderPhraseFontSize, "#0");
 	    jSpinnerFunction390HeaderPhraseFontSize.setEditor(editor2);
-	    JFormattedTextField ftext2 = editor1.getTextField();
+	    JFormattedTextField ftext2 = editor2.getTextField();
 	    ftext2.setEditable(false);
 		ftext2.setBackground(Color.white);
 		jLabelFunction390HeaderPhraseFontStyle.setEnabled(false);
-		jLabelFunction390HeaderPhraseFontStyle.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390HeaderPhraseFontStyle.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390HeaderPhraseFontStyle.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390HeaderPhraseFontStyle.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390HeaderPhraseFontStyle.setText(res.getString("FontStyle"));
-		jLabelFunction390HeaderPhraseFontStyle.setBounds(new Rectangle(431, 112, 96, 15));
+		jLabelFunction390HeaderPhraseFontStyle.setBounds(new Rectangle(505, 130, 130, 20));
 		jComboBoxFunction390HeaderPhraseFontStyle.setEditable(false);
-		jComboBoxFunction390HeaderPhraseFontStyle.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxFunction390HeaderPhraseFontStyle.setBounds(new Rectangle(530, 109, 90, 22));
+		jComboBoxFunction390HeaderPhraseFontStyle.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jComboBoxFunction390HeaderPhraseFontStyle.setBounds(new Rectangle(640, 127, 150, 25));
 		jComboBoxFunction390HeaderPhraseFontStyle.addItem(res.getString("FontStyleNormal"));
 		jComboBoxFunction390HeaderPhraseFontStyle.addItem(res.getString("FontStyleBold"));
 		jComboBoxFunction390HeaderPhraseFontStyle.addItem(res.getString("FontStyleItalic"));
 		jComboBoxFunction390HeaderPhraseFontStyle.addItem(res.getString("FontStyleBoldItalic"));
 		jComboBoxFunction390HeaderPhraseFontStyle.addItem(res.getString("FontStyleUnderlined"));
-		jPanelFunction390HeaderPhraseList.setLayout(null);
-		jPanelFunction390HeaderPhraseList.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction390HeaderPhraseList.add(jLabelFunction390HeaderPhraseBlockType);
-		jPanelFunction390HeaderPhraseList.add(jComboBoxFunction390HeaderPhraseBlockType);
-		jPanelFunction390HeaderPhraseList.add(jLabelFunction390HeaderPhraseAlignment);
-		//jPanelFunction390HeaderPhraseList.add(jTextFieldFunction390HeaderPhraseAlignment);
-		jPanelFunction390HeaderPhraseList.add(jComboBoxFunction390HeaderPhraseAlignment);
-		jPanelFunction390HeaderPhraseList.add(jLabelFunction390HeaderPhraseMargin);
-		jPanelFunction390HeaderPhraseList.add(jTextFieldFunction390HeaderPhraseMarginLeft);
-		jPanelFunction390HeaderPhraseList.add(jTextFieldFunction390HeaderPhraseMarginRight);
-		jPanelFunction390HeaderPhraseList.add(jLabelFunction390HeaderPhraseValue);
-		jPanelFunction390HeaderPhraseList.add(jTextFieldFunction390HeaderPhraseValue);
-		jPanelFunction390HeaderPhraseList.add(jLabelFunction390HeaderPhraseValueKeywords);
-		jPanelFunction390HeaderPhraseList.add(jTextAreaFunction390HeaderPhraseValueKeywords);
-		jPanelFunction390HeaderPhraseList.add(jLabelFunction390HeaderPhraseFontName);
-		jPanelFunction390HeaderPhraseList.add(jComboBoxFunction390HeaderPhraseFontName);
-		jPanelFunction390HeaderPhraseList.add(jLabelFunction390HeaderPhraseFontSize);
-		jPanelFunction390HeaderPhraseList.add(jSpinnerFunction390HeaderPhraseFontSize);
-		jPanelFunction390HeaderPhraseList.add(jLabelFunction390HeaderPhraseFontStyle);
-		jPanelFunction390HeaderPhraseList.add(jComboBoxFunction390HeaderPhraseFontStyle);
-		jPanelFunction390HeaderPhraseList.add(jLabelFunction390HeaderPhraseSpacingAfter);
-		jPanelFunction390HeaderPhraseList.add(jTextFieldFunction390HeaderPhraseSpacingAfter);
+		//
+		jPanelFunction390HeaderPhraseDefinition.setPreferredSize(new Dimension(1160, 161));
+		jPanelFunction390HeaderPhraseDefinition.setLayout(null);
+		jPanelFunction390HeaderPhraseDefinition.setBorder(null);
+		jPanelFunction390HeaderPhraseDefinition.add(jLabelFunction390HeaderPhraseBlockType);
+		jPanelFunction390HeaderPhraseDefinition.add(jComboBoxFunction390HeaderPhraseBlockType);
+		jPanelFunction390HeaderPhraseDefinition.add(jLabelFunction390HeaderPhraseAlignment);
+		jPanelFunction390HeaderPhraseDefinition.add(jComboBoxFunction390HeaderPhraseAlignment);
+		jPanelFunction390HeaderPhraseDefinition.add(jLabelFunction390HeaderPhraseMargin);
+		jPanelFunction390HeaderPhraseDefinition.add(jTextFieldFunction390HeaderPhraseMarginLeft);
+		jPanelFunction390HeaderPhraseDefinition.add(jTextFieldFunction390HeaderPhraseMarginRight);
+		jPanelFunction390HeaderPhraseDefinition.add(jLabelFunction390HeaderPhraseValue);
+		jPanelFunction390HeaderPhraseDefinition.add(jTextFieldFunction390HeaderPhraseValue);
+		jPanelFunction390HeaderPhraseDefinition.add(jLabelFunction390HeaderPhraseValueKeywords);
+		jPanelFunction390HeaderPhraseDefinition.add(jTextAreaFunction390HeaderPhraseValueKeywords);
+		jPanelFunction390HeaderPhraseDefinition.add(jLabelFunction390HeaderPhraseFontName);
+		jPanelFunction390HeaderPhraseDefinition.add(jComboBoxFunction390HeaderPhraseFontName);
+		jPanelFunction390HeaderPhraseDefinition.add(jLabelFunction390HeaderPhraseFontSize);
+		jPanelFunction390HeaderPhraseDefinition.add(jSpinnerFunction390HeaderPhraseFontSize);
+		jPanelFunction390HeaderPhraseDefinition.add(jLabelFunction390HeaderPhraseFontStyle);
+		jPanelFunction390HeaderPhraseDefinition.add(jComboBoxFunction390HeaderPhraseFontStyle);
+		jPanelFunction390HeaderPhraseDefinition.add(jLabelFunction390HeaderPhraseSpacingAfter);
+		jPanelFunction390HeaderPhraseDefinition.add(jTextFieldFunction390HeaderPhraseSpacingAfter);
 		//
 		jScrollPaneFunction390DetailFieldList.setBorder(null);
 		jScrollPaneFunction390DetailFieldList.getViewport().add(jTableFunction390DetailFieldList, null);
 		jScrollPaneFunction390DetailFieldList.addMouseListener(new Editor_jScrollPaneFunction390DetailFieldList_mouseAdapter(this));
-		jTableFunction390DetailFieldList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction390DetailFieldList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction390DetailFieldList.setBackground(SystemColor.control);
 		jTableFunction390DetailFieldList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction390DetailFieldList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -10917,11 +10863,12 @@ public class Editor extends JFrame {
 		jTableFunction390DetailFieldList.addMouseListener(new Editor_jTableFunction390DetailFieldList_mouseAdapter(this));
 	    jTableFunction390DetailFieldList.addMouseMotionListener(new Editor_jTableFunction390DetailFieldList_mouseMotionAdapter(this));
 		jTableFunction390DetailFieldList.addKeyListener(new Editor_TableKeyAdapter(this));
+		jTableFunction390DetailFieldList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction390DetailFieldList.addColumn("NO.");
 		tableModelFunction390DetailFieldList.addColumn(res.getString("DataSource"));
 		tableModelFunction390DetailFieldList.addColumn(res.getString("FieldType"));
 		tableModelFunction390DetailFieldList.addColumn(res.getString("WidthRate"));
-		tableModelFunction390DetailFieldList.addColumn(res.getString("Alignment"));
+		tableModelFunction390DetailFieldList.addColumn("Align");
 		tableModelFunction390DetailFieldList.addColumn(res.getString("ControlOptions"));
 		column0 = jTableFunction390DetailFieldList.getColumnModel().getColumn(0);
 		column1 = jTableFunction390DetailFieldList.getColumnModel().getColumn(1);
@@ -10929,157 +10876,158 @@ public class Editor extends JFrame {
 		column3 = jTableFunction390DetailFieldList.getColumnModel().getColumn(3);
 		column4 = jTableFunction390DetailFieldList.getColumnModel().getColumn(4);
 		column5 = jTableFunction390DetailFieldList.getColumnModel().getColumn(5);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(160);
-		column2.setPreferredWidth(180);
-		column3.setPreferredWidth(50);
-		column4.setPreferredWidth(100);
-		column5.setPreferredWidth(250);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(250);
+		column2.setPreferredWidth(350);
+		column3.setPreferredWidth(80);
+		column4.setPreferredWidth(80);
+		column5.setPreferredWidth(450);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentRightControlColor);
 		column4.setCellRenderer(rendererAlignmentLeftControlColor);
 		column5.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction390DetailFieldList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction390DetailFieldList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction390DetailFieldList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		jSplitPaneFunction390DetailFieldList.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jSplitPaneFunction390DetailFieldList.add(jScrollPaneFunction390DetailFieldList, JSplitPane.TOP);
-		jSplitPaneFunction390DetailFieldList.add(jPanelFunction390DetailFieldList, JSplitPane.BOTTOM);
-		jSplitPaneFunction390DetailFieldList.setDividerLocation(screenHeight - 467);
-		jLabelFunction390DetailTable.setEnabled(false);
-		jLabelFunction390DetailTable.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jScrollPaneFunction390DetailFieldDefinition.setBorder(null);
+		jScrollPaneFunction390DetailFieldDefinition.getViewport().add(jPanelFunction390DetailFieldDefinition);
+		jPanelFunction390DetailFieldList.setLayout(new BorderLayout());
+		jPanelFunction390DetailFieldList.add(jScrollPaneFunction390DetailFieldList, BorderLayout.CENTER);
+		jPanelFunction390DetailFieldList.add(jScrollPaneFunction390DetailFieldDefinition, BorderLayout.SOUTH);
+		//
+		jLabelFunction390DetailTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390DetailTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390DetailTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390DetailTable.setText(res.getString("Table"));
-		jLabelFunction390DetailTable.setBounds(new Rectangle(11, 12, 96, 15));
-		jTextFieldFunction390DetailTable.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction390DetailTable.setBounds(new Rectangle(115, 9, 300, 22));
+		jLabelFunction390DetailTable.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldFunction390DetailTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction390DetailTable.setBounds(new Rectangle(140, 9, 350, 25));
 		jTextFieldFunction390DetailTable.setEditable(false);
-		jLabelFunction390DetailTableType.setEnabled(false);
-		jLabelFunction390DetailTableType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390DetailTableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390DetailTableType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390DetailTableType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390DetailTableType.setText(res.getString("Type"));
-		jLabelFunction390DetailTableType.setBounds(new Rectangle(430, 12, 76, 15));
-		jTextFieldFunction390DetailTableType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction390DetailTableType.setBounds(new Rectangle(514, 9, 250, 22));
+		jLabelFunction390DetailTableType.setBounds(new Rectangle(500, 12, 100, 20));
+		jTextFieldFunction390DetailTableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction390DetailTableType.setBounds(new Rectangle(605, 9, 330, 25));
 		jTextFieldFunction390DetailTableType.setEditable(false);
-		jLabelFunction390DetailField.setFont(new java.awt.Font("SansSerif", 0, 12));
+		//
+		jLabelFunction390DetailField.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390DetailField.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390DetailField.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390DetailField.setText(res.getString("Field"));
-		jLabelFunction390DetailField.setBounds(new Rectangle(11, 40, 96, 15));
-		jTextFieldFunction390DetailField.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction390DetailField.setBounds(new Rectangle(115, 37, 300, 22));
+		jLabelFunction390DetailField.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldFunction390DetailField.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction390DetailField.setBounds(new Rectangle(140, 40, 350, 25));
 		jTextFieldFunction390DetailField.setEditable(false);
-		jLabelFunction390DetailFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390DetailFieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390DetailFieldType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390DetailFieldType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390DetailFieldType.setText(res.getString("Type"));
-		jLabelFunction390DetailFieldType.setBounds(new Rectangle(430, 40, 76, 15));
-		jTextFieldFunction390DetailFieldType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction390DetailFieldType.setBounds(new Rectangle(514, 37, 250, 22));
+		jLabelFunction390DetailFieldType.setBounds(new Rectangle(500, 43, 100, 20));
+		jTextFieldFunction390DetailFieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction390DetailFieldType.setBounds(new Rectangle(605, 40, 330, 25));
 		jTextFieldFunction390DetailFieldType.setEditable(false);
+		//
 		jLabelFunction390DetailFieldCaptionOption.setText(res.getString("Caption"));
-		jLabelFunction390DetailFieldCaptionOption.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390DetailFieldCaptionOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390DetailFieldCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390DetailFieldCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction390DetailFieldCaptionOption.setBounds(new Rectangle(11, 68, 96, 15));
+		jLabelFunction390DetailFieldCaptionOption.setBounds(new Rectangle(5, 74, 130, 20));
 		jRadioButtonFunction390DetailFieldCaptionOptionName.setText(res.getString("FieldName"));
-		jRadioButtonFunction390DetailFieldCaptionOptionName.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction390DetailFieldCaptionOptionName.setBounds(new Rectangle(115, 65, 100, 22));
-		jRadioButtonFunction390DetailFieldCaptionOptionName.setEnabled(false);
+		jRadioButtonFunction390DetailFieldCaptionOptionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction390DetailFieldCaptionOptionName.setBounds(new Rectangle(140, 71, 130, 25));
 		jRadioButtonFunction390DetailFieldCaptionOptionName.addChangeListener(new Editor_jRadioButtonFunction390DetailFieldCaptionOption_changeAdapter(this));
 		jRadioButtonFunction390DetailFieldCaptionOptionValue.setText(res.getString("ValueSpecified"));
-		jRadioButtonFunction390DetailFieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jRadioButtonFunction390DetailFieldCaptionOptionValue.setBounds(new Rectangle(225, 65, 63, 22));
-		jRadioButtonFunction390DetailFieldCaptionOptionValue.setEnabled(false);
+		jRadioButtonFunction390DetailFieldCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jRadioButtonFunction390DetailFieldCaptionOptionValue.setBounds(new Rectangle(270, 71, 130, 25));
 		jRadioButtonFunction390DetailFieldCaptionOptionValue.addChangeListener(new Editor_jRadioButtonFunction390DetailFieldCaptionOption_changeAdapter(this));
 		buttonGroupFunction390DetailFieldCaptionOption.add(jRadioButtonFunction390DetailFieldCaptionOptionName);
 		buttonGroupFunction390DetailFieldCaptionOption.add(jRadioButtonFunction390DetailFieldCaptionOptionValue);
-		jTextFieldFunction390DetailFieldCaptionOptionValue.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction390DetailFieldCaptionOptionValue.setBounds(new Rectangle(300, 65, 220, 22));
-		jTextFieldFunction390DetailFieldCaptionOptionValue.setEnabled(false);
+		jTextFieldFunction390DetailFieldCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction390DetailFieldCaptionOptionValue.setBounds(new Rectangle(400, 71, 250, 25));
 		jTextFieldFunction390DetailFieldCaptionOptionValue.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
-		jLabelFunction390DetailFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390DetailFieldWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390DetailFieldWidth.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390DetailFieldWidth.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390DetailFieldWidth.setText(res.getString("WidthRate"));
-		jLabelFunction390DetailFieldWidth.setBounds(new Rectangle(530, 68, 76, 15));
-		jLabelFunction390DetailFieldWidth.setEnabled(false);
-		jTextFieldFunction390DetailFieldWidth.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction390DetailFieldWidth.setBounds(new Rectangle(614, 65, 45, 22));
-		jTextFieldFunction390DetailFieldWidth.setEnabled(false);
+		jLabelFunction390DetailFieldWidth.setBounds(new Rectangle(660, 74, 120, 20));
+		jTextFieldFunction390DetailFieldWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction390DetailFieldWidth.setBounds(new Rectangle(785, 71, 60, 25));
 		jTextFieldFunction390DetailFieldWidth.setText("");
-		jLabelFunction390DetailFieldWidthPercentMark.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390DetailFieldWidthPercentMark.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390DetailFieldWidthPercentMark.setText("(%)");
-		jLabelFunction390DetailFieldWidthPercentMark.setBounds(new Rectangle(663, 68, 30, 15));
-		jLabelFunction390DetailFieldAlignment.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390DetailFieldWidthPercentMark.setBounds(new Rectangle(845, 74, 40, 20));
+		//
+		jLabelFunction390DetailFieldAlignment.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390DetailFieldAlignment.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390DetailFieldAlignment.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390DetailFieldAlignment.setText(res.getString("Alignment"));
-		jLabelFunction390DetailFieldAlignment.setBounds(new Rectangle(11, 96, 96, 15));
+		jLabelFunction390DetailFieldAlignment.setBounds(new Rectangle(5, 105, 130, 20));
 		jComboBoxFunction390DetailFieldAlignment.setEditable(false);
-		jComboBoxFunction390DetailFieldAlignment.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxFunction390DetailFieldAlignment.setBounds(new Rectangle(115, 93, 90, 22));
+		jComboBoxFunction390DetailFieldAlignment.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jComboBoxFunction390DetailFieldAlignment.setBounds(new Rectangle(140, 102, 100, 25));
 		jComboBoxFunction390DetailFieldAlignment.addItem("LEFT");
 		jComboBoxFunction390DetailFieldAlignment.addItem("CENTER");
 		jComboBoxFunction390DetailFieldAlignment.addItem("RIGHT");
-		jLabelFunction390DetailFieldEditCode.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390DetailFieldEditCode.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390DetailFieldEditCode.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390DetailFieldEditCode.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390DetailFieldEditCode.setText(res.getString("EditCode"));
-		jLabelFunction390DetailFieldEditCode.setBounds(new Rectangle(196, 96, 96, 15));
-		jTextFieldFunction390DetailFieldEditCode.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction390DetailFieldEditCode.setBounds(new Rectangle(300, 93, 60, 22));
-		jLabelFunction390DetailFieldBarcodeType.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelFunction390DetailFieldEditCode.setBounds(new Rectangle(265, 105, 130, 20));
+		jTextFieldFunction390DetailFieldEditCode.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction390DetailFieldEditCode.setBounds(new Rectangle(400, 102, 80, 25));
+		jLabelFunction390DetailFieldBarcodeType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390DetailFieldBarcodeType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390DetailFieldBarcodeType.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390DetailFieldBarcodeType.setText(res.getString("BarcodeType"));
-		jLabelFunction390DetailFieldBarcodeType.setBounds(new Rectangle(410, 96, 96, 15));
-		jTextFieldFunction390DetailFieldBarcodeType.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTextFieldFunction390DetailFieldBarcodeType.setBounds(new Rectangle(514, 93, 100, 22));
-		jCheckBoxFunction390DetailFieldWithTotal.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jCheckBoxFunction390DetailFieldWithTotal.setBounds(new Rectangle(645, 93, 120, 22));
+		jLabelFunction390DetailFieldBarcodeType.setBounds(new Rectangle(490, 105, 130, 20));
+		jTextFieldFunction390DetailFieldBarcodeType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction390DetailFieldBarcodeType.setBounds(new Rectangle(625, 102, 120, 25));
+		jCheckBoxFunction390DetailFieldWithTotal.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxFunction390DetailFieldWithTotal.setBounds(new Rectangle(780, 102, 180, 25));
 		jCheckBoxFunction390DetailFieldWithTotal.setText(res.getString("WithTotal"));
-		jPanelFunction390DetailFieldList.setLayout(null);
-		jPanelFunction390DetailFieldList.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction390DetailFieldList.add(jLabelFunction390DetailTable);
-		jPanelFunction390DetailFieldList.add(jTextFieldFunction390DetailTable);
-		jPanelFunction390DetailFieldList.add(jLabelFunction390DetailTableType);
-		jPanelFunction390DetailFieldList.add(jTextFieldFunction390DetailTableType);
-		jPanelFunction390DetailFieldList.add(jLabelFunction390DetailField);
-		jPanelFunction390DetailFieldList.add(jTextFieldFunction390DetailField);
-		jPanelFunction390DetailFieldList.add(jLabelFunction390DetailFieldType);
-		jPanelFunction390DetailFieldList.add(jTextFieldFunction390DetailFieldType);
-		jPanelFunction390DetailFieldList.add(jLabelFunction390DetailFieldWidth);
-		jPanelFunction390DetailFieldList.add(jTextFieldFunction390DetailFieldWidth);
-		jPanelFunction390DetailFieldList.add(jLabelFunction390DetailFieldWidthPercentMark);
-		jPanelFunction390DetailFieldList.add(jLabelFunction390DetailFieldCaptionOption);
-		jPanelFunction390DetailFieldList.add(jRadioButtonFunction390DetailFieldCaptionOptionName);
-		jPanelFunction390DetailFieldList.add(jRadioButtonFunction390DetailFieldCaptionOptionValue);
-		jPanelFunction390DetailFieldList.add(jTextFieldFunction390DetailFieldCaptionOptionValue);
-		jPanelFunction390DetailFieldList.add(jLabelFunction390DetailFieldAlignment);
-		jPanelFunction390DetailFieldList.add(jComboBoxFunction390DetailFieldAlignment);
-		jPanelFunction390DetailFieldList.add(jLabelFunction390DetailFieldEditCode);
-		jPanelFunction390DetailFieldList.add(jTextFieldFunction390DetailFieldEditCode);
-		jPanelFunction390DetailFieldList.add(jLabelFunction390DetailFieldBarcodeType);
-		jPanelFunction390DetailFieldList.add(jTextFieldFunction390DetailFieldBarcodeType);
-		jPanelFunction390DetailFieldList.add(jCheckBoxFunction390DetailFieldWithTotal);
 		//
-		jTabbedPaneFunction390.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jTabbedPaneFunction390.add(res.getString("HDRFields"), jSplitPaneFunction390HeaderPhraseList);
+		jPanelFunction390DetailFieldDefinition.setPreferredSize(new Dimension(960, 136));
+		jPanelFunction390DetailFieldDefinition.setLayout(null);
+		jPanelFunction390DetailFieldDefinition.setBorder(null);
+		jPanelFunction390DetailFieldDefinition.add(jLabelFunction390DetailTable);
+		jPanelFunction390DetailFieldDefinition.add(jTextFieldFunction390DetailTable);
+		jPanelFunction390DetailFieldDefinition.add(jLabelFunction390DetailTableType);
+		jPanelFunction390DetailFieldDefinition.add(jTextFieldFunction390DetailTableType);
+		jPanelFunction390DetailFieldDefinition.add(jLabelFunction390DetailField);
+		jPanelFunction390DetailFieldDefinition.add(jTextFieldFunction390DetailField);
+		jPanelFunction390DetailFieldDefinition.add(jLabelFunction390DetailFieldType);
+		jPanelFunction390DetailFieldDefinition.add(jTextFieldFunction390DetailFieldType);
+		jPanelFunction390DetailFieldDefinition.add(jLabelFunction390DetailFieldWidth);
+		jPanelFunction390DetailFieldDefinition.add(jTextFieldFunction390DetailFieldWidth);
+		jPanelFunction390DetailFieldDefinition.add(jLabelFunction390DetailFieldWidthPercentMark);
+		jPanelFunction390DetailFieldDefinition.add(jLabelFunction390DetailFieldCaptionOption);
+		jPanelFunction390DetailFieldDefinition.add(jRadioButtonFunction390DetailFieldCaptionOptionName);
+		jPanelFunction390DetailFieldDefinition.add(jRadioButtonFunction390DetailFieldCaptionOptionValue);
+		jPanelFunction390DetailFieldDefinition.add(jTextFieldFunction390DetailFieldCaptionOptionValue);
+		jPanelFunction390DetailFieldDefinition.add(jLabelFunction390DetailFieldAlignment);
+		jPanelFunction390DetailFieldDefinition.add(jComboBoxFunction390DetailFieldAlignment);
+		jPanelFunction390DetailFieldDefinition.add(jLabelFunction390DetailFieldEditCode);
+		jPanelFunction390DetailFieldDefinition.add(jTextFieldFunction390DetailFieldEditCode);
+		jPanelFunction390DetailFieldDefinition.add(jLabelFunction390DetailFieldBarcodeType);
+		jPanelFunction390DetailFieldDefinition.add(jTextFieldFunction390DetailFieldBarcodeType);
+		jPanelFunction390DetailFieldDefinition.add(jCheckBoxFunction390DetailFieldWithTotal);
+		//
+		jTabbedPaneFunction390.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTabbedPaneFunction390.add(res.getString("HDRFields"), jPanelFunction390HeaderPhraseList);
 		jTabbedPaneFunction390.setIconAt(0, imageIconField);
-		jTabbedPaneFunction390.add(res.getString("DTLFields"), jSplitPaneFunction390DetailFieldList);
+		jTabbedPaneFunction390.add(res.getString("DTLFields"), jPanelFunction390DetailFieldList);
 		jTabbedPaneFunction390.setIconAt(1, imageIconDetailField);
 		jTabbedPaneFunction390.add(res.getString("FunctionsWhereUsed"), jScrollPaneFunction390UsageList);
 		jTabbedPaneFunction390.setIconAt(2, imageIconFunctionUsage);
 		//
 		jScrollPaneFunction390UsageList.setBorder(null);
 		jScrollPaneFunction390UsageList.getViewport().add(jTableFunction390UsageList, null);
-		jTableFunction390UsageList.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction390UsageList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTableFunction390UsageList.setBackground(SystemColor.control);
 		jTableFunction390UsageList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableFunction390UsageList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -11087,6 +11035,7 @@ public class Editor extends JFrame {
 		jTableFunction390UsageList.setSelectionForeground(Color.black);
 		jTableFunction390UsageList.addFocusListener(new Editor_FocusListener());
 		jTableFunction390UsageList.addMouseListener(new Editor_jTableFunction390UsageList_mouseAdapter(this));
+		jTableFunction390UsageList.setRowHeight(TABLE_ROW_HEIGHT);
 		tableModelFunction390UsageList.addColumn("NO.");
 		tableModelFunction390UsageList.addColumn(res.getString("FunctionsWhereUsed"));
 		tableModelFunction390UsageList.addColumn(res.getString("Type"));
@@ -11095,15 +11044,15 @@ public class Editor extends JFrame {
 		column1 = jTableFunction390UsageList.getColumnModel().getColumn(1);
 		column2 = jTableFunction390UsageList.getColumnModel().getColumn(2);
 		column3 = jTableFunction390UsageList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(37);
-		column1.setPreferredWidth(300);
-		column2.setPreferredWidth(160);
-		column3.setPreferredWidth(280);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(400);
+		column2.setPreferredWidth(250);
+		column3.setPreferredWidth(380);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
 		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction390UsageList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableFunction390UsageList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction390UsageList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
 	}
@@ -12926,6 +12875,7 @@ public class Editor extends JFrame {
 		public NodeJumpButton(MainTreeNode nd) {
 			super();
 			node_ = nd;
+			this.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE-2));
 			String nodeType = ((MainTreeNode)node_).getType();
 			this.addActionListener(new NodeJumpButton_actionAdapter(this));
 			if (nodeType == "System") {
@@ -13407,9 +13357,26 @@ public class Editor extends JFrame {
 	    	jPopupMenuComponent.add(jMenuItemComponentToDelete);
 	    }
 	    //
+	    if (e.getComponent().equals(jScrollPaneTableDataList)) {
+	    	componentType_jPopupMenuComponent = "TableDataList";
+	    	jPopupMenuComponent.add(jMenuItemComponentToListTableData);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListExcel);
+	    	if (jTableTableDataList.getRowCount() > 0) {
+	    		jMenuItemComponentToListExcel.setEnabled(true);
+	    	} else {
+	    		jMenuItemComponentToListExcel.setEnabled(false);
+	    	}
+	    }
+	    //
 	    if (e.getComponent().equals(jTableTableDataList)) {
 	    	componentType_jPopupMenuComponent = "TableDataList";
-	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListTableData);
+	    	jPopupMenuComponent.add(jMenuItemComponentToListExcel);
+	    	if (jTableTableDataList.getRowCount() > 0) {
+	    		jMenuItemComponentToListExcel.setEnabled(true);
+	    	} else {
+	    		jMenuItemComponentToListExcel.setEnabled(false);
+	    	}
 	    	jPopupMenuComponent.addSeparator();
 	    	jPopupMenuComponent.add(jMenuItemComponentToDelete);
 	    }
@@ -14861,24 +14828,24 @@ public class Editor extends JFrame {
 
 		public String getTipText() {
 			String str = "";
-			if (nodeType_.equals("System")) {
-				str = domNode_.getAttribute("Name");
-			}
-			if (nodeType_.equals("MenuList")) {
-				str = res.getString("MenuList");
-			}
-			if (nodeType_.equals("Menu")) {
-				str = domNode_.getAttribute("ID") + " " + domNode_.getAttribute("Name");
-			}
-			if (nodeType_.equals("SubsystemList")) {
-				str = res.getString("Application");
-			}
-			if (nodeType_.equals("Subsystem")) {
-				str = domNode_.getAttribute("ID") + " " + domNode_.getAttribute("Name");
-			}
-			if (nodeType_.equals("FunctionList")) {
-				str = res.getString("FunctionList");
-			}
+//			if (nodeType_.equals("System")) {
+//				str = domNode_.getAttribute("Name");
+//			}
+//			if (nodeType_.equals("MenuList")) {
+//				str = res.getString("MenuList");
+//			}
+//			if (nodeType_.equals("Menu")) {
+//				str = domNode_.getAttribute("ID") + " " + domNode_.getAttribute("Name");
+//			}
+//			if (nodeType_.equals("SubsystemList")) {
+//				str = res.getString("Application");
+//			}
+//			if (nodeType_.equals("Subsystem")) {
+//				str = domNode_.getAttribute("ID") + " " + domNode_.getAttribute("Name");
+//			}
+//			if (nodeType_.equals("FunctionList")) {
+//				str = res.getString("FunctionList");
+//			}
 			if (nodeType_.equals("Function")) {
 				if (domNode_.getAttribute("Type").equals("XF000")) {
 					str = res.getString("FunctionTypeXF000");
@@ -14905,18 +14872,18 @@ public class Editor extends JFrame {
 					str = res.getString("FunctionTypeXF390");
 				}
 			}
-			if (nodeType_.equals("TableList")) {
-				str = res.getString("TableList");
-			}
-			if (nodeType_.equals("Table")) {
-				String wrk1 = getCaseShiftValue(domNode_.getAttribute("ID"), "Upper");
-				String wrk2 = getCaseShiftValue(domNode_.getAttribute("Name"), "Upper");
-				if (wrk1.equals(wrk2)) {
-					str = domNode_.getAttribute("ID");
-				} else {
-					str = domNode_.getAttribute("ID") + " " + domNode_.getAttribute("Name");
-				}
-			}
+//			if (nodeType_.equals("TableList")) {
+//				str = res.getString("TableList");
+//			}
+//			if (nodeType_.equals("Table")) {
+//				String wrk1 = getCaseShiftValue(domNode_.getAttribute("ID"), "Upper");
+//				String wrk2 = getCaseShiftValue(domNode_.getAttribute("Name"), "Upper");
+//				if (wrk1.equals(wrk2)) {
+//					str = domNode_.getAttribute("ID");
+//				} else {
+//					str = domNode_.getAttribute("ID") + " " + domNode_.getAttribute("Name");
+//				}
+//			}
 			return str;
 		}
 
@@ -15144,9 +15111,6 @@ public class Editor extends JFrame {
 				if (tableModelTableUsageList.getRowCount() == 0) {
 					Connection connection = databaseConnList.get(databaseIDList.indexOf(domNode_.getAttribute("DB")));
 					if (connection != null && !errorStatus_.equals("ER1")) {
-						//setupConnectionList(true);
-						//connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
-
 						Object[] bts = {res.getString("Cancel"), res.getString("DeleteTableDefinitionOnly"), res.getString("DeleteTableDefinitionAndModule")};
 						int rtn = JOptionPane.showOptionDialog(null, res.getString("DeleteTableMessage"),
 								res.getString("DeleteTableModule"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
@@ -15522,11 +15486,6 @@ public class Editor extends JFrame {
 			} else {
 				jTextFieldSystemDBCPOptions.setText(domNode_.getAttribute("DBCP"));
 			}
-			if (domNode_.getAttribute("AutoConnectToEdit").equals("T")) {
-				jCheckBoxSystemAutoConnectToEdit.setSelected(true);
-			} else {
-				jCheckBoxSystemAutoConnectToEdit.setSelected(false);
-			}
 			jTextFieldSystemVariantsTable.setText(domNode_.getAttribute("VariantsTable"));
 			jTextFieldSystemUserTable.setText(domNode_.getAttribute("UserTable"));
 			jTextFieldSystemNumberingTable.setText(domNode_.getAttribute("NumberingTable"));
@@ -15587,6 +15546,16 @@ public class Editor extends JFrame {
 			int index = listSystemDateFormat.indexOf(domNode_.getAttribute("DateFormat"));
 			if (index > -1) {
 				jComboBoxSystemDateFormat.setSelectedIndex(index);
+			}
+			if (domNode_.getAttribute("SystemFont").equals("")) {
+				jTextFieldSystemFont.setText("*Default");
+			} else {
+				jTextFieldSystemFont.setText(domNode_.getAttribute("SystemFont"));
+			}
+			if (domNode_.getAttribute("AutoConnectToEdit").equals("T")) {
+				jCheckBoxSystemAutoConnectToEdit.setSelected(true);
+			} else {
+				jCheckBoxSystemAutoConnectToEdit.setSelected(false);
 			}
 			jTextFieldSystemEditorUser.setText(domNode_.getAttribute("EditorUser"));
 			jTextFieldSystemEditorUserPassword.setText(domNode_.getAttribute("EditorUserPassword"));
@@ -15728,7 +15697,7 @@ public class Editor extends JFrame {
 			editableColumns.add(4);
 			tableModelMenuFunctionList = new TableModelEditableList(editableColumns);
 			jTableMenuFunctionList.setModel(tableModelMenuFunctionList);
-			jTableMenuFunctionList.setFont(new java.awt.Font("SansSerif", 0, 12));
+			jTableMenuFunctionList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 			jTableMenuFunctionList.setBackground(SystemColor.control);
 			jTableMenuFunctionList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 			jTableMenuFunctionList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -15742,11 +15711,11 @@ public class Editor extends JFrame {
 			column2 = jTableMenuFunctionList.getColumnModel().getColumn(2);
 			column3 = jTableMenuFunctionList.getColumnModel().getColumn(3);
 			column4 = jTableMenuFunctionList.getColumnModel().getColumn(4);
-			column0.setPreferredWidth(37);
-			column1.setPreferredWidth(45);
-			column2.setPreferredWidth(80);
-			column3.setPreferredWidth(230);
-			column4.setPreferredWidth(230);
+			column0.setPreferredWidth(40);
+			column1.setPreferredWidth(70);
+			column2.setPreferredWidth(120);
+			column3.setPreferredWidth(350);
+			column4.setPreferredWidth(350);
 			column0.setCellRenderer(rendererAlignmentCenterControlColor);
 			column1.setCellRenderer(rendererAlignmentCenter);
 			column1.setCellEditor(editorMenuOptionIndex);
@@ -15754,7 +15723,7 @@ public class Editor extends JFrame {
 			column3.setCellRenderer(rendererAlignmentLeftControlColor);
 			column4.setCellRenderer(rendererAlignmentLeft);
 			column4.setCellEditor(cellEditorLeft);
-			jTableMenuFunctionList.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+			jTableMenuFunctionList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 			rendererTableHeader = (DefaultTableCellRenderer)jTableMenuFunctionList.getTableHeader().getDefaultRenderer();
 			rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
 
@@ -15902,13 +15871,13 @@ public class Editor extends JFrame {
 			jLabelSubtitle.setText(((MainTreeNode)this.getParent().getParent()).getName() + " - " + this.getName());
 
 			int prevSelectedTabIndex = jTabbedPaneTable.getSelectedIndex();
-			jTabbedPaneTable.remove(jSplitPaneTableData);
+			jTabbedPaneTable.remove(jPanelTableData);
 			Connection connection = databaseConnList.get(databaseIDList.indexOf(domNode_.getAttribute("DB")));
 			if (connection != null && !connection.isClosed()) {
 				if (!currentMainTreeNode.getErrorStatus().equals("ER1")
 					&& !currentMainTreeNode.getErrorStatus().equals("ER2")) {
 
-					jTabbedPaneTable.add(res.getString("Data"), jSplitPaneTableData);
+					jTabbedPaneTable.add(res.getString("Data"), jPanelTableData);
 					jTabbedPaneTable.setIconAt(5, imageIconTableEdit);
 					jTabbedPaneTable.setSelectedIndex(prevSelectedTabIndex);
 					isTableDataEditable = true;
@@ -15916,7 +15885,7 @@ public class Editor extends JFrame {
 					tableModelTableDataList = new TableModelReadOnlyList();
 					jTableTableDataList.setModel(tableModelTableDataList);
 					tableModelTableDataList.addColumn("NO.");
-					columnWidthList.add(40);
+					columnWidthList.add(60);
 					columnTypeList.add("INTEGER");
 
 					jButtonTableDataFieldsToEditMode.setEnabled(false);
@@ -15949,14 +15918,11 @@ public class Editor extends JFrame {
 
 			jComboBoxTableDB.removeAllItems();
 			jComboBoxTableDB.addItem(res.getString("DatabaseMain"));
-			//databaseIDList.clear();
-			//databaseIDList.add("");
 			NodeList columnList = systemNode.getElement().getElementsByTagName("SubDB");
 			sortingList = getSortedListModel(columnList, "ID");
 		    for (int i = 0; i < sortingList.getSize(); i++) {
 		        element = (org.w3c.dom.Element)sortingList.getElementAt(i);
 				jComboBoxTableDB.addItem(element.getAttribute("Description"));
-				//databaseIDList.add(element.getAttribute("ID"));
 			}
 			jComboBoxTableDB.setSelectedIndex(databaseIDList.indexOf(domNode_.getAttribute("DB")));
 			jComboBoxTableDB.setEnabled(!isSystemControlTable);
@@ -16065,7 +16031,7 @@ public class Editor extends JFrame {
 		    int digits = 0;
 			int decimalSize = 0;
 			label = new JLabel();
-			FontMetrics metrics = label.getFontMetrics(new java.awt.Font("SansSerif", 0, 12));
+			FontMetrics metrics = label.getFontMetrics(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 			if (tableModelTableFieldList.getRowCount() > 0) {
 				int rowCount = tableModelTableFieldList.getRowCount();
 				for (int i = 0; i < rowCount; i++) {tableModelTableFieldList.removeRow(0);}
@@ -16110,12 +16076,12 @@ public class Editor extends JFrame {
 							decimalSize = Integer.parseInt(element1.getAttribute("Decimal"));
 						}
 						if (getOptionList(element1.getAttribute("TypeOptions")).contains("KANJI")) {
-							columnWidth = digits * 12 + 10;
+							columnWidth = digits * Editor.MAIN_FONT_SIZE + 10;
 						} else {
 							if (basicType.equals("INTEGER") || basicType.equals("FLOAT")) {
 								digits = getLengthOfEdittedNumericValue(digits, decimalSize, element1.getAttribute("TypeOptions").contains("ACCEPT_MINUS"));
 							}
-							columnWidth = digits * 6 + 10;
+							columnWidth = digits * (Editor.MAIN_FONT_SIZE/2 + 2) + 15;
 						}
 						if (columnWidth > 200) {
 							columnWidth = 200;
@@ -16225,7 +16191,6 @@ public class Editor extends JFrame {
 			/////////////////////
 			jButtonTableDataFieldsToUpdate.setEnabled(false); //Refer to "Commit Check" of update method //
 			if (isTableDataEditable) {
-				jCheckBoxTableDataOutput.setSelected(false);
 				String databaseName = databaseNameList.get(databaseIDList.indexOf(domNode_.getAttribute("DB")));
 				if (databaseName.contains("jdbc:derby")) {
 					jButtonTableDataFieldsToCompress.setEnabled(true);
@@ -16237,7 +16202,8 @@ public class Editor extends JFrame {
 					TableColumn col = jTableTableDataList.getColumnModel().getColumn(i);
 					col.setPreferredWidth(columnWidthList.get(i));
 					if (i == 0) {
-						col.setCellRenderer(rendererAlignmentCenterControlColor);
+						col.setCellRenderer(rendererAlignmentRightControlColor);
+						jTableTableDataList.getColumnModel().getColumn(i).setHeaderRenderer(headerRendererAlignmentRight);
 					} else {
 						basicType = getBasicTypeOf(columnTypeList.get(i));
 						if (basicType.equals("INTEGER") || basicType.equals("FLOAT")) {
@@ -16383,7 +16349,7 @@ public class Editor extends JFrame {
 		    tableRowsAreBeingSetup = true;
 
 			jLabelSubtitle.setText(((MainTreeNode)this.getParent().getParent()).getName() + " - " + this.getName());
-			jSplitPaneFunction000.setDividerLocation(95);
+			jSplitPaneFunction000.setDividerLocation(104);
 			jTextFieldFunction000ID.setText(domNode_.getAttribute("ID"));
 			jTextFieldFunction000Name.setText(domNode_.getAttribute("Name"));
 
@@ -16588,6 +16554,12 @@ public class Editor extends JFrame {
 				jTextFieldFunction100InitialReadCount.setText("*All");
 	        } else {
 				jTextFieldFunction100InitialReadCount.setText(domNode_.getAttribute("InitialReadCount"));
+	        }
+	        //
+	        if (domNode_.getAttribute("MaxReadCount").equals("")) {
+				jTextFieldFunction100MaxReadCount.setText("*All");
+	        } else {
+				jTextFieldFunction100MaxReadCount.setText(domNode_.getAttribute("MaxReadCount"));
 	        }
 			//
 	        if (domNode_.getAttribute("InitialMsg").equals("")) {
@@ -16833,6 +16805,12 @@ public class Editor extends JFrame {
 			} else {
 				jCheckBoxFunction110InitialListing.setSelected(false);
 			}
+	        //
+	        if (domNode_.getAttribute("MaxReadCount").equals("")) {
+				jTextFieldFunction110MaxReadCount.setText("*All");
+	        } else {
+				jTextFieldFunction110MaxReadCount.setText(domNode_.getAttribute("MaxReadCount"));
+	        }
 			//
 			//Column List//
 			if (tableModelFunction110ColumnList.getRowCount() > 0) {
@@ -18799,15 +18777,6 @@ public class Editor extends JFrame {
 					valueOfFieldsChanged = true;
 				}
 			}
-			if (domNode_.getAttribute("AutoConnectToEdit").equals("T")) {
-				if (!jCheckBoxSystemAutoConnectToEdit.isSelected()) {
-					valueOfFieldsChanged = true;
-				}
-			} else {
-				if (jCheckBoxSystemAutoConnectToEdit.isSelected()) {
-					valueOfFieldsChanged = true;
-				}
-			}
 			//
 			if (!domNode_.getAttribute("VariantsTable").equals(jTextFieldSystemVariantsTable.getText())) {
 				valueOfFieldsChanged = true;
@@ -18858,6 +18827,24 @@ public class Editor extends JFrame {
 			int index = listSystemDateFormat.indexOf(domNode_.getAttribute("DateFormat"));
 			if (index != jComboBoxSystemDateFormat.getSelectedIndex()) {
 				valueOfFieldsChanged = true;
+			}
+			if (jTextFieldSystemFont.getText().equals("") || jTextFieldSystemFont.getText().equals("*Default")) {
+				if (!domNode_.getAttribute("SystemFont").equals("")) {
+					valueOfFieldsChanged = true;
+				}
+			} else {
+				if (!domNode_.getAttribute("SystemFont").equals(jTextFieldSystemFont.getText())) {
+					valueOfFieldsChanged = true;
+				}
+			}
+			if (domNode_.getAttribute("AutoConnectToEdit").equals("T")) {
+				if (!jCheckBoxSystemAutoConnectToEdit.isSelected()) {
+					valueOfFieldsChanged = true;
+				}
+			} else {
+				if (jCheckBoxSystemAutoConnectToEdit.isSelected()) {
+					valueOfFieldsChanged = true;
+				}
 			}
 			if (!domNode_.getAttribute("EditorUser").equals(jTextFieldSystemEditorUser.getText())) {
 				valueOfFieldsChanged = true;
@@ -18921,13 +18908,6 @@ public class Editor extends JFrame {
 				} else {
 					domNode_.setAttribute("DBCP", jTextFieldSystemDBCPOptions.getText());
 				}
-				if (jCheckBoxSystemAutoConnectToEdit.isSelected()) {
-					domNode_.setAttribute("AutoConnectToEdit", "T");
-					setupConnectionList(true);
-				} else {
-					domNode_.setAttribute("AutoConnectToEdit", "F");
-					setupConnectionList(false);
-				}
 				//
 				domNode_.setAttribute("VariantsTable", jTextFieldSystemVariantsTable.getText());
 				domNode_.setAttribute("UserTable", jTextFieldSystemUserTable.getText());
@@ -18962,6 +18942,18 @@ public class Editor extends JFrame {
 				}
 				domNode_.setAttribute("WelcomePageURL", jTextFieldSystemWelcomePageURL.getText());
 				domNode_.setAttribute("DateFormat", listSystemDateFormat.get(jComboBoxSystemDateFormat.getSelectedIndex()));
+				if (jTextFieldSystemFont.getText().equals("") || jTextFieldSystemFont.getText().equals("*Default")) {
+					domNode_.setAttribute("SystemFont", "");
+				} else {
+					domNode_.setAttribute("SystemFont", jTextFieldSystemFont.getText());
+				}
+				if (jCheckBoxSystemAutoConnectToEdit.isSelected()) {
+					domNode_.setAttribute("AutoConnectToEdit", "T");
+					//setupConnectionList(true);
+				} else {
+					domNode_.setAttribute("AutoConnectToEdit", "F");
+					//setupConnectionList(false);
+				}
 				//
 				domNode_.setAttribute("LoginScript", concatLinesWithTokenOfEOL(jTextAreaSystemLoginScript.getText()));
 				//
@@ -20218,6 +20210,23 @@ public class Editor extends JFrame {
 				}
 			}
 			//
+			if (domNode_.getAttribute("MaxReadCount").equals("")) {
+				if (!jTextFieldFunction100MaxReadCount.getText().equals("*All") && !jTextFieldFunction100MaxReadCount.getText().equals("")) {
+					valueOfFieldsChanged = true;
+					domNode_.setAttribute("MaxReadCount", jTextFieldFunction100MaxReadCount.getText());
+				}
+			} else {
+				if (jTextFieldFunction100MaxReadCount.getText().equals("*All") || jTextFieldFunction100MaxReadCount.getText().equals("")) {
+					valueOfFieldsChanged = true;
+					domNode_.setAttribute("MaxReadCount", "");
+				} else {
+					if (!domNode_.getAttribute("MaxReadCount").equals(jTextFieldFunction100MaxReadCount.getText())) {
+						valueOfFieldsChanged = true;
+						domNode_.setAttribute("MaxReadCount", jTextFieldFunction100MaxReadCount.getText());
+					}
+				}
+			}
+			//
 			if (domNode_.getAttribute("InitialMsg").equals("")) {
 				if (!jTextFieldFunction100InitialMsg.getText().equals("*Default") && !jTextFieldFunction100InitialMsg.getText().equals("")) {
 					valueOfFieldsChanged = true;
@@ -20845,6 +20854,18 @@ public class Editor extends JFrame {
 				}
 			}
 			//
+			if (domNode_.getAttribute("InitialListing").equals("T")) {
+				if (!jCheckBoxFunction110InitialListing.isSelected()) {
+					valueOfFieldsChanged = true;
+					domNode_.setAttribute("InitialListing", "");
+				}
+			} else {
+				if (jCheckBoxFunction110InitialListing.isSelected()) {
+					valueOfFieldsChanged = true;
+					domNode_.setAttribute("InitialListing", "T");
+				}
+			}
+			//
 			if (domNode_.getAttribute("InitialReadCount").equals("")) {
 				if (!jTextFieldFunction110InitialReadCount.getText().equals("*All") && !jTextFieldFunction110InitialReadCount.getText().equals("")) {
 					valueOfFieldsChanged = true;
@@ -20862,15 +20883,20 @@ public class Editor extends JFrame {
 				}
 			}
 			//
-			if (domNode_.getAttribute("InitialListing").equals("T")) {
-				if (!jCheckBoxFunction110InitialListing.isSelected()) {
+			if (domNode_.getAttribute("MaxReadCount").equals("")) {
+				if (!jTextFieldFunction110MaxReadCount.getText().equals("*All") && !jTextFieldFunction110MaxReadCount.getText().equals("")) {
 					valueOfFieldsChanged = true;
-					domNode_.setAttribute("InitialListing", "");
+					domNode_.setAttribute("MaxReadCount", jTextFieldFunction110MaxReadCount.getText());
 				}
 			} else {
-				if (jCheckBoxFunction110InitialListing.isSelected()) {
+				if (jTextFieldFunction110MaxReadCount.getText().equals("*All") || jTextFieldFunction110MaxReadCount.getText().equals("")) {
 					valueOfFieldsChanged = true;
-					domNode_.setAttribute("InitialListing", "T");
+					domNode_.setAttribute("MaxReadCount", "");
+				} else {
+					if (!domNode_.getAttribute("MaxReadCount").equals(jTextFieldFunction110MaxReadCount.getText())) {
+						valueOfFieldsChanged = true;
+						domNode_.setAttribute("MaxReadCount", jTextFieldFunction110MaxReadCount.getText());
+					}
 				}
 			}
 			//
@@ -25507,13 +25533,20 @@ public class Editor extends JFrame {
 			descriptions = dataType + "(" + dataSize + "," + decimal + ") ";
 		} else {
 			if (dataType.equals("CHAR")
-					|| dataType.equals("VARCHAR")
 					|| dataType.equals("INTEGER")
 					|| dataType.equals("SMALLINT")
 					|| dataType.equals("BIGINT")) {
 				descriptions = dataType + "(" + dataSize + ") ";
 			} else {
-				descriptions = dataType;
+				if (dataType.equals("VARCHAR")) {
+					if (Integer.parseInt(dataSize) > 0) {
+						descriptions = dataType + "(" + dataSize + ") ";
+					} else {
+						descriptions = dataType;
+					}
+				} else {
+					descriptions = dataType;
+				}
 			}
 		}
 		return descriptions + " ";
@@ -26320,7 +26353,11 @@ public class Editor extends JFrame {
 	void jMenuTool_menuSelected(MenuEvent e) {
 		boolean allConnectionReady = true;
 		for (int i = 0; i < databaseConnList.size(); i++) {
-			if (databaseConnList.get(i) == null) {
+			try {
+				if (databaseConnList.get(i) == null || databaseConnList.get(i).isClosed()) {
+					allConnectionReady = false;
+				}
+			} catch (SQLException ex) {
 				allConnectionReady = false;
 			}
 		}
@@ -26414,6 +26451,7 @@ public class Editor extends JFrame {
 						}
 					}
 					currentMainTreeNode.activateContentsPane();
+					JOptionPane.showMessageDialog(this, res.getString("DBConnectMessage8"));
 				}
 			} finally {
 				jProgressBar.setValue(0);
@@ -27909,6 +27947,28 @@ public class Editor extends JFrame {
 	}
 	
 	/**
+	 * Event Handler for jMenuItemComponentToListExcel in case item selected
+	 * @param e :Action Event
+	 */
+	void jMenuItemComponentToListExcel_actionPerformed(ActionEvent e) {
+		if (componentType_jPopupMenuComponent.equals("TableDataList")) {
+			try {
+				desktop.browse(getExcellBookURI());
+			} catch (IOException ex) {
+				jTextAreaTableDataMessages.setText(jTextAreaTableDataMessages.getText()+"\n"+ex.getMessage());
+			}
+		}
+	}
+	
+	/**
+	 * Event Handler for jMenuItemComponentToListTableData in case item selected
+	 * @param e :Action Event
+	 */
+	void jMenuItemComponentToListTableData_actionPerformed(ActionEvent e) {
+		jButtonTableDataSelect_actionPerformed(null);
+	}
+	
+	/**
 	 * Event Handler for jMenuItemComponentToListCsv in case item selected
 	 * @param e :Action Event
 	 */
@@ -28146,7 +28206,6 @@ public class Editor extends JFrame {
 	void jListTableReferFields_mouseClicked(MouseEvent e) {
 	    Point p = e.getPoint();
 	    int index = jListTableReferFields.locationToIndex(p);
-	    //
 	    if (index > -1) {
 	    	JCheckBox checkBox = (JCheckBox)listModelTableReferFields.getElementAt(index);
 	    	if (checkBox.isEnabled()){
@@ -28157,9 +28216,19 @@ public class Editor extends JFrame {
 	    		}
 	    		informationOnThisPageChanged = true;
 	    	} else {
-	    		JOptionPane.showMessageDialog(null, res.getString("FieldUsageMessage") + checkBox.getToolTipText());
+	    		String[] button = { "OK", res.getString("CopyToClipboard")};
+	    		int reply = JOptionPane.showOptionDialog(null, checkBox.getToolTipText(), "'" + checkBox.getText() + "'" + res.getString("FieldUsageMessage"),
+	    			JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+	    			null,
+	    			button,
+	    			button[0]);
+	    		if (reply == 1) {
+	    			Clipboard clipboard = getToolkit().getSystemClipboard();
+					StringSelection contents = new StringSelection(checkBox.getToolTipText());
+					clipboard.setContents(contents, null);
+	    			
+	    		}
  	    	}
-	    	//
 	    	jListTableReferFields.repaint();
 	    }
 	}
@@ -33473,7 +33542,7 @@ public class Editor extends JFrame {
 			//
 			jLabelTableFieldSize.setVisible(true);
 			jSpinnerTableFieldSize.setVisible(true);
-			spinnerNumberModelTableFieldSize.setMinimum(1);
+			spinnerNumberModelTableFieldSize.setMinimum(0);
 			spinnerNumberModelTableFieldSize.setMaximum(1000);
 		}
 		//
@@ -33814,6 +33883,7 @@ public class Editor extends JFrame {
 				jLabelTableReferWithKeyFields.setEnabled(false);
 				jTextFieldTableReferWithKeyFields.setEnabled(false);
 				jTextFieldTableReferWithKeyFields.setText("");
+				jButtonTableReferWithKeyFieldsEdit.setEnabled(false);
 				jLabelTableReferOrderByFields.setEnabled(false);
 				jTextFieldTableReferOrderByFields.setEnabled(false);
 				jTextFieldTableReferOrderByFields.setText("");
@@ -33835,6 +33905,7 @@ public class Editor extends JFrame {
 					jTextFieldTableReferAlias.setEnabled(true);
 					jLabelTableReferWithKeyFields.setEnabled(true);
 					jTextFieldTableReferWithKeyFields.setEnabled(true);
+					jButtonTableReferWithKeyFieldsEdit.setEnabled(true);
 					jLabelTableReferOrderByFields.setEnabled(true);
 					jTextFieldTableReferOrderByFields.setEnabled(true);
 					jButtonTableReferOrderByFieldsEdit.setEnabled(true);
@@ -33897,7 +33968,6 @@ public class Editor extends JFrame {
 						fieldElement = getSpecificFieldElement(element.getAttribute("ToTable"), referFieldsList.get(i));
 						JCheckBox checkBox = new JCheckBox();
 						checkBox.setName(referFieldsList.get(i));
-						checkBox.setFont(new java.awt.Font("SansSerif", 0, 12));
 						if (fieldElement.getAttribute("TypeOptions").contains("VIRTUAL")) {
 							checkBox.setText("(" + fieldElement.getAttribute("ID") + " " +  fieldElement.getAttribute("Name") + ")");
 						} else {
@@ -33913,7 +33983,6 @@ public class Editor extends JFrame {
 						if (!wrkStr.equals("")) {
 							checkBox.setEnabled(false);
 							checkBox.setToolTipText(wrkStr);
-							checkBox.setText("<html><u><font color='blue'>" + checkBox.getText());
 						}
 						listModelTableReferFields.addElement(checkBox);
 					}
@@ -33922,7 +33991,6 @@ public class Editor extends JFrame {
 							fieldElement = getSpecificFieldElement(element.getAttribute("ToTable"), tableFieldsList.get(i));
 							JCheckBox checkBox = new JCheckBox();
 							checkBox.setName(tableFieldsList.get(i));
-							checkBox.setFont(new java.awt.Font("SansSerif", 0, 12));
 							if (fieldElement.getAttribute("TypeOptions").contains("VIRTUAL")) {
 								checkBox.setText("(" + fieldElement.getAttribute("ID") + " " +  fieldElement.getAttribute("Name") + ")");
 							} else {
@@ -34428,6 +34496,7 @@ public class Editor extends JFrame {
 				jLabelTableScript.setEnabled(false);
 				jTextAreaTableScriptText.setText("");
 				jTextAreaTableScriptText.setEnabled(false);
+				jTextAreaTableScriptText.setBackground(SystemColor.control);
 			    jLabelTableScriptCursorPos.setText("");
 				jButtonTableScriptEdit.setEnabled(false);
 				jCheckBoxTableScriptHold.setEnabled(false);
@@ -34449,6 +34518,7 @@ public class Editor extends JFrame {
 					jTextFieldTableScriptName.setEnabled(true);
 					jLabelTableScript.setEnabled(true);
 					jTextAreaTableScriptText.setEnabled(true);
+					jTextAreaTableScriptText.setBackground(colorScriptBackground);
 					jButtonTableScriptEdit.setEnabled(true);
 					jCheckBoxTableScriptHold.setEnabled(true);
 					//
@@ -34567,6 +34637,9 @@ public class Editor extends JFrame {
 				jButtonTableDataFieldsToUpdate.setEnabled(false);
 			}
 		}
+	}
+	void jScrollPaneTableDataList_mouseClicked(MouseEvent e) {
+		showPopupMenuComponentForScrollPane(e, jScrollPaneTableDataList);
 	}
 	void jTableTableDataList_mouseClicked(MouseEvent e) {
 		showPopupMenuComponentForTable(e, jTableTableDataList);
@@ -37738,7 +37811,7 @@ public class Editor extends JFrame {
 	}
 	
 	void jButtonTableModuleCheck_actionPerformed(ActionEvent e) {
-		currentMainTreeNode.updateFields();
+		//currentMainTreeNode.updateFields();
 		checkTableModule(currentMainTreeNode, true);
 	}
 	
@@ -37875,8 +37948,6 @@ public class Editor extends JFrame {
 		}
 
 		NodeList subDBList = systemNode.getElement().getElementsByTagName("SubDB");
-//		for (int i = 0; i < subDBList.getLength(); i++) {
-//			element = (org.w3c.dom.Element)subDBList.item(i);
 		sortingList = getSortedListModel(subDBList, "ID");
 	    for (int i = 0; i < sortingList.getSize(); i++) {
 	        element = (org.w3c.dom.Element)sortingList.getElementAt(i);
@@ -37912,9 +37983,14 @@ public class Editor extends JFrame {
 				connection.setAutoCommit(true);
 				reply = 1;
 			} catch (Exception e) {
-				Object[] bts = {res.getString("DBConnectMessage3"), res.getString("DBConnectMessage4")};
-				reply = JOptionPane.showOptionDialog(this, res.getString("DBConnectMessage1") + dbName + res.getString("DBConnectMessage2"),
-						res.getString("DBConnectMessage0"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
+				while (reply != 1) {
+					Object[] bts = {res.getString("DBConnectMessage3"), res.getString("DBConnectMessage4"), res.getString("DBConnectMessage7")};
+					reply = JOptionPane.showOptionDialog(this, res.getString("DBConnectMessage1") + dbName + res.getString("DBConnectMessage2"),
+							res.getString("DBConnectMessage0"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
+					if (reply == 2) {
+						JOptionPane.showMessageDialog(this,  e.getMessage());
+					}
+				}
 			}
 		}
 		return connection;
@@ -38220,40 +38296,40 @@ public class Editor extends JFrame {
 		HSSFFooter workSheetFooter = workSheet.getFooter();
 		workSheetFooter.setRight(jTextFieldTableID.getText() + "  Page " + HSSFFooter.page() + " / " + HSSFFooter.numPages() );
 		//
-		HSSFFont fontHeader = workBook.createFont();
-		fontHeader = workBook.createFont();
-		fontHeader.setFontName(res.getString("XLSFontHDR"));
-		fontHeader.setFontHeightInPoints((short)11);
-		//
-		HSSFFont fontDetail = workBook.createFont();
-		fontDetail.setFontName(res.getString("XLSFontDTL"));
-		fontDetail.setFontHeightInPoints((short)11);
+//		HSSFFont fontHeader = workBook.createFont();
+//		fontHeader = workBook.createFont();
+//		fontHeader.setFontName(res.getString("XLSFontHDR"));
+//		fontHeader.setFontHeightInPoints((short)11);
+//		//
+//		HSSFFont fontDetail = workBook.createFont();
+//		fontDetail.setFontName(res.getString("XLSFontDTL"));
+//		fontDetail.setFontHeightInPoints((short)11);
 		//
 		HSSFCellStyle styleHeader = workBook.createCellStyle();
-		styleHeader.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		styleHeader.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		styleHeader.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		styleHeader.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		styleHeader.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
-		styleHeader.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		//styleHeader.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		//styleHeader.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		//styleHeader.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		//styleHeader.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		//styleHeader.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		//styleHeader.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 		styleHeader.setAlignment(HSSFCellStyle.ALIGN_LEFT);
-		styleHeader.setFont(fontHeader);
+		//styleHeader.setFont(fontHeader);
 		//
 		HSSFCellStyle styleHeaderNumber = workBook.createCellStyle();
-		styleHeaderNumber.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		styleHeaderNumber.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		styleHeaderNumber.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		styleHeaderNumber.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		styleHeaderNumber.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
-		styleHeaderNumber.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		//styleHeaderNumber.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		//styleHeaderNumber.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		//styleHeaderNumber.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		//styleHeaderNumber.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		//styleHeaderNumber.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		//styleHeaderNumber.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 		styleHeaderNumber.setAlignment(HSSFCellStyle.ALIGN_LEFT);
-		styleHeaderNumber.setFont(fontHeader);
+		//styleHeaderNumber.setFont(fontHeader);
 		//
 		HSSFCellStyle styleDataInteger = workBook.createCellStyle();
-		styleDataInteger.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		styleDataInteger.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		styleDataInteger.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		styleDataInteger.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		//styleDataInteger.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		//styleDataInteger.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		//styleDataInteger.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		//styleDataInteger.setBorderTop(HSSFCellStyle.BORDER_THIN);
 		styleDataInteger.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
 		styleDataInteger.setVerticalAlignment(HSSFCellStyle.VERTICAL_TOP);
 		styleDataInteger.setDataFormat(HSSFDataFormat.getBuiltinFormat("#,##0"));
@@ -38314,7 +38390,8 @@ public class Editor extends JFrame {
 				columnIndex = 0;
 				for (int j = 0; j < editableTableFieldList.size(); j++) {
 					columnIndex++;
-					setupCellAttributes(rowData.createCell(columnIndex), workBook, editableTableFieldList.get(j).getBasicType(), tableModelTableDataList.getValueAt(i,columnIndex), fontDetail);
+					//setupCellAttributes(rowData.createCell(columnIndex), workBook, editableTableFieldList.get(j).getBasicType(), tableModelTableDataList.getValueAt(i,columnIndex), fontDetail);
+					setupCellAttributes(rowData.createCell(columnIndex), workBook, editableTableFieldList.get(j).getBasicType(), tableModelTableDataList.getValueAt(i,columnIndex));
 				}
 			}
 			//
@@ -38350,15 +38427,16 @@ public class Editor extends JFrame {
 		return xlsFile.toURI();
 	}
 
-	private void setupCellAttributes(HSSFCell cell, HSSFWorkbook workbook, String basicType, Object object, HSSFFont font) {
+	//private void setupCellAttributes(HSSFCell cell, HSSFWorkbook workbook, String basicType, Object object, HSSFFont font) {
+	private void setupCellAttributes(HSSFCell cell, HSSFWorkbook workbook, String basicType, Object object) {
 		String wrk;
 		//
 		HSSFCellStyle style = workbook.createCellStyle();
-		style.setFont(font);
-		style.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		style.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		style.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		style.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		//style.setFont(font);
+		//style.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		//style.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		//style.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		//style.setBorderTop(HSSFCellStyle.BORDER_THIN);
 		//
 		if (basicType.equals("INTEGER")) {
 			if (object == null) {
@@ -38429,8 +38507,6 @@ public class Editor extends JFrame {
 			MainTreeNode tableNode = getSpecificXETreeNode("Table", tableID);
 			Connection connection = databaseConnList.get(databaseIDList.indexOf(tableNode.getElement().getAttribute("DB")));
 			if (connection != null && !connection.isClosed()) {
-				//setupConnectionList(true);
-				//connection = databaseConnList.get(databaseIDList.indexOf(tableNode.getElement().getAttribute("DB")));
 				//
 				jTextAreaTableFieldTypeOptionKUBUN.setText("");
 				//
@@ -38548,8 +38624,6 @@ public class Editor extends JFrame {
 			int blockRows = 0;
 			TableDataRowNumber rowNumber;
 			Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
-			//setupConnectionList(true);
-			//connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
 			statement = connection.createStatement();
 			sql = buf.toString();
 			result = statement.executeQuery(sql);
@@ -38606,9 +38680,9 @@ public class Editor extends JFrame {
 
 			if (count > 0) {
 				jTextAreaTableDataMessages.setText(count + res.getString("ReadCountMessage"));
-				if (jCheckBoxTableDataOutput.isSelected() && actionEvent != null) {
-					desktop.browse(getExcellBookURI());
-				}
+//				if (jCheckBoxTableDataOutput.isSelected() && actionEvent != null) {
+//					desktop.browse(getExcellBookURI());
+//				}
 			} else {
 				if (!jTextFieldTableDataSelectWhere.getText().trim().equals("*All") && !jTextFieldTableDataSelectWhere.getText().trim().equals("")) {
 					jTextAreaTableDataMessages.setText(res.getString("ReadNoneMessage"));
@@ -38617,10 +38691,10 @@ public class Editor extends JFrame {
 				}
 			}
 
-		} catch (IOException ex) {
-			jTextAreaTableDataMessages.setText("IOException : "+ ex.getMessage());
+		//} catch (IOException ex) {
+		//	jTextAreaTableDataMessages.setText("IOException : "+ ex.getMessage());
 		} catch (SQLException ex) {
-			jTextAreaTableDataMessages.setText("SQLException : "+ ex.getMessage() + "\nSQL: " + sql);
+			jTextAreaTableDataMessages.setText("SQLException:("+ ex.getErrorCode() + ") " + ex.getMessage() + "\nSQL: " + sql);
 		} catch (OutOfMemoryError ex) {
 			jTextAreaTableDataMessages.setText("Exception : "+ ex.getMessage());
 		} catch (Exception ex) {
@@ -38785,8 +38859,6 @@ public class Editor extends JFrame {
 				}
 				//
 				Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
-				//setupConnectionList(true);
-				//connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
 				Statement statement = connection.createStatement();
 				sql = statementBuf.toString();
 				int recordCount = statement.executeUpdate(sql);
@@ -38888,8 +38960,6 @@ public class Editor extends JFrame {
 				}
 				//
 				Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
-				//setupConnectionList(true);
-				//connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
 				Statement statement = connection.createStatement();
 				sql = statementBuf.toString();
 				ResultSet result = statement.executeQuery(sql);
@@ -38990,8 +39060,6 @@ public class Editor extends JFrame {
 				}
 				//
 				Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
-				//setupConnectionList(true);
-				//connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
 				Statement statement = connection.createStatement();
 				sql = statementBuf.toString();
 				int recordCount = statement.executeUpdate(sql);
@@ -39157,8 +39225,6 @@ public class Editor extends JFrame {
 							}
 						}
 						Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
-						//setupConnectionList(true);
-						//connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
 						Statement statement = connection.createStatement();
 						ResultSet result = statement.executeQuery(statementBuf.toString());
 						if (result.next()) {
@@ -39981,15 +40047,24 @@ public class Editor extends JFrame {
 
 class Editor_CheckBoxListRenderer extends JCheckBox implements ListCellRenderer{
 	private static final long serialVersionUID = 1L;
-	public Editor_CheckBoxListRenderer() {
+	private Editor editor_;
+	public Editor_CheckBoxListRenderer(Editor editor) {
+		editor_= editor;
 	}
 	public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus){
 		JCheckBox checkBox = (JCheckBox)value;
-		setText(checkBox.getText());
 		setSelected(checkBox.isSelected());
 		setEnabled(checkBox.isEnabled());
-		setForeground(Color.black);
-		return this;
+		if (checkBox.isEnabled()) {
+			setFont(new java.awt.Font(editor_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+			setText(checkBox.getText());
+			return this;
+		} else {
+			JLabel label = new JLabel();
+			label.setFont(new java.awt.Font(editor_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+			label.setText("<html><font color='blue'><u>" + checkBox.getText());
+			return label;
+		}
 	}
 }
 
@@ -40134,10 +40209,10 @@ class Editor_DialogBatchTableEdit extends JDialog {
 
 	private void init() throws Exception {
 		jPanelButtons.setBorder(BorderFactory.createEtchedBorder());
-		jPanelButtons.setPreferredSize(new Dimension(350, 43));
+		jPanelButtons.setPreferredSize(new Dimension(100, 43));
 		jPanelButtons.setLayout(null);
-		jButtonOK.setBounds(new Rectangle(430, 10, 73, 25));
-		jButtonOK.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonOK.setBounds(new Rectangle(700, 8, 100, 27));
+		jButtonOK.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonOK.setText("OK");
 		jButtonOK.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -40147,8 +40222,8 @@ class Editor_DialogBatchTableEdit extends JDialog {
 				}
 			}
 		});
-		jButtonCancel.setBounds(new Rectangle(44, 10, 73, 25));
-		jButtonCancel.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonCancel.setBounds(new Rectangle(50, 8, 100, 27));
+		jButtonCancel.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonCancel.setText(res.getString("Cancel"));
 		jButtonCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -40158,43 +40233,44 @@ class Editor_DialogBatchTableEdit extends JDialog {
 		jPanelButtons.add(jButtonOK, null);
 		jPanelButtons.add(jButtonCancel, null);
 		//
-		jPanelCenter.setBorder(BorderFactory.createEtchedBorder());
+		jPanelCenter.setBorder(null);
 		jPanelCenter.setLayout(null);
 		jLabelPrimaryTable.setText(res.getString("PrimaryTable"));
-		jLabelPrimaryTable.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelPrimaryTable.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelPrimaryTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelPrimaryTable.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelPrimaryTable.setBounds(new Rectangle(5, 12, 110, 15));
-		jTextFieldPrimaryTableName.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldPrimaryTableName.setBounds(new Rectangle(120, 9, 410, 22));
+		jLabelPrimaryTable.setBounds(new Rectangle(5, 12, 130, 20));
+		jTextFieldPrimaryTableName.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldPrimaryTableName.setBounds(new Rectangle(140, 9, 700, 25));
 		jTextFieldPrimaryTableName.setEditable(false);
 		jLabelBatchWithKeyFields.setText(res.getString("BatchKey"));
-		jLabelBatchWithKeyFields.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelBatchWithKeyFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelBatchWithKeyFields.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelBatchWithKeyFields.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelBatchWithKeyFields.setBounds(new Rectangle(5, 40, 110, 15));
-		jTextFieldBatchWithKeyFields.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldBatchWithKeyFields.setBounds(new Rectangle(120, 37, 410, 22));
+		jLabelBatchWithKeyFields.setBounds(new Rectangle(5, 43, 130, 20));
+		jTextFieldBatchWithKeyFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldBatchWithKeyFields.setBounds(new Rectangle(140, 40, 700, 25));
 		jLabelBatchTable.setText(res.getString("BatchTable"));
-		jLabelBatchTable.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelBatchTable.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelBatchTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelBatchTable.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelBatchTable.setBounds(new Rectangle(5, 68, 110, 15));
+		jLabelBatchTable.setBounds(new Rectangle(5, 74, 130, 20));
 		jComboBoxBatchTable.setEditable(false);
-		jComboBoxBatchTable.setFont(new java.awt.Font("Dialog", 0, 12));
-		jComboBoxBatchTable.setBounds(new Rectangle(120, 65, 410, 22));
+		jComboBoxBatchTable.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jComboBoxBatchTable.setBounds(new Rectangle(140, 71, 700, 25));
 		jLabelBatchKeyFields.setText(res.getString("BatchKey"));
-		jLabelBatchKeyFields.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelBatchKeyFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelBatchKeyFields.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelBatchKeyFields.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelBatchKeyFields.setBounds(new Rectangle(5, 96, 110, 15));
-		jTextFieldBatchKeyFields.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldBatchKeyFields.setBounds(new Rectangle(120, 93, 410, 22));
-		jTextAreaMessage.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextAreaMessage.setBounds(new Rectangle(7, 121, 530, 88));
+		jLabelBatchKeyFields.setBounds(new Rectangle(5, 105, 130, 20));
+		jTextFieldBatchKeyFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldBatchKeyFields.setBounds(new Rectangle(140, 102, 700, 25));
+		jTextAreaMessage.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextAreaMessage.setBounds(new Rectangle(7, 136, 834, 70));
 		jTextAreaMessage.setLineWrap(true);
 		jTextAreaMessage.setEditable(false);
 		jTextAreaMessage.setBorder(BorderFactory.createEtchedBorder());
+		jTextAreaMessage.setBackground(SystemColor.control);
 		jPanelCenter.add(jLabelPrimaryTable, null);
 		jPanelCenter.add(jTextFieldPrimaryTableName, null);
 		jPanelCenter.add(jLabelBatchWithKeyFields, null);
@@ -40286,7 +40362,7 @@ class Editor_DialogBatchTableEdit extends JDialog {
 		returnCode = 0;
 		jTextAreaMessage.setText(res.getString("BatchKeyAbout"));
 		//
-		this.setSize(new Dimension(550, 291));
+		this.setSize(new Dimension(855, 297));
 		Dimension dlgSize = this.getSize();
 		Dimension frmSize = frame_.getSize();
 		Point loc = frame_.getLocation();
@@ -40409,7 +40485,7 @@ class Editor_DialogStructureTableEdit extends JDialog {
 	private JLabel jLabelStructureChildKeys = new JLabel();
 	private JLabel jLabelStructureOrderBy = new JLabel();
 	private JTextField jTextFieldStructureTableID = new JTextField();
-	private JLabel jLabelStructureTableName = new JLabel();
+	private JTextField jTextFieldStructureTableName = new JTextField();
 	private JTextField jTextFieldStructureUpperKeys = new JTextField();
 	private JTextField jTextFieldStructureChildKeys = new JTextField();
 	private JTextField jTextFieldStructureOrderBy = new JTextField();
@@ -40437,8 +40513,8 @@ class Editor_DialogStructureTableEdit extends JDialog {
 		jPanelButtons.setBorder(BorderFactory.createEtchedBorder());
 		jPanelButtons.setPreferredSize(new Dimension(350, 43));
 		jPanelButtons.setLayout(null);
-		jButtonOK.setBounds(new Rectangle(300, 10, 73, 25));
-		jButtonOK.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonOK.setBounds(new Rectangle(440, 8, 100, 27));
+		jButtonOK.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonOK.setText("OK");
 		jButtonOK.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -40448,8 +40524,8 @@ class Editor_DialogStructureTableEdit extends JDialog {
 				}
 			}
 		});
-		jButtonCancel.setBounds(new Rectangle(44, 10, 73, 25));
-		jButtonCancel.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonCancel.setBounds(new Rectangle(50, 8, 100, 27));
+		jButtonCancel.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonCancel.setText(res.getString("Cancel"));
 		jButtonCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -40459,51 +40535,53 @@ class Editor_DialogStructureTableEdit extends JDialog {
 		jPanelButtons.add(jButtonOK, null);
 		jPanelButtons.add(jButtonCancel, null);
 		//
-		jPanelCenter.setBorder(BorderFactory.createEtchedBorder());
+		jPanelCenter.setBorder(null);
 		jPanelCenter.setLayout(null);
 		jLabelStructureTableID.setText(res.getString("StructureTable"));
-		jLabelStructureTableID.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelStructureTableID.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelStructureTableID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelStructureTableID.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelStructureTableID.setBounds(new Rectangle(5, 12, 110, 15));
-		jTextFieldStructureTableID.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldStructureTableID.setBounds(new Rectangle(120, 9, 70, 22));
+		jLabelStructureTableID.setBounds(new Rectangle(5, 12, 150, 20));
+		jTextFieldStructureTableID.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldStructureTableID.setBounds(new Rectangle(160, 9, 120, 25));
 		jTextFieldStructureTableID.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
 				setTableAttribute();
 			}
 		});
-		jLabelStructureTableName.setFont(new java.awt.Font("Dialog", 0, 12));
-		jLabelStructureTableName.setBounds(new Rectangle(195, 12, 200, 15));
+		jTextFieldStructureTableName.setEditable(false);
+		jTextFieldStructureTableName.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldStructureTableName.setBounds(new Rectangle(285, 9, 300, 25));
 		jLabelStructureUpperKeys.setText(res.getString("StructureUpperKeys"));
-		jLabelStructureUpperKeys.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelStructureUpperKeys.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelStructureUpperKeys.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelStructureUpperKeys.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelStructureUpperKeys.setBounds(new Rectangle(5, 40, 110, 15));
-		jTextFieldStructureUpperKeys.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldStructureUpperKeys.setBounds(new Rectangle(120, 37, 280, 22));
+		jLabelStructureUpperKeys.setBounds(new Rectangle(5, 43, 150, 20));
+		jTextFieldStructureUpperKeys.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldStructureUpperKeys.setBounds(new Rectangle(160, 40, 425, 25));
 		jLabelStructureChildKeys.setText(res.getString("StructureChildKeys"));
-		jLabelStructureChildKeys.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelStructureChildKeys.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelStructureChildKeys.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelStructureChildKeys.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelStructureChildKeys.setBounds(new Rectangle(5, 68, 110, 15));
-		jTextFieldStructureChildKeys.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldStructureChildKeys.setBounds(new Rectangle(120, 65, 280, 22));
+		jLabelStructureChildKeys.setBounds(new Rectangle(5, 74, 150, 20));
+		jTextFieldStructureChildKeys.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldStructureChildKeys.setBounds(new Rectangle(160, 71, 425, 25));
 		jLabelStructureOrderBy.setText(res.getString("StructureOrderBy"));
-		jLabelStructureOrderBy.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelStructureOrderBy.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelStructureOrderBy.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelStructureOrderBy.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelStructureOrderBy.setBounds(new Rectangle(5, 96, 110, 15));
-		jTextFieldStructureOrderBy.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldStructureOrderBy.setBounds(new Rectangle(120, 93, 280, 22));
-		jTextAreaMessage.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextAreaMessage.setBounds(new Rectangle(7, 121, 400, 55));
+		jLabelStructureOrderBy.setBounds(new Rectangle(5, 105, 150, 20));
+		jTextFieldStructureOrderBy.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldStructureOrderBy.setBounds(new Rectangle(160, 102, 425, 22));
+		jTextAreaMessage.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextAreaMessage.setBounds(new Rectangle(7, 133, 579, 55));
 		jTextAreaMessage.setLineWrap(true);
 		jTextAreaMessage.setEditable(false);
+		jTextAreaMessage.setBackground(SystemColor.control);
 		jTextAreaMessage.setBorder(BorderFactory.createEtchedBorder());
 		jPanelCenter.add(jLabelStructureTableID, null);
 		jPanelCenter.add(jTextFieldStructureTableID, null);
-		jPanelCenter.add(jLabelStructureTableName, null);
+		jPanelCenter.add(jTextFieldStructureTableName, null);
 		jPanelCenter.add(jLabelStructureUpperKeys, null);
 		jPanelCenter.add(jTextFieldStructureUpperKeys, null);
 		jPanelCenter.add(jLabelStructureChildKeys, null);
@@ -40534,7 +40612,7 @@ class Editor_DialogStructureTableEdit extends JDialog {
 		returnCode = 0;
 		jTextAreaMessage.setText(res.getString("StructureTableComment"));
 		//
-		this.setSize(new Dimension(420, 258));
+		this.setSize(new Dimension(600, 280));
 		Dimension dlgSize = this.getSize();
 		Dimension frmSize = frame_.getSize();
 		Point loc = frame_.getLocation();
@@ -40547,15 +40625,15 @@ class Editor_DialogStructureTableEdit extends JDialog {
 
 	void setTableAttribute() {
 		tableNode = null;
-		jLabelStructureTableName.setText("");
+		jTextFieldStructureTableName.setText("");
 		jButtonOK.setEnabled(false);
 		if (!jTextFieldStructureTableID.getText().equals("")) {
-			jLabelStructureTableName.setText("N/A");
+			jTextFieldStructureTableName.setText("N/A");
 			tableNode = frame_.getSpecificXETreeNode("Table", jTextFieldStructureTableID.getText());
 			if (tableNode == null) {
 				tableNode = frame_.getSpecificXETreeNode("Table", jTextFieldStructureTableID.getText().toUpperCase());
 				if (tableNode != null) {
-					jLabelStructureTableName.setText(tableNode.getElement().getAttribute("Name"));
+					jTextFieldStructureTableName.setText(tableNode.getElement().getAttribute("Name"));
 					jTextFieldStructureTableID.setText(frame_.getCaseShiftValue(jTextFieldStructureTableID.getText(), "Upper"));
 					org.w3c.dom.Element tablePKElement = frame_.getSpecificPKElement(jTextFieldStructureTableID.getText());
 					if (jTextFieldStructureUpperKeys.getText().equals("")) {
@@ -40564,7 +40642,7 @@ class Editor_DialogStructureTableEdit extends JDialog {
 					jButtonOK.setEnabled(true);
 				}
 			} else {
-				jLabelStructureTableName.setText(tableNode.getElement().getAttribute("Name"));
+				jTextFieldStructureTableName.setText(tableNode.getElement().getAttribute("Name"));
 				org.w3c.dom.Element tablePKElement = frame_.getSpecificPKElement(jTextFieldStructureTableID.getText());
 				if (jTextFieldStructureUpperKeys.getText().equals("")) {
 					jTextFieldStructureUpperKeys.setText(tablePKElement.getAttribute("Fields"));
@@ -40748,10 +40826,10 @@ class Editor_DialogStructureNodeIconsEdit extends JDialog {
 
 	private void init() throws Exception {
 		jPanelButtons.setBorder(BorderFactory.createEtchedBorder());
-		jPanelButtons.setPreferredSize(new Dimension(350, 43));
+		jPanelButtons.setPreferredSize(new Dimension(100, 43));
 		jPanelButtons.setLayout(null);
-		jButtonOK.setBounds(new Rectangle(300, 10, 73, 25));
-		jButtonOK.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonOK.setBounds(new Rectangle(565, 8, 100, 27));
+		jButtonOK.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonOK.setText("OK");
 		jButtonOK.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -40761,8 +40839,8 @@ class Editor_DialogStructureNodeIconsEdit extends JDialog {
 				}
 			}
 		});
-		jButtonCancel.setBounds(new Rectangle(44, 10, 73, 25));
-		jButtonCancel.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonCancel.setBounds(new Rectangle(50, 8, 100, 27));
+		jButtonCancel.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonCancel.setText(res.getString("Cancel"));
 		jButtonCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -40772,41 +40850,42 @@ class Editor_DialogStructureNodeIconsEdit extends JDialog {
 		jPanelButtons.add(jButtonOK, null);
 		jPanelButtons.add(jButtonCancel, null);
 		//
-		jPanelCenter.setBorder(BorderFactory.createEtchedBorder());
+		jPanelCenter.setBorder(null);
 		jPanelCenter.setLayout(null);
 		jLabelDefaultIcon.setText(res.getString("StructureNodeDefaultIcon"));
-		jLabelDefaultIcon.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelDefaultIcon.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelDefaultIcon.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelDefaultIcon.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelDefaultIcon.setBounds(new Rectangle(5, 12, 110, 15));
-		jTextFieldDefaultIcon.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldDefaultIcon.setBounds(new Rectangle(120, 9, 140, 22));
+		jLabelDefaultIcon.setBounds(new Rectangle(5, 12, 150, 20));
+		jTextFieldDefaultIcon.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldDefaultIcon.setBounds(new Rectangle(160, 9, 160, 25));
 		jLabelFieldID.setText(res.getString("StructureNodeIconsFieldID"));
-		jLabelFieldID.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelFieldID.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelFieldID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFieldID.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFieldID.setBounds(new Rectangle(5, 40, 110, 15));
-		jTextFieldFieldID.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldFieldID.setBounds(new Rectangle(120, 37, 140, 22));
+		jLabelFieldID.setBounds(new Rectangle(5, 43, 150, 20));
+		jTextFieldFieldID.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldFieldID.setBounds(new Rectangle(160, 40, 160, 25));
 		jLabelFieldValues.setText(res.getString("StructureNodeIconsFieldValues"));
-		jLabelFieldValues.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelFieldValues.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelFieldValues.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFieldValues.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFieldValues.setBounds(new Rectangle(5, 68, 110, 15));
-		jTextFieldFieldValues.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldFieldValues.setBounds(new Rectangle(120, 65, 280, 22));
+		jLabelFieldValues.setBounds(new Rectangle(5, 74, 150, 20));
+		jTextFieldFieldValues.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldFieldValues.setBounds(new Rectangle(160, 71, 550, 25));
 		jLabelIcons.setText(res.getString("StructureNodeIconsList"));
-		jLabelIcons.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelIcons.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelIcons.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelIcons.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelIcons.setBounds(new Rectangle(5, 96, 110, 15));
-		jTextFieldIcons.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldIcons.setBounds(new Rectangle(120, 93, 280, 22));
-		jTextAreaMessage.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextAreaMessage.setBounds(new Rectangle(7, 121, 400, 55));
+		jLabelIcons.setBounds(new Rectangle(5, 105, 150, 20));
+		jTextFieldIcons.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldIcons.setBounds(new Rectangle(160, 102, 550, 25));
+		jTextAreaMessage.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextAreaMessage.setBounds(new Rectangle(7, 133, 704, 53));
 		jTextAreaMessage.setLineWrap(true);
 		jTextAreaMessage.setEditable(false);
 		jTextAreaMessage.setBorder(BorderFactory.createEtchedBorder());
+		jTextAreaMessage.setBackground(SystemColor.control);
 		jPanelCenter.add(jLabelDefaultIcon, null);
 		jPanelCenter.add(jTextFieldDefaultIcon, null);
 		jPanelCenter.add(jLabelFieldID, null);
@@ -40836,7 +40915,7 @@ class Editor_DialogStructureNodeIconsEdit extends JDialog {
 			jTextFieldFieldValues.setText(fieldValues);
 			jTextFieldIcons.setText(icons);
 			jTextAreaMessage.setText(res.getString("StructureNodeIconsComment"));
-			this.setSize(new Dimension(420, 258));
+			this.setSize(new Dimension(725, 277));
 			Dimension dlgSize = this.getSize();
 			Dimension frmSize = frame_.getSize();
 			Point loc = frame_.getLocation();
@@ -40932,7 +41011,7 @@ class Editor_DialogAddRowListTableEdit extends JDialog {
 	private JLabel jLabelAddRowListTableWithFields = new JLabel();
 	private JLabel jLabelHeaderTableWithFields = new JLabel();
 	private JTextField jTextFieldAddRowListTableID = new JTextField();
-	private JLabel jLabelAddRowListTableName = new JLabel();
+	private JTextField jTextFieldAddRowListTableName = new JTextField();
 	private JTextField jTextFieldAddRowListTableWithFields = new JTextField();
 	private JTextField jTextFieldHeaderTableWithFields = new JTextField();
 	private JTextArea jTextAreaMessage = new JTextArea();
@@ -40954,12 +41033,11 @@ class Editor_DialogAddRowListTableEdit extends JDialog {
 	}
 
 	private void init() throws Exception {
-		//
 		jPanelButtons.setBorder(BorderFactory.createEtchedBorder());
-		jPanelButtons.setPreferredSize(new Dimension(350, 43));
+		jPanelButtons.setPreferredSize(new Dimension(100, 43));
 		jPanelButtons.setLayout(null);
-		jButtonOK.setBounds(new Rectangle(300, 10, 73, 25));
-		jButtonOK.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonOK.setBounds(new Rectangle(430, 8, 100, 27));
+		jButtonOK.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonOK.setText("OK");
 		jButtonOK.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -40969,8 +41047,8 @@ class Editor_DialogAddRowListTableEdit extends JDialog {
 				}
 			}
 		});
-		jButtonCancel.setBounds(new Rectangle(44, 10, 73, 25));
-		jButtonCancel.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonCancel.setBounds(new Rectangle(50, 8, 100, 27));
+		jButtonCancel.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonCancel.setText(res.getString("Cancel"));
 		jButtonCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -40979,51 +41057,53 @@ class Editor_DialogAddRowListTableEdit extends JDialog {
 		});
 		jPanelButtons.add(jButtonOK, null);
 		jPanelButtons.add(jButtonCancel, null);
-		//
-		jPanelCenter.setBorder(BorderFactory.createEtchedBorder());
+
+		jPanelCenter.setBorder(null);
 		jPanelCenter.setLayout(null);
 		jLabelAddRowListTableID.setText(res.getString("ListTable"));
-		jLabelAddRowListTableID.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelAddRowListTableID.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelAddRowListTableID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelAddRowListTableID.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelAddRowListTableID.setBounds(new Rectangle(5, 12, 110, 15));
-		jTextFieldAddRowListTableID.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldAddRowListTableID.setBounds(new Rectangle(120, 9, 70, 22));
+		jLabelAddRowListTableID.setBounds(new Rectangle(5, 12, 150, 20));
+		jTextFieldAddRowListTableID.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldAddRowListTableID.setBounds(new Rectangle(160, 9, 120, 25));
 		jTextFieldAddRowListTableID.addKeyListener(new KeyAdapter() {
 			public void keyReleased(KeyEvent e) {
 				setTableAttribute();
 			}
 		});
-		jLabelAddRowListTableName.setFont(new java.awt.Font("Dialog", 0, 12));
-		jLabelAddRowListTableName.setBounds(new Rectangle(195, 12, 200, 15));
+		jTextFieldAddRowListTableName.setEditable(false);
+		jTextFieldAddRowListTableName.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldAddRowListTableName.setBounds(new Rectangle(285, 9, 300, 25));
 		jLabelAddRowListTableWithFields.setText(res.getString("AddRowListWithFieldShort"));
-		jLabelAddRowListTableWithFields.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelAddRowListTableWithFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelAddRowListTableWithFields.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelAddRowListTableWithFields.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelAddRowListTableWithFields.setBounds(new Rectangle(5, 40, 110, 15));
-		jTextFieldAddRowListTableWithFields.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldAddRowListTableWithFields.setBounds(new Rectangle(120, 37, 280, 22));
+		jLabelAddRowListTableWithFields.setBounds(new Rectangle(5, 43, 150, 20));
+		jTextFieldAddRowListTableWithFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldAddRowListTableWithFields.setBounds(new Rectangle(160, 40, 425, 22));
 		jLabelHeaderTableWithFields.setText(res.getString("AddRowListWithHDRFieldShort"));
-		jLabelHeaderTableWithFields.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelHeaderTableWithFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelHeaderTableWithFields.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelHeaderTableWithFields.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelHeaderTableWithFields.setBounds(new Rectangle(5, 68, 110, 15));
-		jTextFieldHeaderTableWithFields.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldHeaderTableWithFields.setBounds(new Rectangle(120, 65, 280, 22));
-		jTextAreaMessage.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextAreaMessage.setBounds(new Rectangle(7, 93, 400, 40));
+		jLabelHeaderTableWithFields.setBounds(new Rectangle(5, 74, 150, 20));
+		jTextFieldHeaderTableWithFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldHeaderTableWithFields.setBounds(new Rectangle(160, 71, 425, 25));
+		jTextAreaMessage.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextAreaMessage.setBounds(new Rectangle(7, 105, 579, 51));
 		jTextAreaMessage.setLineWrap(true);
 		jTextAreaMessage.setEditable(false);
 		jTextAreaMessage.setBorder(BorderFactory.createEtchedBorder());
+		jTextAreaMessage.setBackground(SystemColor.control);
 		jPanelCenter.add(jLabelAddRowListTableID, null);
 		jPanelCenter.add(jTextFieldAddRowListTableID, null);
-		jPanelCenter.add(jLabelAddRowListTableName, null);
+		jPanelCenter.add(jTextFieldAddRowListTableName, null);
 		jPanelCenter.add(jLabelAddRowListTableWithFields, null);
 		jPanelCenter.add(jTextFieldAddRowListTableWithFields, null);
 		jPanelCenter.add(jTextAreaMessage, null);
 		jPanelCenter.add(jLabelHeaderTableWithFields, null);
 		jPanelCenter.add(jTextFieldHeaderTableWithFields, null);
-		//
+
 		this.setTitle(res.getString("AddRowListTableDialogTitle"));
 		this.getContentPane().setLayout(new BorderLayout());
 		this.getContentPane().add(jPanelButtons,  BorderLayout.SOUTH);
@@ -41031,9 +41111,8 @@ class Editor_DialogAddRowListTableEdit extends JDialog {
 		this.setResizable(false);
 		this.pack();
 	}
-	//
+
 	public int request(String headerTableID, String addRowListTableID, String addRowListTableWhereFields, String headerTableWithKeys, NodeList referList) {
-		//
 		headerTableID_ = headerTableID;
 		jTextFieldAddRowListTableID.setText(addRowListTableID);
 		setTableAttribute();
@@ -41044,7 +41123,7 @@ class Editor_DialogAddRowListTableEdit extends JDialog {
 		returnCode = 0;
 		jTextAreaMessage.setText(res.getString("AddRowListTableDialogComment"));
 		//
-		this.setSize(new Dimension(420, 215));
+		this.setSize(new Dimension(600, 245));
 		Dimension dlgSize = this.getSize();
 		Dimension frmSize = frame_.getSize();
 		Point loc = frame_.getLocation();
@@ -41054,39 +41133,37 @@ class Editor_DialogAddRowListTableEdit extends JDialog {
 		//
 		return returnCode;
 	}
-	//
+
 	void setTableAttribute() {
 		tableNode = null;
-		jLabelAddRowListTableName.setText("");
-		//jTextFieldAddRowListTableWithFields.setText("");
-		//jTextFieldHeaderTableWithFields.setText("");
+		jTextFieldAddRowListTableName.setText("");
 		if (!jTextFieldAddRowListTableID.getText().equals("")) {
-			jLabelAddRowListTableName.setText("N/A");
+			jTextFieldAddRowListTableName.setText("N/A");
 			tableNode = frame_.getSpecificXETreeNode("Table", jTextFieldAddRowListTableID.getText());
 			if (tableNode == null) {
 				tableNode = frame_.getSpecificXETreeNode("Table", frame_.getCaseShiftValue(jTextFieldAddRowListTableID.getText(), "Upper"));
 				if (tableNode != null) {
-					jLabelAddRowListTableName.setText(tableNode.getElement().getAttribute("Name"));
+					jTextFieldAddRowListTableName.setText(tableNode.getElement().getAttribute("Name"));
 					jTextFieldAddRowListTableID.setText(frame_.getCaseShiftValue(jTextFieldAddRowListTableID.getText(), "Upper"));
 				}
 			} else {
-				jLabelAddRowListTableName.setText(tableNode.getElement().getAttribute("Name"));
+				jTextFieldAddRowListTableName.setText(tableNode.getElement().getAttribute("Name"));
 			}
 		}
 	}
-	//
+
 	public String getAddRowListWhereFields() {
 		return jTextFieldAddRowListTableWithFields.getText();
 	}
-	//
+
 	public String getAddRowListWithHeaderFields() {
 		return jTextFieldHeaderTableWithFields.getText();
 	}
-	//
+
 	public String getAddRowListTableID() {
 		return jTextFieldAddRowListTableID.getText();
 	}
-	//
+
 	boolean valuesValidated() {
 		boolean isValid = true;
 		//
@@ -41283,13 +41360,13 @@ class Editor_EditableTableField extends JPanel {
 
 	public Editor_EditableTableField(org.w3c.dom.Element fieldElement, Editor editor){
 		super();
-		//
+
 		editor_ = editor;
 		fieldElement_ = fieldElement;
 		org.w3c.dom.Element tableElement = (org.w3c.dom.Element)fieldElement_.getParentNode();
 		String dbID = tableElement.getAttribute("DB");
 		dbName = editor_.getDatabaseNameList().get(editor_.getDatabaseIDList().indexOf(dbID));
-		//
+
 		fieldID_ = fieldElement_.getAttribute("ID");
 		dataType = fieldElement_.getAttribute("Type");
 		dataTypeOptions = fieldElement_.getAttribute("TypeOptions");
@@ -41309,14 +41386,14 @@ class Editor_EditableTableField extends JPanel {
 		if (fieldElement_.getAttribute("Nullable").equals("F")) {
 			isNullable = false;
 		}
-		//
+
 		jLabelField = new JLabel(fieldCaption);
-		jLabelField.setPreferredSize(new Dimension(120, 15));
+		jLabelField.setPreferredSize(new Dimension(170, 15));
 		jLabelField.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelField.setVerticalAlignment(SwingConstants.TOP);
-		jLabelField.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelField.setFont(new java.awt.Font(editor_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelField.setEnabled(false);
-		//
+
 		if (dataType.equals("VARCHAR") || dataType.equals("LONG VARCHAR")) {
 			textArea = new Editor_TextArea(dataSize, dataTypeOptions, editor_);
 			textArea.setLocation(5, 0);
@@ -41334,21 +41411,21 @@ class Editor_EditableTableField extends JPanel {
 		jPanelField.add((JComponent)component);
 		component.setValue(this.getNullValue());
 		component.setEnabled(false);
-		//
+
 		this.setLayout(new BorderLayout());
-		this.setPreferredSize(new Dimension(component.getWidth() + 130, component.getHeight()));
+		this.setPreferredSize(new Dimension(component.getWidth() + 180, component.getHeight()));
 		this.add(jLabelField, BorderLayout.WEST);
 		this.add(jPanelField, BorderLayout.CENTER);
 	}
-	//
+
 	public ArrayList<String> getDataTypeOptionList() {
 		return dataTypeOptionList;
 	}
-	//
+
 	public String getFieldID(){
 		return fieldID_;
 	}
-	//
+
 	public String getFieldName(){
 		if (fieldElement_.getAttribute("Name").equals("")) {
 			return fieldElement_.getAttribute("ID");
@@ -41356,22 +41433,22 @@ class Editor_EditableTableField extends JPanel {
 			return fieldElement_.getAttribute("Name");
 		}
 	}
-	//
+
 	public boolean isEditControlled(){
 		return isEditControlled;
 	}
-	//
+
 	public void setCaption(String caption){
 		jLabelField.setText(caption);
 	}
-	//
+
 	public void setEditControlled(boolean isEditControlled){
 		this.isEditControlled = isEditControlled;
 		if (this.isEditControlled) {
 			this.setFocusable(false);
 		}
 	}
-	//
+
 	public boolean isLiteralRequired() {
 		if (dataType.equals("CHAR")
 				|| dataType.equals("VARCHAR")
@@ -41386,48 +41463,48 @@ class Editor_EditableTableField extends JPanel {
 			return false;
 		}
 	}
-	//
+
 	public int getRows(){
 		return fieldRows;
 	}
-	//
+
 	public String getBasicType(){
 		return editor_.getBasicTypeOf(dataType);
 	}
-	//
+
 	public int getDecimalSize(){
 		return decimalSize;
 	}
-	//
+
 	public int getDataSize(){
 		return dataSize;
 	}
-	//
+
 	public void setKey(boolean key){
 		isKey = key;
 		if (isKey) {
-			jLabelField.setFont(new java.awt.Font("SansSerif", 1, 12));
+			jLabelField.setFont(new java.awt.Font(editor_.mainFontName, 1, Editor.MAIN_FONT_SIZE));
 		}
 	}
-	//
+
 	public boolean isKey(){
 		return isKey;
 	}
-	//
+
 	public boolean isEditable() {
 		return component.isEditable();
 	}
-	//
+
 	public void requestFocus() {
 		component.requestFocus();
 	}
-	//
+
 	public void setEnabled(boolean enabled) {
 		jLabelField.setEnabled(enabled);
 		component.setEnabled(enabled);
 		component.setEditable(false);
 	}
-	//
+
 	public Object getTableOperationValue(){
 		Object returnValue = null;
 		String basicType = this.getBasicType();
@@ -41468,7 +41545,7 @@ class Editor_EditableTableField extends JPanel {
 		}
 		return returnValue;
 	}
-	//
+
 	public void setEditable(boolean editable){
 		if (editable) {
 			component.setEditable(true);
@@ -41478,15 +41555,14 @@ class Editor_EditableTableField extends JPanel {
 			component.setBackground(inactiveColor);
 		}
 	}
-	//
+
 	public void clear() {
 		setValue(getNullValue());
 	}
-	//
+
 	public void setValue(Object object){
 		String wrkStr;
 		String basicType = this.getBasicType();
-		//
 		if (basicType.equals("INTEGER")) {
 			if (object == null || object.equals("")) {
 				component.setValue("");
@@ -41538,61 +41614,53 @@ class Editor_EditableTableField extends JPanel {
 			}
 		}
 	}
-	//
+
 	public Object getNullValue(){
 		Object value = null;
 		String basicType = this.getBasicType();
-		//
 		if (basicType.equals("INTEGER") || basicType.equals("FLOAT")) {
 			value = 0;
 		}
-		//
 		if (basicType.equals("STRING") || basicType.equals("DATETIME") || basicType.equals("TIME")) {
 			value = "";
 		}
-		//
 		if (basicType.equals("DATE")) {
 			value = "";
 		}
-		//
 		return value;
 	}
+
 	public boolean isNullable(){
 		return isNullable;
 	}
-	//
+
 	public boolean isNull(){
 		boolean isNull = false;
 		String basicType = this.getBasicType();
-		//
 		if (basicType.equals("INTEGER") || basicType.equals("FLOAT")) {
 			String value = (String)component.getInternalValue();
 			if (value == null || value.equals("") || value.equals("0") || value.equals("0.0")) {
 				isNull = true;
 			}
 		}
-		//
 		if (basicType.equals("STRING") || basicType.equals("DATETIME") || basicType.equals("TIME")) {
 			String value = (String)component.getInternalValue();
 			if (value == null || value.equals("")) {
 				isNull = true;
 			}
 		}
-		//
 		if (basicType.equals("DATE")) {
 			Object value = (java.sql.Date)component.getInternalValue();
 			if (value == null || value.equals("")) {
 				isNull = true;
 			}
 		}
-		//
 		return isNull;
 	}
-	//
+
 	public Object getInternalValue(){
 		Object returnObj = null;
 		String basicType = this.getBasicType();
-		//
 		if (basicType.equals("INTEGER") || basicType.equals("FLOAT") || basicType.equals("STRING")) {
 			String value = (String)component.getInternalValue();
 			if (value == null) {
@@ -41600,18 +41668,15 @@ class Editor_EditableTableField extends JPanel {
 			}
 			returnObj = value;
 		}
-		//
 		if (basicType.equals("DATE")) {
 			returnObj = (String)component.getInternalValue();
 		}
-		//
 		if (basicType.equals("DATETIME")) {
 			returnObj = (String)component.getInternalValue();
 		}
-		//
 		return returnObj;
 	}
-	//
+
 	public void setError(boolean error) {
 		if (error) {
 			if (component.isEditable()) {
@@ -41626,7 +41691,7 @@ class Editor_EditableTableField extends JPanel {
 			}
 		}
 	}
-	//
+
 	private void setErrorMessage(String msg) {
 		if (msg.equals("")) {
 			setError(false);
@@ -41636,16 +41701,14 @@ class Editor_EditableTableField extends JPanel {
 			errorMessage = fieldCaption + ":" + msg;
 		}
 	}
-	//
+
 	public String getErrorMessage() {
 		return	errorMessage;
 	}
-	//
+
 	public void checkNull(){
-		String basicType = this.getBasicType();
-		//
 		this.setErrorMessage("");
-		//
+		String basicType = this.getBasicType();
 		if (basicType.equals("INTEGER")) {
 			long value = Long.parseLong((String)component.getInternalValue());
 			if (!this.isNullable) {
@@ -41654,7 +41717,6 @@ class Editor_EditableTableField extends JPanel {
 				}
 			}
 		}
-		//
 		if (basicType.equals("FLOAT")) {
 			double value = Double.parseDouble((String)component.getInternalValue());
 			if (!this.isNullable) {
@@ -41663,7 +41725,6 @@ class Editor_EditableTableField extends JPanel {
 				}
 			}
 		}
-		//
 		if (basicType.equals("DATE")) {
 			String strDate = (String)component.getInternalValue();
 			if (!this.isNullable) {
@@ -41672,7 +41733,6 @@ class Editor_EditableTableField extends JPanel {
 				}
 			}
 		}
-		//
 		if (basicType.equals("STRING")) {
 			String strWrk = (String)component.getInternalValue();
 			if (!this.isNullable) {
@@ -41710,11 +41770,9 @@ class Editor_TextField extends JTextField implements Editor_EditableField {
 	private int rows_ = 1;
 	private ArrayList<String> dataTypeOptionList;
 	Editor editor_;
-	//
+
 	public Editor_TextField(String basicType, int digits, int decimal, String dataTypeOptions, Editor editor) {
-		//
 		super();
-		//
 		basicType_ = basicType;
 		if (basicType_.equals("DATE")) {
 			digits_ = 10;
@@ -41724,7 +41782,7 @@ class Editor_TextField extends JTextField implements Editor_EditableField {
 		decimal_ = decimal;
 		editor_ = editor;
 		dataTypeOptionList = editor_.getOptionList(dataTypeOptions);
-		//
+
 		if (basicType_.equals("INTEGER")) {
 			this.setHorizontalAlignment(SwingConstants.RIGHT);
 			this.setText("0");
@@ -41757,24 +41815,24 @@ class Editor_TextField extends JTextField implements Editor_EditableField {
 			}
 		}
 		this.addFocusListener(new ComponentFocusListener());
-		this.setFont(new java.awt.Font("Monospaced", 0, 12));
+		this.setFont(new java.awt.Font(editor_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		this.setDocument(new LimitedDocument(this));
-		//
+
 		int fieldWidth;
 		if (dataTypeOptionList.contains("KANJI")) {
-			fieldWidth = digits_ * 12 + 10;
+			fieldWidth = digits_ * Editor.MAIN_FONT_SIZE + 10;
 		} else {
 			if (basicType_.equals("INTEGER") || basicType_.equals("FLOAT")) {
 				int totalLength = editor_.getLengthOfEdittedNumericValue(digits_, decimal_, dataTypeOptionList.contains("ACCEPT_MINUS"));
-				fieldWidth = totalLength * 6 + 10;
+				fieldWidth = totalLength * (Editor.MAIN_FONT_SIZE/2 + 2) + 15;
 			} else {
-				fieldWidth = digits_ * 6 + 10;
+				fieldWidth = digits_ * (Editor.MAIN_FONT_SIZE/2 + 2) + 10;
 			}
 		}
 		if (fieldWidth > 800) {
 			fieldWidth = 800;
 		}
-		this.setSize(new Dimension(fieldWidth, 22));
+		this.setSize(new Dimension(fieldWidth, 27));
 	}
 	
 	public void setEditable(boolean editable) {
@@ -41783,7 +41841,6 @@ class Editor_TextField extends JTextField implements Editor_EditableField {
 
 	public String getStringNumber(String text) {
 		String numberString = editor_.getStringNumber(text);
-		//
 		if (numberString.equals("")) {
 			if (basicType_.equals("INTEGER")) {
 				numberString = "0";
@@ -41821,7 +41878,6 @@ class Editor_TextField extends JTextField implements Editor_EditableField {
 				numberString = numberString.substring(0, 3) + "-" + numberString.substring(3, 7); 
 			}
 		}
-		//
 		return numberString;
 	}
 
@@ -41840,10 +41896,8 @@ class Editor_TextField extends JTextField implements Editor_EditableField {
 	
 	public void setValue(Object obj) {
 		String text = "";
-		//
 		if (obj != null) {
 			text = obj.toString();
-			//
 			if (basicType_.equals("INTEGER") || basicType_.equals("FLOAT")) {
 				if (dataTypeOptionList.contains("FYEAR")) {
 					this.setText(text);
@@ -41883,7 +41937,6 @@ class Editor_TextField extends JTextField implements Editor_EditableField {
 		}
 		public void focusGained(FocusEvent event){
 			Character.Subset[] subsets = new Character.Subset[] {java.awt.im.InputSubset.LATIN_DIGITS};
-			//
 			if (basicType_.equals("STRING")) {
 				String lang = Locale.getDefault().getLanguage();
 				if (dataTypeOptionList.contains("KANJI")) {
@@ -41905,7 +41958,6 @@ class Editor_TextField extends JTextField implements Editor_EditableField {
 					}
 				}
 			}
-			//
 			getInputContext().setCharacterSubsets(subsets);
 		}
 	}
@@ -41913,15 +41965,12 @@ class Editor_TextField extends JTextField implements Editor_EditableField {
 	class LimitedDocument extends PlainDocument {
 		private static final long serialVersionUID = 1L;
 		Editor_TextField adaptee;
-		//
 		LimitedDocument(Editor_TextField adaptee) {
 		  this.adaptee = adaptee;
 		}
-		//
 		public void insertString(int offset, String str, AttributeSet attr) {
 			try {
 				int integerSizeOfField = adaptee.digits_ - adaptee.decimal_;
-				//
 				if (adaptee.decimal_ > 0 && str.length() == 1) {
 					if (adaptee.isEditable() && !dataTypeOptionList.contains("ACCEPT_MINUS") && str.contains("-")) {
 						JOptionPane.showMessageDialog(null, res.getString("MinusRejectMessage"));
@@ -41955,9 +42004,6 @@ class Editor_TextField extends JTextField implements Editor_EditableField {
 					if (adaptee.isEditable() && dataTypeOptionList.contains("NO_MINUS") && str.contains("-")) {
 						JOptionPane.showMessageDialog(null, res.getString("MinusRejectMessage"));
 					} else {
-						//if (offset < adaptee.digits_ && super.getLength() < adaptee.digits_) {
-						//	super.insertString( offset, str, attr );
-						//}
 						if (basicType_.equals("INTEGER")) {
 							if (str.contains(".")) {
 								JOptionPane.showMessageDialog(null, res.getString("NumberFormatError"));
@@ -41992,23 +42038,21 @@ class Editor_TextArea extends JScrollPane implements Editor_EditableField {
 	private int rows_ = 2;
 	private int digits_ = 5;
 	private Editor editor_;
-	//
+
 	public Editor_TextArea(int digits, String dataTypeOptions, Editor editor){
-		//
 		super();
-		//
 		digits_ = digits;
 		editor_ = editor;
-		//
+
 		dataTypeOptionList = editor_.getOptionList(dataTypeOptions);
-		//
+
 		InputMap inputMap  = jTextArea.getInputMap(JTextArea.WHEN_FOCUSED);
 		ActionMap actionMap = jTextArea.getActionMap();
-		//
+
 		KeyStroke tab = KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0);
 		KeyStroke enter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
 		KeyStroke altEnter = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.ALT_MASK);
-		//
+
 		inputMap.put(altEnter, inputMap.get(enter));
 		inputMap.put(enter, "none");
 		inputMap.put(tab, "Exit");
@@ -42019,15 +42063,15 @@ class Editor_TextArea extends JScrollPane implements Editor_EditableField {
 			}
 		};
 		actionMap.put("Exit", exitAction);
-		//
+
 		jTextArea.addFocusListener(new ComponentFocusListener());
-		jTextArea.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTextArea.setFont(new java.awt.Font(editor_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTextArea.setLineWrap(true);
 		this.getViewport().add(jTextArea, null);
 		jTextArea.setDocument(new LimitedDocument(this));
-		//
-		int fieldWidth = 600;
-		int fieldHeight = rows_ * 22;
+
+		int fieldWidth = 800;
+		int fieldHeight = rows_ * 25;
 		this.setSize(fieldWidth, fieldHeight);
 	}
 
@@ -42065,7 +42109,7 @@ class Editor_TextArea extends JScrollPane implements Editor_EditableField {
 			jTextArea.setBackground(SystemColor.control);
 		}
 	}
-	//
+
 	class ComponentFocusListener implements FocusListener{
 		public void focusLost(FocusEvent event){
 			Character.Subset[] subsets = new Character.Subset[] {java.awt.im.InputSubset.LATIN_DIGITS};
@@ -42073,7 +42117,6 @@ class Editor_TextArea extends JScrollPane implements Editor_EditableField {
 		}
 		public void focusGained(FocusEvent event){
 			Character.Subset[] subsets = new Character.Subset[] {java.awt.im.InputSubset.LATIN_DIGITS};
-			//
 			String lang = Locale.getDefault().getLanguage();
 			if (dataTypeOptionList.equals("KANJI")) {
 				if (lang.equals("ja")) {
@@ -42092,7 +42135,6 @@ class Editor_TextArea extends JScrollPane implements Editor_EditableField {
 				}
 				
 			}
-			//
 			getInputContext().setCharacterSubsets(subsets);
 		}
 	}
@@ -42104,11 +42146,9 @@ class Editor_TextArea extends JScrollPane implements Editor_EditableField {
 	class LimitedDocument extends PlainDocument {
 		private static final long serialVersionUID = 1L;
 		Editor_TextArea adaptee;
-		//
 		LimitedDocument(Editor_TextArea adaptee) {
 		  this.adaptee = adaptee;
 		}
-		//
 		public void insertString(int offset, String str, AttributeSet a) {
 			try {
 				if (offset < adaptee.digits_ && super.getLength() < adaptee.digits_) {
@@ -42149,12 +42189,11 @@ class Editor_DialogAddRowListReturnDataSourcesEdit extends JDialog {
 	}
 
 	private void init() throws Exception {
-		//
 		jPanelButtons.setBorder(BorderFactory.createEtchedBorder());
-		jPanelButtons.setPreferredSize(new Dimension(350, 43));
+		jPanelButtons.setPreferredSize(new Dimension(100, 43));
 		jPanelButtons.setLayout(null);
-		jButtonOK.setBounds(new Rectangle(750, 10, 73, 25));
-		jButtonOK.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonOK.setBounds(new Rectangle(800, 8, 100, 27));
+		jButtonOK.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonOK.setText("OK");
 		jButtonOK.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -42164,8 +42203,8 @@ class Editor_DialogAddRowListReturnDataSourcesEdit extends JDialog {
 				}
 			}
 		});
-		jButtonCancel.setBounds(new Rectangle(44, 10, 73, 25));
-		jButtonCancel.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonCancel.setBounds(new Rectangle(50, 8, 100, 27));
+		jButtonCancel.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonCancel.setText(res.getString("Cancel"));
 		jButtonCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -42175,27 +42214,28 @@ class Editor_DialogAddRowListReturnDataSourcesEdit extends JDialog {
 		jPanelButtons.add(jButtonOK, null);
 		jPanelButtons.add(jButtonCancel, null);
 		//
-		jPanelCenter.setBorder(BorderFactory.createEtchedBorder());
+		jPanelCenter.setBorder(null);
 		jPanelCenter.setLayout(null);
 		jLabelReturnFromFields.setText(res.getString("AddRowListReturnFromFieldShort"));
-		jLabelReturnFromFields.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelReturnFromFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelReturnFromFields.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelReturnFromFields.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelReturnFromFields.setBounds(new Rectangle(5, 12, 110, 15));
-		jTextFieldReturnFromFields.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldReturnFromFields.setBounds(new Rectangle(120, 9, 730, 22));
+		jLabelReturnFromFields.setBounds(new Rectangle(5, 12, 150, 15));
+		jTextFieldReturnFromFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldReturnFromFields.setBounds(new Rectangle(160, 9, 800, 25));
 		jLabelReturnToFields.setText(res.getString("AddRowListReturnToFieldShort"));
-		jLabelReturnToFields.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelReturnToFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelReturnToFields.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelReturnToFields.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelReturnToFields.setBounds(new Rectangle(5, 40, 110, 15));
-		jTextFieldReturnToFields.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldReturnToFields.setBounds(new Rectangle(120, 37, 730, 22));
-		jTextAreaMessage.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextAreaMessage.setBounds(new Rectangle(7, 66, 850, 57));
+		jLabelReturnToFields.setBounds(new Rectangle(5, 43, 150, 15));
+		jTextFieldReturnToFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldReturnToFields.setBounds(new Rectangle(160, 40, 800, 25));
+		jTextAreaMessage.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextAreaMessage.setBounds(new Rectangle(7, 71, 954, 57));
 		jTextAreaMessage.setLineWrap(true);
 		jTextAreaMessage.setEditable(false);
 		jTextAreaMessage.setBorder(BorderFactory.createEtchedBorder());
+		jTextAreaMessage.setBackground(SystemColor.control);
 		jPanelCenter.add(jLabelReturnFromFields, null);
 		jPanelCenter.add(jTextFieldReturnFromFields, null);
 		jPanelCenter.add(jLabelReturnToFields, null);
@@ -42211,7 +42251,6 @@ class Editor_DialogAddRowListReturnDataSourcesEdit extends JDialog {
 	}
 
 	public int request(String addRowListTableID, String returnFromFields, NodeList fromReferList, String detailTableID, String returnToFields, NodeList toReferList) {
-		//
 		jTextFieldReturnFromFields.setText(returnFromFields);
 		jTextFieldReturnFromFields.requestFocus();
 		jTextFieldReturnToFields.setText(returnToFields);
@@ -42221,7 +42260,7 @@ class Editor_DialogAddRowListReturnDataSourcesEdit extends JDialog {
 		returnCode = 0;
 		jTextAreaMessage.setText(res.getString("AddRowListFieldsDialogComment"));
 		//
-		this.setSize(new Dimension(870, 206));
+		this.setSize(new Dimension(975, 218));
 		Dimension dlgSize = this.getSize();
 		Dimension frmSize = frame_.getSize();
 		Point loc = frame_.getLocation();
@@ -42354,8 +42393,8 @@ class Editor_DialogPromptOptionCallFunctionExchangeEdit extends JDialog {
 		jPanelButtons.setPreferredSize(new Dimension(350, 43));
 		jPanelButtons.setLayout(null);
 
-		jButtonCancel.setBounds(new Rectangle(34, 10, 73, 25));
-		jButtonCancel.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonCancel.setBounds(new Rectangle(50, 8, 100, 27));
+		jButtonCancel.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonCancel.setText(res.getString("Cancel"));
 		jButtonCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -42363,8 +42402,8 @@ class Editor_DialogPromptOptionCallFunctionExchangeEdit extends JDialog {
 			}
 		});
 
-		jButtonPasteToClipboard.setBounds(new Rectangle(250, 10, 100, 25));
-		jButtonPasteToClipboard.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonPasteToClipboard.setBounds(new Rectangle(280, 8, 150, 27));
+		jButtonPasteToClipboard.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonPasteToClipboard.setText(res.getString("PasteToClipboard"));
 		jButtonPasteToClipboard.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -42384,8 +42423,8 @@ class Editor_DialogPromptOptionCallFunctionExchangeEdit extends JDialog {
 			}
 		});
 
-		jButtonPasteFromClipboard.setBounds(new Rectangle(490, 10, 100, 25));
-		jButtonPasteFromClipboard.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonPasteFromClipboard.setBounds(new Rectangle(530, 8, 150, 27));
+		jButtonPasteFromClipboard.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonPasteFromClipboard.setText(res.getString("PasteFromClipboard"));
 		jButtonPasteFromClipboard.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -42411,8 +42450,8 @@ class Editor_DialogPromptOptionCallFunctionExchangeEdit extends JDialog {
 			}
 		});
 
-		jButtonOK.setBounds(new Rectangle(735, 10, 73, 25));
-		jButtonOK.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonOK.setBounds(new Rectangle(820, 8, 100, 27));
+		jButtonOK.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonOK.setText("OK");
 		jButtonOK.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -42428,38 +42467,38 @@ class Editor_DialogPromptOptionCallFunctionExchangeEdit extends JDialog {
 		jPanelButtons.add(jButtonPasteFromClipboard, null);
 		jPanelButtons.add(jButtonOK, null);
 
-		jPanelCenter.setBorder(BorderFactory.createEtchedBorder());
+		jPanelCenter.setBorder(null);
 		jPanelCenter.setLayout(null);
 		jLabelFieldsToPut.setText(res.getString("FieldsToPut"));
-		jLabelFieldsToPut.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelFieldsToPut.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelFieldsToPut.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFieldsToPut.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFieldsToPut.setBounds(new Rectangle(5, 12, 110, 15));
-		jTextFieldFieldsToPut.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldFieldsToPut.setBounds(new Rectangle(120, 9, 730, 22));
+		jLabelFieldsToPut.setBounds(new Rectangle(5, 12, 150, 20));
+		jTextFieldFieldsToPut.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldFieldsToPut.setBounds(new Rectangle(160, 9, 800, 25));
 		jLabelFieldsToPutTo.setText(res.getString("FieldsToPutTo"));
-		jLabelFieldsToPutTo.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelFieldsToPutTo.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelFieldsToPutTo.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFieldsToPutTo.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFieldsToPutTo.setBounds(new Rectangle(5, 40, 110, 15));
-		jTextFieldFieldsToPutTo.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldFieldsToPutTo.setBounds(new Rectangle(120, 37, 730, 22));
+		jLabelFieldsToPutTo.setBounds(new Rectangle(5, 43, 150, 20));
+		jTextFieldFieldsToPutTo.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldFieldsToPutTo.setBounds(new Rectangle(160, 40, 800, 25));
 		jLabelFieldsToGet.setText(res.getString("FieldsToGet"));
-		jLabelFieldsToGet.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelFieldsToGet.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelFieldsToGet.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFieldsToGet.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFieldsToGet.setBounds(new Rectangle(5, 68, 110, 15));
-		jTextFieldFieldsToGet.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldFieldsToGet.setBounds(new Rectangle(120, 65, 730, 22));
+		jLabelFieldsToGet.setBounds(new Rectangle(5, 74, 150, 20));
+		jTextFieldFieldsToGet.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldFieldsToGet.setBounds(new Rectangle(160, 71, 800, 25));
 		jLabelFieldsToGetTo.setText(res.getString("FieldsToGetTo"));
-		jLabelFieldsToGetTo.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelFieldsToGetTo.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelFieldsToGetTo.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFieldsToGetTo.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFieldsToGetTo.setBounds(new Rectangle(5, 96, 110, 15));
-		jTextFieldFieldsToGetTo.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextFieldFieldsToGetTo.setBounds(new Rectangle(120, 93, 730, 22));
-		jTextAreaMessage.setFont(new java.awt.Font("Dialog", 0, 12));
-		jTextAreaMessage.setBounds(new Rectangle(7, 122, 850, 40));
+		jLabelFieldsToGetTo.setBounds(new Rectangle(5, 105, 150, 20));
+		jTextFieldFieldsToGetTo.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldFieldsToGetTo.setBounds(new Rectangle(160, 102, 800, 25));
+		jTextAreaMessage.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextAreaMessage.setBounds(new Rectangle(7, 133, 954, 40));
 		jTextAreaMessage.setLineWrap(true);
 		jTextAreaMessage.setEditable(false);
 		jTextAreaMessage.setBorder(BorderFactory.createEtchedBorder());
@@ -42527,7 +42566,7 @@ class Editor_DialogPromptOptionCallFunctionExchangeEdit extends JDialog {
 			}
 		}
 
-		this.setSize(new Dimension(870, 245));
+		this.setSize(new Dimension(976, 265));
 		Dimension dlgSize = this.getSize();
 		Dimension frmSize = frame_.getSize();
 		Point loc = frame_.getLocation();
@@ -42728,6 +42767,16 @@ class Editor_jTableTableDataList_listSelectionAdapter implements ListSelectionLi
 	}
 	public void valueChanged(ListSelectionEvent e) {
 		adaptee.jTableTableDataList_valueChanged();
+	}
+}
+
+class Editor_jScrollPaneTableDataList_mouseAdapter extends java.awt.event.MouseAdapter {
+	Editor adaptee;
+	Editor_jScrollPaneTableDataList_mouseAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void mouseClicked(MouseEvent e) {
+		adaptee.jScrollPaneTableDataList_mouseClicked(e);
 	}
 }
 
@@ -45303,7 +45352,6 @@ class Editor_jMenuItemHelpHelp_actionAdapter implements java.awt.event.ActionLis
 		this.adaptee = adaptee;
 	}
 	public void actionPerformed(ActionEvent e) {
-		//adaptee.jMenuItemHelpHelp_actionPerformed(e);
 		adaptee.browseHelp();
 	}
 }
@@ -45445,6 +45493,26 @@ class Editor_jMenuItemComponentToListCsv_actionAdapter implements java.awt.event
 	}
 	public void actionPerformed(ActionEvent e) {
 		adaptee.jMenuItemComponentToListCsv_actionPerformed(e);
+	}
+}
+
+class Editor_jMenuItemComponentToListTableData_actionAdapter implements java.awt.event.ActionListener {
+	Editor adaptee;
+	Editor_jMenuItemComponentToListTableData_actionAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jMenuItemComponentToListTableData_actionPerformed(e);
+	}
+}
+
+class Editor_jMenuItemComponentToListExcel_actionAdapter implements java.awt.event.ActionListener {
+	Editor adaptee;
+	Editor_jMenuItemComponentToListExcel_actionAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jMenuItemComponentToListExcel_actionPerformed(e);
 	}
 }
 

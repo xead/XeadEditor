@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2011 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2014 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -32,23 +32,19 @@ package xeadEditor;
  */
 
 import java.awt.*;
-
 import javax.swing.*;
 import javax.swing.table.*;
 import java.awt.event.*;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
-
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
-import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFFooter;
 import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.HSSFColor;
 import org.w3c.dom.*;
 import xeadEditor.Editor.MainTreeNode;
 import xeadEditor.Editor.SortableDomElementListModel;
@@ -93,16 +89,16 @@ public class DialogCheckFunctionsCalled extends JDialog {
 	private void jbInit() throws Exception {
 		//
 		panelMain.setLayout(borderLayoutMain);
-		panelMain.setPreferredSize(new Dimension(880, 300));
+		//panelMain.setPreferredSize(new Dimension(1120, 400));
 		panelMain.setBorder(null);
 		panelMain.add(jPanelSouth, BorderLayout.SOUTH);
 		panelMain.add(jScrollPaneCheckResult, BorderLayout.CENTER);
 		//
-		jTableCheckResult.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableCheckResult.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTableCheckResult.setBackground(SystemColor.control);
 		jTableCheckResult.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableCheckResult.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		jTableCheckResult.setRowSelectionAllowed(true);
+		jTableCheckResult.setRowHeight(Editor.TABLE_ROW_HEIGHT);
 		tableModelCheckResult.addColumn("NO.");
 		tableModelCheckResult.addColumn(res.getString("ElementType"));
 		tableModelCheckResult.addColumn(res.getString("ElementName"));
@@ -111,10 +107,10 @@ public class DialogCheckFunctionsCalled extends JDialog {
 		column1 = jTableCheckResult.getColumnModel().getColumn(1);
 		column2 = jTableCheckResult.getColumnModel().getColumn(2);
 		column3 = jTableCheckResult.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(34);
-		column1.setPreferredWidth(95);
-		column2.setPreferredWidth(200);
-		column3.setPreferredWidth(525);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(150);
+		column2.setPreferredWidth(250);
+		column3.setPreferredWidth(550);
 		rendererAlignmentCenter.setHorizontalAlignment(0); //CENTER//
 		rendererAlignmentRight.setHorizontalAlignment(4); //RIGHT//
 		rendererAlignmentLeft.setHorizontalAlignment(2); //LEFT//
@@ -122,20 +118,20 @@ public class DialogCheckFunctionsCalled extends JDialog {
 		column1.setCellRenderer(rendererAlignmentLeft);
 		column2.setCellRenderer(rendererAlignmentLeft);
 		column3.setCellRenderer(rendererAlignmentLeft);
-		jTableCheckResult.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableCheckResult.getTableHeader().setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableCheckResult.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(2); //LEFT//
 		jScrollPaneCheckResult.getViewport().add(jTableCheckResult, null);
 		//
 		//jPanelSouth and objects on it
 		jPanelSouth.setBorder(BorderFactory.createEtchedBorder());
-		jPanelSouth.setPreferredSize(new Dimension(800, 40));
-		jButtonCloseDialog.setBounds(new Rectangle(20, 7, 70, 25));
-		jButtonCloseDialog.setFont(new java.awt.Font("Dialog", 0, 12));
+		jPanelSouth.setPreferredSize(new Dimension(100, 43));
+		jButtonCloseDialog.setBounds(new Rectangle(50, 8, 100, 27));
+		jButtonCloseDialog.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonCloseDialog.setText(res.getString("Close"));
 		jButtonCloseDialog.addActionListener(new DialogCheckFunctionsCalled_jButtonCloseDialog_actionAdapter(this));
-		jButtonGenerateListData.setBounds(new Rectangle(760, 7, 90, 25));
-		jButtonGenerateListData.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonGenerateListData.setBounds(new Rectangle(800, 8, 150, 27));
+		jButtonGenerateListData.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonGenerateListData.setText(res.getString("GenerateList"));
 		jButtonGenerateListData.addActionListener(new DialogCheckFunctionsCalled_jButtonGenerateListData_actionAdapter(this));
 		jPanelSouth.setLayout(null);
@@ -143,6 +139,7 @@ public class DialogCheckFunctionsCalled extends JDialog {
 		jPanelSouth.add(jButtonCloseDialog);
 		//
 		this.setResizable(false);
+		this.setPreferredSize(new Dimension(1024, 400));
 		this.setTitle(res.getString("CheckFunctionsCalled"));
 		this.getContentPane().add(panelMain);
 		Dimension scrSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -542,49 +539,18 @@ public class DialogCheckFunctionsCalled extends JDialog {
 		HSSFFooter workSheetFooter = workSheet.getFooter();
 		workSheetFooter.setRight(this.getTitle() + "  Page " + HSSFFooter.page() + " / " + HSSFFooter.numPages() );
 		//
-		HSSFFont fontHeader = workBook.createFont();
-		fontHeader = workBook.createFont();
-		fontHeader.setFontName(res.getString("XLSFontHDR"));
-		fontHeader.setFontHeightInPoints((short)11);
-		//
-		HSSFFont fontDetail = workBook.createFont();
-		fontDetail.setFontName(res.getString("XLSFontDTL"));
-		fontDetail.setFontHeightInPoints((short)11);
-		//
 		HSSFCellStyle styleHeader = workBook.createCellStyle();
-		styleHeader.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		styleHeader.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		styleHeader.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		styleHeader.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		styleHeader.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
-		styleHeader.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 		styleHeader.setAlignment(HSSFCellStyle.ALIGN_LEFT);
-		styleHeader.setFont(fontHeader);
 		//
 		HSSFCellStyle styleHeaderNumber = workBook.createCellStyle();
-		styleHeaderNumber.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		styleHeaderNumber.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		styleHeaderNumber.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		styleHeaderNumber.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		styleHeaderNumber.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
-		styleHeaderNumber.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 		styleHeaderNumber.setAlignment(HSSFCellStyle.ALIGN_LEFT);
-		styleHeaderNumber.setFont(fontHeader);
 		//
 		HSSFCellStyle styleDataInteger = workBook.createCellStyle();
-		styleDataInteger.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		styleDataInteger.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		styleDataInteger.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		styleDataInteger.setBorderTop(HSSFCellStyle.BORDER_THIN);
 		styleDataInteger.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
 		styleDataInteger.setVerticalAlignment(HSSFCellStyle.VERTICAL_TOP);
 		styleDataInteger.setDataFormat(HSSFDataFormat.getBuiltinFormat("#,##0"));
 		//
 		HSSFCellStyle styleDataString = workBook.createCellStyle();
-		styleDataString.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		styleDataString.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		styleDataString.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		styleDataString.setBorderTop(HSSFCellStyle.BORDER_THIN);
 		styleDataString.setAlignment(HSSFCellStyle.ALIGN_LEFT);
 		styleDataString.setVerticalAlignment(HSSFCellStyle.VERTICAL_TOP);
 		styleDataString.setWrapText(true);

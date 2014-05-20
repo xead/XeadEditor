@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2012 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2014 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -55,18 +55,20 @@ import xeadEditor.Editor.TableModelReadOnlyList;
 public class DialogCheckLayout extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private static ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
-	private static final int FIELD_UNIT_HEIGHT = 24;
-	private static final int FIELD_HORIZONTAL_MARGIN = 1;
-	private static final int FIELD_VERTICAL_MARGIN = 5;
-	private static final int FONT_SIZE = 14;
-	private static final int ROW_HEIGHT = 18;
+	public static final int FIELD_UNIT_HEIGHT = 25;
+	public static final int FIELD_HORIZONTAL_MARGIN = 1;
+	public static final int FIELD_VERTICAL_MARGIN = 5;
+	public static final int DEFAULT_LABEL_WIDTH = 150;
+	public static final int ROW_UNIT_HEIGHT = 25;
+	public static final int SEQUENCE_WIDTH = 45;
+	public static final int FONT_SIZE = 18;
 	private static ImageIcon ICON_CHECK_0A = new ImageIcon(Toolkit.getDefaultToolkit().createImage(xeadEditor.Editor.class.getResource("iCheck0A.PNG")));
 	private static ImageIcon ICON_CHECK_1A = new ImageIcon(Toolkit.getDefaultToolkit().createImage(xeadEditor.Editor.class.getResource("iCheck1A.PNG")));
 	private static ImageIcon ICON_CHECK_0D = new ImageIcon(Toolkit.getDefaultToolkit().createImage(xeadEditor.Editor.class.getResource("iCheck0D.PNG")));
 	private static ImageIcon ICON_CHECK_1D = new ImageIcon(Toolkit.getDefaultToolkit().createImage(xeadEditor.Editor.class.getResource("iCheck1D.PNG")));
 	private static ImageIcon ICON_CHECK_0R = new ImageIcon(Toolkit.getDefaultToolkit().createImage(xeadEditor.Editor.class.getResource("iCheck0R.PNG")));
 	private static ImageIcon ICON_CHECK_1R = new ImageIcon(Toolkit.getDefaultToolkit().createImage(xeadEditor.Editor.class.getResource("iCheck1R.PNG")));
-	//
+
 	private JPanel jPanelMain = new JPanel();
 	private JTable jTableMain = new JTable();
 	private JScrollPane jScrollPane = new JScrollPane();
@@ -83,12 +85,14 @@ public class DialogCheckLayout extends JDialog {
 	private int extForXF110_ = 0;
 	private ArrayList<DialogCheckLayoutColumn> columnList = null;
 	private ArrayList<DialogCheckLayoutFilter> filterList = null;
+	public String driverFontName_;
 	
-	public DialogCheckLayout(Editor parent) {
+	public DialogCheckLayout(Editor parent, String driverFontName) {
 		super(parent);
 		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 		try {
 			editor = parent;
+			driverFontName_ = driverFontName;
 			jbInit(parent);
 		}
 		catch(Exception e) {
@@ -98,15 +102,15 @@ public class DialogCheckLayout extends JDialog {
 
 	private void jbInit(Editor parent) throws Exception  {
 		jPanelMain.setLayout(null);
-		jTableMain.setFont(new java.awt.Font("SansSerif", 0, FONT_SIZE));
+		jTableMain.setFont(new java.awt.Font(driverFontName_, 0, FONT_SIZE));
 		jTableMain.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		jTableMain.setRowHeight(ROW_HEIGHT);
-		jTableMain.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, FONT_SIZE));
+		jTableMain.setRowHeight(ROW_UNIT_HEIGHT);
+		jTableMain.getTableHeader().setFont(new java.awt.Font(driverFontName_, 0, FONT_SIZE));
 		jTableMain.getTableHeader().setResizingAllowed(false);
 		jTableMain.getTableHeader().setReorderingAllowed(false);
 		DefaultTableCellRenderer rendererTableHeader = (DefaultTableCellRenderer)jTableMain.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		//
+
 		this.setResizable(false);
 		this.setTitle(res.getString("CheckLayoutTitle"));
 	 	this.setIconImage(Toolkit.getDefaultToolkit().createImage(xeadEditor.Editor.class.getResource("title.png")));
@@ -118,11 +122,11 @@ public class DialogCheckLayout extends JDialog {
 		functionElement = node.getElement();
 		panelType_ = panelType;
 		extForXF110_ = extForXF110;
-		//
+
 		referTableList1.clear();
 		referTableList2.clear();
 		detailTable = null;
-		//
+
 		if (panelType_.equals("Function100ColumnList")) {
 			showLayoutOfTableColumns(functionElement.getElementsByTagName("Column"));
 		}
@@ -305,7 +309,6 @@ public class DialogCheckLayout extends JDialog {
 		int posX = 0;
 		int posY = 8;
 		int wrkInt = 0;
-		int rowsOfDisplayedFilters = 0;
 		Dimension dimOfPriviousField = new Dimension(0,0);
 		Dimension dim;
 		filterList = new ArrayList<DialogCheckLayoutFilter>();
@@ -316,30 +319,27 @@ public class DialogCheckLayout extends JDialog {
 			filter = new DialogCheckLayoutFilter((org.w3c.dom.Element)sortableList.getElementAt(i), this);
 			filterList.add(filter);
 			if (!filter.isHidden()) {
-				if (wrkInt == 0) {
-					rowsOfDisplayedFilters++;
-				} else {
+				if (wrkInt > 0) {
 					if (filter.isVerticalPosition()) {
 						posX = 0;
 						posY = posY + dimOfPriviousField.height + filter.getVerticalMargin();
-						rowsOfDisplayedFilters++;
 					} else {
 						posX = posX + dimOfPriviousField.width;
 					}
 				}
-				//
+
 				dim = filter.getPreferredSize();
 				dimOfPriviousField = new Dimension(dim.width, dim.height);
 				filter.setBounds(posX, posY, dim.width, dim.height);
 				jPanelMain.add(filter);
-				//
+
 				if (posX + dim.width > maxWidth) {
 					maxWidth = posX + dim.width;
 				}
 				if (posY + dim.height > maxHeight) {
 					maxHeight = posY + dim.height;
 				}
-				//
+
 				wrkInt++;
 			}
 		}
@@ -556,6 +556,22 @@ public class DialogCheckLayout extends JDialog {
 		return FIELD_VERTICAL_MARGIN;
 	}
 	
+	static int adjustFontSizeToGetPreferredWidthOfLabel(JLabel jLabel, int initialWidth) {
+		int width = initialWidth;
+		int initialFontSize = jLabel.getFont().getSize();
+		FontMetrics metrics = jLabel.getFontMetrics(jLabel.getFont());
+		if (metrics.stringWidth(jLabel.getText()) > width) {
+			for (int i = initialFontSize; i > 10; i--) {
+				jLabel.setFont(new java.awt.Font(jLabel.getFont().getFontName(), 0, jLabel.getFont().getSize()-1));
+				metrics = jLabel.getFontMetrics(jLabel.getFont());
+				if (metrics.stringWidth(jLabel.getText()) <= width) {
+					break;
+				}
+			}
+		}
+		return metrics.stringWidth(jLabel.getText());
+	}
+	
 	public String getStringData(String type, int dataSize, int decimal, boolean isAcceptMinus) {
 		String value = "";
 		StringBuffer bf = new StringBuffer();
@@ -615,59 +631,6 @@ public class DialogCheckLayout extends JDialog {
 		}
 		return image;
 	}
-	
-//	public String getDateValue(String dateFormat) {
-//		String value = "";
-//		if (dateFormat.equals("en00")) {
-//			value = "06/17/10";
-//		}
-//		if (dateFormat.equals("en01")) {
-//			value = "Thur,06/17/01";
-//		}
-//		if (dateFormat.equals("en10")) {
-//			value = "Jun17,2010";
-//		}
-//		if (dateFormat.equals("en11")) {
-//			value = "Thur,Jun17,2010";
-//		}
-//		if (dateFormat.equals("jp00")) {
-//			value = "10/06/17";
-//		}
-//		if (dateFormat.equals("jp01")) {
-//			value = "10/06/17(木)";
-//		}
-//		if (dateFormat.equals("jp10")) {
-//			value = "2010/06/17";
-//		}
-//		if (dateFormat.equals("jp11")) {
-//			value = "2010/06/17(木)";
-//		}
-//		if (dateFormat.equals("jp20")) {
-//			value = "2010年6月17日";
-//		}
-//		if (dateFormat.equals("jp21")) {
-//			value = "2010年6月17日(木)";
-//		}
-//		if (dateFormat.equals("jp30")) {
-//			value = "H22/06/17";
-//		}
-//		if (dateFormat.equals("jp31")) {
-//			value = "H22/06/17(木)";
-//		}
-//		if (dateFormat.equals("jp40")) {
-//			value = "H22年06月17日";
-//		}
-//		if (dateFormat.equals("jp41")) {
-//			value = "H22年06月17日(木)";
-//		}
-//		if (dateFormat.equals("jp50")) {
-//			value = "平成22年06月17日";
-//		}
-//		if (dateFormat.equals("jp51")) {
-//			value = "平成22年06月17日(木)";
-//		}
-//		return value;
-//	}
 	
 	public String getDateValue(String dateFormat) {
 		//
@@ -917,8 +880,6 @@ public class DialogCheckLayout extends JDialog {
 
 	class HeadersRenderer extends JPanel implements TableCellRenderer {   
 		private static final long serialVersionUID = 1L;
-		private static final int ROW_UNIT_HEIGHT = 24;
-		private static final int SEQUENCE_WIDTH = 30;
 		private JPanel westPanel = new JPanel();
 		private JLabel numberLabel = new JLabel("No.");
 		private JPanel checkBoxPanel = new JPanel();
@@ -942,7 +903,7 @@ public class DialogCheckLayout extends JDialog {
 				layout.setRows(1);
 				westPanel.setLayout(layout);
 				westPanel.setPreferredSize(new Dimension(SEQUENCE_WIDTH*2, 10));
-				numberLabel.setFont(new java.awt.Font("SansSerif", 0, 14));
+				numberLabel.setFont(new java.awt.Font(driverFontName_, 0, FONT_SIZE));
 				numberLabel.setBorder(new HeaderBorder());
 				numberLabel.setHorizontalAlignment(SwingConstants.CENTER);
 				checkBox.setHorizontalAlignment(SwingConstants.CENTER);
@@ -956,7 +917,7 @@ public class DialogCheckLayout extends JDialog {
 				this.add(westPanel, BorderLayout.WEST);
 			} else {
 				centerPanel.setLayout(null);
-				numberLabel.setFont(new java.awt.Font("SansSerif", 0, 14));
+				numberLabel.setFont(new java.awt.Font(driverFontName_, 0, FONT_SIZE));
 				numberLabel.setBorder(new HeaderBorder());
 				numberLabel.setHorizontalAlignment(SwingConstants.CENTER);
 				workWidth = SEQUENCE_WIDTH;
@@ -1008,7 +969,7 @@ public class DialogCheckLayout extends JDialog {
 			headerList.clear();
 			for (int i = 0; i < columnList.size(); i++) {
 					header = new JLabel();
-					header.setFont(new java.awt.Font("SansSerif", 0, 14));
+					header.setFont(new java.awt.Font(driverFontName_, 0, FONT_SIZE));
 					if (columnList.get(i).getValueType().equals("IMAGE")
 							|| columnList.get(i).getValueType().equals("FLAG")) {
 						header.setHorizontalAlignment(SwingConstants.CENTER);
@@ -1114,7 +1075,7 @@ public class DialogCheckLayout extends JDialog {
 		public CellsRenderer(HeadersRenderer headersRenderer) {
 			headersRenderer_ = headersRenderer;
 			//
-			numberCell.setFont(new java.awt.Font("SansSerif", 0, 12));
+			numberCell.setFont(new java.awt.Font(driverFontName_, 0, FONT_SIZE));
 			numberCell.setBorder(new CellBorder());
 			numberCell.setHorizontalAlignment(SwingConstants.CENTER);
 			numberCell.setOpaque(true);
@@ -1141,7 +1102,7 @@ public class DialogCheckLayout extends JDialog {
 			centerPanel.removeAll();
 			for (int i = 0; i < headersRenderer_.getColumnHeaderList().size(); i++) {
 				cell = new JLabel();
-				cell.setFont(new java.awt.Font("SansSerif", 0, 14));
+				cell.setFont(new java.awt.Font(driverFontName_, 0, FONT_SIZE));
 				cell.setHorizontalAlignment(headersRenderer_.getColumnHeaderList().get(i).getHorizontalAlignment());
 				rec = headersRenderer_.getColumnHeaderList().get(i).getBounds();
 				cell.setBounds(rec.x, rec.y, rec.width, rec.height);
@@ -1202,7 +1163,6 @@ public class DialogCheckLayout extends JDialog {
 }
 
 class DialogCheckLayoutColumn extends Object {
-	private static final long serialVersionUID = 1L;
 	org.w3c.dom.Element functionFieldElement_ = null;
 	org.w3c.dom.Element tableElement = null;
 	private String fieldName = "";
@@ -1258,7 +1218,7 @@ class DialogCheckLayoutColumn extends Object {
 		}
 		//
 		JLabel jLabel = new JLabel();
-		FontMetrics metrics = jLabel.getFontMetrics(new java.awt.Font("SansSerif", 0, 14));
+		FontMetrics metrics = jLabel.getFontMetrics(new java.awt.Font(dialog.driverFontName_, 0, DialogCheckLayout.FONT_SIZE));
 		String wrkStr = dialog_.getEditor().getOptionValueWithKeyword(fieldOptions, "CAPTION");
 		if (!wrkStr.equals("")) {
 			fieldCaption = wrkStr;
@@ -1306,11 +1266,11 @@ class DialogCheckLayoutColumn extends Object {
 		} else {
 			if ((dataTypeOptionList.contains("KANJI") || dataTypeOptionList.contains("ZIPADRS"))
 					&& !dataType.equals("VARCHAR") && !dataType.equals("LONG VARCHAR")) {
-				fieldWidth = dataSize * 14 + 5;
+				fieldWidth = dataSize * DialogCheckLayout.FONT_SIZE + 5;
 				value = dialog_.getStringData("KANJI", dataSize, 0, false);
 			} else {
 				if (dataTypeOptionList.contains("FYEAR")) {
-					fieldWidth = 85;
+					fieldWidth = 100;
 					if (language.equals("en")
 							|| dateFormat.equals("jp00")
 							|| dateFormat.equals("jp01")
@@ -1324,7 +1284,7 @@ class DialogCheckLayoutColumn extends Object {
 					}
 				} else {
 					if (dataTypeOptionList.contains("YMONTH")) {
-						fieldWidth = 85;
+						fieldWidth = 120;
 						if (language.equals("en")
 								|| dateFormat.equals("jp00")
 								|| dateFormat.equals("jp01")
@@ -1338,7 +1298,7 @@ class DialogCheckLayoutColumn extends Object {
 						}
 					} else {
 						if (dataTypeOptionList.contains("MSEQ")) {
-							fieldWidth = 50;
+							fieldWidth = 80;
 							if (language.equals("jp")) {
 								value = "１月度";
 							} else {
@@ -1347,7 +1307,7 @@ class DialogCheckLayoutColumn extends Object {
 						} else {
 							if (basicType.equals("INTEGER") || basicType.equals("FLOAT")) {
 								String stringValue = dialog_.getStringData("NUMBER", dataSize, decimalSize, dataTypeOptionList.contains("ACCEPT_MINUS"));
-								fieldWidth = stringValue.length() * 7 + 21;
+								fieldWidth = stringValue.length() * (DialogCheckLayout.FONT_SIZE/2 + 2) + 15;
 								value = stringValue;
 							} else {
 								if (basicType.equals("DATE")) {
@@ -1359,23 +1319,23 @@ class DialogCheckLayoutColumn extends Object {
 										valueType = "IMAGE";
 										fieldWidth = 60;
 										fieldRows = 2;
-										value = "(image)";
+										value = "image";
 									} else {
 										wrkStr = dialog_.getEditor().getOptionValueWithKeyword(dataTypeOptions, "BOOLEAN");
 										if (!wrkStr.equals("")) {
 											valueType = "FLAG";
-											fieldWidth = 20;
+											fieldWidth = 25;
 											value = "(v)";
 										} else {
 											if (dataType.equals("VARCHAR") || dataType.equals("LONG VARCHAR")) {
-												fieldWidth = 320;
+												fieldWidth = 400;
 												if (dataTypeOptionList.contains("KANJI")) {
 													value = dialog_.getStringData("KANJI", dataSize, 0, false);
 												} else {
 													value = dialog_.getStringData("STRING", dataSize, 0, false);
 												}
 											} else {
-												fieldWidth = dataSize * 7 + 15;
+												fieldWidth = dataSize * (DialogCheckLayout.FONT_SIZE/2 + 2) + 15;
 												value = dialog_.getStringData("STRING", dataSize, 0, false);
 											}
 										}
@@ -1388,8 +1348,8 @@ class DialogCheckLayoutColumn extends Object {
 			}
 		}
 		//
-		if (fieldWidth > 320) {
-			fieldWidth = 320;
+		if (fieldWidth > 400) {
+			fieldWidth = 400;
 		}
 		if (captionWidth > fieldWidth) {
 			fieldWidth = captionWidth;
@@ -1431,24 +1391,6 @@ class DialogCheckLayoutColumn extends Object {
 	public Object getValue() {
 		return value;
 	}
-	
-//	private String getLongestSegment(String caption) {
-//		String value = "";
-//		ArrayList<String> stringList = new ArrayList<String>();
-//		String wrkStr = caption.toUpperCase();
-//		wrkStr = wrkStr.replace("<HTML>", "");
-//		wrkStr = wrkStr.replace("</HTML>", "");
-//		StringTokenizer workTokenizer = new StringTokenizer(wrkStr, "<BR>");
-//		while (workTokenizer.hasMoreTokens()) {
-//			stringList.add(workTokenizer.nextToken());
-//		}
-//		for (int i = 0; i < stringList.size(); i++) {
-//			if (stringList.get(i).length() > value.length()) {
-//				value = stringList.get(i);
-//			}
-//		}
-//		return value;
-//	}
 }
 
 class DialogCheckLayoutFilter extends JPanel {
@@ -1472,7 +1414,7 @@ class DialogCheckLayoutFilter extends JPanel {
 	private JComponent component = null;
 	private boolean isVertical = false;
 	private int verticalMargin = 5;
-	private int horizontalMargin = 45;
+	private int horizontalMargin = 30;
 	private boolean isEditable_ = true;
 	private boolean isHidden = false;
 
@@ -1526,24 +1468,12 @@ class DialogCheckLayoutFilter extends JPanel {
 		}
 		jLabelField = new JLabel(fieldCaption);
 		jLabelField.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelField.setFont(new java.awt.Font("Dialog", 0, 14));
-		FontMetrics metrics1 = jLabelField.getFontMetrics(new java.awt.Font("Dialog", 0, 14));
-		if (metrics1.stringWidth(fieldCaption) > 110) {
-			jLabelField.setFont(new java.awt.Font("Dialog", 0, 12));
-			metrics1 = jLabelField.getFontMetrics(new java.awt.Font("Dialog", 0, 12));
-			if (metrics1.stringWidth(fieldCaption) > 110) {
-				jLabelField.setFont(new java.awt.Font("Dialog", 0, 10));
-				metrics1 = jLabelField.getFontMetrics(new java.awt.Font("Dialog", 0, 10));
-			} else {
-				jLabelField.setFont(new java.awt.Font("Dialog", 0, 12));
-			}
-		} else {
-			jLabelField.setFont(new java.awt.Font("Dialog", 0, 14));
-		}
+		jLabelField.setFont(new java.awt.Font(dialog_.driverFontName_, 0, DialogCheckLayout.FONT_SIZE));
+		int width = DialogCheckLayout.adjustFontSizeToGetPreferredWidthOfLabel(jLabelField, DialogCheckLayout.DEFAULT_LABEL_WIDTH);
 		if (isVertical || dialog_.getFilterList().size() == 0) {
-			jLabelField.setPreferredSize(new Dimension(110, 20));
+			jLabelField.setPreferredSize(new Dimension(DialogCheckLayout.DEFAULT_LABEL_WIDTH, DialogCheckLayout.FIELD_UNIT_HEIGHT));
 		} else {
-			jLabelField.setPreferredSize(new Dimension(metrics1.stringWidth(fieldCaption) + horizontalMargin, 20));
+			jLabelField.setPreferredSize(new Dimension(width + horizontalMargin, DialogCheckLayout.FIELD_UNIT_HEIGHT));
 		}
 		isEditable_ = !fieldOptionList.contains("NON_EDITABLE");
 
@@ -1620,8 +1550,8 @@ class DialogCheckLayoutFilter extends JPanel {
 
 		wrkStr = dialog_.getEditor().getOptionValueWithKeyword(fieldOptions, "WIDTH");
 		if (wrkStr.equals("")) {
-			if (component.getBounds().width > 200) {
-				component.setBounds(new Rectangle(component.getBounds().x, component.getBounds().y, 200, 24));
+			if (component.getBounds().width > 250) {
+				component.setBounds(new Rectangle(component.getBounds().x, component.getBounds().y, 250, component.getBounds().height));
 			}
 		} else {
 			component.setBounds(new Rectangle(component.getBounds().x, component.getBounds().y, Integer.parseInt(wrkStr), 24));
@@ -1770,19 +1700,13 @@ class DialogCheckLayoutField extends JPanel {
 		jLabelField.setFocusable(false);
 		jLabelField.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelField.setVerticalAlignment(SwingConstants.TOP);
-		jLabelField.setFont(new java.awt.Font("Dialog", 0, 14));
-		FontMetrics metrics = jLabelField.getFontMetrics(new java.awt.Font("Dialog", 0, 14));
+		jLabelField.setFont(new java.awt.Font(dialog_.driverFontName_, 0, DialogCheckLayout.FONT_SIZE));
 		if (fieldOptionList.contains("CAPTION_LENGTH_VARIABLE")) {
-			jLabelField.setPreferredSize(new Dimension(metrics.stringWidth(fieldCaption), dialog_.getFieldUnitHeight()));
+			FontMetrics metrics = jLabelField.getFontMetrics(jLabelField.getFont());
+			jLabelField.setPreferredSize(new Dimension(metrics.stringWidth(fieldCaption), DialogCheckLayout.FIELD_UNIT_HEIGHT));
 		} else {
-			jLabelField.setPreferredSize(new Dimension(120, dialog_.getFieldUnitHeight()));
-			if (metrics.stringWidth(fieldCaption) > 120) {
-				jLabelField.setFont(new java.awt.Font("Dialog", 0, 12));
-				metrics = jLabelField.getFontMetrics(new java.awt.Font("Dialog", 0, 12));
-				if (metrics.stringWidth(fieldCaption) > 120) {
-					jLabelField.setFont(new java.awt.Font("Dialog", 0, 10));
-				}
-			}
+			jLabelField.setPreferredSize(new Dimension(DialogCheckLayout.DEFAULT_LABEL_WIDTH, DialogCheckLayout.FIELD_UNIT_HEIGHT));
+			DialogCheckLayout.adjustFontSizeToGetPreferredWidthOfLabel(jLabelField, DialogCheckLayout.DEFAULT_LABEL_WIDTH);
 		}
 		//
 		component.setPreferredSize(new Dimension(120, dialog_.getFieldUnitHeight()));
@@ -1880,16 +1804,16 @@ class DialogCheckLayoutField extends JPanel {
 			jLabelFieldComment = new JLabel();
 			jLabelFieldComment.setText(" " + wrkStr);
 			jLabelFieldComment.setForeground(Color.blue);
-			jLabelFieldComment.setFont(new java.awt.Font("Dialog", 0, 12));
+			jLabelFieldComment.setFont(new java.awt.Font(dialog_.driverFontName_, 0, DialogCheckLayout.FONT_SIZE-2));
 			jLabelFieldComment.setVerticalAlignment(SwingConstants.TOP);
-			metrics = jLabelFieldComment.getFontMetrics(new java.awt.Font("Dialog", 0, 12));
+			FontMetrics metrics = jLabelFieldComment.getFontMetrics(jLabelFieldComment.getFont());
 			this.setPreferredSize(new Dimension(this.getPreferredSize().width + metrics.stringWidth(wrkStr) + 6, this.getPreferredSize().height));
 		}
 		//
 		if (dataTypeOptionList.contains("ZIPADRS") && isOnEditablePanel) {
 			jButtonToRefferZipNo = new JButton();
 			jButtonToRefferZipNo.setText("<");
-			jButtonToRefferZipNo.setFont(new java.awt.Font("SansSerif", 0, 9));
+			jButtonToRefferZipNo.setFont(new java.awt.Font(dialog.driverFontName_, 0, DialogCheckLayout.FONT_SIZE));
 			jButtonToRefferZipNo.setPreferredSize(new Dimension(37, this.getPreferredSize().height));
 			this.setPreferredSize(new Dimension(this.getPreferredSize().width + 34, this.getPreferredSize().height));
 		}
@@ -1989,11 +1913,11 @@ class DialogCheckLayoutComboBox extends JComboBox {
 		fieldID =workTokenizer.nextToken();
 		dialog_ = dialog;
 		//
-		jTextField.setFont(new java.awt.Font("Monospaced", 0, 14));
+		jTextField.setFont(new java.awt.Font(dialog_.driverFontName_, 0, DialogCheckLayout.FONT_SIZE));
 		jTextField.setEditable(false);
 		jTextField.setFocusable(false);
-		FontMetrics metrics = jTextField.getFontMetrics(new java.awt.Font("Monospaced", 0, 14));
-		this.setFont(new java.awt.Font("Monospaced", 0, 14));
+		FontMetrics metrics = jTextField.getFontMetrics(jTextField.getFont());
+		this.setFont(new java.awt.Font(dialog_.driverFontName_, 0, DialogCheckLayout.FONT_SIZE));
 		this.setFocusable(false);
 		//
 		strWrk = dialog_.getEditor().getOptionValueWithKeyword(dataTypeOptions_, "VALUES");
@@ -2038,10 +1962,10 @@ class DialogCheckLayoutComboBox extends JComboBox {
 					ArrayList<String> workDataTypeOptionList = dialog_.getEditor().getOptionList(workElement.getAttribute("TypeOptions"));
 					int dataSize = Integer.parseInt(workElement.getAttribute("Size"));
 					if (workDataTypeOptionList.contains("KANJI") || workDataTypeOptionList.contains("ZIPADRS")) {
-						fieldWidth = dataSize * 14 + 20;
+						fieldWidth = dataSize * DialogCheckLayout.FONT_SIZE + 20;
 						this.addItem(dialog_.getStringData("KANJI", dataSize, 0, false));
 					} else {
-						fieldWidth = dataSize * 7 + 30;
+						fieldWidth = dataSize * (DialogCheckLayout.FONT_SIZE/2 +2) + 30;
 						this.addItem(dialog_.getStringData("STRING", dataSize, 0, false));
 					}
 					if (fieldWidth > 800) {
@@ -2083,20 +2007,20 @@ class DialogCheckLayoutTextField extends JTextField {
 		} else {
 			this.setHorizontalAlignment(SwingConstants.LEFT);
 		}
-		this.setFont(new java.awt.Font("Monospaced", 0, 14));
+		this.setFont(new java.awt.Font(dialog_.driverFontName_, 0, DialogCheckLayout.FONT_SIZE));
 		this.setFocusable(false);
 		//
 		String wrkStr1, wrkStr2, value = "";
 		int fieldHeight, fieldWidth = 0;
 		if (dataTypeOptionList.contains("KANJI") || dataTypeOptionList.contains("ZIPADRS")) {
 			value = dialog_.getStringData("KANJI", digits, 0, false);
-			fieldWidth = digits_ * 14 + 10;
+			fieldWidth = digits_ * DialogCheckLayout.FONT_SIZE + 10;
 		} else {
 			wrkStr1 = dialog_.getEditor().getOptionValueWithKeyword(dataTypeOptions, "KUBUN");
 			wrkStr2 = dialog_.getEditor().getOptionValueWithKeyword(fieldOptions_, "PROMPT_CALL");
 			if (!wrkStr1.equals("") && wrkStr2.equals("")) {
 				try {
-					FontMetrics metrics = this.getFontMetrics(new java.awt.Font("Monospaced", 0, 14));
+					FontMetrics metrics = this.getFontMetrics(this.getFont());
 					StringBuffer buf1 = new StringBuffer();
 					buf1.append("select * from ");
 					buf1.append(dialog_.getEditor().getSystemUserVariantsTableID());
@@ -2117,20 +2041,19 @@ class DialogCheckLayoutTextField extends JTextField {
 							}
 						}
 					}
-					//fieldWidth = fieldWidth + 10;
 				} catch(Exception e) {
 				}
 			} else {
 				if (basicType_.equals("INTEGER") || basicType_.equals("FLOAT")) {
 					value = dialog_.getStringData("NUMBER", digits, decimal_, dataTypeOptionList.contains("ACCEPT_MINUS"));
-					fieldWidth = value.length() * 7 + 21;
+					fieldWidth = value.length() * (DialogCheckLayout.FONT_SIZE/2 + 2) + 15;
 				} else {
 					if (basicType_.equals("DATETIME")) {
 						value = "9999/99/99 HH:MM:SS.SSS";
-						fieldWidth = 24 * 7;
+						fieldWidth = 24 * (DialogCheckLayout.FONT_SIZE/2 + 2);
 					} else {
 						value = dialog_.getStringData("STRING", digits, 0, false);
-						fieldWidth = digits_ * 7 + 10;
+						fieldWidth = digits_ * (DialogCheckLayout.FONT_SIZE/2 + 2) + 10;
 					}
 				}
 			}
@@ -2157,11 +2080,11 @@ class DialogCheckLayoutUrlField extends JPanel {
 	public DialogCheckLayoutUrlField(int digits, String fieldOptions, boolean isEditable, DialogCheckLayout dialog){
 		super();
 		//
-		jTextField.setFont(new java.awt.Font("Monospaced", 0, 14));
+		jTextField.setFont(new java.awt.Font(dialog.driverFontName_, 0, DialogCheckLayout.FONT_SIZE));
 		jTextField.setText(dialog.getStringData("STRING", digits, 0, false));
 		jTextField.setFocusable(false);
 		//
-		jLabel.setFont(new java.awt.Font("Monospaced", 0, 14));
+		jLabel.setFont(new java.awt.Font(dialog.driverFontName_, 0, DialogCheckLayout.FONT_SIZE));
 		jLabel.setForeground(Color.blue);
 		jLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		jLabel.setBorder(jTextField.getBorder());
@@ -2178,7 +2101,7 @@ class DialogCheckLayoutUrlField extends JPanel {
 		if (!wrkStr.equals("")) {
 			fieldWidth = Integer.parseInt(wrkStr);
 		} else {
-			fieldWidth = digits * 7 + 10;
+			fieldWidth = digits * (DialogCheckLayout.FONT_SIZE/2 + 2) + 15;
 		}
 		if (fieldWidth > 800) {
 			fieldWidth = 800;
@@ -2270,11 +2193,11 @@ class DialogCheckLayoutImageField extends JPanel {
 		jTextField.setBorder(BorderFactory.createLineBorder(normalModeColor));
 		jTextField.setBackground(Color.white);
 		jTextField.setEditable(true);
-		jTextField.setFont(new java.awt.Font("Dialog", 0, 14));
+		jTextField.setFont(new java.awt.Font(dialog.driverFontName_, 0, DialogCheckLayout.FONT_SIZE));
 		jTextField.setFocusable(false);
 		jTextField.setText(dialog.getStringData("STRING", size, 0, false));
 		//
-		jButton.setFont(new java.awt.Font("Dialog", 0, 14));
+		jButton.setFont(new java.awt.Font(dialog.driverFontName_, 0, DialogCheckLayout.FONT_SIZE));
 		jButton.setPreferredSize(new Dimension(80, dialog.getFieldUnitHeight()));
 		jButton.setText(res.getString("Refresh"));
 		jButton.setFocusable(false);
@@ -2336,9 +2259,9 @@ class DialogCheckLayoutDateField extends JPanel {
 	private JPanel jPanelDummy = new JPanel();
 	public DialogCheckLayoutDateField(boolean isEditable, DialogCheckLayout dialog){
 		super();
-		jTextField.setFont(new java.awt.Font("Dialog", 0, 14));
+		jTextField.setFont(new java.awt.Font(dialog.driverFontName_, 0, DialogCheckLayout.FONT_SIZE));
 		jTextField.setFocusable(false);
-		FontMetrics metrics = jTextField.getFontMetrics(new java.awt.Font("Dialog", 0, 14));
+		FontMetrics metrics = jTextField.getFontMetrics(jTextField.getFont());
 		String value = dialog.getDateValue(dialog.getEditor().getDateFormat());
 		int width = metrics.stringWidth(value) + 10;
 		jTextField.setText(value);
@@ -2372,7 +2295,7 @@ class DialogCheckLayoutTextArea extends JScrollPane {
 		super();
 		String wrkStr;
 		fieldOptions_ = fieldOptions;
-		jTextArea.setFont(new java.awt.Font("Dialog", 0, 14));
+		jTextArea.setFont(new java.awt.Font(dialog.driverFontName_, 0, DialogCheckLayout.FONT_SIZE));
 		jTextArea.setLineWrap(true);
 		jTextArea.setWrapStyleWord(true);
 		jTextArea.setFocusable(false);
@@ -2415,13 +2338,13 @@ class DialogCheckLayoutFYearBox extends JPanel {
 		dateFormat = dialog.getEditor().getDateFormat();
 		language = dateFormat.substring(0, 2);
 		//
-		jTextField.setFont(new java.awt.Font("Dialog", 0, 14));
+		jTextField.setFont(new java.awt.Font(dialog.driverFontName_, 0, DialogCheckLayout.FONT_SIZE));
 		jTextField.setEditable(false);
 		jTextField.setFocusable(false);
-		jTextField.setBounds(new Rectangle(0, 0, 80, dialog.getFieldUnitHeight()));
+		jTextField.setBounds(new Rectangle(0, 0, 110, dialog.getFieldUnitHeight()));
 		//
-		jComboBoxYear.setFont(new java.awt.Font("Dialog", 0, 12));
-		jComboBoxYear.setBounds(new Rectangle(0, 0, 80, dialog.getFieldUnitHeight()));
+		jComboBoxYear.setFont(new java.awt.Font(dialog.driverFontName_, 0, DialogCheckLayout.FONT_SIZE));
+		jComboBoxYear.setBounds(new Rectangle(0, 0, 110, dialog.getFieldUnitHeight()));
 		if (language.equals("en")
 				|| dateFormat.equals("jp00")
 				|| dateFormat.equals("jp01")
@@ -2457,19 +2380,19 @@ class DialogCheckLayoutMSeqBox extends JPanel {
 	public DialogCheckLayoutMSeqBox(boolean isEditable, DialogCheckLayout dialog){
 		super();
 		language = dialog.getEditor().getDateFormat().substring(0, 2);
-		jTextField.setFont(new java.awt.Font("Dialog", 0, 14));
+		jTextField.setFont(new java.awt.Font(dialog.driverFontName_, 0, DialogCheckLayout.FONT_SIZE));
 		jTextField.setEditable(false);
 		jTextField.setFocusable(false);
-		jComboBoxMSeq.setFont(new java.awt.Font("Dialog", 0, 12));
+		jComboBoxMSeq.setFont(new java.awt.Font(dialog.driverFontName_, 0, DialogCheckLayout.FONT_SIZE-2));
 		if (language.equals("en")) {
-			jComboBoxMSeq.setBounds(new Rectangle(0, 0, 50, dialog.getFieldUnitHeight()));
-			jTextField.setBounds(new Rectangle(0, 0, 50, dialog.getFieldUnitHeight()));
+			jComboBoxMSeq.setBounds(new Rectangle(0, 0, 60, dialog.getFieldUnitHeight()));
+			jTextField.setBounds(new Rectangle(0, 0, 60, dialog.getFieldUnitHeight()));
 			this.setSize(new Dimension(50, dialog.getFieldUnitHeight()));
 			jComboBoxMSeq.addItem("Jan");
 		}
 		if (language.equals("jp")) {
-			jComboBoxMSeq.setBounds(new Rectangle(0, 0, 62, dialog.getFieldUnitHeight()));
-			jTextField.setBounds(new Rectangle(0, 0, 62, dialog.getFieldUnitHeight()));
+			jComboBoxMSeq.setBounds(new Rectangle(0, 0, 80, dialog.getFieldUnitHeight()));
+			jTextField.setBounds(new Rectangle(0, 0, 80, dialog.getFieldUnitHeight()));
 			this.setSize(new Dimension(62, dialog.getFieldUnitHeight()));
 			jComboBoxMSeq.addItem("１月度");
 		}
@@ -2495,12 +2418,11 @@ class DialogCheckLayoutYMonthBox extends JPanel {
 		super();
 		dateFormat = dialog.getEditor().getDateFormat();
 		language = dateFormat.substring(0, 2);
-		jTextField.setFont(new java.awt.Font("Dialog", 0, 14));
-		jTextField.setBounds(new Rectangle(0, 0, 85, dialog.getFieldUnitHeight()));
+		jTextField.setFont(new java.awt.Font(dialog.driverFontName_, 0, DialogCheckLayout.FONT_SIZE));
 		jTextField.setEditable(false);
 		jTextField.setFocusable(false);
-		//
-		jComboBoxYear.setFont(new java.awt.Font("Dialog", 0, 14));
+
+		jComboBoxYear.setFont(new java.awt.Font(dialog.driverFontName_, 0, DialogCheckLayout.FONT_SIZE));
 		jComboBoxYear.setFocusable(false);
 		if (language.equals("en")
 				|| dateFormat.equals("jp00")
@@ -2513,21 +2435,23 @@ class DialogCheckLayoutYMonthBox extends JPanel {
 		} else {
 			jComboBoxYear.addItem("H99");
 		}
-		jComboBoxMonth.setFont(new java.awt.Font("Dialog", 0, 14));
+		jComboBoxMonth.setFont(new java.awt.Font(dialog.driverFontName_, 0, DialogCheckLayout.FONT_SIZE));
 		jComboBoxMonth.setFocusable(false);
 		if (language.equals("en")) {
-			jComboBoxMonth.setBounds(new Rectangle(0, 0, 55, dialog.getFieldUnitHeight()));
-			jComboBoxYear.setBounds(new Rectangle(56, 0, 60, dialog.getFieldUnitHeight()));
-			this.setSize(new Dimension(116, dialog.getFieldUnitHeight()));
+			jComboBoxMonth.setBounds(new Rectangle(0, 0, 70, dialog.getFieldUnitHeight()));
+			jComboBoxYear.setBounds(new Rectangle(71, 0, 80, dialog.getFieldUnitHeight()));
+			jTextField.setBounds(new Rectangle(0, 0, 151, dialog.getFieldUnitHeight()));
+			this.setSize(new Dimension(151, dialog.getFieldUnitHeight()));
 			jComboBoxMonth.addItem("Jan");
 		}
 		if (language.equals("jp")) {
-			jComboBoxYear.setBounds(new Rectangle(0, 0, 60, dialog.getFieldUnitHeight()));
-			jComboBoxMonth.setBounds(new Rectangle(61, 0, 45, dialog.getFieldUnitHeight()));
-			this.setSize(new Dimension(106, dialog.getFieldUnitHeight()));
+			jComboBoxYear.setBounds(new Rectangle(0, 0, 80, dialog.getFieldUnitHeight()));
+			jComboBoxMonth.setBounds(new Rectangle(81, 0, 60, dialog.getFieldUnitHeight()));
+			jTextField.setBounds(new Rectangle(0, 0, 141, dialog.getFieldUnitHeight()));
+			this.setSize(new Dimension(141, dialog.getFieldUnitHeight()));
 			jComboBoxMonth.addItem("01");
 		}
-		//
+
 		this.setLayout(null);
 		this.setFocusable(false);
 		if (isEditable) {
@@ -2540,7 +2464,6 @@ class DialogCheckLayoutYMonthBox extends JPanel {
 }
 
 class DialogCheckLayoutPrimaryTable extends Object {
-	private static final long serialVersionUID = 1L;
 	private org.w3c.dom.Element tableElement = null;
 	private org.w3c.dom.Element functionElement_ = null;
 	private String tableID = "";
@@ -2601,23 +2524,18 @@ class DialogCheckLayoutPrimaryTable extends Object {
 }
 
 class DialogCheckLayoutDetailTable extends Object {
-	private static final long serialVersionUID = 1L;
 	private org.w3c.dom.Element tableElement = null;
-	//private org.w3c.dom.Element detailElement_ = null;
 	private String tableID_ = "";
 	private ArrayList<String> keyFieldList = new ArrayList<String>();
 	private DialogCheckLayout dialog_;
 	private StringTokenizer workTokenizer;
 	public DialogCheckLayoutDetailTable(String tableID, String keyFields, DialogCheckLayout dialog){
 		super();
-		//detailElement_ = detailElement;
 		dialog_ = dialog;
-		//tableID = detailElement_.getAttribute("Table");
 		tableID_ = tableID;
 		tableElement = dialog_.getEditor().getSpecificXETreeNode("Table", tableID_).getElement();
 		String wrkStr1;
 		org.w3c.dom.Element workElement;
-		//if (detailElement_.getAttribute("KeyFields").equals("")) {
 		if (keyFields.equals("")) {
 			NodeList nodeList = tableElement.getElementsByTagName("Key");
 			for (int i = 0; i < nodeList.getLength(); i++) {
@@ -2631,7 +2549,6 @@ class DialogCheckLayoutDetailTable extends Object {
 				}
 			}
 		} else {
-			//workTokenizer = new StringTokenizer(detailElement_.getAttribute("KeyFields"), ";" );
 			workTokenizer = new StringTokenizer(keyFields, ";" );
 			while (workTokenizer.hasMoreTokens()) {
 				keyFieldList.add(workTokenizer.nextToken());
@@ -2653,7 +2570,6 @@ class DialogCheckLayoutDetailTable extends Object {
 }
 
 class DialogCheckLayoutReferTable extends Object {
-	private static final long serialVersionUID = 1L;
 	private org.w3c.dom.Element referElement_ = null;
 	private String tableID = "";
 	private String tableAlias = "";
@@ -2673,130 +2589,3 @@ class DialogCheckLayoutReferTable extends Object {
 		return tableAlias;
 	}
 }
-
-
-//class DialogCheckLayoutHorizontalAlignmentHeaderRenderer implements TableCellRenderer{
-//	private int horizontalAlignment = SwingConstants.LEFT;
-//	public DialogCheckLayoutHorizontalAlignmentHeaderRenderer(int horizontalAlignment) {
-//		this.horizontalAlignment = horizontalAlignment;
-//	}
-//	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-//		TableCellRenderer r = table.getTableHeader().getDefaultRenderer();
-//		JLabel l = (JLabel)r.getTableCellRendererComponent(table,value,isSelected,hasFocus,row,column);
-//		l.setHorizontalAlignment(horizontalAlignment);
-//		return l;
-//	}
-//}
-//
-//class DialogCheckLayoutRowNumberRenderer extends DefaultTableCellRenderer {
-//	private static final long serialVersionUID = 1L;
-//	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column){
-//		int number = (Integer)value;
-//		//
-//		setText(Integer.toString(number));
-//		setFont(new java.awt.Font("Dialog", 0, 14));
-//		setHorizontalAlignment(SwingConstants.RIGHT);
-//		//
-//		if (isSelected) {
-//			setBackground(table.getSelectionBackground());
-//			setForeground(table.getSelectionForeground());
-//		} else {
-//			if (row%2==0) {
-//				setBackground(table.getBackground());
-//			} else {
-//				setBackground(new Color(240, 240, 255));
-//			}
-//			setForeground(table.getForeground());
-//		}
-//		//
-//		validate();
-//		return this;
-//	}
-//}
-//
-//class DialogCheckLayoutTableCellRenderer extends DefaultTableCellRenderer {
-//	private static final long serialVersionUID = 1L;
-//	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column){
-//			setText((String)value);
-//			setFont(new java.awt.Font("Dialog", 0, 14));
-//		if (isSelected) {
-//			setBackground(table.getSelectionBackground());
-//			setForeground(table.getSelectionForeground());
-//		} else {
-//			if (row%2==0) {
-//				setBackground(table.getBackground());
-//			} else {
-//				setBackground(new Color(240, 240, 255));
-//			}
-//			setForeground(table.getForeground());
-//		}
-//		validate();
-//		return this;
-//	}
-//}
-//
-//class DialogCheckLayoutTableCellRendererWithCheckBox extends JCheckBox implements TableCellRenderer {
-//	private static final long serialVersionUID = 1L;
-//	public DialogCheckLayoutTableCellRendererWithCheckBox(String dataTypeOptions) {
-//		super(dataTypeOptions);
-//	}
-//	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column){
-//		this.setOpaque(true);
-//		if (isSelected) {
-//			this.setBackground(table.getSelectionBackground());
-//		} else {
-//			if (row%2==0) {
-//				this.setBackground(table.getBackground());
-//			} else {
-//				this.setBackground(new Color(240, 240, 255));
-//			}
-//		}
-//		validate();
-//		return this;
-//	}
-//}
-
-//class DialogCheckLayoutCheckBoxRenderer extends JCheckBox implements TableCellRenderer {
-//	private static final long serialVersionUID = 1L;
-//	public DialogCheckLayoutCheckBoxRenderer() {
-//		super();
-//	}
-//	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int	row, int column) {
-//		if (isSelected) {
-//			setBackground(table.getSelectionBackground());
-//			setForeground(table.getSelectionForeground());
-//		} else {
-//			if (row%2==0) {
-//				setBackground(table.getBackground());
-//			} else {
-//				setBackground(new Color(240, 240, 255));
-//			}
-//			setForeground(table.getForeground());
-//		}
-//		return this;
-//	} 
-//} 
-
-//class DialogCheckLayoutCheckBoxHeaderRenderer extends JCheckBox implements TableCellRenderer {   
-//	private static final long serialVersionUID = 1L;
-//	protected DialogCheckLayoutCheckBoxHeaderRenderer rendererComponent;   
-//	protected int column;   
-//	protected boolean mousePressed = false;   
-//	public DialogCheckLayoutCheckBoxHeaderRenderer() {   
-//		rendererComponent = this;   
-//	}   
-//	public Component getTableCellRendererComponent(	JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {  
-//		setColumn(column);   
-//		rendererComponent.setText("");   
-//		rendererComponent.setBackground(new Color(219,219,219));   
-//		setBorder(UIManager.getBorder("TableHeader.cellBorder"));   
-//		return rendererComponent;   
-//	}   
-//	protected void setColumn(int column) {   
-//		this.column = column;   
-//	}   
-//	public int getColumn() {   
-//		return column;   
-//	}   
-//}  
-

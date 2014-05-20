@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2011 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2014 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -32,7 +32,7 @@ package xeadEditor;
  */
 
 import java.awt.*;
-
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
@@ -40,27 +40,20 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
-import javax.swing.text.TabSet;
-import javax.swing.text.TabStop;
-
-import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
-import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFFooter;
 import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.HSSFColor;
 import org.w3c.dom.*;
 import xeadEditor.Editor.MainTreeNode;
 import xeadEditor.Editor.SortableDomElementListModel;
 import java.io.*;
-//import java.util.*;
 import java.net.URI;
 
 public class DialogScan extends JDialog {
@@ -132,87 +125,88 @@ public class DialogScan extends JDialog {
 		//
 		//panelMain
 		panelMain.setLayout(borderLayoutMain);
-		panelMain.setPreferredSize(new Dimension(880, 620));
+		panelMain.setPreferredSize(new Dimension(1020, 700));
 		panelMain.setBorder(BorderFactory.createEtchedBorder());
 		panelMain.add(jPanelNorth, BorderLayout.NORTH);
 		panelMain.add(jPanelSouth, BorderLayout.SOUTH);
 		panelMain.add(jSplitPane, BorderLayout.CENTER);
 		//
 		//jPanelNorth and objects on it
-		jPanelNorth.setBorder(BorderFactory.createEtchedBorder());
-		jPanelNorth.setPreferredSize(new Dimension(800, 98));
-		jLabel1.setFont(new java.awt.Font("Dialog", 0, 12));
+		jPanelNorth.setBorder(null);
+		jPanelNorth.setLayout(null);
+		jPanelNorth.setPreferredSize(new Dimension(1000, 108));
+		jLabel1.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabel1.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabel1.setText(res.getString("ScanString"));
-		jLabel1.setBounds(new Rectangle(8, 13, 80, 15));
-		jTextFieldScan.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabel1.setBounds(new Rectangle(5, 13, 130, 20));
+		jTextFieldScan.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTextFieldScan.setText("");
-		jTextFieldScan.setBounds(new Rectangle(96, 11, 215, 21));
+		jTextFieldScan.setBounds(new Rectangle(140, 10, 240, 25));
 		jTextFieldScan.addKeyListener(new DialogScan_jTextFieldScan_keyAdapter(this));
-		jLabel2.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabel2.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabel2.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabel2.setText(res.getString("ScanStringReplacedTo"));
-		jLabel2.setBounds(new Rectangle(322, 13, 80, 15));
-		jTextFieldReplace.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabel2.setBounds(new Rectangle(390, 13, 130, 20));
+		jTextFieldReplace.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTextFieldReplace.setText("");
-		jTextFieldReplace.setBounds(new Rectangle(408, 13, 215, 21));
+		jTextFieldReplace.setBounds(new Rectangle(525, 10, 240, 25));
 		jTextFieldReplace.addKeyListener(new DialogScan_jTextFieldReplace_keyAdapter(this));
-		jCheckBoxCaseSensitive.setFont(new java.awt.Font("Dialog", 0, 12));
+		jCheckBoxCaseSensitive.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jCheckBoxCaseSensitive.setText(res.getString("CaseSensitive"));
-		jCheckBoxCaseSensitive.setBounds(new Rectangle(642, 12, 180, 23));
+		jCheckBoxCaseSensitive.setBounds(new Rectangle(770, 10, 220, 25));
 		jLabel3.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabel3.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabel3.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabel3.setText(res.getString("ScanRange"));
-		jLabel3.setBounds(new Rectangle(9, 46, 78, 15));
-		jCheckBoxSystem.setBounds(new Rectangle(92, 41, 125, 22));
-		jCheckBoxSystem.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabel3.setBounds(new Rectangle(5, 44, 130, 20));
+		jCheckBoxSystem.setBounds(new Rectangle(140, 41, 150, 25));
+		jCheckBoxSystem.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jCheckBoxSystem.setText(res.getString("SystemDescriptions"));
 		jCheckBoxSystem.setSelected(true);
-		jCheckBoxMenu.setBounds(new Rectangle(222, 41, 125, 22));
-		jCheckBoxMenu.setFont(new java.awt.Font("Dialog", 0, 12));
+		jCheckBoxMenu.setBounds(new Rectangle(290, 41, 150, 25));
+		jCheckBoxMenu.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jCheckBoxMenu.setText(res.getString("MenuDefinitions"));
 		jCheckBoxMenu.setSelected(true);
-		jCheckBoxSubsystem.setBounds(new Rectangle(92, 64, 125, 22));
-		jCheckBoxSubsystem.setFont(new java.awt.Font("Dialog", 0, 12));
+		jCheckBoxSubsystem.setBounds(new Rectangle(140, 72, 150, 25));
+		jCheckBoxSubsystem.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jCheckBoxSubsystem.setText(res.getString("SubsystemDescriptions"));
 		jCheckBoxSubsystem.addChangeListener(new DialogScan_jCheckBoxSubsystem_changeAdapter(this));
 		jCheckBoxSubsystem.setSelected(true);
-		jCheckBoxTable.setBounds(new Rectangle(222, 64, 125, 22));
-		jCheckBoxTable.setFont(new java.awt.Font("Dialog", 0, 12));
+		jCheckBoxTable.setBounds(new Rectangle(290, 72, 150, 25));
+		jCheckBoxTable.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jCheckBoxTable.setText(res.getString("TableDefinitions"));
 		jCheckBoxTable.addChangeListener(new DialogScan_jCheckBoxTable_changeAdapter(this));
 		jCheckBoxTable.setSelected(true);
-		jCheckBoxFunction.setBounds(new Rectangle(352, 64, 125, 22));
-		jCheckBoxFunction.setFont(new java.awt.Font("Dialog", 0, 12));
+		jCheckBoxFunction.setBounds(new Rectangle(440, 72, 150, 25));
+		jCheckBoxFunction.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jCheckBoxFunction.setText(res.getString("FunctionDefinitions"));
 		jCheckBoxFunction.addChangeListener(new DialogScan_jCheckBoxFunction_changeAdapter(this));
 		jCheckBoxFunction.setSelected(true);
-		jComboBoxSubsystems.setBounds(new Rectangle(487, 64, 170, 21));
-		jComboBoxSubsystems.setFont(new java.awt.Font("Dialog", 0, 12));
-		jButtonStartScan.setBounds(new Rectangle(720, 51, 90, 30));
-		jButtonStartScan.setFont(new java.awt.Font("Dialog", 0, 12));
+		jComboBoxSubsystems.setBounds(new Rectangle(590, 72, 240, 25));
+		jComboBoxSubsystems.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jButtonStartScan.setBounds(new Rectangle(850, 43, 130, 56));
+		jButtonStartScan.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonStartScan.setText(res.getString("ScanStart"));
 		jButtonStartScan.addActionListener(new DialogScan_jButtonStartScan_actionAdapter(this));
 		jButtonStartScan.setEnabled(false);
 		jButtonStartScan.setFocusCycleRoot(true);
-		jProgressBar.setBounds(new Rectangle(720, 51, 90, 30));
+		jProgressBar.setBounds(new Rectangle(850, 43, 130, 56));
 		jProgressBar.setVisible(false);
-		jPanelNorth.setLayout(null);
-		jPanelNorth.add(jTextFieldScan);
-		jPanelNorth.add(jCheckBoxTable);
-		jPanelNorth.add(jTextFieldReplace);
-		jPanelNorth.add(jLabel2);
-		jPanelNorth.add(jCheckBoxCaseSensitive);
-		jPanelNorth.add(jCheckBoxSubsystem);
-		jPanelNorth.add(jCheckBoxFunction);
-		jPanelNorth.add(jCheckBoxTable);
-		jPanelNorth.add(jLabel1);
-		jPanelNorth.add(jCheckBoxSystem);
-		jPanelNorth.add(jCheckBoxMenu);
-		jPanelNorth.add(jLabel3);
-		jPanelNorth.add(jComboBoxSubsystems);
-		jPanelNorth.add(jButtonStartScan);
-		jPanelNorth.add(jProgressBar);
+		//
+		jPanelNorth.add(jTextFieldScan, null);
+		jPanelNorth.add(jCheckBoxTable, null);
+		jPanelNorth.add(jTextFieldReplace, null);
+		jPanelNorth.add(jLabel2, null);
+		jPanelNorth.add(jCheckBoxCaseSensitive, null);
+		jPanelNorth.add(jCheckBoxSubsystem, null);
+		jPanelNorth.add(jCheckBoxFunction, null);
+		jPanelNorth.add(jCheckBoxTable, null);
+		jPanelNorth.add(jLabel1, null);
+		jPanelNorth.add(jCheckBoxSystem, null);
+		jPanelNorth.add(jCheckBoxMenu, null);
+		jPanelNorth.add(jLabel3, null);
+		jPanelNorth.add(jComboBoxSubsystems, null);
+		jPanelNorth.add(jButtonStartScan, null);
+		jPanelNorth.add(jProgressBar, null);
 		//
 		//jSplitPane and objects on it
 		jSplitPane.setBorder(null);
@@ -223,12 +217,15 @@ public class DialogScan extends JDialog {
 		jScrollPaneScanDetail.setBounds(new Rectangle(132, 144, 282, 51));
 		jSplitPane.add(jScrollPaneScanResult, JSplitPane.TOP);
 		jSplitPane.add(jScrollPaneScanDetail, JSplitPane.BOTTOM);
-		jTableScanResult.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jTableScanResult.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTableScanResult.setBackground(SystemColor.control);
 		jTableScanResult.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableScanResult.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jTableScanResult.setRowSelectionAllowed(true);
 		jTableScanResult.getSelectionModel().addListSelectionListener(new DialogScan_jTableScanResult_listSelectionAdapter(this));
+		jTableScanResult.setRowHeight(Editor.TABLE_ROW_HEIGHT);
+		jTableScanResult.addMouseListener(new DialogScan_jTableScanResult_mouseAdapter(this));
+		jTableScanResult.getTableHeader().setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		tableModelScanResult.addColumn("NO.");
 		tableModelScanResult.addColumn("");
 		tableModelScanResult.addColumn(res.getString("ElementType"));
@@ -243,13 +240,13 @@ public class DialogScan extends JDialog {
 		column4 = jTableScanResult.getColumnModel().getColumn(4);
 		column5 = jTableScanResult.getColumnModel().getColumn(5);
 		column6 = jTableScanResult.getColumnModel().getColumn(6);
-		column0.setPreferredWidth(34);
-		column1.setPreferredWidth(22);
-		column2.setPreferredWidth(150);
-		column3.setPreferredWidth(380);
-		column4.setPreferredWidth(105);
-		column5.setPreferredWidth(127);
-		column6.setPreferredWidth(30);
+		column0.setPreferredWidth(40);
+		column1.setPreferredWidth(30);
+		column2.setPreferredWidth(190);
+		column3.setPreferredWidth(400);
+		column4.setPreferredWidth(125);
+		column5.setPreferredWidth(145);
+		column6.setPreferredWidth(35);
 		rendererAlignmentCenter.setHorizontalAlignment(0); //CENTER//
 		rendererAlignmentRight.setHorizontalAlignment(4); //RIGHT//
 		rendererAlignmentLeft.setHorizontalAlignment(2); //LEFT//
@@ -265,23 +262,10 @@ public class DialogScan extends JDialog {
 		column4.setCellRenderer(rendererAlignmentLeft);
 		column5.setCellRenderer(rendererAlignmentLeft);
 		column6.setCellRenderer(rendererAlignmentRight);
-		jTableScanResult.addMouseListener(new DialogScan_jTableScanResult_mouseAdapter(this));
-		jTableScanResult.getTableHeader().setFont(new java.awt.Font("SansSerif", 0, 12));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableScanResult.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(2); //LEFT//
 		jScrollPaneScanResult.getViewport().add(jTableScanResult, null);
-		jTextPaneScanDetail.setFont(new Font("monospaced", Font.PLAIN, 14));
-		//jTextPaneScanDetail.setTabSize(4);
-		FontMetrics fm = jTextPaneScanDetail.getFontMetrics(jTextPaneScanDetail.getFont());
-		int charWidth = fm.charWidth('m');
-		int tabLength = charWidth * 4;
-		TabStop[] tabs = new TabStop[20];
-		for(int j=0;j<tabs.length;j++) {
-			tabs[j] = new TabStop((j+1)*tabLength);
-		}
-		TabSet tabSet = new TabSet(tabs);
-		StyleConstants.setTabSet(attrs, tabSet);
-		//jTextPaneScanDetail.setLineWrap(true);
+		jTextPaneScanDetail.setFont(new java.awt.Font(frame_.scriptFontName, 0, Editor.MAIN_FONT_SIZE + 2));
 		jTextPaneScanDetail.setEditable(false);
 		jTextPaneScanDetail.setBackground(SystemColor.control);
 		jScrollPaneScanDetail.getViewport().add(jTextPaneScanDetail, null);
@@ -290,30 +274,30 @@ public class DialogScan extends JDialog {
 		StyleConstants.setBackground(style, Color.cyan);
 		//
 		//jPanelSouth and objects on it
-		jPanelSouth.setBorder(BorderFactory.createEtchedBorder());
-		jPanelSouth.setPreferredSize(new Dimension(800, 40));
-		jButtonCloseDialog.setBounds(new Rectangle(20, 7, 70, 25));
-		jButtonCloseDialog.setFont(new java.awt.Font("Dialog", 0, 12));
+		jPanelSouth.setBorder(null);
+		jPanelSouth.setLayout(null);
+		jPanelSouth.setPreferredSize(new Dimension(800, 43));
+		jButtonCloseDialog.setBounds(new Rectangle(30, 8, 120, 27));
+		jButtonCloseDialog.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonCloseDialog.setText(res.getString("Close"));
 		jButtonCloseDialog.addActionListener(new DialogScan_jButtonCloseDialog_actionAdapter(this));
-		jButtonReplaceAllSelected.setBounds(new Rectangle(330, 7, 176, 25));
-		jButtonReplaceAllSelected.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonReplaceAllSelected.setBounds(new Rectangle(380, 8, 230, 27));
+		jButtonReplaceAllSelected.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonReplaceAllSelected.setText(res.getString("ReplaceAllSelected"));
 		jButtonReplaceAllSelected.addActionListener(new DialogScan_jButtonReplaceRowsSelected_actionAdapter(this));
-		jButtonGenerateListData.setBounds(new Rectangle(760, 7, 90, 25));
-		jButtonGenerateListData.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonGenerateListData.setBounds(new Rectangle(840, 8, 120, 27));
+		jButtonGenerateListData.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonGenerateListData.setText(res.getString("GenerateList"));
 		jButtonGenerateListData.setEnabled(false);
 		jButtonGenerateListData.addActionListener(new DialogScan_jButtonGenerateListData_actionAdapter(this));
-		jPanelSouth.setLayout(null);
-		jPanelSouth.add(jButtonReplaceAllSelected);
-		jPanelSouth.add(jButtonGenerateListData);
-		jPanelSouth.add(jButtonCloseDialog);
+		jPanelSouth.add(jButtonCloseDialog, null);
+		jPanelSouth.add(jButtonReplaceAllSelected, null);
+		jPanelSouth.add(jButtonGenerateListData, null);
 		//
 		//DialogScan
-		//this.setResizable(false);
 		this.setTitle(res.getString("ScanDialogTitle"));
 		this.getContentPane().add(panelMain);
+		this.setPreferredSize(new Dimension(1024, 768));
 		Dimension scrSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension dlgSize = this.getPreferredSize();
 		this.setLocation((scrSize.width - dlgSize.width)/2 , (scrSize.height - dlgSize.height)/2);
@@ -372,7 +356,6 @@ public class DialogScan extends JDialog {
 		SortableDomElementListModel sortedSubsystemList = null;
 		SortableDomElementListModel sortedTableList = null;
 		SortableDomElementListModel sortedFunctionList = null;
-		int numberOfTableElementsToBeScanned = -1;
 		//
 		try {
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
@@ -432,7 +415,6 @@ public class DialogScan extends JDialog {
 						workElement = (org.w3c.dom.Element)sortedTableList.getElementAt(i);
 						if (subsystemID.equals(workElement.getAttribute("SubsystemID"))) {
 							countOfElementsToBeScanned++;
-							numberOfTableElementsToBeScanned++;
 						}
 					}
 				}
@@ -1290,11 +1272,6 @@ public class DialogScan extends JDialog {
 							}
 						}
 					}
-					//
-					//if (!jCheckBoxCaseSensitive.isSelected()) {
-					//	targetString = targetString.toUpperCase();
-					//}
-					//
 					if (attributeType.equals("TypeOptions")) {
 						targetString = replaceValueWithKeyword(element.getAttribute(attributeType), keyword, targetString);
 					} else {
@@ -1303,7 +1280,6 @@ public class DialogScan extends JDialog {
 								|| attributeType.equals("FieldOptions_VALUE")) {
 							targetString = replaceValueWithKeyword(element.getAttribute("FieldOptions"), keyword, targetString);
 						} else {
-							//targetString = targetString.replaceAll(stringToBeScanned, stringToBeReplaced);
 							targetString = replaceStringValue(targetString);
 							if (attributeType.equals("Descriptions")
 									|| attributeType.equals("Remarks")
@@ -1336,8 +1312,6 @@ public class DialogScan extends JDialog {
 							}
 						}
 					}
-					//
-					//tableModelScanResult.setValueAt("0", i, 6);
 				}
 			}
 		}
@@ -1481,55 +1455,32 @@ public class DialogScan extends JDialog {
 		FileOutputStream fileOutputStream = null;
 		//
 		HSSFWorkbook workBook = new HSSFWorkbook();
-		//HSSFSheet workSheet = workBook.createSheet(jTextFieldScan.getText());
 		HSSFSheet workSheet = workBook.createSheet("Sheet1");
 		workSheet.setDefaultRowHeight( (short) 300);
 		HSSFFooter workSheetFooter = workSheet.getFooter();
 		workSheetFooter.setRight(jTextFieldScan.getText() + "  Page " + HSSFFooter.page() + " / " + HSSFFooter.numPages() );
 		//
-		HSSFFont fontHeader = workBook.createFont();
-		fontHeader = workBook.createFont();
-		fontHeader.setFontName(res.getString("XLSFontHDR"));
-		fontHeader.setFontHeightInPoints((short)11);
+//		HSSFFont fontHeader = workBook.createFont();
+//		fontHeader = workBook.createFont();
+//		fontHeader.setFontName(res.getString("XLSFontHDR"));
+//		fontHeader.setFontHeightInPoints((short)11);
 		//
-		HSSFFont fontDetail = workBook.createFont();
-		fontDetail.setFontName(res.getString("XLSFontDTL"));
-		fontDetail.setFontHeightInPoints((short)11);
+//		HSSFFont fontDetail = workBook.createFont();
+//		fontDetail.setFontName(res.getString("XLSFontDTL"));
+//		fontDetail.setFontHeightInPoints((short)11);
 		//
 		HSSFCellStyle styleHeader = workBook.createCellStyle();
-		styleHeader.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		styleHeader.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		styleHeader.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		styleHeader.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		styleHeader.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
-		styleHeader.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 		styleHeader.setAlignment(HSSFCellStyle.ALIGN_LEFT);
-		styleHeader.setFont(fontHeader);
 		//
 		HSSFCellStyle styleHeaderNumber = workBook.createCellStyle();
-		styleHeaderNumber.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		styleHeaderNumber.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		styleHeaderNumber.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		styleHeaderNumber.setBorderTop(HSSFCellStyle.BORDER_THIN);
-		styleHeaderNumber.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
-		styleHeaderNumber.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
 		styleHeaderNumber.setAlignment(HSSFCellStyle.ALIGN_LEFT);
-		styleHeaderNumber.setFont(fontHeader);
 		//
 		HSSFCellStyle styleDataInteger = workBook.createCellStyle();
-		styleDataInteger.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		styleDataInteger.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		styleDataInteger.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		styleDataInteger.setBorderTop(HSSFCellStyle.BORDER_THIN);
 		styleDataInteger.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
 		styleDataInteger.setVerticalAlignment(HSSFCellStyle.VERTICAL_TOP);
 		styleDataInteger.setDataFormat(HSSFDataFormat.getBuiltinFormat("#,##0"));
 		//
 		HSSFCellStyle styleDataString = workBook.createCellStyle();
-		styleDataString.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-		styleDataString.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-		styleDataString.setBorderRight(HSSFCellStyle.BORDER_THIN);
-		styleDataString.setBorderTop(HSSFCellStyle.BORDER_THIN);
 		styleDataString.setAlignment(HSSFCellStyle.ALIGN_LEFT);
 		styleDataString.setVerticalAlignment(HSSFCellStyle.VERTICAL_TOP);
 		styleDataString.setWrapText(true);
@@ -1636,7 +1587,6 @@ public class DialogScan extends JDialog {
 
 	void jTextFieldReplace_keyReleased(KeyEvent e) {
 		jButtonReplaceAllSelected.setEnabled(false);
-		//if (!stringToBeScanned.equals(jTextFieldReplace.getText())) {
 		if (!stringToBeScanned.equals(jTextFieldReplace.getText().toUpperCase()) && !jCheckBoxCaseSensitive.isSelected()
 				|| !stringToBeScanned.equals(jTextFieldReplace.getText()) && jCheckBoxCaseSensitive.isSelected()) {
 			for (int i = 0; i < tableModelScanResult.getRowCount(); i++) {
@@ -1672,7 +1622,6 @@ public class DialogScan extends JDialog {
 					for (int i = 0; i < tableModelScanResult.getRowCount(); i++) {
 						tableModelScanResult.setValueAt(Boolean.TRUE, i, 1);
 					}
-					//if (!stringToBeScanned.equals(jTextFieldReplace.getText())) {
 					if (!stringToBeScanned.equals(jTextFieldReplace.getText().toUpperCase()) && !jCheckBoxCaseSensitive.isSelected()
 							|| !stringToBeScanned.equals(jTextFieldReplace.getText()) && jCheckBoxCaseSensitive.isSelected()) {
 						jButtonReplaceAllSelected.setEnabled(true);

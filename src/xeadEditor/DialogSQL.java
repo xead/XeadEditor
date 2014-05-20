@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2011 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2014 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -99,32 +99,31 @@ public class DialogSQL extends JDialog {
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0), "RUN");
 		actionMap.put("RUN", commitAction);
 		//
-		jLabelConnection.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelConnection.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelConnection.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelConnection.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelConnection.setText(res.getString("Connection"));
-		jLabelConnection.setPreferredSize(new Dimension(100, 17));
-		jLabelConnection.setBounds(new Rectangle(11, 12, 96, 15));
-		jComboBoxConnection.setFont(new java.awt.Font("SansSerif", 0, 12));
-		jComboBoxConnection.setBounds(new Rectangle(115, 9, 730, 22));
+		jLabelConnection.setBounds(new Rectangle(5, 12, 130, 20));
+		jComboBoxConnection.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jComboBoxConnection.setBounds(new Rectangle(140, 9, 850, 25));
 		jPanelStatementTop.setLayout(null);
-		jPanelStatementTop.setPreferredSize(new Dimension(10, 40));
+		jPanelStatementTop.setPreferredSize(new Dimension(10, 43));
 		jPanelStatementTop.add(jLabelConnection);
 		jPanelStatementTop.add(jComboBoxConnection);
 		jPanelStatement.setLayout(new BorderLayout());
 		jPanelStatement.add(jPanelStatementTop, BorderLayout.NORTH);
 		jPanelStatement.add(jScrollPaneStatement, BorderLayout.CENTER);
 		//
-		jTextAreaStatement.setFont(new java.awt.Font("Dialog", 0, 12));
+		jTextAreaStatement.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTextAreaStatement.setEditable(true);
 		jTextAreaStatement.setOpaque(true);
 		jTextAreaStatement.setLineWrap(true);
 		jScrollPaneStatement.getViewport().add(jTextAreaStatement);
 		//
-		jLabelMessage.setFont(new java.awt.Font("SansSerif", 0, 12));
+		jLabelMessage.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelMessage.setText(" " + res.getString("Message"));
-		jLabelMessage.setPreferredSize(new Dimension(100, 17));
-		jTextAreaMessage.setFont(new java.awt.Font("Dialog", 0, 12));
+		jLabelMessage.setPreferredSize(new Dimension(100, 23));
+		jTextAreaMessage.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTextAreaMessage.setEditable(false);
 		jTextAreaMessage.setOpaque(false);
 		jTextAreaMessage.setLineWrap(true);
@@ -136,24 +135,24 @@ public class DialogSQL extends JDialog {
 		jPanelMessage.add(jScrollPaneMessage, BorderLayout.CENTER);
 		//
 		jSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		jSplitPane.setDividerLocation(150);
+		jSplitPane.setDividerLocation(200);
 		jSplitPane.add(jPanelStatement, JSplitPane.TOP);
 		jSplitPane.add(jPanelMessage, JSplitPane.BOTTOM);
 		//
 		jButtonClose.setText(res.getString("Close"));
-		jButtonClose.setBounds(new Rectangle(30, 8, 80, 25));
-		jButtonClose.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonClose.setBounds(new Rectangle(30, 8, 100, 27));
+		jButtonClose.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonClose.addActionListener(new DialogSQL_jButtonClose_actionAdapter(this));
 		jButtonCommit.setText(res.getString("SqlCommitF5"));
-		jButtonCommit.setBounds(new Rectangle(375, 8, 130, 25));
-		jButtonCommit.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonCommit.setBounds(new Rectangle(400, 8, 150, 27));
+		jButtonCommit.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonCommit.addActionListener(new DialogSQL_jButtonCommit_actionAdapter(this));
 		jButtonListTables.setText(res.getString("SqlListModules"));
-		jButtonListTables.setBounds(new Rectangle(735, 8, 130, 25));
-		jButtonListTables.setFont(new java.awt.Font("Dialog", 0, 12));
+		jButtonListTables.setBounds(new Rectangle(820, 8, 150, 27));
+		jButtonListTables.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonListTables.addActionListener(new DialogSQL_jButtonListTables_actionAdapter(this));
 		jPanelButtons.setBorder(BorderFactory.createEtchedBorder());
-		jPanelButtons.setPreferredSize(new Dimension(400, 41));
+		jPanelButtons.setPreferredSize(new Dimension(100, 43));
 		jPanelButtons.setLayout(null);
 		jPanelButtons.add(jButtonClose, null);
 		jPanelButtons.add(jButtonCommit, null);
@@ -162,7 +161,7 @@ public class DialogSQL extends JDialog {
 		this.setTitle(res.getString("SqlConsole"));
 		this.getContentPane().add(jPanelButtons,  BorderLayout.SOUTH);
 		this.setResizable(false);
-		this.setPreferredSize(new Dimension(900, 600));
+		this.setPreferredSize(new Dimension(1010, 700));
 		this.getContentPane().add(jSplitPane,  BorderLayout.CENTER);
 	}
 
