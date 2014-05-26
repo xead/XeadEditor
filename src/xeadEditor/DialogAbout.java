@@ -48,7 +48,10 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2014 DBC,Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
-	public static final String FULL_VERSION  = "V1.R2.M0";
+	public static final String FULL_VERSION  = "V1.R2.M1";
+	//1.2.1
+	//・XF100,110に最大表示行数をはずした
+	//・フィールド検索ダイアログでのメッセージを修正した
 	//
 	//1.2.0
 	//・フォントサイズを12pから16pに変更するとともに、各種定義パネルのデザインを改善した

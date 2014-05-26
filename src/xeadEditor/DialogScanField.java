@@ -217,6 +217,7 @@ public class DialogScanField extends JDialog {
 		this.setResizable(false);
 		this.setTitle(res.getString("ScanField"));
 		this.getContentPane().add(panelMain);
+		this.getRootPane().setDefaultButton(jButtonScan);
 		this.setPreferredSize(new Dimension(1024, 768));
 		Dimension scrSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension dlgSize = this.getPreferredSize();
@@ -403,6 +404,8 @@ public class DialogScanField extends JDialog {
 		}
 		if (rowNumber == 0) {
 			jTextAreaMessage.setText(res.getString("ScanFieldNotFound"));
+		} else {
+			jTextAreaMessage.setText(rowNumber + res.getString("ScanFieldFound"));
 		}
 	}
 

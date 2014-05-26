@@ -989,8 +989,6 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldFunction100SizeHeight = new JTextField();
 	private JLabel jLabelFunction100InitialReadCount = new JLabel();
 	private JTextField jTextFieldFunction100InitialReadCount = new JTextField();
-	private JLabel jLabelFunction100MaxReadCount = new JLabel();
-	private JTextField jTextFieldFunction100MaxReadCount = new JTextField();
 	private JLabel jLabelFunction100InitialMsg = new JLabel();
 	private JTextField jTextFieldFunction100InitialMsg = new JTextField();
 	private JTabbedPane jTabbedPaneFunction100 = new JTabbedPane();
@@ -1139,8 +1137,6 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldFunction110SizeHeight = new JTextField();
 	private JLabel jLabelFunction110InitialReadCount = new JLabel();
 	private JTextField jTextFieldFunction110InitialReadCount = new JTextField();
-	private JLabel jLabelFunction110MaxReadCount = new JLabel();
-	private JTextField jTextFieldFunction110MaxReadCount = new JTextField();
 	private JCheckBox jCheckBoxFunction110InitialListing = new JCheckBox();
 	private JLabel jLabelFunction110InitialMsg = new JLabel();
 	private JTextField jTextFieldFunction110InitialMsg = new JTextField();
@@ -5469,7 +5465,7 @@ public class Editor extends JFrame {
 		jScrollPaneFunction100Top.setBorder(null);
 		jScrollPaneFunction100Top.getViewport().add(jPanelFunction100Top);
 		jPanelFunction100Top.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction100Top.setPreferredSize(new Dimension(1210, 229));
+		jPanelFunction100Top.setPreferredSize(new Dimension(1170, 229));
 		jPanelFunction100Top.setToolTipText("");
 		jPanelFunction100Top.setLayout(null);
 		//
@@ -5530,9 +5526,6 @@ public class Editor extends JFrame {
 		jLabelFunction100FixedWhere.setBounds(new Rectangle(5, 105, 130, 20));
 		jTextFieldFunction100FixedWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldFunction100FixedWhere.setBounds(new Rectangle(140, 102, 840, 25));
-		jCheckBoxFunction100InitialListing.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jCheckBoxFunction100InitialListing.setText(res.getString("InitialListing"));
-		jCheckBoxFunction100InitialListing.setBounds(new Rectangle(1000, 102, 200, 25));
 		//
 		jLabelFunction100RowSelectionAction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100RowSelectionAction.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -5601,13 +5594,9 @@ public class Editor extends JFrame {
 		jLabelFunction100InitialReadCount.setBounds(new Rectangle(695, 167, 130, 20));
 		jTextFieldFunction100InitialReadCount.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldFunction100InitialReadCount.setBounds(new Rectangle(830, 164, 60, 25));
-		jLabelFunction100MaxReadCount.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jLabelFunction100MaxReadCount.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction100MaxReadCount.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction100MaxReadCount.setText(res.getString("MaxReadCount"));
-		jLabelFunction100MaxReadCount.setBounds(new Rectangle(900, 167, 130, 20));
-		jTextFieldFunction100MaxReadCount.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction100MaxReadCount.setBounds(new Rectangle(1035, 164, 80, 25));
+		jCheckBoxFunction100InitialListing.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxFunction100InitialListing.setText(res.getString("InitialListing"));
+		jCheckBoxFunction100InitialListing.setBounds(new Rectangle(910, 164, 200, 25));
 		//
 		jLabelFunction100InitialMsg.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100InitialMsg.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -5646,10 +5635,7 @@ public class Editor extends JFrame {
 		jPanelFunction100Top.add(jTextFieldFunction100SizeWidth);
 		jPanelFunction100Top.add(jTextFieldFunction100SizeHeight);
 		jPanelFunction100Top.add(jLabelFunction100InitialReadCount);
-		jPanelFunction100Top.add(jLabelFunction100MaxReadCount);
 		jPanelFunction100Top.add(jTextFieldFunction100InitialReadCount);
-		jPanelFunction100Top.add(jLabelFunction100MaxReadCount);
-		jPanelFunction100Top.add(jTextFieldFunction100MaxReadCount);
 		jPanelFunction100Top.add(jLabelFunction100InitialMsg);
 		jPanelFunction100Top.add(jTextFieldFunction100InitialMsg);
 		jPanelFunction100.add(jScrollPaneFunction100Top, BorderLayout.NORTH);
@@ -6234,7 +6220,7 @@ public class Editor extends JFrame {
 		jScrollPaneFunction110Top.setBorder(null);
 		jScrollPaneFunction110Top.getViewport().add(jPanelFunction110Top);
 		jPanelFunction110Top.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction110Top.setPreferredSize(new Dimension(1210, 198));
+		jPanelFunction110Top.setPreferredSize(new Dimension(1130, 198));
 		jPanelFunction110Top.setToolTipText("");
 		jPanelFunction110Top.setLayout(null);
 		//
@@ -6295,9 +6281,6 @@ public class Editor extends JFrame {
 		jLabelFunction110FixedWhere.setBounds(new Rectangle(5, 105, 130, 20));
 		jTextFieldFunction110FixedWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldFunction110FixedWhere.setBounds(new Rectangle(140, 102, 840, 25));
-		jCheckBoxFunction110InitialListing.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jCheckBoxFunction110InitialListing.setText(res.getString("InitialListing"));
-		jCheckBoxFunction110InitialListing.setBounds(new Rectangle(1000, 102, 200, 25));
 		//
 		jLabelFunction110Size.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110Size.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -6331,13 +6314,9 @@ public class Editor extends JFrame {
 		jTextFieldFunction110InitialReadCount.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldFunction110InitialReadCount.setBounds(new Rectangle(830, 133, 60, 25));
 		jTextFieldFunction110InitialReadCount.setText("*All");
-		jLabelFunction110MaxReadCount.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jLabelFunction110MaxReadCount.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction110MaxReadCount.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction110MaxReadCount.setText(res.getString("MaxReadCount"));
-		jLabelFunction110MaxReadCount.setBounds(new Rectangle(900, 136, 130, 20));
-		jTextFieldFunction110MaxReadCount.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction110MaxReadCount.setBounds(new Rectangle(1035, 133, 80, 25));
+		jCheckBoxFunction110InitialListing.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxFunction110InitialListing.setText(res.getString("InitialListing"));
+		jCheckBoxFunction110InitialListing.setBounds(new Rectangle(910, 133, 200, 25));
 		//
 		jLabelFunction110InitialMsg.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110InitialMsg.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -6368,8 +6347,6 @@ public class Editor extends JFrame {
 		jPanelFunction110Top.add(jTextFieldFunction110SizeHeight);
 		jPanelFunction110Top.add(jLabelFunction110InitialReadCount);
 		jPanelFunction110Top.add(jTextFieldFunction110InitialReadCount);
-		jPanelFunction110Top.add(jLabelFunction110MaxReadCount);
-		jPanelFunction110Top.add(jTextFieldFunction110MaxReadCount);
 		jPanelFunction110Top.add(jCheckBoxFunction110InitialListing);
 		jPanelFunction110Top.add(jLabelFunction110InitialMsg);
 		jPanelFunction110Top.add(jTextFieldFunction110InitialMsg);
@@ -16555,12 +16532,6 @@ public class Editor extends JFrame {
 	        } else {
 				jTextFieldFunction100InitialReadCount.setText(domNode_.getAttribute("InitialReadCount"));
 	        }
-	        //
-	        if (domNode_.getAttribute("MaxReadCount").equals("")) {
-				jTextFieldFunction100MaxReadCount.setText("*All");
-	        } else {
-				jTextFieldFunction100MaxReadCount.setText(domNode_.getAttribute("MaxReadCount"));
-	        }
 			//
 	        if (domNode_.getAttribute("InitialMsg").equals("")) {
 				jTextFieldFunction100InitialMsg.setText("*Default");
@@ -16805,12 +16776,6 @@ public class Editor extends JFrame {
 			} else {
 				jCheckBoxFunction110InitialListing.setSelected(false);
 			}
-	        //
-	        if (domNode_.getAttribute("MaxReadCount").equals("")) {
-				jTextFieldFunction110MaxReadCount.setText("*All");
-	        } else {
-				jTextFieldFunction110MaxReadCount.setText(domNode_.getAttribute("MaxReadCount"));
-	        }
 			//
 			//Column List//
 			if (tableModelFunction110ColumnList.getRowCount() > 0) {
@@ -20210,23 +20175,6 @@ public class Editor extends JFrame {
 				}
 			}
 			//
-			if (domNode_.getAttribute("MaxReadCount").equals("")) {
-				if (!jTextFieldFunction100MaxReadCount.getText().equals("*All") && !jTextFieldFunction100MaxReadCount.getText().equals("")) {
-					valueOfFieldsChanged = true;
-					domNode_.setAttribute("MaxReadCount", jTextFieldFunction100MaxReadCount.getText());
-				}
-			} else {
-				if (jTextFieldFunction100MaxReadCount.getText().equals("*All") || jTextFieldFunction100MaxReadCount.getText().equals("")) {
-					valueOfFieldsChanged = true;
-					domNode_.setAttribute("MaxReadCount", "");
-				} else {
-					if (!domNode_.getAttribute("MaxReadCount").equals(jTextFieldFunction100MaxReadCount.getText())) {
-						valueOfFieldsChanged = true;
-						domNode_.setAttribute("MaxReadCount", jTextFieldFunction100MaxReadCount.getText());
-					}
-				}
-			}
-			//
 			if (domNode_.getAttribute("InitialMsg").equals("")) {
 				if (!jTextFieldFunction100InitialMsg.getText().equals("*Default") && !jTextFieldFunction100InitialMsg.getText().equals("")) {
 					valueOfFieldsChanged = true;
@@ -20879,23 +20827,6 @@ public class Editor extends JFrame {
 					if (!domNode_.getAttribute("InitialReadCount").equals(jTextFieldFunction110InitialReadCount.getText())) {
 						valueOfFieldsChanged = true;
 						domNode_.setAttribute("InitialReadCount", jTextFieldFunction110InitialReadCount.getText());
-					}
-				}
-			}
-			//
-			if (domNode_.getAttribute("MaxReadCount").equals("")) {
-				if (!jTextFieldFunction110MaxReadCount.getText().equals("*All") && !jTextFieldFunction110MaxReadCount.getText().equals("")) {
-					valueOfFieldsChanged = true;
-					domNode_.setAttribute("MaxReadCount", jTextFieldFunction110MaxReadCount.getText());
-				}
-			} else {
-				if (jTextFieldFunction110MaxReadCount.getText().equals("*All") || jTextFieldFunction110MaxReadCount.getText().equals("")) {
-					valueOfFieldsChanged = true;
-					domNode_.setAttribute("MaxReadCount", "");
-				} else {
-					if (!domNode_.getAttribute("MaxReadCount").equals(jTextFieldFunction110MaxReadCount.getText())) {
-						valueOfFieldsChanged = true;
-						domNode_.setAttribute("MaxReadCount", jTextFieldFunction110MaxReadCount.getText());
 					}
 				}
 			}
