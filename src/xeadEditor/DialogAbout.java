@@ -48,7 +48,16 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2014 DBC,Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
-	public static final String FULL_VERSION  = "V1.R2.M1";
+	public static final String FULL_VERSION  = "V1.R2.M2";
+	//1.2.2
+	//・Driver用フォントを変更すれば「レイアウト確認」のダイアログにただちに反映されるようにした
+	//・一部の使途一覧からテーブルスクリプトにジャンプできなかった問題を修正
+	//・使徒一覧からのジャンプ先がXF000であれば、スクリプト編集域をフォーカスするようにした
+	//・カラム数上限255の制限をなくすために、データ一覧のEXCEL出力についてxlsからxlsx形式に変更した
+	//・機能へのフィールド追加用ダイアログに「全選択」のボタンを置いた
+	//・レイアウトチェック機能で区分系フィールドの幅設定ロジックがDriverと違っていた問題を修正した
+	//・スクリプトのインデント処理のロジックを改善した
+	//
 	//1.2.1
 	//・XF100,110に最大表示行数をはずした
 	//・フィールド検索ダイアログでのメッセージを修正した

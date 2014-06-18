@@ -42,12 +42,15 @@ import java.util.Calendar;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+
 import org.w3c.dom.NodeList;
+
 import xeadEditor.Editor.MainTreeNode;
 import xeadEditor.Editor.SortableDomElementListModel;
 import xeadEditor.Editor.TableModelReadOnlyList;
@@ -87,12 +90,11 @@ public class DialogCheckLayout extends JDialog {
 	private ArrayList<DialogCheckLayoutFilter> filterList = null;
 	public String driverFontName_;
 	
-	public DialogCheckLayout(Editor parent, String driverFontName) {
+	public DialogCheckLayout(Editor parent) {
 		super(parent);
 		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 		try {
 			editor = parent;
-			driverFontName_ = driverFontName;
 			jbInit(parent);
 		}
 		catch(Exception e) {
@@ -102,15 +104,8 @@ public class DialogCheckLayout extends JDialog {
 
 	private void jbInit(Editor parent) throws Exception  {
 		jPanelMain.setLayout(null);
-		jTableMain.setFont(new java.awt.Font(driverFontName_, 0, FONT_SIZE));
 		jTableMain.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableMain.setRowHeight(ROW_UNIT_HEIGHT);
-		jTableMain.getTableHeader().setFont(new java.awt.Font(driverFontName_, 0, FONT_SIZE));
-		jTableMain.getTableHeader().setResizingAllowed(false);
-		jTableMain.getTableHeader().setReorderingAllowed(false);
-		DefaultTableCellRenderer rendererTableHeader = (DefaultTableCellRenderer)jTableMain.getTableHeader().getDefaultRenderer();
-		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-
 		this.setResizable(false);
 		this.setTitle(res.getString("CheckLayoutTitle"));
 	 	this.setIconImage(Toolkit.getDefaultToolkit().createImage(xeadEditor.Editor.class.getResource("title.png")));
@@ -118,7 +113,16 @@ public class DialogCheckLayout extends JDialog {
 		this.getContentPane().add(jScrollPane, BorderLayout.CENTER);
 	}
 
-	public void request(MainTreeNode node, String panelType, int tabIndex, int extForXF110) {
+	public void request(MainTreeNode node, String panelType, int tabIndex, int extForXF110, String driverFontName) {
+		driverFontName_ = driverFontName;
+
+		jTableMain.setFont(new java.awt.Font(driverFontName_, 0, FONT_SIZE));
+		jTableMain.getTableHeader().setFont(new java.awt.Font(driverFontName_, 0, FONT_SIZE));
+		jTableMain.getTableHeader().setResizingAllowed(false);
+		jTableMain.getTableHeader().setReorderingAllowed(false);
+		DefaultTableCellRenderer rendererTableHeader = (DefaultTableCellRenderer)jTableMain.getTableHeader().getDefaultRenderer();
+		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
+
 		functionElement = node.getElement();
 		panelType_ = panelType;
 		extForXF110_ = extForXF110;
@@ -572,7 +576,7 @@ public class DialogCheckLayout extends JDialog {
 		return metrics.stringWidth(jLabel.getText());
 	}
 	
-	public String getStringData(String type, int dataSize, int decimal, boolean isAcceptMinus) {
+	public String getStringData(String type, int dataSize, int decimal, ArrayList<String> dataTypeOptionList) {
 		String value = "";
 		StringBuffer bf = new StringBuffer();
 		if (type.equals("KANJI")) {
@@ -597,11 +601,16 @@ public class DialogCheckLayout extends JDialog {
 			int intSize = dataSize - decimal;
 			for (int i = 1; i <= intSize; i++) {
 				bf.append("9");
-				if (i % 3 == 0 && i < intSize) {
-					bf.append(",");
+				if (dataTypeOptionList != null
+						&& !dataTypeOptionList.contains("NO_EDIT")
+						&& !dataTypeOptionList.contains("ZERO_SUPPRESS")) {
+					if (i % 3 == 0 && i < intSize) {
+						bf.append(",");
+					}
 				}
 			}
-			if (isAcceptMinus) {
+			if (dataTypeOptionList != null
+					&& dataTypeOptionList.contains("ACCEPT_MINUS")) {
 				bf.append("-");
 			}
 			value = bf.reverse().toString();
@@ -1267,7 +1276,7 @@ class DialogCheckLayoutColumn extends Object {
 			if ((dataTypeOptionList.contains("KANJI") || dataTypeOptionList.contains("ZIPADRS"))
 					&& !dataType.equals("VARCHAR") && !dataType.equals("LONG VARCHAR")) {
 				fieldWidth = dataSize * DialogCheckLayout.FONT_SIZE + 5;
-				value = dialog_.getStringData("KANJI", dataSize, 0, false);
+				value = dialog_.getStringData("KANJI", dataSize, 0, dataTypeOptionList);
 			} else {
 				if (dataTypeOptionList.contains("FYEAR")) {
 					fieldWidth = 100;
@@ -1306,7 +1315,7 @@ class DialogCheckLayoutColumn extends Object {
 							}
 						} else {
 							if (basicType.equals("INTEGER") || basicType.equals("FLOAT")) {
-								String stringValue = dialog_.getStringData("NUMBER", dataSize, decimalSize, dataTypeOptionList.contains("ACCEPT_MINUS"));
+								String stringValue = dialog_.getStringData("NUMBER", dataSize, decimalSize, dataTypeOptionList);
 								fieldWidth = stringValue.length() * (DialogCheckLayout.FONT_SIZE/2 + 2) + 15;
 								value = stringValue;
 							} else {
@@ -1330,13 +1339,13 @@ class DialogCheckLayoutColumn extends Object {
 											if (dataType.equals("VARCHAR") || dataType.equals("LONG VARCHAR")) {
 												fieldWidth = 400;
 												if (dataTypeOptionList.contains("KANJI")) {
-													value = dialog_.getStringData("KANJI", dataSize, 0, false);
+													value = dialog_.getStringData("KANJI", dataSize, 0, dataTypeOptionList);
 												} else {
-													value = dialog_.getStringData("STRING", dataSize, 0, false);
+													value = dialog_.getStringData("STRING", dataSize, 0, dataTypeOptionList);
 												}
 											} else {
 												fieldWidth = dataSize * (DialogCheckLayout.FONT_SIZE/2 + 2) + 15;
-												value = dialog_.getStringData("STRING", dataSize, 0, false);
+												value = dialog_.getStringData("STRING", dataSize, 0, dataTypeOptionList);
 											}
 										}
 									}
@@ -1963,10 +1972,10 @@ class DialogCheckLayoutComboBox extends JComboBox {
 					int dataSize = Integer.parseInt(workElement.getAttribute("Size"));
 					if (workDataTypeOptionList.contains("KANJI") || workDataTypeOptionList.contains("ZIPADRS")) {
 						fieldWidth = dataSize * DialogCheckLayout.FONT_SIZE + 20;
-						this.addItem(dialog_.getStringData("KANJI", dataSize, 0, false));
+						this.addItem(dialog_.getStringData("KANJI", dataSize, 0, workDataTypeOptionList));
 					} else {
 						fieldWidth = dataSize * (DialogCheckLayout.FONT_SIZE/2 +2) + 30;
-						this.addItem(dialog_.getStringData("STRING", dataSize, 0, false));
+						this.addItem(dialog_.getStringData("STRING", dataSize, 0, workDataTypeOptionList));
 					}
 					if (fieldWidth > 800) {
 						fieldWidth = 800;
@@ -2013,7 +2022,7 @@ class DialogCheckLayoutTextField extends JTextField {
 		String wrkStr1, wrkStr2, value = "";
 		int fieldHeight, fieldWidth = 0;
 		if (dataTypeOptionList.contains("KANJI") || dataTypeOptionList.contains("ZIPADRS")) {
-			value = dialog_.getStringData("KANJI", digits, 0, false);
+			value = dialog_.getStringData("KANJI", digits, 0, dataTypeOptionList);
 			fieldWidth = digits_ * DialogCheckLayout.FONT_SIZE + 10;
 		} else {
 			wrkStr1 = dialog_.getEditor().getOptionValueWithKeyword(dataTypeOptions, "KUBUN");
@@ -2034,25 +2043,26 @@ class DialogCheckLayoutTextField extends JTextField {
 						while (result.next()) {
 							wrkStr1 = result.getString("TXUSERKUBUN").trim();
 							if (metrics.stringWidth(wrkStr1) > fieldWidth) {
-								fieldWidth = metrics.stringWidth(wrkStr1) + 12;
+								fieldWidth = metrics.stringWidth(wrkStr1);
 							}
 							if (value.equals("")) {
 								value = wrkStr1;
 							}
 						}
+						fieldWidth = fieldWidth + 10;
 					}
 				} catch(Exception e) {
 				}
 			} else {
 				if (basicType_.equals("INTEGER") || basicType_.equals("FLOAT")) {
-					value = dialog_.getStringData("NUMBER", digits, decimal_, dataTypeOptionList.contains("ACCEPT_MINUS"));
+					value = dialog_.getStringData("NUMBER", digits, decimal_, dataTypeOptionList);
 					fieldWidth = value.length() * (DialogCheckLayout.FONT_SIZE/2 + 2) + 15;
 				} else {
 					if (basicType_.equals("DATETIME")) {
 						value = "9999/99/99 HH:MM:SS.SSS";
 						fieldWidth = 24 * (DialogCheckLayout.FONT_SIZE/2 + 2);
 					} else {
-						value = dialog_.getStringData("STRING", digits, 0, false);
+						value = dialog_.getStringData("STRING", digits, 0, dataTypeOptionList);
 						fieldWidth = digits_ * (DialogCheckLayout.FONT_SIZE/2 + 2) + 10;
 					}
 				}
@@ -2081,14 +2091,14 @@ class DialogCheckLayoutUrlField extends JPanel {
 		super();
 		//
 		jTextField.setFont(new java.awt.Font(dialog.driverFontName_, 0, DialogCheckLayout.FONT_SIZE));
-		jTextField.setText(dialog.getStringData("STRING", digits, 0, false));
+		jTextField.setText(dialog.getStringData("STRING", digits, 0, null));
 		jTextField.setFocusable(false);
 		//
 		jLabel.setFont(new java.awt.Font(dialog.driverFontName_, 0, DialogCheckLayout.FONT_SIZE));
 		jLabel.setForeground(Color.blue);
 		jLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		jLabel.setBorder(jTextField.getBorder());
-		jLabel.setText("<html><u>" + dialog.getStringData("STRING", digits, 0, false));
+		jLabel.setText("<html><u>" + dialog.getStringData("STRING", digits, 0, null));
 		//
 		this.setLayout(new BorderLayout());
 		if (isEditable) {
@@ -2195,7 +2205,7 @@ class DialogCheckLayoutImageField extends JPanel {
 		jTextField.setEditable(true);
 		jTextField.setFont(new java.awt.Font(dialog.driverFontName_, 0, DialogCheckLayout.FONT_SIZE));
 		jTextField.setFocusable(false);
-		jTextField.setText(dialog.getStringData("STRING", size, 0, false));
+		jTextField.setText(dialog.getStringData("STRING", size, 0, null));
 		//
 		jButton.setFont(new java.awt.Font(dialog.driverFontName_, 0, DialogCheckLayout.FONT_SIZE));
 		jButton.setPreferredSize(new Dimension(80, dialog.getFieldUnitHeight()));

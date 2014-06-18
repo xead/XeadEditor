@@ -52,6 +52,7 @@ public class DialogAddFieldToFunction extends JDialog {
 	private static ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
 	private JPanel jPanelMain = new JPanel();
 	private JButton jButtonOK = new JButton();
+	private JButton jButtonSelectAll = new JButton();
 	private JButton jButtonCancel = new JButton();
 	private Editor frame_;
 	private DefaultListModel listModelDataSource = new DefaultListModel();
@@ -96,16 +97,21 @@ public class DialogAddFieldToFunction extends JDialog {
 
 		jPanelButtons.setBorder(BorderFactory.createEtchedBorder());
 		jPanelButtons.setPreferredSize(new Dimension(350, 45));
-		jButtonCancel.setBounds(new Rectangle(30, 10, 100, 27));
+		jButtonCancel.setBounds(new Rectangle(18, 10, 100, 27));
 		jButtonCancel.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonCancel.setText(res.getString("Cancel"));
 		jButtonCancel.addActionListener(new DialogAddFieldToFunction_jButtonCancel_actionAdapter(this));
-		jButtonOK.setBounds(new Rectangle(230, 10, 100, 27));
+		jButtonSelectAll.setBounds(new Rectangle(128, 10, 100, 27));
+		jButtonSelectAll.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jButtonSelectAll.setText(res.getString("SelectAll"));
+		jButtonSelectAll.addActionListener(new DialogAddFieldToFunction_jButtonSelectAll_actionAdapter(this));
+		jButtonOK.setBounds(new Rectangle(238, 10, 100, 27));
 		jButtonOK.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonOK.setText(res.getString("Add"));
 		jButtonOK.addActionListener(new DialogAddFieldToFunction_jButtonOK_actionAdapter(this));
 		jPanelButtons.setLayout(null);
 		jPanelButtons.add(jButtonCancel);
+		jPanelButtons.add(jButtonSelectAll);
 		jPanelButtons.add(jButtonOK);
 
 		this.getContentPane().add(jPanelButtons,  BorderLayout.SOUTH);
@@ -449,6 +455,17 @@ public class DialogAddFieldToFunction extends JDialog {
 		return isDuplicated;
 	}
 
+	void jButtonSelectAll_actionPerformed(ActionEvent e) {
+		for (int i = 0; i < listModelDataSource.getSize(); i++) {
+			DialogAddFieldToFunction_CheckBox checkBox = (DialogAddFieldToFunction_CheckBox)listModelDataSource.getElementAt(i);
+			checkBox.setSelected(true);
+		}
+		jListDataSource.updateUI();
+		if (listModelDataSource.getSize() > 0) {
+			jButtonOK.setEnabled(true);
+		}
+	}
+
 	void jButtonCancel_actionPerformed(ActionEvent e) {
 		this.setVisible(false);
 	}
@@ -517,6 +534,16 @@ class DialogAddFieldToFunction_jButtonOK_actionAdapter implements java.awt.event
 	}
 	public void actionPerformed(ActionEvent e) {
 		adaptee.jButtonOK_actionPerformed(e);
+	}
+}
+
+class DialogAddFieldToFunction_jButtonSelectAll_actionAdapter implements java.awt.event.ActionListener {
+	DialogAddFieldToFunction adaptee;
+	DialogAddFieldToFunction_jButtonSelectAll_actionAdapter(DialogAddFieldToFunction adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jButtonSelectAll_actionPerformed(e);
 	}
 }
 

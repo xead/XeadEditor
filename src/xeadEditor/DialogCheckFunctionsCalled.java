@@ -308,10 +308,21 @@ public class DialogCheckFunctionsCalled extends JDialog {
 			if (isNotCalledByAnyElement) {
 				for (int j = 0; j < tableNodeList.getSize(); j++) {
 					element2 = (org.w3c.dom.Element)tableNodeList.getElementAt(j);
-					if (!frame_.getFunctionUsageInTableScript(element2, element1.getAttribute("ID")).equals("")) {
-						isNotCalledByAnyElement = false;
-						break;
-					}
+					//if (!frame_.getFunctionUsageInTableScript(element2, element1.getAttribute("ID")).equals("")) {
+					//	isNotCalledByAnyElement = false;
+					//	break;
+					//}
+				    nodeList1 = element2.getElementsByTagName("Script");
+				    for (int k = 0; k < nodeList1.getLength(); k++) {
+				    	element3 = (org.w3c.dom.Element)nodeList1.item(k);
+				    	if (frame_.isTableScriptUsingFunction(element3, element1.getAttribute("ID"))) {
+							isNotCalledByAnyElement = false;
+				    		break;
+				    	}
+				    }
+				    if (!isNotCalledByAnyElement) {
+				    	break;
+				    }
 				}
 			}
 			if (isNotCalledByAnyElement) {
