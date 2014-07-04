@@ -98,6 +98,9 @@ public class Editor extends JFrame {
 	public static final int TREE_ROW_HEIGHT = 20;
 	public static final int TABLE_ROW_HEIGHT = 22;
 	public static final int TABLE_ROW_HEIGHT_EDITABLE = 25;
+	public static String[] SECTION_DIGIT = {"(", ")", "{", "}", "+", "-", "/", "*", "=", "<", ">", ";", "|", "&", "\n", "\t", ",", " ", "!"};
+	public static String[] TABLE_OPERATION_METHOD = {"addValue(", "addKeyValue(", "setSelectFields(", "setDistinctFields(", "setOrderBy(", "getValueOf("};
+
 	/**
 	 * Main Panels and Labels
 	 */
@@ -288,6 +291,7 @@ public class Editor extends JFrame {
 	private JMenuItem jMenuItemComponentToListExcel = new JMenuItem();
 	private JMenuItem jMenuItemComponentToShowTips = new JMenuItem();
 	private JMenuItem jMenuItemComponentToCheckLayout = new JMenuItem();
+	private JMenuItem jMenuItemComponentToEditTableScript = new JMenuItem();
 	private JMenu jMenuComponentToCheckLayoutXF110 = new JMenu();
 	private JMenuItem jMenuItemComponentToCheckLayoutXF110_1 = new JMenuItem();
 	private JMenuItem jMenuItemComponentToCheckLayoutXF110_2 = new JMenuItem();
@@ -797,6 +801,12 @@ public class Editor extends JFrame {
 	private JPanel jPanelTableScriptEditButtonAndCursorPos = new JPanel();
 	private JButton jButtonTableScriptEdit = new JButton();
 	private JCheckBox jCheckBoxTableScriptHold = new JCheckBox();
+	private Action actionChangeModeTableScript = new AbstractAction(){
+		private static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			changeMode(jTextAreaTableScriptText, true);
+		}
+	};
 	private Action actionIndentTableScript = new AbstractAction(){
 		private static final long serialVersionUID = 1L;
 		public void actionPerformed(ActionEvent e){
@@ -831,6 +841,10 @@ public class Editor extends JFrame {
 			checkSyntaxError(jTextAreaTableScriptText.getText(), true);
 		}
 	};
+	public ArrayList<String> dataSourceAliasList = new ArrayList<String>();
+	public ArrayList<String> dataSourceIDList = new ArrayList<String>();
+	public ArrayList<String> dataSourceNameList = new ArrayList<String>();
+	private String idModeText = "";
 	//
 	private JPanel jPanelTableData = new JPanel();
 	private JSplitPane jSplitPaneTableDataTop = new JSplitPane();
@@ -841,7 +855,6 @@ public class Editor extends JFrame {
 	private JLabel jLabelTableDataSelectOrderBy = new JLabel();
 	private JTextField jTextFieldTableDataSelectOrderBy = new JTextField();
 	private JButton jButtonTableDataSelect = new JButton();
-	//private JCheckBox jCheckBoxTableDataOutput = new JCheckBox();
 	private JScrollPane jScrollPaneTableDataList = new JScrollPane();
 	private TableModelReadOnlyList tableModelTableDataList;
 	private JTable jTableTableDataList = new JTable();
@@ -905,6 +918,12 @@ public class Editor extends JFrame {
 	private JScrollPane jScrollPaneFunction000UsageList = new JScrollPane();
 	private TableModelReadOnlyList tableModelFunction000UsageList = new TableModelReadOnlyList();
 	private JTable jTableFunction000UsageList = new JTable(tableModelFunction000UsageList);
+	private Action actionChangeModeFunction000Script = new AbstractAction(){
+		private static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			changeMode(jTextAreaFunction000Script, false);
+		}
+	};
 	private Action actionIndentFunction000Script = new AbstractAction(){
 		private static final long serialVersionUID = 1L;
 		public void actionPerformed(ActionEvent e){
@@ -2778,7 +2797,7 @@ public class Editor extends JFrame {
 		 */
 		jPanelMain = (JPanel) this.getContentPane();
 		jPanelMain.setLayout(new BorderLayout());
-		jPanelJumpButtons.setPreferredSize(new Dimension(10, 22));
+		jPanelJumpButtons.setPreferredSize(new Dimension(10, 25));
 		jPanelJumpButtons.setLayout(gridLayoutJumpButtons);
 		gridLayoutJumpButtons.setColumns(8);
 		gridLayoutJumpButtons.setRows(0);
@@ -3004,6 +3023,7 @@ public class Editor extends JFrame {
 		jMenuItemComponentToListExcel.setText(res.getString("DataOutput"));
 		jMenuItemComponentToShowTips.setText(res.getString("TipsToEdit"));
 		jMenuItemComponentToCheckLayout.setText(res.getString("CheckLayout"));
+		jMenuItemComponentToEditTableScript.setText(res.getString("EditTableScript"));
 		jMenuComponentToAddKey.add(jMenuItemComponentToAddPK);
 		jMenuComponentToAddKey.add(jMenuItemComponentToAddSK);
 		jMenuComponentToAddKey.add(jMenuItemComponentToAddXK);
@@ -3071,6 +3091,7 @@ public class Editor extends JFrame {
 		jMenuItemComponentToListExcel.addActionListener(new Editor_jMenuItemComponentToListExcel_actionAdapter(this));
 		jMenuItemComponentToShowTips.addActionListener(new Editor_jMenuItemComponentToShowTips_actionAdapter(this));
 		jMenuItemComponentToCheckLayout.addActionListener(new Editor_jMenuItemComponentToCheckLayout_actionAdapter(this));
+		jMenuItemComponentToEditTableScript.addActionListener(new Editor_jMenuItemComponentToEditTableScript_actionAdapter(this));
 		jMenuItemComponentToCheckLayoutXF110_1.addActionListener(new Editor_jMenuItemComponentToCheckLayout_actionAdapter(this));
 		jMenuItemComponentToCheckLayoutXF110_2.addActionListener(new Editor_jMenuItemComponentToCheckLayout_actionAdapter(this));
 
@@ -3468,6 +3489,7 @@ public class Editor extends JFrame {
 		jCheckBoxSystemLoginScriptEditToolScanCase.setBounds(new Rectangle(204, 1, 29, 23));
 		jCheckBoxSystemLoginScriptEditToolScanCase.setBackground(Color.lightGray);
 		jLabelSystemLoginScriptEditToolCursorPos.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelSystemLoginScriptEditToolCursorPos.setForeground(Color.darkGray);
 		jLabelSystemLoginScriptEditToolCursorPos.setBounds(new Rectangle(233, 1, 70, 23));
 		jLabelSystemLoginScriptEditToolCursorPos.setHorizontalAlignment(SwingConstants.CENTER);
 		jLabelSystemLoginScriptEditToolCursorPos.setForeground(Color.darkGray);
@@ -3520,6 +3542,7 @@ public class Editor extends JFrame {
 		jCheckBoxSystemScriptFunctionsEditToolScanCase.setBounds(new Rectangle(204, 1, 29, 23));
 		jCheckBoxSystemScriptFunctionsEditToolScanCase.setBackground(Color.lightGray);
 		jLabelSystemScriptFunctionsEditToolCursorPos.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelSystemScriptFunctionsEditToolCursorPos.setForeground(Color.darkGray);
 		jLabelSystemScriptFunctionsEditToolCursorPos.setBounds(new Rectangle(233, 1, 70, 23));
 		jLabelSystemScriptFunctionsEditToolCursorPos.setHorizontalAlignment(SwingConstants.CENTER);
 		jLabelSystemScriptFunctionsEditToolCursorPos.setForeground(Color.darkGray);
@@ -4938,7 +4961,6 @@ public class Editor extends JFrame {
 		jLabelTableReferFields.setText(res.getString("JoinFields"));
 		jLabelTableReferFields.setVerticalAlignment(SwingConstants.BOTTOM);
 		jLabelTableReferFields.setPreferredSize(new Dimension(10, 22));
-		//jLabelTableReferFields.setBounds(new Rectangle(520, 12, 96, 15));
 		jListTableReferFields.setBorder(null);
 		Editor_CheckBoxListRenderer renderer = new Editor_CheckBoxListRenderer(this);
 		jListTableReferFields.setCellRenderer(renderer);
@@ -5047,12 +5069,15 @@ public class Editor extends JFrame {
 		jTextAreaTableScriptText.setTabSize(4);
 		jTextAreaTableScriptText.setFont(new java.awt.Font(scriptFontName, 0, scriptFontSize));
 		jTextAreaTableScriptText.addCaretListener(new Editor_jTextAreaTableScriptText_caretAdapter(this));
+		jTextAreaTableScriptText.addMouseListener(new Editor_jTextAreaTableScriptText_mouseAdapter(this));
 		jTextAreaTableScriptText.getDocument().addUndoableEditListener(jTextAreaTableScriptTextUndoManager);
 		jScrollPaneTableScriptText.getViewport().add(jTextAreaTableScriptText, null);
 		InputMap inputMap = jScrollPaneTableScriptText.getInputMap(JSplitPane.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 		inputMap.clear();
 		ActionMap actionMap = jScrollPaneTableScriptText.getActionMap();
 		actionMap.clear();
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_DOWN_MASK), "MODE");
+		actionMap.put("MODE", actionChangeModeTableScript);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_DOWN_MASK), "INDENT");
 		actionMap.put("INDENT", actionIndentTableScript);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_SLASH, KeyEvent.CTRL_DOWN_MASK), "COMMENT");
@@ -5073,6 +5098,7 @@ public class Editor extends JFrame {
 		jLabelTableScript.setBounds(new Rectangle(5, 4, 150, 15));
 		jLabelTableScript.setPreferredSize(new Dimension(150, 20));
 		jLabelTableScriptCursorPos.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelTableScriptCursorPos.setForeground(Color.darkGray);
 		jLabelTableScriptCursorPos.setHorizontalAlignment(SwingConstants.CENTER);
 		jLabelTableScriptCursorPos.setPreferredSize(new Dimension(80, 20));
 		jLabelTableScriptCursorPos.setBorder(BorderFactory.createLineBorder(Color.lightGray));
@@ -5381,6 +5407,8 @@ public class Editor extends JFrame {
 		inputMap.clear();
 		ActionMap actionMap = jScrollPaneFunction000Script.getActionMap();
 		actionMap.clear();
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_DOWN_MASK), "MODE");
+		actionMap.put("MODE", actionChangeModeFunction000Script);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_I, KeyEvent.CTRL_DOWN_MASK), "INDENT");
 		actionMap.put("INDENT", actionIndentFunction000Script);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_SLASH, KeyEvent.CTRL_DOWN_MASK), "COMMENT");
@@ -5416,6 +5444,7 @@ public class Editor extends JFrame {
 		jCheckBoxFunction000ScriptEditToolScanCase.setBounds(new Rectangle(204, 1, 29, 23));
 		jCheckBoxFunction000ScriptEditToolScanCase.setBackground(Color.lightGray);
 		jLabelFunction000ScriptEditToolCursorPos.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelFunction000ScriptEditToolCursorPos.setForeground(Color.darkGray);
 		jLabelFunction000ScriptEditToolCursorPos.setBounds(new Rectangle(233, 1, 70, 23));
 		jLabelFunction000ScriptEditToolCursorPos.setHorizontalAlignment(SwingConstants.CENTER);
 		jLabelFunction000ScriptEditToolCursorPos.setForeground(Color.darkGray);
@@ -13327,6 +13356,10 @@ public class Editor extends JFrame {
 	    	jPopupMenuComponent.addSeparator();
 	    	jPopupMenuComponent.add(jMenuItemComponentToDelete);
 	    }
+	    if (e.getComponent().equals(jTextAreaTableScriptText)) {
+	    	componentType_jPopupMenuComponent = "TableScriptText";
+	    	jPopupMenuComponent.add(jMenuItemComponentToEditTableScript);
+	    }
 	    //
 	    if (e.getComponent().equals(jScrollPaneTableDataList)) {
 	    	componentType_jPopupMenuComponent = "TableDataList";
@@ -16120,6 +16153,7 @@ public class Editor extends JFrame {
 		    /////////////////
 			// Script List //
 		    /////////////////
+		    jTextAreaTableScriptText.setEditable(true);
 		    int wrkInt;
 		    setupTableScriptNotes(domNode_);
 			setupComboBoxTableScriptEventRefer();
@@ -16355,9 +16389,11 @@ public class Editor extends JFrame {
 					}
 				}
 			}
+			jTextAreaFunction000Script.setEditable(true);
 			jTextAreaFunction000Script.setText(substringLinesWithTokenOfEOL(domNode_.getAttribute("Script"), "\n"));
 			jTextAreaFunction000ScriptUndoManager.discardAllEdits();
 			jTextAreaFunction000Script.setCaretPosition(0);
+			idModeText = jTextAreaFunction000Script.getText();
 
 			//Function Usage List//
 		    int rowNumber = 1;
@@ -18932,10 +18968,8 @@ public class Editor extends JFrame {
 				}
 				if (jCheckBoxSystemAutoConnectToEdit.isSelected()) {
 					domNode_.setAttribute("AutoConnectToEdit", "T");
-					//setupConnectionList(true);
 				} else {
 					domNode_.setAttribute("AutoConnectToEdit", "F");
-					//setupConnectionList(false);
 				}
 				//
 				domNode_.setAttribute("LoginScript", concatLinesWithTokenOfEOL(jTextAreaSystemLoginScript.getText()));
@@ -19263,7 +19297,6 @@ public class Editor extends JFrame {
 			} else {
 				if (!domNode_.getAttribute("ModuleID").equals(jTextFieldTableModuleID.getText())) {
 					valueOfFieldsChanged = true;
-					//if (jTextFieldTableModuleID.getText().toUpperCase().equals(jTextFieldTableID.getText())) {
 					if (getCaseShiftValue(jTextFieldTableModuleID.getText(), "Upper").equals(jTextFieldTableID.getText())) {
 						domNode_.setAttribute("ModuleID", "");
 					} else {
@@ -19961,7 +19994,11 @@ public class Editor extends JFrame {
 					}
 				}
 				//
-				wrkStr = concatLinesWithTokenOfEOL(jTextAreaTableScriptText.getText());
+				if (jTextAreaTableScriptText.isEditable()) {
+					wrkStr = concatLinesWithTokenOfEOL(jTextAreaTableScriptText.getText());
+				} else {
+					wrkStr = concatLinesWithTokenOfEOL(idModeText);
+				}
 				if (!element.getAttribute("Text").equals(wrkStr)) {
 					valueOfFieldsChanged = true;
 					element.setAttribute("Text", wrkStr);
@@ -20031,7 +20068,11 @@ public class Editor extends JFrame {
 				}
 			}
 			//
-			wrkStr = concatLinesWithTokenOfEOL(jTextAreaFunction000Script.getText());
+			if (jTextAreaFunction000Script.isEditable()) {
+				wrkStr = concatLinesWithTokenOfEOL(jTextAreaFunction000Script.getText());
+			} else {
+				wrkStr = concatLinesWithTokenOfEOL(idModeText);
+			}
 			if (!domNode_.getAttribute("Script").equals(wrkStr)) {
 				valueOfFieldsChanged = true;
 				domNode_.setAttribute("Script", wrkStr);
@@ -20261,27 +20302,6 @@ public class Editor extends JFrame {
 					}
 				}
 				//
-//				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
-//				if (jTextFieldFunction100FieldWidth.getText().equals("*Auto") || jTextFieldFunction100FieldWidth.getText().equals("")) {
-//					if (!wrkStr.equals("")) {
-//						valueOfFieldsChanged = true;
-//					}
-//				} else {
-//					if (wrkStr.equals("")) {
-//						valueOfFieldsChanged = true;
-//					} else {
-//						if (!wrkStr.equals(jTextFieldFunction100FieldWidth.getText())) {
-//							valueOfFieldsChanged = true;
-//						}
-//					}
-//					wrkStr = getStringSizeValue(jTextFieldFunction100FieldWidth.getText(), "", 10, 1000);
-//					if (!wrkStr.equals("")) {
-//						if (!wrkOptions.equals("")) {
-//							wrkOptions = wrkOptions + ",";
-//						}
-//						wrkOptions = wrkOptions + "WIDTH(" + wrkStr + ")";
-//					}
-//				}
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
 				if (jTextFieldFunction100FieldWidth.getText().equals("*Auto") || jTextFieldFunction100FieldWidth.getText().equals("")) {
 					if (!wrkStr.equals("")) {
@@ -20967,27 +20987,6 @@ public class Editor extends JFrame {
 					}
 				}
 				//
-//				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
-//				if (jTextFieldFunction110FieldWidth.getText().equals("*Auto") || jTextFieldFunction110FieldWidth.getText().equals("")) {
-//					if (!wrkStr.equals("")) {
-//						valueOfFieldsChanged = true;
-//					}
-//				} else {
-//					if (wrkStr.equals("")) {
-//						valueOfFieldsChanged = true;
-//					} else {
-//						if (!wrkStr.equals(jTextFieldFunction110FieldWidth.getText())) {
-//							valueOfFieldsChanged = true;
-//						}
-//					}
-//					wrkStr = getStringSizeValue(jTextFieldFunction110FieldWidth.getText(), "", 10, 1000);
-//					if (!wrkStr.equals("")) {
-//						if (!wrkOptions.equals("")) {
-//							wrkOptions = wrkOptions + ",";
-//						}
-//						wrkOptions = wrkOptions + "WIDTH(" + wrkStr + ")";
-//					}
-//				}
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
 				if (jTextFieldFunction110FieldWidth.getText().equals("*Auto") || jTextFieldFunction110FieldWidth.getText().equals("")) {
 					if (!wrkStr.equals("")) {
@@ -21517,7 +21516,7 @@ public class Editor extends JFrame {
 							valueOfFieldsChanged = true;
 						}
 					}
-					wrkStr = getStringSizeValue(jTextFieldFunction110BatchFieldWidth.getText(), "", 10, 1000);
+					wrkStr = getStringSizeValue(jTextFieldFunction110BatchFieldWidth.getText(), "", 10, 2000);
 					if (!wrkStr.equals("")) {
 						if (!wrkOptions.equals("")) {
 							wrkOptions = wrkOptions + ",";
@@ -22003,7 +22002,7 @@ public class Editor extends JFrame {
 							valueOfFieldsChanged = true;
 						}
 					}
-					wrkStr = getStringSizeValue(jTextFieldFunction200FieldWidth.getText(), "", 10, 1000);
+					wrkStr = getStringSizeValue(jTextFieldFunction200FieldWidth.getText(), "", 10, 2000);
 					if (!wrkStr.equals("")) {
 						if (!wrkOptions.equals("")) {
 							wrkOptions = wrkOptions + ",";
@@ -22271,7 +22270,7 @@ public class Editor extends JFrame {
 							valueOfFieldsChanged = true;
 						}
 					}
-					wrkStr = getStringSizeValue(jTextFieldFunction200TabFieldWidth.getText(), "", 10, 1000);
+					wrkStr = getStringSizeValue(jTextFieldFunction200TabFieldWidth.getText(), "", 10, 2000);
 					if (!wrkStr.equals("")) {
 						if (!wrkOptions.equals("")) {
 							wrkOptions = wrkOptions + ",";
@@ -22944,7 +22943,7 @@ public class Editor extends JFrame {
 							valueOfFieldsChanged = true;
 						}
 					}
-					wrkStr = getStringSizeValue(jTextFieldFunction300HeaderFieldWidth.getText(), "", 10, 1000);
+					wrkStr = getStringSizeValue(jTextFieldFunction300HeaderFieldWidth.getText(), "", 10, 2000);
 					if (!wrkStr.equals("")) {
 						if (!wrkOptions.equals("")) {
 							wrkOptions = wrkOptions + ",";
@@ -23221,27 +23220,6 @@ public class Editor extends JFrame {
 					}
 				}
 				//
-//				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
-//				if (jTextFieldFunction300DetailFieldWidth.getText().equals("*Auto") || jTextFieldFunction300DetailFieldWidth.getText().equals("")) {
-//					if (!wrkStr.equals("")) {
-//						valueOfFieldsChanged = true;
-//					}
-//				} else {
-//					if (wrkStr.equals("")) {
-//						valueOfFieldsChanged = true;
-//					} else {
-//						if (!wrkStr.equals(jTextFieldFunction300DetailFieldWidth.getText())) {
-//							valueOfFieldsChanged = true;
-//						}
-//					}
-//					wrkStr = getStringSizeValue(jTextFieldFunction300DetailFieldWidth.getText(), "", 10, 1000);
-//					if (!wrkStr.equals("")) {
-//						if (!wrkOptions.equals("")) {
-//							wrkOptions = wrkOptions + ",";
-//						}
-//						wrkOptions = wrkOptions + "WIDTH(" + wrkStr + ")";
-//					}
-//				}
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
 				if (jTextFieldFunction300DetailFieldWidth.getText().equals("*Auto") || jTextFieldFunction300DetailFieldWidth.getText().equals("")) {
 					if (!wrkStr.equals("")) {
@@ -24115,7 +24093,7 @@ public class Editor extends JFrame {
 							valueOfFieldsChanged = true;
 						}
 					}
-					wrkStr = getStringSizeValue(jTextFieldFunction310HeaderFieldWidth.getText(), "", 10, 1000);
+					wrkStr = getStringSizeValue(jTextFieldFunction310HeaderFieldWidth.getText(), "", 10, 2000);
 					if (!wrkStr.equals("")) {
 						if (!wrkOptions.equals("")) {
 							wrkOptions = wrkOptions + ",";
@@ -24324,27 +24302,6 @@ public class Editor extends JFrame {
 					}
 				}
 				//
-//				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
-//				if (jTextFieldFunction310DetailFieldWidth.getText().equals("*Auto") || jTextFieldFunction310DetailFieldWidth.getText().equals("")) {
-//					if (!wrkStr.equals("")) {
-//						valueOfFieldsChanged = true;
-//					}
-//				} else {
-//					if (wrkStr.equals("")) {
-//						valueOfFieldsChanged = true;
-//					} else {
-//						if (!wrkStr.equals(jTextFieldFunction310DetailFieldWidth.getText())) {
-//							valueOfFieldsChanged = true;
-//						}
-//					}
-//					wrkStr = getStringSizeValue(jTextFieldFunction310DetailFieldWidth.getText(), "", 10, 1000);
-//					if (!wrkStr.equals("")) {
-//						if (!wrkOptions.equals("")) {
-//							wrkOptions = wrkOptions + ",";
-//						}
-//						wrkOptions = wrkOptions + "WIDTH(" + wrkStr + ")";
-//					}
-//				}
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
 				if (jTextFieldFunction310DetailFieldWidth.getText().equals("*Auto") || jTextFieldFunction310DetailFieldWidth.getText().equals("")) {
 					if (!wrkStr.equals("")) {
@@ -24508,27 +24465,6 @@ public class Editor extends JFrame {
 					}
 				}
 				//
-//				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
-//				if (jTextFieldFunction310AddRowListColumnWidth.getText().equals("*Auto") || jTextFieldFunction310AddRowListColumnWidth.getText().equals("")) {
-//					if (!wrkStr.equals("")) {
-//						valueOfFieldsChanged = true;
-//					}
-//				} else {
-//					if (wrkStr.equals("")) {
-//						valueOfFieldsChanged = true;
-//					} else {
-//						if (!wrkStr.equals(jTextFieldFunction310AddRowListColumnWidth.getText())) {
-//							valueOfFieldsChanged = true;
-//						}
-//					}
-//					wrkStr = getStringSizeValue(jTextFieldFunction310AddRowListColumnWidth.getText(), "", 10, 1000);
-//					if (!wrkStr.equals("")) {
-//						if (!wrkOptions.equals("")) {
-//							wrkOptions = wrkOptions + ",";
-//						}
-//						wrkOptions = wrkOptions + "WIDTH(" + wrkStr + ")";
-//					}
-//				}
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
 				if (jTextFieldFunction310AddRowListColumnWidth.getText().equals("*Auto") || jTextFieldFunction310AddRowListColumnWidth.getText().equals("")) {
 					if (!wrkStr.equals("")) {
@@ -25287,7 +25223,74 @@ public class Editor extends JFrame {
 		}
 		scrollPane.getViewport().setViewPosition(point);
 	}
-	
+
+	public void changeMode(JTextArea textArea, boolean isTableScript) {
+		////////////////////////////
+		// Restore caret position //
+		////////////////////////////
+		int caretPos = textArea.getCaretPosition();
+		String text = textArea.getText().substring(0, caretPos);
+		int pos = 0;
+		int rowsOfCursor = 0;
+		while (pos > -1) {
+			pos = text.indexOf("\n", pos);
+			if (pos > -1) {
+				pos++;
+				rowsOfCursor++;
+			}
+		}
+
+		//////////////////
+		// Reverse mode //
+		//////////////////
+		if (!textArea.isEditable()) {
+			textArea.setEditable(true);
+			textArea.setText(idModeText);
+		} else {
+			textArea.setEditable(false);
+			idModeText = textArea.getText();
+			String nameModeText = idModeText;
+			if (isTableScript) {
+				for (int i = 0; i < dataSourceIDList.size(); i++) {
+					nameModeText = nameModeText.replaceAll(
+							dataSourceAliasList.get(i)+"_"+dataSourceIDList.get(i)+".value",
+							dataSourceAliasList.get(i)+"_"+dataSourceNameList.get(i)+".value"); 
+					nameModeText = nameModeText.replaceAll(
+							dataSourceAliasList.get(i)+"_"+dataSourceIDList.get(i)+".oldValue",
+							dataSourceAliasList.get(i)+"_"+dataSourceNameList.get(i)+".oldValue"); 
+					nameModeText = nameModeText.replaceAll(
+							dataSourceAliasList.get(i)+"_"+dataSourceIDList.get(i)+".valueChanged",
+							dataSourceAliasList.get(i)+"_"+dataSourceNameList.get(i)+".valueChanged"); 
+					nameModeText = nameModeText.replaceAll(
+							dataSourceAliasList.get(i)+"_"+dataSourceIDList.get(i)+".color",
+							dataSourceAliasList.get(i)+"_"+dataSourceNameList.get(i)+".color"); 
+					nameModeText = nameModeText.replaceAll(
+							dataSourceAliasList.get(i)+"_"+dataSourceIDList.get(i)+".editable",
+							dataSourceAliasList.get(i)+"_"+dataSourceNameList.get(i)+".editable"); 
+					nameModeText = nameModeText.replaceAll(
+							dataSourceAliasList.get(i)+"_"+dataSourceIDList.get(i)+".error",
+							dataSourceAliasList.get(i)+"_"+dataSourceNameList.get(i)+".error"); 
+				}
+			}
+			nameModeText = translateTableOperationInScript(nameModeText);
+			textArea.setText(nameModeText);
+		}
+
+		///////////////////////////
+		// Adjust caret position //
+		///////////////////////////
+		text = textArea.getText();
+		pos = 0;
+		int wrkInt = 0;
+		while (wrkInt < rowsOfCursor) {
+			pos = text.indexOf("\n", pos);
+			pos++;
+			wrkInt++;
+		}
+		textArea.setCaretPosition(pos);
+		textArea.getCaret().setVisible(true);
+	}
+
 	public void commentRows(JScrollPane scrollPane) {
 		StringBuffer buf = new StringBuffer();
 		String wrkStr;
@@ -26358,10 +26361,10 @@ public class Editor extends JFrame {
 		int childCount1, numberOfTableNodes = 0;
 		String errorStatus;
 		//
-		Object[] bts = {res.getString("DBConnect"), res.getString("Cancel")};
+		Object[] bts = {res.getString("Cancel"), res.getString("DBConnect")};
 		int rtn = JOptionPane.showOptionDialog(this, res.getString("DBConnectMessage5"),
 				res.getString("DBConnect"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[1]);
-		if (rtn == 0) {
+		if (rtn == 1) {
 			try {
 				setCursor(new Cursor(Cursor.WAIT_CURSOR));
 				//
@@ -26708,6 +26711,12 @@ public class Editor extends JFrame {
 		}
 		if (componentType_jPopupMenuComponent.equals("FunctionList")) {
 			JOptionPane.showMessageDialog(jScrollPaneFunctionList, res.getString("TipsFunction"), res.getString("TipsTitle"), 1);
+		}
+	}
+	
+	void jMenuItemComponentToEditTableScript_actionPerformed(ActionEvent e) {
+		if (componentType_jPopupMenuComponent.equals("TableScriptText")) {
+			jButtonTableScriptEdit_actionPerformed(null);
 		}
 	}
 	
@@ -31904,7 +31913,6 @@ public class Editor extends JFrame {
 		StringTokenizer workTokenizer;
 		int countOfUsageRows = 0;
 		int index;
-		String[] sectionDigit = {"(", ")", "{", "}", "+", "-", "/", "*", "=", "<", ">", ";", "|", "&", "\n", "\t", ",", " ", "!"};
 		//
 		nodeList1 = domDocument.getElementsByTagName("Table");
 		sortingList = getSortedListModel(nodeList1, "ID");
@@ -32034,8 +32042,8 @@ public class Editor extends JFrame {
 				index = wrkStr.indexOf(fieldExpInScript);
 				if (index > 0) {
 					wrkStr = wrkStr.substring(index-1, index);
-					for (int k = 0; k < sectionDigit.length; k++) {
-						if (wrkStr.equals(sectionDigit[k])) {
+					for (int k = 0; k < SECTION_DIGIT.length; k++) {
+						if (wrkStr.equals(SECTION_DIGIT[k])) {
 							index = 0;
 							break;
 						}
@@ -33378,14 +33386,17 @@ public class Editor extends JFrame {
 		StringTokenizer workTokenizer;
 		StringBuffer buf = new StringBuffer();
 		String wrkStr;
-		//
+		dataSourceAliasList.clear();
+		dataSourceIDList.clear();
+		dataSourceNameList.clear();
+
 		for (int i = 0; i < tableModelTableFieldList.getRowCount(); i++) {
 			if (i == 0) {
 				buf.append(res.getString("ScriptNotesTitle1"));
 			}
 			tableRowNumber = (TableRowNumber)tableModelTableFieldList.getValueAt(i, 0);
 			element = tableRowNumber.getElement();
-			//
+
 			buf.append("\n");
 			if (getOptionList(element.getAttribute("TypeOptions")).contains("VIRTUAL")) {
 				buf.append(res.getString("ScriptNotesVFMark"));
@@ -33397,8 +33408,12 @@ public class Editor extends JFrame {
 			buf.append(element.getAttribute("Name"));
 			buf.append(" ");
 			buf.append(getDescriptionsOfTypeAndSize(element.getAttribute("Type"), element.getAttribute("Size"), element.getAttribute("Decimal")));
+
+			dataSourceAliasList.add(jTextFieldTableID.getText());
+			dataSourceIDList.add(element.getAttribute("ID"));
+			dataSourceNameList.add(element.getAttribute("Name"));
 		}
-		//
+
 		NodeList nodeList = tableElement.getElementsByTagName("Refer");
 		sortingList = getSortedListModel(nodeList, "Order");
 		for (int i = 0; i < sortingList.getSize(); i++) {
@@ -33412,15 +33427,17 @@ public class Editor extends JFrame {
 				fieldElement = getSpecificFieldElement(element.getAttribute("ToTable"), wrkStr);
 				if (fieldElement != null) {
 					buf.append("\n");
-					//
+
 					if (getOptionList(fieldElement.getAttribute("TypeOptions")).contains("VIRTUAL")) {
 						buf.append(res.getString("ScriptNotesVFMark"));
 					}
-					//
+
 					if (element.getAttribute("TableAlias").equals("")) {
 						buf.append(element.getAttribute("ToTable"));
+						dataSourceAliasList.add(element.getAttribute("ToTable"));
 					} else {
 						buf.append(element.getAttribute("TableAlias"));
+						dataSourceAliasList.add(element.getAttribute("TableAlias"));
 					}
 					buf.append("_");
 					buf.append(wrkStr);
@@ -33428,14 +33445,263 @@ public class Editor extends JFrame {
 					buf.append(fieldElement.getAttribute("Name"));
 					buf.append(" ");
 					buf.append(getDescriptionsOfTypeAndSize(fieldElement.getAttribute("Type"), fieldElement.getAttribute("Size"), fieldElement.getAttribute("Decimal")));
+
+					dataSourceIDList.add(wrkStr);
+					dataSourceNameList.add(fieldElement.getAttribute("Name"));
 				}
 			}
 		}
-		//
+
 		buf.append(res.getString("ScriptNotesTitle3"));
-		//
+
 		jTextAreaTableScriptNotes.setText(buf.toString());
 		jTextAreaTableScriptNotes.setCaretPosition(0);
+	}
+	
+	public String translateTableOperationInScript(String text) {
+		String newText = text;
+		String wrkStr, wrkStr2, tableID, variantID, strOriginal, strProcessed;
+		MainTreeNode node = null;
+		org.w3c.dom.Element tableElement, fieldElement;
+		HashMap<String, String> idNameMap;
+		NodeList nodeList;
+	    int wrkInt, maxSize;
+		int pos =0;
+		int posFrom = 0;
+		int posTo = 0;
+		StringTokenizer tokenizer;
+		ArrayList<String> variantIDList = new ArrayList<String>();
+		ArrayList<HashMap> mapList = new ArrayList<HashMap>();
+		ArrayList<Integer> maxSizeList = new ArrayList<Integer>();
+		StringBuffer bf;
+		
+		while (pos >= 0) {
+			pos = newText.indexOf(".createTableOperator(", pos);
+			if (pos > -1) {
+
+				//////////////////
+				// Get Table ID //
+				//////////////////
+				tableID = "";
+				posTo = newText.indexOf(")", pos);
+				wrkStr = newText.substring(pos+21, posTo);
+				tokenizer = new StringTokenizer(wrkStr, ",");
+				if (tokenizer.countTokens() == 2) {
+					tokenizer.nextToken();
+					wrkStr = tokenizer.nextToken();
+					tableID = wrkStr.replaceAll("\'", "").replaceAll(" ", "");
+
+					////////////////////
+					// Get Variant ID //
+					////////////////////
+					posTo = -1;
+					posFrom = pos - 1;
+					variantID = "";
+					while (posFrom > 0) {
+						wrkStr = newText.substring(posFrom, posFrom + 1);
+						if (wrkStr.equals("=")) {
+							wrkInt = posFrom;
+							wrkStr2 = newText.substring(wrkInt-1, wrkInt);
+							while (wrkStr2.equals(" ")) {
+								wrkInt--;
+								wrkStr2 = newText.substring(wrkInt-1, wrkInt);
+								posFrom--;
+							}
+							posTo = wrkInt;
+						}
+						if (posTo != -1 && (wrkStr.equals(" ") || wrkStr.equals("\t") || wrkStr.equals("\n"))) {
+							break;
+						}
+						posFrom--;
+					}
+					if (posTo > posFrom) {
+						variantID = newText.substring(posFrom, posTo).replaceAll(" ", "").replaceAll("\t", "").replaceAll("\n", "");
+					}
+
+					/////////////////////////
+					// Register to ID List //
+					/////////////////////////
+					if (!variantID.equals("") && !tableID.equals("") && !variantIDList.contains(variantID)) {
+						node = getSpecificXETreeNode("Table", tableID);
+						if (node != null) {
+							idNameMap = new HashMap<String, String>();
+							tableElement = node.getElement();
+							nodeList = tableElement.getElementsByTagName("Field");
+						    for (int i = 0; i < nodeList.getLength(); i++) {
+						    	fieldElement = (org.w3c.dom.Element)nodeList.item(i);
+						    	idNameMap.put(fieldElement.getAttribute("ID"), fieldElement.getAttribute("Name"));
+						    }
+						    variantIDList.add(variantID);
+						    mapList.add(idNameMap);
+						}
+					}
+				}
+				pos++;
+			}
+		}
+
+		//////////////////////////////////////////////////
+		// Translate field ID into field Name in script //
+		//////////////////////////////////////////////////
+		String fieldID, fieldName;
+	    for (int i = 0; i < variantIDList.size(); i++) {
+			pos = 0;
+			while (pos >= 0) {
+				pos = newText.indexOf(variantIDList.get(i) + ".", pos);
+				if (pos > -1) {
+					posFrom = newText.indexOf("(\'", pos);
+					posTo = newText.indexOf("\'", posFrom+2);
+					fieldID = newText.substring(posFrom+2, posTo).replaceAll(" ", "");
+					if (mapList.get(i).get(fieldID) != null) {
+						fieldName = mapList.get(i).get(fieldID).toString(); 
+						newText = newText.replace(fieldID, fieldName);
+					}
+					pos++;
+				}
+			}
+	    }
+
+		/////////////////////////////////////////////
+		// Trim space and tab between ID and Value //
+		/////////////////////////////////////////////
+	    pos = 0;
+		while (pos >= 0) {
+			pos = newText.indexOf(".addValue(\'", pos);
+			if (pos > -1) {
+				posFrom = pos + 11;
+				posTo = newText.indexOf(",", posFrom);
+				wrkStr = newText.substring(posFrom, posTo+1);
+				while (newText.substring(posTo+1, posTo+2).equals(" ") || newText.substring(posTo+1, posTo+2).equals("\t")) {
+					posTo++;
+				}
+				bf = new StringBuffer();
+				bf.append(newText.substring(0, posFrom));
+				bf.append(wrkStr);
+				bf.append(newText.substring(posTo+1, newText.length()));
+				newText = bf.toString();
+				pos++;
+			}
+		}
+	    pos = 0;
+		while (pos >= 0) {
+			pos = newText.indexOf(".addKeyValue(\'", pos);
+			if (pos > -1) {
+				posFrom = pos + 14;
+				posTo = newText.indexOf(",", posFrom);
+				wrkStr = newText.substring(posFrom, posTo+1);
+				while (newText.substring(posTo+1, posTo+2).equals(" ") || newText.substring(posTo+1, posTo+2).equals("\t")) {
+					posTo++;
+				}
+				bf = new StringBuffer();
+				bf.append(newText.substring(0, posFrom));
+				bf.append(wrkStr);
+				bf.append(newText.substring(posTo+1, newText.length()));
+				newText = bf.toString();
+				pos++;
+			}
+		}
+	    
+	    ///////////////////////////////////////////////
+	    // Adjust indent of 'addValue' by variant ID //
+	    ///////////////////////////////////////////////
+	    for (int i = 0; i < variantIDList.size(); i++) {
+			pos = 0;
+			maxSize = 1;
+			while (pos >= 0) {
+				pos = newText.indexOf(variantIDList.get(i) + ".addValue(\'", pos);
+				if (pos > -1) {
+					posFrom = pos + variantIDList.get(i).length() + 11;
+					posTo = newText.indexOf("\'", posFrom);
+					wrkStr = newText.substring(posFrom, posTo);
+					wrkInt = 1;
+					wrkInt = wrkStr.getBytes().length;
+					if (wrkInt > maxSize) {
+						maxSize = wrkInt;
+					}
+					pos++;
+				}
+			}
+			maxSizeList.add(maxSize);
+	    }
+	    for (int i = 0; i < variantIDList.size(); i++) {
+			pos = 0;
+			while (pos >= 0) {
+				pos = newText.indexOf(variantIDList.get(i) + ".addValue(\'", pos);
+				if (pos > -1) {
+					posFrom = pos + variantIDList.get(i).length() + 11;
+					posTo = newText.indexOf("\',", posFrom);
+					strOriginal = newText.substring(posFrom, posTo+2);
+
+					wrkInt = 1;
+					wrkInt = strOriginal.getBytes().length;
+					wrkInt = (maxSizeList.get(i) + 3) - wrkInt;
+					strProcessed = strOriginal;
+					for (int j = 0; j < wrkInt; j++) {
+						strProcessed = strProcessed + " ";
+					}
+
+					bf = new StringBuffer();
+					bf.append(newText.substring(0, posFrom));
+					bf.append(strProcessed);
+					bf.append(newText.substring(posTo+2, newText.length()));
+					newText = bf.toString();
+
+					pos++;
+				}
+			}
+	    }
+	    
+	    //////////////////////////////////////////////////
+	    // Adjust indent of 'addKeyValue' by variant ID //
+	    //////////////////////////////////////////////////
+	    for (int i = 0; i < variantIDList.size(); i++) {
+			pos = 0;
+			maxSize = 1;
+			while (pos >= 0) {
+				pos = newText.indexOf(variantIDList.get(i) + ".addKeyValue(\'", pos);
+				if (pos > -1) {
+					posFrom = pos + variantIDList.get(i).length() + 14;
+					posTo = newText.indexOf("\'", posFrom);
+					wrkStr = newText.substring(posFrom, posTo);
+					wrkInt = 1;
+					wrkInt = wrkStr.getBytes().length;
+					if (wrkInt > maxSize) {
+						maxSize = wrkInt;
+					}
+					pos++;
+				}
+			}
+			maxSizeList.add(maxSize);
+	    }
+	    for (int i = 0; i < variantIDList.size(); i++) {
+			pos = 0;
+			while (pos >= 0) {
+				pos = newText.indexOf(variantIDList.get(i) + ".addKeyValue(\'", pos);
+				if (pos > -1) {
+					posFrom = pos + variantIDList.get(i).length() + 14;
+					posTo = newText.indexOf("\',", posFrom);
+					strOriginal = newText.substring(posFrom, posTo+2);
+
+					wrkInt = 1;
+					wrkInt = strOriginal.getBytes().length;
+					wrkInt = (maxSizeList.get(i) + 3) - wrkInt;
+					strProcessed = strOriginal;
+					for (int j = 0; j < wrkInt; j++) {
+						strProcessed = strProcessed + " ";
+					}
+
+					bf = new StringBuffer();
+					bf.append(newText.substring(0, posFrom));
+					bf.append(strProcessed);
+					bf.append(newText.substring(posTo+2, newText.length()));
+					newText = bf.toString();
+
+					pos++;
+				}
+			}
+	    }
+	    
+		return newText;
 	}
 
 	void setupRadioButtonsOfTableFieldType() {
@@ -33563,10 +33829,6 @@ public class Editor extends JFrame {
 				}
 			}
 			if (jComboBoxTableFieldType.getSelectedItem().equals("BIGINT")) {
-//				spinnerNumberModelTableFieldSize.setMaximum(18);
-//				if ((Integer)jSpinnerTableFieldSize.getValue() > 18) {
-//					jSpinnerTableFieldSize.setValue(18);
-//				}
 				spinnerNumberModelTableFieldSize.setMaximum(15);
 				if ((Integer)jSpinnerTableFieldSize.getValue() > 15) {
 					jSpinnerTableFieldSize.setValue(15);
@@ -33638,7 +33900,6 @@ public class Editor extends JFrame {
 		//
 		//TIME;
 		if (jComboBoxTableFieldType.getSelectedItem().equals("TIME")) {
-			//jSpinnerTableFieldSize.setValue(8); //FIXED LENGTH//
 			jSpinnerTableFieldSize.setValue(12); //FIXED LENGTH//
 		}
 		//
@@ -33653,6 +33914,9 @@ public class Editor extends JFrame {
 				 || jComboBoxTableFieldType.getSelectedItem().equals("CLOB")
 				 || jComboBoxTableFieldType.getSelectedItem().equals("BLOB")) {
 			jSpinnerTableFieldSize.setValue(20); //FIXED LENGTH//
+			if (!jComboBoxTableFieldType.getSelectedItem().equals("CLOB")) {
+				jRadioButtonFieldTypeOptionIMAGE.setEnabled(true);
+			}
 		}
 		//
 		//Compulsory resetting
@@ -34531,6 +34795,7 @@ public class Editor extends JFrame {
 					jTextAreaTableScriptText.setText(substringLinesWithTokenOfEOL(element.getAttribute("Text"), "\n"));
 					jTextAreaTableScriptTextUndoManager.discardAllEdits();
 					jTextAreaTableScriptText.setCaretPosition(0);
+					idModeText = jTextAreaTableScriptText.getText();
 				}
 			} catch (Exception e1) {
 				processError(e1);
@@ -34611,24 +34876,41 @@ public class Editor extends JFrame {
 		showPopupMenuComponentForTable(e, jTableTableDataList);
 	}
 
+	void jTextAreaTableScriptText_mouseClicked(MouseEvent e) {
+		if (e.getClickCount() >= 2) {
+			jButtonTableScriptEdit_actionPerformed(null);
+		} else {
+			if ((e.getModifiers() & InputEvent.BUTTON1_MASK) != InputEvent.BUTTON1_MASK) {
+				showPopupMenuComponent(e);
+			}
+		}
+	}
 	void jTextAreaTableScriptText_caretUpdate(CaretEvent e) {
-	    Point pos = getCaretPositionInText(jTextAreaTableScriptText);
-	    jLabelTableScriptCursorPos.setText(pos.x + " : " + pos.y);
+		if (jTextAreaTableScriptText.isEditable()) {
+			Point pos = getCaretPositionInText(jTextAreaTableScriptText);
+			jLabelTableScriptCursorPos.setText(pos.x + " : " + pos.y);
+		} else {
+		    jLabelTableScriptCursorPos.setText("NAME");
+		}
 	}
 
 	void jTextAreaSystemLoginScript_caretUpdate(CaretEvent e) {
-	    Point pos = getCaretPositionInText(jTextAreaSystemLoginScript);
-	    jLabelSystemLoginScriptEditToolCursorPos.setText(pos.x + " : " + pos.y);
+		Point pos = getCaretPositionInText(jTextAreaSystemLoginScript);
+		jLabelSystemLoginScriptEditToolCursorPos.setText(pos.x + " : " + pos.y);
 	}
 
 	void jTextAreaSystemScriptFunctions_caretUpdate(CaretEvent e) {
-	    Point pos = getCaretPositionInText(jTextAreaSystemScriptFunctions);
-	    jLabelSystemScriptFunctionsEditToolCursorPos.setText(pos.x + " : " + pos.y);
+		Point pos = getCaretPositionInText(jTextAreaSystemScriptFunctions);
+		jLabelSystemScriptFunctionsEditToolCursorPos.setText(pos.x + " : " + pos.y);
 	}
 
 	void jTextAreaFunction000Script_caretUpdate(CaretEvent e) {
-	    Point pos = getCaretPositionInText(jTextAreaFunction000Script);
-	    jLabelFunction000ScriptEditToolCursorPos.setText(pos.x + " : " + pos.y);
+		if (jTextAreaFunction000Script.isEditable()) {
+			Point pos = getCaretPositionInText(jTextAreaFunction000Script);
+			jLabelFunction000ScriptEditToolCursorPos.setText(pos.x + " : " + pos.y);
+		} else {
+		    jLabelFunction000ScriptEditToolCursorPos.setText("NAME");
+		}
 	}
 	
 	Point getCaretPositionInText(JTextArea textarea) {
@@ -37785,16 +38067,34 @@ public class Editor extends JFrame {
 		String subtitle = jTextFieldTableID.getText() + " " + jTextFieldTableName.getText() + " - " + jTextFieldTableScriptName.getText()
 			+ " - [" + tableModelTableScriptList.getValueAt(selectedRow_jTableTableScriptList, 2)
 			+ "] - [" + tableModelTableScriptList.getValueAt(selectedRow_jTableTableScriptList, 3) + "]";
-		String text = jTextAreaTableScriptText.getText();
+		String nameText = "";
+		String text = idModeText;
+		if (!jTextAreaTableScriptText.isEditable()) {
+			nameText = jTextAreaTableScriptText.getText();
+		}
 		String notes = jTextAreaTableScriptNotes.getText();
 
-		String edittedText = dialogEditScript.request(subtitle, text, notes, jTextAreaTableScriptText.getCaretPosition());
-		if (!edittedText.equals(jTextAreaTableScriptText.getText())) {
-			jTextAreaTableScriptText.setText(edittedText);
-			jTextAreaTableScriptText.setCaretPosition(dialogEditScript.getCaretPosition());
-			jTextAreaTableScriptText.requestFocus();
-			changeState.setChanged(true);
+		String edittedText = dialogEditScript.request(subtitle, text, notes, jTextAreaTableScriptText.getCaretPosition(), nameText);
+		if (jTextAreaTableScriptText.isEditable()) {
+			if (!edittedText.equals(jTextAreaTableScriptText.getText())) {
+				jTextAreaTableScriptText.setText(edittedText);
+				jTextAreaTableScriptText.setCaretPosition(dialogEditScript.getCaretPosition());
+				jTextAreaTableScriptText.requestFocus();
+				changeState.setChanged(true);
+			}
+		} else {
+			if (!edittedText.equals(idModeText)) {
+				jTextAreaTableScriptText.setText(edittedText);
+				jTextAreaTableScriptText.setCaretPosition(dialogEditScript.getCaretPosition());
+				jTextAreaTableScriptText.requestFocus();
+				changeState.setChanged(true);
+			}
 		}
+		if (dialogEditScript.isEditable() != jTextAreaTableScriptText.isEditable()) {
+			changeMode(jTextAreaTableScriptText, true);
+		}
+		jTextAreaTableScriptText.requestFocus();
+		jTextAreaTableScriptText.getCaret().setVisible(true);
 	}
 	
 	void checkTableModule(MainTreeNode tableNode, boolean isShowDialog) {
@@ -37889,7 +38189,7 @@ public class Editor extends JFrame {
 	PrintStream getExceptionStream() {
 		return exceptionStream;
 	}
-	
+
 	void setupConnectionList(boolean isToConnect) {
 		org.w3c.dom.Element element;
 		String databaseName, user, password;
@@ -37992,6 +38292,23 @@ public class Editor extends JFrame {
 		}
 		return connection;
 	}
+
+	public void validateConnectionToShowMessage(Connection connection) {
+		try {
+			if (connection != null) {
+				connection.createStatement().executeQuery("SELECT * FROM * " + jTextFieldSystemTaxTable.getText());
+			}
+		} catch (SQLException e) {
+			try {
+				connection.close();
+			} catch (SQLException e1) {
+			} finally {
+				JOptionPane.showMessageDialog(null, res.getString("DBConnectMessage9"));
+				currentMainTreeNode.updateFields();
+				currentMainTreeNode.activateContentsPane(true);
+			}
+		}
+	}
 	
 	public String getDefaultPrintFontID() {
 		return defaultPrintFontID;
@@ -38007,14 +38324,10 @@ public class Editor extends JFrame {
 			connection = databaseConnList.get(i);
 			if (connection != null) {
 				try {
-					//
-					//connection.commit();
 					connection.close();
-					//
 					if (databaseNameList.get(i).contains("jdbc:derby")) {
 						DriverManager.getConnection("jdbc:derby:;shutdown=true");
 					}
-					//
 				} catch (SQLException ex) {
 					if (databaseNameList.get(i).contains("jdbc:derby")
 							&& ex.getSQLState() != null
@@ -38024,7 +38337,6 @@ public class Editor extends JFrame {
 				}
 			}
 		}
-		//
 		connection = null;
 	}
 
@@ -38638,6 +38950,7 @@ public class Editor extends JFrame {
 		Statement statement = null;
 		StringBuffer buf1 = new StringBuffer();
 		StringBuffer buf2 = new StringBuffer();
+		Connection connection = null;
 		int count = 0;
 
 		try {
@@ -38645,7 +38958,7 @@ public class Editor extends JFrame {
 
 			String tableID = systemNode.getElement().getAttribute("UserVariantsTable");
 			MainTreeNode tableNode = getSpecificXETreeNode("Table", tableID);
-			Connection connection = databaseConnList.get(databaseIDList.indexOf(tableNode.getElement().getAttribute("DB")));
+			connection = databaseConnList.get(databaseIDList.indexOf(tableNode.getElement().getAttribute("DB")));
 			if (connection != null && !connection.isClosed()) {
 
 				jTextAreaTableFieldTypeOptionKUBUN.setText("");
@@ -38678,6 +38991,7 @@ public class Editor extends JFrame {
 			}
 		} catch (SQLException ex) {
 			jTextAreaTableFieldTypeOptionKUBUN.setText("SQLException : "+ ex.getMessage());
+			validateConnectionToShowMessage(connection);
 		} catch (Exception ex) {
 			jTextAreaTableFieldTypeOptionKUBUN.setText("Exception : "+ ex.getMessage());
 		} finally {
@@ -38698,6 +39012,7 @@ public class Editor extends JFrame {
 	void jButtonTableDataSelect_actionPerformed(ActionEvent actionEvent) {
 		String basicType;
 		ResultSet result = null;
+		Connection connection = null;
 		Statement statement = null;
 		String sql = "";
 		int readBlockCount = 1000;
@@ -38762,7 +39077,7 @@ public class Editor extends JFrame {
 
 			int blockRows = 0;
 			TableDataRowNumber rowNumber;
-			Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
+			connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
 			statement = connection.createStatement();
 			sql = buf.toString();
 			result = statement.executeQuery(sql);
@@ -38819,9 +39134,6 @@ public class Editor extends JFrame {
 
 			if (count > 0) {
 				jTextAreaTableDataMessages.setText(count + res.getString("ReadCountMessage"));
-//				if (jCheckBoxTableDataOutput.isSelected() && actionEvent != null) {
-//					desktop.browse(getExcellBookURI());
-//				}
 			} else {
 				if (!jTextFieldTableDataSelectWhere.getText().trim().equals("*All") && !jTextFieldTableDataSelectWhere.getText().trim().equals("")) {
 					jTextAreaTableDataMessages.setText(res.getString("ReadNoneMessage"));
@@ -38830,10 +39142,9 @@ public class Editor extends JFrame {
 				}
 			}
 
-		//} catch (IOException ex) {
-		//	jTextAreaTableDataMessages.setText("IOException : "+ ex.getMessage());
 		} catch (SQLException ex) {
 			jTextAreaTableDataMessages.setText("SQLException:("+ ex.getErrorCode() + ") " + ex.getMessage() + "\nSQL: " + sql);
+			validateConnectionToShowMessage(connection);
 		} catch (OutOfMemoryError ex) {
 			jTextAreaTableDataMessages.setText("Exception : "+ ex.getMessage());
 		} catch (Exception ex) {
@@ -38866,7 +39177,7 @@ public class Editor extends JFrame {
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
 	}
-	
+
 	void jButtonTableDataFieldsToChangeLabel_actionPerformed(ActionEvent e) {
 		isCaptionWithName = !isCaptionWithName;
 		for(int i=1; i < jTableTableDataList.getColumnModel().getColumnCount(); i++) { 
@@ -38934,21 +39245,22 @@ public class Editor extends JFrame {
 	
 	void updateTableData() {
 		String basicType;
+		Connection connection = null;
 		String sql = "";
-		//
+
 		try {
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
-			//
+
 			if (noFieldError()) {
-				//
+
 				TableDataRowNumber tableRowNumber = (TableDataRowNumber)tableModelTableDataList.getValueAt(selectedRow_jTableTableDataList, 0);
-				//
+
 				String updateCounterID = DEFAULT_UPDATE_COUNTER;
 				if (!jTextFieldTableUpdateCounter.getText().toUpperCase().equals("*DEFAULT")
 						&& !jTextFieldTableUpdateCounter.getText().equals("")) {
 					updateCounterID = jTextFieldTableUpdateCounter.getText();
 				}
-				//
+
 				StringBuffer statementBuf = new StringBuffer();
 				statementBuf.append("update ");
 				if (jTextFieldTableModuleID.getText().equals("")
@@ -38958,7 +39270,7 @@ public class Editor extends JFrame {
 					statementBuf.append(jTextFieldTableModuleID.getText());
 				}
 				statementBuf.append(" set ");
-				//
+
 				boolean firstField = true;
 				for (int i = 0; i < editableTableFieldList.size(); i++) {
 					if (!firstField) {
@@ -38975,9 +39287,9 @@ public class Editor extends JFrame {
 					statementBuf.append("=") ;
 					statementBuf.append(tableRowNumber.getUpdateCounter() + 1) ;
 				}
-				//
+
 				statementBuf.append(" where ") ;
-				//
+
 				firstField = true;
 				for (int i = 0; i < editableTableFieldList.size(); i++) {
 					if (editableTableFieldList.get(i).isKey()) {
@@ -38996,8 +39308,8 @@ public class Editor extends JFrame {
 					statementBuf.append("=") ;
 					statementBuf.append(tableRowNumber.getUpdateCounter()) ;
 				}
-				//
-				Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
+
+				connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
 				Statement statement = connection.createStatement();
 				sql = statementBuf.toString();
 				int recordCount = statement.executeUpdate(sql);
@@ -39023,15 +39335,15 @@ public class Editor extends JFrame {
 						tableRowNumber.getColumnMap().put(editableTableFieldList.get(i).getFieldID(), editableTableFieldList.get(i).getInternalValue());
 					}
 					tableRowNumber.setUpdateCounter(tableRowNumber.getUpdateCounter() + 1);
-					//
+
 					jButtonTableDataFieldsToEditMode.setEnabled(true);
 					jButtonTableDataFieldsToAddMode.setEnabled(true);
 					jButtonTableDataFieldsToDelete.setEnabled(true);
 					jButtonTableDataFieldsToUpdate.setEnabled(false);
 					jButtonTableDataFieldsToClear.setEnabled(false);
-					//
+
 					jTableTableDataList.requestFocus();
-					//
+
 				} else {
 					JOptionPane.showMessageDialog(jPanelMain, res.getString("DataUtilityMessage3"));
 					try {
@@ -39045,6 +39357,7 @@ public class Editor extends JFrame {
 			}
 		} catch (SQLException e1) {
 			jTextAreaTableDataMessages.setText("SQLException : "+ e1.getMessage() + "\nSQL: " + sql);
+			validateConnectionToShowMessage(connection);
 		} finally {
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
@@ -39068,12 +39381,14 @@ public class Editor extends JFrame {
 	}
 	
 	void insertTableData() {
+		Connection connection = null;
 		String sql = "";
+
 		try {
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
-			//
+
 			if (noFieldError()) {
-				//
+
 				StringBuffer statementBuf = new StringBuffer();
 				statementBuf.append("select ");
 				statementBuf.append(editableTableFieldList.get(0).getFieldID());
@@ -39097,22 +39412,22 @@ public class Editor extends JFrame {
 						firstField = false;
 					}
 				}
-				//
-				Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
+
+				connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
 				Statement statement = connection.createStatement();
 				sql = statementBuf.toString();
 				ResultSet result = statement.executeQuery(sql);
 				if (result.next()) {
-					//
+
 					for (int i = 0; i < editableTableFieldList.size(); i++) {
 						if (editableTableFieldList.get(i).isKey()) {
 							editableTableFieldList.get(i).setError(true);
 						}
 					}
 					jTextAreaTableDataMessages.setText(res.getString("DataUtilityMessage4"));
-					//
+
 				} else {
-					//
+
 					statementBuf = new StringBuffer();
 					statementBuf.append("insert into ");
 					statementBuf.append(jTextFieldTableID.getText());
@@ -39135,41 +39450,43 @@ public class Editor extends JFrame {
 						firstField = false;
 					}
 					statementBuf.append(")") ;
-					//
+
 					sql = statementBuf.toString();
 					int recordCount = statement.executeUpdate(sql);
 					if (recordCount == 1) {
 						jTextAreaTableDataMessages.setText(res.getString("DataUtilityMessage5"));
 					}
-					//
+
 					jButtonTableDataSelect.doClick();
 				}
-				//
+
 				result.close();
 			}
 		} catch (SQLException e1) {
 			jTextAreaTableDataMessages.setText("SQLException : "+ e1.getMessage() + "\nSQL: " + sql);
+			validateConnectionToShowMessage(connection);
 		} finally {
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
 	}
 	
 	void jButtonTableDataFieldsToDelete_actionPerformed(ActionEvent e) {
+		Connection connection = null;
 		String sql = "";
 		Object[] bts = {res.getString("Yes"), res.getString("No")} ;
 		int reply = JOptionPane.showOptionDialog(jPanelTableDataFieldsEdit, res.getString("DeleteCheckMessage"), res.getString("DeleteCheckTitle"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
 		if (reply == 0) {
 			try {
 				setCursor(new Cursor(Cursor.WAIT_CURSOR));
-				//
+
 				TableDataRowNumber tableRowNumber = (TableDataRowNumber)tableModelTableDataList.getValueAt(selectedRow_jTableTableDataList, 0);
-				//
+
 				String updateCounterID = DEFAULT_UPDATE_COUNTER;
 				if (!jTextFieldTableUpdateCounter.getText().toUpperCase().equals("*DEFAULT")
 						&& !jTextFieldTableUpdateCounter.getText().equals("")) {
 					updateCounterID = jTextFieldTableUpdateCounter.getText();
 				}
-				//
+
 				boolean firstField = true;
 				StringBuffer statementBuf = new StringBuffer();
 				statementBuf.append("delete from ");
@@ -39197,8 +39514,8 @@ public class Editor extends JFrame {
 					statementBuf.append("=") ;
 					statementBuf.append(tableRowNumber.getUpdateCounter()) ;
 				}
-				//
-				Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
+
+				connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
 				Statement statement = connection.createStatement();
 				sql = statementBuf.toString();
 				int recordCount = statement.executeUpdate(sql);
@@ -39213,10 +39530,11 @@ public class Editor extends JFrame {
 						jTextAreaTableDataMessages.setText("SQLException : "+ e6.getMessage());
 					}
 				}
-				//
+
 				jButtonTableDataSelect.doClick();
 			} catch (SQLException e1) {
 				jTextAreaTableDataMessages.setText("SQLException : "+ e1.getMessage() + "\nSQL: " + sql);
+				validateConnectionToShowMessage(connection);
 			} finally {
 				setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			}
@@ -39224,9 +39542,10 @@ public class Editor extends JFrame {
 	}
 	
 	void jButtonTableDataFieldsToCompress_actionPerformed(ActionEvent e) {
+		Connection connection = null;
 		try {
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
-			//
+
 			StringBuffer statementBuf = new StringBuffer();
 			statementBuf.append("call SYSCS_UTIL.SYSCS_COMPRESS_TABLE('");
 			statementBuf.append(jTextFieldSystemDBUser.getText());
@@ -39238,13 +39557,14 @@ public class Editor extends JFrame {
 				statementBuf.append(jTextFieldTableModuleID.getText());
 			}
 			statementBuf.append("', 1)") ;
-			//
-			Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
+
+			connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
 			Statement statement = connection.createStatement();
 			statement.executeUpdate(statementBuf.toString());
 			jTextAreaTableDataMessages.setText(res.getString("DataUtilityMessage7"));
 		} catch (SQLException e1) {
 			jTextAreaTableDataMessages.setText("SQLException : "+ e1.getMessage());
+			validateConnectionToShowMessage(connection);
 		} finally {
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
@@ -39273,23 +39593,23 @@ public class Editor extends JFrame {
 		boolean existed;
 		Pattern pattern = Pattern.compile("\t");
 		String[] values;
-	    //
+		Connection connection = null;
+
 		String csvFileName = specifyNameOfExistingFile(res.getString("ImportData"), "txt");
 		if (!csvFileName.equals("")) {
 			try {
 				setCursor(new Cursor(Cursor.WAIT_CURSOR));
-				//
+
 				String dbID = currentMainTreeNode.getElement().getAttribute("DB");
 				String dbName = databaseNameList.get(databaseIDList.indexOf(dbID));
-				//
+
 				br = new BufferedReader(new FileReader(csvFileName));
 				while ((line = br.readLine()) != null) {
 					values = pattern.split(line);
-					//
+
 					totalLineNumber++;
 					if (totalLineNumber == 1) {
 						for (int i=0; i < values.length; i++) {
-							//fieldIDList.add(values[i]);
 							existed = false;
 							for (int j = 0; j < editableTableFieldList.size(); j++) {
 								if (editableTableFieldList.get(j).getFieldID().equals(values[i])) {
@@ -39319,6 +39639,7 @@ public class Editor extends JFrame {
 							}
 						}
 					} else {
+
 						fieldValueList.clear();
 						for (int i=0; i < values.length; i++) {
 							fieldValueList.add(values[i]);
@@ -39326,7 +39647,7 @@ public class Editor extends JFrame {
 						if (fieldIDList.size() > fieldValueList.size()) {
 							fieldValueList.add("");
 						}
-						//
+
 						statementBuf = new StringBuffer();
 						statementBuf.append("select *  from ");
 						if (jTextFieldTableModuleID.getText().equals("")
@@ -39363,7 +39684,7 @@ public class Editor extends JFrame {
 								firstField = false;
 							}
 						}
-						Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
+						connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
 						Statement statement = connection.createStatement();
 						ResultSet result = statement.executeQuery(statementBuf.toString());
 						if (result.next()) {
@@ -39422,7 +39743,7 @@ public class Editor extends JFrame {
 								firstField = false;
 							}
 							statementBuf.append(")") ;
-							//
+
 							int recordCount = statement.executeUpdate(statementBuf.toString());
 							if (recordCount == 1) {
 								numberOfInserted++;
@@ -39431,7 +39752,6 @@ public class Editor extends JFrame {
 						result.close();
 					}
 				}
-				//connection.commit();
 				noErrors = true;
 				jButtonTableDataSelect.doClick();
 
@@ -39441,6 +39761,7 @@ public class Editor extends JFrame {
 				} else {
 					jTextAreaTableDataMessages.setText(ex.getMessage() + "\n" + statementBuf.toString());
 				}
+				validateConnectionToShowMessage(connection);
 			} catch (Exception ex) {
 				jTextAreaTableDataMessages.setText(ex.getMessage());
 			} finally {
@@ -45545,6 +45866,16 @@ class Editor_jMenuItemXETreeNodeDelete_actionAdapter implements java.awt.event.A
 	}
 }
 
+class Editor_jMenuItemComponentToEditTableScript_actionAdapter implements java.awt.event.ActionListener {
+	Editor adaptee;
+	Editor_jMenuItemComponentToEditTableScript_actionAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jMenuItemComponentToEditTableScript_actionPerformed(e);
+	}
+}
+
 class Editor_jMenuItemComponentToAdd_actionAdapter implements java.awt.event.ActionListener {
 	Editor adaptee;
 	Editor_jMenuItemComponentToAdd_actionAdapter(Editor adaptee) {
@@ -46116,6 +46447,16 @@ class Editor_jTextAreaTableScriptText_caretAdapter implements javax.swing.event.
 	}
 	public void caretUpdate(CaretEvent e) {
 		adaptee.jTextAreaTableScriptText_caretUpdate(e);
+	}
+}
+
+class Editor_jTextAreaTableScriptText_mouseAdapter extends java.awt.event.MouseAdapter {
+	Editor adaptee;
+	Editor_jTextAreaTableScriptText_mouseAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void mouseClicked(MouseEvent e) {
+		adaptee.jTextAreaTableScriptText_mouseClicked(e);
 	}
 }
 

@@ -171,7 +171,6 @@ public class DialogSQL extends JDialog {
 		for (int i = 0; i < frame_.getDatabaseNameList().size(); i++) {
 			jComboBoxConnection.addItem(frame_.getDatabaseNameList().get(i));
 		}
-		dbIDList.clear();
 		dbIDList = frame_.getDatabaseIDList();
 		jTextAreaStatement.requestFocus();
 		jPanelButtons.getRootPane().setDefaultButton(jButtonClose);

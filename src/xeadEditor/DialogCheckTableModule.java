@@ -36,6 +36,7 @@ import java.awt.*;
 import javax.swing.*;
 
 import org.w3c.dom.NodeList;
+
 import java.awt.event.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -44,6 +45,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
+
 import xeadEditor.Editor.SortableDomElementListModel;
 import xeadEditor.Editor.MainTreeNode;
 
@@ -154,10 +156,8 @@ public class DialogCheckTableModule extends JDialog {
 		if (frame_.getSystemNode().getElement().getAttribute("AutoConnectToEdit").equals("T")) {
 			errorStatus = tableNode.getErrorStatus();
 			tableElement = tableNode.getElement();
-
-			connection_ = frame_.getDatabaseConnection(tableElement.getAttribute("DB"));
 			databaseName = frame_.getDatabaseName(tableElement.getAttribute("DB"));
-
+			connection_ = frame_.getDatabaseConnection(tableElement.getAttribute("DB"));
 			if (connection_ != null) {
 				if (tableNode.getType().equals("Table")) {
 					checkTableModule("");
@@ -876,6 +876,12 @@ public class DialogCheckTableModule extends JDialog {
 			jButtonCreate.setEnabled(false);
 			jButtonDelete.setEnabled(false);
 			jButtonPut.setEnabled(false);
+			try {
+				connection_.close();
+			} catch (SQLException e1) {
+			} finally {
+				JOptionPane.showMessageDialog(null, res.getString("DBConnectMessage9"));
+			}
 		} finally {
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
@@ -1683,14 +1689,14 @@ public class DialogCheckTableModule extends JDialog {
 	}
 
 	public String checkTableModule(MainTreeNode tableNode) {
-		tableElement = tableNode.getElement();
-		connection_ = frame_.getDatabaseConnection(tableElement.getAttribute("DB"));
-		databaseName = frame_.getDatabaseName(tableElement.getAttribute("DB"));
-		updateCounterID = tableElement.getAttribute("UpdateCounter");
-		if (updateCounterID.equals("")) {
-			updateCounterID = DEFAULT_UPDATE_COUNTER;
-		}
 		try {
+			tableElement = tableNode.getElement();
+			connection_ = frame_.getDatabaseConnection(tableElement.getAttribute("DB"));
+			databaseName = frame_.getDatabaseName(tableElement.getAttribute("DB"));
+			updateCounterID = tableElement.getAttribute("UpdateCounter");
+			if (updateCounterID.equals("")) {
+				updateCounterID = DEFAULT_UPDATE_COUNTER;
+			}
 			Statement statement = connection_.createStatement();
 			String sqlText = getSqlToCreateTable();
 			statement.executeUpdate(sqlText);

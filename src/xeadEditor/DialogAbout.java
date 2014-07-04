@@ -48,7 +48,12 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2014 DBC,Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
-	public static final String FULL_VERSION  = "V1.R2.M2";
+	public static final String FULL_VERSION  = "V1.R2.M3";
+	//1.2.3
+	//・DBとの接続が切れている場合に再接続をガイドするようにした
+	//・SQLコンソールを２回使うとDBのIDリストがクリアされてしまう問題を修正した
+	//・スクリプトエディタ上で、Ctrl+NでIDモードと名称モードを切り替えられるようにした
+	//
 	//1.2.2
 	//・Driver用フォントを変更すれば「レイアウト確認」のダイアログにただちに反映されるようにした
 	//・一部の使途一覧からテーブルスクリプトにジャンプできなかった問題を修正

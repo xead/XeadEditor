@@ -35,6 +35,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ import xeadEditor.Editor.TableModelReadOnlyList;
 
 public class DialogCheckLayout extends JDialog {
 	private static final long serialVersionUID = 1L;
-	private static ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
+	public static ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
 	public static final int FIELD_UNIT_HEIGHT = 25;
 	public static final int FIELD_HORIZONTAL_MARGIN = 1;
 	public static final int FIELD_VERTICAL_MARGIN = 5;
@@ -1247,6 +1248,7 @@ class DialogCheckLayoutColumn extends Object {
 		String basicType = this.getBasicType();
 		wrkStr = dialog_.getEditor().getOptionValueWithKeyword(dataTypeOptions, "KUBUN");
 		if (!wrkStr.equals("")) {
+			Connection connection = null;
 			try {
 				String wrk = "";
 				StringBuffer buf1 = new StringBuffer();
@@ -1255,7 +1257,7 @@ class DialogCheckLayoutColumn extends Object {
 				buf1.append(" where IDUSERKUBUN = '");
 				buf1.append(wrkStr);
 				buf1.append("'");
-				Connection connection = dialog_.getEditor().getDatabaseConnection("");
+				connection = dialog_.getEditor().getDatabaseConnection("");
 				if (connection != null && !connection.isClosed()) {
 					Statement statement = connection.createStatement();
 					ResultSet result = statement.executeQuery(buf1.toString());
@@ -1269,6 +1271,13 @@ class DialogCheckLayoutColumn extends Object {
 							value = wrk;
 						}
 					}
+				}
+			} catch (SQLException e) {
+				try {
+					connection.close();
+				} catch (SQLException e1) {
+				} finally {
+					JOptionPane.showMessageDialog(null, DialogCheckLayout.res.getString("DBConnectMessage9"));
 				}
 			} catch(Exception e) {
 			}
@@ -2208,7 +2217,7 @@ class DialogCheckLayoutImageField extends JPanel {
 		jTextField.setText(dialog.getStringData("STRING", size, 0, null));
 		//
 		jButton.setFont(new java.awt.Font(dialog.driverFontName_, 0, DialogCheckLayout.FONT_SIZE));
-		jButton.setPreferredSize(new Dimension(80, dialog.getFieldUnitHeight()));
+		jButton.setPreferredSize(new Dimension(100, dialog.getFieldUnitHeight()));
 		jButton.setText(res.getString("Refresh"));
 		jButton.setFocusable(false);
 		jPanelBottom.setPreferredSize(new Dimension(200, dialog.getFieldUnitHeight()));

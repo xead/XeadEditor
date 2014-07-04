@@ -36,6 +36,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.util.ResourceBundle;
+
 import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.text.DefaultEditorKit;
@@ -49,7 +50,8 @@ public class DialogEditScript extends JDialog {
 	private JLabel jLabelScanText = new JLabel();
 	private JTextField jTextFieldScanText = new JTextField();
 	private JCheckBox jCheckBoxScanText = new JCheckBox();
-	private JLabel jLabelFunctionKeys = new JLabel();
+	private JLabel jLabelFunctionKeys1 = new JLabel();
+	private JLabel jLabelFunctionKeys2 = new JLabel();
 	private JPanel jPanelStatement = new JPanel();
 	private JPanel jPanelStatementHeader = new JPanel();
 	private JLabel jLabelStatementHeader = new JLabel();
@@ -108,7 +110,14 @@ public class DialogEditScript extends JDialog {
 			redo();
 		}
 	};
+	private Action modeAction = new AbstractAction(){
+		private static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			changeMode();
+		}
+	};
 	private String originalText = "";
+	private String idModeText = "";
 	private String returnText = "";
 	private UndoManager undoManager = new UndoManager();
 	
@@ -138,13 +147,14 @@ public class DialogEditScript extends JDialog {
 		jLabelStatementHeader.setPreferredSize(new Dimension(150, 25));
 
 		jLabelStatementCursorPos.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jLabelStatementCursorPos.setForeground(Color.darkGray);
 		jLabelStatementCursorPos.setHorizontalAlignment(SwingConstants.CENTER);
 		jLabelStatementCursorPos.setPreferredSize(new Dimension(80, 25));
 		jLabelStatementCursorPos.setBorder(BorderFactory.createLineBorder(Color.lightGray));
 		jPanelStatementHeader.add(jLabelStatementHeader, BorderLayout.WEST);
 		jPanelStatementHeader.add(jLabelStatementCursorPos, BorderLayout.EAST);
 
-		jPanelScan.setPreferredSize(new Dimension(10, 120));
+		jPanelScan.setPreferredSize(new Dimension(10, 150));
 		jPanelScan.setLayout(null);
 		jLabelScanText.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelScanText.setText(res.getString("ScanStringInScript"));
@@ -154,13 +164,17 @@ public class DialogEditScript extends JDialog {
 		jCheckBoxScanText.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jCheckBoxScanText.setBounds(new Rectangle(7, 63, 250, 22));
 		jCheckBoxScanText.setText(res.getString("CaseSensitive"));
-		jLabelFunctionKeys.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jLabelFunctionKeys.setText(res.getString("ScriptEditorFunctionKeys"));
-		jLabelFunctionKeys.setBounds(new Rectangle(11, 94, 450, 20));
+		jLabelFunctionKeys1.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jLabelFunctionKeys1.setText(res.getString("ScriptEditorFunctionKeys1"));
+		jLabelFunctionKeys1.setBounds(new Rectangle(11, 94, 450, 20));
+		jLabelFunctionKeys2.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jLabelFunctionKeys2.setText(res.getString("ScriptEditorFunctionKeys2"));
+		jLabelFunctionKeys2.setBounds(new Rectangle(11, 120, 450, 20));
 		jPanelScan.add(jLabelScanText);
 		jPanelScan.add(jTextFieldScanText);
 		jPanelScan.add(jCheckBoxScanText);
-		jPanelScan.add(jLabelFunctionKeys);
+		jPanelScan.add(jLabelFunctionKeys1);
+		jPanelScan.add(jLabelFunctionKeys2);
 
 		jPanelInformation.setLayout(new BorderLayout());
 		jPanelInformation.add(jScrollPaneFieldInformation, BorderLayout.CENTER);
@@ -206,6 +220,8 @@ public class DialogEditScript extends JDialog {
 		actionMap.put("UNDO", undoAction);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_DOWN_MASK), "REDO");
 		actionMap.put("REDO", redoAction);
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_DOWN_MASK), "MODE");
+		actionMap.put("MODE", modeAction);
 
 		this.setResizable(true);
         Rectangle screenRect = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
@@ -215,18 +231,27 @@ public class DialogEditScript extends JDialog {
 		this.getContentPane().add(jSplitPane,  BorderLayout.CENTER);
 	}
 
-	public String request(String subtitle, String text, String fieldInfo, int caretPos) {
+	public String request(String subtitle, String idText, String fieldInfo, int caretPos, String nameText) {
 		this.setTitle(res.getString("EditTableScriptTitle") + " - " +  subtitle);
 
 		jTextAreaFieldInformation.setText(fieldInfo);
 		jTextAreaFieldInformation.setCaretPosition(0);
 
-		originalText = text;
-		returnText = text;
+		originalText = idText;
+		returnText = idText;
+		idModeText = idText;
 
-		jTextAreaStatement.setFont(new java.awt.Font(frame_.scriptFontName, 0, frame_.scriptFontSize));
-		jTextAreaStatement.setText(text);
+		if (nameText.equals("")) {
+			jTextAreaStatement.setText(idText);
+			jTextAreaStatement.setEditable(true);
+		} else {
+			jTextAreaStatement.setText(nameText);
+			jTextAreaStatement.setEditable(false);
+		}
+	
+		jTextAreaStatement.getCaret().setVisible(true);
 		jTextAreaStatement.setCaretPosition(caretPos);
+		jTextAreaStatement.setFont(new java.awt.Font(frame_.scriptFontName, 0, frame_.scriptFontSize));
 		jTextAreaStatement.requestFocus();
 		undoManager.discardAllEdits();
 
@@ -238,9 +263,15 @@ public class DialogEditScript extends JDialog {
 	protected void processWindowEvent(WindowEvent e) {
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
 			int rtn = 0;
-			String scriptError = frame_.checkSyntaxError(jTextAreaStatement.getText(), false);
-			//
-			if (jTextAreaStatement.getText().equals(originalText)) {
+			String edittedText = "";
+			if (jTextAreaStatement.isEditable()) {
+				edittedText = jTextAreaStatement.getText();
+			} else {
+				edittedText = idModeText;
+			}
+			String scriptError = frame_.checkSyntaxError(edittedText, false);
+
+			if (edittedText.equals(originalText)) {
 				if (scriptError.equals("")) {
 					super.setVisible(false);
 				} else {
@@ -261,7 +292,7 @@ public class DialogEditScript extends JDialog {
 							res.getString("EditTableScriptTitle"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
 				}
 				if (rtn == 0) {
-					returnText = jTextAreaStatement.getText();
+					returnText = edittedText;
 					super.setVisible(false);
 				}
 				if (rtn == 1) {
@@ -274,13 +305,21 @@ public class DialogEditScript extends JDialog {
 		}
 	}
 	
+	public boolean isEditable() {
+		return jTextAreaStatement.isEditable();
+	}
+	
 	public int getCaretPosition() {
 		return jTextAreaStatement.getCaretPosition();
 	}
 
 	void jTextAreaStatement_caretUpdate(CaretEvent e) {
-	    Point pos = frame_.getCaretPositionInText(jTextAreaStatement);
-	    jLabelStatementCursorPos.setText(pos.x + " : " + pos.y);
+		if (jTextAreaStatement.isEditable()) {
+			Point pos = frame_.getCaretPositionInText(jTextAreaStatement);
+			jLabelStatementCursorPos.setText(pos.x + " : " + pos.y);
+		} else {
+			jLabelStatementCursorPos.setText("NAME");
+		}
 	}
 	
 	public void indentRows() {
@@ -301,6 +340,73 @@ public class DialogEditScript extends JDialog {
 		if (undoManager.canRedo()) {
 			undoManager.redo();
 		}
+	}
+	
+	public void changeMode() {
+		////////////////////////////
+		// Restore caret position //
+		////////////////////////////
+		int caretPos = jTextAreaStatement.getCaretPosition();
+		String text = jTextAreaStatement.getText().substring(0, caretPos);
+		int pos = 0;
+		int rowsOfCursor = 0;
+		while (pos > -1) {
+			pos = text.indexOf("\n", pos);
+			if (pos > -1) {
+				pos++;
+				rowsOfCursor++;
+			}
+		}
+
+		//////////////////
+		// Reverse mode //
+		//////////////////
+		if (jTextAreaStatement.isEditable()) {
+			jTextAreaStatement.setEditable(false);
+			jLabelStatementCursorPos.setText("NAME");
+			idModeText = jTextAreaStatement.getText();
+			String nameModeText = idModeText;
+			for (int i = 0; i < frame_.dataSourceIDList.size(); i++) {
+				nameModeText = nameModeText.replaceAll(
+						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceIDList.get(i)+".value",
+						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceNameList.get(i)+".value"); 
+				nameModeText = nameModeText.replaceAll(
+						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceIDList.get(i)+".oldValue",
+						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceNameList.get(i)+".oldValue"); 
+				nameModeText = nameModeText.replaceAll(
+						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceIDList.get(i)+".valueChanged",
+						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceNameList.get(i)+".valueChanged"); 
+				nameModeText = nameModeText.replaceAll(
+						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceIDList.get(i)+".color",
+						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceNameList.get(i)+".color"); 
+				nameModeText = nameModeText.replaceAll(
+						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceIDList.get(i)+".editable",
+						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceNameList.get(i)+".editable"); 
+				nameModeText = nameModeText.replaceAll(
+						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceIDList.get(i)+".error",
+						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceNameList.get(i)+".error"); 
+			}
+			nameModeText = frame_.translateTableOperationInScript(nameModeText);
+			jTextAreaStatement.setText(nameModeText);
+		} else {
+			jTextAreaStatement.setEditable(true);
+			jTextAreaStatement.setText(idModeText);
+			//jTextAreaStatement_caretUpdate(null);
+		}
+
+		///////////////////////////
+		// Adjust caret position //
+		///////////////////////////
+		text = jTextAreaStatement.getText();
+		pos = 0;
+		int wrkInt = 0;
+		while (wrkInt < rowsOfCursor) {
+			pos = text.indexOf("\n", pos);
+			pos++;
+			wrkInt++;
+		}
+		jTextAreaStatement.setCaretPosition(pos);
+		jTextAreaStatement.getCaret().setVisible(true);
 	}
 }
 
