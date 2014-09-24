@@ -48,7 +48,22 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2014 DBC,Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
-	public static final String FULL_VERSION  = "V1.R2.M3";
+	public static final String FULL_VERSION  = "V1.R2.M4";
+	//1.2.4
+	//・起動時にJavaのバージョンをチェックするようにした
+	//・テーブルのキー定義が１件も存在しない場合、キー編集ボタンを無効にするようにした
+	//・キー定義用のダイアログを設けた
+	//・テーブルスクリプト中のデータソースオブジェクトにenabledのプロパティを追加した
+	//・テーブルスクリプトのエディタダイアログを開けなくなることがある問題を修正した
+	//・SQL Serverでのint型の複合主キーの扱いに考慮してモジュールチェックのロジックを改善した
+	//・SQL Serverのfloat型とtiny int型に対応するとともに、DATETIMEのデータ型を導入した
+	//・SQL Server向けのモジュール作成でnchar型とTEXT型への対応が抜けていた問題を修正した
+	//・PostgreSql向けにbyteaのデータタイプを設けた
+	//・システム定義の「その他の設定」に「Editor起動時にモジュールチェックをスキップ」を組み込んだ
+	//・見出し明細系の機能タイプにおいて、明細テーブルを切り替えたときに正常終了してもエラーメッセージが示される問題を修正した
+	//・一部のシステム制御テーブルのモジュールを作成した際に、セッション立ち上げに必要なレコードを自動追加するようにした
+	//・編集途中で保管した後でも、変更履歴の追加時に保管以前のアクションも含めて初期設定されるようにした
+	//
 	//1.2.3
 	//・DBとの接続が切れている場合に再接続をガイドするようにした
 	//・SQLコンソールを２回使うとDBのIDリストがクリアされてしまう問題を修正した

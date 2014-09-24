@@ -92,7 +92,7 @@ public class DialogCheckLayout extends JDialog {
 	public String driverFontName_;
 	
 	public DialogCheckLayout(Editor parent) {
-		super(parent);
+		super(parent, "", true);
 		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 		try {
 			editor = parent;
@@ -1345,13 +1345,17 @@ class DialogCheckLayoutColumn extends Object {
 											fieldWidth = 25;
 											value = "(v)";
 										} else {
-											if (dataType.equals("VARCHAR") || dataType.equals("LONG VARCHAR")) {
-												fieldWidth = 400;
-												if (dataTypeOptionList.contains("KANJI")) {
-													value = dialog_.getStringData("KANJI", dataSize, 0, dataTypeOptionList);
-												} else {
-													value = dialog_.getStringData("STRING", dataSize, 0, dataTypeOptionList);
-												}
+//											if (dataType.equals("VARCHAR") || dataType.equals("LONG VARCHAR")) {
+//												fieldWidth = 400;
+//												if (dataTypeOptionList.contains("KANJI")) {
+//													value = dialog_.getStringData("KANJI", dataSize, 0, dataTypeOptionList);
+//												} else {
+//													value = dialog_.getStringData("STRING", dataSize, 0, dataTypeOptionList);
+//												}
+//											} else {
+											if (basicType.equals("BYTEA")) {
+												fieldWidth = 100;
+												value = "<bin>";
 											} else {
 												fieldWidth = dataSize * (DialogCheckLayout.FONT_SIZE/2 + 2) + 15;
 												value = dialog_.getStringData("STRING", dataSize, 0, dataTypeOptionList);
@@ -1771,23 +1775,27 @@ class DialogCheckLayoutField extends JPanel {
 									if (dataType.equals("DATE")) {
 										component = new DialogCheckLayoutDateField(isEditable, dialog_);
 									} else {
-										if (dataTypeOptionList.contains("YMONTH")) {
-											component = new DialogCheckLayoutYMonthBox(isEditable, dialog_);
+										if (dataType.equals("BYTEA")) {
+											component = new DialogCheckLayoutByteaField(dialog_);
 										} else {
-											if (dataTypeOptionList.contains("MSEQ")) {
-												component = new DialogCheckLayoutMSeqBox(isEditable, dialog_);
+											if (dataTypeOptionList.contains("YMONTH")) {
+												component = new DialogCheckLayoutYMonthBox(isEditable, dialog_);
 											} else {
-												if (dataTypeOptionList.contains("FYEAR")) {
-													component = new DialogCheckLayoutFYearBox(isEditable, dialog_);
+												if (dataTypeOptionList.contains("MSEQ")) {
+													component = new DialogCheckLayoutMSeqBox(isEditable, dialog_);
 												} else {
-													if (isAutoDetailRowNumber) {
-														if (dataSize < 5) { 
-															component = new DialogCheckLayoutTextField("STRING", 5, 0, "", "", isEditable, dialog_);
-														} else {
-															component = new DialogCheckLayoutTextField("STRING", dataSize, 0, "", "", isEditable, dialog_);
-														}
+													if (dataTypeOptionList.contains("FYEAR")) {
+														component = new DialogCheckLayoutFYearBox(isEditable, dialog_);
 													} else {
-														component = new DialogCheckLayoutTextField(this.getBasicType(), dataSize, decimalSize, dataTypeOptions, fieldOptions, isEditable, dialog_);
+														if (isAutoDetailRowNumber) {
+															if (dataSize < 5) { 
+																component = new DialogCheckLayoutTextField("STRING", 5, 0, "", "", isEditable, dialog_);
+															} else {
+																component = new DialogCheckLayoutTextField("STRING", dataSize, 0, "", "", isEditable, dialog_);
+															}
+														} else {
+															component = new DialogCheckLayoutTextField(this.getBasicType(), dataSize, decimalSize, dataTypeOptions, fieldOptions, isEditable, dialog_);
+														}
 													}
 												}
 											}
@@ -1831,7 +1839,7 @@ class DialogCheckLayoutField extends JPanel {
 		if (dataTypeOptionList.contains("ZIPADRS") && isOnEditablePanel) {
 			jButtonToRefferZipNo = new JButton();
 			jButtonToRefferZipNo.setText("<");
-			jButtonToRefferZipNo.setFont(new java.awt.Font(dialog.driverFontName_, 0, DialogCheckLayout.FONT_SIZE));
+			jButtonToRefferZipNo.setFont(new java.awt.Font("SansSerif", 0, 9));
 			jButtonToRefferZipNo.setPreferredSize(new Dimension(37, this.getPreferredSize().height));
 			this.setPreferredSize(new Dimension(this.getPreferredSize().width + 34, this.getPreferredSize().height));
 		}
@@ -2300,6 +2308,26 @@ class DialogCheckLayoutDateField extends JPanel {
 			this.setBorder(jTextField.getBorder());
 			jTextField.setBorder(null);
 		}
+	}
+}
+
+class DialogCheckLayoutByteaField extends JPanel {
+	private static final long serialVersionUID = 1L;
+	private JTextField jTextField = new JTextField();
+	private JButton jButton = new JButton();
+	public DialogCheckLayoutByteaField(DialogCheckLayout dialog){
+		super();
+		jTextField.setEditable(false);
+		jTextField.setFont(new java.awt.Font(dialog.driverFontName_, 0, DialogCheckLayout.FONT_SIZE));
+		jTextField.setFocusable(false);
+		jTextField.setText("<bin>");
+		this.setPreferredSize(new Dimension(100, dialog.getFieldUnitHeight()));
+		this.setLayout(new BorderLayout());
+		this.add(jTextField, BorderLayout.CENTER);
+		ImageIcon imageIcon = new ImageIcon(xeadEditor.Editor.class.getResource("prompt.png"));
+		jButton.setIcon(imageIcon);
+		jButton.setPreferredSize(new Dimension(26, dialog.getFieldUnitHeight()));
+		this.add(jButton, BorderLayout.EAST);
 	}
 }
 

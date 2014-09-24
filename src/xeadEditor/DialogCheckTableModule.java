@@ -199,6 +199,7 @@ public class DialogCheckTableModule extends JDialog {
 		ArrayList<String> foreignKeyTableList = new ArrayList<String>();
 		ArrayList<String> foreignKeyFieldList = new ArrayList<String>();
 		ArrayList<String> nativeFieldList = new ArrayList<String>();
+		ArrayList<String> optionList = new ArrayList<String>();
 		int workIndex, count1, count2, wrkInt;
 
 		try {
@@ -254,7 +255,8 @@ public class DialogCheckTableModule extends JDialog {
 				SortableDomElementListModel sortingList = frame_.getSortedListModel(fieldList, "Order");
 			    for (int i = 0; i < sortingList.getSize(); i++) {
 			        element = (org.w3c.dom.Element)sortingList.getElementAt(i);
-					if (!frame_.getOptionList(element.getAttribute("TypeOptions")).contains("VIRTUAL")) {
+			        optionList = frame_.getOptionList(element.getAttribute("TypeOptions"));
+					if (!optionList.contains("VIRTUAL")) {
 
 						sizeOfDefinitionField = Integer.parseInt(element.getAttribute("Size"));
 						if (element.getAttribute("Decimal").equals("")) {
@@ -275,11 +277,21 @@ public class DialogCheckTableModule extends JDialog {
 
 						// DDL FieldID and Data Type//
 						moduleBuf.append("\t" + element.getAttribute("ID") + " ");
-						if (databaseName.contains("jdbc:sqlserver")
-								&& element.getAttribute("Type").equals("CHAR")) {
+						if ((databaseName.contains("jdbc:sqlserver") || databaseName.contains("jdbc:oracle"))
+								&& element.getAttribute("Type").equals("CHAR")
+								&& optionList.contains("KANJI")) {
 							moduleBuf.append("NCHAR");
+							moduleBuf.append("(");
+							moduleBuf.append(element.getAttribute("Size"));
+							moduleBuf.append(")");
 						} else {
-							moduleBuf.append(element.getAttribute("Type"));
+							if (databaseName.contains("jdbc:sqlserver")
+									&& element.getAttribute("Type").equals("DOUBLE")) {
+								moduleBuf.append("FLOAT");
+							} else {
+								moduleBuf.append(element.getAttribute("Type"));
+
+							}
 							if (getBasicTypeOf(element.getAttribute("Type")).equals("INTEGER")) {
 								moduleBuf.append(" Default 0");
 							} else {
@@ -299,7 +311,7 @@ public class DialogCheckTableModule extends JDialog {
 										moduleBuf.append(")");
 									}
 									if (element.getAttribute("Type").equals("VARCHAR")
-										&& !element.getAttribute("Size").equals("0")) {
+											&& !element.getAttribute("Size").equals("0")) {
 										moduleBuf.append("(");
 										moduleBuf.append(element.getAttribute("Size"));
 										moduleBuf.append(")");
@@ -346,23 +358,15 @@ public class DialogCheckTableModule extends JDialog {
 								isNullableOfModuleField = false;
 							}
 
-							if (isEquivalentDataType(element.getAttribute("Type"), sizeOfDefinitionField, rs2.getString("TYPE_NAME"))) {
+							if (isEquivalentDataType(element.getAttribute("Type"), sizeOfDefinitionField, rs2.getString("TYPE_NAME"), databaseName, optionList)) {
 								if (element.getAttribute("Type").equals("CHAR")
 										|| element.getAttribute("Type").equals("VARCHAR")
 										|| element.getAttribute("Type").equals("DECIMAL")
 										|| (element.getAttribute("Type").equals("NUMERIC") && !rs2.getString("TYPE_NAME").equals("NUMBER"))) {
-									if (databaseName.contains("jdbc:sqlserver")
-											&& element.getAttribute("Type").equals("CHAR")
-											&& frame_.getOptionList(element.getAttribute("TypeOptions")).contains("KANJI")
-											&& rs2.getString("TYPE_NAME").equals("char")) {
-										countOfErrors++;
-										fieldListToBeDropped.add(element.getAttribute("ID"));
-										fieldListToBeAdded.add(element.getAttribute("ID"));
-										buf.append("(" + countOfErrors + ") " + res.getString("ModuleCheckMessage1") + element.getAttribute("ID") + "(" + element.getAttribute("Name") +")" + res.getString("ModuleCheckMessage48"));
+									if (element.getAttribute("Type").equals("VARCHAR")
+											&& sizeOfDefinitionField == 0) {
 									} else {
-										if (element.getAttribute("Type").equals("VARCHAR")
-												&& sizeOfDefinitionField == 0) {
-										} else {
+										if (!rs2.getString("TYPE_NAME").equals("money")) {
 											if (sizeOfDefinitionField != sizeOfModuleField
 													|| decimalOfDefinitionField != decimalOfModuleField) {
 												countOfErrors++;
@@ -383,7 +387,11 @@ public class DialogCheckTableModule extends JDialog {
 								countOfErrors++;
 								fieldListToBeDropped.add(element.getAttribute("ID"));
 								fieldListToBeAdded.add(element.getAttribute("ID"));
-								buf.append("(" + countOfErrors + ") " + res.getString("ModuleCheckMessage1") + element.getAttribute("ID") + "(" + element.getAttribute("Name") +")" + res.getString("ModuleCheckMessage2") + typeDescriptionsOfDefinitionField + res.getString("ModuleCheckMessage3") + typeDescriptionsOfModuleField + res.getString("ModuleCheckMessage4"));
+								if (element.getAttribute("Type").equals("CHAR") && optionList.contains("KANJI")) {
+									buf.append("(" + countOfErrors + ") " + res.getString("ModuleCheckMessage1") + element.getAttribute("ID") + "(" + element.getAttribute("Name") +")" + res.getString("ModuleCheckMessage48") + typeDescriptionsOfDefinitionField + res.getString("ModuleCheckMessage3") + typeDescriptionsOfModuleField + res.getString("ModuleCheckMessage4"));
+								} else {
+									buf.append("(" + countOfErrors + ") " + res.getString("ModuleCheckMessage1") + element.getAttribute("ID") + "(" + element.getAttribute("Name") +")" + res.getString("ModuleCheckMessage2") + typeDescriptionsOfDefinitionField + res.getString("ModuleCheckMessage3") + typeDescriptionsOfModuleField + res.getString("ModuleCheckMessage4"));
+								}
 							}
 							if (!isNullableOfModuleField && isNullableOfDefinitionField) {
 								countOfErrors++;
@@ -414,7 +422,7 @@ public class DialogCheckTableModule extends JDialog {
 			    	}
 			    	ResultSet rs2 = connection_.getMetaData().getColumns(null, null, moduleID, fieldID);
 			    	if (rs2.next()) {
-			    		if (!isEquivalentDataType("INTEGER", 9, rs2.getString("TYPE_NAME"))) {
+			    		if (!isEquivalentDataType("INTEGER", 9, rs2.getString("TYPE_NAME"), databaseName, null)) {
 			    			countOfErrors++;
 			    			fieldListToBeDropped.add(updateCounterID);
 			    			fieldListToBeAdded.add(updateCounterID);
@@ -440,8 +448,9 @@ public class DialogCheckTableModule extends JDialog {
 					} else {
 						for (int i = 0; i < fieldList.getLength(); i++) {
 							element = (org.w3c.dom.Element)fieldList.item(i);
+					        optionList = frame_.getOptionList(element.getAttribute("TypeOptions"));
 							if (element.getAttribute("ID").equals(frame_.getCaseShiftValue(rs3.getString("COLUMN_NAME"), "Upper"))
-									&& !frame_.getOptionList(element.getAttribute("TypeOptions")).contains("VIRTUAL")) {
+									&& !optionList.contains("VIRTUAL")) {
 								exist = true;
 								break;
 							}
@@ -887,16 +896,25 @@ public class DialogCheckTableModule extends JDialog {
 		}
 	}
 	
-	boolean isEquivalentDataType(String dataTypeDefiition, int size, String dataTypeModule) {
+	boolean isEquivalentDataType(String dataTypeDefiition, int size, String dataTypeModule, String dbDriverName, ArrayList<String> optionList) {
 		boolean isEquivalent = false;
-		if (dataTypeDefiition.equals(dataTypeModule)) {
-			isEquivalent = true;
-		} else {
+//		if (dataTypeDefiition.equals(dataTypeModule)) {
+//			if ((dbDriverName.contains("jdbc:oracle") || dbDriverName.contains("jdbc:sqlserver"))
+//					&& dataTypeDefiition.equals("CHAR") && optionList.contains("KANJI")) {
+//			} else {
+//				isEquivalent = true;
+//			}
+//		} else {
 			if (dataTypeDefiition.equals(dataTypeModule.toUpperCase())) {
-				isEquivalent = true;
+				if ((dbDriverName.contains("jdbc:oracle") || dbDriverName.contains("jdbc:sqlserver"))
+						&& dataTypeDefiition.equals("CHAR") && optionList.contains("KANJI")) {
+				} else {
+					isEquivalent = true;
+				}
 			} else {
 				if (dataTypeDefiition.equals("SMALLINT")) {
 					if (dataTypeModule.equals("int2")
+							|| dataTypeModule.equals("tinyint")
 							|| dataTypeModule.equals("NUMBER")) {
 						isEquivalent = true;
 					}
@@ -905,6 +923,8 @@ public class DialogCheckTableModule extends JDialog {
 					if (dataTypeModule.equals("INT")
 							|| dataTypeModule.equals("INT SIGNED")
 							|| dataTypeModule.equals("INT UNSIGNED")
+							|| dataTypeModule.equals("int identity")
+							|| dataTypeModule.equals("money")
 							|| dataTypeModule.equals("NUMBER")
 							|| dataTypeModule.equals("SERIAL")) {
 						isEquivalent = true;
@@ -919,6 +939,7 @@ public class DialogCheckTableModule extends JDialog {
 					if (dataTypeModule.equals("int8")
 						|| dataTypeModule.equals("bigserial")
 						|| dataTypeModule.equals("BIGSERIAL")
+						|| dataTypeModule.equals("money")
 						|| dataTypeModule.equals("NUMBER")) {
 						isEquivalent = true;
 					}
@@ -941,6 +962,7 @@ public class DialogCheckTableModule extends JDialog {
 				}
 				if (dataTypeDefiition.equals("NUMERIC")) {
 					if (dataTypeModule.equals("DECIMAL")
+							|| dataTypeModule.equals("money")
 							|| dataTypeModule.equals("NUMBER")) {
 						isEquivalent = true;
 					}
@@ -951,9 +973,22 @@ public class DialogCheckTableModule extends JDialog {
 					}
 				}
 				if (dataTypeDefiition.equals("CHAR")) {
+					if (optionList.contains("KANJI")) {
+						if (dataTypeModule.equals("NCHAR")
+								|| dataTypeModule.equals("nchar")
+								|| dataTypeModule.equals("NVARCHAR2")) {
+							isEquivalent = true;
+						}
+//					} else {
+//						if (dataTypeModule.equals("bpchar")
+//								|| dataTypeModule.equals("bool")) {
+//							isEquivalent = true;
+//						}
+//						if (size == 19 && dataTypeModule.equals("DATETIME")) {
+//							isEquivalent = true;
+//						}
+					}
 					if (dataTypeModule.equals("bpchar")
-							|| dataTypeModule.equals("nchar")
-							|| dataTypeModule.equals("NVARCHAR2")
 							|| dataTypeModule.equals("bool")) {
 						isEquivalent = true;
 					}
@@ -963,9 +998,10 @@ public class DialogCheckTableModule extends JDialog {
 				}
 				if (dataTypeDefiition.equals("LONG VARCHAR")) {
 					if (dataTypeModule.equals("MEDIUMTEXT")
+							|| dataTypeModule.equals("LONG")
 							|| dataTypeModule.equals("CLOB")
-							|| dataTypeModule.equals("json")
-							|| dataTypeModule.equals("NVARCHAR2")) {
+							|| dataTypeModule.equals("NVARCHAR2")
+							|| dataTypeModule.equals("json")) {
 						isEquivalent = true;
 					}
 					if (dataTypeModule.equals("text")) {
@@ -982,7 +1018,7 @@ public class DialogCheckTableModule extends JDialog {
 						isEquivalent = true;
 					}
 				}
-				if (dataTypeDefiition.equals("BLOB")) {
+				if (dataTypeDefiition.equals("BYTEA")) {
 					if (dataTypeModule.equals("bytea")) {
 						isEquivalent = true;
 					}
@@ -999,8 +1035,14 @@ public class DialogCheckTableModule extends JDialog {
 						isEquivalent = true;
 					}
 				}
+				if (dataTypeDefiition.equals("DATETIME")) {
+					if (dataTypeModule.startsWith("TIMESTAMP")
+							|| dataTypeModule.equals("timestamp")) {
+						isEquivalent = true;
+					}
+				}
 			}
-		}
+//		}
 		return isEquivalent;
 	}
 
@@ -1010,6 +1052,7 @@ public class DialogCheckTableModule extends JDialog {
 		int wrkCount;
 		StringTokenizer workTokenizer;
 		String wrkStr;
+		ArrayList<String> optionList = new ArrayList<String>();
 		boolean firstField = true;
 
 		Object[] bts = {res.getString("Cancel"), res.getString("Execute")};
@@ -1066,7 +1109,7 @@ public class DialogCheckTableModule extends JDialog {
 						buf.append(" ALTER COLUMN ");
 					}
 					buf.append(fieldListToBeNotNull.get(i));
-					if (databaseName.contains("jdbc:mysql")) {
+					if (databaseName.contains("jdbc:mysql") || databaseName.contains("jdbc:sqlserver")) {
 						buf.append(" ");
 						buf.append(getDataTypeOfField(fieldListToBeNotNull.get(i)));
 					}
@@ -1147,8 +1190,11 @@ public class DialogCheckTableModule extends JDialog {
 					if (databaseName.contains("jdbc:oracle")) {
 						buf.append(" ADD (");
 					}
+					if (databaseName.contains("jdbc:sqlserver")) {
+						buf.append(" ADD ");
+					}
 					if (updateCounterID.equals(fieldListToBeAdded.get(i))) {
-						if (!databaseName.contains("jdbc:oracle")) {
+						if (!databaseName.contains("jdbc:oracle") && !databaseName.contains("jdbc:sqlserver")) {
 							buf.append(" ADD COLUMN ");
 						}
 						buf.append(updateCounterID);
@@ -1160,49 +1206,80 @@ public class DialogCheckTableModule extends JDialog {
 					} else {
 						for (int j = 0; j < fieldList.getLength(); j++) {
 							element = (org.w3c.dom.Element)fieldList.item(j);
+					        optionList = frame_.getOptionList(element.getAttribute("TypeOptions"));
 							if (element.getAttribute("ID").equals(fieldListToBeAdded.get(i))) {
-								if (!databaseName.contains("jdbc:oracle")) {
+								if (!databaseName.contains("jdbc:oracle") && !databaseName.contains("jdbc:sqlserver")) {
 									buf.append(" ADD COLUMN ");
 								}
 								buf.append(element.getAttribute("ID"));
 								buf.append(" ");
-								if (element.getAttribute("Type").equals("TIMETZ")) {
-									buf.append("time with time zone");
-								} else {
-									if (element.getAttribute("Type").equals("TIMESTAMPTZ")) {
-										buf.append("timestamp with time zone");
-									} else {
-										if (databaseName.contains("jdbc:postgresql") && element.getAttribute("Type").equals("LONG VARCHAR")) {
-											buf.append("text");
-										} else {
-											if (databaseName.contains("jdbc:oracle") && element.getAttribute("Type").equals("LONG VARCHAR")) {
-												buf.append("LONG");
-											} else {
-												buf.append(element.getAttribute("Type"));
-											}
+//								if (element.getAttribute("Type").equals("TIMETZ")) {
+//									buf.append("time with time zone");
+//								} else {
+//									if (element.getAttribute("Type").equals("TIMESTAMPTZ")) {
+//										buf.append("timestamp with time zone");
+//									} else {
+//										if (databaseName.contains("jdbc:postgresql") && element.getAttribute("Type").equals("LONG VARCHAR")) {
+//											buf.append("text");
+//										} else {
+//											if (databaseName.contains("jdbc:oracle") && element.getAttribute("Type").equals("LONG VARCHAR")) {
+//												buf.append("LONG");
+//											} else {
+//												if (databaseName.contains("jdbc:sqlserver")
+//														&& element.getAttribute("Type").equals("DOUBLE")) {
+//													buf.append("FLOAT");
+//												} else {
+//													buf.append(element.getAttribute("Type"));
+//												}
+//											}
+//										}
+//										if (getBasicTypeOf(element.getAttribute("Type")).equals("STRING")) {
+//											if (element.getAttribute("Type").equals("CHAR") || element.getAttribute("Type").equals("VARCHAR")) {
+//												buf.append("(");
+//												buf.append(element.getAttribute("Size"));
+//												buf.append(")");
+//												buf.append(" DEFAULT ''");
+//											}
+//										} else {
+//											if (getBasicTypeOf(element.getAttribute("Type")).equals("INTEGER")) {
+//												buf.append(" Default 0");
+//											} else {
+//												if (getBasicTypeOf(element.getAttribute("Type")).equals("FLOAT")) {
+//													if (element.getAttribute("Type").equals("DECIMAL") || element.getAttribute("Type").equals("NUMERIC")) {
+//														buf.append("(");
+//														buf.append(element.getAttribute("Size"));
+//														buf.append(",");
+//														buf.append(element.getAttribute("Decimal"));
+//														buf.append(")");
+//													}
+//													buf.append(" Default 0.0");
+//												}
+//											}
+//										}
+//									}
+//								}
+								buf.append(getAlternativeDataTypeForDBMS(element.getAttribute("Type"), databaseName, optionList));
+								if (getBasicTypeOf(element.getAttribute("Type")).equals("STRING")) {
+									if (element.getAttribute("Type").equals("CHAR") || element.getAttribute("Type").equals("VARCHAR")) {
+										if (!element.getAttribute("Size").equals("0")) {
+											buf.append("(");
+											buf.append(element.getAttribute("Size"));
+											buf.append(")");
 										}
-										if (getBasicTypeOf(element.getAttribute("Type")).equals("STRING")) {
-											if (element.getAttribute("Type").equals("CHAR") || element.getAttribute("Type").equals("VARCHAR")) {
+									}
+								} else {
+									if (getBasicTypeOf(element.getAttribute("Type")).equals("INTEGER")) {
+										buf.append(" Default 0");
+									} else {
+										if (getBasicTypeOf(element.getAttribute("Type")).equals("FLOAT")) {
+											if (element.getAttribute("Type").equals("DECIMAL") || element.getAttribute("Type").equals("NUMERIC")) {
 												buf.append("(");
 												buf.append(element.getAttribute("Size"));
+												buf.append(",");
+												buf.append(element.getAttribute("Decimal"));
 												buf.append(")");
-												buf.append(" DEFAULT ''");
 											}
-										} else {
-											if (getBasicTypeOf(element.getAttribute("Type")).equals("INTEGER")) {
-												buf.append(" Default 0");
-											} else {
-												if (getBasicTypeOf(element.getAttribute("Type")).equals("FLOAT")) {
-													if (element.getAttribute("Type").equals("DECIMAL") || element.getAttribute("Type").equals("NUMERIC")) {
-														buf.append("(");
-														buf.append(element.getAttribute("Size"));
-														buf.append(",");
-														buf.append(element.getAttribute("Decimal"));
-														buf.append(")");
-													}
-													buf.append(" Default 0.0");
-												}
-											}
+											buf.append(" Default 0.0");
 										}
 									}
 								}
@@ -1362,6 +1439,8 @@ public class DialogCheckTableModule extends JDialog {
 
 			} catch (SQLException ex1) {
 				JOptionPane.showMessageDialog(this, res.getString("ModuleCheckMessage37") + buf .toString() + "\n" + ex1.getMessage());
+			} catch (Exception ex1) {
+				JOptionPane.showMessageDialog(this, ex1.getMessage());
 			} finally {
 				setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			}
@@ -1457,7 +1536,7 @@ public class DialogCheckTableModule extends JDialog {
 		NodeList fieldList = tableElement.getElementsByTagName("Field");
 		for (int i = 0; i < fieldList.getLength(); i++) {
 			element = (org.w3c.dom.Element)fieldList.item(i);
-			if (!element.getAttribute("TypeOptions").contains("VIRTUAL")) {
+			if (!frame_.getOptionList(element.getAttribute("TypeOptions")).contains("VIRTUAL")) {
 				countOfPhysicalFields++;
 			}
 		}
@@ -1474,11 +1553,20 @@ public class DialogCheckTableModule extends JDialog {
 					Statement statement = connection_.createStatement();
 					sqlText = getSqlToCreateTable();
 					statement.executeUpdate(sqlText);
+					
+					ArrayList<String> sqlList = frame_.getSqlToInsertInitialRecord(tableElement.getAttribute("ID"));
+					if (sqlList.size() > 0) {
+						for (int i = 0; i < sqlList.size(); i++) {
+							statement.executeUpdate(sqlList.get(i));
+						}
+					}
 
 					checkTableModule("CREATE");
 
 				} catch (SQLException ex1) {
-					JOptionPane.showMessageDialog(this, res.getString("ModuleCheckMessage40") + sqlText + "\n" + ex1.getMessage());
+					jTextAreaMessage.setText(res.getString("ModuleCheckMessage40") + sqlText + "\n" + ex1.getMessage());
+				} catch (Exception ex1) {
+					jTextAreaMessage.setText(ex1.getMessage());
 				} finally {
 					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 				}
@@ -1505,8 +1593,9 @@ public class DialogCheckTableModule extends JDialog {
 			statement.executeUpdate("DROP TABLE " + tableID);
 			checkTableModule("DROP");
 		} catch (SQLException ex1) {
-			ex1.printStackTrace();
 			JOptionPane.showMessageDialog(this, res.getString("ModuleCheckMessage42"));
+		} catch (Exception ex1) {
+			JOptionPane.showMessageDialog(this, ex1.getMessage());
 		} finally {
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
@@ -1562,7 +1651,7 @@ public class DialogCheckTableModule extends JDialog {
 						if (databaseName.contains("jdbc:postgresql") && element.getAttribute("Type").equals("LONG VARCHAR")) {
 							buf.append("text");
 						} else {
-							if (databaseName.contains("jdbc:postgresql") && element.getAttribute("Type").equals("BLOB")) {
+							if (databaseName.contains("jdbc:postgresql") && element.getAttribute("Type").equals("BYTEA")) {
 								buf.append("bytea");
 							} else {
 								buf.append(element.getAttribute("Type"));
@@ -1593,8 +1682,10 @@ public class DialogCheckTableModule extends JDialog {
 		return buf.toString();
 	}
 	
-	String getEquivalentDataType(String dataTypeModule) {
+	String getEquivalentDataType(String dataTypeOfModule) {
 		String dataTypeDefinition = "";
+		String dataTypeModule = dataTypeOfModule.toUpperCase();
+
 		if (dataTypeModule.equals("DOUBLE")) {
 			dataTypeDefinition = "DOUBLE";
 		}
@@ -1603,6 +1694,9 @@ public class DialogCheckTableModule extends JDialog {
 		}
 		if (dataTypeModule.equals("TIME")) {
 			dataTypeDefinition = "TIME";
+		}
+		if (dataTypeModule.equals("DATETIME")) {
+			dataTypeDefinition = "DATETIME";
 		}
 		if (dataTypeModule.equals("TIMETZ")) {
 			dataTypeDefinition = "TIMETZ";
@@ -1625,49 +1719,51 @@ public class DialogCheckTableModule extends JDialog {
 		if (dataTypeModule.equals("BLOB")) {
 			dataTypeDefinition = "BLOB";
 		}
+		if (dataTypeModule.equals("BYTEA")) {
+			dataTypeDefinition = "BYTEA";
+		}
 		if (dataTypeModule.equals("SMALLINT")
-				|| dataTypeModule.equals("int2")
-				|| dataTypeModule.equals("NUMBER")) {
+				|| dataTypeModule.equals("TINY INT")
+				|| dataTypeModule.equals("INT2")) {
 			dataTypeDefinition = "SMALLINT";
 		}
 		if (dataTypeModule.equals("INTEGER")
 				|| dataTypeModule.equals("INT")
 				|| dataTypeModule.equals("INT SIGNED")
 				|| dataTypeModule.equals("INT UNSIGNED")
-				|| dataTypeModule.equals("NUMBER")
 				|| dataTypeModule.equals("SERIAL")
-				|| dataTypeModule.equals("int")
-				|| dataTypeModule.equals("int4")
-				|| dataTypeModule.equals("serial")) {
+				|| dataTypeModule.equals("INT4")) {
 			dataTypeDefinition = "INTEGER";
 		}
 		if (dataTypeModule.equals("BIGINT")
-				|| dataTypeModule.equals("int8")
-				|| dataTypeModule.equals("bigserial")
+				|| dataTypeModule.equals("INT8")
 				|| dataTypeModule.equals("BIGSERIAL")
 				|| dataTypeModule.equals("NUMBER")) {
 			dataTypeDefinition = "BIGINT";
 		}
 		if (dataTypeModule.equals("REAL")
-				|| dataTypeModule.equals("float4")) {
+				|| dataTypeModule.equals("FLOAT4")) {
 			dataTypeDefinition = "REAL";
 		}
 		if (dataTypeModule.equals("DOUBLE PRECISION")
-				|| dataTypeModule.equals("float8")) {
+				|| dataTypeModule.equals("FLOAT")
+				|| dataTypeModule.equals("FLOAT8")) {
 			dataTypeDefinition = "DOUBLE PRECISION";
 		}
 		if (dataTypeModule.equals("NUMERIC")
+				|| dataTypeModule.equals("MONEY")
 				|| dataTypeModule.equals("DECIMAL")
 				|| dataTypeModule.equals("NUMBER")) {
 			dataTypeDefinition = "NUMERIC";
 		}
 		if (dataTypeModule.equals("DECIMAL")
-				|| dataTypeModule.equals("numeric")) {
+				|| dataTypeModule.equals("NUMERIC")) {
 			dataTypeDefinition = "DECIMAL";
 		}
 		if (dataTypeModule.equals("CHAR")
-				|| dataTypeModule.equals("bpchar")
-				|| dataTypeModule.equals("bool")
+				|| dataTypeModule.equals("NCHAR")
+				|| dataTypeModule.equals("BPCHAR")
+				|| dataTypeModule.equals("BOOL")
 				|| dataTypeModule.equals("NVARCHAR2")) {
 			dataTypeDefinition = "CHAR";
 		}
@@ -1675,14 +1771,13 @@ public class DialogCheckTableModule extends JDialog {
 				|| dataTypeModule.equals("MEDIUMTEXT")
 				|| dataTypeModule.equals("CLOB")
 				|| dataTypeModule.equals("LONG")
-				|| dataTypeModule.equals("text")) {
+				|| dataTypeModule.equals("TEXT")) {
 			dataTypeDefinition = "LONG VARCHAR";
 		}
 		if (dataTypeModule.equals("VARCHAR")
-				|| dataTypeModule.equals("text")
 				|| dataTypeModule.equals("VARCHAR2")
 				|| dataTypeModule.equals("NVARCHAR2")
-				|| dataTypeModule.equals("character varying")) {
+				|| dataTypeModule.equals("CHARACTER VARYING")) {
 			dataTypeDefinition = "VARCHAR";
 		}
 		return dataTypeDefinition;
@@ -1700,6 +1795,13 @@ public class DialogCheckTableModule extends JDialog {
 			Statement statement = connection_.createStatement();
 			String sqlText = getSqlToCreateTable();
 			statement.executeUpdate(sqlText);
+			
+			ArrayList<String> sqlList = frame_.getSqlToInsertInitialRecord(tableElement.getAttribute("ID"));
+			if (sqlList.size() > 0) {
+				for (int i = 0; i < sqlList.size(); i++) {
+					statement.executeUpdate(sqlList.get(i));
+				}
+			}
 		} catch (SQLException e) {
 		}
 		return this.request(tableNode, false);
@@ -1710,6 +1812,7 @@ public class DialogCheckTableModule extends JDialog {
 		org.w3c.dom.Element element;
 		StringTokenizer workTokenizer;
 		String wrkStr;
+		ArrayList<String> optionList = new ArrayList<String>();
 		boolean firstField = true;
 
 		buf.append("Create table ");
@@ -1724,7 +1827,8 @@ public class DialogCheckTableModule extends JDialog {
 		SortableDomElementListModel sortingList = frame_.getSortedListModel(fieldList, "Order");
 	    for (int i = 0; i < sortingList.getSize(); i++) {
 	        element = (org.w3c.dom.Element)sortingList.getElementAt(i);
-			if (!element.getAttribute("TypeOptions").contains("VIRTUAL")) {
+	        optionList = frame_.getOptionList(element.getAttribute("TypeOptions"));
+			if (!optionList.contains("VIRTUAL")) {
 				if (firstField) {
 					firstField = false;
 				} else {
@@ -1733,44 +1837,86 @@ public class DialogCheckTableModule extends JDialog {
 				buf.append("     ");
 				buf.append(element.getAttribute("ID"));
 				buf.append(" ");
-				if (element.getAttribute("Type").equals("TIMETZ")) {
-					buf.append("time with time zone");
-				} else {
-					if (element.getAttribute("Type").equals("TIMESTAMPTZ")) {
-						buf.append("timestamp with time zone");
-					} else {
-						if (databaseName.contains("jdbc:postgresql") && element.getAttribute("Type").equals("LONG VARCHAR")) {
-							buf.append("text");
-						} else {
-							if (databaseName.contains("jdbc:oracle") && element.getAttribute("Type").equals("LONG VARCHAR")) {
-								buf.append("LONG");
-							} else {
-								buf.append(element.getAttribute("Type"));
-							}
+//				if (element.getAttribute("Type").equals("TIMETZ")) {
+//					buf.append("time with time zone");
+//				} else {
+//					if (element.getAttribute("Type").equals("TIMESTAMPTZ")) {
+//						buf.append("timestamp with time zone");
+//					} else {
+//						if (databaseName.contains("jdbc:postgresql")
+//								&& element.getAttribute("Type").equals("LONG VARCHAR")) {
+//							buf.append("text");
+//						} else {
+//							if (databaseName.contains("jdbc:oracle")
+//									&& element.getAttribute("Type").equals("LONG VARCHAR")) {
+//								buf.append("LONG");
+//							} else {
+//								if (databaseName.contains("jdbc:sqlserver")
+//										&& element.getAttribute("Type").equals("LONG VARCHAR")) {
+//									buf.append("TEXT");
+//								} else {
+//									if (databaseName.contains("jdbc:sqlserver")
+//											&& element.getAttribute("Type").equals("DOUBLE")) {
+//										buf.append("FLOAT");
+//									} else {
+//										if (databaseName.contains("jdbc:sqlserver")
+//												&& element.getAttribute("Type").equals("CHAR")) {
+//											buf.append("NCHAR");
+//										} else {
+//											buf.append(element.getAttribute("Type"));
+//										}
+//									}
+//								}
+//							}
+//						}
+//						if (getBasicTypeOf(element.getAttribute("Type")).equals("STRING")) {
+//							if (element.getAttribute("Type").equals("CHAR") || element.getAttribute("Type").equals("VARCHAR")) {
+//								if (!element.getAttribute("Size").equals("0")) {
+//									buf.append("(");
+//									buf.append(element.getAttribute("Size"));
+//									buf.append(")");
+//								}
+//							}
+//						} else {
+//							if (getBasicTypeOf(element.getAttribute("Type")).equals("INTEGER")) {
+//								buf.append(" Default 0");
+//							} else {
+//								if (getBasicTypeOf(element.getAttribute("Type")).equals("FLOAT")) {
+//									if (element.getAttribute("Type").equals("DECIMAL") || element.getAttribute("Type").equals("NUMERIC")) {
+//										buf.append("(");
+//										buf.append(element.getAttribute("Size"));
+//										buf.append(",");
+//										buf.append(element.getAttribute("Decimal"));
+//										buf.append(")");
+//									}
+//									buf.append(" Default 0.0");
+//								}
+//							}
+//						}
+//					}
+//				}
+				buf.append(getAlternativeDataTypeForDBMS(element.getAttribute("Type"), databaseName, optionList));
+				if (getBasicTypeOf(element.getAttribute("Type")).equals("STRING")) {
+					if (element.getAttribute("Type").equals("CHAR") || element.getAttribute("Type").equals("VARCHAR")) {
+						if (!element.getAttribute("Size").equals("0")) {
+							buf.append("(");
+							buf.append(element.getAttribute("Size"));
+							buf.append(")");
 						}
-						if (getBasicTypeOf(element.getAttribute("Type")).equals("STRING")) {
-							if (element.getAttribute("Type").equals("CHAR") || element.getAttribute("Type").equals("VARCHAR")) {
-								if (!element.getAttribute("Size").equals("0")) {
-									buf.append("(");
-									buf.append(element.getAttribute("Size"));
-									buf.append(")");
-								}
+					}
+				} else {
+					if (getBasicTypeOf(element.getAttribute("Type")).equals("INTEGER")) {
+						buf.append(" Default 0");
+					} else {
+						if (getBasicTypeOf(element.getAttribute("Type")).equals("FLOAT")) {
+							if (element.getAttribute("Type").equals("DECIMAL") || element.getAttribute("Type").equals("NUMERIC")) {
+								buf.append("(");
+								buf.append(element.getAttribute("Size"));
+								buf.append(",");
+								buf.append(element.getAttribute("Decimal"));
+								buf.append(")");
 							}
-						} else {
-							if (getBasicTypeOf(element.getAttribute("Type")).equals("INTEGER")) {
-								buf.append(" Default 0");
-							} else {
-								if (getBasicTypeOf(element.getAttribute("Type")).equals("FLOAT")) {
-									if (element.getAttribute("Type").equals("DECIMAL") || element.getAttribute("Type").equals("NUMERIC")) {
-										buf.append("(");
-										buf.append(element.getAttribute("Size"));
-										buf.append(",");
-										buf.append(element.getAttribute("Decimal"));
-										buf.append(")");
-									}
-									buf.append(" Default 0.0");
-								}
-							}
+							buf.append(" Default 0.0");
 						}
 					}
 				}
@@ -1841,6 +1987,59 @@ public class DialogCheckTableModule extends JDialog {
 		return buf.toString();
 	}
 	
+	String getAlternativeDataTypeForDBMS(String dataType, String dbDriverName, ArrayList<String> optionList) {
+		String alternative = dataType;
+		if (dataType.equals("TIMETZ")) {
+			alternative = "time with time zone";
+		}
+		if (dataType.equals("TIMESTAMPTZ")) {
+			alternative = "timestamp with time zone";
+		}
+		if (dbDriverName.contains("jdbc:postgresql")
+				&& dataType.equals("LONG VARCHAR")) {
+			alternative = "text";
+		}
+		if (dbDriverName.contains("jdbc:postgresql")
+				&& dataType.equals("BYTEA")) {
+			alternative = "bytea";
+		}
+		if (dbDriverName.contains("jdbc:postgresql")
+				&& dataType.equals("DATETIME")) {
+			alternative = "timestamp";
+		}
+		if (dbDriverName.contains("jdbc:oracle")
+				&& dataType.equals("CHAR")
+				&& optionList.contains("KANJI")) {
+			alternative = "NCHAR";
+		}
+		if (dbDriverName.contains("jdbc:oracle")
+				&& dataType.equals("LONG VARCHAR")) {
+			alternative = "LONG";
+		}
+		if (dbDriverName.contains("jdbc:oracle")
+				&& dataType.equals("DATETIME")) {
+			alternative = "TIMESTAMP";
+		}
+		if (dbDriverName.contains("jdbc:derby")
+				&& dataType.equals("DATETIME")) {
+			alternative = "TIMESTAMP";
+		}
+		if (dbDriverName.contains("jdbc:sqlserver")
+				&& dataType.equals("LONG VARCHAR")) {
+			alternative = "TEXT";
+		}
+		if (dbDriverName.contains("jdbc:sqlserver")
+				&& dataType.equals("DOUBLE")) {
+			alternative = "FLOAT";
+		}
+		if (dbDriverName.contains("jdbc:sqlserver")
+				&& dataType.equals("CHAR")
+				&& optionList.contains("KANJI")) {
+			alternative = "NCHAR";
+		}
+		return alternative;
+	}
+	
 	static String getBasicTypeOf(String dataType){
 		String basicType = "";
 		if (dataType.equals("INTEGER")
@@ -1873,6 +2072,9 @@ public class DialogCheckTableModule extends JDialog {
 		}
 		if (dataType.equals("BLOB")) {
 			basicType = "BLOB";
+		}
+		if (dataType.equals("BYTEA")) {
+			basicType = "BYTEA";
 		}
 		if (dataType.equals("DATE")) {
 			basicType = "DATE";

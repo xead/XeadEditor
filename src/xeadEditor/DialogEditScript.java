@@ -383,6 +383,9 @@ public class DialogEditScript extends JDialog {
 						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceIDList.get(i)+".editable",
 						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceNameList.get(i)+".editable"); 
 				nameModeText = nameModeText.replaceAll(
+						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceIDList.get(i)+".enabled",
+						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceNameList.get(i)+".enabled"); 
+				nameModeText = nameModeText.replaceAll(
 						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceIDList.get(i)+".error",
 						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceNameList.get(i)+".error"); 
 			}
@@ -391,7 +394,6 @@ public class DialogEditScript extends JDialog {
 		} else {
 			jTextAreaStatement.setEditable(true);
 			jTextAreaStatement.setText(idModeText);
-			//jTextAreaStatement_caretUpdate(null);
 		}
 
 		///////////////////////////

@@ -39,7 +39,7 @@ import java.awt.event.*;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
-public class DialogEditTableKey extends JDialog {
+public class DialogEditPrimaryTableKey extends JDialog {
 	private static final long serialVersionUID = 1L;
 	private static ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
 	private JPanel panelMain = new JPanel();
@@ -58,7 +58,7 @@ public class DialogEditTableKey extends JDialog {
 	private String primaryKey = "";
 	private boolean isValidated = false;
 	
-	public DialogEditTableKey(Editor frame) {
+	public DialogEditPrimaryTableKey(Editor frame) {
 		super(frame, "", true);
 		frame_ = frame;
 		try {
@@ -80,7 +80,7 @@ public class DialogEditTableKey extends JDialog {
 		jLabelID.setBounds(new Rectangle(5, 12, 130, 20));
 		jTextFieldID.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTextFieldID.setBounds(new Rectangle(140, 9, 120, 25));
-		jTextFieldID.addKeyListener(new DialogEditTableKey_jTextFieldID_keyAdapter(this));
+		jTextFieldID.addKeyListener(new DialogEditPrimaryTableKey_jTextFieldID_keyAdapter(this));
 		jTextFieldName.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTextFieldName.setBounds(new Rectangle(265, 9, 450, 25));
 		jTextFieldName.setEditable(false);
@@ -107,11 +107,11 @@ public class DialogEditTableKey extends JDialog {
 		jButtonCancel.setBounds(new Rectangle(40, 8, 100, 27));
 		jButtonCancel.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonCancel.setText(res.getString("Cancel"));
-		jButtonCancel.addActionListener(new DialogEditTableKey_jButtonCancel_actionAdapter(this));
+		jButtonCancel.addActionListener(new DialogEditPrimaryTableKey_jButtonCancel_actionAdapter(this));
 		jButtonOK.setBounds(new Rectangle(585, 8, 100, 27));
 		jButtonOK.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonOK.setText("OK");
-		jButtonOK.addActionListener(new DialogEditTableKey_jButtonOK_actionAdapter(this));
+		jButtonOK.addActionListener(new DialogEditPrimaryTableKey_jButtonOK_actionAdapter(this));
 		jPanelButtons.setLayout(null);
 		jPanelButtons.add(jButtonOK);
 		jPanelButtons.add(jButtonCancel);
@@ -449,9 +449,9 @@ public class DialogEditTableKey extends JDialog {
 	}
 }
 
-class DialogEditTableKey_jTextFieldID_keyAdapter extends java.awt.event.KeyAdapter {
-	DialogEditTableKey adaptee;
-	DialogEditTableKey_jTextFieldID_keyAdapter(DialogEditTableKey adaptee) {
+class DialogEditPrimaryTableKey_jTextFieldID_keyAdapter extends java.awt.event.KeyAdapter {
+	DialogEditPrimaryTableKey adaptee;
+	DialogEditPrimaryTableKey_jTextFieldID_keyAdapter(DialogEditPrimaryTableKey adaptee) {
 		this.adaptee = adaptee;
 	}
 	public void keyReleased(KeyEvent e) {
@@ -459,9 +459,9 @@ class DialogEditTableKey_jTextFieldID_keyAdapter extends java.awt.event.KeyAdapt
 	}
 }
 
-class DialogEditTableKey_jButtonOK_actionAdapter implements java.awt.event.ActionListener {
-	DialogEditTableKey adaptee;
-	DialogEditTableKey_jButtonOK_actionAdapter(DialogEditTableKey adaptee) {
+class DialogEditPrimaryTableKey_jButtonOK_actionAdapter implements java.awt.event.ActionListener {
+	DialogEditPrimaryTableKey adaptee;
+	DialogEditPrimaryTableKey_jButtonOK_actionAdapter(DialogEditPrimaryTableKey adaptee) {
 		this.adaptee = adaptee;
 	}
 	public void actionPerformed(ActionEvent e) {
@@ -469,9 +469,9 @@ class DialogEditTableKey_jButtonOK_actionAdapter implements java.awt.event.Actio
 	}
 }
 
-class DialogEditTableKey_jButtonCancel_actionAdapter implements java.awt.event.ActionListener {
-	DialogEditTableKey adaptee;
-	DialogEditTableKey_jButtonCancel_actionAdapter(DialogEditTableKey adaptee) {
+class DialogEditPrimaryTableKey_jButtonCancel_actionAdapter implements java.awt.event.ActionListener {
+	DialogEditPrimaryTableKey adaptee;
+	DialogEditPrimaryTableKey_jButtonCancel_actionAdapter(DialogEditPrimaryTableKey adaptee) {
 		this.adaptee = adaptee;
 	}
 	public void actionPerformed(ActionEvent e) {
