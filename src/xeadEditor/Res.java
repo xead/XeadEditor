@@ -849,7 +849,7 @@ public class Res extends java.util.ListResourceBundle {
 		{ "ScriptHold", "Hold" },
 		{ "ScriptNotesTitle1", "<< Native Field Variants List >>" },
 		{ "ScriptNotesTitle2", "\n\n<< Join Field Variants List >>" },
-		{ "ScriptNotesTitle3", "\n\n<< Legends of Variant Name >>\n[TableID]_[FieldID].value : Field value\n[TableID]_[FieldID].oldValue : Field value before update(read-only)\n[TableID]_[FieldID].valueChanged : Whether value has been changed or not(read-only:true,false)\n[TableID]_[FieldID].color : Font Color(black,green,blue,red,orange)\n[TableID]_[FieldID].enabled : Enabled(true,false)\n[TableID]_[FieldID].editable : Editable(true,false)\n[TableID]_[FieldID].error : Error message\n( You can also use 'session' and 'instance (of function)'.\nRefer to HELP for details.)" },
+		{ "ScriptNotesTitle3", "\n\n<< Legends of Variant Name >>\n[TableID]_[FieldID].value : Field value\n[TableID]_[FieldID].oldValue : Field value before update(read-only)\n[TableID]_[FieldID].valueChanged : Whether value has been changed or not(read-only:true,false)\n[TableID]_[FieldID].color : Font Color(black,green,blue,red,orange)\n[TableID]_[FieldID].enabled : Enabled(true,false)\n[TableID]_[FieldID].editable : Editable(true,false)\n[TableID]_[FieldID].valueList : Selectable Value List(array)\n[TableID]_[FieldID].error : Error message\n( You can also use 'session' and 'instance (of function)'.\nRefer to HELP for details.)" },
 		{ "ScriptNotesVFMark", "(V/F) " },
 		{ "Scripts", "Scripts" },
 		{ "Sel", "Sel" },

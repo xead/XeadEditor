@@ -856,7 +856,7 @@ public class Res_ja extends java.util.ListResourceBundle {
 		{ "ScriptHold", "一時保留" },
 		{ "ScriptNotesTitle1", "■フィールド値変数一覧" },
 		{ "ScriptNotesTitle2", "\n\n■結合フィールド値変数一覧" },
-		{ "ScriptNotesTitle3", "\n\n■変数名凡例\n[TableID]_[FieldID].value : フィールド値\n[TableID]_[FieldID].oldValue : 更新前のフィールド値。読取専用\n[TableID]_[FieldID].valueChanged : 値が変更されたかどうか(true,false)。読取専用\n[TableID]_[FieldID].color : 表示色(black,green,blue,red,orange)\n[TableID]_[FieldID].enabled : 有効設定(true,false)\n[TableID]_[FieldID].editable : 編集設定(true,false)\n[TableID]_[FieldID].error : エラーメッセージ\n（セッションオブジェクトや機能オブジェクトも利用可能です。\n詳細についてはヘルプで確認してください）" },
+		{ "ScriptNotesTitle3", "\n\n■変数名凡例\n[TableID]_[FieldID].value : フィールド値\n[TableID]_[FieldID].oldValue : 更新前のフィールド値。読取専用\n[TableID]_[FieldID].valueChanged : 値が変更されたかどうか(true,false)。読取専用\n[TableID]_[FieldID].color : 表示色(black,green,blue,red,orange)\n[TableID]_[FieldID].enabled : 有効設定(true,false)\n[TableID]_[FieldID].editable : 編集設定(true,false)\n[TableID]_[FieldID].valueList : 選択可能値リスト（配列）\n[TableID]_[FieldID].error : エラーメッセージ\n（セッションオブジェクトや機能オブジェクトも利用可能です。\n詳細についてはヘルプで確認してください）" },
 		{ "ScriptNotesVFMark", "(仮) " },
 		{ "Scripts", "スクリプト" },
 		{ "Sel", "選" },

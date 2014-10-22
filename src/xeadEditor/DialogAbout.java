@@ -48,7 +48,10 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2014 DBC,Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
-	public static final String FULL_VERSION  = "V1.R2.M4";
+	public static final String FULL_VERSION  = "V1.R2.M5";
+	//1.2.5
+	//・走査援助およびテーブルスクリプトエディタの凡例欄に、valueListに関する情報を加筆した
+	//
 	//1.2.4
 	//・起動時にJavaのバージョンをチェックするようにした
 	//・テーブルのキー定義が１件も存在しない場合、キー編集ボタンを無効にするようにした
