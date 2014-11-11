@@ -15276,7 +15276,7 @@ public class Editor extends JFrame {
 					if (answer == null || answer.equals("")) {
 						ready = true;
 					} else {
-						if (answer.length() > 20) {
+						if (answer.length() > 40) {
 							JOptionPane.showMessageDialog(null, res.getString("ErrorMessage127"));
 						} else {
 							answer = getCaseShiftValue(answer, "Upper");
@@ -25869,14 +25869,15 @@ public class Editor extends JFrame {
 			rtn1 = JOptionPane.showOptionDialog(this, res.getString("ImportMessage0"),
 					res.getString("SaveChangesTitle"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
 			if (rtn1 == 0) {
-				try{
-					setCursor(new Cursor(Cursor.WAIT_CURSOR));
-					saveFileWithCurrentFileName();
-					undoManager.resetLog();
-					changeState.setChanged(false);
-				} finally {
-					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-				}
+//				try{
+//					setCursor(new Cursor(Cursor.WAIT_CURSOR));
+//					saveFileWithCurrentFileName();
+//					undoManager.resetLog();
+//					changeState.setChanged(false);
+//				} finally {
+//					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+//				}
+				jMenuItemFileSave_actionPerformed(null);
 			}
 		}
 
@@ -25942,14 +25943,15 @@ public class Editor extends JFrame {
 			rtn1 = JOptionPane.showOptionDialog(this, res.getString("ImportMessage0"),
 					res.getString("SaveChangesTitle"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
 			if (rtn1 == 0) {
-				try{
-					setCursor(new Cursor(Cursor.WAIT_CURSOR));
-					saveFileWithCurrentFileName();
-					undoManager.resetLog();
-					changeState.setChanged(false);
-				} finally {
-					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-				}
+//				try{
+//					setCursor(new Cursor(Cursor.WAIT_CURSOR));
+//					saveFileWithCurrentFileName();
+//					undoManager.resetLog();
+//					changeState.setChanged(false);
+//				} finally {
+//					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+//				}
+				jMenuItemFileSave_actionPerformed(null);
 			}
 		}
 
@@ -26015,14 +26017,15 @@ public class Editor extends JFrame {
 			rtn1 = JOptionPane.showOptionDialog(this, res.getString("ScanMessage"),
 					res.getString("SaveChangesTitle"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
 			if (rtn1 == 0) {
-				try{
-					setCursor(new Cursor(Cursor.WAIT_CURSOR));
-					saveFileWithCurrentFileName();
-					undoManager.resetLog();
-					changeState.setChanged(false);
-				} finally {
-					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-				}
+//				try{
+//					setCursor(new Cursor(Cursor.WAIT_CURSOR));
+//					saveFileWithCurrentFileName();
+//					undoManager.resetLog();
+//					changeState.setChanged(false);
+//				} finally {
+//					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+//				}
+				jMenuItemFileSave_actionPerformed(null);
 			}
 		}
 
@@ -26084,14 +26087,15 @@ public class Editor extends JFrame {
 			rtn1 = JOptionPane.showOptionDialog(this, res.getString("ScanMessage"),
 					res.getString("SaveChangesTitle"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
 			if (rtn1 == 0) {
-				try{
-					setCursor(new Cursor(Cursor.WAIT_CURSOR));
-					saveFileWithCurrentFileName();
-					undoManager.resetLog();
-					changeState.setChanged(false);
-				} finally {
-					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-				}
+//				try{
+//					setCursor(new Cursor(Cursor.WAIT_CURSOR));
+//					saveFileWithCurrentFileName();
+//					undoManager.resetLog();
+//					changeState.setChanged(false);
+//				} finally {
+//					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+//				}
+				jMenuItemFileSave_actionPerformed(null);
 			}
 		}
 		if (rtn1 == 0) {
@@ -26326,59 +26330,54 @@ public class Editor extends JFrame {
 	void jMenuItemFileRun_actionPerformed(ActionEvent e) {
 		currentMainTreeNode.updateFields();
 		int rtn1 = 0;
+
 		if (changeState.isChanged()) {
 			Object[] bts = {res.getString("SaveChanges"), res.getString("BackToEdit")} ;
 			rtn1 = JOptionPane.showOptionDialog(this, res.getString("LaunchSystemTitle"),
 					res.getString("SaveChanges"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
 			if (rtn1 == 0) {
-				try {
-					setCursor(new Cursor(Cursor.WAIT_CURSOR));
-					saveFileWithCurrentFileName();
-					undoManager.resetLog();
-					changeState.setChanged(false);
-				} finally {
-					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-				}
+//				try {
+//					setCursor(new Cursor(Cursor.WAIT_CURSOR));
+//					saveFileWithCurrentFileName();
+//					undoManager.resetLog();
+//					changeState.setChanged(false);
+//				} catch (Exception ex) {
+//					JOptionPane.showMessageDialog(this, "Failed to update the content file. Errors:\n" + ex.getMessage());
+//				} finally {
+//					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+//				}
+				jMenuItemFileSave_actionPerformed(null);
 			}
 		}
+
 		if (rtn1 == 0) {
-			String command = "";
+			StringBuffer bf = new StringBuffer();
+			bf.append("javaw ");
+			bf.append(jTextFieldSystemDriverVMOptions.getText());
+			bf.append(" -jar \"");
+			bf.append(applicationFolder);
+			bf.append("xeaddrv.jar\" \"");
+			bf.append(currentFileName);
+			bf.append("\"");
+			if (!jTextFieldSystemEditorUser.getText().equals("")) {
+				bf.append(" \"");
+				bf.append(jTextFieldSystemEditorUser.getText());
+				bf.append("\"");
+				if (!jTextFieldSystemEditorUserPassword.getText().equals("")) {
+					bf.append(" \"");
+					bf.append(jTextFieldSystemEditorUserPassword.getText());
+					bf.append("\"");
+				}
+			}
+			if (jCheckBoxSystemSkipPreload.isSelected()) {
+				bf.append(" \"SKIP_PRELOAD\"");
+			}
+
 			try {
 				Runtime rt = Runtime.getRuntime();
-				////command = "javaw -Xmx100m -splash:\"" + applicationFolder + "xeaddrv.png\" -jar \"" + applicationFolder + "xeaddrv.jar\" \"" + currentFileName + "\"";
-				//command = "javaw -Xms256m -Xmx256m -jar \"" + applicationFolder + "xeaddrv.jar\" \"" + currentFileName + "\"";
-				//if (!jTextFieldSystemEditorUser.getText().equals("")) {
-				//	command = command + " \"" + jTextFieldSystemEditorUser.getText() + "\"";
-				//	if (!jTextFieldSystemEditorUserPassword.getText().equals("")) {
-				//		command = command + " \"" + jTextFieldSystemEditorUserPassword.getText() + "\"";
-				//	}
-				//}
-				//rt.exec(command);
-				StringBuffer bf = new StringBuffer();
-				bf.append("javaw ");
-				bf.append(jTextFieldSystemDriverVMOptions.getText());
-				bf.append(" -jar \"");
-				bf.append(applicationFolder);
-				bf.append("xeaddrv.jar\" \"");
-				bf.append(currentFileName);
-				bf.append("\"");
-				if (!jTextFieldSystemEditorUser.getText().equals("")) {
-					bf.append(" \"");
-					bf.append(jTextFieldSystemEditorUser.getText());
-					bf.append("\"");
-					if (!jTextFieldSystemEditorUserPassword.getText().equals("")) {
-						bf.append(" \"");
-						bf.append(jTextFieldSystemEditorUserPassword.getText());
-						bf.append("\"");
-					}
-				}
-				if (jCheckBoxSystemSkipPreload.isSelected()) {
-					bf.append(" \"SKIP_PRELOAD\"");
-				}
-				command = bf.toString();
-				rt.exec(command);
-			} catch (Exception e1) {
-				JOptionPane.showMessageDialog(this, res.getString("ErrorMessage25") + command + res.getString("ErrorMessage26") + e1.getMessage());
+				rt.exec(bf.toString());
+			} catch (Exception ex) {
+				JOptionPane.showMessageDialog(this, res.getString("ErrorMessage25") + bf.toString() + res.getString("ErrorMessage26") + ex.getMessage());
 			}
 		}
 	}
@@ -30559,7 +30558,7 @@ public class Editor extends JFrame {
 		}
 	}
 
-	String getFormatted4ByteString(int number) {
+	static String getFormatted4ByteString(int number) {
 		String formattedNumberString = "0000";
 		if (0 <= number && number < 10) {formattedNumberString = "000" + number;}
 		if (10 <= number && number < 100) {formattedNumberString = "00" + number;}

@@ -429,7 +429,7 @@ public class DialogAddReferTable extends JDialog {
 		if (errorMessage.equals("")) {
 			newElement = frame_.getDomDocument().createElement("Refer");
 			lastOrder = lastOrder + 10;
-			newElement.setAttribute("Order", frame_.getFormatted4ByteString(lastOrder));
+			newElement.setAttribute("Order", Editor.getFormatted4ByteString(lastOrder));
 			newElement.setAttribute("ToTable", referTableNode.getElement().getAttribute("ID"));
 			if (jTextFieldAlias.getText().equals("*TableID")) {
 				newElement.setAttribute("TableAlias", "");

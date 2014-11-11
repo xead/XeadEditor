@@ -1614,6 +1614,7 @@ public class DialogCheckTableModule extends JDialog {
 				if (newElement != null) {
 					newElement.setAttribute("ID", fieldListToBePut.get(i));
 					newElement.setAttribute("Name", fieldListToBePut.get(i));
+					newElement.setAttribute("Order", Editor.getFormatted4ByteString(i * 10));
 					if (!fieldTypeListToBePut.get(i).equals("")) {
 						newElement.setAttribute("Type", fieldTypeListToBePut.get(i));
 					}

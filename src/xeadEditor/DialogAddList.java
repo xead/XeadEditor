@@ -316,18 +316,17 @@ public class DialogAddList extends JDialog {
 		}
 		if (parentType_.equals("TableList")) {
 			this.setTitle(res.getString("AddNewTables"));
-			jLabelHeadID.setText(res.getString("IDWithLength1")+"20"+res.getString("IDWithLength2"));
+			jLabelHeadID.setText(res.getString("IDWithLength1")+"40"+res.getString("IDWithLength2"));
 			jLabelHeadName.setText(res.getString("TableName"));
 			for (int i = 0; i < 10; i++) {
 				idList.get(i).setText("");
-				idList.get(i).setMaxLength(20);
+				idList.get(i).setMaxLength(40);
 				nameList.get(i).setText("");
 			}
 		}
 		if (parentType_.equals("TableFieldList")) {
 			this.setTitle(res.getString("AddNewFields"));
 			jLabelHeadID.setText(res.getString("IDWithLength1")+"40"+res.getString("IDWithLength2"));
-			//jLabelHeadID.setText("ID(Max40)");
 			jLabelHeadName.setText(res.getString("FieldName"));
 			for (int i = 0; i < 10; i++) {
 				idList.get(i).setText("");

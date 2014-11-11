@@ -264,7 +264,7 @@ public class DialogAddDetailTable extends JDialog {
 		if (errorMessage.equals("")) {
 			newElement = frame_.getDomDocument().createElement("Detail");
 			lastOrder = lastOrder + 10;
-			newElement.setAttribute("Order", frame_.getFormatted4ByteString(lastOrder));
+			newElement.setAttribute("Order", Editor.getFormatted4ByteString(lastOrder));
 			newElement.setAttribute("Table", detailTableNode.getElement().getAttribute("ID"));
 			if (jTextFieldHdrKeyFields.getText().equals(headerPK)) {
 				newElement.setAttribute("HeaderKeyFields", "");

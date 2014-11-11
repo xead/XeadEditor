@@ -489,7 +489,7 @@ public class DialogAddFunction extends JDialog {
 					if (i < 5) {
 						workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
 						childElement = frame_.getDomDocument().createElement("Column");
-						childElement.setAttribute("Order", frame_.getFormatted4ByteString(i * 10));
+						childElement.setAttribute("Order", Editor.getFormatted4ByteString(i * 10));
 						childElement.setAttribute("DataSource", jTextFieldTableID.getText() + "." + workElement.getAttribute("ID")); 
 						childElement.setAttribute("FieldOptions", "");
 						element.appendChild(childElement);
@@ -502,7 +502,7 @@ public class DialogAddFunction extends JDialog {
 					if (i < 3) {
 						workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
 						childElement = frame_.getDomDocument().createElement("Filter");
-						childElement.setAttribute("Order", frame_.getFormatted4ByteString(i * 10));
+						childElement.setAttribute("Order", Editor.getFormatted4ByteString(i * 10));
 						childElement.setAttribute("DataSource", jTextFieldTableID.getText() + "." + workElement.getAttribute("ID"));
 						dataType = workElement.getAttribute("Type");
 						if (frame_.getBasicTypeOf(dataType).equals("INTEGER")
@@ -555,7 +555,7 @@ public class DialogAddFunction extends JDialog {
 					if (i < 5) {
 						workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
 						childElement = frame_.getDomDocument().createElement("Column");
-						childElement.setAttribute("Order", frame_.getFormatted4ByteString(i * 10));
+						childElement.setAttribute("Order", Editor.getFormatted4ByteString(i * 10));
 						childElement.setAttribute("DataSource", jTextFieldTableID.getText() + "." + workElement.getAttribute("ID")); 
 						childElement.setAttribute("FieldOptions", "");
 						element.appendChild(childElement);
@@ -568,7 +568,7 @@ public class DialogAddFunction extends JDialog {
 					if (i < 3) {
 						workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
 						childElement = frame_.getDomDocument().createElement("Filter");
-						childElement.setAttribute("Order", frame_.getFormatted4ByteString(i * 10));
+						childElement.setAttribute("Order", Editor.getFormatted4ByteString(i * 10));
 						childElement.setAttribute("DataSource", jTextFieldTableID.getText() + "." + workElement.getAttribute("ID")); 
 						dataType = workElement.getAttribute("Type");
 						if (frame_.getBasicTypeOf(dataType).equals("INTEGER")
@@ -626,7 +626,7 @@ public class DialogAddFunction extends JDialog {
 				for (int i = 0; i < sortingList.getSize(); i++) {
 					workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
 					childElement = frame_.getDomDocument().createElement("Field");
-					childElement.setAttribute("Order", frame_.getFormatted4ByteString(i * 10));
+					childElement.setAttribute("Order", Editor.getFormatted4ByteString(i * 10));
 					childElement.setAttribute("DataSource", jTextFieldTableID.getText() + "." + workElement.getAttribute("ID")); 
 					childElement.setAttribute("FieldOptions", "");
 					element.appendChild(childElement);
@@ -696,7 +696,7 @@ public class DialogAddFunction extends JDialog {
 					if (i < 5) {
 						workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
 						childElement = frame_.getDomDocument().createElement("Phrase");
-						childElement.setAttribute("Order", frame_.getFormatted4ByteString((i+1) * 10));
+						childElement.setAttribute("Order", Editor.getFormatted4ByteString((i+1) * 10));
 						childElement.setAttribute("Block", "PARAGRAPH");
 						childElement.setAttribute("Value", "&DataSource(" + jTextFieldTableID.getText() + "." + workElement.getAttribute("ID") + ")"); 
 						childElement.setAttribute("Alignment", "LEFT");
@@ -726,7 +726,7 @@ public class DialogAddFunction extends JDialog {
 						if (i < 7) {
 							workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
 							childElement = frame_.getDomDocument().createElement("Field");
-							childElement.setAttribute("Order", frame_.getFormatted4ByteString(i * 10));
+							childElement.setAttribute("Order", Editor.getFormatted4ByteString(i * 10));
 							childElement.setAttribute("DataSource", jTextFieldHeaderTableID.getText() + "." + workElement.getAttribute("ID")); 
 							childElement.setAttribute("FieldOptions", "");
 							element.appendChild(childElement);
@@ -762,7 +762,7 @@ public class DialogAddFunction extends JDialog {
 							}
 							if (isNotHeaderKey) {
 								grandChildElement = frame_.getDomDocument().createElement("Column");
-								grandChildElement.setAttribute("Order", frame_.getFormatted4ByteString(columnCount * 10));
+								grandChildElement.setAttribute("Order", Editor.getFormatted4ByteString(columnCount * 10));
 								grandChildElement.setAttribute("DataSource", jTextFieldDetailTableID.getText() + "." + workElement.getAttribute("ID")); 
 								grandChildElement.setAttribute("FieldOptions", "");
 								childElement.appendChild(grandChildElement);
@@ -816,7 +816,7 @@ public class DialogAddFunction extends JDialog {
 						if (i < 7) {
 							workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
 							childElement = frame_.getDomDocument().createElement("Field");
-							childElement.setAttribute("Order", frame_.getFormatted4ByteString(i * 10));
+							childElement.setAttribute("Order", Editor.getFormatted4ByteString(i * 10));
 							childElement.setAttribute("DataSource", jTextFieldHeaderTableID.getText() + "." + workElement.getAttribute("ID")); 
 							childElement.setAttribute("FieldOptions", "");
 							element.appendChild(childElement);
@@ -841,7 +841,7 @@ public class DialogAddFunction extends JDialog {
 							}
 							if (isNotHeaderKey) {
 								childElement = frame_.getDomDocument().createElement("Column");
-								childElement.setAttribute("Order", frame_.getFormatted4ByteString(columnCount * 10));
+								childElement.setAttribute("Order", Editor.getFormatted4ByteString(columnCount * 10));
 								childElement.setAttribute("DataSource", jTextFieldDetailTableID.getText() + "." + workElement.getAttribute("ID")); 
 								childElement.setAttribute("FieldOptions", "");
 								element.appendChild(childElement);
@@ -926,7 +926,7 @@ public class DialogAddFunction extends JDialog {
 						if (i < 5) {
 							workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
 							childElement = frame_.getDomDocument().createElement("HeaderPhrase");
-							childElement.setAttribute("Order", frame_.getFormatted4ByteString((i+1) * 10));
+							childElement.setAttribute("Order", Editor.getFormatted4ByteString((i+1) * 10));
 							childElement.setAttribute("Block", "PARAGRAPH");
 							childElement.setAttribute("Value", "&DataSource(" + jTextFieldHeaderTableID.getText() + "." + workElement.getAttribute("ID") + ")"); 
 							childElement.setAttribute("Alignment", "LEFT");
@@ -956,7 +956,7 @@ public class DialogAddFunction extends JDialog {
 							}
 							if (isNotHeaderKey) {
 								childElement = frame_.getDomDocument().createElement("Column");
-								childElement.setAttribute("Order", frame_.getFormatted4ByteString(columnCount * 10));
+								childElement.setAttribute("Order", Editor.getFormatted4ByteString(columnCount * 10));
 								childElement.setAttribute("DataSource", jTextFieldDetailTableID.getText() + "." + workElement.getAttribute("ID")); 
 								childElement.setAttribute("FieldOptions", "");
 								childElement.setAttribute("Width", "19");

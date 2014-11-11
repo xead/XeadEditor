@@ -1045,7 +1045,7 @@ public class DialogImportModel extends JDialog {
 				childElement.setAttribute("ID", workElement1.getAttribute("Alias"));
 				childElement.setAttribute("Name", workElement1.getAttribute("Name"));
 				childElement.setAttribute("Remarks", workElement1.getAttribute("Descriptions"));
-				childElement.setAttribute("Order", frame_.getFormatted4ByteString(i * 10));
+				childElement.setAttribute("Order", Editor.getFormatted4ByteString(i * 10));
 				//
 				attrMap = convertDataTypeIDToAttrMap(workElement1.getAttribute("DataTypeID"));
 				childElement.setAttribute("Type", attrMap.get("Type"));
@@ -1239,7 +1239,7 @@ public class DialogImportModel extends JDialog {
 				if (i < 5) {
 					workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
 					childElement = frame_.getDomDocument().createElement("Column");
-					childElement.setAttribute("Order", frame_.getFormatted4ByteString(i * 10));
+					childElement.setAttribute("Order", Editor.getFormatted4ByteString(i * 10));
 					childElement.setAttribute("DataSource", primaryTableID + "." + workElement.getAttribute("ID")); 
 					childElement.setAttribute("FieldOptions", "");
 					newElementToBeAdded.appendChild(childElement);
@@ -1251,7 +1251,7 @@ public class DialogImportModel extends JDialog {
 				if (i < 3) {
 					workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
 					childElement = frame_.getDomDocument().createElement("Filter");
-					childElement.setAttribute("Order", frame_.getFormatted4ByteString(i * 10));
+					childElement.setAttribute("Order", Editor.getFormatted4ByteString(i * 10));
 					childElement.setAttribute("DataSource", primaryTableID + "." + workElement.getAttribute("ID")); 
 					//childElement.setAttribute("FieldOptions", "");
 					dataType = workElement.getAttribute("Type");
@@ -1304,7 +1304,7 @@ public class DialogImportModel extends JDialog {
 				if (i < 5) {
 					workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
 					childElement = frame_.getDomDocument().createElement("Column");
-					childElement.setAttribute("Order", frame_.getFormatted4ByteString(i * 10));
+					childElement.setAttribute("Order", Editor.getFormatted4ByteString(i * 10));
 					childElement.setAttribute("DataSource", primaryTableID + "." + workElement.getAttribute("ID")); 
 					childElement.setAttribute("FieldOptions", "");
 					newElementToBeAdded.appendChild(childElement);
@@ -1316,7 +1316,7 @@ public class DialogImportModel extends JDialog {
 				if (i < 3) {
 					workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
 					childElement = frame_.getDomDocument().createElement("Filter");
-					childElement.setAttribute("Order", frame_.getFormatted4ByteString(i * 10));
+					childElement.setAttribute("Order", Editor.getFormatted4ByteString(i * 10));
 					childElement.setAttribute("DataSource", primaryTableID + "." + workElement.getAttribute("ID")); 
 					//childElement.setAttribute("FieldOptions", "");
 					dataType = workElement.getAttribute("Type");
@@ -1375,7 +1375,7 @@ public class DialogImportModel extends JDialog {
 			for (int i = 0; i < sortingList.getSize(); i++) {
 				workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
 				childElement = frame_.getDomDocument().createElement("Field");
-				childElement.setAttribute("Order", frame_.getFormatted4ByteString(i * 10));
+				childElement.setAttribute("Order", Editor.getFormatted4ByteString(i * 10));
 				childElement.setAttribute("DataSource", primaryTableID + "." + workElement.getAttribute("ID")); 
 				childElement.setAttribute("FieldOptions", "");
 				newElementToBeAdded.appendChild(childElement);
@@ -1445,7 +1445,7 @@ public class DialogImportModel extends JDialog {
 				if (i < 5) {
 					workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
 					childElement = frame_.getDomDocument().createElement("Phrase");
-					childElement.setAttribute("Order", frame_.getFormatted4ByteString((i+1) * 10));
+					childElement.setAttribute("Order", Editor.getFormatted4ByteString((i+1) * 10));
 					childElement.setAttribute("Block", "PARAGRAPH");
 					childElement.setAttribute("Value", "&DataSource(" + primaryTableID + "." + workElement.getAttribute("ID") + ")"); 
 					childElement.setAttribute("Alignment", "LEFT");
@@ -1487,7 +1487,7 @@ public class DialogImportModel extends JDialog {
 				if (i < 7) {
 					workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
 					childElement = frame_.getDomDocument().createElement("Field");
-					childElement.setAttribute("Order", frame_.getFormatted4ByteString(i * 10));
+					childElement.setAttribute("Order", Editor.getFormatted4ByteString(i * 10));
 					childElement.setAttribute("DataSource", headerTableID + "." + workElement.getAttribute("ID")); 
 					childElement.setAttribute("FieldOptions", "");
 					newElementToBeAdded.appendChild(childElement);
@@ -1511,7 +1511,7 @@ public class DialogImportModel extends JDialog {
 				}
 				//
 				childElement = frame_.getDomDocument().createElement("Detail");
-				childElement.setAttribute("Order", frame_.getFormatted4ByteString((p+1)*10));
+				childElement.setAttribute("Order", Editor.getFormatted4ByteString((p+1)*10));
 				childElement.setAttribute("Table", detailTableIDList.get(p));
 				childElement.setAttribute("HeaderKeyFields", headerTableKeysList.get(p));
 				childElement.setAttribute("KeyFields", detailKeyFields);
@@ -1529,7 +1529,7 @@ public class DialogImportModel extends JDialog {
 						workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
 						if (!headerPKFieldIDList.contains(workElement.getAttribute("ID"))) {
 							grandChildElement = frame_.getDomDocument().createElement("Column");
-							grandChildElement.setAttribute("Order", frame_.getFormatted4ByteString(columnCount * 10));
+							grandChildElement.setAttribute("Order", Editor.getFormatted4ByteString(columnCount * 10));
 							grandChildElement.setAttribute("DataSource", detailTableIDList.get(p) + "." + workElement.getAttribute("ID")); 
 							grandChildElement.setAttribute("FieldOptions", "");
 							childElement.appendChild(grandChildElement);
@@ -1603,7 +1603,7 @@ public class DialogImportModel extends JDialog {
 				if (i < 7) {
 					workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
 					childElement = frame_.getDomDocument().createElement("Field");
-					childElement.setAttribute("Order", frame_.getFormatted4ByteString(i * 10));
+					childElement.setAttribute("Order", Editor.getFormatted4ByteString(i * 10));
 					childElement.setAttribute("DataSource", headerTableID + "." + workElement.getAttribute("ID")); 
 					childElement.setAttribute("FieldOptions", "");
 					newElementToBeAdded.appendChild(childElement);
@@ -1620,7 +1620,7 @@ public class DialogImportModel extends JDialog {
 					workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
 					if (!headerPKFieldIDList.contains(workElement.getAttribute("ID"))) {
 						childElement = frame_.getDomDocument().createElement("Column");
-						childElement.setAttribute("Order", frame_.getFormatted4ByteString(columnCount * 10));
+						childElement.setAttribute("Order", Editor.getFormatted4ByteString(columnCount * 10));
 						childElement.setAttribute("DataSource", detailTableIDList.get(0) + "." + workElement.getAttribute("ID")); 
 						childElement.setAttribute("FieldOptions", "");
 						newElementToBeAdded.appendChild(childElement);
@@ -1723,7 +1723,7 @@ public class DialogImportModel extends JDialog {
 				if (i < 5) {
 					workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
 					childElement = frame_.getDomDocument().createElement("HeaderPhrase");
-					childElement.setAttribute("Order", frame_.getFormatted4ByteString((i+1) * 10));
+					childElement.setAttribute("Order", Editor.getFormatted4ByteString((i+1) * 10));
 					childElement.setAttribute("Block", "PARAGRAPH");
 					childElement.setAttribute("Value", "&DataSource(" + headerTableID + "." + workElement.getAttribute("ID") + ")"); 
 					childElement.setAttribute("Alignment", "LEFT");
@@ -1745,7 +1745,7 @@ public class DialogImportModel extends JDialog {
 					workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
 					if (!headerPKFieldIDList.contains(workElement.getAttribute("ID"))) {
 						childElement = frame_.getDomDocument().createElement("Column");
-						childElement.setAttribute("Order", frame_.getFormatted4ByteString(columnCount * 10));
+						childElement.setAttribute("Order", Editor.getFormatted4ByteString(columnCount * 10));
 						childElement.setAttribute("DataSource", detailTableIDList.get(0) + "." + workElement.getAttribute("ID")); 
 						childElement.setAttribute("FieldOptions", "");
 						childElement.setAttribute("Width", "19");

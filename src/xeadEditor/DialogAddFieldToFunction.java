@@ -324,7 +324,7 @@ public class DialogAddFieldToFunction extends JDialog {
 
 				if (newElement != null) {
 					result = 1;
-					newElement.setAttribute("Order", frame_.getFormatted4ByteString(order));
+					newElement.setAttribute("Order", Editor.getFormatted4ByteString(order));
 					order++;
 
 					if (tableType_.equals("Function290PhraseList") || tableType_.equals("Function390HeaderPhraseList")) {

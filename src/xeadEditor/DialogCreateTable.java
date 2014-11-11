@@ -464,7 +464,7 @@ public class DialogCreateTable extends JDialog {
 		} else {
 			fieldElement.setAttribute("Name", comment);
 		}
-		fieldElement.setAttribute("Order", frame_.getFormatted4ByteString(sortKey * 10));
+		fieldElement.setAttribute("Order", Editor.getFormatted4ByteString(sortKey * 10));
 		String wrkStr = getSubstringInOrder(fieldAttrString, 1);
 		i = wrkStr.indexOf("(", 0);
 		if (i > 0) {

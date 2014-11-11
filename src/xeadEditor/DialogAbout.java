@@ -48,7 +48,13 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2014 DBC,Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
-	public static final String FULL_VERSION  = "V1.R2.M5";
+	public static final String FULL_VERSION  = "V1.R2.M6";
+	//1.2.6
+	//・getFormatted4ByteString(int)をModelerに合わせてstaticに変更した
+	//・「定義の補完」でフィールドの並び順の設定が抜けていた問題を修正した
+	//・冗長な保管確認のステップを整理した
+	//・テーブルIDの最長桁を２０桁から４０桁に変更
+	//
 	//1.2.5
 	//・走査援助およびテーブルスクリプトエディタの凡例欄に、valueListに関する情報を加筆した
 	//

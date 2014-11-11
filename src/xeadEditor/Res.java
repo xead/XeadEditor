@@ -719,7 +719,7 @@ public class Res extends java.util.ListResourceBundle {
 		{ "ModuleCheckMessage34", ". . . Note that field(s) on the table module might be removed all with its data if you execute 'Modify Module' to modify field attributes. And also note that sometimes you have to try more than once to complete modifying module because of priority of attributes to be modified. If you want to remove a secondary uniqu key from tables, you need to use SQL console. Refer to HELP for details." },
 		{ "ModuleCheckMessage35", "* The table module matches to the definition. No need to modify the module." },
 		{ "ModuleCheckMessage36", "The table module will be modified according to\nthe current definition. Sure to execute?" },
-		{ "ModuleCheckMessage37", "It failed to modify the table module.\n\n" },
+		{ "ModuleCheckMessage37", "It failed to modify the table module.Å@Note that adding field should be nullable.\n\n" },
 		{ "ModuleCheckMessage38", "Creating table module is not allowed as it contains no primary key." },
 		{ "ModuleCheckMessage39", "The table module will be created according to the definition.\nNote that you have to delete the module to modify the primary key.\nSure to create?" },
 		{ "ModuleCheckMessage40", "It failed to create the table module.\n\n" },
