@@ -908,6 +908,7 @@ public class Res extends java.util.ListResourceBundle {
 		{ "StructureTableTitle", "Config Structure Table" },
 		{ "StructureUpperKeys", "Upper Keys" },
 		{ "StructureView", "Structure Tree" },
+		{ "StructureViewTitle", "Caption" },
 		{ "StructureViewWidth", "Tree View Width" },
 		{ "SubDB", "Sub-DB" },
 		{ "Subsystem", "Subsystem" },

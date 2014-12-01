@@ -1626,6 +1626,8 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction300StructureViewWidth = new JLabel();
 	private JTextField jTextFieldFunction300StructureViewWidth = new JTextField();
 	private JLabel jLabelFunction300StructureViewWidthComment = new JLabel();
+	private JLabel jLabelFunction300StructureViewTitle = new JLabel();
+	private JTextField jTextFieldFunction300StructureViewTitle = new JTextField();
 	private org.w3c.dom.Element function300StructureTableElement;
 	private String function300StructureTableID = "";
 	private String function300StructureUpperKeys = "";
@@ -9474,6 +9476,14 @@ public class Editor extends JFrame {
 		jLabelFunction300StructureViewWidthComment.setText("pixcel (50 - 500)");
 		jLabelFunction300StructureViewWidthComment.setBounds(new Rectangle(205, 136, 150, 20));
 		//
+		jLabelFunction300StructureViewTitle.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelFunction300StructureViewTitle.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction300StructureViewTitle.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction300StructureViewTitle.setText(res.getString("StructureViewTitle"));
+		jLabelFunction300StructureViewTitle.setBounds(new Rectangle(355, 136, 130, 20));
+		jTextFieldFunction300StructureViewTitle.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300StructureViewTitle.setBounds(new Rectangle(490, 133, 200, 25));
+		//
 		jPanelFunction300Structure.add(jLabelFunction300StructureTableName);
 		jPanelFunction300Structure.add(jTextFieldFunction300StructureTableName);
 		jPanelFunction300Structure.add(jButtonFunction300StructureTableNameEdit);
@@ -9489,6 +9499,8 @@ public class Editor extends JFrame {
 		jPanelFunction300Structure.add(jLabelFunction300StructureViewWidth);
 		jPanelFunction300Structure.add(jTextFieldFunction300StructureViewWidth);
 		jPanelFunction300Structure.add(jLabelFunction300StructureViewWidthComment);
+		jPanelFunction300Structure.add(jLabelFunction300StructureViewTitle);
+		jPanelFunction300Structure.add(jTextFieldFunction300StructureViewTitle);
 		//
 		jScrollPaneFunction300UsageList.setBorder(null);
 		jScrollPaneFunction300UsageList.getViewport().add(jTableFunction300UsageList, null);
@@ -14326,8 +14338,12 @@ public class Editor extends JFrame {
 			  }
 			  bf = new StringBuffer();
 			  bf.append(stringBufferForAmendment.toString());
-			  for (int i = 0; i < logList.size(); i++) {
-				  bf.append(logList.get(i));
+			  try {
+				for (int i = 0; i < logList.size(); i++) {
+					  bf.append(logList.get(i));
+				  }
+			  } catch (Exception e) {
+				e.printStackTrace();
 			  }
 			  return bf.toString();
 		  }
@@ -17695,6 +17711,8 @@ public class Editor extends JFrame {
 				jButtonFunction300StructureNodeIconsEdit.setEnabled(false);
 				jTextFieldFunction300StructureViewWidth.setText("");
 				jTextFieldFunction300StructureViewWidth.setEnabled(false);
+				jTextFieldFunction300StructureViewTitle.setText("");
+				jTextFieldFunction300StructureViewTitle.setEnabled(false);
 			} else {
 				tableNode = getSpecificXETreeNode("Table", function300StructureTableID);
 				function300StructureTableElement = tableNode.getElement();
@@ -17740,6 +17758,9 @@ public class Editor extends JFrame {
 				//
 				jTextFieldFunction300StructureViewWidth.setText(domNode_.getAttribute("StructureViewWidth"));
 				jTextFieldFunction300StructureViewWidth.setEnabled(true);
+				//
+				jTextFieldFunction300StructureViewTitle.setText(domNode_.getAttribute("StructureViewTitle"));
+				jTextFieldFunction300StructureViewTitle.setEnabled(true);
 			}
 			jPanelFunction300StructureNodeIcons.updateUI();
 			//
@@ -22887,6 +22908,7 @@ public class Editor extends JFrame {
 				function300StructureNodeText = "";
 				function300StructureNodeIcons = "";
 				jTextFieldFunction300StructureViewWidth.setText("");
+				jTextFieldFunction300StructureViewTitle.setText("");
 			}
 			if (!domNode_.getAttribute("StructureUpperKeys").equals(function300StructureUpperKeys)) {
 				valueOfFieldsChanged = true;
@@ -22939,6 +22961,10 @@ public class Editor extends JFrame {
 			if (!domNode_.getAttribute("StructureViewWidth").equals(jTextFieldFunction300StructureViewWidth.getText().replace(",", ""))) {
 				valueOfFieldsChanged = true;
 				domNode_.setAttribute("StructureViewWidth", jTextFieldFunction300StructureViewWidth.getText().replace(",", ""));
+			}
+			if (!domNode_.getAttribute("StructureViewTitle").equals(jTextFieldFunction300StructureViewTitle.getText())) {
+				valueOfFieldsChanged = true;
+				domNode_.setAttribute("StructureViewTitle", jTextFieldFunction300StructureViewTitle.getText());
 			}
 			//
 			if (updateFieldsForFunction300HeaderField()) {
@@ -26300,6 +26326,9 @@ public class Editor extends JFrame {
 			changeState.setChanged(false);
 			undoManager.resetLog();
 			informationOnThisPageChanged = false;
+		} catch(Exception ex){
+			JOptionPane.showMessageDialog(this, res.getString("ErrorMessage28"));
+			ex.printStackTrace();
 		} finally {
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
@@ -40046,6 +40075,9 @@ public class Editor extends JFrame {
 					jButtonFunction300StructureNodeIconsEdit.setEnabled(true);
 					if (jTextFieldFunction300StructureViewWidth.getText().equals("")) {
 						jTextFieldFunction300StructureViewWidth.setText("200");
+					}
+					if (jTextFieldFunction300StructureViewTitle.getText().equals("")) {
+						jTextFieldFunction300StructureViewTitle.setText(res.getString("StructureView"));
 					}
 					jTextFieldFunction300StructureViewWidth.setEnabled(true);
 				}

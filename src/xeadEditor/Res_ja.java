@@ -915,6 +915,7 @@ public class Res_ja extends java.util.ListResourceBundle {
 		{ "StructureTableTitle", "構成テーブルの設定" },
 		{ "StructureUpperKeys", "構成上位キー" },
 		{ "StructureView", "構成ツリー" },
+		{ "StructureViewTitle", "キャプション" },
 		{ "StructureViewWidth", "ツリービュー幅" },
 		{ "SubDB", "サブＤＢ" },
 		{ "Subsystem", "サブシステム定義" },
