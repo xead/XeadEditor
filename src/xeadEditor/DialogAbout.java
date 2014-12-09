@@ -48,7 +48,12 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2014 DBC,Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
-	public static final String FULL_VERSION  = "V1.R2.M7";
+	public static final String FULL_VERSION  = "V1.R2.M8";
+	//1.2.8
+	//・いくつかの機能タイプのフィールド一覧のコンテキストメニューに、他機能定義からのインポート処理を組み込んだ
+	//・変更ログを記録するためのロジックを修正した
+	//・スクリプト編集域のNAMEモードで、編集不可のメッセージを出すようにした
+	//
 	//1.2.7
 	//・XF300の構成ツリー用のタイトルを設けた
 	//

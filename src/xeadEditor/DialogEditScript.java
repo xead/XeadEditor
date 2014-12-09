@@ -33,6 +33,7 @@ package xeadEditor;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.util.ResourceBundle;
@@ -188,6 +189,7 @@ public class DialogEditScript extends JDialog {
 		jTextAreaStatement.setOpaque(true);
 		jTextAreaStatement.setTabSize(4);
 		jTextAreaStatement.addCaretListener(new DialogEditScript_jTextAreaStatement_caretAdapter(this));
+		jTextAreaStatement.addKeyListener(new DialogEditScript_jTextAreaStatement_keyAdapter(this));
 		jTextAreaStatement.getDocument().addUndoableEditListener(undoManager);
 		ActionMap am = jTextAreaStatement.getActionMap();
 		am.put(DefaultEditorKit.pasteAction, pasteAction);
@@ -410,6 +412,17 @@ public class DialogEditScript extends JDialog {
 		jTextAreaStatement.setCaretPosition(pos);
 		jTextAreaStatement.getCaret().setVisible(true);
 	}
+	
+	void jTextAreaStatement_keyTyped(KeyEvent e) {
+		if ((e.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) == 0){
+			if (!jTextAreaStatement.isEditable()) {
+				int position = jTextAreaStatement.getCaretPosition();
+				JOptionPane.showMessageDialog(null, res.getString("ErrorMessage128"));
+				jTextAreaStatement.setCaretPosition(position);
+				jTextAreaStatement.getCaret().setVisible(true);
+			}
+		}
+	}
 }
 
 class DialogEditScript_jTextAreaStatement_caretAdapter implements javax.swing.event.CaretListener {
@@ -419,5 +432,15 @@ class DialogEditScript_jTextAreaStatement_caretAdapter implements javax.swing.ev
 	}
 	public void caretUpdate(CaretEvent e) {
 		adaptee.jTextAreaStatement_caretUpdate(e);
+	}
+}
+
+class DialogEditScript_jTextAreaStatement_keyAdapter extends java.awt.event.KeyAdapter {
+	DialogEditScript adaptee;
+	DialogEditScript_jTextAreaStatement_keyAdapter(DialogEditScript adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void keyTyped(KeyEvent e) {
+		adaptee.jTextAreaStatement_keyTyped(e);
 	}
 }

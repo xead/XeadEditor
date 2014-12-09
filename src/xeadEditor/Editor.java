@@ -291,6 +291,7 @@ public class Editor extends JFrame {
 	private JMenuItem jMenuItemComponentToListTableData = new JMenuItem();
 	private JMenuItem jMenuItemComponentToListExcel = new JMenuItem();
 	private JMenuItem jMenuItemComponentToShowTips = new JMenuItem();
+	private JMenu jMenuComponentToImportLayout = new JMenu();
 	private JMenuItem jMenuItemComponentToCheckLayout = new JMenuItem();
 	private JMenuItem jMenuItemComponentToEditTableScript = new JMenuItem();
 	private JMenu jMenuComponentToCheckLayoutXF110 = new JMenu();
@@ -3055,6 +3056,7 @@ public class Editor extends JFrame {
 		jMenuItemComponentToListTableData.setText(res.getString("List"));
 		jMenuItemComponentToListExcel.setText(res.getString("DataOutput"));
 		jMenuItemComponentToShowTips.setText(res.getString("TipsToEdit"));
+		jMenuComponentToImportLayout.setText(res.getString("ImportLayout"));
 		jMenuItemComponentToCheckLayout.setText(res.getString("CheckLayout"));
 		jMenuItemComponentToEditTableScript.setText(res.getString("EditTableScript"));
 		jMenuComponentToAddKey.add(jMenuItemComponentToAddPK);
@@ -5041,7 +5043,7 @@ public class Editor extends JFrame {
 		jPanelTableRefer.setLayout(new BorderLayout());
 		jPanelTableRefer.add(jPanelTableReferLeft, BorderLayout.WEST);
 		jPanelTableRefer.add(jPanelTableReferRight, BorderLayout.CENTER);
-		//
+
 		jSplitPaneTableScript.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneTableScript.add(jScrollPaneTableScriptList, JSplitPane.TOP);
 		jSplitPaneTableScript.add(jPanelTableScript, JSplitPane.BOTTOM);
@@ -5050,6 +5052,7 @@ public class Editor extends JFrame {
 		jTextAreaTableScriptNotes.setBackground(jPanelTableScriptTop.getBackground());
 		jTextAreaTableScriptNotes.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextAreaTableScriptNotes.setEditable(false);
+
 		jScrollPaneTableScriptNotes.setBorder(BorderFactory.createEtchedBorder());
 		jScrollPaneTableScriptNotes.getViewport().add(jTextAreaTableScriptNotes, null);
 		jLabelTableScriptName.setEnabled(false);
@@ -5119,6 +5122,7 @@ public class Editor extends JFrame {
 		jTextAreaTableScriptText.addCaretListener(new Editor_jTextAreaTableScriptText_caretAdapter(this));
 		jTextAreaTableScriptText.addMouseListener(new Editor_jTextAreaTableScriptText_mouseAdapter(this));
 		jTextAreaTableScriptText.getDocument().addUndoableEditListener(jTextAreaTableScriptTextUndoManager);
+		jTextAreaTableScriptText.addKeyListener(new Editor_jTextAreaScriptText_keyAdapter(this));
 		jScrollPaneTableScriptText.getViewport().add(jTextAreaTableScriptText, null);
 		InputMap inputMap = jScrollPaneTableScriptText.getInputMap(JSplitPane.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 		inputMap.clear();
@@ -5475,6 +5479,7 @@ public class Editor extends JFrame {
 		jTextAreaFunction000Script.setCaretColor(colorScriptCaret);
 		jTextAreaFunction000Script.setTabSize(4);
 		jTextAreaFunction000Script.addCaretListener(new Editor_jTextAreaFunction000Script_caretAdapter(this));
+		jTextAreaFunction000Script.addKeyListener(new Editor_jTextAreaScriptText_keyAdapter(this));
 		jTextAreaFunction000Script.getDocument().addUndoableEditListener(jTextAreaFunction000ScriptUndoManager);
 		actionMap = jTextAreaFunction000Script.getActionMap();
 		actionMap.put(DefaultEditorKit.pasteAction, actionPasteFunction000Script);
@@ -13633,6 +13638,8 @@ public class Editor extends JFrame {
 	    if (e.getComponent().equals(jScrollPaneFunction200FieldList)) {
 	    	componentType_jPopupMenuComponent = "Function200FieldList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	setupMenuToImportLayout();
+	    	jPopupMenuComponent.add(jMenuComponentToImportLayout);
 	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    	jPopupMenuComponent.add(jMenuItemComponentToCheckLayout);
 			if (jTableFunction200FieldList.getRowCount() == 0) {
@@ -13642,6 +13649,8 @@ public class Editor extends JFrame {
 	    if (e.getComponent().equals(jTableFunction200FieldList)) {
 	    	componentType_jPopupMenuComponent = "Function200FieldList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	setupMenuToImportLayout();
+	    	jPopupMenuComponent.add(jMenuComponentToImportLayout);
 	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    	jPopupMenuComponent.add(jMenuItemComponentToCheckLayout);
 	    	jPopupMenuComponent.addSeparator();
@@ -13720,6 +13729,8 @@ public class Editor extends JFrame {
 	    if (e.getComponent().equals(jScrollPaneFunction290PhraseList)) {
 	    	componentType_jPopupMenuComponent = "Function290PhraseList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	setupMenuToImportLayout();
+	    	jPopupMenuComponent.add(jMenuComponentToImportLayout);
 	    	jPopupMenuComponent.add(jMenuItemComponentToPaste);
 	    	if (pastingDomElement != null) {
 	    		if (pastingDomElement.getTagName().equals("Phrase")) {
@@ -13730,6 +13741,8 @@ public class Editor extends JFrame {
 	    if (e.getComponent().equals(jTableFunction290PhraseList)) {
 	    	componentType_jPopupMenuComponent = "Function290PhraseList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	setupMenuToImportLayout();
+	    	jPopupMenuComponent.add(jMenuComponentToImportLayout);
 	    	jPopupMenuComponent.add(jMenuItemComponentToPaste);
 	    	if (pastingDomElement != null) {
 	    		if (pastingDomElement.getTagName().equals("Phrase")) {
@@ -13750,6 +13763,8 @@ public class Editor extends JFrame {
 	    if (e.getComponent().equals(jScrollPaneFunction300HeaderFieldList)) {
 	    	componentType_jPopupMenuComponent = "Function300HeaderFieldList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	setupMenuToImportLayout();
+	    	jPopupMenuComponent.add(jMenuComponentToImportLayout);
 	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    	jPopupMenuComponent.add(jMenuItemComponentToCheckLayout);
 			if (jTableFunction300HeaderFieldList.getRowCount() == 0) {
@@ -13759,6 +13774,8 @@ public class Editor extends JFrame {
 	    if (e.getComponent().equals(jTableFunction300HeaderFieldList)) {
 	    	componentType_jPopupMenuComponent = "Function300HeaderFieldList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	setupMenuToImportLayout();
+	    	jPopupMenuComponent.add(jMenuComponentToImportLayout);
 	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    	jPopupMenuComponent.add(jMenuItemComponentToCheckLayout);
 	    	jPopupMenuComponent.addSeparator();
@@ -13850,6 +13867,8 @@ public class Editor extends JFrame {
 	    if (e.getComponent().equals(jScrollPaneFunction310HeaderFieldList)) {
 	    	componentType_jPopupMenuComponent = "Function310HeaderFieldList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	setupMenuToImportLayout();
+	    	jPopupMenuComponent.add(jMenuComponentToImportLayout);
 	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    	jPopupMenuComponent.addSeparator();
 	    	jPopupMenuComponent.add(jMenuItemComponentToCheckLayout);
@@ -13861,6 +13880,8 @@ public class Editor extends JFrame {
 	    if (e.getComponent().equals(jTableFunction310HeaderFieldList)) {
 	    	componentType_jPopupMenuComponent = "Function310HeaderFieldList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	setupMenuToImportLayout();
+	    	jPopupMenuComponent.add(jMenuComponentToImportLayout);
 	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
 	    	jPopupMenuComponent.add(jMenuItemComponentToCheckLayout);
 	    	jPopupMenuComponent.addSeparator();
@@ -13958,6 +13979,8 @@ public class Editor extends JFrame {
 	    if (e.getComponent().equals(jScrollPaneFunction390HeaderPhraseList)) {
 	    	componentType_jPopupMenuComponent = "Function390HeaderPhraseList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	setupMenuToImportLayout();
+	    	jPopupMenuComponent.add(jMenuComponentToImportLayout);
 	    	jPopupMenuComponent.add(jMenuItemComponentToPaste);
 	    	if (pastingDomElement != null) {
 	    		if (pastingDomElement.getTagName().equals("HeaderPhrase")) {
@@ -13968,6 +13991,8 @@ public class Editor extends JFrame {
 	    if (e.getComponent().equals(jTableFunction390HeaderPhraseList)) {
 	    	componentType_jPopupMenuComponent = "Function390HeaderPhraseList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
+	    	setupMenuToImportLayout();
+	    	jPopupMenuComponent.add(jMenuComponentToImportLayout);
 	    	jPopupMenuComponent.add(jMenuItemComponentToPaste);
 	    	if (pastingDomElement != null) {
 	    		if (pastingDomElement.getTagName().equals("HeaderPhrase")) {
@@ -14004,164 +14029,8 @@ public class Editor extends JFrame {
 	    jPopupMenuComponent.show(e.getComponent(), e.getX(), e.getY());
 	  }
 
-//	/**
-//	 * Class of XE Undo Manager
-//	 */
-//	class UndoManager {
-//		String[] actionArray = new String[100];
-//		MainTreeNode[] nodeArray = new MainTreeNode[100];
-//		MainTreeNode[] ownerNodeArray = new MainTreeNode[100];
-//		org.w3c.dom.Element[] oldDomElementArray = new org.w3c.dom.Element[100];
-//		org.w3c.dom.Element[] newDomElementArray = new org.w3c.dom.Element[100];
-//		org.w3c.dom.Element savedDomElement;
-//		MainTreeNode savedOwnerNode;
-//		int indexOfLastElement = 0;
-//		int indexOfRedoMax = -1;
-//		int indexOfLastUndo = -1;
-//		boolean undoRedoActionBeingExecuted = false;
-//		//
-//		void addLogOfAdd(MainTreeNode node) {
-//			if (node.isUndoable() && !undoRedoActionBeingExecuted) {
-//				indexOfRedoMax = indexOfLastElement;
-//				indexOfLastUndo = indexOfLastElement;
-//				//
-//				actionArray[indexOfLastElement] = "Add";
-//				nodeArray[indexOfLastElement] = node;
-//				oldDomElementArray[indexOfLastElement] = null;
-//				newDomElementArray[indexOfLastElement] = null;
-//				ownerNodeArray[indexOfLastElement] = (MainTreeNode)node.getParent();
-//				jMenuItemEditUndo.setEnabled(true);
-//				jMenuItemEditRedo.setEnabled(false);
-//				//
-//				changeState.setChanged(true);
-//				countUpIndex();
-//			}
-//		}
-//		//
-//		void addLogOfRemove(MainTreeNode node) {
-//			if (node.isUndoable() && !undoRedoActionBeingExecuted) {
-//				indexOfRedoMax = indexOfLastElement;
-//				indexOfLastUndo = indexOfLastElement;
-//				//
-//				actionArray[indexOfLastElement] = "Remove";
-//				nodeArray[indexOfLastElement] = node;
-//				oldDomElementArray[indexOfLastElement] = null;
-//				newDomElementArray[indexOfLastElement] = null;
-//				ownerNodeArray[indexOfLastElement] = (MainTreeNode)node.getParent();
-//				jMenuItemEditUndo.setEnabled(true);
-//				jMenuItemEditRedo.setEnabled(false);
-//				//
-//				changeState.setChanged(true);
-//				countUpIndex();
-//			}
-//		}
-//		//
-//		void saveNodeBeforeModified(MainTreeNode node) {
-//			if (node.isUndoable()) {
-//				savedDomElement = node.getUndoRedoElement();
-//				savedOwnerNode = (MainTreeNode)node.getParent();
-//			}
-//		}
-//		//
-//		void addLogAfterModified(MainTreeNode node) {
-//			if (node.isUndoable() && !undoRedoActionBeingExecuted) {
-//				indexOfRedoMax = indexOfLastElement;
-//				indexOfLastUndo = indexOfLastElement;
-//				//
-//				actionArray[indexOfLastElement] = "Modify";
-//				nodeArray[indexOfLastElement] = node;
-//				oldDomElementArray[indexOfLastElement] = savedDomElement;
-//				newDomElementArray[indexOfLastElement] = node.getUndoRedoElement();
-//				ownerNodeArray[indexOfLastElement] = savedOwnerNode;
-//				jMenuItemEditUndo.setEnabled(true);
-//				jMenuItemEditRedo.setEnabled(false);
-//				//
-//				changeState.setChanged(true);
-//				countUpIndex();
-//			}
-//		}
-//		//
-//		void countUpIndex() {
-//			if (indexOfLastElement < 99) {
-//				indexOfLastElement = indexOfLastElement + 1;
-//			} else {
-//				for (int i = 0; i < 99; i++) {
-//					nodeArray[i] = nodeArray[i+1];
-//				}
-//				for (int i = 0; i < 99; i++) {
-//					ownerNodeArray[i] = ownerNodeArray[i+1];
-//				}
-//				for (int i = 0; i < 99; i++) {
-//					actionArray[i] = actionArray[i+1];
-//				}
-//				for (int i = 0; i < 99; i++) {
-//					oldDomElementArray[i] = oldDomElementArray[i+1];
-//				}
-//				for (int i = 0; i < 99; i++) {
-//					newDomElementArray[i] = newDomElementArray[i+1];
-//				}
-//				indexOfLastElement = 99;
-//			}
-//		}
-//		//
-//		void undo() {
-//			undoRedoActionBeingExecuted = true;
-//			if (indexOfLastUndo > -1) {
-//				if (actionArray[indexOfLastUndo].equals("Add")) {
-//					nodeArray[indexOfLastUndo].undoAdd(ownerNodeArray[indexOfLastUndo]);
-//				}
-//				if (actionArray[indexOfLastUndo].equals("Modify")) {
-//					nodeArray[indexOfLastUndo].undoModify(oldDomElementArray[indexOfLastUndo], newDomElementArray[indexOfLastUndo]);
-//				}
-//				if (actionArray[indexOfLastUndo].equals("Remove")) {
-//					nodeArray[indexOfLastUndo].undoRemove(ownerNodeArray[indexOfLastUndo]);
-//				}
-//				//
-//				indexOfLastUndo = indexOfLastUndo - 1;
-//				if (indexOfLastUndo == -1) {
-//					jMenuItemEditUndo.setEnabled(false);
-//					changeState.setChanged(false);
-//				}
-//				indexOfLastElement = indexOfLastUndo + 1;
-//				jMenuItemEditRedo.setEnabled(true);
-//			}
-//			undoRedoActionBeingExecuted = false;
-//		}
-//		//
-//		void redo() {
-//			undoRedoActionBeingExecuted = true;
-//			if (indexOfLastUndo < indexOfRedoMax) {
-//				indexOfLastUndo = indexOfLastUndo + 1;
-//				//
-//				if (actionArray[indexOfLastUndo].equals("Add")) {
-//					nodeArray[indexOfLastUndo].redoAdd(ownerNodeArray[indexOfLastUndo]);
-//				}
-//				if (actionArray[indexOfLastUndo].equals("Modify")) {
-//					nodeArray[indexOfLastUndo].redoModify(oldDomElementArray[indexOfLastUndo], newDomElementArray[indexOfLastUndo]);
-//				}
-//				if (actionArray[indexOfLastUndo].equals("Remove")) {
-//					nodeArray[indexOfLastUndo].redoRemove(ownerNodeArray[indexOfLastUndo]);
-//				}
-//				//
-//				if (indexOfLastUndo >= indexOfRedoMax) {
-//					jMenuItemEditRedo.setEnabled(false);
-//				}
-//				changeState.setChanged(true);
-//				indexOfLastElement = indexOfLastUndo + 1;
-//				jMenuItemEditUndo.setEnabled(true);
-//			}
-//			undoRedoActionBeingExecuted = false;
-//		}
-//		//
-//		void resetLog() {
-//			indexOfLastUndo = -1;
-//			indexOfLastElement = 0;
-//			jMenuItemEditUndo.setEnabled(false);
-//			jMenuItemEditRedo.setEnabled(false);
-//		}
-//	}
 	  /**
-	   * Class of XE Undo Manager
+	   * Class of Undo Manager
 	   */
 	  class UndoManager {
 		  ArrayList<String> actionArray = new ArrayList<String>();
@@ -14337,7 +14206,7 @@ public class Editor extends JFrame {
 				  }
 			  }
 			  bf = new StringBuffer();
-			  bf.append(stringBufferForAmendment.toString());
+			  //bf.append(stringBufferForAmendment.toString());
 			  try {
 				for (int i = 0; i < logList.size(); i++) {
 					  bf.append(logList.get(i));
@@ -25401,6 +25270,18 @@ public class Editor extends JFrame {
 		textArea.setCaretPosition(pos);
 		textArea.getCaret().setVisible(true);
 	}
+	
+	void jTextAreaScriptText_keyTyped(KeyEvent e) {
+		if ((e.getModifiersEx() & InputEvent.CTRL_DOWN_MASK) == 0){
+			if ((e.getSource() == jTextAreaTableScriptText && !jTextAreaTableScriptText.isEditable())
+					|| (e.getSource() == jTextAreaFunction000Script && !jTextAreaFunction000Script.isEditable())) {
+				int position = ((JTextArea)e.getSource()).getCaretPosition();
+				JOptionPane.showMessageDialog(null, res.getString("ErrorMessage128"));
+				((JTextArea)e.getSource()).setCaretPosition(position);
+				((JTextArea)e.getSource()).getCaret().setVisible(true);
+			}
+		}
+	}
 
 	public void commentRows(JScrollPane scrollPane) {
 		StringBuffer buf = new StringBuffer();
@@ -26830,6 +26711,217 @@ public class Editor extends JFrame {
 	void jMenuItemComponentToEditTableScript_actionPerformed(ActionEvent e) {
 		if (componentType_jPopupMenuComponent.equals("TableScriptText")) {
 			jButtonTableScriptEdit_actionPerformed(null);
+		}
+	}
+	
+	void jMenuComponentToImportLayout_actionPerformed(org.w3c.dom.Element elementFrom) {
+		NodeList nodeList;
+		ArrayList<String> optionList;
+		int wrkInt;
+		org.w3c.dom.Element newElement, workElement;
+	    org.w3c.dom.Element elementInto = currentMainTreeNode.getElement();
+	    String functionTypeInto = elementInto.getAttribute("Type"); 
+	    String functionTypeFrom = elementFrom.getAttribute("Type"); 
+
+	    if (functionTypeInto.equals("XF200") || functionTypeInto.equals("XF310")) {
+			nodeList = elementInto.getElementsByTagName("Field");
+			wrkInt = nodeList.getLength();
+			for (int i = 0; i < wrkInt; i++) {
+				elementInto.removeChild(elementInto.getElementsByTagName("Field").item(0));
+			}
+		    if (functionTypeFrom.equals("XF200")
+		    		|| functionTypeFrom.equals("XF300")
+		    		|| functionTypeFrom.equals("XF310")) {
+				nodeList = elementFrom.getElementsByTagName("Field");
+				for (int i = 0; i < nodeList.getLength(); i++) {
+					elementInto.appendChild(nodeList.item(i).cloneNode(false));
+				}
+		    }
+	    }
+
+	    if (functionTypeInto.equals("XF290")) {
+			nodeList = elementInto.getElementsByTagName("Phrase");
+			wrkInt = nodeList.getLength();
+			for (int i = 0; i < wrkInt; i++) {
+				elementInto.removeChild(elementInto.getElementsByTagName("Phrase").item(0));
+			}
+		    if (functionTypeFrom.equals("XF290")) {
+				nodeList = elementFrom.getElementsByTagName("Phrase");
+				for (int i = 0; i < nodeList.getLength(); i++) {
+					elementInto.appendChild(nodeList.item(i).cloneNode(false));
+				}
+		    }
+		    if (functionTypeFrom.equals("XF390")) {
+				nodeList = elementFrom.getElementsByTagName("HeaderPhrase");
+				for (int i = 0; i < nodeList.getLength(); i++) {
+					workElement = (org.w3c.dom.Element)nodeList.item(i);
+					newElement = domDocument.createElement("Phrase");
+					newElement.setAttribute("Block", workElement.getAttribute("Block"));
+					newElement.setAttribute("Order", workElement.getAttribute("Order"));
+					newElement.setAttribute("Value", workElement.getAttribute("Value"));
+					newElement.setAttribute("Alignment", workElement.getAttribute("Alignment"));
+					newElement.setAttribute("AlignmentMargin", workElement.getAttribute("AlignmentMargin"));
+					newElement.setAttribute("SpacingAfter", workElement.getAttribute("SpacingAfter"));
+					newElement.setAttribute("FontID", workElement.getAttribute("FontID"));
+					newElement.setAttribute("FontSize", workElement.getAttribute("FontSize"));
+					newElement.setAttribute("FontStyle", workElement.getAttribute("FontStyle"));
+					elementInto.appendChild(newElement);
+				}
+		    }
+	    }
+
+	    if (functionTypeInto.equals("XF300")) {
+			nodeList = elementInto.getElementsByTagName("Field");
+			wrkInt = nodeList.getLength();
+			for (int i = 0; i < wrkInt; i++) {
+				elementInto.removeChild(elementInto.getElementsByTagName("Field").item(0));
+			}
+		    if (functionTypeFrom.equals("XF300")) {
+				nodeList = elementFrom.getElementsByTagName("Field");
+				for (int i = 0; i < nodeList.getLength(); i++) {
+					elementInto.appendChild(nodeList.item(i).cloneNode(false));
+				}
+		    }
+		    if (functionTypeFrom.equals("XF200")
+		    		|| functionTypeFrom.equals("XF310")) {
+				nodeList = elementFrom.getElementsByTagName("Field");
+				for (int i = 0; i < nodeList.getLength(); i++) {
+					workElement = (org.w3c.dom.Element)nodeList.item(i);
+					newElement = domDocument.createElement("Field");
+					newElement.setAttribute("DataSource", workElement.getAttribute("DataSource"));
+					newElement.setAttribute("Order", workElement.getAttribute("Order"));
+					StringBuffer bf = new StringBuffer();
+					optionList = getOptionList(workElement.getAttribute("FieldOptions"));
+					for (int j = 0; j < optionList.size(); j++) {
+						if (!optionList.get(j).startsWith("PROMPT")) {
+							if (!bf.toString().equals("")) {
+								bf.append(",");
+							}
+							bf.append(optionList.get(j));
+						}
+					}
+					newElement.setAttribute("FieldOptions", bf.toString());
+					elementInto.appendChild(newElement);
+				}
+		    }
+	    }
+
+	    if (functionTypeInto.equals("XF390")) {
+			nodeList = elementInto.getElementsByTagName("HeaderPhrase");
+			wrkInt = nodeList.getLength();
+			for (int i = 0; i < wrkInt; i++) {
+				elementInto.removeChild(elementInto.getElementsByTagName("HeaderPhrase").item(0));
+			}
+		    if (functionTypeFrom.equals("XF290")) {
+				nodeList = elementFrom.getElementsByTagName("Phrase");
+				for (int i = 0; i < nodeList.getLength(); i++) {
+					workElement = (org.w3c.dom.Element)nodeList.item(i);
+					newElement = domDocument.createElement("HeaderPhrase");
+					newElement.setAttribute("Block", workElement.getAttribute("Block"));
+					newElement.setAttribute("Order", workElement.getAttribute("Order"));
+					newElement.setAttribute("Value", workElement.getAttribute("Value"));
+					newElement.setAttribute("Alignment", workElement.getAttribute("Alignment"));
+					newElement.setAttribute("AlignmentMargin", workElement.getAttribute("AlignmentMargin"));
+					newElement.setAttribute("SpacingAfter", workElement.getAttribute("SpacingAfter"));
+					newElement.setAttribute("FontID", workElement.getAttribute("FontID"));
+					newElement.setAttribute("FontSize", workElement.getAttribute("FontSize"));
+					newElement.setAttribute("FontStyle", workElement.getAttribute("FontStyle"));
+					elementInto.appendChild(newElement);
+				}
+		    }
+		    if (functionTypeFrom.equals("XF390")) {
+				nodeList = elementFrom.getElementsByTagName("HeaderPhrase");
+				for (int i = 0; i < nodeList.getLength(); i++) {
+					elementInto.appendChild(nodeList.item(i).cloneNode(false));
+				}
+		    }
+	    }
+
+	    informationOnThisPageChanged = true;
+	    currentMainTreeNode.updateFields();
+	    currentMainTreeNode.activateContentsPane();
+	}
+
+	void setupMenuToImportLayout() {
+	    org.w3c.dom.Element elementInto = currentMainTreeNode.getElement();
+	    String functionIDInto = elementInto.getAttribute("ID"); 
+	    String functionTypeInto = elementInto.getAttribute("Type"); 
+		String tableIDInto = "";
+		if (functionTypeInto.equals("XF300")
+	    		|| functionTypeInto.equals("XF310")
+	    		|| functionTypeInto.equals("XF390")) {
+	        tableIDInto = elementInto.getAttribute("HeaderTable");
+	    }
+	    if (functionTypeInto.equals("XF200")
+	    		|| functionTypeInto.equals("XF290")) {
+	        tableIDInto = elementInto.getAttribute("PrimaryTable");
+	    }
+	    org.w3c.dom.Element elementFrom;
+	    String functionIDFrom = ""; 
+	    String functionTypeFrom = ""; 
+		String tableIDFrom = "";
+		boolean isSelected;
+
+	    jMenuComponentToImportLayout.removeAll();
+		jMenuComponentToImportLayout.setEnabled(false);
+
+		NodeList nodeList1 = domDocument.getElementsByTagName("Function");
+		sortingList = getSortedListModel(nodeList1, "ID");
+		for (int i = 0; i < sortingList.getSize(); i++) {
+			elementFrom = (org.w3c.dom.Element)sortingList.getElementAt(i);
+			functionIDFrom = elementFrom.getAttribute("ID"); 
+			functionTypeFrom = elementFrom.getAttribute("Type"); 
+			if (functionTypeFrom.equals("XF300")
+		    		|| functionTypeFrom.equals("XF310")
+		    		|| functionTypeFrom.equals("XF390")) {
+		        tableIDFrom = elementFrom.getAttribute("HeaderTable");
+		    }
+		    if (functionTypeFrom.equals("XF200")
+		    		|| functionTypeFrom.equals("XF290")) {
+		        tableIDFrom = elementFrom.getAttribute("PrimaryTable");
+		    }
+
+			if (tableIDFrom.equals(tableIDInto) && !functionIDFrom.equals(functionIDInto)) {
+				isSelected = false;
+				if (functionTypeInto.equals("XF200")
+						|| functionTypeInto.equals("XF300")
+						|| functionTypeInto.equals("XF310")) {
+					if (functionTypeFrom.equals("XF200")
+							|| functionTypeFrom.equals("XF300")
+							|| functionTypeFrom.equals("XF310")) {
+						isSelected = true;
+					}
+				}
+				if (functionTypeInto.equals("XF290")
+						|| functionTypeInto.equals("XF390")) {
+					if (functionTypeFrom.equals("XF290")
+							|| functionTypeFrom.equals("XF390")) {
+						isSelected = true;
+					}
+				}
+
+				if (isSelected) {
+					JMenuItem item = new JMenuItem(functionIDFrom + " " + elementFrom.getAttribute("Name"));
+					if (functionTypeFrom.equals("XF200")) {
+						item.setIcon(imageIconFunction200);
+					}
+					if (functionTypeFrom.equals("XF290")) {
+						item.setIcon(imageIconFunction290);
+					}
+					if (functionTypeFrom.equals("XF300")) {
+						item.setIcon(imageIconFunction300);
+					}
+					if (functionTypeFrom.equals("XF310")) {
+						item.setIcon(imageIconFunction310);
+					}
+					if (functionTypeFrom.equals("XF390")) {
+						item.setIcon(imageIconFunction390);
+					}
+					item.addActionListener(new Editor_jMenuComponentToImportLayout_actionAdapter(this, elementFrom));
+					jMenuComponentToImportLayout.add(item);
+					jMenuComponentToImportLayout.setEnabled(true);
+				}
+			}
 		}
 	}
 	
@@ -46207,6 +46299,18 @@ class Editor_jMenuItemComponentToShowTips_actionAdapter implements java.awt.even
 	}
 }
 
+class Editor_jMenuComponentToImportLayout_actionAdapter implements java.awt.event.ActionListener {
+	Editor adaptee;
+	org.w3c.dom.Element functionElement;
+	Editor_jMenuComponentToImportLayout_actionAdapter(Editor adaptee, org.w3c.dom.Element functionElement) {
+		this.adaptee = adaptee;
+		this.functionElement = functionElement;
+	}
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jMenuComponentToImportLayout_actionPerformed(functionElement);
+	}
+}
+
 class Editor_jMenuItemComponentToCheckLayout_actionAdapter implements java.awt.event.ActionListener {
 	Editor adaptee;
 	Editor_jMenuItemComponentToCheckLayout_actionAdapter(Editor adaptee) {
@@ -46244,6 +46348,16 @@ class Editor_jTextFieldTableFieldTypeOptionKUBUN_keyAdapter extends java.awt.eve
 	}
 	public void keyReleased(KeyEvent e) {
 		adaptee.jTextFieldTableFieldTypeOptionKUBUN_keyReleased(e);
+	}
+}
+
+class Editor_jTextAreaScriptText_keyAdapter extends java.awt.event.KeyAdapter {
+	Editor adaptee;
+	Editor_jTextAreaScriptText_keyAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void keyTyped(KeyEvent e) {
+		adaptee.jTextAreaScriptText_keyTyped(e);
 	}
 }
 
