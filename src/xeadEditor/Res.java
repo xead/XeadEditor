@@ -265,6 +265,7 @@ public class Res extends java.util.ListResourceBundle {
 		{ "EditTypeNormal", "Normal Edit" },
 		{ "EditTypeNoEdit", "No Edit" },
 		{ "EditTypeZeroSuppress", "Zero Suppress" },
+		{ "EditTypeHourMinuite", "Time(HH:MM)" },
 		{ "ElementName", "Name" },
 		{ "ElementType", "Element" },
 		{ "EOL", "End of line" },

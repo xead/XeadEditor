@@ -264,6 +264,7 @@ public class Res_ja extends java.util.ListResourceBundle {
 		{ "EditTypeNormal", "通常編集" },
 		{ "EditTypeNoEdit", "編集なし" },
 		{ "EditTypeZeroSuppress", "ゼロサプレス" },
+		{ "EditTypeHourMinuite", "時刻(HH:MM)" },
 		{ "ElementName", "定義要素名" },
 		{ "ElementType", "定義要素区分" },
 		{ "EOL", "この後で改行" },

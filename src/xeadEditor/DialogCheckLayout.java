@@ -600,13 +600,18 @@ public class DialogCheckLayout extends JDialog {
 				bf.append(".");
 			}
 			int intSize = dataSize - decimal;
-			for (int i = 1; i <= intSize; i++) {
-				bf.append("9");
-				if (dataTypeOptionList != null
-						&& !dataTypeOptionList.contains("NO_EDIT")
-						&& !dataTypeOptionList.contains("ZERO_SUPPRESS")) {
-					if (i % 3 == 0 && i < intSize) {
-						bf.append(",");
+			if (dataTypeOptionList != null
+					&& dataTypeOptionList.contains("HH_MM")) {
+				bf.append("99:99");
+			} else {
+				for (int i = 1; i <= intSize; i++) {
+					bf.append("9");
+					if (dataTypeOptionList != null
+							&& !dataTypeOptionList.contains("NO_EDIT")
+							&& !dataTypeOptionList.contains("ZERO_SUPPRESS")) {
+						if (i % 3 == 0 && i < intSize) {
+							bf.append(",");
+						}
 					}
 				}
 			}

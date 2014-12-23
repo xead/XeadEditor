@@ -4663,10 +4663,11 @@ public class Editor extends JFrame {
 		jCheckBoxTableFieldAcceptMinus.setText(res.getString("AcceptMinus"));
 		jCheckBoxTableFieldAcceptMinus.setBounds(new Rectangle(1040, 9, 150, 25));
 		jComboBoxTableFieldEditType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jComboBoxTableFieldEditType.setBounds(new Rectangle(1200, 9, 120, 25));
+		jComboBoxTableFieldEditType.setBounds(new Rectangle(1200, 9, 140, 25));
 		jComboBoxTableFieldEditType.addItem(res.getString("EditTypeNormal"));
 		jComboBoxTableFieldEditType.addItem(res.getString("EditTypeNoEdit"));
 		jComboBoxTableFieldEditType.addItem(res.getString("EditTypeZeroSuppress"));
+		jComboBoxTableFieldEditType.addItem(res.getString("EditTypeHourMinuite"));
 		jLabelTableFieldDecimal.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableFieldDecimal.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableFieldDecimal.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -12158,6 +12159,13 @@ public class Editor extends JFrame {
 			result = result + res.getString("EditTypeNoEdit");
 		}
 		//
+		if (optionList.contains("HH_MM")) {
+			if (!result.equals("")) {
+				result = result + ",";
+			}
+			result = result + res.getString("EditTypeHourMinuite");
+		}
+		//
 		if (optionList.contains("ZERO_SUPPRESS")) {
 			if (!result.equals("")) {
 				result = result + ",";
@@ -19472,6 +19480,7 @@ public class Editor extends JFrame {
 				}
 				if (jComboBoxTableFieldEditType.getSelectedIndex() == 0) {
 					if (typeOptionList.contains("NO_EDIT")
+							|| typeOptionList.contains("HH_MM")
 							|| typeOptionList.contains("ZERO_SUPPRESS")) {
 						valueOfFieldsChanged = true;
 					}
@@ -19493,6 +19502,15 @@ public class Editor extends JFrame {
 						options.append(",");
 					}
 					options.append("ZERO_SUPPRESS");
+				}
+				if (jComboBoxTableFieldEditType.getSelectedIndex() == 3) {
+					if (!typeOptionList.contains("HH_MM")) {
+						valueOfFieldsChanged = true;
+					}
+					if (optionsNotNull) {
+						options.append(",");
+					}
+					options.append("HH_MM");
 				}
 				if (jRadioButtonFieldTypeOptionKANJI.isSelected()) {
 					if (!typeOptionList.contains("KANJI")) {
@@ -31738,8 +31756,11 @@ public class Editor extends JFrame {
 					if (!element.getAttribute("Size").equals("")) {
 						jSpinnerTableFieldSize.setValue(Integer.parseInt(element.getAttribute("Size")));
 					}
+					if (tableKeyFieldIDList.contains(fieldID)) {
+						jComboBoxTableFieldType.setEnabled(false);
+					}
 					jRadioButtonFieldTypeOptionNONE.setSelected(true);
-					setupRadioButtonsOfTableFieldType();
+					//setupRadioButtonsOfTableFieldType(false);
 					//
 					if (element.getAttribute("Decimal").equals("")) {
 						jSpinnerTableFieldDecimal.setValue(0);
@@ -31759,7 +31780,11 @@ public class Editor extends JFrame {
 						if (typeOptionList.contains("ZERO_SUPPRESS")) {
 							jComboBoxTableFieldEditType.setSelectedIndex(2);
 						} else {
-							jComboBoxTableFieldEditType.setSelectedIndex(0);
+							if (typeOptionList.contains("HH_MM")) {
+								jComboBoxTableFieldEditType.setSelectedIndex(3);
+							} else {
+								jComboBoxTableFieldEditType.setSelectedIndex(0);
+							}
 						}
 					}
 					//
@@ -33917,7 +33942,6 @@ public class Editor extends JFrame {
 	}
 
 	void setupRadioButtonsOfTableFieldType() {
-		//
 		jLabelTableFieldSize.setVisible(false);
 		jSpinnerTableFieldSize.setVisible(false);
 		jLabelTableFieldDecimal.setVisible(false);
@@ -34209,9 +34233,9 @@ public class Editor extends JFrame {
 	 */
 	void jTableTableKeyList_valueChanged() {
 		int sequence;
-		String wrkStr="";
+		String fieldID, wrkStr="";
 		TableRowNumber tableRowNumber;
-		org.w3c.dom.Element element, element1, element2, element3;
+		org.w3c.dom.Element element, element1, element2, element3, fieldElement;
 		NodeList nodeList1, nodeList2;
 		//
 		if (!tableRowsAreBeingSetup) {
@@ -34256,6 +34280,16 @@ public class Editor extends JFrame {
 							jButtonTableKeyFieldsEdit.setEnabled(true);
 						}
 						jCheckBoxTableDetailRowNumberAuto.setVisible(true);
+						StringTokenizer workTokenizer = new StringTokenizer(tableKeyFields, ";" );
+						boolean hasLastKeyFieldAsNumerous = false;
+						while (workTokenizer.hasMoreTokens()) {
+							fieldID = workTokenizer.nextToken();
+							fieldElement = getSpecificFieldElement(tableID, fieldID);
+							if (getBasicTypeOf(fieldElement.getAttribute("Type")).equals("INTEGER")) {
+								hasLastKeyFieldAsNumerous = true;	
+							}
+						}
+						jCheckBoxTableDetailRowNumberAuto.setEnabled(hasLastKeyFieldAsNumerous);
 					}
 					if (tableKeyType.equals("SK")) {
 						jTextFieldTableKeyType.setText(res.getString("SKey"));
@@ -38758,7 +38792,30 @@ public class Editor extends JFrame {
 					if (dataTypeOptionList.contains("ZERO_SUPPRESS")) {
 						value = Long.toString(numberValue);
 					} else {
-						value = integerFormat.format(numberValue);
+						if (dataTypeOptionList.contains("HH_MM")) {
+							String hourStr = "00";
+							String minuiteStr = "00";
+							String wrkValue = getStringNumber(object.toString());
+							int wrkInt = Integer.parseInt(wrkValue);
+							int hour = wrkInt / 100;
+							if (hour > 9) {
+								hourStr = Integer.toString(hour);
+							} else {
+								hourStr = "0" + Integer.toString(hour);
+							}
+							if (wrkValue.length() == 1) {
+								minuiteStr = "0" + wrkValue;
+							}
+							if (wrkValue.length() == 2) {
+								minuiteStr = wrkValue;
+							}
+							if (wrkValue.length() >= 3) {
+								minuiteStr = wrkValue.substring(wrkValue.length()-2, wrkValue.length());
+							}
+							value = hourStr + ":" + minuiteStr;
+						} else {
+							value = integerFormat.format(numberValue);
+						}
 					}
 				}
 			}
@@ -42743,6 +42800,7 @@ class Editor_TextField extends JTextField implements Editor_EditableField {
 						String wrkStr1 = wrkStr0.replace(".", "");
 						wrkStr1 = wrkStr1.replace(",", "");
 						wrkStr1 = wrkStr1.replace("-", "");
+						wrkStr1 = wrkStr1.replace(":", "");
 						if (wrkStr1.length() > adaptee.digits_) {
 							wrkStr1 = wrkStr1.substring(0, integerSizeOfField) + "." + wrkStr1.substring(integerSizeOfField, wrkStr1.length() - 1);
 							super.replace(0, super.getLength(), wrkStr1, attr);
@@ -42776,6 +42834,7 @@ class Editor_TextField extends JTextField implements Editor_EditableField {
 								String wrkStr1 = wrkStr0.replace(".", "");
 								wrkStr1 = wrkStr1.replace(",", "");
 								wrkStr1 = wrkStr1.replace("-", "");
+								wrkStr1 = wrkStr1.replace(":", "");
 								if (wrkStr1.length() <= adaptee.digits_) {
 									super.insertString( offset, str, attr );
 								}
@@ -42805,6 +42864,9 @@ class Editor_TextArea extends JScrollPane implements Editor_EditableField {
 	public Editor_TextArea(int digits, String dataTypeOptions, Editor editor){
 		super();
 		digits_ = digits;
+		if (digits_ == 0) {
+			digits_ = 2147483647;
+		}
 		editor_ = editor;
 
 		dataTypeOptionList = editor_.getOptionList(dataTypeOptions);

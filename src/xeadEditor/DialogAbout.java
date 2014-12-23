@@ -48,7 +48,13 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2014 DBC,Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
-	public static final String FULL_VERSION  = "V1.R2.M8";
+	public static final String FULL_VERSION  = "V1.R2.M9";
+	//1.2.9
+	//・PKに含まれるフィールドのデータタイプを変更不可にした
+	//・PKの最終キーフィールドが数字属性でない場合には「AUTO行番として処理する」のチェックを無効化するようにした
+	//・テーブルの実データを一覧して選択したときに、長さを0としているvarcharのデータが示されない問題を修正した
+	//・整数フィールド向けに「時刻(HH:MM)」の編集タイプを設けた
+	//
 	//1.2.8
 	//・いくつかの機能タイプのフィールド一覧のコンテキストメニューに、他機能定義からのインポート処理を組み込んだ
 	//・変更ログを記録するためのロジックを修正した
