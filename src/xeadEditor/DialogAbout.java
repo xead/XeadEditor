@@ -48,7 +48,10 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2014 DBC,Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
-	public static final String FULL_VERSION  = "V1.R2.M9";
+	public static final String FULL_VERSION  = "V1.R2.M10";
+	//1.2.10
+	//・PKの最終キーフィールドが数字属性でない場合には「AUTO行番として処理する」のチェックを非表示にするようにした
+	//
 	//1.2.9
 	//・PKに含まれるフィールドのデータタイプを変更不可にした
 	//・PKの最終キーフィールドが数字属性でない場合には「AUTO行番として処理する」のチェックを無効化するようにした

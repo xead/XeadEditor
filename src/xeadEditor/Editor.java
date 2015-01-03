@@ -15927,11 +15927,11 @@ public class Editor extends JFrame {
 			jTextAreaTableRemarks.setText(substringLinesWithTokenOfEOL(domNode_.getAttribute("Remarks"), "\n"));
 			jTextAreaTableRemarks.setCaretPosition(0);
 
-			if (domNode_.getAttribute("DetailRowNumberAuto").equals("T")) {
-				jCheckBoxTableDetailRowNumberAuto.setSelected(true);
-			} else {
-				jCheckBoxTableDetailRowNumberAuto.setSelected(false);
-			}
+			//if (domNode_.getAttribute("DetailRowNumberAuto").equals("T")) {
+			//	jCheckBoxTableDetailRowNumberAuto.setSelected(true);
+			//} else {
+			//	jCheckBoxTableDetailRowNumberAuto.setSelected(false);
+			//}
 
 			//////////////
 			// Key List //
@@ -34253,6 +34253,7 @@ public class Editor extends JFrame {
 				jTextFieldTableKeyFields.setText("");
 				jButtonTableKeyFieldsEdit.setEnabled(false);
 				jCheckBoxTableDetailRowNumberAuto.setVisible(false);
+				jCheckBoxTableDetailRowNumberAuto.setSelected(false);
 				//
 				if (tableModelTableKeyRelationshipList.getRowCount() > 0) {
 					int rowCount = tableModelTableKeyRelationshipList.getRowCount();
@@ -34279,7 +34280,6 @@ public class Editor extends JFrame {
 						if (((MainTreeNode)currentMainTreeNode).getErrorStatus().equals("ER1")) {
 							jButtonTableKeyFieldsEdit.setEnabled(true);
 						}
-						jCheckBoxTableDetailRowNumberAuto.setVisible(true);
 						StringTokenizer workTokenizer = new StringTokenizer(tableKeyFields, ";" );
 						boolean hasLastKeyFieldAsNumerous = false;
 						while (workTokenizer.hasMoreTokens()) {
@@ -34289,7 +34289,14 @@ public class Editor extends JFrame {
 								hasLastKeyFieldAsNumerous = true;	
 							}
 						}
-						jCheckBoxTableDetailRowNumberAuto.setEnabled(hasLastKeyFieldAsNumerous);
+						if (hasLastKeyFieldAsNumerous) {
+							jCheckBoxTableDetailRowNumberAuto.setVisible(true);
+							if (currentMainTreeNode.getElement().getAttribute("DetailRowNumberAuto").equals("T")) {
+								jCheckBoxTableDetailRowNumberAuto.setSelected(true);
+							} else {
+								jCheckBoxTableDetailRowNumberAuto.setSelected(false);
+							}
+						}
 					}
 					if (tableKeyType.equals("SK")) {
 						jTextFieldTableKeyType.setText(res.getString("SKey"));
