@@ -906,9 +906,9 @@ public class DialogAddFunction extends JDialog {
 					element.setAttribute("Direction", "LANDSCAPE");
 					element.setAttribute("Margins", "50;50;50;50");
 					element.setAttribute("WithPageNumber", "T");
-					element.setAttribute("TableFontID", defaultFontID);
-					element.setAttribute("TableFontSize", "9");
-					element.setAttribute("TableRowNoWidth", "5");
+//					element.setAttribute("TableFontID", defaultFontID);
+//					element.setAttribute("TableFontSize", "9");
+//					element.setAttribute("TableRowNoWidth", "5");
 					//
 					childElement = frame_.getDomDocument().createElement("HeaderPhrase");
 					childElement.setAttribute("Order", "0000");
@@ -931,6 +931,7 @@ public class DialogAddFunction extends JDialog {
 							childElement.setAttribute("Value", "&DataSource(" + jTextFieldHeaderTableID.getText() + "." + workElement.getAttribute("ID") + ")"); 
 							childElement.setAttribute("Alignment", "LEFT");
 							childElement.setAttribute("AlignmentMargin", "0");
+							childElement.setAttribute("SpacingAfter", "0");
 							childElement.setAttribute("FontID", defaultFontID);
 							childElement.setAttribute("FontSize", "12");
 							childElement.setAttribute("FontStyle", "");
@@ -939,6 +940,19 @@ public class DialogAddFunction extends JDialog {
 							break;
 						}
 					}
+					//
+					childElement = frame_.getDomDocument().createElement("Detail");
+					childElement.setAttribute("Order", "0010");
+					childElement.setAttribute("Table", jTextFieldDetailTableID.getText());
+					childElement.setAttribute("HeaderKeyFields", headerTableKeys);
+					childElement.setAttribute("KeyFields", detailTableKeys);
+					childElement.setAttribute("Caption", "");
+					childElement.setAttribute("CaptionFontSize", "12");
+					childElement.setAttribute("CaptionFontStyle", "");
+					childElement.setAttribute("FontID", defaultFontID);
+					childElement.setAttribute("FontSize", "10");
+					childElement.setAttribute("RowNoWidth", "5");
+					element.appendChild(childElement);
 					//
 					boolean isNotHeaderKey;
 					int columnCount = 0;
@@ -955,13 +969,13 @@ public class DialogAddFunction extends JDialog {
 								}
 							}
 							if (isNotHeaderKey) {
-								childElement = frame_.getDomDocument().createElement("Column");
-								childElement.setAttribute("Order", Editor.getFormatted4ByteString(columnCount * 10));
-								childElement.setAttribute("DataSource", jTextFieldDetailTableID.getText() + "." + workElement.getAttribute("ID")); 
-								childElement.setAttribute("FieldOptions", "");
-								childElement.setAttribute("Width", "19");
-								childElement.setAttribute("Alignment", "LEFT");
-								element.appendChild(childElement);
+								grandChildElement = frame_.getDomDocument().createElement("Column");
+								grandChildElement.setAttribute("Order", Editor.getFormatted4ByteString(columnCount * 10));
+								grandChildElement.setAttribute("DataSource", jTextFieldDetailTableID.getText() + "." + workElement.getAttribute("ID")); 
+								grandChildElement.setAttribute("FieldOptions", "");
+								grandChildElement.setAttribute("Width", "19");
+								grandChildElement.setAttribute("Alignment", "LEFT");
+								childElement.appendChild(grandChildElement);
 								columnCount++;
 							}
 						} else {

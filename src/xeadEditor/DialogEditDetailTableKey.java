@@ -190,7 +190,7 @@ public class DialogEditDetailTableKey extends JDialog {
 			} else {
 				jTextFieldHdrKeyFields.setText(headerKeys);
 			}
-			if (functionElement_.getAttribute("Type").equals("XF300")) {
+			if (functionElement_.getAttribute("Type").equals("XF300") || functionElement_.getAttribute("Type").equals("XF390")) {
 				jTextFieldHdrKeyFields.setEditable(true);
 			} else {
 				jTextFieldHdrKeyFields.setEditable(false);

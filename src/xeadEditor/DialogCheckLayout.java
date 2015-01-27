@@ -1833,10 +1833,10 @@ class DialogCheckLayoutField extends JPanel {
 		wrkStr = dialog_.getEditor().getOptionValueWithKeyword(fieldOptions, "COMMENT");
 		if (!wrkStr.equals("")) {
 			jLabelFieldComment = new JLabel();
-			jLabelFieldComment.setText(" " + wrkStr);
+			jLabelFieldComment.setText(wrkStr);
 			jLabelFieldComment.setForeground(Color.blue);
 			jLabelFieldComment.setFont(new java.awt.Font(dialog_.driverFontName_, 0, DialogCheckLayout.FONT_SIZE-2));
-			jLabelFieldComment.setVerticalAlignment(SwingConstants.TOP);
+			//jLabelFieldComment.setVerticalAlignment(SwingConstants.TOP);
 			FontMetrics metrics = jLabelFieldComment.getFontMetrics(jLabelFieldComment.getFont());
 			this.setPreferredSize(new Dimension(this.getPreferredSize().width + metrics.stringWidth(wrkStr) + 6, this.getPreferredSize().height));
 		}

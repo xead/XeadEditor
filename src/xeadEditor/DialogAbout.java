@@ -48,7 +48,13 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2014 DBC,Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
-	public static final String FULL_VERSION  = "V1.R2.M10";
+	public static final String FULL_VERSION  = "V1.R2.M11";
+	//1.2.11
+	//・XF290,XF390について、異なるテーブルを処理する機能定義からもレイアウトをインポートできるようにした
+	//・レイアウト確認パネルでのフィールドの「コメント」について表示様式を微調整した
+	//・XF390で複数の明細テーブルを扱えるようにした
+	//・ファイル更新時に他ユーザによる更新をチェックするようにした
+	//
 	//1.2.10
 	//・PKの最終キーフィールドが数字属性でない場合には「AUTO行番として処理する」のチェックを非表示にするようにした
 	//

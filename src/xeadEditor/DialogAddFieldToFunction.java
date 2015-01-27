@@ -34,12 +34,15 @@ package xeadEditor;
 import java.awt.*;
 
 import javax.swing.*;
+
 //import javax.swing.table.DefaultTableCellRenderer;
 //import javax.swing.table.DefaultTableModel;
 //import javax.swing.table.TableCellRenderer;
 //import javax.swing.table.TableColumn;
 import org.w3c.dom.NodeList;
+
 import xeadEditor.Editor.SortableDomElementListModel;
+
 //import xeadEditor.Editor.MainTreeNode;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -195,7 +198,7 @@ public class DialogAddFieldToFunction extends JDialog {
 			tableID = objectElement.getAttribute("HeaderTable");
 		}
 		if (tableType_.equals("Function390DetailFieldList")) {
-			tableID = objectElement.getAttribute("DetailTable");
+			tableID = objectElement.getAttribute("Table");
 		}
 
 		if (tableType_.equals("Function200TabFieldList")) {

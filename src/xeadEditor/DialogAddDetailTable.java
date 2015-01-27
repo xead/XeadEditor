@@ -41,6 +41,7 @@ import xeadEditor.Editor.SortableDomElementListModel;
 import xeadEditor.Editor.MainTreeNode;
 
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
@@ -276,52 +277,143 @@ public class DialogAddDetailTable extends JDialog {
 			} else {
 				newElement.setAttribute("KeyFields", jTextFieldDtlKeyFields.getText());
 			}
-			newElement.setAttribute("DetailFunction", "XXXXX");
 			newElement.setAttribute("Caption", detailTableNode.getElement().getAttribute("Name"));
-			newElement.setAttribute("InitialMsg", "");
-			//
-			NodeList nodeList = detailTableNode.getElement().getElementsByTagName("Field");
-			sortingList = frame_.getSortedListModel(nodeList, "Order");
-		    for (int i = 0; i < sortingList.getSize(); i++) {
-		    	if (i < 4) {
-		    		workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
-		    		childElement = frame_.getDomDocument().createElement("Column");
-		    		childElement.setAttribute("Order", "00" + Integer.toString(i + 1) + "0");
-		    		childElement.setAttribute("DataSource", detailTableNode.getElement().getAttribute("ID") + "." + workElement.getAttribute("ID")); 
-	    			childElement.setAttribute("FieldOptions", "");
-		    		newElement.appendChild(childElement);
-		    	} else {
-		    		break;
-		    	}
+
+			boolean isNotHeaderKey;
+			org.w3c.dom.Element workElement1, workElement2;
+			String headerTableKeys = "";
+			if (!jTextFieldHdrKeyFields.getText().equals(headerPK)) {
+				headerTableKeys = jTextFieldHdrKeyFields.getText();
 			}
-			//
-			childElement = frame_.getDomDocument().createElement("Button");
-			childElement.setAttribute("Position", "0");
-			childElement.setAttribute("Number", "3");
-			childElement.setAttribute("Caption", res.getString("Close"));
-			childElement.setAttribute("Action", "EXIT");
-			newElement.appendChild(childElement);
-			childElement = frame_.getDomDocument().createElement("Button");
-			childElement.setAttribute("Position", "3");
-			childElement.setAttribute("Number", "6");
-			childElement.setAttribute("Caption", res.getString("Add"));
-			childElement.setAttribute("Action", "ADD");
-			newElement.appendChild(childElement);
-			childElement = frame_.getDomDocument().createElement("Button");
-			childElement.setAttribute("Position", "4");
-			childElement.setAttribute("Number", "8");
-			childElement.setAttribute("Caption", res.getString("HDRData"));
-			childElement.setAttribute("Action", "HEADER");
-			newElement.appendChild(childElement);
-			childElement = frame_.getDomDocument().createElement("Button");
-			childElement.setAttribute("Position", "6");
-			childElement.setAttribute("Number", "12");
-			childElement.setAttribute("Caption", res.getString("Output"));
-			childElement.setAttribute("Action", "OUTPUT");
-			newElement.appendChild(childElement);
-			//
+			String detailTableKeys = "";
+			if (!jTextFieldDtlKeyFields.getText().equals(detailPK)) {
+				detailTableKeys = jTextFieldDtlKeyFields.getText();
+			}
+			String workHeaderTableKeys = headerTableKeys;
+			if (workHeaderTableKeys.equals("")) {
+				workElement1 = frame_.getSpecificPKElement(objectFunctionElement_.getAttribute("HeaderTable"));
+				workHeaderTableKeys = workElement1.getAttribute("Fields");
+			}
+			String workDetailTableKeys = detailTableKeys;
+			if (workDetailTableKeys.equals("")) {
+				workElement2 = frame_.getSpecificPKElement(detailTableNode.getElement().getAttribute("ID"));
+				workDetailTableKeys = workElement2.getAttribute("Fields");
+			}
+			ArrayList<String> headerKeyList = new ArrayList<String>();
+			StringTokenizer workTokenizer = new StringTokenizer(workHeaderTableKeys, ";" );
+			while (workTokenizer.hasMoreTokens()) {
+				headerKeyList.add(workTokenizer.nextToken());
+			}
+			ArrayList<String> detailKeyList = new ArrayList<String>();
+			workTokenizer = new StringTokenizer(workDetailTableKeys, ";" );
+			while (workTokenizer.hasMoreTokens()) {
+				detailKeyList.add(workTokenizer.nextToken());
+			}
+
+			if (objectFunctionElement_.getAttribute("Type").equals("XF300")) {
+
+				newElement.setAttribute("DetailFunction", "NONE");
+				newElement.setAttribute("InitialMsg", "");
+
+				int columnCount = 0;
+				NodeList nodeList = detailTableNode.getElement().getElementsByTagName("Field");
+				sortingList = frame_.getSortedListModel(nodeList, "Order");
+				for (int i = 0; i < sortingList.getSize(); i++) {
+					if (columnCount < 5) {
+						workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
+						isNotHeaderKey = true;
+						for (int j = 0; j < headerKeyList.size(); j++) {
+							if (workElement.getAttribute("ID").equals(detailKeyList.get(j))) {
+								isNotHeaderKey = false;
+								break;
+							}
+						}
+						if (isNotHeaderKey) {
+							childElement = frame_.getDomDocument().createElement("Column");
+							childElement.setAttribute("Order", "00" + Integer.toString(i + 1) + "0");
+							childElement.setAttribute("DataSource", detailTableNode.getElement().getAttribute("ID") + "." + workElement.getAttribute("ID")); 
+							childElement.setAttribute("FieldOptions", "");
+							newElement.appendChild(childElement);
+							columnCount++;
+						}
+					} else {
+						break;
+					}
+				}
+
+				childElement = frame_.getDomDocument().createElement("Button");
+				childElement.setAttribute("Position", "0");
+				childElement.setAttribute("Number", "3");
+				childElement.setAttribute("Caption", res.getString("Close"));
+				childElement.setAttribute("Action", "EXIT");
+				newElement.appendChild(childElement);
+				childElement = frame_.getDomDocument().createElement("Button");
+				childElement.setAttribute("Position", "3");
+				childElement.setAttribute("Number", "6");
+				childElement.setAttribute("Caption", res.getString("Add"));
+				childElement.setAttribute("Action", "ADD");
+				newElement.appendChild(childElement);
+				childElement = frame_.getDomDocument().createElement("Button");
+				childElement.setAttribute("Position", "4");
+				childElement.setAttribute("Number", "8");
+				childElement.setAttribute("Caption", res.getString("HDRData"));
+				childElement.setAttribute("Action", "HEADER");
+				newElement.appendChild(childElement);
+				childElement = frame_.getDomDocument().createElement("Button");
+				childElement.setAttribute("Position", "6");
+				childElement.setAttribute("Number", "12");
+				childElement.setAttribute("Caption", res.getString("Output"));
+				childElement.setAttribute("Action", "OUTPUT");
+				newElement.appendChild(childElement);
+			}
+			
+			if (objectFunctionElement_.getAttribute("Type").equals("XF390")) {
+
+				//Get Default Font ID//
+				org.w3c.dom.Element fontElement;
+				String defaultFontID = "";
+				NodeList fontList = frame_.getDomDocument().getElementsByTagName("PrintFont");
+				sortingList = frame_.getSortedListModel(fontList, "FontName");
+				fontElement = (org.w3c.dom.Element)sortingList.getElementAt(0);
+				defaultFontID = fontElement.getAttribute("ID");
+
+				newElement.setAttribute("CaptionFontSize", "12");
+				newElement.setAttribute("CaptionFontStyle", "");
+				newElement.setAttribute("FontID", defaultFontID);
+				newElement.setAttribute("FontSize", "10");
+				newElement.setAttribute("RowNoWidth", "5");
+
+				int columnCount = 0;
+				NodeList nodeList = detailTableNode.getElement().getElementsByTagName("Field");
+				sortingList = frame_.getSortedListModel(nodeList, "Order");
+				for (int i = 0; i < sortingList.getSize(); i++) {
+					if (columnCount < 5) {
+						workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
+						isNotHeaderKey = true;
+						for (int j = 0; j < headerKeyList.size(); j++) {
+							if (workElement.getAttribute("ID").equals(detailKeyList.get(j))) {
+								isNotHeaderKey = false;
+								break;
+							}
+						}
+						if (isNotHeaderKey) {
+							childElement = frame_.getDomDocument().createElement("Column");
+							childElement.setAttribute("Order", Editor.getFormatted4ByteString(columnCount * 10));
+							childElement.setAttribute("DataSource", detailTableNode.getElement().getAttribute("ID") + "." + workElement.getAttribute("ID")); 
+							childElement.setAttribute("FieldOptions", "");
+							childElement.setAttribute("Width", "19");
+							childElement.setAttribute("Alignment", "LEFT");
+							newElement.appendChild(childElement);
+							columnCount++;
+						}
+					} else {
+						break;
+					}
+				}
+			}
+
 			this.setVisible(false);
-			//
+
 		} else {
 			JOptionPane.showMessageDialog(this, errorMessage);
 		}

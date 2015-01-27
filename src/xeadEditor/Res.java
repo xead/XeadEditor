@@ -467,6 +467,7 @@ public class Res extends java.util.ListResourceBundle {
 		{ "File", "File" },
 		{ "FileNameImporting", "File Importing From" },
 		{ "FileSpecifiedNotFound", "File with specified name and the valid extention is not found." },
+		{ "FileUpdateMessage", "This file has been already updated by the other user. Save changes?" },
 		{ "FilterOfDetailList", "Filter of Detail List" },
 		{ "FilterOption", "Filter Option" },
 		{ "Filters", "Filters" },

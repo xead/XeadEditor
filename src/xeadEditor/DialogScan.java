@@ -736,10 +736,25 @@ public class DialogScan extends JDialog {
 								scanAttribute(workElement1, "FunctionPhrase", res.getString("Function/HDRPhrase"), "Value", res.getString("PhraseFormula"));
 							}
 							//
-							workList1 = workElement.getElementsByTagName("Column");
-							for (int j = 0; j < workList1.getLength(); j++) {
-								workElement1 = (org.w3c.dom.Element)workList1.item(j);
-								scanAttribute(workElement1, "Function390DetailField", res.getString("Function/DTLField"), "FieldOptions_CAPTION", res.getString("Caption"));
+							workList1 = workElement.getElementsByTagName("Detail");
+							if (workList1.getLength() == 0) {
+								workList2 = workElement.getElementsByTagName("Column");
+								for (int j = 0; j < workList2.getLength(); j++) {
+									workElement1 = (org.w3c.dom.Element)workList2.item(j);
+									scanAttribute(workElement1, "Function390DetailField", res.getString("Function/DTLField"), "FieldOptions_CAPTION", res.getString("Caption"));
+								}
+							} else {
+								for (int j = 0; j < workList1.getLength(); j++) {
+									workElement1 = (org.w3c.dom.Element)workList1.item(j);
+									scanAttribute(workElement1, "FunctionDetail", res.getString("Function/DTLTab"), "Caption", res.getString("Caption"));
+									scanAttribute(workElement1, "FunctionDetail", res.getString("Function/DTLTab"), "FixedWhere", res.getString("FixedWhere"));
+									//
+									workList2 = workElement1.getElementsByTagName("Column");
+									for (int k = 0; k < workList2.getLength(); k++) {
+										workElement2 = (org.w3c.dom.Element)workList2.item(k);
+										scanAttribute(workElement2, "Function390DetailField", res.getString("Function/DTLField"), "FieldOptions_CAPTION", res.getString("Caption"));
+									}
+								}
 							}
 						}
 					}

@@ -467,6 +467,7 @@ public class Res_ja extends java.util.ListResourceBundle {
 		{ "File", "ファイル" },
 		{ "FileNameImporting", "インポート元ファイル" },
 		{ "FileSpecifiedNotFound", "有効な拡張子を持つ指定名のファイルが見つかりません。" },
+		{ "FileUpdateMessage", "ファイルを開いた後に、別のユーザによって更新されています。保存しますか？" },
 		{ "FilterOfDetailList", "一覧検索条件フィールド" },
 		{ "FilterOption", "検査オプション" },
 		{ "Filters", "検索条件" },
