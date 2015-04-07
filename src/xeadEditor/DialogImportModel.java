@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2014 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2015 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -988,6 +988,12 @@ public class DialogImportModel extends JDialog {
 					childElement.setAttribute("Nullable", "T");
 				}
 				//
+				if (workElement1.getAttribute("NoUpdate").equals("true")) {
+					childElement.setAttribute("NoUpdate", "T");
+				} else {
+					childElement.setAttribute("NoUpdate", "F");
+				}
+				//
 				if (workElement1.getAttribute("AttributeType").equals("NATIVE")) {
 					childElement.setAttribute("TypeOptions", "");
 				} else {
@@ -1362,7 +1368,7 @@ public class DialogImportModel extends JDialog {
 			childElement = frame_.getDomDocument().createElement("Phrase");
 			childElement.setAttribute("Order", "0000");
 			childElement.setAttribute("Block", "HEADER");
-			childElement.setAttribute("Value", "&Text(" + modelElement.getAttribute("Name") + ")");
+			childElement.setAttribute("Value", "&Text(" + modelElement.getAttribute("Name").replace("ÇÃàÛç¸", "") + ")");
 			childElement.setAttribute("Alignment", "CENTER");
 			childElement.setAttribute("FontID", defaultFontID);
 			childElement.setAttribute("FontSize", "15");
@@ -1635,7 +1641,7 @@ public class DialogImportModel extends JDialog {
 			childElement = frame_.getDomDocument().createElement("HeaderPhrase");
 			childElement.setAttribute("Order", "0000");
 			childElement.setAttribute("Block", "HEADER");
-			childElement.setAttribute("Value", "&Text(" + modelElement.getAttribute("Name") + ")");
+			childElement.setAttribute("Value", "&Text(" + modelElement.getAttribute("Name").replace("ÇÃàÛç¸", "") + ")");
 			childElement.setAttribute("Alignment", "CENTER");
 			childElement.setAttribute("FontID", defaultFontID);
 			childElement.setAttribute("FontSize", "15");

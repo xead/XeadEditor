@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2014 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2015 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -48,7 +48,14 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
 	public static final String COPYRIGHT = "Copyright 2014 DBC,Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
-	public static final String FULL_VERSION  = "V1.R2.M11";
+	public static final String FULL_VERSION  = "V1.R2.M12";
+	//1.2.12
+	//・XF290,XF390の追加およびモデルからのインポートについて、帳票タイトル設定を微調整した
+	//・システムノードのundo/redoに関する細かいバグを修正した
+	//・フィールド属性として「更新不可」のチェックボックスを組み込んだ
+	//・Linuxで利用するために、ツリービューの処理ロジックおよびDriverの起動様式を改善した
+	//・データ保守ユーティリティで、行選択していない状態でDelキーが使えるバグを修正した
+	//
 	//1.2.11
 	//・XF290,XF390について、異なるテーブルを処理する機能定義からもレイアウトをインポートできるようにした
 	//・レイアウト確認パネルでのフィールドの「コメント」について表示様式を微調整した

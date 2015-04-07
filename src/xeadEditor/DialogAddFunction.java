@@ -683,7 +683,7 @@ public class DialogAddFunction extends JDialog {
 				childElement = frame_.getDomDocument().createElement("Phrase");
 				childElement.setAttribute("Order", "0000");
 				childElement.setAttribute("Block", "HEADER");
-				childElement.setAttribute("Value", "&Text(" + jTextFieldName.getText() + ")");
+				childElement.setAttribute("Value", "&Text(" + jTextFieldName.getText().replace("ÇÃàÛç¸", "") + ")");
 				childElement.setAttribute("Alignment", "CENTER");
 				childElement.setAttribute("FontID", defaultFontID);
 				childElement.setAttribute("FontSize", "15");
@@ -906,14 +906,11 @@ public class DialogAddFunction extends JDialog {
 					element.setAttribute("Direction", "LANDSCAPE");
 					element.setAttribute("Margins", "50;50;50;50");
 					element.setAttribute("WithPageNumber", "T");
-//					element.setAttribute("TableFontID", defaultFontID);
-//					element.setAttribute("TableFontSize", "9");
-//					element.setAttribute("TableRowNoWidth", "5");
 					//
 					childElement = frame_.getDomDocument().createElement("HeaderPhrase");
 					childElement.setAttribute("Order", "0000");
 					childElement.setAttribute("Block", "HEADER");
-					childElement.setAttribute("Value", "&Text(" + jTextFieldName.getText() + ")");
+					childElement.setAttribute("Value", "&Text(" + jTextFieldName.getText().replace("ÇÃàÛç¸", "") + ")");
 					childElement.setAttribute("Alignment", "CENTER");
 					childElement.setAttribute("FontID", defaultFontID);
 					childElement.setAttribute("FontSize", "15");

@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2014 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2015 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -700,6 +700,7 @@ public class Editor extends JFrame {
 	private SpinnerNumberModel spinnerNumberModelTableFieldDecimal = new SpinnerNumberModel(0, 0, 10, 1);
 	private JSpinner jSpinnerTableFieldDecimal = new JSpinner(spinnerNumberModelTableFieldDecimal);
 	private JCheckBox jCheckBoxTableFieldNullable = new JCheckBox();
+	private JCheckBox jCheckBoxTableFieldNoUpdate = new JCheckBox();
 	private JLabel jLabelTableFieldByteaType = new JLabel();
 	private JTextField jTextFieldTableFieldByteaType = new JTextField();
 	private JLabel jLabelTableFieldTypeOptions = new JLabel();
@@ -3126,7 +3127,7 @@ public class Editor extends JFrame {
 		jTreeMain.addKeyListener(new Editor_jTreeMain_keyAdapter(this));
 		jTreeMain.addMouseListener(new Editor_jTreeMain_mouseAdapter(this));
 		jTreeMain.addMouseMotionListener(new Editor_jTreeMain_mouseMotionAdapter(this));
-		jTreeMain.setCellRenderer((TreeCellRenderer)mainTreeRenderer);
+		jTreeMain.setCellRenderer(mainTreeRenderer);
 		jTreeMain.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 		jScrollPaneTreeView.getViewport().add(jTreeMain, null);
 		/**
@@ -4473,8 +4474,8 @@ public class Editor extends JFrame {
 		column1.setPreferredWidth(200);
 		column2.setPreferredWidth(250);
 		column3.setPreferredWidth(150);
-		column4.setPreferredWidth(230);
-		column5.setPreferredWidth(550);
+		column4.setPreferredWidth(330);
+		column5.setPreferredWidth(450);
 		column0.setCellRenderer(rendererAlignmentCenterControlColor);
 		column1.setCellRenderer(rendererAlignmentLeftControlColor);
 		column2.setCellRenderer(rendererAlignmentLeftControlColor);
@@ -4723,6 +4724,9 @@ public class Editor extends JFrame {
 		jCheckBoxTableFieldNullable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jCheckBoxTableFieldNullable.setText(res.getString("Nullable"));
 		jCheckBoxTableFieldNullable.setBounds(new Rectangle(640, 40, 150, 25));
+		jCheckBoxTableFieldNoUpdate.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxTableFieldNoUpdate.setText(res.getString("NoUpdate"));
+		jCheckBoxTableFieldNoUpdate.setBounds(new Rectangle(790, 40, 150, 25));
 		//
 		jLabelTableFieldTypeOptions.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableFieldTypeOptions.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -4846,6 +4850,7 @@ public class Editor extends JFrame {
 		jPanelTableFieldTop.add(jLabelTableFieldDecimal);
 		jPanelTableFieldTop.add(jSpinnerTableFieldDecimal);
 		jPanelTableFieldTop.add(jCheckBoxTableFieldNullable);
+		jPanelTableFieldTop.add(jCheckBoxTableFieldNoUpdate);
 		jPanelTableFieldTop.add(jLabelTableFieldTypeOptions);
 		jPanelTableFieldTop.add(jRadioButtonFieldTypeOptionNONE);
 		jPanelTableFieldTop.add(jRadioButtonFieldTypeOptionAUTO_NUMBER);
@@ -12276,8 +12281,11 @@ public class Editor extends JFrame {
 		//
 		return stringSize;
 	}
-	
     public String getDescriptionsOfTypeOptions(org.w3c.dom.Element fieldElement, boolean mentionToBeVirtual, org.w3c.dom.Element tableElement) {
+    	return getDescriptionsOfTypeOptions(fieldElement, mentionToBeVirtual, tableElement, false);
+    }
+	
+    public String getDescriptionsOfTypeOptions(org.w3c.dom.Element fieldElement, boolean mentionToBeVirtual, org.w3c.dom.Element tableElement, boolean isPrimaryKey) {
 		org.w3c.dom.Element keyElement;
 		StringTokenizer workTokenizer; 
 		String wrkStr;
@@ -12376,6 +12384,13 @@ public class Editor extends JFrame {
 				result = result + ",";
 			}
 			result = result + res.getString("Nullable");
+        }
+		//
+        if (!isPrimaryKey && fieldElement.getAttribute("NoUpdate").equals("T")) {
+			if (!result.equals("")) {
+				result = result + ",";
+			}
+			result = result + res.getString("NoUpdate");
         }
 		//
 		if (tableElement != null) {
@@ -14488,23 +14503,24 @@ public class Editor extends JFrame {
 	class MenuTreeRenderer extends DefaultTreeCellRenderer {
 		private static final long serialVersionUID = 1L;
 		public Component getTreeCellRendererComponent(JTree tree,Object treeNode,boolean selected,boolean expanded,boolean leaf,int row,boolean hasFocus) {
-			//
+
 			Component renderer = super.getTreeCellRendererComponent(tree,treeNode,selected,expanded,leaf,row,hasFocus);
-			//
+
 			if (hasFocus) {
 				this.setBackgroundSelectionColor(SELECTED_ACTIVE_COLOR);
 			} else {
 				this.setBackgroundSelectionColor(SELECTED_INACTIVE_COLOR);
 				this.setForeground(Color.black);
 			}
-			//
-			//Set text expression of node//
-			if (((MenuTreeNode)treeNode).getElement() != null) {
-				this.setText(((MenuTreeNode)treeNode).toString());
-				//
+
+			try {
+				MenuTreeNode menuNode = (MenuTreeNode)treeNode;
+				org.w3c.dom.Element menuElement = menuNode.getElement();
+
+				this.setText(menuNode.toString());
 				this.setIcon(imageIconMenu);
-				//
-				String type = ((MenuTreeNode)treeNode).getElement().getAttribute("Type");
+
+				String type = menuElement.getAttribute("Type");
 				if (type.equals("XF000")) {
 					this.setIcon(imageIconFunction000);
 				}
@@ -14529,8 +14545,40 @@ public class Editor extends JFrame {
 				if (type.equals("XF390")) {
 					this.setIcon(imageIconFunction390);
 				}
-			}
-			//
+			} catch (Exception e) {}
+//
+//			//Set text expression of node//
+//			if (menuElement != null) {
+//				this.setText(menuNode.toString());
+//				this.setIcon(imageIconMenu);
+//
+//				String type = menuElement.getAttribute("Type");
+//				if (type.equals("XF000")) {
+//					this.setIcon(imageIconFunction000);
+//				}
+//				if (type.equals("XF100")) {
+//					this.setIcon(imageIconFunction100);
+//				}
+//				if (type.equals("XF110")) {
+//					this.setIcon(imageIconFunction110);
+//				}
+//				if (type.equals("XF200")) {
+//					this.setIcon(imageIconFunction200);
+//				}
+//				if (type.equals("XF290")) {
+//					this.setIcon(imageIconFunction290);
+//				}
+//				if (type.equals("XF300")) {
+//					this.setIcon(imageIconFunction300);
+//				}
+//				if (type.equals("XF310")) {
+//					this.setIcon(imageIconFunction310);
+//				}
+//				if (type.equals("XF390")) {
+//					this.setIcon(imageIconFunction390);
+//				}
+//			}
+
 			return renderer;
 		}
 	}
@@ -14539,24 +14587,30 @@ public class Editor extends JFrame {
 	 */
 	class MainTreeRenderer extends DefaultTreeCellRenderer {
 		private static final long serialVersionUID = 1L;
-		
 		public Component getTreeCellRendererComponent(JTree tree, Object treeNode, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-			//
-			String status = ((MainTreeNode)treeNode).getErrorStatus();
+
 			Component renderer = super.getTreeCellRendererComponent(tree,treeNode,selected,expanded,leaf,row,hasFocus);
-			//
+
+			//Cast node as MainTreeNode//
+			String text = "";
+			String status = "";
+			String nodeType = "";
+			try {
+				MainTreeNode node = (MainTreeNode)treeNode;
+				text = node.toString();
+				status = ((MainTreeNode)treeNode).getErrorStatus();
+				nodeType = ((MainTreeNode)treeNode).getType();
+			} catch (Exception e) {}
+
 			if (hasFocus) {
 				this.setBackgroundSelectionColor(SELECTED_ACTIVE_COLOR);
 			} else {
 				this.setBackgroundSelectionColor(SELECTED_INACTIVE_COLOR);
 				this.setForeground(Color.black);
 			}
-			//
-			//Set text expression of node//
-			this.setText(((MainTreeNode)treeNode).toString());
-			//
-			//Set graphic expression of node//
-			String nodeType = ((MainTreeNode)treeNode).getType();
+
+			this.setText(text);
+
 			if (nodeType == "System") {
 				if (status.equals("")) {
 					this.setIcon(imageIconSystem);
@@ -14624,7 +14678,7 @@ public class Editor extends JFrame {
 					this.setIcon(imageIconFunction390);
 				}
 			}
-			//
+
 			return renderer;
 		}
 	}
@@ -14988,24 +15042,6 @@ public class Editor extends JFrame {
 
 		public String getTipText() {
 			String str = "";
-//			if (nodeType_.equals("System")) {
-//				str = domNode_.getAttribute("Name");
-//			}
-//			if (nodeType_.equals("MenuList")) {
-//				str = res.getString("MenuList");
-//			}
-//			if (nodeType_.equals("Menu")) {
-//				str = domNode_.getAttribute("ID") + " " + domNode_.getAttribute("Name");
-//			}
-//			if (nodeType_.equals("SubsystemList")) {
-//				str = res.getString("Application");
-//			}
-//			if (nodeType_.equals("Subsystem")) {
-//				str = domNode_.getAttribute("ID") + " " + domNode_.getAttribute("Name");
-//			}
-//			if (nodeType_.equals("FunctionList")) {
-//				str = res.getString("FunctionList");
-//			}
 			if (nodeType_.equals("Function")) {
 				if (domNode_.getAttribute("Type").equals("XF000")) {
 					str = res.getString("FunctionTypeXF000");
@@ -15032,18 +15068,6 @@ public class Editor extends JFrame {
 					str = res.getString("FunctionTypeXF390");
 				}
 			}
-//			if (nodeType_.equals("TableList")) {
-//				str = res.getString("TableList");
-//			}
-//			if (nodeType_.equals("Table")) {
-//				String wrk1 = getCaseShiftValue(domNode_.getAttribute("ID"), "Upper");
-//				String wrk2 = getCaseShiftValue(domNode_.getAttribute("Name"), "Upper");
-//				if (wrk1.equals(wrk2)) {
-//					str = domNode_.getAttribute("ID");
-//				} else {
-//					str = domNode_.getAttribute("ID") + " " + domNode_.getAttribute("Name");
-//				}
-//			}
 			return str;
 		}
 
@@ -16015,6 +16039,7 @@ public class Editor extends JFrame {
 			org.w3c.dom.Element element, tableElement, tablePKElement;
 			String wrkStr;
 			boolean isTableDataEditable = false;
+			boolean isPrimaryKey = false;
 			String basicType;
 			ArrayList<Integer> columnWidthList = new ArrayList<Integer>();
 			ArrayList<String> columnTypeList = new ArrayList<String>();
@@ -16141,12 +16166,6 @@ public class Editor extends JFrame {
 			jTextAreaTableRemarks.setText(substringLinesWithTokenOfEOL(domNode_.getAttribute("Remarks"), "\n"));
 			jTextAreaTableRemarks.setCaretPosition(0);
 
-			//if (domNode_.getAttribute("DetailRowNumberAuto").equals("T")) {
-			//	jCheckBoxTableDetailRowNumberAuto.setSelected(true);
-			//} else {
-			//	jCheckBoxTableDetailRowNumberAuto.setSelected(false);
-			//}
-
 			//////////////
 			// Key List //
 			//////////////
@@ -16213,6 +16232,7 @@ public class Editor extends JFrame {
 			nodeList1 = domNode_.getElementsByTagName("Field");
 			sortingList = getSortedListModel(nodeList1, "Order");
 		    for (int i = 0; i < sortingList.getSize(); i++) {
+				isPrimaryKey = false;
 		        element1 = (org.w3c.dom.Element)sortingList.getElementAt(i);
 				Object[] Cell = new Object[6];
 				Cell[0] = new TableRowNumber(i+1, element1);
@@ -16221,6 +16241,7 @@ public class Editor extends JFrame {
 					Cell[2] = element1.getAttribute("Name");
 				} else {
 					if (tableKeyFieldIDList.contains(element1.getAttribute("ID"))) {
+						isPrimaryKey = true;
 						Cell[1] = "<html><strong>" + element1.getAttribute("ID");
 						Cell[2] = "<html><strong>" + element1.getAttribute("Name");
 					} else {
@@ -16229,7 +16250,7 @@ public class Editor extends JFrame {
 					}
 				}
 				Cell[3] = getDescriptionsOfTypeAndSize(element1.getAttribute("Type"), element1.getAttribute("Size"), element1.getAttribute("Decimal"));
-				Cell[4] = getDescriptionsOfTypeOptions(element1, false, null);
+				Cell[4] = getDescriptionsOfTypeOptions(element1, false, null, isPrimaryKey);
 				Cell[5] = getFirstParagraph(element1.getAttribute("Remarks"));
 				tableModelTableFieldList.addRow(Cell);
 				if (isTableDataEditable) {
@@ -18669,6 +18690,14 @@ public class Editor extends JFrame {
 				domNode_.setAttribute("OutputFolder", oldElement.getAttribute("OutputFolder"));
 				domNode_.setAttribute("WelcomePageURL", oldElement.getAttribute("WelcomePageURL"));
 				domNode_.setAttribute("DateFormat", oldElement.getAttribute("DateFormat"));
+				domNode_.setAttribute("DBCP", oldElement.getAttribute("DBCP"));
+				domNode_.setAttribute("DriverVMOptions", oldElement.getAttribute("DriverVMOptions"));
+				domNode_.setAttribute("SkipPreload", oldElement.getAttribute("SkipPreload"));
+				domNode_.setAttribute("SmtpHost", oldElement.getAttribute("SmtpHost"));
+				domNode_.setAttribute("SmtpPort", oldElement.getAttribute("SmtpPort"));
+				domNode_.setAttribute("SmtpUser", oldElement.getAttribute("SmtpUser"));
+				domNode_.setAttribute("SmtpPassword", oldElement.getAttribute("SmtpPassword"));
+				domNode_.setAttribute("SystemFont", oldElement.getAttribute("SystemFont"));
 				//
 				//Replace Sub-DB data//
 				NodeList currentSubDBList = systemNode.getElement().getElementsByTagName("SubDB");
@@ -18774,6 +18803,14 @@ public class Editor extends JFrame {
 				domNode_.setAttribute("OutputFolder", newElement.getAttribute("OutputFolder"));
 				domNode_.setAttribute("WelcomePageURL", newElement.getAttribute("WelcomePageURL"));
 				domNode_.setAttribute("DateFormat", newElement.getAttribute("DateFormat"));
+				domNode_.setAttribute("DBCP", newElement.getAttribute("DBCP"));
+				domNode_.setAttribute("DriverVMOptions", newElement.getAttribute("DriverVMOptions"));
+				domNode_.setAttribute("SkipPreload", newElement.getAttribute("SkipPreload"));
+				domNode_.setAttribute("SmtpHost", newElement.getAttribute("SmtpHost"));
+				domNode_.setAttribute("SmtpPort", newElement.getAttribute("SmtpPort"));
+				domNode_.setAttribute("SmtpUser", newElement.getAttribute("SmtpUser"));
+				domNode_.setAttribute("SmtpPassword", newElement.getAttribute("SmtpPassword"));
+				domNode_.setAttribute("SystemFont", newElement.getAttribute("SystemFont"));
 				//
 				//Replace Sub-DB data//
 				NodeList currentSubDBList = systemNode.getElement().getElementsByTagName("SubDB");
@@ -19657,6 +19694,17 @@ public class Editor extends JFrame {
 				if (!jCheckBoxTableFieldNullable.isSelected() && element.getAttribute("Nullable").equals("T")) {
 					valueOfFieldsChanged = true;
 					element.setAttribute("Nullable", "F");
+				}
+
+				if (!tableKeyFieldIDList.contains(jTextFieldTableFieldID.getText())) {
+					if (jCheckBoxTableFieldNoUpdate.isSelected() && !element.getAttribute("NoUpdate").equals("T")) {
+						valueOfFieldsChanged = true;
+						element.setAttribute("NoUpdate", "T");
+					}
+					if (!jCheckBoxTableFieldNoUpdate.isSelected() && element.getAttribute("NoUpdate").equals("T")) {
+						valueOfFieldsChanged = true;
+						element.setAttribute("NoUpdate", "F");
+					}
 				}
 
 				if (jCheckBoxTableFieldPhysical.isSelected() && typeOptionList.contains("VIRTUAL")) {
@@ -26593,25 +26641,46 @@ public class Editor extends JFrame {
 
 		if (rtn1 == 0) {
 			StringBuffer bf = new StringBuffer();
-			bf.append("javaw ");
-			bf.append(jTextFieldSystemDriverVMOptions.getText());
-			bf.append(" -jar \"");
-			bf.append(applicationFolder);
-			bf.append("xeaddrv.jar\" \"");
-			bf.append(currentFileName);
-			bf.append("\"");
-			if (!jTextFieldSystemEditorUser.getText().equals("")) {
-				bf.append(" \"");
-				bf.append(jTextFieldSystemEditorUser.getText());
+
+			if (System.getProperty("os.name").toLowerCase().startsWith("windows")) {
+				bf.append("javaw ");
+				bf.append(jTextFieldSystemDriverVMOptions.getText());
+				bf.append(" -jar \"");
+				bf.append(applicationFolder);
+				bf.append("xeaddrv.jar\" \"");
+				bf.append(currentFileName);
 				bf.append("\"");
-				if (!jTextFieldSystemEditorUserPassword.getText().equals("")) {
+				if (!jTextFieldSystemEditorUser.getText().equals("")) {
 					bf.append(" \"");
-					bf.append(jTextFieldSystemEditorUserPassword.getText());
+					bf.append(jTextFieldSystemEditorUser.getText());
 					bf.append("\"");
+					if (!jTextFieldSystemEditorUserPassword.getText().equals("")) {
+						bf.append(" \"");
+						bf.append(jTextFieldSystemEditorUserPassword.getText());
+						bf.append("\"");
+					}
 				}
-			}
-			if (jCheckBoxSystemSkipPreload.isSelected()) {
-				bf.append(" \"SKIP_PRELOAD\"");
+				if (jCheckBoxSystemSkipPreload.isSelected()) {
+					bf.append(" \"SKIP_PRELOAD\"");
+				}
+			} else {
+				bf.append("java ");
+				bf.append(jTextFieldSystemDriverVMOptions.getText());
+				bf.append(" -jar ");
+				bf.append(applicationFolder);
+				bf.append("xeaddrv.jar ");
+				bf.append(currentFileName);
+				if (!jTextFieldSystemEditorUser.getText().equals("")) {
+					bf.append(" ");
+					bf.append(jTextFieldSystemEditorUser.getText());
+					if (!jTextFieldSystemEditorUserPassword.getText().equals("")) {
+						bf.append(" ");
+						bf.append(jTextFieldSystemEditorUserPassword.getText());
+					}
+				}
+				if (jCheckBoxSystemSkipPreload.isSelected()) {
+					bf.append(" SKIP_PRELOAD");
+				}
 			}
 
 			try {
@@ -27717,6 +27786,7 @@ public class Editor extends JFrame {
 			newElement.setAttribute("Type", "CHAR");
 			newElement.setAttribute("Size", "5");
 			newElement.setAttribute("Nullable", "F");
+			newElement.setAttribute("NoUpdate", "F");
 			newElement.setAttribute("TypeOptions", "");
 		}
 		//
@@ -27942,7 +28012,9 @@ public class Editor extends JFrame {
 		String wrkStr, errorMsg = "";
 		//
 		if (componentType_jPopupMenuComponent.equals("TableDataList")) {
-			jButtonTableDataFieldsToDelete_actionPerformed(null);
+			if (jButtonTableDataFieldsToDelete.isEnabled()) {
+				jButtonTableDataFieldsToDelete_actionPerformed(null);
+			}
 		} else {
 			//Delete TreeViewNode//
 			if (componentType_jPopupMenuComponent.equals("MenuList") ||
@@ -32123,6 +32195,8 @@ public class Editor extends JFrame {
 				jSpinnerTableFieldDecimal.setEnabled(false);
 				jCheckBoxTableFieldNullable.setEnabled(false);
 				jCheckBoxTableFieldNullable.setSelected(false);
+				jCheckBoxTableFieldNoUpdate.setEnabled(false);
+				jCheckBoxTableFieldNoUpdate.setSelected(false);
 				jLabelTableFieldTypeOptions.setEnabled(false);
 				jRadioButtonFieldTypeOptionKANJI.setEnabled(false);
 				jRadioButtonFieldTypeOptionKATAKANA.setEnabled(false);
@@ -32184,6 +32258,9 @@ public class Editor extends JFrame {
 					String fieldID = element.getAttribute("ID");
 					jTextFieldTableFieldID.setText(fieldID);
 					jTextFieldTableFieldName.setText(element.getAttribute("Name"));
+					if (!tableKeyFieldIDList.contains(jTextFieldTableFieldID.getText())) {
+						jCheckBoxTableFieldNoUpdate.setEnabled(true);
+					}
 					//
 					jComboBoxTableFieldType.setSelectedItem(element.getAttribute("Type"));
 					if (!element.getAttribute("Size").equals("")) {
@@ -32193,7 +32270,6 @@ public class Editor extends JFrame {
 						jComboBoxTableFieldType.setEnabled(false);
 					}
 					jRadioButtonFieldTypeOptionNONE.setSelected(true);
-					//setupRadioButtonsOfTableFieldType(false);
 					//
 					if (element.getAttribute("Decimal").equals("")) {
 						jSpinnerTableFieldDecimal.setValue(0);
@@ -32235,6 +32311,16 @@ public class Editor extends JFrame {
 						jCheckBoxTableFieldNullable.setSelected(true);
 					} else {
 						jCheckBoxTableFieldNullable.setSelected(false);
+					}
+					//
+					if (tableKeyFieldIDList.contains(jTextFieldTableFieldID.getText())) {
+						jCheckBoxTableFieldNoUpdate.setSelected(true);
+					} else {
+						if (element.getAttribute("NoUpdate").equals("T")) {
+							jCheckBoxTableFieldNoUpdate.setSelected(true);
+						} else {
+							jCheckBoxTableFieldNoUpdate.setSelected(false);
+						}
 					}
 					//
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("TypeOptions"), "AUTO_NUMBER");

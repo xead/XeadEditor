@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2014 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2015 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -252,8 +252,8 @@ public class DialogImport extends JDialog {
 		column0.setPreferredWidth(40);
 		column1.setPreferredWidth(30);
 		column2.setPreferredWidth(120);
-		column3.setPreferredWidth(250);
-		column4.setPreferredWidth(100);
+		column3.setPreferredWidth(230);
+		column4.setPreferredWidth(120);
 		column0.setCellRenderer(rendererAlignmentCenter);
 		CheckBoxRenderer checkBoxRenderer = new CheckBoxRenderer();
 		column1.setCellRenderer(checkBoxRenderer);
@@ -639,6 +639,7 @@ public class DialogImport extends JDialog {
     				workElement2.setAttribute("Size", workElement.getAttribute("Size"));
     				workElement2.setAttribute("Decimal", workElement.getAttribute("Decimal"));
     				workElement2.setAttribute("Nullable", workElement.getAttribute("Nullable"));
+    				workElement2.setAttribute("NoUpdate", workElement.getAttribute("NoUpdate"));
     				workElement2.setAttribute("TypeOptions", workElement.getAttribute("TypeOptions"));
     				break;
     			}
@@ -1414,7 +1415,7 @@ public class DialogImport extends JDialog {
 						if (jComboBoxSubsystemInto.getSelectedIndex() == 0) {
 							Cell[4] = "?";
 						} else {
-							Cell[4] = getProcessType("Table", element.getAttribute("ID"));
+							Cell[4] = getProcessType("Table", element.getAttribute("ID"), element);
 						}
 						tableModelTableListFrom.addRow(Cell);
 					}
@@ -1434,7 +1435,7 @@ public class DialogImport extends JDialog {
 						if (jComboBoxSubsystemInto.getSelectedIndex() == 0) {
 							Cell[4] = "?";
 						} else {
-							Cell[4] = getProcessType("Function", element.getAttribute("ID"));
+							Cell[4] = getProcessType("Function", element.getAttribute("ID"), null);
 						}
 						tableModelFunctionListFrom.addRow(Cell);
 					}
@@ -1454,7 +1455,7 @@ public class DialogImport extends JDialog {
 		}
 	}
 	
-	String getProcessType(String tagName, String id) {
+	String getProcessType(String tagName, String id, org.w3c.dom.Element fromElement) {
 		String processType = "";
 		String subsystemID;
 		org.w3c.dom.Element subsystemElement, element;
@@ -1480,6 +1481,20 @@ public class DialogImport extends JDialog {
 					}
 					break;
 				}
+			}
+			//
+			if (tagName.equals("Table") && !processType.equals("UNMATCH")) {
+				nodeList = fromElement.getElementsByTagName("Refer");
+				for (int i = 0; i < nodeList.getLength(); i++) {
+					element = (org.w3c.dom.Element)nodeList.item(i);
+					if (!isValidTableID(element.getAttribute("ToTable"))) {
+						processType = "NO_JOINNED";
+						break;
+					}
+				}
+			}
+			//
+			if (tagName.equals("Function") && !processType.equals("UNMATCH")) {
 			}
 		}
 		//
@@ -1537,11 +1552,11 @@ public class DialogImport extends JDialog {
 				//
 				for (int i = 0; i < tableModelTableListFrom.getRowCount(); i++) {
 					tableRowNumber = (TableRowNumber)tableModelTableListFrom.getValueAt(i, 0);
-					tableModelTableListFrom.setValueAt(getProcessType("Table", tableRowNumber.getElement().getAttribute("ID")), i, 4);
+					tableModelTableListFrom.setValueAt(getProcessType("Table", tableRowNumber.getElement().getAttribute("ID"), tableRowNumber.getElement()), i, 4);
 				}
 				for (int i = 0; i < tableModelFunctionListFrom.getRowCount(); i++) {
 					tableRowNumber = (TableRowNumber)tableModelFunctionListFrom.getValueAt(i, 0);
-					tableModelFunctionListFrom.setValueAt(getProcessType("Function", tableRowNumber.getElement().getAttribute("ID")), i, 4);
+					tableModelFunctionListFrom.setValueAt(getProcessType("Function", tableRowNumber.getElement().getAttribute("ID"), null), i, 4);
 				}
 				//
 				jButtonImport.setEnabled(isReadyToStartImport());
