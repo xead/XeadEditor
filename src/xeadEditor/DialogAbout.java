@@ -46,9 +46,17 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String APPLICATION_NAME  = "XEAD Editor 1.2";
 	public static final String FORMAT_VERSION  = "1.2";
 	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
-	public static final String COPYRIGHT = "Copyright 2014 DBC,Ltd.";
+	public static final String COPYRIGHT = "Copyright 2015 DBC,Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
-	public static final String FULL_VERSION  = "V1.R2.M12";
+	public static final String FULL_VERSION  = "V1.R2.M14";
+	//1.2.14
+	//・Java1.8に対応するために、sort処理をcomparatorからcomparableベースに修正した
+	//・xeafのインポートが出来なくなっていたバグを修正(5/6)
+	//
+	//1.2.13
+	//・XF110,200,310の見出し域フィールドの水平位置設定と間隔を同時に変更すると反映されないバグを修正した
+	//・フィールドタイプにBYTEAを指定して変更すると編集パネルのレイアウトが一部崩れるバグを修正した
+	//
 	//1.2.12
 	//・XF290,XF390の追加およびモデルからのインポートについて、帳票タイトル設定を微調整した
 	//・システムノードのundo/redoに関する細かいバグを修正した

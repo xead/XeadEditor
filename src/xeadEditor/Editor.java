@@ -52,7 +52,6 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.*;
 import java.util.regex.Pattern;
-
 import javax.script.Compilable;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -71,13 +70,11 @@ import javax.swing.text.InternationalFormatter;
 import javax.swing.text.PlainDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.tree.*;
-
 import org.apache.poi.ss.usermodel.Footer;
 import org.apache.poi.xssf.usermodel.*;
 import org.apache.xerces.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.*;
-
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
@@ -2246,7 +2243,7 @@ public class Editor extends JFrame {
 			// Java Version Check //
 			////////////////////////
 			String version = System.getProperty("java.version");
-			if (!version.startsWith("1.6.") && !version.startsWith("1.7.")) {
+			if (!version.startsWith("1.7.") && !version.startsWith("1.8.")) {
 				JOptionPane.showMessageDialog(null, res.getString("JavaVersionError1") + version + res.getString("JavaVersionError2"));
 				System.exit(0);
 			}
@@ -14682,48 +14679,48 @@ public class Editor extends JFrame {
 			return renderer;
 		}
 	}
-	/**
-	 * Class of Node Comparator
-	 */
-	class NodeComparator implements java.util.Comparator<MainTreeNode> {
-		public int compare( MainTreeNode node1, MainTreeNode node2 ) {
-			String value1, value2;
-			value1 = node1.getElement().getAttribute("SortKey");
-			value2 = node2.getElement().getAttribute("SortKey");
-			int compareResult = value1.compareTo(value2);
-			if (compareResult == 0) {
-				value1 = node1.getElement().getAttribute("ID");
-				value2 = node2.getElement().getAttribute("ID");
-				compareResult = value1.compareTo(value2);
-				if (compareResult == 0) {
-					compareResult = 1;
-				}
-			}
-			return(compareResult);
-		}
-	}
-	/**
-	 * Class of Element Comparator
-	 */
-	class ElementComparator implements java.util.Comparator<org.w3c.dom.Element> {
-		private String attName_ = "";
-		//
-		public ElementComparator (String attName) {
-			super();
-			attName_ = attName;
-		}
-		//
-	    public int compare(org.w3c.dom.Element element1, org.w3c.dom.Element element2 ) {
-	      String value1, value2;
-	      value1 = element1.getAttribute(attName_);
-	      value2 = element2.getAttribute(attName_);
-	      int compareResult = value1.compareTo(value2);
-	      if (compareResult == 0) {
-	          compareResult = 1;
-	      }
-	      return(compareResult);
-	    }
-	}
+//	/**
+//	 * Class of Node Comparator
+//	 */
+//	class NodeComparator implements java.util.Comparator<MainTreeNode> {
+//		public int compare( MainTreeNode node1, MainTreeNode node2 ) {
+//			String value1, value2;
+//			value1 = node1.getElement().getAttribute("SortKey");
+//			value2 = node2.getElement().getAttribute("SortKey");
+//			int compareResult = value1.compareTo(value2);
+//			if (compareResult == 0) {
+//				value1 = node1.getElement().getAttribute("ID");
+//				value2 = node2.getElement().getAttribute("ID");
+//				compareResult = value1.compareTo(value2);
+//				if (compareResult == 0) {
+//					compareResult = 1;
+//				}
+//			}
+//			return(compareResult);
+//		}
+//	}
+//	/**
+//	 * Class of Element Comparator
+//	 */
+//	class ElementComparator implements java.util.Comparator<org.w3c.dom.Element> {
+//		private String attName_ = "";
+//		//
+//		public ElementComparator (String attName) {
+//			super();
+//			attName_ = attName;
+//		}
+//		//
+//	    public int compare(org.w3c.dom.Element element1, org.w3c.dom.Element element2 ) {
+//	      String value1, value2;
+//	      value1 = element1.getAttribute(attName_);
+//	      value2 = element2.getAttribute(attName_);
+//	      int compareResult = value1.compareTo(value2);
+//	      if (compareResult == 0) {
+//	          compareResult = 1;
+//	      }
+//	      return(compareResult);
+//	    }
+//	}
 	
 	SortableDomElementListModel getSortedListModel(NodeList list, String attName) {
 		SortableDomElementListModel sortableDomElementListModel = new SortableDomElementListModel(attName);
@@ -14736,7 +14733,7 @@ public class Editor extends JFrame {
 		return sortableDomElementListModel;
 	}
 	/**
-	 * Class of DOM-element-model to sort elements by its "SortKey"
+	 * Class of DOM-element-model to sort elements by a specified attribute name
 	 */
 	class SortableDomElementListModel extends DefaultListModel {
 		private static final long serialVersionUID = 1L;
@@ -14745,23 +14742,60 @@ public class Editor extends JFrame {
 			super();
 			attName_ = attName;
 		}
+		public void addElement(Object object) {
+			XeadElement element = new XeadElement((org.w3c.dom.Element)object, attName_);
+			super.addElement(element);
+		}
 	    public void sortElements() {
-	      TreeSet<org.w3c.dom.Element> treeSet = new TreeSet<org.w3c.dom.Element>(new ElementComparator(attName_));
-	      int elementCount = this.getSize();
-	      org.w3c.dom.Element domElement;
-	      for (int i = 0; i < elementCount; i++) {
-	        domElement = (org.w3c.dom.Element)this.getElementAt(i);
-	        treeSet.add(domElement);
-	      }
-	      this.removeAllElements();
-	      Iterator<org.w3c.dom.Element> it = treeSet.iterator();
-	      while( it.hasNext() ){
-	        domElement = (org.w3c.dom.Element)it.next();
-	        this.addElement(domElement);
-	      }
+//	      TreeSet<org.w3c.dom.Element> treeSet = new TreeSet<org.w3c.dom.Element>(new ElementComparator(attName_));
+//	      int elementCount = this.getSize();
+//	      org.w3c.dom.Element domElement;
+//	      for (int i = 0; i < elementCount; i++) {
+//	        domElement = (org.w3c.dom.Element)this.getElementAt(i);
+//	        treeSet.add(domElement);
+//	      }
+//	      this.removeAllElements();
+//	      Iterator<org.w3c.dom.Element> it = treeSet.iterator();
+//	      while( it.hasNext() ){
+//	        domElement = (org.w3c.dom.Element)it.next();
+//	        this.addElement(domElement);
+//	      }
+			ArrayList<XeadElement> list = new ArrayList<XeadElement>();
+			for (int i = 0; i < this.getSize(); i++) {
+				list.add((XeadElement)super.getElementAt(i));
+			}
+			this.removeAllElements();
+			Collections.sort(list);
+			Iterator<XeadElement> it = list.iterator();
+			while(it.hasNext()){
+				super.addElement(it.next());
+			}
 	    }
+		public Object getElementAt(int index) {
+			XeadElement element = (XeadElement)super.getElementAt(index);
+			return element.getElement();
+		}
 	}
 
+	/**
+	 * Class of Comparable Element
+	 */
+	class XeadElement implements Comparable {
+		private org.w3c.dom.Element domNode_;
+		private String attName_ = "";
+		public XeadElement(org.w3c.dom.Element node, String attName) {
+			super();
+			domNode_ = node;
+			attName_ = attName;
+		}
+		public org.w3c.dom.Element getElement() {
+			return domNode_;
+		}
+        public int compareTo(Object other) {
+            XeadElement otherNode = (XeadElement)other;
+            return domNode_.getAttribute(attName_).compareTo(otherNode.getElement().getAttribute(attName_));
+        }
+	}
 
 	class MenuTreeNode extends DefaultMutableTreeNode {
 		private static final long serialVersionUID = 1L;
@@ -14919,7 +14953,7 @@ public class Editor extends JFrame {
 		}
 	}
 	
-	class MainTreeNode extends DefaultMutableTreeNode {
+	class MainTreeNode extends DefaultMutableTreeNode implements Comparable {
 		private static final long serialVersionUID = 1L;
 		private Editor editor_;
 		private String nodeType_;
@@ -14933,6 +14967,11 @@ public class Editor extends JFrame {
 			domNode_ = node;
 		}
 
+		public int compareTo(Object other) {
+            MainTreeNode otherNode = (MainTreeNode)other;
+            return domNode_.getAttribute("SortKey").compareTo(otherNode.getElement().getAttribute("SortKey"));
+        }
+
 		public Editor getEditor() {
 			return editor_;
 		}
@@ -14944,7 +14983,6 @@ public class Editor extends JFrame {
 		public String getErrorStatus() {
 			return errorStatus_;
 		}
-
 
 		public String toString() {
 			String str = "???";
@@ -15530,18 +15568,30 @@ public class Editor extends JFrame {
 		}
 
 		public void sortChildNodes() {
-			TreeSet<MainTreeNode> treeSet = new TreeSet<MainTreeNode>(new NodeComparator());
-			int childCount = this.getChildCount();
+//			TreeSet<MainTreeNode> treeSet = new TreeSet<MainTreeNode>(new NodeComparator());
+//			int childCount = this.getChildCount();
+//			MainTreeNode node;
+//			for (int i = 0; i < childCount; i++) {
+//				node = (MainTreeNode)this.getChildAt(i);
+//				treeSet.add(node);
+//			}
+//			this.removeAllChildren();
+//			Iterator<MainTreeNode> it = treeSet.iterator();
+//			while( it.hasNext() ){
+//				node = (MainTreeNode)it.next();
+//				this.add(node);
+//			}
+			ArrayList<MainTreeNode> list = new ArrayList<MainTreeNode>();
 			MainTreeNode node;
-			for (int i = 0; i < childCount; i++) {
+			for (int i = 0; i < this.getChildCount(); i++) {
 				node = (MainTreeNode)this.getChildAt(i);
-				treeSet.add(node);
+				list.add(node);
 			}
 			this.removeAllChildren();
-			Iterator<MainTreeNode> it = treeSet.iterator();
+			Collections.sort(list);
+			Iterator<MainTreeNode> it = list.iterator();
 			while( it.hasNext() ){
-				node = (MainTreeNode)it.next();
-				this.add(node);
+				this.add((MainTreeNode)it.next());
 			}
 		}
 
@@ -15806,7 +15856,7 @@ public class Editor extends JFrame {
 			columnList = domNode_.getElementsByTagName("MaintenanceLog");
 			sortingList = getSortedListModel(columnList, "SortKey");
 			for (int i = 0; i < sortingList.getSize(); i++) {
-				element = (org.w3c.dom.Element)sortingList.elementAt(i);
+				element = (org.w3c.dom.Element)sortingList.getElementAt(i);
 				Object[] Cell = new Object[4];
 				Cell[0] =  new TableRowNumber(i+1, element);
 				Cell[1] = element.getAttribute("SortKey");
@@ -21796,7 +21846,15 @@ public class Editor extends JFrame {
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "HORIZONTAL");
 				if (jRadioButtonFunction110BatchFieldLayoutOptionHorizontal.isSelected()) {
 					if (jTextFieldFunction110BatchFieldMargin.getText().equals("*Auto") || jTextFieldFunction110BatchFieldMargin.getText().equals("") || jTextFieldFunction110BatchFieldMargin.getText().equals("0")) {
-						if (!optionList.contains("HORIZONTAL")) {
+						//if (!optionList.contains("HORIZONTAL")) {
+						boolean isNotHorizontal = true;
+						for (int i=0;i <optionList.size();i++) {
+							if (optionList.get(i).contains("HORIZONTAL")) {
+								isNotHorizontal = false;
+								break;
+							}
+						}
+						if (isNotHorizontal) {
 							valueOfFieldsChanged = true;
 						}
 						if (!wrkOptions.equals("")) {
@@ -21806,7 +21864,15 @@ public class Editor extends JFrame {
 					} else {
 						wrkStr2 = getStringSizeValue(jTextFieldFunction110BatchFieldMargin.getText(), "", 1, 500);
 						if (wrkStr2.equals("")) {
-							if (!optionList.contains("HORIZONTAL")) {
+							//if (!optionList.contains("HORIZONTAL")) {
+							boolean isNotHorizontal = true;
+							for (int i=0;i <optionList.size();i++) {
+								if (optionList.get(i).contains("HORIZONTAL")) {
+									isNotHorizontal = false;
+									break;
+								}
+							}
+							if (isNotHorizontal) {
 								valueOfFieldsChanged = true;
 							}
 							if (!wrkOptions.equals("")) {
@@ -21827,8 +21893,14 @@ public class Editor extends JFrame {
 				//
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "VERTICAL");
 				if (jRadioButtonFunction110BatchFieldLayoutOptionVertical.isSelected()) {
-					if (optionList.contains("HORIZONTAL")) {
-						valueOfFieldsChanged = true;
+//					if (optionList.contains("HORIZONTAL")) {
+//						valueOfFieldsChanged = true;
+//					}
+					for (int i=0;i <optionList.size();i++) {
+						if (optionList.get(i).contains("HORIZONTAL")) {
+							valueOfFieldsChanged = true;
+							break;
+						}
 					}
 					if (jTextFieldFunction110BatchFieldMargin.getText().equals("*Auto") || jTextFieldFunction110BatchFieldMargin.getText().equals("") || jTextFieldFunction110BatchFieldMargin.getText().equals("0")) {
 						if (!wrkStr.equals("")) {
@@ -22282,7 +22354,17 @@ public class Editor extends JFrame {
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "HORIZONTAL");
 				if (jRadioButtonFunction200FieldLayoutOptionHorizontal.isSelected()) {
 					if (jTextFieldFunction200FieldMargin.getText().equals("*Auto") || jTextFieldFunction200FieldMargin.getText().equals("") || jTextFieldFunction200FieldMargin.getText().equals("0")) {
-						if (!optionList.contains("HORIZONTAL") || !wrkStr.equals("")) {
+//						if (!optionList.contains("HORIZONTAL") || !wrkStr.equals("")) {
+//							valueOfFieldsChanged = true;
+//						}
+						boolean isNotHorizontal = true;
+						for (int i=0;i <optionList.size();i++) {
+							if (optionList.get(i).contains("HORIZONTAL")) {
+								isNotHorizontal = false;
+								break;
+							}
+						}
+						if (isNotHorizontal || !wrkStr.equals("")) {
 							valueOfFieldsChanged = true;
 						}
 						if (!wrkOptions.equals("")) {
@@ -22292,7 +22374,15 @@ public class Editor extends JFrame {
 					} else {
 						wrkStr2 = getStringSizeValue(jTextFieldFunction200FieldMargin.getText(), "", 1, 500);
 						if (wrkStr2.equals("")) {
-							if (!optionList.contains("HORIZONTAL")) {
+							//if (!optionList.contains("HORIZONTAL")) {
+							boolean isNotHorizontal = true;
+							for (int i=0;i <optionList.size();i++) {
+								if (optionList.get(i).contains("HORIZONTAL")) {
+									isNotHorizontal = false;
+									break;
+								}
+							}
+							if (isNotHorizontal) {
 								valueOfFieldsChanged = true;
 							}
 							if (!wrkOptions.equals("")) {
@@ -22313,10 +22403,18 @@ public class Editor extends JFrame {
 				//
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "VERTICAL");
 				if (jRadioButtonFunction200FieldLayoutOptionVertical.isSelected()) {
-					if (optionList.contains("HORIZONTAL")) {
-						valueOfFieldsChanged = true;
+//					if (optionList.contains("HORIZONTAL")) {
+//						valueOfFieldsChanged = true;
+//					}
+					for (int i=0;i <optionList.size();i++) {
+						if (optionList.get(i).contains("HORIZONTAL")) {
+							valueOfFieldsChanged = true;
+							break;
+						}
 					}
-					if (jTextFieldFunction200FieldMargin.getText().equals("*Auto") || jTextFieldFunction200FieldMargin.getText().equals("") || jTextFieldFunction200FieldMargin.getText().equals("0")) {
+					if (jTextFieldFunction200FieldMargin.getText().equals("*Auto")
+							|| jTextFieldFunction200FieldMargin.getText().equals("")
+							|| jTextFieldFunction200FieldMargin.getText().equals("0")) {
 						if (!wrkStr.equals("")) {
 							valueOfFieldsChanged = true;
 						}
@@ -22550,7 +22648,15 @@ public class Editor extends JFrame {
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "HORIZONTAL");
 				if (jRadioButtonFunction200TabFieldLayoutOptionHorizontal.isSelected()) {
 					if (jTextFieldFunction200TabFieldMargin.getText().equals("*Auto") || jTextFieldFunction200TabFieldMargin.getText().equals("") || jTextFieldFunction200TabFieldMargin.getText().equals("0")) {
-						if (!optionList.contains("HORIZONTAL") || !wrkStr.equals("")) {
+//						if (!optionList.contains("HORIZONTAL") || !wrkStr.equals("")) {
+						boolean isNotHorizontal = true;
+						for (int i=0;i <optionList.size();i++) {
+							if (optionList.get(i).contains("HORIZONTAL")) {
+								isNotHorizontal = false;
+								break;
+							}
+						}
+						if (isNotHorizontal || !wrkStr.equals("")) {
 							valueOfFieldsChanged = true;
 						}
 						if (!wrkOptions.equals("")) {
@@ -22560,7 +22666,15 @@ public class Editor extends JFrame {
 					} else {
 						wrkStr2 = getStringSizeValue(jTextFieldFunction200TabFieldMargin.getText(), "", 1, 500);
 						if (wrkStr2.equals("")) {
-							if (!optionList.contains("HORIZONTAL")) {
+							//if (!optionList.contains("HORIZONTAL")) {
+							boolean isNotHorizontal = true;
+							for (int i=0;i <optionList.size();i++) {
+								if (optionList.get(i).contains("HORIZONTAL")) {
+									isNotHorizontal = false;
+									break;
+								}
+							}
+							if (isNotHorizontal) {
 								valueOfFieldsChanged = true;
 							}
 							if (!wrkOptions.equals("")) {
@@ -22581,8 +22695,14 @@ public class Editor extends JFrame {
 				//
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "VERTICAL");
 				if (jRadioButtonFunction200TabFieldLayoutOptionVertical.isSelected()) {
-					if (optionList.contains("HORIZONTAL")) {
-						valueOfFieldsChanged = true;
+//					if (optionList.contains("HORIZONTAL")) {
+//						valueOfFieldsChanged = true;
+//					}
+					for (int i=0;i <optionList.size();i++) {
+						if (optionList.get(i).contains("HORIZONTAL")) {
+							valueOfFieldsChanged = true;
+							break;
+						}
 					}
 					if (jTextFieldFunction200TabFieldMargin.getText().equals("*Auto") || jTextFieldFunction200TabFieldMargin.getText().equals("") || jTextFieldFunction200TabFieldMargin.getText().equals("0")) {
 						if (!wrkStr.equals("")) {
@@ -23233,7 +23353,15 @@ public class Editor extends JFrame {
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "HORIZONTAL");
 				if (jRadioButtonFunction300HeaderFieldLayoutOptionHorizontal.isSelected()) {
 					if (jTextFieldFunction300HeaderFieldMargin.getText().equals("*Auto") || jTextFieldFunction300HeaderFieldMargin.getText().equals("") || jTextFieldFunction300HeaderFieldMargin.getText().equals("0")) {
-						if (!optionList.contains("HORIZONTAL")) {
+						//if (!optionList.contains("HORIZONTAL")) {
+						boolean isNotHorizontal = true;
+						for (int i=0;i <optionList.size();i++) {
+							if (optionList.get(i).contains("HORIZONTAL")) {
+								isNotHorizontal = false;
+								break;
+							}
+						}
+						if (isNotHorizontal) {
 							valueOfFieldsChanged = true;
 						}
 						if (!wrkOptions.equals("")) {
@@ -23243,7 +23371,15 @@ public class Editor extends JFrame {
 					} else {
 						wrkStr2 = getStringSizeValue(jTextFieldFunction300HeaderFieldMargin.getText(), "", 1, 500);
 						if (wrkStr2.equals("")) {
-							if (!optionList.contains("HORIZONTAL")) {
+							//if (!optionList.contains("HORIZONTAL")) {
+							boolean isNotHorizontal = true;
+							for (int i=0;i <optionList.size();i++) {
+								if (optionList.get(i).contains("HORIZONTAL")) {
+									isNotHorizontal = false;
+									break;
+								}
+							}
+							if (isNotHorizontal) {
 								valueOfFieldsChanged = true;
 							}
 							if (!wrkOptions.equals("")) {
@@ -23264,8 +23400,14 @@ public class Editor extends JFrame {
 				//
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "VERTICAL");
 				if (jRadioButtonFunction300HeaderFieldLayoutOptionVertical.isSelected()) {
-					if (optionList.contains("HORIZONTAL")) {
-						valueOfFieldsChanged = true;
+//					if (optionList.contains("HORIZONTAL")) {
+//						valueOfFieldsChanged = true;
+//					}
+					for (int i=0;i <optionList.size();i++) {
+						if (optionList.get(i).contains("HORIZONTAL")) {
+							valueOfFieldsChanged = true;
+							break;
+						}
 					}
 					if (jTextFieldFunction300HeaderFieldMargin.getText().equals("*Auto") || jTextFieldFunction300HeaderFieldMargin.getText().equals("") || jTextFieldFunction300HeaderFieldMargin.getText().equals("0")) {
 						if (!wrkStr.equals("")) {
@@ -24383,7 +24525,15 @@ public class Editor extends JFrame {
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "HORIZONTAL");
 				if (jRadioButtonFunction310HeaderFieldLayoutOptionHorizontal.isSelected()) {
 					if (jTextFieldFunction310HeaderFieldMargin.getText().equals("*Auto") || jTextFieldFunction310HeaderFieldMargin.getText().equals("") || jTextFieldFunction310HeaderFieldMargin.getText().equals("0")) {
-						if (!optionList.contains("HORIZONTAL")) {
+						//if (!optionList.contains("HORIZONTAL")) {
+						boolean isNotHorizontal = true;
+						for (int i=0;i <optionList.size();i++) {
+							if (optionList.get(i).contains("HORIZONTAL")) {
+								isNotHorizontal = false;
+								break;
+							}
+						}
+						if (isNotHorizontal) {
 							valueOfFieldsChanged = true;
 						}
 						if (!wrkOptions.equals("")) {
@@ -24393,7 +24543,15 @@ public class Editor extends JFrame {
 					} else {
 						wrkStr2 = getStringSizeValue(jTextFieldFunction310HeaderFieldMargin.getText(), "", 1, 500);
 						if (wrkStr2.equals("")) {
-							if (!optionList.contains("HORIZONTAL")) {
+							//if (!optionList.contains("HORIZONTAL")) {
+							boolean isNotHorizontal = true;
+							for (int i=0;i <optionList.size();i++) {
+								if (optionList.get(i).contains("HORIZONTAL")) {
+									isNotHorizontal = false;
+									break;
+								}
+							}
+							if (isNotHorizontal) {
 								valueOfFieldsChanged = true;
 							}
 							if (!wrkOptions.equals("")) {
@@ -24414,8 +24572,14 @@ public class Editor extends JFrame {
 				//
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "VERTICAL");
 				if (jRadioButtonFunction310HeaderFieldLayoutOptionVertical.isSelected()) {
-					if (optionList.contains("HORIZONTAL")) {
-						valueOfFieldsChanged = true;
+//					if (optionList.contains("HORIZONTAL")) {
+//						valueOfFieldsChanged = true;
+//					}
+					for (int i=0;i <optionList.size();i++) {
+						if (optionList.get(i).contains("HORIZONTAL")) {
+							valueOfFieldsChanged = true;
+							break;
+						}
 					}
 					if (jTextFieldFunction310HeaderFieldMargin.getText().equals("*Auto") || jTextFieldFunction310HeaderFieldMargin.getText().equals("") || jTextFieldFunction310HeaderFieldMargin.getText().equals("0")) {
 						if (!wrkStr.equals("")) {
@@ -34589,6 +34753,8 @@ public class Editor extends JFrame {
 		jRadioButtonFieldTypeOptionAUTO_NUMBER.setEnabled(false);
 		jRadioButtonFieldTypeOptionMSEQ.setEnabled(false);
 		jRadioButtonFieldTypeOptionFYEAR.setEnabled(false);
+		jLabelTableFieldByteaType.setVisible(false);
+		jTextFieldTableFieldByteaType.setVisible(false);
 		//
 		jLabelTableFieldSize.setEnabled(true);
 		jSpinnerTableFieldSize.setEnabled(true);

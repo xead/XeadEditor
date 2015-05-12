@@ -33,7 +33,7 @@ package xeadEditor;
 
 public class Res extends java.util.ListResourceBundle {
 	private static final Object[][] contents = new String[][]{
-		{ "About", "About XEAD" },
+		{ "About", "About XEAD Editor" },
 		{ "AcceptMinus", "Accept Minus" },
 		{ "Action", "Action" },
 		{ "ActionAddBlankRow", "Add a blank row" },
@@ -618,7 +618,7 @@ public class Res extends java.util.ListResourceBundle {
 		{ "InsertInitialRecordData6", "subject" },
 		{ "InsertInitialRecordData7", "not' subject" },
 		{ "JavaVersionError1", "Launching XEAD Editor failed as Java version is " },
-		{ "JavaVersionError2", ". Required version is 1.6.* or 1.7.*." },
+		{ "JavaVersionError2", ". Required version is 1.7 - 1.8." },
 		{ "JoinField", "Join Field" },
 		{ "JoinFields", "Join Fields" },
 		{ "JoinOrderBy", "Join Order-By" },

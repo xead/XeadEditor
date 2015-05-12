@@ -404,7 +404,7 @@ public class DialogImport extends JDialog {
 				NodeList nodelist = domDocumentImportingFrom.getElementsByTagName("Subsystem");
 				SortableDomElementListModel sortingList = frame_.getSortedListModel(nodelist, "ID");
 				for (int i = 0; i < sortingList.getSize(); i++) {
-					element = (org.w3c.dom.Element)sortingList.get(i);
+					element = (org.w3c.dom.Element)sortingList.getElementAt(i);
 					jComboBoxSubsystemFrom.addItem(element.getAttribute("ID") + " " + element.getAttribute("Name"));
 					subsystemNodeListFrom.add(element);
 				}

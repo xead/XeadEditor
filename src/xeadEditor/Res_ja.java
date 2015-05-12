@@ -624,7 +624,7 @@ public class Res_ja extends java.util.ListResourceBundle {
 		{ "InsertInitialRecordData6", "対象" },
 		{ "InsertInitialRecordData7", "対象外" },
 		{ "JavaVersionError1", "Javaのバージョンが " },
-		{ "JavaVersionError2", " であるためにXEAD Editorを起動できません。\n規定のバージョンは1.6.*～1.7.*です。" },
+		{ "JavaVersionError2", " であるためにXEAD Editorを起動できません。\n規定のバージョンは1.7～1.8です。" },
 		{ "JoinField", "結合フィールド" },
 		{ "JoinFields", "結合フィールド" },
 		{ "JoinOrderBy", "レコード検索順" },
