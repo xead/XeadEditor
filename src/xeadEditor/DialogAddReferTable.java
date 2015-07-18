@@ -249,7 +249,7 @@ public class DialogAddReferTable extends JDialog {
 				NodeList referList = objectTableElement_.getElementsByTagName("Refer");
 				SortableDomElementListModel sortingList = frame_.getSortedListModel(referList, "Order");
 				for (int i = 0; i < sortingList.getSize(); i++) {
-					workElement = (org.w3c.dom.Element)sortingList.elementAt(i);
+					workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
 					if (workElement.getAttribute("ToTable").equals(jTextFieldID.getText())) {
 						if (workElement.getAttribute("TableAlias").equals(tableAlias)) {
 							duplicated = true;

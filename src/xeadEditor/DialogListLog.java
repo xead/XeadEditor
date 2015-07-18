@@ -300,7 +300,7 @@ public class DialogListLog extends JDialog {
 		SortableDomElementListModel sortingList = frame_.getSortedListModel(nodeList1, "Type");
 	    for (int i = 0; i < sortingList.getSize(); i++) {
 	    	//
-	        element1 = (org.w3c.dom.Element)sortingList.elementAt(i);
+	        element1 = (org.w3c.dom.Element)sortingList.getElementAt(i);
 	        if (element1.getAttribute("Type").equals("PK") || element1.getAttribute("Type").equals("SK")) {
 	        	//
 				workTokenizer = new StringTokenizer(element1.getAttribute("Fields"), ";");

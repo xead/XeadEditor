@@ -52,6 +52,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.*;
 import java.util.regex.Pattern;
+
 import javax.script.Compilable;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
@@ -70,11 +71,13 @@ import javax.swing.text.InternationalFormatter;
 import javax.swing.text.PlainDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.tree.*;
+
 import org.apache.poi.ss.usermodel.Footer;
 import org.apache.poi.xssf.usermodel.*;
 import org.apache.xerces.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.*;
+
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
 
@@ -2290,7 +2293,7 @@ public class Editor extends JFrame {
 	 * @return String :name of file
 	 */
 	String specifyNameOfExistingFile(String dialogTitle, String fileExtention) {
-		jFileChooser.setDialogTitle("XEAD Editor - " + dialogTitle);
+		jFileChooser.setDialogTitle("X-TEA Editor - " + dialogTitle);
 		jFileChooser.resetChoosableFileFilters();
 		ArrayList<String> extentionList = new ArrayList<String>();
 		if (!fileExtention.equals("")) {
@@ -2692,7 +2695,7 @@ public class Editor extends JFrame {
 		screenHeight = (int)screenRect.getHeight();
 
 		/**
-		 * Read xeadedt.properties
+		 * Read xteaedt.properties
 		 */
 		InputStream inputStream = null;
 		StringTokenizer workTokenizer;
@@ -2700,13 +2703,13 @@ public class Editor extends JFrame {
 		int[] colorRGB = {0,0,0};
 		int i = 0;
 		try {
-			File file = new File("xeadedt.properties");
+			File file = new File("xteaedt.properties");
 			if (file.exists()) {
 				inputStream = new FileInputStream(file);
 			} else {
 				String classPath = System.getProperty("java.class.path");
 				String jarPath = classPath.substring(0, classPath.lastIndexOf(File.separator)+1);
-				file = new File(jarPath + "xeadedt.properties");
+				file = new File(jarPath + "xteaedt.properties");
 				if (file.exists()) {
 					inputStream = new FileInputStream(file);
 				}
@@ -2801,7 +2804,7 @@ public class Editor extends JFrame {
 	    /**
 		 * Title Name and Title Icon
 		 */
-	 	imageTitle = Toolkit.getDefaultToolkit().createImage(xeadEditor.Editor.class.getResource("title.png"));
+	 	imageTitle = Toolkit.getDefaultToolkit().createImage(xeadEditor.Editor.class.getResource("title32.png"));
 	 	this.setIconImage(imageTitle);
 		this.setSize(new Dimension(screenWidth - 80, screenHeight - 50));
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -4701,14 +4704,15 @@ public class Editor extends JFrame {
 		jLabelTableFieldDecimal.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableFieldDecimal.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableFieldDecimal.setText(res.getString("Decimal"));
-		jLabelTableFieldDecimal.setBounds(new Rectangle(835, 43, 130, 20));
+		jLabelTableFieldDecimal.setBounds(new Rectangle(860, 43, 130, 20));
 		jSpinnerTableFieldDecimal.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jSpinnerTableFieldDecimal.setBounds(new Rectangle(970, 40, 60, 25));
+		jSpinnerTableFieldDecimal.setBounds(new Rectangle(995, 40, 35, 25));
 	    JSpinner.NumberEditor editor2 = new JSpinner.NumberEditor(jSpinnerTableFieldDecimal, "#,##0");
 	    jSpinnerTableFieldDecimal.setEditor(editor2);
 	    JFormattedTextField ftext2 = editor2.getTextField();
 	    ftext2.setEditable(false);
 		ftext2.setBackground(Color.white);
+	    jSpinnerTableFieldDecimal.setModel(new SpinnerNumberModel(0,0,9,1));
 	    jSpinnerTableFieldDecimal.addChangeListener(new Editor_jSpinnerTableFieldDecimal_changeAdapter(this));
 		//
 		jLabelTableFieldName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
@@ -14969,7 +14973,7 @@ public class Editor extends JFrame {
 
 		public int compareTo(Object other) {
             MainTreeNode otherNode = (MainTreeNode)other;
-            return domNode_.getAttribute("SortKey").compareTo(otherNode.getElement().getAttribute("SortKey"));
+            return domNode_.getAttribute("ID").compareTo(otherNode.getElement().getAttribute("ID"));
         }
 
 		public Editor getEditor() {
@@ -19697,16 +19701,18 @@ public class Editor extends JFrame {
 					element.setAttribute("Type", (String)jComboBoxTableFieldType.getSelectedItem());
 				}
 
+				int fieldSize = 0;
 				XEditor_FieldSizeSpinnerEditor editor = (XEditor_FieldSizeSpinnerEditor)jSpinnerTableFieldSize.getEditor();
 				try {
 					editor.commitEdit();
+					fieldSize = Integer.parseInt(editor.getTextField().getText().replaceAll(",", ""));
 				} catch (Exception e) {
+					fieldSize = Integer.parseInt(element.getAttribute("Size"));
 					e.printStackTrace();
 				}
-				if (!element.getAttribute("Size").equals("")
-						&& (Integer)jSpinnerTableFieldSize.getValue() != Integer.parseInt(element.getAttribute("Size"))) {
+				if (!element.getAttribute("Size").equals("") && fieldSize != Integer.parseInt(element.getAttribute("Size"))) {
 					valueOfFieldsChanged = true;
-					element.setAttribute("Size", Integer.toString((Integer)jSpinnerTableFieldSize.getValue()));
+					element.setAttribute("Size", Integer.toString(fieldSize));
 				}
 				if (element.getAttribute("Decimal").equals("")) {
 					if (jSpinnerTableFieldDecimal.isVisible()) {
@@ -26248,11 +26254,11 @@ public class Editor extends JFrame {
 			try {
 				if (!exceptionLog.toString().equals("")) {
 					File file = new File(currentFileName);
-					String fileName = file.getParent() + File.separator + "xeadedt_err_" + getStringValueOfDateTime("withTime") + ".log";
+					String fileName = file.getParent() + File.separator + "xteaedt_err_" + getStringValueOfDateTime("withTime") + ".log";
 					FileWriter fileWriter = new FileWriter(fileName);
 
 					BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-					bufferedWriter.write("XEAD Editor " + DialogAbout.FULL_VERSION + " Error Log\n\n");
+					bufferedWriter.write("X-TEA Editor " + DialogAbout.FULL_VERSION + " Error Log\n\n");
 					bufferedWriter.write(exceptionLog.toString());
 					bufferedWriter.flush();
 					bufferedWriter.close();
@@ -26811,7 +26817,7 @@ public class Editor extends JFrame {
 				bf.append(jTextFieldSystemDriverVMOptions.getText());
 				bf.append(" -jar \"");
 				bf.append(applicationFolder);
-				bf.append("xeaddrv.jar\" \"");
+				bf.append("xteadrv.jar\" \"");
 				bf.append(currentFileName);
 				bf.append("\"");
 				if (!jTextFieldSystemEditorUser.getText().equals("")) {
@@ -26832,7 +26838,7 @@ public class Editor extends JFrame {
 				bf.append(jTextFieldSystemDriverVMOptions.getText());
 				bf.append(" -jar ");
 				bf.append(applicationFolder);
-				bf.append("xeaddrv.jar ");
+				bf.append("xteadrv.jar ");
 				bf.append(currentFileName);
 				if (!jTextFieldSystemEditorUser.getText().equals("")) {
 					bf.append(" ");
@@ -27049,7 +27055,7 @@ public class Editor extends JFrame {
 		}
 	}
 	/**
-	 * [Tool|Check Call XEAD Modeler]
+	 * [Tool|Check Call X-TEA Modeler]
 	 * @param e :Action Event
 	 */
 	void jMenuItemToolCallModeler_actionPerformed(ActionEvent e) {
@@ -28943,7 +28949,7 @@ public class Editor extends JFrame {
 		
 		if (tableModel != null) {
 			try {
-				File tempCsvFile = File.createTempFile("xeadTemp" + getStringValueOfDateTime("withTime"), ".csv");
+				File tempCsvFile = File.createTempFile("xteaTemp" + getStringValueOfDateTime("withTime"), ".csv");
 				csvFileName = tempCsvFile.getPath();
 				fileWriter = new FileWriter(csvFileName);
 				bufferedWriter = new BufferedWriter(fileWriter);
@@ -32438,7 +32444,12 @@ public class Editor extends JFrame {
 					if (element.getAttribute("Decimal").equals("")) {
 						jSpinnerTableFieldDecimal.setValue(0);
 					} else {
-						jSpinnerTableFieldDecimal.setValue(Integer.parseInt(element.getAttribute("Decimal")));
+						int decimalLength = Integer.parseInt(element.getAttribute("Decimal"));
+						if (decimalLength <= 9) {
+							jSpinnerTableFieldDecimal.setValue(decimalLength);
+						} else {
+							jSpinnerTableFieldDecimal.setValue(9);
+						}
 					}
 					//
 					if (typeOptionList.contains("ACCEPT_MINUS")) {
@@ -34803,7 +34814,7 @@ public class Editor extends JFrame {
 			jLabelTableFieldSize.setVisible(true);
 			jSpinnerTableFieldSize.setVisible(true);
 			spinnerNumberModelTableFieldSize.setMinimum(0);
-			spinnerNumberModelTableFieldSize.setMaximum(1000);
+			spinnerNumberModelTableFieldSize.setMaximum(327000);
 		}
 		//
 		//DATE;
@@ -39533,7 +39544,7 @@ public class Editor extends JFrame {
 		return connection;
 	}
 	
-	public ArrayList<String> getSqlToInsertInitialRecord(String tableID) {
+	public ArrayList<String> getSqlToInsertInitialRecord(String tableID, String dateValueSeparator) {
 		ArrayList<String> sql = new ArrayList<String>();
 		if (tableID.equals(jTextFieldSystemVariantsTable.getText())) {
 			sql.add("Insert into " + tableID
@@ -39543,7 +39554,7 @@ public class Editor extends JFrame {
 		if (tableID.equals(jTextFieldSystemUserTable.getText())) {
 			sql.add("Insert into " + tableID
 					+ " (IDUSER, TXNAME, TXPASSWORD, DTVALID, DTEXPIRE, TXEMAIL, TXMENUS, NREMPLOYEE) values('00000', '"
-					+ res.getString("InsertInitialRecordData2") + "', 'f1b708bba17f1ce948dc979f4d7092bc', '2000-01-01', '9999-12-31', '', 'ALL', '')");
+					+ res.getString("InsertInitialRecordData2") + "', 'f1b708bba17f1ce948dc979f4d7092bc', " + dateValueSeparator + "2000-01-01" + dateValueSeparator + ", " + dateValueSeparator + "9999-12-31" + dateValueSeparator + ", '', 'ALL', '')");
 		}
 		if (tableID.equals(jTextFieldSystemNumberingTable.getText())) {
 			sql.add("Insert into " + tableID
@@ -39574,11 +39585,11 @@ public class Editor extends JFrame {
 		}
 		if (tableID.equals(jTextFieldSystemTaxTable.getText())) {
 			sql.add("Insert into " + tableID
-					+ " (DTSTART, VLTAXRATE) values('1988-04-01', 0.03)");
+					+ " (DTSTART, VLTAXRATE) values(" + dateValueSeparator + "1988-04-01" + dateValueSeparator + ", 0.03)");
 			sql.add("Insert into " + tableID
-					+ " (DTSTART, VLTAXRATE) values('1997-04-01', 0.05)");
+					+ " (DTSTART, VLTAXRATE) values(" + dateValueSeparator + "1997-04-01" + dateValueSeparator + ", 0.05)");
 			sql.add("Insert into " + tableID
-					+ " (DTSTART, VLTAXRATE) values('2014-04-01', 0.08)");
+					+ " (DTSTART, VLTAXRATE) values(" + dateValueSeparator + "2014-04-01" + dateValueSeparator + ", 0.08)");
 		}
 		return sql;
 	}
@@ -39744,6 +39755,9 @@ public class Editor extends JFrame {
 		DecimalFormat floatFormat4 = new DecimalFormat("#,##0.0000");
 		DecimalFormat floatFormat5 = new DecimalFormat("#,##0.00000");
 		DecimalFormat floatFormat6 = new DecimalFormat("#,##0.000000");
+		DecimalFormat floatFormat7 = new DecimalFormat("#,##0.0000000");
+		DecimalFormat floatFormat8 = new DecimalFormat("#,##0.00000000");
+		DecimalFormat floatFormat9 = new DecimalFormat("#,##0.000000000");
 		//
 		if (object != null && !object.toString().equals("")) {
 			if (basicType.equals("INTEGER")) {
@@ -39813,6 +39827,15 @@ public class Editor extends JFrame {
 				}
 				if (decimal == 6) {
 					value = floatFormat6.format(numberValue);
+				}
+				if (decimal == 7) {
+					value = floatFormat7.format(numberValue);
+				}
+				if (decimal == 8) {
+					value = floatFormat8.format(numberValue);
+				}
+				if (decimal == 9) {
+					value = floatFormat9.format(numberValue);
 				}
 			}
 		}
@@ -40133,7 +40156,7 @@ public class Editor extends JFrame {
 				}
 			}
 
-			xlsFile = File.createTempFile("XeadEditor_" + jTextFieldTableID.getText() + "_", ".xlsx", outputFolder);
+			xlsFile = File.createTempFile("XTeaEditor_" + jTextFieldTableID.getText() + "_", ".xlsx", outputFolder);
 			if (outputFolder == null) {
 				xlsFile.deleteOnExit();
 			}
@@ -40431,8 +40454,14 @@ public class Editor extends JFrame {
 						if (editableTableFieldList.get(i).getDataTypeOptionList().contains("FYEAR")) {
 							Cell[i+1] = result.getInt(editableTableFieldList.get(i).getFieldID());
 						} else {
+//							Cell[i+1] = getFormattedNumber(
+//									result.getBigDecimal(editableTableFieldList.get(i).getFieldID()),
+//									basicType,
+//									editableTableFieldList.get(i).getDataSize(),
+//									editableTableFieldList.get(i).getDecimalSize(),
+//									editableTableFieldList.get(i).getDataTypeOptionList());
 							Cell[i+1] = getFormattedNumber(
-									result.getBigDecimal(editableTableFieldList.get(i).getFieldID()),
+									result.getObject(editableTableFieldList.get(i).getFieldID()),
 									basicType,
 									editableTableFieldList.get(i).getDataSize(),
 									editableTableFieldList.get(i).getDecimalSize(),
@@ -40606,7 +40635,7 @@ public class Editor extends JFrame {
 					}
 					statementBuf.append(editableTableFieldList.get(i).getFieldID()) ;
 					statementBuf.append("=") ;
-					statementBuf.append(editableTableFieldList.get(i).getTableOperationValue()) ;
+					statementBuf.append(editableTableFieldList.get(i).getTableOperationValue());
 					firstField = false;
 				}
 				if (!updateCounterID.toUpperCase().equals("*NONE")) {
@@ -40626,7 +40655,7 @@ public class Editor extends JFrame {
 						}
 						statementBuf.append(editableTableFieldList.get(i).getFieldID()) ;
 						statementBuf.append("=") ;
-						statementBuf.append(editableTableFieldList.get(i).getTableOperationValue()) ;
+						statementBuf.append(editableTableFieldList.get(i).getTableOperationValue());
 						firstField = false;
 					}
 				}
@@ -40774,7 +40803,7 @@ public class Editor extends JFrame {
 						if (!firstField) {
 							statementBuf.append(", ") ;
 						}
-						statementBuf.append(editableTableFieldList.get(i).getTableOperationValue()) ;
+						statementBuf.append(editableTableFieldList.get(i).getTableOperationValue());
 						firstField = false;
 					}
 					statementBuf.append(")") ;
@@ -43319,7 +43348,11 @@ class Editor_EditableTableField extends JPanel {
 			if (strDate == null || strDate.equals("")) {
 				returnValue = "NULL";
 			} else {
-				returnValue = "'" + strDate + "'";
+				if (dbName.contains("jdbc:ucanaccess:")) {
+					returnValue = "#" + strDate + "#";
+				} else {
+					returnValue = "'" + strDate + "'";
+				}
 			}
 		}
 		if (basicType.equals("DATETIME")) {
@@ -43331,7 +43364,11 @@ class Editor_EditableTableField extends JPanel {
 					returnValue = timeDate;
 				} else {
 					timeDate = timeDate.replace("/", "-");
-					returnValue = "'" + timeDate + "'";
+					if (dbName.contains("jdbc:ucanaccess:")) {
+						returnValue = "#" + timeDate + "#";
+					} else {
+						returnValue = "'" + timeDate + "'";
+					}
 				}
 			}
 		}
@@ -43395,7 +43432,11 @@ class Editor_EditableTableField extends JPanel {
 			if (object == null) {
 				component.setValue("");
 			} else {
-				component.setValue(object);
+				try {
+					component.setValue(object.toString().substring(0, 10));
+				} catch (Exception e) {
+					component.setValue(object);
+				}
 			}
 		}
 		if (basicType.equals("DATETIME") || basicType.equals("TIME")) {

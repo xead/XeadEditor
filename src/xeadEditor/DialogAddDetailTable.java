@@ -205,7 +205,7 @@ public class DialogAddDetailTable extends JDialog {
 		NodeList detailList = objectFunctionElement_.getElementsByTagName("Detail");
 		sortingList = frame_.getSortedListModel(detailList, "Order");
 	    for (int i = 0; i < sortingList.getSize(); i++) {
-			workElement = (org.w3c.dom.Element)sortingList.elementAt(i);
+			workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
 			lastOrder = Integer.parseInt(workElement.getAttribute("Order"));
 		}
 		//

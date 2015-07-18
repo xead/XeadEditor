@@ -33,6 +33,7 @@ package xeadEditor;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
@@ -40,8 +41,10 @@ import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
@@ -51,8 +54,10 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.w3c.dom.*;
+
 import xeadEditor.Editor.MainTreeNode;
 import xeadEditor.Editor.SortableDomElementListModel;
+
 import java.io.*;
 import java.net.URI;
 
@@ -79,6 +84,7 @@ public class DialogScan extends JDialog {
 	private JCheckBox jCheckBoxTable = new JCheckBox();
 	private JCheckBox jCheckBoxFunction = new JCheckBox();
 	private JComboBox jComboBoxSubsystems = new JComboBox();
+	private JCheckBox jCheckBoxAll = new JCheckBox();
 	private ArrayList<MainTreeNode> subsystemNodeList;
 	private TableModelScanResult tableModelScanResult = new TableModelScanResult();
 	private JTable jTableScanResult = new JTable(tableModelScanResult);
@@ -183,7 +189,12 @@ public class DialogScan extends JDialog {
 		jCheckBoxFunction.setSelected(true);
 		jComboBoxSubsystems.setBounds(new Rectangle(590, 72, 240, 25));
 		jComboBoxSubsystems.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jButtonStartScan.setBounds(new Rectangle(850, 43, 130, 56));
+		jCheckBoxAll.setBounds(new Rectangle(850, 36, 140, 25));
+		jCheckBoxAll.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jCheckBoxAll.setText(res.getString("CheckAllItems"));
+		jCheckBoxAll.setSelected(true);
+		jCheckBoxAll.addActionListener(new DialogScan_jCheckBoxAll_actionAdapter(this));
+		jButtonStartScan.setBounds(new Rectangle(850, 63, 130, 36));
 		jButtonStartScan.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonStartScan.setText(res.getString("ScanStart"));
 		jButtonStartScan.addActionListener(new DialogScan_jButtonStartScan_actionAdapter(this));
@@ -205,6 +216,7 @@ public class DialogScan extends JDialog {
 		jPanelNorth.add(jCheckBoxMenu, null);
 		jPanelNorth.add(jLabel3, null);
 		jPanelNorth.add(jComboBoxSubsystems, null);
+		jPanelNorth.add(jCheckBoxAll, null);
 		jPanelNorth.add(jButtonStartScan, null);
 		jPanelNorth.add(jProgressBar, null);
 		//
@@ -1651,6 +1663,14 @@ public class DialogScan extends JDialog {
 		}   
 	}   
 
+	void jCheckBoxAll_actionPerformed(ActionEvent e) {
+		jCheckBoxSystem.setSelected((jCheckBoxAll.isSelected()));
+		jCheckBoxMenu.setSelected((jCheckBoxAll.isSelected()));
+		jCheckBoxSubsystem.setSelected((jCheckBoxAll.isSelected()));
+		jCheckBoxTable.setSelected((jCheckBoxAll.isSelected()));
+		jCheckBoxFunction.setSelected((jCheckBoxAll.isSelected()));
+	}
+
 	class CheckBoxHeaderRenderer extends JCheckBox implements TableCellRenderer, MouseListener {   
 		private static final long serialVersionUID = 1L;
 		protected CheckBoxHeaderRenderer rendererComponent;   
@@ -1801,6 +1821,17 @@ class DialogScan_jButtonGenerateListData_actionAdapter implements java.awt.event
 	}
 	public void actionPerformed(ActionEvent e) {
 		adaptee.jButtonGenerateListData_actionPerformed(e);
+	}
+}
+
+class DialogScan_jCheckBoxAll_actionAdapter implements java.awt.event.ActionListener {
+	DialogScan adaptee;
+
+	DialogScan_jCheckBoxAll_actionAdapter(DialogScan adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jCheckBoxAll_actionPerformed(e);
 	}
 }
 

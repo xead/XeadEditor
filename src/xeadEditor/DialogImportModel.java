@@ -281,7 +281,7 @@ public class DialogImportModel extends JDialog {
 			NodeList nodelist = domDocumentImportingFrom.getElementsByTagName("Subsystem");
 			SortableDomElementListModel sortingList = frame_.getSortedListModel(nodelist, "SortKey");
 			for (int i = 0; i < sortingList.getSize(); i++) {
-				element = (org.w3c.dom.Element)sortingList.get(i);
+				element = (org.w3c.dom.Element)sortingList.getElementAt(i);
 				jComboBoxSubsystemFrom.addItem(element.getAttribute("SortKey") + " " + element.getAttribute("Name"));
 				subsystemNodeListFrom.add(element);
 			}
@@ -728,7 +728,7 @@ public class DialogImportModel extends JDialog {
 						NodeList keyFieldList = element1.getElementsByTagName("TableKeyField");
 						SortableDomElementListModel sortingList = frame_.getSortedListModel(keyFieldList, "SortKey");
 						for (int k = 0; k < sortingList.getSize(); k++) {
-							element2 = (org.w3c.dom.Element)sortingList.get(k);
+							element2 = (org.w3c.dom.Element)sortingList.getElementAt(k);
 							for (int m = 0; m < fieldList.getLength(); m++) {
 								element3 = (org.w3c.dom.Element)fieldList.item(m);
 								if (element2.getAttribute("FieldID").equals(element3.getAttribute("ID"))) {
@@ -741,7 +741,7 @@ public class DialogImportModel extends JDialog {
 						NodeList keyFieldList = element1.getElementsByTagName("TableKeyField");
 						SortableDomElementListModel sortingList = frame_.getSortedListModel(keyFieldList, "SortKey");
 						for (int k = 0; k < sortingList.getSize(); k++) {
-							element2 = (org.w3c.dom.Element)sortingList.get(k);
+							element2 = (org.w3c.dom.Element)sortingList.getElementAt(k);
 							for (int m = 0; m < fieldList.getLength(); m++) {
 								element3 = (org.w3c.dom.Element)fieldList.item(m);
 								if (element2.getAttribute("FieldID").equals(element3.getAttribute("ID"))) {
@@ -968,7 +968,7 @@ public class DialogImportModel extends JDialog {
 		nodeList = modelElement.getElementsByTagName("TableField");
 		fieldSortingList = frame_.getSortedListModel(nodeList, "SortKey");
 		for (int i = 0; i < fieldSortingList.getSize(); i++) {
-			workElement1 = (org.w3c.dom.Element)fieldSortingList.elementAt(i);
+			workElement1 = (org.w3c.dom.Element)fieldSortingList.getElementAt(i);
 			if (workElement1.getAttribute("AttributeType").equals("NATIVE")
 					|| workElement1.getAttribute("AttributeType").equals("DERIVABLE")) {
 				childElement = frame_.getDomDocument().createElement("Field");
@@ -1014,9 +1014,9 @@ public class DialogImportModel extends JDialog {
 				NodeList nodeList2 = workElement1.getElementsByTagName("TableKeyField");
 				sortingList = frame_.getSortedListModel(nodeList2, "SortKey");
 				for (int j = 0; j < sortingList.getSize(); j++) {
-					workElement2 = (org.w3c.dom.Element)sortingList.elementAt(j);
+					workElement2 = (org.w3c.dom.Element)sortingList.getElementAt(j);
 					for (int k = 0; k < fieldSortingList.getSize(); k++) {
-						workElement3 = (org.w3c.dom.Element)fieldSortingList.elementAt(k);
+						workElement3 = (org.w3c.dom.Element)fieldSortingList.getElementAt(k);
 						if (workElement3.getAttribute("ID").equals(workElement2.getAttribute("FieldID"))) {
 							if (j > 0) {
 								bf.append(";");
@@ -1041,9 +1041,9 @@ public class DialogImportModel extends JDialog {
 				NodeList nodeList2 = workElement1.getElementsByTagName("TableKeyField");
 				sortingList = frame_.getSortedListModel(nodeList2, "SortKey");
 				for (int j = 0; j < sortingList.getSize(); j++) {
-					workElement2 = (org.w3c.dom.Element)sortingList.elementAt(j);
+					workElement2 = (org.w3c.dom.Element)sortingList.getElementAt(j);
 					for (int k = 0; k < fieldSortingList.getSize(); k++) {
-						workElement3 = (org.w3c.dom.Element)fieldSortingList.elementAt(k);
+						workElement3 = (org.w3c.dom.Element)fieldSortingList.getElementAt(k);
 						if (workElement3.getAttribute("ID").equals(workElement2.getAttribute("FieldID"))) {
 							if (j > 0) {
 								bf.append(";");

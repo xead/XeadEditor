@@ -43,15 +43,24 @@ public class DialogAbout extends JDialog implements ActionListener {
 	 * Application Information and log of changes
 	 */
 	private static final long serialVersionUID = 1L;
-	public static final String APPLICATION_NAME  = "XEAD Editor 1.2";
+	public static final String APPLICATION_NAME  = "X-TEA Editor 1.2";
 	public static final String FORMAT_VERSION  = "1.2";
-	public static final String PRODUCT_NAME = "XEAD[zi:d] Editor";
-	public static final String COPYRIGHT = "Copyright 2015 DBC,Ltd.";
+	public static final String PRODUCT_NAME = "X-TEA Editor";
+	public static final String COPYRIGHT = "Copyright 2015 DBC Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
-	public static final String FULL_VERSION  = "V1.R2.M14";
+	public static final String FULL_VERSION  = "V1.R2.M15";
+	//1.2.15
+	//・ツール名をX-TEA　Editorに変更した
+	//・Float型小数桁の最大値を９に設定した
+	//・H2 Database EngineとMS Accessに対応した
+	//・SQL ServerのIMAGE型に対応した
+	//・DialogCheckTableModuleのデータ型のマッピングをリファクタリングした
+	//・Java1.8対応にともなって、xeadファイルとxeafファイルのインポート処理が出来なくなっていた問題を修正
+	//・Java1.8対応にともなって、データ保守ユーティリティの操作ログが動かなくなっていた問題を修正
+	//・Java1.8対応にともなって、参照テーブルと明細テーブルの追加用ダイアログが動かなくなっていた問題を修正
+	//
 	//1.2.14
 	//・Java1.8に対応するために、sort処理をcomparatorからcomparableベースに修正した
-	//・xeafのインポートが出来なくなっていたバグを修正(5/6)
 	//
 	//1.2.13
 	//・XF110,200,310の見出し域フィールドの水平位置設定と間隔を同時に変更すると反映されないバグを修正した
@@ -337,7 +346,7 @@ public class DialogAbout extends JDialog implements ActionListener {
 		panel2.add(insetsPanel2, BorderLayout.CENTER);
 		panel2.add(insetsPanel3, BorderLayout.EAST);
 
-		this.setTitle("About XEAD Editor");
+		this.setTitle("About X-TEA Editor");
 		this.getContentPane().add(panel1, null);
 		this.setResizable(false);
 	}
