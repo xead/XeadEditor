@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2011 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2015 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of X-TEA Editor.
@@ -247,7 +247,7 @@ public class Res extends java.util.ListResourceBundle {
 		{ "DTLTabs", "DTL Tabs" },
 		{ "Edit", "Edit" },
 		{ "Editable", "Editable" },
-		{ "EditableOptions", "Edit Options" },
+		{ "EditableOptions", "Edit Option" },
 		{ "EditCode", "Edit Code" },
 		{ "EditDetailTableKeyTitle", "Edit DTL Table and Key" },
 		{ "EditDetailTableKeyComment", "Specify unique keys of the header table and the detail table. Upper common fields must be as the same data type." },
@@ -430,6 +430,8 @@ public class Res extends java.util.ListResourceBundle {
 		{ "Field", "Field" },
 		{ "FieldAccountDate", "Acc.Date" },
 		{ "FieldBoolean", "Boolean" },
+		{ "FieldColumnName", "Column Name" },
+		{ "FieldColumnName2", "Col. Name" },
 		{ "FieldDialNo", "Phone" },
 		{ "FieldExtType", "Ext-Type" },
 		{ "FieldFiscalYear", "Fiscal Year" },
@@ -749,7 +751,7 @@ public class Res extends java.util.ListResourceBundle {
 		{ "NoCaption", "No Caption" },
 		{ "NoFieldsLeftToBeAdded", "No fields left to be added." },
 		{ "None", "None" },
-		{ "NonEditable", "Not Editable" },
+		{ "NonEditable", "Non Editable" },
 		{ "NoUpdate", "No Update" },
 		{ "NumberFormatError", "Decimal point is invalid." },
 		{ "Nullable", "Nullable" },

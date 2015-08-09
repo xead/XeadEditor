@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2014 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2015 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of X-TEA Editor.
@@ -429,6 +429,8 @@ public class Res_ja extends java.util.ListResourceBundle {
 		{ "Field", "フィールド" },
 		{ "FieldAccountDate", "会計日付" },
 		{ "FieldBoolean", "ブール値" },
+		{ "FieldColumnName", "カラム名" },
+		{ "FieldColumnName2", "カラム名" },
 		{ "FieldDialNo", "電話番号" },
 		{ "FieldExtType", "拡張データタイプ" },
 		{ "FieldFiscalYear", "年度" },

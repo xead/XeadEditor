@@ -337,7 +337,11 @@ public class DialogCheckTableModule extends JDialog {
 						ResultSet rs2 = connection_.getMetaData().getColumns(null, null, moduleID, fieldID);
 						if (rs2.next()) {
 
-							sizeOfModuleField = Integer.parseInt(rs2.getString("COLUMN_SIZE"));
+							if (rs2.getString("COLUMN_SIZE") == null || rs2.getString("COLUMN_SIZE").equals("")) {
+								sizeOfModuleField = 1;
+							} else {
+								sizeOfModuleField = Integer.parseInt(rs2.getString("COLUMN_SIZE"));
+							}
 							if (rs2.getString("DECIMAL_DIGITS") == null) {
 								decimalOfModuleField = 0;
 							} else {
@@ -345,10 +349,10 @@ public class DialogCheckTableModule extends JDialog {
 							}
 
 							if (element.getAttribute("Type").equals("DECIMAL") || element.getAttribute("Type").equals("NUMERIC")) {
-								typeDescriptionsOfModuleField = rs2.getString("TYPE_NAME") + "(" + rs2.getString("COLUMN_SIZE") + "," + decimalOfModuleField + ")";
+								typeDescriptionsOfModuleField = rs2.getString("TYPE_NAME") + "(" + sizeOfModuleField + "," + decimalOfModuleField + ")";
 							} else {
 								if (element.getAttribute("Type").equals("CHAR") || element.getAttribute("Type").equals("VARCHAR")) {
-									typeDescriptionsOfModuleField = rs2.getString("TYPE_NAME") + "(" + rs2.getString("COLUMN_SIZE") + ")";
+									typeDescriptionsOfModuleField = rs2.getString("TYPE_NAME") + "(" + sizeOfModuleField + ")";
 								} else {
 									typeDescriptionsOfModuleField = rs2.getString("TYPE_NAME");
 								}
@@ -399,11 +403,11 @@ public class DialogCheckTableModule extends JDialog {
 								countOfErrors++;
 								fieldListToBeNullable.add(element.getAttribute("ID"));
 								if (element.getAttribute("Type").equals("DECIMAL") || element.getAttribute("Type").equals("NUMERIC")) {
-									fieldListToBeNullableDataType.add(rs2.getString("TYPE_NAME") + "(" + rs2.getString("COLUMN_SIZE") + "," + decimalOfModuleField + ")");
+									fieldListToBeNullableDataType.add(rs2.getString("TYPE_NAME") + "(" + sizeOfModuleField + "," + decimalOfModuleField + ")");
 								} else {
 									if (!element.getAttribute("Size").equals("0")
 											&& (element.getAttribute("Type").equals("CHAR") || element.getAttribute("Type").equals("VARCHAR"))) {
-										fieldListToBeNullableDataType.add(rs2.getString("TYPE_NAME") + "(" + rs2.getString("COLUMN_SIZE") + ")");
+										fieldListToBeNullableDataType.add(rs2.getString("TYPE_NAME") + "(" + sizeOfModuleField + ")");
 									} else {
 										fieldListToBeNullableDataType.add(rs2.getString("TYPE_NAME"));
 									}
@@ -414,11 +418,11 @@ public class DialogCheckTableModule extends JDialog {
 								countOfErrors++;
 								fieldListToBeNotNull.add(element.getAttribute("ID"));
 								if (element.getAttribute("Type").equals("DECIMAL") || element.getAttribute("Type").equals("NUMERIC")) {
-									fieldListToBeNotNullDataType.add(rs2.getString("TYPE_NAME") + "(" + rs2.getString("COLUMN_SIZE") + "," + decimalOfModuleField + ")");
+									fieldListToBeNotNullDataType.add(rs2.getString("TYPE_NAME") + "(" + sizeOfModuleField + "," + decimalOfModuleField + ")");
 								} else {
 									if (!element.getAttribute("Size").equals("0")
 											&& (element.getAttribute("Type").equals("CHAR") || element.getAttribute("Type").equals("VARCHAR"))) {
-										fieldListToBeNotNullDataType.add(rs2.getString("TYPE_NAME") + "(" + rs2.getString("COLUMN_SIZE") + ")");
+										fieldListToBeNotNullDataType.add(rs2.getString("TYPE_NAME") + "(" + sizeOfModuleField + ")");
 									} else {
 										fieldListToBeNotNullDataType.add(rs2.getString("TYPE_NAME"));
 									}
@@ -479,7 +483,11 @@ public class DialogCheckTableModule extends JDialog {
 						}
 					}
 					if (!exist) {
-						sizeOfModuleField = Integer.parseInt(rs3.getString("COLUMN_SIZE"));
+						if (rs3.getString("COLUMN_SIZE") == null || rs3.getString("COLUMN_SIZE").equals("")) {
+							sizeOfModuleField = 1;
+						} else {
+							sizeOfModuleField = Integer.parseInt(rs3.getString("COLUMN_SIZE"));
+						}
 						if (rs3.getString("DECIMAL_DIGITS") == null) {
 							decimalOfModuleField = 0;
 						} else {
@@ -487,10 +495,10 @@ public class DialogCheckTableModule extends JDialog {
 						}
 
 						if (rs3.getString("TYPE_NAME").equals("DECIMAL") || rs3.getString("TYPE_NAME").equals("NUMERIC")) {
-							typeDescriptionsOfModuleField = rs3.getString("TYPE_NAME") + "(" + rs3.getString("COLUMN_SIZE") + "," + decimalOfModuleField + ")";
+							typeDescriptionsOfModuleField = rs3.getString("TYPE_NAME") + "(" + sizeOfModuleField + "," + decimalOfModuleField + ")";
 						} else {
 							if (rs3.getString("TYPE_NAME").equals("CHAR")) {
-								typeDescriptionsOfModuleField = rs3.getString("TYPE_NAME") + "(" + rs3.getString("COLUMN_SIZE") + ")";
+								typeDescriptionsOfModuleField = rs3.getString("TYPE_NAME") + "(" + sizeOfModuleField + ")";
 							} else {
 								typeDescriptionsOfModuleField = rs3.getString("TYPE_NAME");
 							}
@@ -501,7 +509,7 @@ public class DialogCheckTableModule extends JDialog {
 						buf.append("(" + countOfErrors + ") "+ res.getString("ModuleCheckMessage16") + frame_.getCaseShiftValue(rs3.getString("COLUMN_NAME"), "Upper") + " [" + typeDescriptionsOfModuleField + "]" + res.getString("ModuleCheckMessage17"));
 
 						fieldListToBePut.add(frame_.getCaseShiftValue(rs3.getString("COLUMN_NAME"), "Upper"));
-						fieldTypeListToBePut.add(getDataTypeForEditor(rs3.getString("TYPE_NAME"), Integer.parseInt(rs3.getString("COLUMN_SIZE")), databaseName));
+						fieldTypeListToBePut.add(getDataTypeForEditor(rs3.getString("TYPE_NAME"), sizeOfModuleField, databaseName));
 						fieldSizeListToBePut.add(sizeOfModuleField);
 						fieldDecimalListToBePut.add(decimalOfModuleField);
 						fieldNullableListToBePut.add(rs3.getString("IS_NULLABLE"));
@@ -987,7 +995,8 @@ public class DialogCheckTableModule extends JDialog {
 			}
 
 			if (dataTypeDefiition.equals("DOUBLE PRECISION")) {
-				if (dataTypeModule.equals("float8")) {
+				if (dataTypeModule.equals("float8")
+						|| dataTypeModule.equals("FLOAT")) {
 					isEquivalent = true;
 				}
 			}
@@ -1022,6 +1031,7 @@ public class DialogCheckTableModule extends JDialog {
 					if (dataTypeModule.equals("bpchar")
 							|| dataTypeModule.equals("CHARACTER")
 							|| dataTypeModule.equals("uniqueidentifier")
+							|| dataTypeModule.equals("BIT")
 							|| dataTypeModule.equals("bool")) {
 						isEquivalent = true;
 					}
@@ -1039,13 +1049,14 @@ public class DialogCheckTableModule extends JDialog {
 					}
 				} else {
 					if (dataTypeModule.equals("MEDIUMTEXT")
+							|| dataTypeModule.equals("LONGTEXT")
 							|| dataTypeModule.equals("image")
 							|| dataTypeModule.equals("CLOB")
 							|| dataTypeModule.equals("json")) {
 						isEquivalent = true;
 					}
 				}
-				if (dataTypeModule.equals("text")) {
+				if (dataTypeModule.equals("text") || dataTypeModule.equals("TEXT")) {
 					isEquivalent = true;
 				}
 				if (dbDriverName.contains("jdbc:h2") && dataTypeModule.equals("VARCHAR")) {
@@ -1080,7 +1091,8 @@ public class DialogCheckTableModule extends JDialog {
 			}
 
 			if (dataTypeDefiition.equals("BLOB")) {
-				if (dataTypeModule.endsWith("OLE")) {
+				if (dataTypeModule.endsWith("OLE")
+						|| dataTypeModule.endsWith("LONGBLOB")) {
 					isEquivalent = true;
 				}
 			}
@@ -1700,6 +1712,7 @@ public class DialogCheckTableModule extends JDialog {
 			dataTypeDefinition = "CLOB";
 		}
 		if (dataTypeModule.equals("BLOB")
+			|| dataTypeModule.equals("LONGBLOB")
 			|| dataTypeModule.equals("OLE")) {
 			dataTypeDefinition = "BLOB";
 		}
@@ -1752,11 +1765,13 @@ public class DialogCheckTableModule extends JDialog {
 				|| dataTypeModule.equals("NCHAR")
 				|| dataTypeModule.equals("BPCHAR")
 				|| dataTypeModule.equals("BOOL")
+				|| dataTypeModule.equals("BIT")
 				|| dataTypeModule.equals("UNIQUEIDENTIFIER")) {
 			dataTypeDefinition = "CHAR";
 		}
 		if (dataTypeModule.equals("LONG VARCHAR")
 				|| dataTypeModule.equals("MEDIUMTEXT")
+				|| dataTypeModule.equals("LONGTEXT")
 				|| dataTypeModule.equals("CLOB")
 				|| dataTypeModule.equals("LONG")
 				|| dataTypeModule.equals("NVARCHAR2")
@@ -1978,6 +1993,12 @@ public class DialogCheckTableModule extends JDialog {
 		if (dbDriverName.contains("jdbc:mysql")) {
 			if (dataType.equals("INTEGER")) {
 				alternative = "INT";
+			}
+			if (dataType.equals("DOUBLE PRECISION")) {
+				alternative = "FLOAT";
+			}
+			if (dataType.equals("LONG VARCHAR")) {
+				alternative = "LONGTEXT";
 			}
 		}
 

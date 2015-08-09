@@ -688,6 +688,8 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldTableFieldID = new JTextField();
 	private JLabel jLabelTableFieldName = new JLabel();
 	private Editor_KanjiTextField jTextFieldTableFieldName = new Editor_KanjiTextField();
+	private JLabel jLabelTableFieldColumnName = new JLabel();
+	private Editor_KanjiTextField jTextFieldTableFieldColumnName = new Editor_KanjiTextField();
 	private JCheckBox jCheckBoxTableFieldPhysical = new JCheckBox();
 	private JLabel jLabelTableFieldType = new JLabel();
 	private JComboBox jComboBoxTableFieldType = new JComboBox();
@@ -696,7 +698,7 @@ public class Editor extends JFrame {
 	private JSpinner jSpinnerTableFieldSize = new JSpinner(spinnerNumberModelTableFieldSize);
 	private JCheckBox jCheckBoxTableFieldAcceptMinus = new JCheckBox();
 	private JComboBox jComboBoxTableFieldEditType = new JComboBox();
-	private JLabel jLabelTableFieldDecimal = new JLabel();
+	//private JLabel jLabelTableFieldDecimal = new JLabel();
 	private SpinnerNumberModel spinnerNumberModelTableFieldDecimal = new SpinnerNumberModel(0, 0, 10, 1);
 	private JSpinner jSpinnerTableFieldDecimal = new JSpinner(spinnerNumberModelTableFieldDecimal);
 	private JCheckBox jCheckBoxTableFieldNullable = new JCheckBox();
@@ -2596,14 +2598,18 @@ public class Editor extends JFrame {
 		    }
 
 			// Add Node of "Table"//
-			int progressRate = 0;
-			String progressMessage = "";
+			//int progressRate = 0;
+			//String progressMessage = "";
+			//application.setTextOnSplash(res.getString("SplashMessage3"));
 			xmlnodelist1 = domDocument.getElementsByTagName("Table");
 			sortingList = getSortedListModel(xmlnodelist1, "ID");
+	    	application.setTextOnSplash(res.getString("SplashMessage3"));
+			application.setProgressMax(sortingList.getSize());
 		    for (int i = 0; i < sortingList.getSize(); i++) {
-		    	progressRate = (i+1) * 100 / sortingList.getSize();
-		    	progressMessage = res.getString("SplashMessage3") + "(" + progressRate + "%)";
-		    	application.setTextOnSplash(progressMessage);
+		    	//progressRate = (i+1) * 100 / sortingList.getSize();
+		    	//progressMessage = res.getString("SplashMessage3") + "(" + progressRate + "%)";
+		    	application.setProgressValue(i+1);
+		    	application.repaintProgress();
 
 		    	element1 = (org.w3c.dom.Element)sortingList.getElementAt(i);
 		    	xETreeNode1 = getSpecificXETreeNode("Subsystem", element1.getAttribute("SubsystemID"));
@@ -3634,6 +3640,9 @@ public class Editor extends JFrame {
 		jLabelSystemImageFileFolder.setBounds(new Rectangle(5, 12, 130, 20));
 		jTextFieldSystemImageFileFolder.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldSystemImageFileFolder.setBounds(new Rectangle(140, 9, 635, 25));
+		jCheckBoxSystemAutoConnectToEdit.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxSystemAutoConnectToEdit.setBounds(new Rectangle(795, 9, 400, 25));
+		jCheckBoxSystemAutoConnectToEdit.setText(res.getString("AutoConnect"));
 		jLabelSystemWelcomePageURL.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemWelcomePageURL.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemWelcomePageURL.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -3641,6 +3650,9 @@ public class Editor extends JFrame {
 		jLabelSystemWelcomePageURL.setBounds(new Rectangle(5, 43, 130, 20));
 		jTextFieldSystemWelcomePageURL.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldSystemWelcomePageURL.setBounds(new Rectangle(140, 40, 635, 25));
+		jCheckBoxSystemSkipModuleCheckToEdit.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxSystemSkipModuleCheckToEdit.setBounds(new Rectangle(795, 40, 400, 25));
+		jCheckBoxSystemSkipModuleCheckToEdit.setText(res.getString("SkipModuleCheck"));
 		jLabelSystemOutputFolder.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemOutputFolder.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemOutputFolder.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -3648,9 +3660,9 @@ public class Editor extends JFrame {
 		jLabelSystemOutputFolder.setBounds(new Rectangle(5, 74, 130, 20));
 		jTextFieldSystemOutputFolder.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldSystemOutputFolder.setBounds(new Rectangle(140, 71, 635, 25));
-		jCheckBoxSystemAutoConnectToEdit.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jCheckBoxSystemAutoConnectToEdit.setBounds(new Rectangle(795, 71, 350, 25));
-		jCheckBoxSystemAutoConnectToEdit.setText(res.getString("AutoConnect"));
+		jCheckBoxSystemSkipPreload.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxSystemSkipPreload.setText(res.getString("SkipPreload"));
+		jCheckBoxSystemSkipPreload.setBounds(new Rectangle(795, 71, 400, 25));
 		jLabelSystemDateFormat.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemDateFormat.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemDateFormat.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -3698,9 +3710,6 @@ public class Editor extends JFrame {
 		jLabelSystemFont.setBounds(new Rectangle(390, 105, 130, 20));
 		jTextFieldSystemFont.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldSystemFont.setBounds(new Rectangle(525, 102, 250, 25));
-		jCheckBoxSystemSkipModuleCheckToEdit.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jCheckBoxSystemSkipModuleCheckToEdit.setBounds(new Rectangle(795, 102, 350, 25));
-		jCheckBoxSystemSkipModuleCheckToEdit.setText(res.getString("SkipModuleCheck"));
 		jLabelSystemEditorUser.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemEditorUser.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemEditorUser.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -3721,10 +3730,7 @@ public class Editor extends JFrame {
 		jLabelSystemDriverVMOptions.setText(res.getString("DriverVMOptions"));
 		jLabelSystemDriverVMOptions.setBounds(new Rectangle(495, 136, 110, 20));
 		jTextFieldSystemDriverVMOptions.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemDriverVMOptions.setBounds(new Rectangle(610, 133, 225, 25));
-		jCheckBoxSystemSkipPreload.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jCheckBoxSystemSkipPreload.setText(res.getString("SkipPreload"));
-		jCheckBoxSystemSkipPreload.setBounds(new Rectangle(855, 133, 350, 25));
+		jTextFieldSystemDriverVMOptions.setBounds(new Rectangle(610, 133, 355, 25));
 		jLabelSystemSmtpHost.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemSmtpHost.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSmtpHost.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -3752,7 +3758,7 @@ public class Editor extends JFrame {
 		jLabelSystemSmtpPassword.setText(res.getString("SmtpPassword"));
 		jLabelSystemSmtpPassword.setBounds(new Rectangle(720, 167, 110, 20));
 		jTextFieldSystemSmtpPassword.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemSmtpPassword.setBounds(new Rectangle(835, 164, 120, 25));
+		jTextFieldSystemSmtpPassword.setBounds(new Rectangle(835, 164, 130, 25));
 		jSplitPaneSystemPrintFont.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneSystemPrintFont.add(jScrollPaneSystemPrintFontList, JSplitPane.TOP);
 		jSplitPaneSystemPrintFont.add(jPanelSystemPrintFont, JSplitPane.BOTTOM);
@@ -3882,7 +3888,7 @@ public class Editor extends JFrame {
 		jLabelSystemPrintPDFEncoding.setText("PDF Encoding");
 		jLabelSystemPrintPDFEncoding.setBounds(new Rectangle(350, 43, 130, 20));
 		jTextFieldSystemPrintPDFEncoding.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemPrintPDFEncoding.setBounds(new Rectangle(485, 40, 170, 25));
+		jTextFieldSystemPrintPDFEncoding.setBounds(new Rectangle(485, 40, 200, 25));
 		jPanelSystemPrintFont.setLayout(new BorderLayout());
 		jPanelSystemPrintFont.add(jPanelSystemPrintFontTop, BorderLayout.NORTH);
 		jPanelSystemPrintFont.add(jScrollPaneSystemPrintFontUsageList, BorderLayout.CENTER);
@@ -4325,12 +4331,12 @@ public class Editor extends JFrame {
 		jLabelTableID.setText(res.getString("TableIDAndName"));
 		jLabelTableID.setBounds(new Rectangle(5, 12, 130, 20));
 		jTextFieldTableID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldTableID.setBounds(new Rectangle(140, 9, 160, 25));
+		jTextFieldTableID.setBounds(new Rectangle(140, 9, 230, 25));
 		jTextFieldTableID.setEditable(false);
 		Insets m = jTextFieldTableID.getMargin();
 		jTextFieldTableID.setMargin(new Insets(m.top, m.left+imageIconTable.getIconWidth()+2, m.bottom, m.right)); 
 		jTextFieldTableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldTableName.setBounds(new Rectangle(305, 9, 390, 25));
+		jTextFieldTableName.setBounds(new Rectangle(375, 9, 320, 25));
 		jLabelTableModuleID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableModuleID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableModuleID.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -4625,13 +4631,13 @@ public class Editor extends JFrame {
 		jTableTableUsageList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableTableUsageList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		//
+
 		jSplitPaneTableField.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneTableField.add(jScrollPaneTableFieldList, JSplitPane.TOP);
 		jSplitPaneTableField.add(jPanelTableField, JSplitPane.BOTTOM);
 		jSplitPaneTableField.setDividerLocation(350);
 		jPanelTableField.setLayout(new BorderLayout());
-		//
+
 		jLabelTableFieldID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableFieldID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableFieldID.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -4674,23 +4680,26 @@ public class Editor extends JFrame {
 		jComboBoxTableFieldType.addItem("CLOB");
 		jComboBoxTableFieldType.addItem("BLOB");
 		jComboBoxTableFieldType.addItem("BYTEA");
+
 		jLabelTableFieldSize.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableFieldSize.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableFieldSize.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableFieldSize.setText(res.getString("FieldSize"));
-		jLabelTableFieldSize.setBounds(new Rectangle(835, 12, 130, 20));
+		jLabelTableFieldSize.setBounds(new Rectangle(830, 12, 95, 20));
 		jSpinnerTableFieldSize.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jSpinnerTableFieldSize.setBounds(new Rectangle(970, 9, 60, 25));
+		jSpinnerTableFieldSize.setBounds(new Rectangle(930, 9, 60, 25));
 		XEditor_FieldSizeSpinnerEditor editor1 = new XEditor_FieldSizeSpinnerEditor(jSpinnerTableFieldSize, "#,##0");
 	    jSpinnerTableFieldSize.setEditor(editor1);
 	    jSpinnerTableFieldSize.addChangeListener(new Editor_jSpinnerTableFieldSize_changeAdapter(this));
-		jLabelTableFieldByteaType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jLabelTableFieldByteaType.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelTableFieldByteaType.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelTableFieldByteaType.setText(res.getString("ByteaType"));
-		jLabelTableFieldByteaType.setBounds(new Rectangle(855, 12, 170, 20));
-		jTextFieldTableFieldByteaType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldTableFieldByteaType.setBounds(new Rectangle(1030, 9, 200, 25));
+		jSpinnerTableFieldDecimal.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jSpinnerTableFieldDecimal.setBounds(new Rectangle(995, 9, 35, 25));
+	    JSpinner.NumberEditor editor2 = new JSpinner.NumberEditor(jSpinnerTableFieldDecimal, "#,##0");
+	    jSpinnerTableFieldDecimal.setEditor(editor2);
+	    JFormattedTextField ftext2 = editor2.getTextField();
+	    ftext2.setEditable(false);
+		ftext2.setBackground(Color.white);
+	    jSpinnerTableFieldDecimal.setModel(new SpinnerNumberModel(0,0,9,1));
+	    jSpinnerTableFieldDecimal.addChangeListener(new Editor_jSpinnerTableFieldDecimal_changeAdapter(this));
 		jCheckBoxTableFieldAcceptMinus.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jCheckBoxTableFieldAcceptMinus.setText(res.getString("AcceptMinus"));
 		jCheckBoxTableFieldAcceptMinus.setBounds(new Rectangle(1040, 9, 150, 25));
@@ -4700,41 +4709,41 @@ public class Editor extends JFrame {
 		jComboBoxTableFieldEditType.addItem(res.getString("EditTypeNoEdit"));
 		jComboBoxTableFieldEditType.addItem(res.getString("EditTypeZeroSuppress"));
 		jComboBoxTableFieldEditType.addItem(res.getString("EditTypeHourMinuite"));
-		jLabelTableFieldDecimal.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jLabelTableFieldDecimal.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelTableFieldDecimal.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelTableFieldDecimal.setText(res.getString("Decimal"));
-		jLabelTableFieldDecimal.setBounds(new Rectangle(860, 43, 130, 20));
-		jSpinnerTableFieldDecimal.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jSpinnerTableFieldDecimal.setBounds(new Rectangle(995, 40, 35, 25));
-	    JSpinner.NumberEditor editor2 = new JSpinner.NumberEditor(jSpinnerTableFieldDecimal, "#,##0");
-	    jSpinnerTableFieldDecimal.setEditor(editor2);
-	    JFormattedTextField ftext2 = editor2.getTextField();
-	    ftext2.setEditable(false);
-		ftext2.setBackground(Color.white);
-	    jSpinnerTableFieldDecimal.setModel(new SpinnerNumberModel(0,0,9,1));
-	    jSpinnerTableFieldDecimal.addChangeListener(new Editor_jSpinnerTableFieldDecimal_changeAdapter(this));
-		//
+
+		jLabelTableFieldByteaType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelTableFieldByteaType.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelTableFieldByteaType.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelTableFieldByteaType.setText(res.getString("ByteaType"));
+		jLabelTableFieldByteaType.setBounds(new Rectangle(830, 12, 195, 20));
+		jTextFieldTableFieldByteaType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldTableFieldByteaType.setBounds(new Rectangle(1030, 9, 200, 25));
+
 		jLabelTableFieldName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableFieldName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableFieldName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableFieldName.setText(res.getString("FieldName"));
 		jLabelTableFieldName.setBounds(new Rectangle(5, 43, 130, 20));
 		jTextFieldTableFieldName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldTableFieldName.setBounds(new Rectangle(140, 40, 300, 25));
+		jTextFieldTableFieldName.setBounds(new Rectangle(140, 40, 360, 25));
+		jLabelTableFieldColumnName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelTableFieldColumnName.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelTableFieldColumnName.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelTableFieldColumnName.setText(res.getString("FieldColumnName"));
+		jLabelTableFieldColumnName.setBounds(new Rectangle(510, 43, 130, 20));
+		jTextFieldTableFieldColumnName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldTableFieldColumnName.setBounds(new Rectangle(645, 40, 215, 25));
 		jCheckBoxTableFieldNullable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jCheckBoxTableFieldNullable.setText(res.getString("Nullable"));
-		jCheckBoxTableFieldNullable.setBounds(new Rectangle(640, 40, 150, 25));
+		jCheckBoxTableFieldNullable.setBounds(new Rectangle(900, 40, 140, 25));
 		jCheckBoxTableFieldNoUpdate.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jCheckBoxTableFieldNoUpdate.setText(res.getString("NoUpdate"));
-		jCheckBoxTableFieldNoUpdate.setBounds(new Rectangle(790, 40, 150, 25));
-		//
+		jCheckBoxTableFieldNoUpdate.setBounds(new Rectangle(1040, 40, 140, 25));
+
 		jLabelTableFieldTypeOptions.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableFieldTypeOptions.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableFieldTypeOptions.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableFieldTypeOptions.setText(res.getString("FieldExtType"));
 		jLabelTableFieldTypeOptions.setBounds(new Rectangle(5, 74, 130, 20));
-		//
 		jRadioButtonFieldTypeOptionNONE.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jRadioButtonFieldTypeOptionNONE.setBounds(new Rectangle(140, 71, 130, 25));
 		jRadioButtonFieldTypeOptionNONE.setText(res.getString("None"));
@@ -4762,7 +4771,7 @@ public class Editor extends JFrame {
 		jTextAreaTableFieldTypeOptionKUBUN.setBackground(SystemColor.control);
 		jScrollPaneTableFieldTypeOptionKUBUN.getViewport().setView(jTextAreaTableFieldTypeOptionKUBUN);
 		jScrollPaneTableFieldTypeOptionKUBUN.setBounds(new Rectangle(1030, 102, 200, 111));
-		//
+
 		jRadioButtonFieldTypeOptionURL.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jRadioButtonFieldTypeOptionURL.setBounds(new Rectangle(140, 102, 130, 25));
 		jRadioButtonFieldTypeOptionURL.setText(res.getString("FieldURL"));
@@ -4781,7 +4790,7 @@ public class Editor extends JFrame {
 		jRadioButtonFieldTypeOptionBOOLEAN.addChangeListener(new Editor_jRadioButtonFieldTypeOptionBOOLEAN_changeAdapter(this));
 		jTextFieldTableFieldTypeOptionBOOLEAN.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldTableFieldTypeOptionBOOLEAN.setBounds(new Rectangle(790, 102, 200, 22));
-		//
+
 		jRadioButtonFieldTypeOptionYMONTH.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jRadioButtonFieldTypeOptionYMONTH.setBounds(new Rectangle(140, 133, 130, 25));
 		jRadioButtonFieldTypeOptionYMONTH.setText(res.getString("FieldYearMonth"));
@@ -4800,7 +4809,7 @@ public class Editor extends JFrame {
 		jRadioButtonFieldTypeOptionVALUES.addChangeListener(new Editor_jRadioButtonFieldTypeOptionVALUES_changeAdapter(this));
 		jTextFieldTableFieldTypeOptionVALUES.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldTableFieldTypeOptionVALUES.setBounds(new Rectangle(790, 133, 200, 25));
-		//
+
 		buttonGroupTypeOption.add(jRadioButtonFieldTypeOptionNONE);
 		buttonGroupTypeOption.add(jRadioButtonFieldTypeOptionAUTO_NUMBER);
 		buttonGroupTypeOption.add(jRadioButtonFieldTypeOptionKANJI);
@@ -4816,7 +4825,7 @@ public class Editor extends JFrame {
 		buttonGroupTypeOption.add(jRadioButtonFieldTypeOptionBOOLEAN);
 		buttonGroupTypeOption.add(jRadioButtonFieldTypeOptionVALUES);
 		buttonGroupTypeOption.add(jRadioButtonFieldTypeOptionMSEQ);
-		//
+
 		jLabelTableFieldRemarks.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableFieldRemarks.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableFieldRemarks.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -4827,7 +4836,7 @@ public class Editor extends JFrame {
 		jTextAreaTableFieldRemarks.setWrapStyleWord(true);
 		jScrollPaneTableFieldRemarks.getViewport().add(jTextAreaTableFieldRemarks, null);
 		jScrollPaneTableFieldRemarks.setBounds(new Rectangle(140, 164, 850, 49));
-		//
+
 		jPanelTableField.add(jScrollPaneTableFieldTop, BorderLayout.NORTH);
 		jPanelTableField.add(jScrollPaneTableFieldUsageList, BorderLayout.CENTER);
 		jScrollPaneTableFieldTop.setBorder(null);
@@ -4837,9 +4846,11 @@ public class Editor extends JFrame {
 		jPanelTableFieldTop.setLayout(null);
 		jPanelTableFieldTop.add(jLabelTableFieldID);
 		jPanelTableFieldTop.add(jLabelTableFieldName);
+		jPanelTableFieldTop.add(jLabelTableFieldColumnName);
 		jPanelTableFieldTop.add(jCheckBoxTableFieldPhysical);
 		jPanelTableFieldTop.add(jTextFieldTableFieldID);
 		jPanelTableFieldTop.add(jTextFieldTableFieldName);
+		jPanelTableFieldTop.add(jTextFieldTableFieldColumnName);
 		jPanelTableFieldTop.add(jLabelTableFieldType);
 		jPanelTableFieldTop.add(jComboBoxTableFieldType);
 		jPanelTableFieldTop.add(jLabelTableFieldSize);
@@ -4848,7 +4859,6 @@ public class Editor extends JFrame {
 		jPanelTableFieldTop.add(jTextFieldTableFieldByteaType);
 		jPanelTableFieldTop.add(jCheckBoxTableFieldAcceptMinus);
 		jPanelTableFieldTop.add(jComboBoxTableFieldEditType);
-		jPanelTableFieldTop.add(jLabelTableFieldDecimal);
 		jPanelTableFieldTop.add(jSpinnerTableFieldDecimal);
 		jPanelTableFieldTop.add(jCheckBoxTableFieldNullable);
 		jPanelTableFieldTop.add(jCheckBoxTableFieldNoUpdate);
@@ -4875,7 +4885,7 @@ public class Editor extends JFrame {
 		jPanelTableFieldTop.add(jLabelTableFieldRemarks);
 		jPanelTableFieldTop.add(jScrollPaneTableFieldRemarks);
 		jPanelTableFieldTop.add(jScrollPaneTableFieldTypeOptionKUBUN);
-		//
+
 		jScrollPaneTableFieldList.setBorder(null);
 		jScrollPaneTableFieldList.getViewport().add(jTableTableFieldList, null);
 		jScrollPaneTableFieldUsageList.setBorder(null);
@@ -4908,7 +4918,7 @@ public class Editor extends JFrame {
 		jTableTableFieldUsageList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableTableFieldUsageList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		//
+
 		jSplitPaneTableKey.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneTableKey.add(jScrollPaneTableKeyList, JSplitPane.TOP);
 		jSplitPaneTableKey.add(jPanelTableKey, JSplitPane.BOTTOM);
@@ -4944,7 +4954,7 @@ public class Editor extends JFrame {
 		jPanelTableKeyTop.add(jLabelTableKeyFields, null);
 		jPanelTableKeyTop.add(jTextFieldTableKeyFields, null);
 		jPanelTableKeyTop.add(jButtonTableKeyFieldsEdit, null);
-		//
+
 		jPanelTableKey.setLayout(new BorderLayout());
 		jPanelTableKey.setBackground(SystemColor.control);
 		jPanelTableKey.add(jPanelTableKeyTop, BorderLayout.NORTH);
@@ -4983,14 +4993,14 @@ public class Editor extends JFrame {
 		jTableTableKeyRelationshipList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableTableKeyRelationshipList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		//
+
 		jSplitPaneTableRefer.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneTableRefer.add(jScrollPaneTableReferList, JSplitPane.TOP);
 		jSplitPaneTableRefer.add(jPanelTableRefer, JSplitPane.BOTTOM);
 		jSplitPaneTableRefer.setDividerLocation(200);
 		jPanelTableRefer.setBorder(BorderFactory.createEtchedBorder());
 		jPanelTableRefer.setLayout(null);
-		//
+
 		jLabelTableReferToTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableReferToTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableReferToTable.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -5444,7 +5454,7 @@ public class Editor extends JFrame {
 		jRadioButtonFunction000ConsoleOptionYes.addChangeListener(new Editor_jRadioButtonFunction000ConsoleOption_changeAdapter(this));
 		jRadioButtonFunction000ConsoleOptionTimer.setText(res.getString("ConsoleOptionTimer"));
 		jRadioButtonFunction000ConsoleOptionTimer.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jRadioButtonFunction000ConsoleOptionTimer.setBounds(new Rectangle(360, 40, 90, 25));
+		jRadioButtonFunction000ConsoleOptionTimer.setBounds(new Rectangle(360, 40, 110, 25));
 		jRadioButtonFunction000ConsoleOptionTimer.addChangeListener(new Editor_jRadioButtonFunction000ConsoleOption_changeAdapter(this));
 		buttonGroupFunction000ConsoleOption.add(jRadioButtonFunction000ConsoleOptionNo);
 		buttonGroupFunction000ConsoleOption.add(jRadioButtonFunction000ConsoleOptionYes);
@@ -5453,7 +5463,7 @@ public class Editor extends JFrame {
 		jLabelFunction000TimerDefault.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction000TimerDefault.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction000TimerDefault.setText(res.getString("TimerDefault"));
-		jLabelFunction000TimerDefault.setBounds(new Rectangle(450, 43, 130, 20));
+		jLabelFunction000TimerDefault.setBounds(new Rectangle(470, 43, 110, 20));
 		jTextFieldFunction000TimerDefault.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldFunction000TimerDefault.setBounds(new Rectangle(585, 40, 395, 25));
 		//
@@ -5890,7 +5900,7 @@ public class Editor extends JFrame {
 		jLabelFunction100FieldCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100FieldCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100FieldCaptionOption.setBounds(new Rectangle(5, 105, 130, 20));
-		jRadioButtonFunction100FieldCaptionOptionName.setText(res.getString("FieldName"));
+		jRadioButtonFunction100FieldCaptionOptionName.setText(res.getString("FieldColumnName2"));
 		jRadioButtonFunction100FieldCaptionOptionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jRadioButtonFunction100FieldCaptionOptionName.setBounds(new Rectangle(140, 103, 130, 25));
 		jRadioButtonFunction100FieldCaptionOptionName.setEnabled(false);
@@ -6598,7 +6608,7 @@ public class Editor extends JFrame {
 		jLabelFunction110FieldCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction110FieldCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction110FieldCaptionOption.setBounds(new Rectangle(5, 105, 130, 20));
-		jRadioButtonFunction110FieldCaptionOptionName.setText(res.getString("FieldName"));
+		jRadioButtonFunction110FieldCaptionOptionName.setText(res.getString("FieldColumnName2"));
 		jRadioButtonFunction110FieldCaptionOptionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jRadioButtonFunction110FieldCaptionOptionName.setBounds(new Rectangle(140, 102, 130, 25));
 		jRadioButtonFunction110FieldCaptionOptionName.addChangeListener(new Editor_jRadioButtonFunction110FieldCaptionOption_changeAdapter(this));
@@ -9024,7 +9034,7 @@ public class Editor extends JFrame {
 		jLabelFunction300DetailFieldCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailFieldCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailFieldCaptionOption.setBounds(new Rectangle(5, 105, 130, 20));
-		jRadioButtonFunction300DetailFieldCaptionOptionName.setText(res.getString("FieldName"));
+		jRadioButtonFunction300DetailFieldCaptionOptionName.setText(res.getString("FieldColumnName2"));
 		jRadioButtonFunction300DetailFieldCaptionOptionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jRadioButtonFunction300DetailFieldCaptionOptionName.setBounds(new Rectangle(140, 103, 130, 25));
 		jRadioButtonFunction300DetailFieldCaptionOptionName.setEnabled(false);
@@ -10065,7 +10075,7 @@ public class Editor extends JFrame {
 		jLabelFunction310DetailFieldCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310DetailFieldCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310DetailFieldCaptionOption.setBounds(new Rectangle(5, 105, 130, 20));
-		jRadioButtonFunction310DetailFieldCaptionOptionName.setText(res.getString("FieldName"));
+		jRadioButtonFunction310DetailFieldCaptionOptionName.setText(res.getString("FieldColumnName2"));
 		jRadioButtonFunction310DetailFieldCaptionOptionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jRadioButtonFunction310DetailFieldCaptionOptionName.setBounds(new Rectangle(140, 102, 130, 25));
 		jRadioButtonFunction310DetailFieldCaptionOptionName.addChangeListener(new Editor_jRadioButtonFunction310DetailFieldCaptionOption_changeAdapter(this));
@@ -10332,7 +10342,7 @@ public class Editor extends JFrame {
 		jLabelFunction310AddRowListColumnCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction310AddRowListColumnCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction310AddRowListColumnCaptionOption.setBounds(new Rectangle(5, 105, 130, 20));
-		jRadioButtonFunction310AddRowListColumnCaptionOptionName.setText(res.getString("FieldName"));
+		jRadioButtonFunction310AddRowListColumnCaptionOptionName.setText(res.getString("FieldColumnName2"));
 		jRadioButtonFunction310AddRowListColumnCaptionOptionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jRadioButtonFunction310AddRowListColumnCaptionOptionName.setBounds(new Rectangle(140, 102, 130, 25));
 		jRadioButtonFunction310AddRowListColumnCaptionOptionName.addChangeListener(new Editor_jRadioButtonFunction310AddRowListColumnCaptionOption_changeAdapter(this));
@@ -11217,7 +11227,7 @@ public class Editor extends JFrame {
 		jLabelFunction390DetailFieldCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390DetailFieldCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction390DetailFieldCaptionOption.setBounds(new Rectangle(5, 74, 130, 20));
-		jRadioButtonFunction390DetailFieldCaptionOptionName.setText(res.getString("FieldName"));
+		jRadioButtonFunction390DetailFieldCaptionOptionName.setText(res.getString("FieldColumnName2"));
 		jRadioButtonFunction390DetailFieldCaptionOptionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jRadioButtonFunction390DetailFieldCaptionOptionName.setBounds(new Rectangle(140, 71, 130, 25));
 		jRadioButtonFunction390DetailFieldCaptionOptionName.addChangeListener(new Editor_jRadioButtonFunction390DetailFieldCaptionOption_changeAdapter(this));
@@ -15681,6 +15691,10 @@ public class Editor extends JFrame {
 				for (int i = 0; i < fontList.getLength(); i++) {
 					element.appendChild(fontList.item(i).cloneNode(true));
 				}
+				NodeList logList = this.getElement().getElementsByTagName("MaintenanceLog");
+				for (int i = 0; i < logList.getLength(); i++) {
+					element.appendChild(logList.item(i).cloneNode(true));
+				}
 			} else {
 				element = (org.w3c.dom.Element)domNode_.cloneNode(true);
 			}
@@ -18752,7 +18766,7 @@ public class Editor extends JFrame {
 				domNode_.setAttribute("SmtpUser", oldElement.getAttribute("SmtpUser"));
 				domNode_.setAttribute("SmtpPassword", oldElement.getAttribute("SmtpPassword"));
 				domNode_.setAttribute("SystemFont", oldElement.getAttribute("SystemFont"));
-				//
+
 				//Replace Sub-DB data//
 				NodeList currentSubDBList = systemNode.getElement().getElementsByTagName("SubDB");
 				int rowNumber = currentSubDBList.getLength();
@@ -18764,7 +18778,7 @@ public class Editor extends JFrame {
 				for (int i = 0; i < rowNumber; i++) {
 					systemNode.getElement().appendChild(subDBList.item(i).cloneNode(true));
 				}
-				//
+
 				//Replace Print-Font data//
 				NodeList currentFontList = systemNode.getElement().getElementsByTagName("PrintFont");
 				rowNumber = currentFontList.getLength();
@@ -18775,6 +18789,18 @@ public class Editor extends JFrame {
 				rowNumber = fontList.getLength();
 				for (int i = 0; i < rowNumber; i++) {
 					systemNode.getElement().appendChild(fontList.item(i).cloneNode(true));
+				}
+
+				//Replace Maintenance-Log data//
+				NodeList currentLogList = systemNode.getElement().getElementsByTagName("MaintenanceLog");
+				rowNumber = currentLogList.getLength();
+				for (int i = 0; i < rowNumber; i++) {
+					systemNode.getElement().removeChild(currentLogList.item(0));
+				}
+				NodeList logList = oldElement.getElementsByTagName("MaintenanceLog");
+				rowNumber = logList.getLength();
+				for (int i = 0; i < rowNumber; i++) {
+					systemNode.getElement().appendChild(logList.item(i).cloneNode(true));
 				}
 			}
 			//
@@ -19696,6 +19722,18 @@ public class Editor extends JFrame {
 					}
 				}
 
+				if (jTextFieldTableFieldColumnName.getText().toUpperCase().equals("*NAME") || jTextFieldTableFieldColumnName.getText().equals("")) {
+					if (!element.getAttribute("ColumnName").equals("")) {
+						valueOfFieldsChanged = true;
+						element.setAttribute("ColumnName", "");
+					}
+				} else {
+					if (!element.getAttribute("ColumnName").equals(jTextFieldTableFieldColumnName.getText())) {
+						valueOfFieldsChanged = true;
+						element.setAttribute("ColumnName", jTextFieldTableFieldColumnName.getText());
+					}
+				}
+
 				if (!jComboBoxTableFieldType.getSelectedItem().equals(element.getAttribute("Type"))) {
 					valueOfFieldsChanged = true;
 					element.setAttribute("Type", (String)jComboBoxTableFieldType.getSelectedItem());
@@ -19715,12 +19753,12 @@ public class Editor extends JFrame {
 					element.setAttribute("Size", Integer.toString(fieldSize));
 				}
 				if (element.getAttribute("Decimal").equals("")) {
-					if (jSpinnerTableFieldDecimal.isVisible()) {
+					if (jSpinnerTableFieldDecimal.isVisible() && jSpinnerTableFieldDecimal.isEnabled()) {
 						valueOfFieldsChanged = true;
 						element.setAttribute("Decimal", Integer.toString((Integer)jSpinnerTableFieldDecimal.getValue()));
 					}
 				} else {
-					if (jSpinnerTableFieldDecimal.isVisible()) {
+					if (jSpinnerTableFieldDecimal.isVisible() && jSpinnerTableFieldDecimal.isEnabled()) {
 						if ((Integer)jSpinnerTableFieldDecimal.getValue() != Integer.parseInt(element.getAttribute("Decimal"))) {
 							valueOfFieldsChanged = true;
 							if ((Integer)jSpinnerTableFieldDecimal.getValue() == 0) {
@@ -32352,6 +32390,9 @@ public class Editor extends JFrame {
 				jLabelTableFieldName.setEnabled(false);
 				jTextFieldTableFieldName.setText("");
 				jTextFieldTableFieldName.setEnabled(false);
+				jLabelTableFieldColumnName.setEnabled(false);
+				jTextFieldTableFieldColumnName.setText("");
+				jTextFieldTableFieldColumnName.setEnabled(false);
 				jCheckBoxTableFieldPhysical.setEnabled(false);
 				jLabelTableFieldType.setEnabled(false);
 				jComboBoxTableFieldType.setEnabled(false);
@@ -32360,7 +32401,6 @@ public class Editor extends JFrame {
 				jCheckBoxTableFieldAcceptMinus.setEnabled(false);
 				jCheckBoxTableFieldAcceptMinus.setSelected(false);
 				jComboBoxTableFieldEditType.setEnabled(false);
-				jLabelTableFieldDecimal.setEnabled(false);
 				jSpinnerTableFieldDecimal.setValue(0);
 				jSpinnerTableFieldDecimal.setEnabled(false);
 				jCheckBoxTableFieldNullable.setEnabled(false);
@@ -32411,6 +32451,8 @@ public class Editor extends JFrame {
 					jTextFieldTableFieldID.setEnabled(true);
 					jLabelTableFieldName.setEnabled(true);
 					jTextFieldTableFieldName.setEnabled(true);
+					jLabelTableFieldColumnName.setEnabled(true);
+					jTextFieldTableFieldColumnName.setEnabled(true);
 					jCheckBoxTableFieldPhysical.setEnabled(true);
 					jLabelTableFieldType.setEnabled(true);
 					jComboBoxTableFieldType.setEnabled(true);
@@ -32427,9 +32469,13 @@ public class Editor extends JFrame {
 					//
 					String fieldID = element.getAttribute("ID");
 					jTextFieldTableFieldID.setText(fieldID);
-					jTextFieldTableFieldName.setText(element.getAttribute("Name"));
 					if (!tableKeyFieldIDList.contains(jTextFieldTableFieldID.getText())) {
 						jCheckBoxTableFieldNoUpdate.setEnabled(true);
+					}
+					jTextFieldTableFieldName.setText(element.getAttribute("Name"));
+					jTextFieldTableFieldColumnName.setText(element.getAttribute("ColumnName"));
+					if (jTextFieldTableFieldColumnName.getText().equals("")) {
+						jTextFieldTableFieldColumnName.setText("*Name");
 					}
 					//
 					jComboBoxTableFieldType.setSelectedItem(element.getAttribute("Type"));
@@ -34745,7 +34791,7 @@ public class Editor extends JFrame {
 	void setupRadioButtonsOfTableFieldType() {
 		jLabelTableFieldSize.setVisible(false);
 		jSpinnerTableFieldSize.setVisible(false);
-		jLabelTableFieldDecimal.setVisible(false);
+		//jLabelTableFieldDecimal.setVisible(false);
 		jSpinnerTableFieldDecimal.setVisible(false);
 		jCheckBoxTableFieldAcceptMinus.setVisible(false);
 		jComboBoxTableFieldEditType.setVisible(false);
@@ -34770,7 +34816,7 @@ public class Editor extends JFrame {
 		jLabelTableFieldSize.setEnabled(true);
 		jSpinnerTableFieldSize.setEnabled(true);
 		if (isWithDecimal((String)jComboBoxTableFieldType.getSelectedItem())) {
-			jLabelTableFieldDecimal.setEnabled(true);
+			//jLabelTableFieldDecimal.setEnabled(true);
 			jSpinnerTableFieldDecimal.setEnabled(true);
 		}
 		//
@@ -34880,6 +34926,9 @@ public class Editor extends JFrame {
 					jSpinnerTableFieldSize.setValue(15);
 				}
 			}
+			jSpinnerTableFieldDecimal.setVisible(true);
+			jSpinnerTableFieldDecimal.setValue(0);
+			jSpinnerTableFieldDecimal.setEnabled(false);
 			jCheckBoxTableFieldAcceptMinus.setVisible(true);
 			jCheckBoxTableFieldAcceptMinus.setEnabled(true);
 			jComboBoxTableFieldEditType.setVisible(true);
@@ -34896,7 +34945,7 @@ public class Editor extends JFrame {
 			jLabelTableFieldSize.setVisible(true);
 			jSpinnerTableFieldSize.setVisible(true);
 			spinnerNumberModelTableFieldSize.setMinimum(1);
-			jLabelTableFieldDecimal.setVisible(true);
+			//jLabelTableFieldDecimal.setVisible(true);
 			jSpinnerTableFieldDecimal.setVisible(true);
 			spinnerNumberModelTableFieldDecimal.setMinimum(0);
 			if (jComboBoxTableFieldType.getSelectedItem().equals("DOUBLE")
@@ -34964,12 +35013,14 @@ public class Editor extends JFrame {
 		if (jComboBoxTableFieldType.getSelectedItem().equals("BLOB")) {
 			jLabelTableFieldSize.setVisible(false);
 			jSpinnerTableFieldSize.setVisible(false);
+			jSpinnerTableFieldDecimal.setVisible(false);
 		}
 		//
 		//BYTEA;
 		if (jComboBoxTableFieldType.getSelectedItem().equals("BYTEA")) {
 			jLabelTableFieldSize.setVisible(false);
 			jSpinnerTableFieldSize.setVisible(false);
+			jSpinnerTableFieldDecimal.setVisible(false);
 			jLabelTableFieldByteaType.setVisible(true);
 			jTextFieldTableFieldByteaType.setVisible(true);
 		}
@@ -37827,9 +37878,6 @@ public class Editor extends JFrame {
 				jLabelFunction310AddRowListColumnType.setEnabled(false);
 				jTextFieldFunction310AddRowListColumnType.setEnabled(false);
 				jTextFieldFunction310AddRowListColumnType.setText("");
-				//jLabelFunction310AddRowListColumnWidth.setEnabled(false);
-				//jTextFieldFunction310AddRowListColumnWidth.setEnabled(false);
-				//jTextFieldFunction310AddRowListColumnWidth.setText("");
 				jLabelFunction310AddRowListColumnLayoutOption.setEnabled(false);
 				jRadioButtonFunction310AddRowListColumnLayoutOptionVertical.setSelected(true);
 				jRadioButtonFunction310AddRowListColumnLayoutOptionVertical.setEnabled(false);
@@ -37860,8 +37908,6 @@ public class Editor extends JFrame {
 					jTextFieldFunction310AddRowListColumn.setEnabled(true);
 					jLabelFunction310AddRowListColumnType.setEnabled(true);
 					jTextFieldFunction310AddRowListColumnType.setEnabled(true);
-					//jLabelFunction310AddRowListColumnWidth.setEnabled(true);
-					//jTextFieldFunction310AddRowListColumnWidth.setEnabled(true);
 					jLabelFunction310AddRowListColumnLayoutOption.setEnabled(true);
 					jRadioButtonFunction310AddRowListColumnLayoutOptionVertical.setEnabled(true);
 					jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal.setEnabled(true);
@@ -37898,12 +37944,6 @@ public class Editor extends JFrame {
 					wrkStr = getDescriptionsOfTypeOptions(fieldElement, true, null);
 					jTextFieldFunction310AddRowListColumnType.setText(getDescriptionsOfTypeAndSize(fieldElement.getAttribute("Type"), fieldElement.getAttribute("Size"), fieldElement.getAttribute("Decimal")) + wrkStr);
 					//
-//					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
-//					if (wrkStr.equals("")) {
-//						jTextFieldFunction310AddRowListColumnWidth.setText("*Auto");
-//					} else {
-//						jTextFieldFunction310AddRowListColumnWidth.setText(wrkStr);
-//					}
 					ArrayList<String> optionList = getOptionList(element.getAttribute("FieldOptions"));
 					if (optionList.contains("VERTICAL")) {
 						jRadioButtonFunction310AddRowListColumnLayoutOptionVertical.setSelected(true);
@@ -38076,66 +38116,57 @@ public class Editor extends JFrame {
 	}
 	
 	void jMenuItemComponentToAddPK_actionPerformed(ActionEvent e) {
-		//String answer = JOptionPane.showInputDialog(this.getContentPane(), res.getString("AddKeyMessage"), res.getString("AddPKey"), 1);
 		String answer = dialogEditTableKeyFields.request(currentMainTreeNode.getElement(), ""); 
-		if (answer != null) {
-			if (!answer.equals("")) {
-				answer = getCaseShiftValue(answer, "Upper");
-				String names = getFieldNames(currentMainTreeNode.getElement().getAttribute("ID"), answer, " + ", false);
-				if (names != null && !names.equals("")) {
-					org.w3c.dom.Element newElement = createNewElementAccordingToType("TableKeyList");
-					if (newElement != null) {
-						newElement.setAttribute("Type", "PK");
-						newElement.setAttribute("Fields", answer);
-						currentMainTreeNode.getElement().appendChild(newElement);
-						informationOnThisPageChanged = true;
-						currentMainTreeNode.updateFields();
-						currentMainTreeNode.activateContentsPane(true);
-					}
+		if (answer != null && !answer.equals("")) {
+			answer = getCaseShiftValue(answer, "Upper");
+			String names = getFieldNames(currentMainTreeNode.getElement().getAttribute("ID"), answer, " + ", false);
+			if (names != null && !names.equals("")) {
+				org.w3c.dom.Element newElement = createNewElementAccordingToType("TableKeyList");
+				if (newElement != null) {
+					newElement.setAttribute("Type", "PK");
+					newElement.setAttribute("Fields", answer);
+					currentMainTreeNode.getElement().appendChild(newElement);
+					informationOnThisPageChanged = true;
+					currentMainTreeNode.updateFields();
+					currentMainTreeNode.activateContentsPane(true);
 				}
 			}
 		}
 	}
 	
 	void jMenuItemComponentToAddSK_actionPerformed(ActionEvent e) {
-		//String answer = JOptionPane.showInputDialog(this.getContentPane(), res.getString("AddKeyMessage"), res.getString("AddSKey"), 1);
 		String answer = dialogEditTableKeyFields.request(currentMainTreeNode.getElement(), ""); 
-		if (answer != null) {
-			if (!answer.equals("")) {
-				answer = getCaseShiftValue(answer, "Upper");
-				String names = getFieldNames(currentMainTreeNode.getElement().getAttribute("ID"), answer, " + ", false);
-				if (names != null && !names.equals("")) {
-					org.w3c.dom.Element newElement = createNewElementAccordingToType("TableKeyList");
-					if (newElement != null) {
-						newElement.setAttribute("Type", "SK");
-						newElement.setAttribute("Fields", answer);
-						currentMainTreeNode.getElement().appendChild(newElement);
-						informationOnThisPageChanged = true;
-						currentMainTreeNode.updateFields();
-						currentMainTreeNode.activateContentsPane(true);
-					}
+		if (answer != null && !answer.equals("")) {
+			answer = getCaseShiftValue(answer, "Upper");
+			String names = getFieldNames(currentMainTreeNode.getElement().getAttribute("ID"), answer, " + ", false);
+			if (names != null && !names.equals("")) {
+				org.w3c.dom.Element newElement = createNewElementAccordingToType("TableKeyList");
+				if (newElement != null) {
+					newElement.setAttribute("Type", "SK");
+					newElement.setAttribute("Fields", answer);
+					currentMainTreeNode.getElement().appendChild(newElement);
+					informationOnThisPageChanged = true;
+					currentMainTreeNode.updateFields();
+					currentMainTreeNode.activateContentsPane(true);
 				}
 			}
 		}
 	}
 	
 	void jMenuItemComponentToAddXK_actionPerformed(ActionEvent e) {
-		//String answer = JOptionPane.showInputDialog(this.getContentPane(), res.getString("AddIndexMessage"), res.getString("AddIndex"), 1);
 		String answer = dialogEditTableKeyFields.request(currentMainTreeNode.getElement(), ""); 
-		if (answer != null) {
-			if (!answer.equals("")) {
-				answer = getCaseShiftValue(answer, "Upper");
-				String names = getIndexKeyNames(currentMainTreeNode.getElement().getAttribute("ID"), answer, " > ");
-				if (names != null && !names.equals("")) {
-					org.w3c.dom.Element newElement = createNewElementAccordingToType("TableKeyList");
-					if (newElement != null) {
-						newElement.setAttribute("Type", "XK");
-						newElement.setAttribute("Fields", answer);
-						currentMainTreeNode.getElement().appendChild(newElement);
-						informationOnThisPageChanged = true;
-						currentMainTreeNode.updateFields();
-						currentMainTreeNode.activateContentsPane(true);
-					}
+		if (answer != null && !answer.equals("")) {
+			answer = getCaseShiftValue(answer, "Upper");
+			String names = getIndexKeyNames(currentMainTreeNode.getElement().getAttribute("ID"), answer, " > ");
+			if (names != null && !names.equals("")) {
+				org.w3c.dom.Element newElement = createNewElementAccordingToType("TableKeyList");
+				if (newElement != null) {
+					newElement.setAttribute("Type", "XK");
+					newElement.setAttribute("Fields", answer);
+					currentMainTreeNode.getElement().appendChild(newElement);
+					informationOnThisPageChanged = true;
+					currentMainTreeNode.updateFields();
+					currentMainTreeNode.activateContentsPane(true);
 				}
 			}
 		}
@@ -41509,13 +41540,13 @@ public class Editor extends JFrame {
 		if (jRadioButtonFunction100RowSelectionActionCall.isSelected()) {
 			jTextFieldFunction100FunctionIDCalled.setEnabled(true);
 			jTextFieldFunction100FunctionNameCalled.setEnabled(true);
-        	//jRadioButtonFunction100ParmTypeKeys.setEnabled(true);
-        	//jRadioButtonFunction100ParmTypeKeys.setSelected(true);
+        	jRadioButtonFunction100ParmTypeKeys.setEnabled(true);
+        	jRadioButtonFunction100ParmTypeKeys.setSelected(true);
 		} else {
 			jTextFieldFunction100FunctionIDCalled.setEnabled(false);
 			jTextFieldFunction100FunctionNameCalled.setEnabled(false);
-        	//jRadioButtonFunction100ParmTypeKeys.setEnabled(false);
-        	//jRadioButtonFunction100ParmTypeColumns.setSelected(true);
+        	jRadioButtonFunction100ParmTypeKeys.setEnabled(false);
+        	jRadioButtonFunction100ParmTypeColumns.setSelected(true);
 		}
 	}
 	

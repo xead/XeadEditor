@@ -48,7 +48,14 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "X-TEA Editor";
 	public static final String COPYRIGHT = "Copyright 2015 DBC Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
-	public static final String FULL_VERSION  = "V1.R2.M15";
+	public static final String FULL_VERSION  = "V1.R2.M16";
+	//1.2.16
+	//・フォントによっては一部の項目のラベルが隠れる問題を修正した
+	//・変更履歴がUndoされない問題を修正した
+	//・フィールド定義に「カラム名」を設け、一覧形式でのキャプション初期値とした
+	//・起動時のスプラッシュの形式を改善した
+	//・MySQL向けに対応データ型を強化した
+	//
 	//1.2.15
 	//・ツール名をX-TEA　Editorに変更した
 	//・Float型小数桁の最大値を９に設定した
