@@ -57,7 +57,7 @@ public class Application {
 
 		splashText.setFont(new java.awt.Font("Dialog", 0, 16));
 		splashText.setOpaque(false);
-		splashText.setBounds(300, 205, 200, 20);
+		splashText.setBounds(280, 205, 220, 20);
 		splashText.setText(res.getString("SplashMessage0"));
 		splashScreen.add(splashText);
 
@@ -119,6 +119,10 @@ public class Application {
 	
 	public void repaintProgress() {
 		splashProgressBar.paintImmediately(0,0,splashProgressBar.getWidth(),splashProgressBar.getHeight());
+	}
+
+	public boolean isSplashValid() {
+		return (splashScreen != null);
 	}
 
 	public void hideSplash() {

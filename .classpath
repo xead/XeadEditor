@@ -5,7 +5,6 @@
 	<classpathentry kind="lib" path="C:/XeadProject/Driver/derbyclient.jar"/>
 	<classpathentry kind="lib" path="C:/XeadProject/Driver/xercesImpl.jar"/>
 	<classpathentry kind="lib" path="C:/XeadProject/Driver/mysql-connector-java-5.1.18-bin.jar"/>
-	<classpathentry kind="lib" path="C:/XeadProject/Driver/postgresql-9.1-901.jdbc3.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="C:/XeadProject/Driver/ojdbc6.jar"/>
 	<classpathentry kind="lib" path="C:/XeadProject/Driver/sqljdbc4.jar"/>
@@ -20,5 +19,6 @@
 	<classpathentry kind="lib" path="C:/XeadProject/Driver/hsqldb.jar"/>
 	<classpathentry kind="lib" path="C:/XeadProject/Driver/jackcess-2.1.0.jar"/>
 	<classpathentry kind="lib" path="C:/XeadProject/Driver/ucanaccess-2.0.9.5.jar"/>
+	<classpathentry kind="lib" path="C:/XeadProject/Driver/postgresql-9.4-1201.jdbc41.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

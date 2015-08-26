@@ -48,13 +48,24 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "X-TEA Editor";
 	public static final String COPYRIGHT = "Copyright 2015 DBC Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
-	public static final String FULL_VERSION  = "V1.R2.M16";
+	public static final String FULL_VERSION  = "V1.R2.M17";
+	//1.2.17
+	//・accdbのオートインクリメントのキーがモジュール上ではNullableとして設定される仕様に対応した
+	//・画像フィールドの高さ設定が指定行数に正確に従っていなかった問題を修正した
+	//・フィールドの自動採番や区分の属性に関して設定の操作性を向上させた
+	//・レイアウト確認機能がフィールド定義のカラム名に追随しない問題を修正した
+	//・レイアウト確認機能で〒連動フィールドのボタンが不必要に表示される問題を修正した
+	//・データ保守ユーティリティ上で〒連動住所が漢字フィールドとみなされていなかった問題を修正した
+	//・画像フィールドの再表示ボタンの幅を狭めてアイコンを設定した
+	//・PostgreSQL向けに対応データ型を強化するとともに、JDBCドライバをアップグレードした
+	//
 	//1.2.16
 	//・フォントによっては一部の項目のラベルが隠れる問題を修正した
 	//・変更履歴がUndoされない問題を修正した
 	//・フィールド定義に「カラム名」を設け、一覧形式でのキャプション初期値とした
 	//・起動時のスプラッシュの形式を改善した
 	//・MySQL向けに対応データ型を強化した
+	//・インポート後の再表示の際に異常終了する問題を修正した
 	//
 	//1.2.15
 	//・ツール名をX-TEA　Editorに変更した

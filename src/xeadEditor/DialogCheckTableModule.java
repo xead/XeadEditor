@@ -178,7 +178,7 @@ public class DialogCheckTableModule extends JDialog {
 	}
 
 	void checkTableModule(String requestType) {
-		org.w3c.dom.Element element;
+		org.w3c.dom.Element element, keyElement;
 		String wrkStr, tableID, moduleID, fieldID;
 		StringBuffer buf = new StringBuffer();
 		StringBuffer moduleBuf = new StringBuffer();
@@ -360,6 +360,19 @@ public class DialogCheckTableModule extends JDialog {
 
 							if (rs2.getString("IS_NULLABLE").equals("YES")) {
 								isNullableOfModuleField = true;
+
+								////////////////////////////////////////////////////////////////////////////
+								// AutoNumber key field of ACCESS is set to be Null-able. Note that value //
+								// of rs2.getString("IS_INCREMENT") is always "NO" for unknown reason.    //
+								////////////////////////////////////////////////////////////////////////////
+								if (databaseName.contains("jdbc:ucanaccess") && element.getAttribute("Type").equals("INTEGER")) {
+									NodeList keyList = tableElement.getElementsByTagName("Key");
+									keyElement = (org.w3c.dom.Element)keyList.item(0);
+									workTokenizer = new StringTokenizer(keyElement.getAttribute("Fields"), ";");
+									if (workTokenizer.countTokens() == 1 && workTokenizer.nextToken().equals(element.getAttribute("ID"))) {
+										isNullableOfModuleField = false;
+									}
+								}
 							} else {
 								isNullableOfModuleField = false;
 							}
@@ -1052,7 +1065,10 @@ public class DialogCheckTableModule extends JDialog {
 							|| dataTypeModule.equals("LONGTEXT")
 							|| dataTypeModule.equals("image")
 							|| dataTypeModule.equals("CLOB")
-							|| dataTypeModule.equals("json")) {
+							|| dataTypeModule.equals("json")
+							|| dataTypeModule.equals("jsonb")
+							|| dataTypeModule.equals("hstore")
+							|| dataTypeModule.equals("xml")) {
 						isEquivalent = true;
 					}
 				}
@@ -1071,6 +1087,9 @@ public class DialogCheckTableModule extends JDialog {
 				if (dataTypeModule.equals("text")
 						|| dataTypeModule.equals("nvarchar")
 						|| dataTypeModule.equals("json")
+						|| dataTypeModule.equals("jsonb")
+						|| dataTypeModule.equals("hstore")
+						|| dataTypeModule.equals("xml")
 						|| dataTypeModule.equals("VARCHAR2")
 						|| dataTypeModule.equals("NVARCHAR2")
 						|| dataTypeModule.equals("character varying")) {

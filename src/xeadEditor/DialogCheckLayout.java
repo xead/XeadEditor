@@ -1216,6 +1216,9 @@ class DialogCheckLayoutColumn extends Object {
 		//
 		org.w3c.dom.Element workElement = dialog_.getEditor().getSpecificFieldElement(tableID_, fieldID_);
 		fieldName = workElement.getAttribute("Name");
+		if (!workElement.getAttribute("ColumnName").equals("")) {
+			fieldName = workElement.getAttribute("ColumnName");
+		}
 		dataType = workElement.getAttribute("Type");
 		dataTypeOptions = workElement.getAttribute("TypeOptions");
 		dataTypeOptionList = dialog_.getEditor().getOptionList(dataTypeOptions);
@@ -1841,7 +1844,7 @@ class DialogCheckLayoutField extends JPanel {
 			this.setPreferredSize(new Dimension(this.getPreferredSize().width + metrics.stringWidth(wrkStr) + 6, this.getPreferredSize().height));
 		}
 		//
-		if (dataTypeOptionList.contains("ZIPADRS") && isOnEditablePanel) {
+		if (dataTypeOptionList.contains("ZIPADRS") && isOnEditablePanel && isEditable) {
 			jButtonToRefferZipNo = new JButton();
 			jButtonToRefferZipNo.setText("<");
 			jButtonToRefferZipNo.setFont(new java.awt.Font("SansSerif", 0, 9));
@@ -2202,7 +2205,7 @@ class DialogCheckLayoutPromptCallField extends JPanel {
 
 class DialogCheckLayoutImageField extends JPanel {
 	private static final long serialVersionUID = 1L;
-	private static ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
+	//private static ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
 	private int rows_;
 	private JTextField jTextField = new JTextField();
 	private JScrollPane jScrollPane = new JScrollPane();
@@ -2213,6 +2216,8 @@ class DialogCheckLayoutImageField extends JPanel {
     private static int DEFAULT_ROWS = 11;
     private static int DEFAULT_WIDTH = 400;
 	private final int FIELD_VERTICAL_MARGIN = 5;
+	private static ImageIcon ICON_REFRESH = new ImageIcon(Toolkit.getDefaultToolkit().createImage(xeadEditor.Editor.class.getResource("refresh.PNG")));
+
 
 	public DialogCheckLayoutImageField(String fieldOptions, int size, boolean isEditable, DialogCheckLayout dialog){
 		super();
@@ -2230,8 +2235,9 @@ class DialogCheckLayoutImageField extends JPanel {
 		jTextField.setText(dialog.getStringData("STRING", size, 0, null));
 		//
 		jButton.setFont(new java.awt.Font(dialog.driverFontName_, 0, DialogCheckLayout.FONT_SIZE));
-		jButton.setPreferredSize(new Dimension(100, dialog.getFieldUnitHeight()));
-		jButton.setText(res.getString("Refresh"));
+		jButton.setPreferredSize(new Dimension(35, dialog.getFieldUnitHeight()));
+		//jButton.setText(res.getString("Refresh"));
+		jButton.setIcon(ICON_REFRESH);
 		jButton.setFocusable(false);
 		jPanelBottom.setPreferredSize(new Dimension(200, dialog.getFieldUnitHeight()));
 	    jScrollPane.setBorder(null);
@@ -2251,7 +2257,8 @@ class DialogCheckLayoutImageField extends JPanel {
 		if (!wrkStr.equals("")) {
 			rows_ = Integer.parseInt(wrkStr);
 		}
-		int fieldHeight = rows_ * dialog.getFieldUnitHeight() - FIELD_VERTICAL_MARGIN - 3;
+		//int fieldHeight = rows_ * dialog.getFieldUnitHeight() - FIELD_VERTICAL_MARGIN - 3;
+		int fieldHeight = rows_ * (dialog.getFieldUnitHeight() + FIELD_VERTICAL_MARGIN) - FIELD_VERTICAL_MARGIN;
 		int fieldWidth = DEFAULT_WIDTH;
 		wrkStr = dialog.getEditor().getOptionValueWithKeyword(fieldOptions_, "WIDTH");
 		if (!wrkStr.equals("")) {

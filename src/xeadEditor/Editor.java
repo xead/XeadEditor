@@ -2487,11 +2487,15 @@ public class Editor extends JFrame {
 			nodeJumpButton[7] = null;
 			currentMainTreeNode = null;
 			previousMainTreeNode = null;
-			application.setTextOnSplash(res.getString("SplashMessage1"));
+
+			if (application.isSplashValid()) {
+				application.setTextOnSplash(res.getString("SplashMessage1"));
+			}
 			
 			if (currentFileName.startsWith("http:")
 					|| currentFileName.startsWith("https:")
 					|| currentFileName.startsWith("file:")) {
+
 				//////////////////////////////////////////////////////////////////////////
 				// Set path of content file which is used to process <CURRENT> keyword. //
 				// And display a warning message as it's a real-only content.           //
@@ -2508,7 +2512,9 @@ public class Editor extends JFrame {
 				DOMParser parser = new DOMParser();
 				parser.parse(new InputSource(inputStream));
 				domDocument = parser.getDocument();
+
 			} else {
+
 				//////////////////////////////////////////////////////////////////////////
 				// Set path of content file which is used to process <CURRENT> keyword. //
 				// And also check File real-only attribute.                             //
@@ -2528,7 +2534,9 @@ public class Editor extends JFrame {
 				domDocument = parser.getDocument();
 			}
 
+			///////////////////////////////////////////////////
 			// Check Format version and add node of "System" //
+			///////////////////////////////////////////////////
 			xmlnodelist1 = domDocument.getElementsByTagName("System");
 			element1 = (org.w3c.dom.Element)xmlnodelist1.item(0);
 			float fileFormat = Float.parseFloat(element1.getAttribute("FormatVersion"));
@@ -2544,21 +2552,26 @@ public class Editor extends JFrame {
 			systemName = systemNode.getElement().getAttribute("Name");
 			systemVersion = systemNode.getElement().getAttribute("Version");
 
+			//////////////////////////////////////////
 			// Check if module checking is required //
+			//////////////////////////////////////////
 			if (systemNode.getElement().getAttribute("SkipModuleCheck").equals("T")) {
 				skipModuleCheck = true;
 			} else {
 				skipModuleCheck = false;
 			}
 
-			// Construct DialogCheckLayout //
 			dialogCheckLayout = new DialogCheckLayout(this);
 
+			///////////////////////////
 			// Add Node of "MenuList"//
+			///////////////////////////
 			menuListNode = new MainTreeNode("MenuList", null, this);
 			systemNode.add(menuListNode);
 
-			// Add Node of "Menu"//
+			////////////////////////
+			// Add Nodes of "Menu"//
+			////////////////////////
 			xmlnodelist1 = domDocument.getElementsByTagName("Menu");
 			sortingList = getSortedListModel(xmlnodelist1, "ID");
 		    for (int i = 0; i < sortingList.getSize(); i++) {
@@ -2567,11 +2580,15 @@ public class Editor extends JFrame {
 				menuListNode.add(xETreeNode1);
 		    }
 
+			////////////////////////////////
 			// Add Node of "SubsystemList"//
+			////////////////////////////////
 			subsystemListNode = new MainTreeNode("SubsystemList", null, this);
 			systemNode.add(subsystemListNode);
 
-			// Add Node of "Subsystem" and its children//
+			////////////////////////////////////////////////
+			// Add Nodes of "Subsystem" and their children//
+			////////////////////////////////////////////////
 			xmlnodelist1 = domDocument.getElementsByTagName("Subsystem");
 			sortingList = getSortedListModel(xmlnodelist1, "ID");
 		    for (int i = 0; i < sortingList.getSize(); i++) {
@@ -2579,37 +2596,53 @@ public class Editor extends JFrame {
 				xETreeNode1 = new MainTreeNode("Subsystem", element1, this);
 				subsystemListNode.add(xETreeNode1);
 
+				////////////////////////////
 				// Add Node of "TableList"//
+				////////////////////////////
 				xETreeNode2 = new MainTreeNode("TableList", null, this);
 				xETreeNode1.add(xETreeNode2);
 
+				///////////////////////////////
 				// Add Node of "FunctionList"//
+				///////////////////////////////
 				xETreeNode2 = new MainTreeNode("FunctionList", null, this);
 				xETreeNode1.add(xETreeNode2);
 			}
 			subsystemListNode.sortChildNodes();
 
-		    // Connect to Database to check table module //
-			application.setTextOnSplash(res.getString("SplashMessage2"));
+			///////////////////////////////////////////////
+			// Connect to Database to check table module //
+			///////////////////////////////////////////////
+			if (application.isSplashValid()) {
+				application.setTextOnSplash(res.getString("SplashMessage2"));
+			}
 		    if (systemNode.getElement().getAttribute("AutoConnectToEdit").equals("T")) {
 		    	setupConnectionList(true);
 		    } else {
 		    	setupConnectionList(false);
 		    }
 
-			// Add Node of "Table"//
-			//int progressRate = 0;
-			//String progressMessage = "";
-			//application.setTextOnSplash(res.getString("SplashMessage3"));
+			/////////////////////////
+			// Add Nodes of "Table"//
+			/////////////////////////
 			xmlnodelist1 = domDocument.getElementsByTagName("Table");
 			sortingList = getSortedListModel(xmlnodelist1, "ID");
-	    	application.setTextOnSplash(res.getString("SplashMessage3"));
-			application.setProgressMax(sortingList.getSize());
-		    for (int i = 0; i < sortingList.getSize(); i++) {
-		    	//progressRate = (i+1) * 100 / sortingList.getSize();
-		    	//progressMessage = res.getString("SplashMessage3") + "(" + progressRate + "%)";
-		    	application.setProgressValue(i+1);
-		    	application.repaintProgress();
+			if (application.isSplashValid()) {
+				application.setTextOnSplash(res.getString("SplashMessage3"));
+				application.setProgressMax(sortingList.getSize());
+			} else {
+				jProgressBar.setMaximum(sortingList.getSize());
+				jProgressBar.setValue(0);
+			}
+
+			for (int i = 0; i < sortingList.getSize(); i++) {
+		    	if (application.isSplashValid()) {
+					application.setProgressValue(i+1);
+					application.repaintProgress();
+				} else {
+					jProgressBar.setValue(jProgressBar.getValue()+1);
+					jProgressBar.paintImmediately(0,0,jProgressBar.getWidth(),jProgressBar.getHeight());
+				}
 
 		    	element1 = (org.w3c.dom.Element)sortingList.getElementAt(i);
 		    	xETreeNode1 = getSpecificXETreeNode("Subsystem", element1.getAttribute("SubsystemID"));
@@ -2624,8 +2657,12 @@ public class Editor extends JFrame {
 		    	}
 			}
 
-			// Add Node of "Function"//
-			application.setTextOnSplash(res.getString("SplashMessage4"));
+			////////////////////////////
+			// Add Nodes of "Function"//
+			////////////////////////////
+			if (application.isSplashValid()) {
+				application.setTextOnSplash(res.getString("SplashMessage4"));
+			}
 			xmlnodelist1 = domDocument.getElementsByTagName("Function");
 			sortingList = getSortedListModel(xmlnodelist1, "ID");
 		    for (int i = 0; i < sortingList.getSize(); i++) {
@@ -2636,20 +2673,25 @@ public class Editor extends JFrame {
 				xETreeNode1.add(xETreeNode2);
 			}
 
+		    ////////////////////////
 		    // Hide Splash Screen //
+		    ////////////////////////
 			EventQueue.invokeLater(new Runnable() {
 				@Override public void run() {
 					application.hideSplash();
 				}
 			});
 
-		    // Select top node(systemNode) and setup contents pane //
+			/////////////////////////////////////////////////////////
+			// Select top node(systemNode) and setup contents pane //
+			/////////////////////////////////////////////////////////
 		    jTreeMain.setModel(treeModel);
 		    jTreeMain.expandRow(0);
 		    jTreeMain.expandRow(jTreeMain.getRowForPath(new TreePath(subsystemListNode.getPath())));
 		    jTreeMain.setSelectionRow(0);
 		    TreePath tp = jTreeMain.getSelectionPath();
 		    setupContentsPaneForTreeNodeSelected((MainTreeNode)tp.getLastPathComponent(), false);
+			jProgressBar.setValue(0);
 
 		} catch(Exception e) {
 			EventQueue.invokeLater(new Runnable() {
@@ -41507,16 +41549,26 @@ public class Editor extends JFrame {
 	void jRadioButtonFieldTypeOptionAUTO_NUMBER_stateChanged(ChangeEvent e) {
 		if (jRadioButtonFieldTypeOptionAUTO_NUMBER.isSelected()) {
 			jTextFieldTableFieldTypeOptionAUTO_NUMBER.setEnabled(true);
+			if (jTextFieldTableFieldTypeOptionAUTO_NUMBER.getText().equals("")) {
+				jTextFieldTableFieldTypeOptionAUTO_NUMBER.setText(jTextFieldTableFieldID.getText());
+			}
 		} else {
 			jTextFieldTableFieldTypeOptionAUTO_NUMBER.setEnabled(false);
+			jTextFieldTableFieldTypeOptionAUTO_NUMBER.setText("");
 		}
 	}
 	
 	void jRadioButtonFieldTypeOptionKUBUN_stateChanged(ChangeEvent e) {
 		if (jRadioButtonFieldTypeOptionKUBUN.isSelected()) {
 			jTextFieldTableFieldTypeOptionKUBUN.setEnabled(true);
+			if (jTextFieldTableFieldTypeOptionKUBUN.getText().equals("")) {
+				jTextFieldTableFieldTypeOptionKUBUN.setText(jTextFieldTableFieldID.getText());
+				setupDescriptionsOfKUBUN();
+			}
 		} else {
 			jTextFieldTableFieldTypeOptionKUBUN.setEnabled(false);
+			jTextFieldTableFieldTypeOptionKUBUN.setText("");
+			jTextAreaTableFieldTypeOptionKUBUN.setText("");
 		}
 	}
 	
@@ -43683,7 +43735,7 @@ class Editor_TextField extends JTextField implements Editor_EditableField {
 		this.setDocument(new LimitedDocument(this));
 
 		int fieldWidth;
-		if (dataTypeOptionList.contains("KANJI")) {
+		if (dataTypeOptionList.contains("KANJI") || dataTypeOptionList.contains("ZIPADRS")) {
 			fieldWidth = digits_ * Editor.MAIN_FONT_SIZE + 10;
 		} else {
 			if (basicType_.equals("INTEGER") || basicType_.equals("FLOAT")) {
@@ -43803,7 +43855,7 @@ class Editor_TextField extends JTextField implements Editor_EditableField {
 			Character.Subset[] subsets = new Character.Subset[] {java.awt.im.InputSubset.LATIN_DIGITS};
 			if (basicType_.equals("STRING")) {
 				String lang = Locale.getDefault().getLanguage();
-				if (dataTypeOptionList.contains("KANJI")) {
+				if (dataTypeOptionList.contains("KANJI") || dataTypeOptionList.contains("ZIPADRS")) {
 					if (lang.equals("ja")) {
 						subsets = new Character.Subset[] {java.awt.im.InputSubset.KANJI};
 					}
