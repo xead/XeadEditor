@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2014 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2015 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -33,14 +33,18 @@ package xeadEditor;
 
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.*;
+
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
+
 import org.w3c.dom.*;
+
 import xeadEditor.Editor.SortableDomElementListModel;
 
 public class DialogEditTableKeyFields extends JDialog {
@@ -55,19 +59,25 @@ public class DialogEditTableKeyFields extends JDialog {
 	private JScrollPane jScrollPaneKeyFieldList = new JScrollPane();
 	private TableModelReadOnlyList tableModelKeyFieldList = new TableModelReadOnlyList();
 	private JTable jTableKeyFieldList = new JTable(tableModelKeyFieldList);
-	private TableColumn column0, column1, column2;
+	private TableColumn column0, column1, column2, column3;
 	private DefaultTableCellRenderer rendererTableHeader = null;
 	private DefaultTableCellRenderer rendererAlignmentCenter = new DefaultTableCellRenderer();
 	private DefaultTableCellRenderer rendererAlignmentLeft = new DefaultTableCellRenderer();
 	private JPanel jPanelButtons = new JPanel();
 	private JButton jButtonCloseDialog = new JButton();
 	private JButton jButtonAddField = new JButton();
-	private JButton jButtonRemoveField = new JButton();
 	private JButton jButtonReturn = new JButton();
+	private JPopupMenu jPopupMenu = new JPopupMenu();
+	private JMenuItem jMenuItemToSetAscDesc = new JMenuItem();
+	private JMenuItem jMenuItemToGoUp = new JMenuItem();
+	private JMenuItem jMenuItemToGoDown = new JMenuItem();
+	private JMenuItem jMenuItemToRemove = new JMenuItem();
 	private ArrayList<String> currentKeyFieldIDList = new ArrayList<String>();
+	private ArrayList<String> currentKeyFieldAscDescList = new ArrayList<String>();
 	private String edittedKeyFields = "";
 	private SortableDomElementListModel fieldSortingList;
 	private org.w3c.dom.Element tableElement_;
+	private String keyType_;
 	private boolean isTableBeingSetup = false;
 
 	public DialogEditTableKeyFields(Editor frame, String title, boolean modal) {
@@ -126,23 +136,27 @@ public class DialogEditTableKeyFields extends JDialog {
 		jTableKeyFieldList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableKeyFieldList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jTableKeyFieldList.getSelectionModel().addListSelectionListener(new DialogEditTableKeyFields_jTableKeyFieldList_listSelectionAdapter(this));
-		jTableKeyFieldList.addKeyListener(new DialogEditTableKeyFields_jTableKeyFieldList_keyAdapter(this));
+		jTableKeyFieldList.addMouseListener(new DialogEditTableKeyFields_jTableKeyFieldList_mouseAdapter(this));
 		jTableKeyFieldList.setRowSelectionAllowed(true);
 		jTableKeyFieldList.setRowHeight(Editor.TABLE_ROW_HEIGHT);
 		tableModelKeyFieldList.addColumn("NO.");
 		tableModelKeyFieldList.addColumn(res.getString("KeyFieldID"));
 		tableModelKeyFieldList.addColumn(res.getString("KeyFieldName"));
+		tableModelKeyFieldList.addColumn("A/D");
 		column0 = jTableKeyFieldList.getColumnModel().getColumn(0);
 		column1 = jTableKeyFieldList.getColumnModel().getColumn(1);
 		column2 = jTableKeyFieldList.getColumnModel().getColumn(2);
+		column3 = jTableKeyFieldList.getColumnModel().getColumn(3);
 		column0.setPreferredWidth(40);
-		column1.setPreferredWidth(360);
-		column2.setPreferredWidth(360);
+		column1.setPreferredWidth(335);
+		column2.setPreferredWidth(335);
+		column3.setPreferredWidth(50);
 		rendererAlignmentCenter.setHorizontalAlignment(0); //CENTER//
 		rendererAlignmentLeft.setHorizontalAlignment(2); //LEFT//
 		column0.setCellRenderer(rendererAlignmentCenter);
 		column1.setCellRenderer(rendererAlignmentLeft);
 		column2.setCellRenderer(rendererAlignmentLeft);
+		column3.setCellRenderer(rendererAlignmentCenter);
 		jTableKeyFieldList.getTableHeader().setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableKeyFieldList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(2); //LEFT//
@@ -154,14 +168,10 @@ public class DialogEditTableKeyFields extends JDialog {
 		jButtonCloseDialog.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonCloseDialog.setText(res.getString("Close"));
 		jButtonCloseDialog.addActionListener(new DialogEditTableKeyFields_jButtonCloseDialog_actionAdapter(this));
-		jButtonAddField.setBounds(new Rectangle(200, 8, 180, 27));
+		jButtonAddField.setBounds(new Rectangle(300, 8, 200, 27));
 		jButtonAddField.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonAddField.setText(res.getString("EditKeyFieldsToPutIntoKey"));
 		jButtonAddField.addActionListener(new DialogEditTableKeyFields_jButtonAddField_actionAdapter(this));
-		jButtonRemoveField.setBounds(new Rectangle(420, 8, 180, 27));
-		jButtonRemoveField.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jButtonRemoveField.setText(res.getString("EditKeyFieldsToRemoveFromKey"));
-		jButtonRemoveField.addActionListener(new DialogEditTableKeyFields_jButtonRemoveField_actionAdapter(this));
 		jButtonReturn.setBounds(new Rectangle(660, 8, 100, 27));
 		jButtonReturn.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonReturn.setText("OK");
@@ -169,8 +179,22 @@ public class DialogEditTableKeyFields extends JDialog {
 		jPanelButtons.setLayout(null);
 		jPanelButtons.add(jButtonCloseDialog);
 		jPanelButtons.add(jButtonAddField);
-		jPanelButtons.add(jButtonRemoveField);
 		jPanelButtons.add(jButtonReturn);
+
+		jMenuItemToGoUp.setText(res.getString("EditKeyFieldsToGoUp"));
+		jMenuItemToGoUp.addActionListener(new DialogEditTableKeyFields_jMenuItemToGoUp_actionAdapter(this));
+		jMenuItemToGoDown.setText(res.getString("EditKeyFieldsToGoDown"));
+		jMenuItemToGoDown.addActionListener(new DialogEditTableKeyFields_jMenuItemToGoDown_actionAdapter(this));
+		jMenuItemToSetAscDesc.setText(res.getString("EditKeyFieldsToSetAscDesc"));
+		jMenuItemToSetAscDesc.addActionListener(new DialogEditTableKeyFields_jMenuItemToSetAscDesc_actionAdapter(this));
+		jMenuItemToRemove.setText(res.getString("EditKeyFieldsToRemove"));
+		jMenuItemToRemove.addActionListener(new DialogEditTableKeyFields_jMenuItemToRemove_actionAdapter(this));
+		jPopupMenu.add(jMenuItemToGoUp);
+    	jPopupMenu.add(jMenuItemToGoDown);
+    	jPopupMenu.addSeparator();
+    	jPopupMenu.add(jMenuItemToSetAscDesc);
+    	jPopupMenu.addSeparator();
+    	jPopupMenu.add(jMenuItemToRemove);
 
 		this.setResizable(false);
 		this.setTitle(res.getString("AddKeyMessage"));
@@ -182,31 +206,44 @@ public class DialogEditTableKeyFields extends JDialog {
 		this.pack();
 	}
 
-	public String request(org.w3c.dom.Element tableElement, String keyFields) {
+	public String request(org.w3c.dom.Element tableElement, String keyType, String keyFields) {
 		
 		/////////////////////////////////////////////////
 		// Setup current key field list and field list //
 		/////////////////////////////////////////////////
+		String fieldID;
 		tableElement_ = tableElement;
+		keyType_ = keyType;
 		edittedKeyFields = keyFields;
 		currentKeyFieldIDList.clear();
+		currentKeyFieldAscDescList.clear();
 		StringTokenizer workTokenizer = new StringTokenizer(keyFields, ";" );
 		while (workTokenizer.hasMoreTokens()) {
-			currentKeyFieldIDList.add(workTokenizer.nextToken());
+			fieldID = workTokenizer.nextToken();
+			if (keyType_.equals("XK")) {
+				if (fieldID.contains("(D)")) {
+					fieldID = fieldID.replace("(D)", "");
+					currentKeyFieldAscDescList.add("D");
+				} else {
+					currentKeyFieldAscDescList.add("A");
+				}
+			} else {
+				currentKeyFieldAscDescList.add("-");
+			}
+			currentKeyFieldIDList.add(fieldID);
 		}
 		NodeList nodeList = tableElement_.getElementsByTagName("Field");
 		fieldSortingList = frame_.getSortedListModel(nodeList, "Order");
 
-		///////////////////////////////////////////
-		// Setup field table and key-field table //
-		///////////////////////////////////////////
-		setupTables();
+		///////////////////////////////////////
+		// Setup table fields and key-fields //
+		///////////////////////////////////////
+		setupFields();
 
 		//////////////////////////////////////
 		// Setup buttons and list selection //
 		//////////////////////////////////////
 		jButtonAddField.setEnabled(false);
-    	jButtonRemoveField.setEnabled(false);
 	    if (tableModelFieldList.getRowCount() > 0
 	    		&& tableModelKeyFieldList.getRowCount() == 0) {
 	    	jTableFieldList.setRowSelectionInterval(0, 0);
@@ -218,7 +255,7 @@ public class DialogEditTableKeyFields extends JDialog {
 		return edittedKeyFields;
 	}
 	
-	void setupTables() {
+	void setupFields() {
 		org.w3c.dom.Element element;
 		isTableBeingSetup = true;
 		int rowNumber;
@@ -255,10 +292,11 @@ public class DialogEditTableKeyFields extends JDialog {
 		    for (int j = 0; j < fieldSortingList.getSize(); j++) {
 		        element = (org.w3c.dom.Element)fieldSortingList.getElementAt(j);
 				if (element.getAttribute("ID").equals(currentKeyFieldIDList.get(i))) {
-					Object[] Cell = new Object[3];
+					Object[] Cell = new Object[4];
 					Cell[0] = rowNumber++;
 					Cell[1] = element.getAttribute("ID");
 					Cell[2] = element.getAttribute("Name");
+					Cell[3] = currentKeyFieldAscDescList.get(i);
 					tableModelKeyFieldList.addRow(Cell);
 				}
 			}
@@ -267,11 +305,6 @@ public class DialogEditTableKeyFields extends JDialog {
 		///////////////////////////////
 		// Set return button enabled //
 		///////////////////////////////
-	    if (tableModelKeyFieldList.getRowCount() > 0) {
-	    	jButtonReturn.setEnabled(true);
-	    } else {
-	    	jButtonReturn.setEnabled(false);
-	    }
 	    isTableBeingSetup = false;
 	}
 	
@@ -279,16 +312,12 @@ public class DialogEditTableKeyFields extends JDialog {
 		if (jTableFieldList.getSelectedRowCount() > 0 && !isTableBeingSetup) {
 			jButtonAddField.setEnabled(true);
 			this.getRootPane().setDefaultButton(jButtonAddField);
-
 			jTableKeyFieldList.clearSelection();
-			jButtonRemoveField.setEnabled(false);
 		}
 	}
 	
 	void jTableKeyFieldList_valueChanged() {
 		if (jTableKeyFieldList.getSelectedRowCount() > 0 && !isTableBeingSetup) {
-			jButtonRemoveField.setEnabled(true);
-			this.getRootPane().setDefaultButton(jButtonRemoveField);
 			jTableFieldList.clearSelection();
 			jButtonAddField.setEnabled(false);
 		}
@@ -302,8 +331,13 @@ public class DialogEditTableKeyFields extends JDialog {
 		int wrkInt = jTableFieldList.getSelectedRow();
 		String fieldID = tableModelFieldList.getValueAt(wrkInt, 1).toString();
 		currentKeyFieldIDList.add(fieldID);
+		if (keyType_.equals("XK")) {
+			currentKeyFieldAscDescList.add("A");
+		} else {
+			currentKeyFieldAscDescList.add("-");
+		}
 
-		setupTables();
+		setupFields();
 
 		if (tableModelFieldList.getRowCount() > wrkInt) {
 	    	jTableFieldList.setRowSelectionInterval(wrkInt, wrkInt);
@@ -318,12 +352,56 @@ public class DialogEditTableKeyFields extends JDialog {
 	    }
 	}
 
-	void jButtonRemoveField_actionPerformed(ActionEvent e) {
+	void jMenuItemToGoUp_actionPerformed(ActionEvent e) {
 		int wrkInt = jTableKeyFieldList.getSelectedRow();
-		String fieldID = tableModelKeyFieldList.getValueAt(wrkInt, 1).toString();
-		currentKeyFieldIDList.remove(fieldID);
 
-		setupTables();
+		String curRowFieldID = currentKeyFieldIDList.get(wrkInt);
+		String prevRowFieldID = currentKeyFieldIDList.get(wrkInt-1);
+		currentKeyFieldIDList.set(wrkInt-1, curRowFieldID);
+		currentKeyFieldIDList.set(wrkInt, prevRowFieldID);
+
+		String curRowAscDesc = currentKeyFieldAscDescList.get(wrkInt);
+		String prevRowAscDesc = currentKeyFieldAscDescList.get(wrkInt-1);
+		currentKeyFieldAscDescList.set(wrkInt-1, curRowAscDesc);
+		currentKeyFieldAscDescList.set(wrkInt, prevRowAscDesc);
+
+		setupFields();
+	}
+
+	void jMenuItemToGoDown_actionPerformed(ActionEvent e) {
+		int wrkInt = jTableKeyFieldList.getSelectedRow();
+
+		String curRowFieldID = currentKeyFieldIDList.get(wrkInt);
+		String nextRowFieldID = currentKeyFieldIDList.get(wrkInt+1);
+		currentKeyFieldIDList.set(wrkInt, nextRowFieldID);
+		currentKeyFieldIDList.set(wrkInt+1, curRowFieldID);
+
+		String curRowAscDesc = currentKeyFieldAscDescList.get(wrkInt);
+		String nextRowAscDesc = currentKeyFieldAscDescList.get(wrkInt+1);
+		currentKeyFieldAscDescList.set(wrkInt, nextRowAscDesc);
+		currentKeyFieldAscDescList.set(wrkInt+1, curRowAscDesc);
+
+		setupFields();
+	}
+
+	void jMenuItemToSetAscDesc_actionPerformed(ActionEvent e) {
+		int wrkInt = jTableKeyFieldList.getSelectedRow();
+		if (keyType_.equals("XK")) {
+			if (currentKeyFieldAscDescList.get(wrkInt).equals("A")) {
+				currentKeyFieldAscDescList.set(wrkInt, "D");
+			} else {
+				currentKeyFieldAscDescList.set(wrkInt, "A");
+			}
+		}
+		setupFields();
+	}
+
+	void jMenuItemToRemove_actionPerformed(ActionEvent e) {
+		int wrkInt = jTableKeyFieldList.getSelectedRow();
+		currentKeyFieldIDList.remove(wrkInt);
+		currentKeyFieldAscDescList.remove(wrkInt);
+
+		setupFields();
 
 		if (tableModelKeyFieldList.getRowCount() > wrkInt) {
 	    	jTableKeyFieldList.setRowSelectionInterval(wrkInt, wrkInt);
@@ -338,7 +416,6 @@ public class DialogEditTableKeyFields extends JDialog {
 			    	jTableFieldList.requestFocus();
 			    }
 		    	jTableKeyFieldList.clearSelection();
-		    	jButtonRemoveField.setEnabled(false);
 			}
 	    }
 	}
@@ -350,9 +427,11 @@ public class DialogEditTableKeyFields extends JDialog {
 	    		bf.append(";");
 	    	}
     		bf.append(currentKeyFieldIDList.get(i));
+    		if (keyType_.equals("XK") && currentKeyFieldAscDescList.get(i).equals("D")) {
+	    		bf.append("(D)");
+    		}
 	    }
 	    edittedKeyFields = bf.toString();
-
 	    this.setVisible(false);
 	}
 	
@@ -361,10 +440,29 @@ public class DialogEditTableKeyFields extends JDialog {
 			jButtonAddField_actionPerformed(null);
 		}
 	}
-	
-	void jTableKeyFieldList_keyPressed(KeyEvent e) {
-		if (e.getKeyCode() == KeyEvent.VK_ENTER && tableModelKeyFieldList.getRowCount() > 0) {
-			jButtonRemoveField_actionPerformed(null);
+
+	void jTableKeyFieldList_mouseClicked(MouseEvent e) {
+		if ((e.getModifiers() & InputEvent.BUTTON1_MASK) != InputEvent.BUTTON1_MASK) {
+
+			int selectedRow = jTableKeyFieldList.rowAtPoint(e.getPoint());
+			jTableKeyFieldList.setRowSelectionInterval(selectedRow, selectedRow);
+
+			if (jTableKeyFieldList.getSelectedRow() <= 0) {
+				jMenuItemToGoUp.setEnabled(false);
+			} else {
+				jMenuItemToGoUp.setEnabled(true);
+			}
+			if (jTableKeyFieldList.getSelectedRow() >= (jTableKeyFieldList.getRowCount()-1)) {
+				jMenuItemToGoDown.setEnabled(false);
+			} else {
+				jMenuItemToGoDown.setEnabled(true);
+			}
+			if (keyType_.equals("XK")) {
+				jMenuItemToSetAscDesc.setEnabled(true);
+			} else {
+				jMenuItemToSetAscDesc.setEnabled(false);
+			}
+		    jPopupMenu.show(e.getComponent(), e.getX(), e.getY());
 		}
 	}
 
@@ -391,6 +489,68 @@ class DialogEditTableKeyFields_jTableKeyFieldList_listSelectionAdapter implement
 	}
 	public void valueChanged(ListSelectionEvent e) {
 		adaptee.jTableKeyFieldList_valueChanged();
+	}
+}
+
+class DialogEditTableKeyFields_jTableKeyFieldList_mouseAdapter implements MouseListener {
+	DialogEditTableKeyFields adaptee;
+	DialogEditTableKeyFields_jTableKeyFieldList_mouseAdapter(DialogEditTableKeyFields adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void mouseClicked(MouseEvent e) {
+		adaptee.jTableKeyFieldList_mouseClicked(e);
+	}
+	public void mousePressed(MouseEvent e) {
+	}
+	public void mouseReleased(MouseEvent e) {
+	}
+	public void mouseEntered(MouseEvent e) {
+	}
+	public void mouseExited(MouseEvent e) {
+	}
+}
+
+class DialogEditTableKeyFields_jMenuItemToGoUp_actionAdapter implements java.awt.event.ActionListener {
+	DialogEditTableKeyFields adaptee;
+
+	DialogEditTableKeyFields_jMenuItemToGoUp_actionAdapter(DialogEditTableKeyFields adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jMenuItemToGoUp_actionPerformed(e);
+	}
+}
+
+class DialogEditTableKeyFields_jMenuItemToGoDown_actionAdapter implements java.awt.event.ActionListener {
+	DialogEditTableKeyFields adaptee;
+
+	DialogEditTableKeyFields_jMenuItemToGoDown_actionAdapter(DialogEditTableKeyFields adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jMenuItemToGoDown_actionPerformed(e);
+	}
+}
+
+class DialogEditTableKeyFields_jMenuItemToSetAscDesc_actionAdapter implements java.awt.event.ActionListener {
+	DialogEditTableKeyFields adaptee;
+
+	DialogEditTableKeyFields_jMenuItemToSetAscDesc_actionAdapter(DialogEditTableKeyFields adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jMenuItemToSetAscDesc_actionPerformed(e);
+	}
+}
+
+class DialogEditTableKeyFields_jMenuItemToRemove_actionAdapter implements java.awt.event.ActionListener {
+	DialogEditTableKeyFields adaptee;
+
+	DialogEditTableKeyFields_jMenuItemToRemove_actionAdapter(DialogEditTableKeyFields adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jMenuItemToRemove_actionPerformed(e);
 	}
 }
 
@@ -427,17 +587,6 @@ class DialogEditTableKeyFields_jButtonAddField_actionAdapter implements java.awt
 	}
 }
 
-class DialogEditTableKeyFields_jButtonRemoveField_actionAdapter implements java.awt.event.ActionListener {
-	DialogEditTableKeyFields adaptee;
-
-	DialogEditTableKeyFields_jButtonRemoveField_actionAdapter(DialogEditTableKeyFields adaptee) {
-		this.adaptee = adaptee;
-	}
-	public void actionPerformed(ActionEvent e) {
-		adaptee.jButtonRemoveField_actionPerformed(e);
-	}
-}
-
 class DialogEditTableKeyFields_jTableFieldList_keyAdapter extends java.awt.event.KeyAdapter {
 	DialogEditTableKeyFields adaptee;
 	DialogEditTableKeyFields_jTableFieldList_keyAdapter(DialogEditTableKeyFields adaptee) {
@@ -445,15 +594,5 @@ class DialogEditTableKeyFields_jTableFieldList_keyAdapter extends java.awt.event
 	}
 	public void keyPressed(KeyEvent e) {
 		adaptee.jTableFieldList_keyPressed(e);
-	}
-}
-
-class DialogEditTableKeyFields_jTableKeyFieldList_keyAdapter extends java.awt.event.KeyAdapter {
-	DialogEditTableKeyFields adaptee;
-	DialogEditTableKeyFields_jTableKeyFieldList_keyAdapter(DialogEditTableKeyFields adaptee) {
-		this.adaptee = adaptee;
-	}
-	public void keyPressed(KeyEvent e) {
-		adaptee.jTableKeyFieldList_keyPressed(e);
 	}
 }

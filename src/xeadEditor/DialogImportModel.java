@@ -1055,6 +1055,30 @@ public class DialogImportModel extends JDialog {
 				childElement.setAttribute("Fields", bf.toString());
 				newElementToBeAdded.appendChild(childElement);
 			}
+			if (workElement1.getAttribute("Type").equals("XK")) {
+				childElement = frame_.getDomDocument().createElement("Key");
+				childElement.setAttribute("Type", "XK");
+				bf = new StringBuffer();
+				NodeList nodeList2 = workElement1.getElementsByTagName("TableKeyField");
+				sortingList = frame_.getSortedListModel(nodeList2, "SortKey");
+				for (int j = 0; j < sortingList.getSize(); j++) {
+					workElement2 = (org.w3c.dom.Element)sortingList.getElementAt(j);
+					for (int k = 0; k < fieldSortingList.getSize(); k++) {
+						workElement3 = (org.w3c.dom.Element)fieldSortingList.getElementAt(k);
+						if (workElement3.getAttribute("ID").equals(workElement2.getAttribute("FieldID"))) {
+							if (j > 0) {
+								bf.append(";");
+							}
+							bf.append(workElement3.getAttribute("Alias"));
+							if (workElement2.getAttribute("AscDesc").equals("D")) {
+								bf.append("(D)");
+							}
+						}
+					}
+				}
+				childElement.setAttribute("Fields", bf.toString());
+				newElementToBeAdded.appendChild(childElement);
+			}
 		}
 		//
 		return error;

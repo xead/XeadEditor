@@ -35195,10 +35195,12 @@ public class Editor extends JFrame {
 						}
 					}
 					if (tableKeyType.equals("SK")) {
+						jButtonTableKeyFieldsEdit.setEnabled(true);
 						jTextFieldTableKeyType.setText(res.getString("SKey"));
 						jTextFieldTableKeyFields.setText(getFieldNames(tableID, tableKeyFields, " + ", false));
 					}
 					if (tableKeyType.equals("XK")) {
+						jButtonTableKeyFieldsEdit.setEnabled(true);
 						jTextFieldTableKeyType.setText(res.getString("Index"));
 						jTextFieldTableKeyFields.setText(getIndexKeyNames(tableID, tableKeyFields, " > "));
 					}
@@ -36009,26 +36011,26 @@ public class Editor extends JFrame {
 		TableDataRowNumber tableRowNumber;
 		HashMap<String, Object> columnMap;
 		Editor_EditableTableField field;
-		//
+
 		if (!tableRowsAreBeingSetup) {
-			//
+
 			selectedRow_jTableTableDataList = jTableTableDataList.getSelectedRow();
 			if (selectedRow_jTableTableDataList != -1) {
-				//
+
 				tableRowNumber = (TableDataRowNumber)tableModelTableDataList.getValueAt(selectedRow_jTableTableDataList, 0);
 				columnMap = tableRowNumber.getColumnMap();
-				//
+
 				for (int i = 0; i < editableTableFieldList.size(); i++) {
 					field = editableTableFieldList.get(i);
 					field.setValue(columnMap.get(field.getFieldID()));
 					field.setEnabled(true);
 					field.setError(false);
 				}
-				//
+
 				jButtonTableDataFieldsToEditMode.setEnabled(true);
 				jButtonTableDataFieldsToAddMode.setEnabled(true);
 				jButtonTableDataFieldsToDelete.setEnabled(true);
-				//
+
 				jButtonTableDataFieldsToClear.setEnabled(false);
 				jButtonTableDataFieldsToUpdate.setEnabled(false);
 			}
@@ -36038,7 +36040,11 @@ public class Editor extends JFrame {
 		showPopupMenuComponentForScrollPane(e, jScrollPaneTableDataList);
 	}
 	void jTableTableDataList_mouseClicked(MouseEvent e) {
-		showPopupMenuComponentForTable(e, jTableTableDataList);
+		if (e.getClickCount() >= 2 && jTableTableFieldUsageList.getModel().getRowCount() > 0) {
+			jButtonTableDataFieldsToEditMode_actionPerformed(null);
+		} else {
+			showPopupMenuComponentForTable(e, jTableTableDataList);
+		}
 	}
 
 	void jTextAreaTableScriptText_mouseClicked(MouseEvent e) {
@@ -38158,7 +38164,7 @@ public class Editor extends JFrame {
 	}
 	
 	void jMenuItemComponentToAddPK_actionPerformed(ActionEvent e) {
-		String answer = dialogEditTableKeyFields.request(currentMainTreeNode.getElement(), ""); 
+		String answer = dialogEditTableKeyFields.request(currentMainTreeNode.getElement(), "PK", ""); 
 		if (answer != null && !answer.equals("")) {
 			answer = getCaseShiftValue(answer, "Upper");
 			String names = getFieldNames(currentMainTreeNode.getElement().getAttribute("ID"), answer, " + ", false);
@@ -38177,7 +38183,7 @@ public class Editor extends JFrame {
 	}
 	
 	void jMenuItemComponentToAddSK_actionPerformed(ActionEvent e) {
-		String answer = dialogEditTableKeyFields.request(currentMainTreeNode.getElement(), ""); 
+		String answer = dialogEditTableKeyFields.request(currentMainTreeNode.getElement(), "SK", ""); 
 		if (answer != null && !answer.equals("")) {
 			answer = getCaseShiftValue(answer, "Upper");
 			String names = getFieldNames(currentMainTreeNode.getElement().getAttribute("ID"), answer, " + ", false);
@@ -38196,7 +38202,7 @@ public class Editor extends JFrame {
 	}
 	
 	void jMenuItemComponentToAddXK_actionPerformed(ActionEvent e) {
-		String answer = dialogEditTableKeyFields.request(currentMainTreeNode.getElement(), ""); 
+		String answer = dialogEditTableKeyFields.request(currentMainTreeNode.getElement(), "XK", ""); 
 		if (answer != null && !answer.equals("")) {
 			answer = getCaseShiftValue(answer, "Upper");
 			String names = getIndexKeyNames(currentMainTreeNode.getElement().getAttribute("ID"), answer, " > ");
@@ -38755,9 +38761,9 @@ public class Editor extends JFrame {
 		//
 		if (e.getSource() == jButtonFunction390DetailTableKeyFieldsEdit) {
 			if (dialogEditDetailTableKey.request(functionElement, 0, function390DetailTableID, function390HeaderTableKeys, function390DetailTableKeys)) {
-				String newTableID = dialogEditDetailTableKey.getDetailTableIDToBeChanged(); 
+				String newTableID = dialogEditDetailTableKey.getDetailTableIDToBeChanged();
 				if (!newTableID.equals("")) {
-					replaceDetailTableID(functionElement, 0, newTableID);
+					replaceDetailTableID(functionElement, jTableFunction390DetailList.getSelectedRow(), newTableID);
 				}
 				function390DetailTableKeys = dialogEditDetailTableKey.getValidatedDetailKeys();
 				if (function390DetailTableKeys.equals("")) {
@@ -39193,59 +39199,66 @@ public class Editor extends JFrame {
 		}
 		
 		if (functionElement.getAttribute("Type").equals("XF390")) {
-			originalTableID = functionElement.getAttribute("DetailTable");
-			detailFieldList = functionElement.getElementsByTagName("Column");
-			for (int i = 0; i < detailFieldList.getLength(); i++) {
-				element2 = (org.w3c.dom.Element)detailFieldList.item(i);
-				dataSource = element2.getAttribute("DataSource");
-				wrkInt = dataSource.indexOf(".");
-				tableID = dataSource.substring(0, wrkInt);
-				fieldID = dataSource.substring(wrkInt+1, dataSource.length());
-				if (tableID.equals(originalTableID)) {
-					element2.setAttribute("DataSource", newTableID + "." + fieldID);
-				}
-			}
+			detailTableList = functionElement.getElementsByTagName("Detail");
+			sortingList = getSortedListModel(detailTableList, "Order");
+		    for (int p = 0; p < sortingList.getSize(); p++) {
+		    	if (p == tabIndex) {
+			        element1 = (org.w3c.dom.Element)sortingList.getElementAt(p);
+			        originalTableID = element1.getAttribute("Table");
+			        detailFieldList = element1.getElementsByTagName("Column");
+			        for (int i = 0; i < detailFieldList.getLength(); i++) {
+			        	element2 = (org.w3c.dom.Element)detailFieldList.item(i);
+			        	dataSource = element2.getAttribute("DataSource");
+			        	wrkInt = dataSource.indexOf(".");
+			        	tableID = dataSource.substring(0, wrkInt);
+			        	fieldID = dataSource.substring(wrkInt+1, dataSource.length());
+			        	if (tableID.equals(originalTableID)) {
+			        		element2.setAttribute("DataSource", newTableID + "." + fieldID);
+			        	}
+			        }
 
-			String orderByDataSources = functionElement.getAttribute("DetailOrderBy");
-			if (!orderByDataSources.equals("")) {
-				bf = new StringBuffer();
-				tokenizer = new StringTokenizer(orderByDataSources, ";");
-				while (tokenizer.hasMoreTokens()) {
-					isAscendingOrder = false;
-					isDescendingOrder = false;
-					dataSource = tokenizer.nextToken();
-					if (dataSource.contains("(A)")) {
-						isAscendingOrder = true;
-						dataSource = dataSource.replace("(A)", "");
-					}
-					if (dataSource.contains("(D)")) {
-						isDescendingOrder = true;
-						dataSource = dataSource.replace("(D)", "");
-					}
-					wrkInt = dataSource.indexOf(".");
-					tableID = dataSource.substring(0, wrkInt);
-					if (tableID.equals(originalTableID)) {
-						tableID = newTableID;
-						fieldID = dataSource.substring(wrkInt+1, dataSource.length());
-						dataSource = tableID + "." + fieldID;
-					}
-					if (bf.length() > 0) {
-						bf.append(";");
-					}
-					bf.append(dataSource);
-					if (isAscendingOrder) {
-						bf.append("(A)");
-					}
-					if (isDescendingOrder) {
-						bf.append("(D)");
-					}
-				}
-				functionElement.setAttribute("DetailOrderBy", bf.toString());
-				function390DetailOrderByFields = bf.toString();
-			}
+			        String orderByDataSources = element1.getAttribute("OrderBy");
+			        if (!orderByDataSources.equals("")) {
+			        	bf = new StringBuffer();
+			        	tokenizer = new StringTokenizer(orderByDataSources, ";");
+			        	while (tokenizer.hasMoreTokens()) {
+			        		isAscendingOrder = false;
+			        		isDescendingOrder = false;
+			        		dataSource = tokenizer.nextToken();
+			        		if (dataSource.contains("(A)")) {
+			        			isAscendingOrder = true;
+			        			dataSource = dataSource.replace("(A)", "");
+			        		}
+			        		if (dataSource.contains("(D)")) {
+			        			isDescendingOrder = true;
+			        			dataSource = dataSource.replace("(D)", "");
+			        		}
+			        		wrkInt = dataSource.indexOf(".");
+			        		tableID = dataSource.substring(0, wrkInt);
+			        		if (tableID.equals(originalTableID)) {
+			        			tableID = newTableID;
+			        			fieldID = dataSource.substring(wrkInt+1, dataSource.length());
+			        			dataSource = tableID + "." + fieldID;
+			        		}
+			        		if (bf.length() > 0) {
+			        			bf.append(";");
+			        		}
+			        		bf.append(dataSource);
+			        		if (isAscendingOrder) {
+			        			bf.append("(A)");
+			        		}
+			        		if (isDescendingOrder) {
+			        			bf.append("(D)");
+			        		}
+			        	}
+			        	element1.setAttribute("OrderBy", bf.toString());
+			        	function390DetailOrderByFields = bf.toString();
+			        }
 
-			functionElement.setAttribute("DetailTable", newTableID);
-			function390DetailTableID = newTableID;
+			        element1.setAttribute("Table", newTableID);
+			        function390DetailTableID = newTableID;
+		    	}
+		    }
 		}
 		
 	}
@@ -39946,8 +39959,7 @@ public class Editor extends JFrame {
 				JOptionPane.showMessageDialog(this.getContentPane(), res.getString("ErrorMessage39"));
 			} else {
 				String currentValue = tableKeyFields;
-//				String answer = JOptionPane.showInputDialog(this.getContentPane(), res.getString("AddKeyMessage"), currentValue);
-				String answer = dialogEditTableKeyFields.request(currentMainTreeNode.getElement(), currentValue); 
+				String answer = dialogEditTableKeyFields.request(currentMainTreeNode.getElement(), tableKeyType, currentValue); 
 				if (answer != null) {
 					if (answer.equals("")) {
 						jTextFieldTableKeyFields.setText("*None");
@@ -40639,6 +40651,7 @@ public class Editor extends JFrame {
 		jButtonTableDataFieldsToEditMode.setEnabled(false);
 		jButtonTableDataFieldsToAddMode.setEnabled(false);
 		jButtonTableDataFieldsToDelete.setEnabled(false);
+		jPanelTableDataFieldsEditButtons.getRootPane().setDefaultButton(jButtonTableDataFieldsToUpdate);
 		jTextAreaTableDataMessages.setText(res.getString("DataUtilityMessage1"));
 	}
 	
@@ -40654,6 +40667,7 @@ public class Editor extends JFrame {
 		jButtonTableDataFieldsToEditMode.setEnabled(false);
 		jButtonTableDataFieldsToAddMode.setEnabled(false);
 		jButtonTableDataFieldsToDelete.setEnabled(false);
+		jPanelTableDataFieldsEditButtons.getRootPane().setDefaultButton(jButtonTableDataFieldsToUpdate);
 		jTextAreaTableDataMessages.setText(res.getString("DataUtilityMessage1"));
 	}
 	
@@ -41575,8 +41589,10 @@ public class Editor extends JFrame {
 	void jRadioButtonFieldTypeOptionBOOLEAN_stateChanged(ChangeEvent e) {
 		if (jRadioButtonFieldTypeOptionBOOLEAN.isSelected()) {
 			jTextFieldTableFieldTypeOptionBOOLEAN.setEnabled(true);
+			jTextFieldTableFieldTypeOptionBOOLEAN.setText("T;F");
 		} else {
 			jTextFieldTableFieldTypeOptionBOOLEAN.setEnabled(false);
+			jTextFieldTableFieldTypeOptionBOOLEAN.setText("");
 		}
 	}
 	
@@ -42421,10 +42437,10 @@ class Editor_DialogStructureTableEdit extends JDialog {
 		jButtonOK.setText("OK");
 		jButtonOK.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (valuesValidated()) {
+				if (jTextFieldStructureTableID.equals("") || valuesValidated()) {
 					returnCode = 1;
-					setVisible(false);
 				}
+				setVisible(false);
 			}
 		});
 		jButtonCancel.setBounds(new Rectangle(50, 8, 100, 27));
@@ -42529,7 +42545,6 @@ class Editor_DialogStructureTableEdit extends JDialog {
 	void setTableAttribute() {
 		tableNode = null;
 		jTextFieldStructureTableName.setText("");
-		jButtonOK.setEnabled(false);
 		if (!jTextFieldStructureTableID.getText().equals("")) {
 			jTextFieldStructureTableName.setText("N/A");
 			tableNode = frame_.getSpecificXETreeNode("Table", jTextFieldStructureTableID.getText());
@@ -42542,7 +42557,6 @@ class Editor_DialogStructureTableEdit extends JDialog {
 					if (jTextFieldStructureUpperKeys.getText().equals("")) {
 						jTextFieldStructureUpperKeys.setText(tablePKElement.getAttribute("Fields"));
 					}
-					jButtonOK.setEnabled(true);
 				}
 			} else {
 				jTextFieldStructureTableName.setText(tableNode.getElement().getAttribute("Name"));
@@ -42550,7 +42564,6 @@ class Editor_DialogStructureTableEdit extends JDialog {
 				if (jTextFieldStructureUpperKeys.getText().equals("")) {
 					jTextFieldStructureUpperKeys.setText(tablePKElement.getAttribute("Fields"));
 				}
-				jButtonOK.setEnabled(true);
 			}
 		}
 	}

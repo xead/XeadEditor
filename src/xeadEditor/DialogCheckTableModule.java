@@ -1338,7 +1338,9 @@ public class DialogCheckTableModule extends JDialog {
 										}
 									}
 								}
-								if (element.getAttribute("Nullable").contains("F") && !element.getAttribute("Type").equals("DATE")) {
+								if (element.getAttribute("Nullable").contains("F")
+										&& !element.getAttribute("Type").equals("DATE")
+										&& !fieldListToBeConverted.contains(element.getAttribute("ID"))) {
 									buf.append(" NOT NULL");
 								}
 								if (databaseName.contains("jdbc:oracle")) {

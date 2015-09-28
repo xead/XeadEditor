@@ -2426,7 +2426,7 @@ class DialogCheckLayoutFYearBox extends JPanel {
 		} else {
 			this.add(jTextField);
 		}
-		this.setPreferredSize(new Dimension(80, dialog.getFieldUnitHeight()));
+		this.setPreferredSize(new Dimension(110, dialog.getFieldUnitHeight()));
 	}
 }
 
@@ -2446,13 +2446,17 @@ class DialogCheckLayoutMSeqBox extends JPanel {
 		if (language.equals("en")) {
 			jComboBoxMSeq.setBounds(new Rectangle(0, 0, 60, dialog.getFieldUnitHeight()));
 			jTextField.setBounds(new Rectangle(0, 0, 60, dialog.getFieldUnitHeight()));
-			this.setSize(new Dimension(50, dialog.getFieldUnitHeight()));
+			jTextField.setText("Jan");
+			this.setPreferredSize(new Dimension(60, dialog.getFieldUnitHeight()));
+			this.setSize(new Dimension(60, dialog.getFieldUnitHeight()));
 			jComboBoxMSeq.addItem("Jan");
 		}
 		if (language.equals("jp")) {
 			jComboBoxMSeq.setBounds(new Rectangle(0, 0, 80, dialog.getFieldUnitHeight()));
 			jTextField.setBounds(new Rectangle(0, 0, 80, dialog.getFieldUnitHeight()));
-			this.setSize(new Dimension(62, dialog.getFieldUnitHeight()));
+			jTextField.setText("‚PŒŽ“x");
+			this.setPreferredSize(new Dimension(80, dialog.getFieldUnitHeight()));
+			this.setSize(new Dimension(80, dialog.getFieldUnitHeight()));
 			jComboBoxMSeq.addItem("‚PŒŽ“x");
 		}
 		this.setLayout(null);

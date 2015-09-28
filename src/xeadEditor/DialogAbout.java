@@ -48,7 +48,17 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "X-TEA Editor";
 	public static final String COPYRIGHT = "Copyright 2015 DBC Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
-	public static final String FULL_VERSION  = "V1.R2.M17";
+	public static final String FULL_VERSION  = "V1.R2.M18";
+	//1.2.18
+	//・キーのフィールド構成編集用パネルで、インデックスの昇降設定が出来なくなっていた問題を修正した
+	//・モデルのインポート処理でテーブルのインデックス定義を取り込むようにした
+	//・XF390の明細テーブルを変更できなくなっていた問題を修正した
+	//・年度と月序のフィールドのレイアウトチェックが不正確だった問題を修正した
+
+	//・データ保守ユーティリティを使いやすくした
+	//・モジュールチェックでALTER時に入力必須項目がデータ移行されない問題を修正した
+	//・XF300の構成テーブル定義をリセットできなかった問題を修正した
+	//
 	//1.2.17
 	//・accdbのオートインクリメントのキーがモジュール上ではNullableとして設定される仕様に対応した
 	//・画像フィールドの高さ設定が指定行数に正確に従っていなかった問題を修正した
