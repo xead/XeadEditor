@@ -385,7 +385,10 @@ public class DialogCheckTableModule extends JDialog {
 									if (element.getAttribute("Type").contains("VARCHAR")
 											&& (sizeOfDefinitionField == 0 || sizeOfDefinitionField <= sizeOfModuleField)) {
 									} else {
-										if (!rs2.getString("TYPE_NAME").equals("money")) {
+										if (!rs2.getString("TYPE_NAME").equals("money")
+												&& !rs2.getString("TYPE_NAME").equals("YESNO")
+												&& !rs2.getString("TYPE_NAME").equals("BYTE")
+												&& !rs2.getString("TYPE_NAME").equals("BOOLEAN")) {
 											if (sizeOfDefinitionField != sizeOfModuleField
 													|| decimalOfDefinitionField != decimalOfModuleField) {
 												countOfErrors++;
@@ -1032,6 +1035,15 @@ public class DialogCheckTableModule extends JDialog {
 			if (dataTypeDefiition.equals("CHAR")) {
 				if (dbDriverName.contains("jdbc:ucanaccess")) {
 					if (size <= 100 && dataTypeModule.equals("VARCHAR")) {
+						isEquivalent = true;
+					}
+					if (size == 1 && dataTypeModule.equals("YESNO")) {
+						isEquivalent = true;
+					}
+					if (size == 1 && dataTypeModule.equals("BYTE")) {
+						isEquivalent = true;
+					}
+					if (size == 1 && dataTypeModule.equals("BOOLEAN")) {
 						isEquivalent = true;
 					}
 				} else {

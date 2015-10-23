@@ -133,6 +133,7 @@ public class Editor extends JFrame {
 	private JMenu jMenuFileImport = new JMenu();
 	private JMenuItem jMenuItemFileImportXEAF = new JMenuItem();
 	private JMenuItem jMenuItemFileImportXEAD = new JMenuItem();
+	private JMenuItem jMenuItemFileDiff = new JMenuItem();
 	private JMenuItem jMenuItemFileExit = new JMenuItem();
 	private JMenuItem jMenuItemFileSave = new JMenuItem();
 	private JMenuItem jMenuItemFileSaveAs = new JMenuItem();
@@ -214,6 +215,8 @@ public class Editor extends JFrame {
 	public Color colorScriptBackground = Color.white;
 	public Color colorScriptForeground = Color.black;
 	public Color colorScriptCaret = Color.black;
+	public String backupFolder = "";
+	public boolean isNeedToBackup = false;
 	/**
 	 * Icons
 	 */
@@ -692,7 +695,7 @@ public class Editor extends JFrame {
 	private Editor_KanjiTextField jTextFieldTableFieldColumnName = new Editor_KanjiTextField();
 	private JCheckBox jCheckBoxTableFieldPhysical = new JCheckBox();
 	private JLabel jLabelTableFieldType = new JLabel();
-	private JComboBox jComboBoxTableFieldType = new JComboBox();
+	public JComboBox jComboBoxTableFieldType = new JComboBox();
 	private JLabel jLabelTableFieldSize = new JLabel();
 	private SpinnerNumberModel spinnerNumberModelTableFieldSize = new SpinnerNumberModel(5, 1, 500, 1);
 	private JSpinner jSpinnerTableFieldSize = new JSpinner(spinnerNumberModelTableFieldSize);
@@ -2207,6 +2210,7 @@ public class Editor extends JFrame {
 	private Editor_DialogPromptOptionCallFunctionExchangeEdit dialogPromptOptionCallFunctionExchangeEdit;
 	private DialogImport dialogImport;
 	private DialogImportModel dialogImportModel;
+	private DialogToListChangesOfFiles dialogToListChangesOfFiles;
 	private DialogScan dialogScan;
 	private DialogScanField dialogScanField;
 	private DialogAddList dialogAddList;
@@ -2258,6 +2262,9 @@ public class Editor extends JFrame {
 			///////////////////////////////////////////
 			if (args.length >= 1) {
 				initComponents();
+				if (!backupFolder.equals("")) {
+					isNeedToBackup = true;
+				}
 				currentFileName = args[0];
 				setupMainTreeModelWithCurrentFileName();
 			} else {
@@ -2806,6 +2813,10 @@ public class Editor extends JFrame {
 					}
 					colorScriptCaret = new Color(colorRGB[0], colorRGB[1], colorRGB[2]);
 				}
+				wrkStr = properties.getProperty("BackupFolder");
+				if (wrkStr != null && !wrkStr.equals("")) {
+					backupFolder = wrkStr;
+				}
 			}
 		} catch (Exception e) {
 		}
@@ -2863,6 +2874,7 @@ public class Editor extends JFrame {
 		dialogPromptOptionCallFunctionExchangeEdit = new Editor_DialogPromptOptionCallFunctionExchangeEdit(this);
 		dialogImport = new DialogImport(this);
 		dialogImportModel = new DialogImportModel(this);
+		dialogToListChangesOfFiles = new DialogToListChangesOfFiles(this);
 		dialogScan = new DialogScan(this);
 		dialogScanField = new DialogScanField(this);
 		dialogAddList = new DialogAddList(this);
@@ -2960,6 +2972,8 @@ public class Editor extends JFrame {
 		jMenuItemFileImportXEAD.addActionListener(new Editor_jMenuItemFileImportXEAD_actionAdapter(this));
 		jMenuItemFileImportXEAF.setText(res.getString("ImportXEAF"));
 		jMenuItemFileImportXEAF.addActionListener(new Editor_jMenuItemFileImportXEAF_actionAdapter(this));
+		jMenuItemFileDiff.setText(res.getString("FileDiff"));
+		jMenuItemFileDiff.addActionListener(new Editor_jMenuItemFileDiff_actionAdapter(this));
 		jMenuItemFileExit.setText(res.getString("Exit"));
 		jMenuItemFileExit.addActionListener(new Editor_jMenuItemFileExit_actionAdapter(this));
 		jMenuItemFileSave.setText(res.getString("Save"));
@@ -3072,6 +3086,7 @@ public class Editor extends JFrame {
 		jMenuFile.add(jMenuFileImport);
 		jMenuFileImport.add(jMenuItemFileImportXEAD);
 		jMenuFileImport.add(jMenuItemFileImportXEAF);
+		jMenuFile.add(jMenuItemFileDiff);
 		jMenuFile.addSeparator();
 		jMenuFile.add(jMenuItemFileSave);
 		jMenuFile.add(jMenuItemFileSaveAs);
@@ -9575,9 +9590,9 @@ public class Editor extends JFrame {
 		jLabelFunction300StructureViewTitle.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300StructureViewTitle.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300StructureViewTitle.setText(res.getString("StructureViewTitle"));
-		jLabelFunction300StructureViewTitle.setBounds(new Rectangle(355, 136, 130, 20));
+		jLabelFunction300StructureViewTitle.setBounds(new Rectangle(355, 136, 170, 20));
 		jTextFieldFunction300StructureViewTitle.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction300StructureViewTitle.setBounds(new Rectangle(490, 133, 200, 25));
+		jTextFieldFunction300StructureViewTitle.setBounds(new Rectangle(530, 133, 200, 25));
 		//
 		jPanelFunction300Structure.add(jLabelFunction300StructureTableName);
 		jPanelFunction300Structure.add(jTextFieldFunction300StructureTableName);
@@ -26389,6 +26404,9 @@ public class Editor extends JFrame {
 		if (rtn == 0 || rtn == 1) {
 			String name = specifyNameOfExistingFile(res.getString("OpenXEAFFile"), "xeaf");
 			if (!name.equals("")) {
+				if (!backupFolder.equals("")) {
+					isNeedToBackup = true;
+				}
 				currentFileName = name;
 				this.setTitle(DialogAbout.APPLICATION_NAME + " - [" + currentFileName + "] - " + systemName);
 				changeState.setChanged(false);
@@ -26415,14 +26433,6 @@ public class Editor extends JFrame {
 			rtn1 = JOptionPane.showOptionDialog(this, res.getString("ImportMessage0"),
 					res.getString("SaveChangesTitle"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
 			if (rtn1 == 0) {
-//				try{
-//					setCursor(new Cursor(Cursor.WAIT_CURSOR));
-//					saveFileWithCurrentFileName();
-//					undoManager.resetLog();
-//					changeState.setChanged(false);
-//				} finally {
-//					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-//				}
 				jMenuItemFileSave_actionPerformed(null);
 			}
 		}
@@ -26489,14 +26499,6 @@ public class Editor extends JFrame {
 			rtn1 = JOptionPane.showOptionDialog(this, res.getString("ImportMessage0"),
 					res.getString("SaveChangesTitle"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
 			if (rtn1 == 0) {
-//				try{
-//					setCursor(new Cursor(Cursor.WAIT_CURSOR));
-//					saveFileWithCurrentFileName();
-//					undoManager.resetLog();
-//					changeState.setChanged(false);
-//				} finally {
-//					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-//				}
 				jMenuItemFileSave_actionPerformed(null);
 			}
 		}
@@ -26546,6 +26548,29 @@ public class Editor extends JFrame {
 						setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 					}
 				}
+			}
+		}
+	}
+
+	/**
+	 * [File|List diff of files]
+	 * @param e :Action Event
+	 */
+	void jMenuItemFileDiff_actionPerformed(ActionEvent e) {
+		int rtn1 = 0;
+		currentMainTreeNode.updateFields();
+		if (changeState.isChanged()) {
+			Object[] bts = {res.getString("SaveChanges"), res.getString("BackToEdit")} ;
+			rtn1 = JOptionPane.showOptionDialog(this, res.getString("ScanMessage"),
+					res.getString("SaveChangesTitle"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
+			if (rtn1 == 0) {
+				jMenuItemFileSave_actionPerformed(null);
+			}
+		}
+		if (rtn1 == 0) {
+			String name = specifyNameOfExistingFile(res.getString("ChooseXeafFileToDiff"), "xeaf");
+			if (!name.equals("")) {
+				dialogToListChangesOfFiles.request(name);
 			}
 		}
 	}
@@ -26839,6 +26864,33 @@ public class Editor extends JFrame {
 	 * @param e :Action Event
 	 */
 	void jMenuItemFileSave_actionPerformed(ActionEvent e) {
+		if (isNeedToBackup) {
+			isNeedToBackup = false;
+			String backupFileName = "";
+			Object[] bts = {res.getString("Yes"), res.getString("No")} ;
+			int rtn1 = JOptionPane.showOptionDialog(this, res.getString("BackupFileMessage"),
+					res.getString("BackupFile"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
+			if (rtn1 == 0) {
+				try{
+					arrangeOrderOfDomElement();
+					OutputFormat outputFormat = new OutputFormat(domDocument);
+					outputFormat.setEncoding("UTF-8");
+					String newFolder = backupFolder.replace("<CURRENT>", currentFileFolder);
+					backupFileName = currentFileName.replace(".xeaf", getStringValueOfDateTime("withTime") + ".xeaf");
+					backupFileName = backupFileName.replace(currentFileFolder, newFolder);
+					FileOutputStream fileOutputStream = new FileOutputStream(backupFileName);
+					OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, "UTF-8");
+					Writer writer = new BufferedWriter(outputStreamWriter);
+					XMLSerializer xmlSerializer = new XMLSerializer(writer, outputFormat);
+					xmlSerializer.serialize(domDocument.getDocumentElement());
+					writer.close();
+				} catch(Exception ex){
+					JOptionPane.showMessageDialog(this, res.getString("ErrorMessage28") + "\n" + backupFileName);
+					ex.printStackTrace();
+				}
+			}
+			
+		}
 		try {
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			currentMainTreeNode.updateFields();
@@ -32634,9 +32686,9 @@ public class Editor extends JFrame {
 					//
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("TypeOptions"), "BOOLEAN");
 					if (!wrkStr.equals("")) {
-						jRadioButtonFieldTypeOptionBOOLEAN.setSelected(true);
 						jTextFieldTableFieldTypeOptionBOOLEAN.setText(wrkStr);
 						jTextFieldTableFieldTypeOptionBOOLEAN.setEnabled(true);
+						jRadioButtonFieldTypeOptionBOOLEAN.setSelected(true);
 					}
 					//
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("TypeOptions"), "VALUES");
@@ -34158,7 +34210,7 @@ public class Editor extends JFrame {
 							Cell[0] = new TableRowNumber(countOfUsageRows, element1);
 							Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
 							Cell[2] = element1.getAttribute("Type");
-							Cell[3] = res.getString("AddRowListWithHDRField");
+							Cell[3] = res.getString("AddRowListWithHeaderFields");
 							tableModelTableFieldUsageList.addRow(Cell);
 							break;
 						}
@@ -34199,7 +34251,7 @@ public class Editor extends JFrame {
 								Cell[0] = new TableRowNumber(countOfUsageRows, element1);
 								Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
 								Cell[2] = element1.getAttribute("Type");
-								Cell[3] = res.getString("AddRowListWithField");
+								Cell[3] = res.getString("AddRowListWithFields");
 								tableModelTableFieldUsageList.addRow(Cell);
 								break;
 							}
@@ -35611,7 +35663,7 @@ public class Editor extends JFrame {
 						workTokenizer = new StringTokenizer(element1.getAttribute("AddRowListWithHeaderFields"), ";" );
 						while (workTokenizer.hasMoreTokens()) {
 							if (workTokenizer.nextToken().equals(dataSourceName)) {
-								buf.append(element1.getAttribute("ID") + " " + res.getString("AddRowListWithHDRField") + "\n");
+								buf.append(element1.getAttribute("ID") + " " + res.getString("AddRowListWithHeaderFields") + "\n");
 							}
 						}
 					}
@@ -41589,7 +41641,9 @@ public class Editor extends JFrame {
 	void jRadioButtonFieldTypeOptionBOOLEAN_stateChanged(ChangeEvent e) {
 		if (jRadioButtonFieldTypeOptionBOOLEAN.isSelected()) {
 			jTextFieldTableFieldTypeOptionBOOLEAN.setEnabled(true);
-			jTextFieldTableFieldTypeOptionBOOLEAN.setText("T;F");
+			if (jTextFieldTableFieldTypeOptionBOOLEAN.getText().equals("")) {
+				jTextFieldTableFieldTypeOptionBOOLEAN.setText("T;F");
+			}
 		} else {
 			jTextFieldTableFieldTypeOptionBOOLEAN.setEnabled(false);
 			jTextFieldTableFieldTypeOptionBOOLEAN.setText("");
@@ -42991,14 +43045,14 @@ class Editor_DialogAddRowListTableEdit extends JDialog {
 		jTextFieldAddRowListTableName.setEditable(false);
 		jTextFieldAddRowListTableName.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTextFieldAddRowListTableName.setBounds(new Rectangle(285, 9, 300, 25));
-		jLabelAddRowListTableWithFields.setText(res.getString("AddRowListWithFieldShort"));
+		jLabelAddRowListTableWithFields.setText(res.getString("AddRowListWithFieldsShort"));
 		jLabelAddRowListTableWithFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelAddRowListTableWithFields.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelAddRowListTableWithFields.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelAddRowListTableWithFields.setBounds(new Rectangle(5, 43, 150, 20));
 		jTextFieldAddRowListTableWithFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTextFieldAddRowListTableWithFields.setBounds(new Rectangle(160, 40, 425, 22));
-		jLabelHeaderTableWithFields.setText(res.getString("AddRowListWithHDRFieldShort"));
+		jLabelHeaderTableWithFields.setText(res.getString("AddRowListWithHeaderFieldsShort"));
 		jLabelHeaderTableWithFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelHeaderTableWithFields.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelHeaderTableWithFields.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -47203,6 +47257,16 @@ class Editor_jMenuItemFileImportXEAF_actionAdapter implements java.awt.event.Act
 	}
 	public void actionPerformed(ActionEvent e) {
 		adaptee.jMenuItemFileImportXEAF_actionPerformed(e);
+	}
+}
+
+class Editor_jMenuItemFileDiff_actionAdapter implements java.awt.event.ActionListener {
+	Editor adaptee;
+	Editor_jMenuItemFileDiff_actionAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jMenuItemFileDiff_actionPerformed(e);
 	}
 }
 
