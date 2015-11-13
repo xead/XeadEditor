@@ -48,14 +48,16 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "X-TEA Editor";
 	public static final String COPYRIGHT = "Copyright 2015 DBC Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
-	public static final String FULL_VERSION  = "V1.R2.M19";
+	public static final String FULL_VERSION  = "V1.R2.M20";
+	//1.2.20
+	//・モデルのインポート機能で、定義要素の新規追加だけでなく、既存要素の更新もできるようにした
+	//・propertiesの設定による更新前の自動バックアップ機能を設けた
+	//
 	//1.2.19
 	//・XF310の行追加ダイアログのレイアウトが、場合によっては確認できない問題を修正した
 	//・AccessのYESNO,BYTE,BOOLEAN型に対応した
 	//・フィールドの「ブール値」を設定しても初期値の"T;F"を変更できなくなっていた問題を修正した
 	//・ファイル間の差異表示のためのオプションをファイルメニューに設けた
-	//・モデルのインポート機能で、定義要素の新規追加だけでなく、既存要素の更新もできるようにした
-	//・propertiesの設定による更新前の自動バックアップ機能を設けた
 	//
 	//1.2.18
 	//・キーのフィールド構成編集用パネルで、インデックスの昇降設定が出来なくなっていた問題を修正した

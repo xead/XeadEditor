@@ -916,10 +916,35 @@ public class DialogImportModel extends JDialog {
 				error.append(countOfErrors + "." + res.getString("ImportModelMessage10") + "\n");
 			} else {
 				int numberOfValidDetailTables = 0;
+				NodeList detailTabList;
+				boolean isFound;
 				for (int i = 0; i < detailTableExternalIDList.size(); i++) {
 					if (isExistingTable(detailTableExternalIDList.get(i))
 							&& isValidWithKeys(headerTableInternalID, detailTableInternalIDList.get(i))) {
 						numberOfValidDetailTables++;
+						if (functionType.equals("XF310")) {
+							if (!elementInto.getAttribute("DetailTable").equals(detailTableExternalIDList.get(i))) {
+								countOfAltered++;
+								altered.append(countOfAltered + "." + res.getString("DTLTable") + ":"
+										+ detailTableExternalIDList.get(i) + "\n");
+							}
+						}
+						if (functionType.equals("XF300") || functionType.equals("XF390")) {
+							detailTabList = elementInto.getElementsByTagName("Detail");
+							isFound = false;
+							for (int j = 0; j < detailTabList.getLength(); j++) {
+								workElement = (org.w3c.dom.Element)detailTabList.item(j);
+								if (workElement.getAttribute("Table").equals(detailTableExternalIDList.get(i))) {
+									isFound = true;
+									break;
+								}
+							}
+							if (!isFound) {
+								countOfAltered++;
+								altered.append(countOfAltered + "." + res.getString("DTLTable") + ":"
+										+ detailTableExternalIDList.get(i) + "\n");
+							}
+						}
 					}
 				}
 				if (numberOfValidDetailTables == 0) {
@@ -1881,7 +1906,9 @@ public class DialogImportModel extends JDialog {
 			newElementToBeAdded.setAttribute("Margins", "50;50;50;50");
 			newElementToBeAdded.setAttribute("WithPageNumber", "F");
 
+			///////////////////////
 			//Get Default Font ID//
+			///////////////////////
 			org.w3c.dom.Element fontElement;
 			String defaultFontID = "";
 			NodeList fontList = frame_.getDomDocument().getElementsByTagName("PrintFont");
@@ -1892,7 +1919,7 @@ public class DialogImportModel extends JDialog {
 			childElement = frame_.getDomDocument().createElement("Phrase");
 			childElement.setAttribute("Order", "0000");
 			childElement.setAttribute("Block", "HEADER");
-			childElement.setAttribute("Value", "&Text(" + modelElement.getAttribute("Name").replace("‚Ìˆóü", "") + ")");
+			childElement.setAttribute("Value", "&Text(" + modelElement.getAttribute("Name").replace("‚Ìˆóü", "").replace("‚Ì”­s", "") + ")");
 			childElement.setAttribute("Alignment", "CENTER");
 			childElement.setAttribute("FontID", defaultFontID);
 			childElement.setAttribute("FontSize", "15");
@@ -2147,7 +2174,9 @@ public class DialogImportModel extends JDialog {
 				}
 			}
 
+			///////////////////////
 			//Get Default Font ID//
+			///////////////////////
 			org.w3c.dom.Element fontElement;
 			String defaultFontID = "";
 			NodeList fontList = frame_.getDomDocument().getElementsByTagName("PrintFont");
@@ -2165,7 +2194,7 @@ public class DialogImportModel extends JDialog {
 			childElement = frame_.getDomDocument().createElement("HeaderPhrase");
 			childElement.setAttribute("Order", "0000");
 			childElement.setAttribute("Block", "HEADER");
-			childElement.setAttribute("Value", "&Text(" + modelElement.getAttribute("Name").replace("‚Ìˆóü", "") + ")");
+			childElement.setAttribute("Value", "&Text(" + modelElement.getAttribute("Name").replace("‚Ìˆóü", "").replace("‚Ì”­s", "") + ")");
 			childElement.setAttribute("Alignment", "CENTER");
 			childElement.setAttribute("FontID", defaultFontID);
 			childElement.setAttribute("FontSize", "15");
@@ -2248,8 +2277,185 @@ public class DialogImportModel extends JDialog {
 	}
 
 	private void importToUpdateFunction(org.w3c.dom.Element modelFunctionElement, org.w3c.dom.Element currentFunctionElement) {
+		org.w3c.dom.Element workElement, workElement2;
+
+		////////////////////////////////
+		// Update Function Definition //
+		////////////////////////////////
 		currentFunctionElement.setAttribute("Name", modelFunctionElement.getAttribute("Name"));
 		currentFunctionElement.setAttribute("SubsystemID", subsystemElementFrom.getAttribute("SortKey"));
+
+		///////////////////////////
+		// Getting Function Type //
+		///////////////////////////
+		String functionType = "";
+		for (int i = 0; i < functionTypeList.getLength(); i++) {
+			workElement = (org.w3c.dom.Element)functionTypeList.item(i);
+			if (workElement.getAttribute("ID").equals(modelFunctionElement.getAttribute("FunctionTypeID"))) {
+				functionType = workElement.getAttribute("SortKey").trim();
+				break;
+			}
+		}
+
+		///////////////////////////////////////
+		// Adding Detail Tab of XF300, XF390 //
+		///////////////////////////////////////
+		if (functionType.equals("XF300") || functionType.equals("XF390")) {
+			String headerTableID = "";
+			org.w3c.dom.Element headerTableElement = null;
+			org.w3c.dom.Element childElement = null;
+			org.w3c.dom.Element grandChildElement = null;
+			String headerTableInternalID = "";
+			String detailTableInternalID = "";
+			String detailTableExternalID = "";
+			String headerKeyFields = "";
+			String detailKeyFields = "";
+			boolean isFound;
+			SortableDomElementListModel sortingList;
+			NodeList detailTabList, nodeList, nodeList2;
+			ArrayList<org.w3c.dom.Element> detailTableElementList = new ArrayList<org.w3c.dom.Element>();
+
+			///////////////////////////////////////////////
+			// Extracting New and Valid Detail Table IOs //
+			///////////////////////////////////////////////
+			nodeList = modelFunctionElement.getElementsByTagName("IOTable");
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				workElement = (org.w3c.dom.Element)nodeList.item(i);
+				if (workElement.getAttribute("NameExtension").toUpperCase().startsWith("HEADER")
+						|| workElement.getAttribute("Descriptions").toUpperCase().startsWith(res.getString("HeaderTable").toUpperCase())) {
+					headerTableInternalID = workElement.getAttribute("TableID");
+					headerTableID = convertTableInternalIDToExternalID(headerTableInternalID);
+					headerTableElement = getCurrentTableElementWithID(headerTableID);
+
+					nodeList2 = headerTableElement.getElementsByTagName("Key");
+					for (int j = 0; j < nodeList2.getLength(); j++) {
+						workElement2 = (org.w3c.dom.Element)nodeList2.item(j);
+						if (workElement2.getAttribute("Type").equals("PK")) {
+							headerKeyFields = workElement2.getAttribute("Fields");
+							break;
+						}
+					}
+					break;
+				}
+			}
+			for (int i = 0; i < nodeList.getLength(); i++) {
+				workElement = (org.w3c.dom.Element)nodeList.item(i);
+				if (workElement.getAttribute("NameExtension").toUpperCase().startsWith("DETAIL")
+						|| workElement.getAttribute("Descriptions").toUpperCase().startsWith(res.getString("DetailTable").toUpperCase())) {
+					detailTableInternalID = workElement.getAttribute("TableID");
+					detailTableExternalID = convertTableInternalIDToExternalID(detailTableInternalID);
+					if (isExistingTable(detailTableExternalID) && isValidWithKeys(headerTableInternalID, detailTableInternalID)) {
+						detailTabList = currentFunctionElement.getElementsByTagName("Detail");
+						isFound = false;
+						for (int j = 0; j < detailTabList.getLength(); j++) {
+							workElement = (org.w3c.dom.Element)detailTabList.item(j);
+							if (workElement.getAttribute("Table").equals(detailTableExternalID)) {
+								isFound = true;
+								break;
+							}
+						}
+						if (!isFound) {
+							detailTableElementList.add(getCurrentTableElementWithID(detailTableExternalID));
+						}
+					}
+				}
+			}
+
+			///////////////////////
+			//Get Default Font ID//
+			///////////////////////
+			String defaultFontID = "";
+			if (functionType.equals("XF390")) {
+				NodeList fontList = frame_.getDomDocument().getElementsByTagName("PrintFont");
+				sortingList = frame_.getSortedListModel(fontList, "FontName");
+				workElement = (org.w3c.dom.Element)sortingList.getElementAt(0);
+				defaultFontID = workElement.getAttribute("ID");
+			}
+
+			////////////////////////////////////////////////////////////
+			// Creating A Detail Tab Element with Columns and Buttons //
+			////////////////////////////////////////////////////////////
+			for (int p = 0; p < detailTableElementList.size(); p++) {
+				nodeList = detailTableElementList.get(p).getElementsByTagName("Key");
+				for (int i = 0; i < nodeList.getLength(); i++) {
+					workElement = (org.w3c.dom.Element)nodeList.item(i);
+					if (workElement.getAttribute("Type").equals("PK")) {
+						detailKeyFields = workElement.getAttribute("Fields");
+						break;
+					}
+				}
+				childElement = frame_.getDomDocument().createElement("Detail");
+				childElement.setAttribute("Order", Editor.getFormatted4ByteString((p+1)*10));
+				childElement.setAttribute("Table", detailTableElementList.get(p).getAttribute("ID"));
+				childElement.setAttribute("HeaderKeyFields", headerKeyFields);
+				childElement.setAttribute("KeyFields", detailKeyFields);
+				childElement.setAttribute("Caption", detailTableElementList.get(p).getAttribute("Name"));
+				if (functionType.equals("XF390")) {
+					childElement.setAttribute("CaptionFontSize", "12");
+					childElement.setAttribute("CaptionFontStyle", "");
+					childElement.setAttribute("FontID", defaultFontID);
+					childElement.setAttribute("FontSize", "10");
+					childElement.setAttribute("RowNoWidth", "5");
+				}
+				currentFunctionElement.appendChild(childElement);
+
+				//////////////////////////////
+				// Creating Column Elements //
+				//////////////////////////////
+				int columnCount = 0;
+				nodeList = detailTableElementList.get(p).getElementsByTagName("Field");
+				sortingList = frame_.getSortedListModel(nodeList, "Order");
+				for (int i = 0; i < sortingList.getSize(); i++) {
+					if (columnCount < 5) {
+						workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
+						if (!headerKeyFields.contains(workElement.getAttribute("ID"))) {
+							grandChildElement = frame_.getDomDocument().createElement("Column");
+							grandChildElement.setAttribute("Order", Editor.getFormatted4ByteString(columnCount * 10));
+							grandChildElement.setAttribute("DataSource", detailTableElementList.get(p).getAttribute("ID") + "." + workElement.getAttribute("ID")); 
+							grandChildElement.setAttribute("FieldOptions", "");
+							if (functionType.equals("XF390")) {
+								grandChildElement.setAttribute("Width", "19");
+								grandChildElement.setAttribute("Alignment", "LEFT");
+							}
+							childElement.appendChild(grandChildElement);
+							columnCount++;
+						}
+					} else {
+						break;
+					}
+				}
+
+				//////////////////////////////
+				// Creating Button Elements //
+				//////////////////////////////
+				if (functionType.equals("XF300")) {
+					grandChildElement = frame_.getDomDocument().createElement("Button");
+					grandChildElement.setAttribute("Position", "0");
+					grandChildElement.setAttribute("Number", "3");
+					grandChildElement.setAttribute("Caption", res.getString("Close"));
+					grandChildElement.setAttribute("Action", "EXIT");
+					childElement.appendChild(grandChildElement);
+					grandChildElement = frame_.getDomDocument().createElement("Button");
+					grandChildElement.setAttribute("Position", "2");
+					grandChildElement.setAttribute("Number", "6");
+					grandChildElement.setAttribute("Caption", res.getString("Add"));
+					grandChildElement.setAttribute("Action", "ADD");
+					childElement.appendChild(grandChildElement);
+					grandChildElement = frame_.getDomDocument().createElement("Button");
+					grandChildElement.setAttribute("Position", "4");
+					grandChildElement.setAttribute("Number", "8");
+					grandChildElement.setAttribute("Caption", res.getString("HDRData"));
+					grandChildElement.setAttribute("Action", "HEADER");
+					childElement.appendChild(grandChildElement);
+					grandChildElement = frame_.getDomDocument().createElement("Button");
+					grandChildElement.setAttribute("Position", "6");
+					grandChildElement.setAttribute("Number", "12");
+					grandChildElement.setAttribute("Caption", res.getString("Output"));
+					grandChildElement.setAttribute("Action", "OUTPUT");
+					childElement.appendChild(grandChildElement);
+				}
+			}
+		}
 	}	
 
 	private org.w3c.dom.Element getCurrentTableElementWithID(String externalTableID) {
