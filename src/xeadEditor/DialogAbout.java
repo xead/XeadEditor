@@ -48,7 +48,13 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "X-TEA Editor";
 	public static final String COPYRIGHT = "Copyright 2015 DBC Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
-	public static final String FULL_VERSION  = "V1.R2.M20";
+	public static final String FULL_VERSION  = "V1.R2.M22";
+	//1.2.22
+	//・xeafのインポート処理で、明細行の並び順に(D)が含まれているとインポートできない問題を修正した
+	//
+	//1.2.21
+	//・区分指定されているフィールドが絞込条件として追加されたときには、「省略可リスト」として初期設定されるようにした
+	//
 	//1.2.20
 	//・モデルのインポート機能で、定義要素の新規追加だけでなく、既存要素の更新もできるようにした
 	//・propertiesの設定による更新前の自動バックアップ機能を設けた

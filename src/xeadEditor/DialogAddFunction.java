@@ -509,7 +509,11 @@ public class DialogAddFunction extends JDialog {
 								|| frame_.getBasicTypeOf(dataType).equals("FLOAT")) {
 							childElement.setAttribute("FieldOptions", "IGNORE_IF_ZERO");	
 						} else {
-							childElement.setAttribute("FieldOptions", "");
+							if (workElement.getAttribute("TypeOptions").contains("KUBUN(")) {
+								childElement.setAttribute("FieldOptions", "PROMPT_LIST1");	
+							} else {
+								childElement.setAttribute("FieldOptions", "");
+							}
 						}
 						element.appendChild(childElement);
 					} else {
@@ -575,7 +579,11 @@ public class DialogAddFunction extends JDialog {
 								|| frame_.getBasicTypeOf(dataType).equals("FLOAT")) {
 							childElement.setAttribute("FieldOptions", "IGNORE_IF_ZERO");	
 						} else {
-							childElement.setAttribute("FieldOptions", "");
+							if (workElement.getAttribute("TypeOptions").contains("KUBUN(")) {
+								childElement.setAttribute("FieldOptions", "PROMPT_LIST1");	
+							} else {
+								childElement.setAttribute("FieldOptions", "");
+							}
 						}
 						element.appendChild(childElement);
 					} else {

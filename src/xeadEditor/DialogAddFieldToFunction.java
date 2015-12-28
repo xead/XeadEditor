@@ -70,6 +70,7 @@ public class DialogAddFieldToFunction extends JDialog {
 	private ArrayList<String> fieldIDList = new ArrayList<String>();
 	private ArrayList<String> fieldNameList = new ArrayList<String>();
 	private ArrayList<Boolean> isNumericList = new ArrayList<Boolean>();
+	private ArrayList<Boolean> isKubunList = new ArrayList<Boolean>();
 	private ArrayList<String> functionDataSourceList = new ArrayList<String>();
 	private int order = 0;
 	private int result = 0;
@@ -212,6 +213,7 @@ public class DialogAddFieldToFunction extends JDialog {
 		fieldIDList.clear();
 		fieldNameList.clear();
 		isNumericList.clear();
+		isKubunList.clear();
 		tableElement = frame_.getSpecificXETreeNode("Table", tableID).getElement();
 		nodeList = tableElement.getElementsByTagName("Field");
 		sortingList = frame_.getSortedListModel(nodeList, "Order");
@@ -226,6 +228,11 @@ public class DialogAddFieldToFunction extends JDialog {
 				isNumericList.add(true);
 			} else {
 				isNumericList.add(false);
+			}
+			if (wrkElement.getAttribute("TypeOptions").contains("KUBUN(")) {
+				isKubunList.add(true);
+			} else {
+				isKubunList.add(false);
 			}
 		}
 		nodeList = tableElement.getElementsByTagName("Refer");
@@ -250,6 +257,11 @@ public class DialogAddFieldToFunction extends JDialog {
 					isNumericList.add(true);
 				} else {
 					isNumericList.add(false);
+				}
+				if (fieldElement.getAttribute("TypeOptions").contains("KUBUN(")) {
+					isKubunList.add(true);
+				} else {
+					isKubunList.add(false);
 				}
 			}
 		}
@@ -295,6 +307,7 @@ public class DialogAddFieldToFunction extends JDialog {
 				checkBox.setText(tableAliasList.get(i) + "." + fieldNameList.get(i));
 				checkBox.setDataSourceName(tableAliasList.get(i) + "." + fieldIDList.get(i));
 				checkBox.setNumeric(isNumericList.get(i));
+				checkBox.setKubun(isKubunList.get(i));
 				listModelDataSource.addElement(checkBox);
 			}
 		}
@@ -347,6 +360,10 @@ public class DialogAddFieldToFunction extends JDialog {
 								|| tableType_.equals("Function300DetailFilterList")) {
 							if (checkBox.isNumeric()) {
 								newElement.setAttribute("FieldOptions", "IGNORE_IF_ZERO");	
+							} else {
+								if (checkBox.isKubun()) {
+									newElement.setAttribute("FieldOptions", "PROMPT_LIST1");	
+								}
 							}
 						}
 						if (tableType_.equals("Function390DetailFieldList")) {
@@ -503,6 +520,7 @@ class DialogAddFieldToFunction_CheckBox extends JCheckBox {
 	private static final long serialVersionUID = 1L;
 	private String dataSourceName_ = "";
 	private boolean isNumeric_ = false;
+	private boolean isKubun_ = false;
 	DialogAddFieldToFunction_CheckBox() {
 		super();
 	}
@@ -512,11 +530,17 @@ class DialogAddFieldToFunction_CheckBox extends JCheckBox {
 	public void setNumeric(boolean isNumeric) {
 		isNumeric_ = isNumeric;
 	}
+	public void setKubun(boolean isKubun) {
+		isKubun_ = isKubun;
+	}
 	public String getDataSourceName() {
 		return dataSourceName_;
 	}
 	public boolean isNumeric() {
 		return isNumeric_;
+	}
+	public boolean isKubun() {
+		return isKubun_;
 	}
 }
 

@@ -112,7 +112,7 @@ public class DialogImportModel extends JDialog {
 		// panelMain //
 		///////////////
 		panelMain.setLayout(new BorderLayout());
-		panelMain.setPreferredSize(new Dimension(850, 800));
+		panelMain.setPreferredSize(new Dimension(850, 750));
 		panelMain.setBorder(BorderFactory.createEtchedBorder());
 		panelMain.add(jPanelNorth, BorderLayout.NORTH);
 		panelMain.add(jPanelCenter, BorderLayout.CENTER);

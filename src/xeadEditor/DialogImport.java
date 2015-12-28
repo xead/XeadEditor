@@ -1269,6 +1269,7 @@ public class DialogImport extends JDialog {
 		boolean isValid = false;
 		org.w3c.dom.Element element, workElement;
 		NodeList workList;
+		dataSourceName = dataSourceName.replace("(D)", "");
 		//
 		StringTokenizer workTokenizer = new StringTokenizer(dataSourceName, ".");
 		String alias = workTokenizer.nextToken();
