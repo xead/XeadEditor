@@ -1656,7 +1656,8 @@ public class DialogImportModel extends JDialog {
 			} else {
 				for (int i = 0; i < nodeList.getLength(); i++) {
 					workElement = (org.w3c.dom.Element)nodeList.item(i);
-					if (workElement.getAttribute("NameExtension").toUpperCase().startsWith("PRIMARY")
+					if (workElement.getAttribute("Position").equals("PRIMARY")
+							|| workElement.getAttribute("NameExtension").toUpperCase().startsWith("PRIMARY")
 							|| workElement.getAttribute("Descriptions").toUpperCase().startsWith(res.getString("PrimaryTable").toUpperCase())) {
 						primaryTableID = convertTableInternalIDToExternalID(workElement.getAttribute("TableID"));
 						break;
@@ -1674,7 +1675,8 @@ public class DialogImportModel extends JDialog {
 			nodeList = modelElement.getElementsByTagName("IOTable");
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				workElement = (org.w3c.dom.Element)nodeList.item(i);
-				if (workElement.getAttribute("NameExtension").toUpperCase().startsWith("HEADER")
+				if (workElement.getAttribute("Position").equals("HEADER")
+						|| workElement.getAttribute("NameExtension").toUpperCase().startsWith("HEADER")
 						|| workElement.getAttribute("Descriptions").toUpperCase().startsWith(res.getString("HeaderTable").toUpperCase())) {
 					headerTableInternalID = workElement.getAttribute("TableID");
 					headerTableID = convertTableInternalIDToExternalID(headerTableInternalID);
@@ -1685,7 +1687,8 @@ public class DialogImportModel extends JDialog {
 			String tableID;
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				workElement = (org.w3c.dom.Element)nodeList.item(i);
-				if (workElement.getAttribute("NameExtension").toUpperCase().startsWith("DETAIL")
+				if (workElement.getAttribute("Position").equals("DETAIL")
+						|| workElement.getAttribute("NameExtension").toUpperCase().startsWith("DETAIL")
 						|| workElement.getAttribute("Descriptions").toUpperCase().startsWith(res.getString("DetailTable").toUpperCase())) {
 					detailTableInternalID = workElement.getAttribute("TableID");
 					tableID = convertTableInternalIDToExternalID(detailTableInternalID);
@@ -2321,7 +2324,8 @@ public class DialogImportModel extends JDialog {
 			nodeList = modelFunctionElement.getElementsByTagName("IOTable");
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				workElement = (org.w3c.dom.Element)nodeList.item(i);
-				if (workElement.getAttribute("NameExtension").toUpperCase().startsWith("HEADER")
+				if (workElement.getAttribute("Position").equals("HEADER")
+						|| workElement.getAttribute("NameExtension").toUpperCase().startsWith("HEADER")
 						|| workElement.getAttribute("Descriptions").toUpperCase().startsWith(res.getString("HeaderTable").toUpperCase())) {
 					headerTableInternalID = workElement.getAttribute("TableID");
 					headerTableID = convertTableInternalIDToExternalID(headerTableInternalID);
@@ -2340,7 +2344,8 @@ public class DialogImportModel extends JDialog {
 			}
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				workElement = (org.w3c.dom.Element)nodeList.item(i);
-				if (workElement.getAttribute("NameExtension").toUpperCase().startsWith("DETAIL")
+				if (workElement.getAttribute("Position").equals("DETAIL")
+						|| workElement.getAttribute("NameExtension").toUpperCase().startsWith("DETAIL")
 						|| workElement.getAttribute("Descriptions").toUpperCase().startsWith(res.getString("DetailTable").toUpperCase())) {
 					detailTableInternalID = workElement.getAttribute("TableID");
 					detailTableExternalID = convertTableInternalIDToExternalID(detailTableInternalID);

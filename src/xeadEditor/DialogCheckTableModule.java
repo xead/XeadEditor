@@ -1056,6 +1056,7 @@ public class DialogCheckTableModule extends JDialog {
 					if (dataTypeModule.equals("bpchar")
 							|| dataTypeModule.equals("CHARACTER")
 							|| dataTypeModule.equals("uniqueidentifier")
+							|| dataTypeModule.equals("uuid")
 							|| dataTypeModule.equals("BIT")
 							|| dataTypeModule.equals("bool")) {
 						isEquivalent = true;
@@ -1799,7 +1800,8 @@ public class DialogCheckTableModule extends JDialog {
 				|| dataTypeModule.equals("BPCHAR")
 				|| dataTypeModule.equals("BOOL")
 				|| dataTypeModule.equals("BIT")
-				|| dataTypeModule.equals("UNIQUEIDENTIFIER")) {
+				|| dataTypeModule.equals("UNIQUEIDENTIFIER")
+				|| dataTypeModule.equals("UUID")) {
 			dataTypeDefinition = "CHAR";
 		}
 		if (dataTypeModule.equals("LONG VARCHAR")

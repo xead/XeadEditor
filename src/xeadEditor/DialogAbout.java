@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2015 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2016 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -43,12 +43,21 @@ public class DialogAbout extends JDialog implements ActionListener {
 	 * Application Information and log of changes
 	 */
 	private static final long serialVersionUID = 1L;
-	public static final String APPLICATION_NAME  = "X-TEA Editor 1.2";
+	public static final String APPLICATION_NAME  = "X-TEA Editor 1.3";
 	public static final String FORMAT_VERSION  = "1.2";
 	public static final String PRODUCT_NAME = "X-TEA Editor";
-	public static final String COPYRIGHT = "Copyright 2015 DBC Ltd.";
+	public static final String COPYRIGHT = "Copyright 2016 DBC Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
-	public static final String FULL_VERSION  = "V1.R2.M22";
+	public static final String FULL_VERSION  = "V1.R3.M0";
+	//1.3.0
+	//・テーブル定義の範囲KEY定義を除去した
+	//・メニュー定義のクロスチェッカーのロード定義を除去した
+	//・xeadファイルのインポート処理で、テーブル入出力のPosition属性に追随するようにした
+	//・削除前のテーブルスクリプトの初期値を設定できるようにした
+	//・Undo/Redo用メニューアイテムの表記を改善した
+	//・「その他の設定」に「ハッシュ方式」を組み込んだ
+	//・「その他の設定」にAdimin Emailを組み込んだ
+	//
 	//1.2.22
 	//・xeafのインポート処理で、明細行の並び順に(D)が含まれているとインポートできない問題を修正した
 	//
