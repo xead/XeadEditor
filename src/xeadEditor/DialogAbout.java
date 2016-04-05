@@ -48,7 +48,11 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "X-TEA Editor";
 	public static final String COPYRIGHT = "Copyright 2016 DBC Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
-	public static final String FULL_VERSION  = "V1.R3.M0";
+	public static final String FULL_VERSION  = "V1.R3.M1";
+	//1.3.1
+	//・論理削除の自動化機構を廃止した
+	//・XF100で、検索結果が１件だけの場合に明細処理を自動起動するためのオプションを設けた
+	//
 	//1.3.0
 	//・テーブル定義の範囲KEY定義を除去した
 	//・メニュー定義のクロスチェッカーのロード定義を除去した
