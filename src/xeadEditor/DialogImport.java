@@ -617,10 +617,7 @@ public class DialogImport extends JDialog {
 		//
 		currentElement.setAttribute("Name", newElement.getAttribute("Name"));
 		currentElement.setAttribute("Remarks", newElement.getAttribute("Remarks"));
-		currentElement.setAttribute("RangeKey", newElement.getAttribute("RangeKey"));
 		currentElement.setAttribute("UpdateCounter", newElement.getAttribute("UpdateCounter"));
-		currentElement.setAttribute("DeleteOperation", newElement.getAttribute("DeleteOperation"));
-		currentElement.setAttribute("ActiveWhere", newElement.getAttribute("ActiveWhere"));
 		currentElement.setAttribute("DetailRowNumberAuto", newElement.getAttribute("DetailRowNumberAuto"));
 		//
     	nodeList = newElement.getElementsByTagName("Field");

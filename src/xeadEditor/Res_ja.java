@@ -420,6 +420,7 @@ public class Res_ja extends java.util.ListResourceBundle {
 		{ "ErrorMessage126", "機能ＩＤが正しくありません。" },
 		{ "ErrorMessage127", "ＩＤの長さが規定桁以上です。" },
 		{ "ErrorMessage128", "NAMEモードでは編集できません。" },
+		{ "ErrorMessage129", "バックアップできませんでした。" },
 		{ "EventAC", "追加後" },
 		{ "EventAD", "削除後" },
 		{ "EventAR", "読込後" },

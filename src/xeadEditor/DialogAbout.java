@@ -48,7 +48,12 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "X-TEA Editor";
 	public static final String COPYRIGHT = "Copyright 2016 DBC Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
-	public static final String FULL_VERSION  = "V1.R3.M1";
+	public static final String FULL_VERSION  = "V1.R3.M2";
+	//1.3.2
+	//・インポート機能とファイル差異分析で、処理対象となる属性を整理した
+	//・英語リソースの表現を一部改善した
+	//・mac環境向けの微調整を施した
+	//
 	//1.3.1
 	//・論理削除の自動化機構を廃止した
 	//・XF100で、検索結果が１件だけの場合に明細処理を自動起動するためのオプションを設けた
@@ -60,7 +65,7 @@ public class DialogAbout extends JDialog implements ActionListener {
 	//・削除前のテーブルスクリプトの初期値を設定できるようにした
 	//・Undo/Redo用メニューアイテムの表記を改善した
 	//・「その他の設定」に「ハッシュ方式」を組み込んだ
-	//・「その他の設定」にAdimin Emailを組み込んだ
+	//・「その他の設定」にAdmin Emailを組み込んだ
 	//
 	//1.2.22
 	//・xeafのインポート処理で、明細行の並び順に(D)が含まれているとインポートできない問題を修正した

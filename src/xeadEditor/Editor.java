@@ -27294,6 +27294,7 @@ public class Editor extends JFrame {
 						if (rtn1 == 0 && domDocumentSaved != null) {
 							try{
 								String newFolder = backupFolder.replace("<CURRENT>", currentFileFolder);
+								//newFolder = newFolder.replaceAll("\\", File.separator);
 								File newFolderDir = new File(newFolder);
 								if (!newFolderDir.exists()) {
 									newFolderDir.mkdir();
@@ -27310,7 +27311,7 @@ public class Editor extends JFrame {
 								xmlSerializer.serialize(domDocumentSaved.getDocumentElement());
 								writer.close();
 							} catch(Exception ex){
-								JOptionPane.showMessageDialog(this, res.getString("ErrorMessage28") + "\n" + backupFileName);
+								JOptionPane.showMessageDialog(this, res.getString("ErrorMessage129") + "\n" + backupFileName + "\n" + ex.getMessage());
 								ex.printStackTrace();
 							}
 						}
@@ -27329,7 +27330,7 @@ public class Editor extends JFrame {
 					lastModifyTime = file.lastModified();
 				}
 			} catch(Exception ex){
-				JOptionPane.showMessageDialog(this, res.getString("ErrorMessage28"));
+				JOptionPane.showMessageDialog(this, res.getString("ErrorMessage28") + "\n" + ex.getMessage());
 				ex.printStackTrace();
 			}
 		}
@@ -39704,9 +39705,7 @@ public class Editor extends JFrame {
 		databaseConnList.clear();
 
 		databaseName = systemNode.getElement().getAttribute("DatabaseName");
-		if (databaseName.contains("<CURRENT>")) {
-			databaseName = databaseName.replace("<CURRENT>", currentFileFolder);
-		}
+		databaseName = databaseName.replace("<CURRENT>", currentFileFolder);
 		user = systemNode.getElement().getAttribute("DatabaseUser");
 		password = systemNode.getElement().getAttribute("DatabasePassword");
 		databaseIDList.add("");
@@ -39722,9 +39721,7 @@ public class Editor extends JFrame {
 	    for (int i = 0; i < sortingList.getSize(); i++) {
 	        element = (org.w3c.dom.Element)sortingList.getElementAt(i);
 			databaseName = element.getAttribute("Name");
-			if (databaseName.contains("<CURRENT>")) {
-				databaseName = databaseName.replace("<CURRENT>", currentFileFolder);
-			}
+			databaseName = databaseName.replace("<CURRENT>", currentFileFolder);
 			user = element.getAttribute("User");
 			password = element.getAttribute("Password");
 			databaseIDList.add(element.getAttribute("ID"));

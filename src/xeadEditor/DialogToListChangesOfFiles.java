@@ -300,9 +300,11 @@ public class DialogToListChangesOfFiles extends JDialog {
 		compareNewAndOldElements(systemElementNew, systemElementOld, "SmtpPort", label);
 		compareNewAndOldElements(systemElementNew, systemElementOld, "SmtpUser", label);
 		compareNewAndOldElements(systemElementNew, systemElementOld, "SmtpPassword", label);
+		compareNewAndOldElements(systemElementNew, systemElementOld, "SmtpAdminEmail", label);
 		compareNewAndOldElements(systemElementNew, systemElementOld, "ImageFileFolder", label);
 		compareNewAndOldElements(systemElementNew, systemElementOld, "OutputFolder", label);
 		compareNewAndOldElements(systemElementNew, systemElementOld, "SystemFont", label);
+		compareNewAndOldElements(systemElementNew, systemElementOld, "HashFormat", label);
 		compareNewAndOldElements(systemElementNew, systemElementOld, "WelcomePageURL", label);
 		compareNewAndOldElements(systemElementNew, systemElementOld, "DateFormat", label);
 		compareNewAndOldElements(systemElementNew, systemElementOld, "LoginScript", label);
@@ -431,11 +433,7 @@ public class DialogToListChangesOfFiles extends JDialog {
 		attrList.add("ModuleID");
 		attrList.add("Remarks");
 		attrList.add("SubsystemID");
-		attrList.add("SkipReferCheck");
-		attrList.add("RangeKey");
 		attrList.add("UpdateCounter");
-		attrList.add("DeleteOperation");
-		attrList.add("ActiveWhere");
 		attrList.add("DetailRowNumberAuto");
 		oldElementList = systemElementOld.getElementsByTagName(tagName);
 		newElementList = systemElementNew.getElementsByTagName(tagName);
