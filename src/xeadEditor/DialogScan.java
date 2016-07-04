@@ -510,7 +510,7 @@ public class DialogScan extends JDialog {
 						//
 						scanAttribute(workElement, "Table", res.getString("TableDefinition"), "Name", res.getString("Name"));
 						scanAttribute(workElement, "Table", res.getString("TableDefinition"), "UpdateCounter", res.getString("UpdateCounter"));
-						scanAttribute(workElement, "Table", res.getString("TableDefinition"), "ActiveWhere", res.getString("ActiveWhere"));
+//						scanAttribute(workElement, "Table", res.getString("TableDefinition"), "ActiveWhere", res.getString("ActiveWhere"));
 						scanAttribute(workElement, "Table", res.getString("TableDefinition"), "Remarks", res.getString("Remarks"));
 						//
 						workList1 = workElement.getElementsByTagName("Field");
@@ -546,13 +546,14 @@ public class DialogScan extends JDialog {
 						if (workElement.getAttribute("Type").equals("XF000")) {
 							scanAttribute(workElement, "Function", res.getString("FunctionDefinition"), "Script", res.getString("Script"));
 						}
-						//
-						if (workElement.getAttribute("Type").equals("XF010")) {
-							scanAttribute(workElement, "Function", res.getString("FunctionDefinition"), "Script", res.getString("Script"));
-						}
+//						//
+//						if (workElement.getAttribute("Type").equals("XF010")) {
+//							scanAttribute(workElement, "Function", res.getString("FunctionDefinition"), "Script", res.getString("Script"));
+//						}
 						//
 						if (workElement.getAttribute("Type").equals("XF100")) {
 							scanAttribute(workElement, "Function", res.getString("FunctionDefinition"), "FixedWhere", res.getString("FixedWhere"));
+							scanAttribute(workElement, "Function", res.getString("FunctionDefinition"), "ParmAdditional", res.getString("ParmAdditional"));
 							scanAttribute(workElement, "Function", res.getString("FunctionDefinition"), "InitialMsg", res.getString("InitialMessage"));
 							//
 							workList1 = workElement.getElementsByTagName("Column");
@@ -571,6 +572,7 @@ public class DialogScan extends JDialog {
 							workList1 = workElement.getElementsByTagName("Button");
 							for (int j = 0; j < workList1.getLength(); j++) {
 								workElement1 = (org.w3c.dom.Element)workList1.item(j);
+								scanAttribute(workElement1, "FunctionButton", res.getString("Function/Button"), "Action", res.getString("Action"));
 								scanAttribute(workElement1, "FunctionButton", res.getString("Function/Button"), "Caption", res.getString("Caption"));
 							}
 						}
@@ -634,27 +636,28 @@ public class DialogScan extends JDialog {
 							workList1 = workElement.getElementsByTagName("Button");
 							for (int j = 0; j < workList1.getLength(); j++) {
 								workElement1 = (org.w3c.dom.Element)workList1.item(j);
+								scanAttribute(workElement1, "FunctionButton", res.getString("Function/Button"), "Action", res.getString("Action"));
 								scanAttribute(workElement1, "FunctionButton", res.getString("Function/Button"), "Caption", res.getString("Caption"));
 							}
 						}
-						//
-						if (workElement.getAttribute("Type").equals("XF210")) {
-							scanAttribute(workElement, "Function", res.getString("FunctionDefinition"), "FixedWhere", res.getString("FixedWhere"));
-							scanAttribute(workElement, "Function", res.getString("FunctionDefinition"), "InitialMsg", res.getString("InitialMessage"));
-							//
-							workList1 = workElement.getElementsByTagName("Field");
-							for (int j = 0; j < workList1.getLength(); j++) {
-								workElement1 = (org.w3c.dom.Element)workList1.item(j);
-								scanAttribute(workElement1, "FunctionField", res.getString("Function/Field"), "FieldOptions_CAPTION", res.getString("Caption"));
-								scanAttribute(workElement1, "FunctionField", res.getString("Function/Field"), "FieldOptions_COMMENT", res.getString("Comment"));
-							}
-							//
-							workList1 = workElement.getElementsByTagName("Button");
-							for (int j = 0; j < workList1.getLength(); j++) {
-								workElement1 = (org.w3c.dom.Element)workList1.item(j);
-								scanAttribute(workElement1, "FunctionButton", res.getString("Function/Button"), "Caption", res.getString("Caption"));
-							}
-						}
+//						//
+//						if (workElement.getAttribute("Type").equals("XF210")) {
+//							scanAttribute(workElement, "Function", res.getString("FunctionDefinition"), "FixedWhere", res.getString("FixedWhere"));
+//							scanAttribute(workElement, "Function", res.getString("FunctionDefinition"), "InitialMsg", res.getString("InitialMessage"));
+//							//
+//							workList1 = workElement.getElementsByTagName("Field");
+//							for (int j = 0; j < workList1.getLength(); j++) {
+//								workElement1 = (org.w3c.dom.Element)workList1.item(j);
+//								scanAttribute(workElement1, "FunctionField", res.getString("Function/Field"), "FieldOptions_CAPTION", res.getString("Caption"));
+//								scanAttribute(workElement1, "FunctionField", res.getString("Function/Field"), "FieldOptions_COMMENT", res.getString("Comment"));
+//							}
+//							//
+//							workList1 = workElement.getElementsByTagName("Button");
+//							for (int j = 0; j < workList1.getLength(); j++) {
+//								workElement1 = (org.w3c.dom.Element)workList1.item(j);
+//								scanAttribute(workElement1, "FunctionButton", res.getString("Function/Button"), "Caption", res.getString("Caption"));
+//							}
+//						}
 						//
 						if (workElement.getAttribute("Type").equals("XF290")) {
 							workList1 = workElement.getElementsByTagName("Phrase");
@@ -666,6 +669,7 @@ public class DialogScan extends JDialog {
 						//
 						if (workElement.getAttribute("Type").equals("XF300")) {
 							scanAttribute(workElement, "Function", res.getString("FunctionDefinition"), "FixedWhere", res.getString("FixedWhere"));
+							scanAttribute(workElement, "Function", res.getString("FunctionDefinition"), "HeaderParmAdditional", res.getString("HeaderParmAdditional"));
 							scanAttribute(workElement, "Function", res.getString("FunctionDefinition"), "InitialMsg", res.getString("InitialMessage"));
 							//
 							workList1 = workElement.getElementsByTagName("Field");
@@ -680,6 +684,7 @@ public class DialogScan extends JDialog {
 								workElement1 = (org.w3c.dom.Element)workList1.item(j);
 								scanAttribute(workElement1, "FunctionDetail", res.getString("Function/DTLTab"), "Caption", res.getString("Caption"));
 								scanAttribute(workElement1, "FunctionDetail", res.getString("Function/DTLTab"), "FixedWhere", res.getString("FixedWhere"));
+								scanAttribute(workElement1, "FunctionDetail", res.getString("Function/DTLTab"), "ParmAdditional", res.getString("ParmAdditional"));
 								scanAttribute(workElement1, "FunctionDetail", res.getString("Function/DTLTab"), "InitialMsg", res.getString("InitialMessage"));
 								//
 								workList2 = workElement1.getElementsByTagName("Column");
@@ -698,6 +703,7 @@ public class DialogScan extends JDialog {
 								workList2 = workElement1.getElementsByTagName("Button");
 								for (int k = 0; k < workList2.getLength(); k++) {
 									workElement2 = (org.w3c.dom.Element)workList2.item(k);
+									scanAttribute(workElement2, "Function300DetailButton", res.getString("Function/DTLButton"), "Action", res.getString("Action"));
 									scanAttribute(workElement2, "Function300DetailButton", res.getString("Function/DTLButton"), "Caption", res.getString("Caption"));
 								}
 							}

@@ -37,15 +37,18 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.*;
+
 import java.awt.event.*;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
+
 import org.apache.xerces.parsers.DOMParser;
 import org.w3c.dom.*;
 import org.xml.sax.InputSource;
+
 import xeadEditor.Editor.SortableDomElementListModel;
 
 public class DialogImportModel extends JDialog {
@@ -314,6 +317,7 @@ public class DialogImportModel extends JDialog {
 		subsystemElementFrom = null;
 		String wrkStr, subsystemID = "";
 		jButtonRefresh.setEnabled(false);
+		jButtonImport.setEnabled(false);
 
 		if (subsystemNodeListFrom != null && jComboBoxSubsystemFrom.getSelectedIndex() >= 0) {
 			try {
@@ -377,31 +381,37 @@ public class DialogImportModel extends JDialog {
 									Cell[3] = functionTypeElement.getAttribute("SortKey") + " " + functionTypeElement.getAttribute("Name");
 								}
 							}
-							wrkStr = getStatusOfFunction(element);
-							if (wrkStr.startsWith("ALTERED:")) {
-								Cell[4] = "ALTERED";
-							} else {
-								if (wrkStr.startsWith("ERROR:")) {
-									Cell[4] = "ERROR";
+//							try {
+								wrkStr = getStatusOfFunction(element);
+								if (wrkStr.startsWith("ALTERED:")) {
+									Cell[4] = "ALTERED";
 								} else {
-									Cell[4] = wrkStr;
+									if (wrkStr.startsWith("ERROR:")) {
+										Cell[4] = "ERROR";
+									} else {
+										Cell[4] = wrkStr;
+									}
 								}
-							}
-							((TableRowNumber)Cell[0]).setMessage(wrkStr);
-							if (Cell[4].equals("NEW") || Cell[4].equals("ALTERED")) {
-								Cell[1] = "<html><b>" + Cell[1];
-								Cell[2] = "<html><b>" + Cell[2];
-								Cell[3] = "<html><b>" + Cell[3];
-								Cell[4] = "<html><b>" + Cell[4];
-							}
-							tableModelElementListFrom.addRow(Cell);
+								((TableRowNumber)Cell[0]).setMessage(wrkStr);
+								if (Cell[4].equals("NEW") || Cell[4].equals("ALTERED")) {
+									Cell[1] = "<html><b>" + Cell[1];
+									Cell[2] = "<html><b>" + Cell[2];
+									Cell[3] = "<html><b>" + Cell[3];
+									Cell[4] = "<html><b>" + Cell[4];
+								}
+								tableModelElementListFrom.addRow(Cell);
+//							} catch (Exception e1) {
+//								jTextAreaMessage.setText(e1.getStackTrace().toString());
+//								break;
+//							}
 						}
 					}
-
-					jButtonImport.setEnabled(false);
+//					jButtonImport.setEnabled(false);
 				}
-			} finally {
 				jTextAreaMessage.setText(res.getString("ImportModelMessage1"));
+			} catch (Exception e1) {
+				jTextAreaMessage.setText(e1.getStackTrace().toString());
+			} finally {
 				setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			}
 		}
@@ -768,8 +778,8 @@ public class DialogImportModel extends JDialog {
 		return fieldID;
 	}
 	
-	private String getStatusOfFunction(org.w3c.dom.Element elementFrom) {
-		String status = "";
+	private String getStatusOfFunction(org.w3c.dom.Element elementFrom) throws Exception {
+		String wrkStr, status = "";
 		org.w3c.dom.Element workElement;
 		org.w3c.dom.Element elementInto = null;
 		StringBuffer error = new StringBuffer();
@@ -840,7 +850,8 @@ public class DialogImportModel extends JDialog {
 			} else {
 				for (int i = 0; i < nodeList.getLength(); i++) {
 					workElement = (org.w3c.dom.Element)nodeList.item(i);
-					if (workElement.getAttribute("NameExtension").toUpperCase().startsWith("PRIMARY")
+					if (workElement.getAttribute("Position").equals("PRIMARY")
+							|| workElement.getAttribute("NameExtension").toUpperCase().startsWith("PRIMARY")
 							|| workElement.getAttribute("Descriptions").toUpperCase().startsWith(res.getString("PrimaryTable").toUpperCase())) {
 						primaryTableExternalID = convertTableInternalIDToExternalID(workElement.getAttribute("TableID"));
 						break;
@@ -878,7 +889,8 @@ public class DialogImportModel extends JDialog {
 			nodeList = elementFrom.getElementsByTagName("IOTable");
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				workElement = (org.w3c.dom.Element)nodeList.item(i);
-				if (workElement.getAttribute("NameExtension").toUpperCase().startsWith("HEADER")
+				if (workElement.getAttribute("Position").equals("HEADER")
+						|| workElement.getAttribute("NameExtension").toUpperCase().startsWith("HEADER")
 						|| workElement.getAttribute("Descriptions").toUpperCase().startsWith(res.getString("HeaderTable").toUpperCase())) {
 					headerTableInternalID = workElement.getAttribute("TableID");
 					headerTableExternalID = convertTableInternalIDToExternalID(headerTableInternalID);
@@ -887,10 +899,14 @@ public class DialogImportModel extends JDialog {
 			}
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				workElement = (org.w3c.dom.Element)nodeList.item(i);
-				if (workElement.getAttribute("NameExtension").toUpperCase().startsWith("DETAIL")
+				if (workElement.getAttribute("Position").equals("DETAIL")
+						|| workElement.getAttribute("NameExtension").toUpperCase().startsWith("DETAIL")
 						|| workElement.getAttribute("Descriptions").toUpperCase().startsWith(res.getString("DetailTable").toUpperCase())) {
-					detailTableInternalIDList.add(workElement.getAttribute("TableID"));
-					detailTableExternalIDList.add(convertTableInternalIDToExternalID(workElement.getAttribute("TableID")));
+					wrkStr = convertTableInternalIDToExternalID(workElement.getAttribute("TableID"));
+					if (!wrkStr.equals("")) {
+						detailTableInternalIDList.add(workElement.getAttribute("TableID"));
+						detailTableExternalIDList.add(wrkStr);
+					}
 				}
 			}
 			if (headerTableExternalID.equals("")) {
@@ -922,27 +938,29 @@ public class DialogImportModel extends JDialog {
 					if (isExistingTable(detailTableExternalIDList.get(i))
 							&& isValidWithKeys(headerTableInternalID, detailTableInternalIDList.get(i))) {
 						numberOfValidDetailTables++;
-						if (functionType.equals("XF310")) {
-							if (!elementInto.getAttribute("DetailTable").equals(detailTableExternalIDList.get(i))) {
-								countOfAltered++;
-								altered.append(countOfAltered + "." + res.getString("DTLTable") + ":"
-										+ detailTableExternalIDList.get(i) + "\n");
-							}
-						}
-						if (functionType.equals("XF300") || functionType.equals("XF390")) {
-							detailTabList = elementInto.getElementsByTagName("Detail");
-							isFound = false;
-							for (int j = 0; j < detailTabList.getLength(); j++) {
-								workElement = (org.w3c.dom.Element)detailTabList.item(j);
-								if (workElement.getAttribute("Table").equals(detailTableExternalIDList.get(i))) {
-									isFound = true;
-									break;
+						if (elementInto != null) {
+							if (functionType.equals("XF310")) {
+								if (!elementInto.getAttribute("DetailTable").equals(detailTableExternalIDList.get(i))) {
+									countOfAltered++;
+									altered.append(countOfAltered + "." + res.getString("DTLTable") + ":"
+											+ detailTableExternalIDList.get(i) + "\n");
 								}
 							}
-							if (!isFound) {
-								countOfAltered++;
-								altered.append(countOfAltered + "." + res.getString("DTLTable") + ":"
-										+ detailTableExternalIDList.get(i) + "\n");
+							if (functionType.equals("XF300") || functionType.equals("XF390")) {
+								detailTabList = elementInto.getElementsByTagName("Detail");
+								isFound = false;
+								for (int j = 0; j < detailTabList.getLength(); j++) {
+									workElement = (org.w3c.dom.Element)detailTabList.item(j);
+									if (workElement.getAttribute("Table").equals(detailTableExternalIDList.get(i))) {
+										isFound = true;
+										break;
+									}
+								}
+								if (!isFound) {
+									countOfAltered++;
+									altered.append(countOfAltered + "." + res.getString("DTLTable") + ":"
+											+ detailTableExternalIDList.get(i) + "\n");
+								}
 							}
 						}
 					}

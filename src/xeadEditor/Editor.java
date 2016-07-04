@@ -357,6 +357,8 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldSystemVariantsTable = new JTextField();
 	private JLabel jLabelSystemUserTable = new JLabel();
 	private JTextField jTextFieldSystemUserTable = new JTextField();
+	private JLabel jLabelSystemUserFilterValueTable = new JLabel();
+	private JTextField jTextFieldSystemUserFilterValueTable = new JTextField();
 	private JLabel jLabelSystemNumberingTable = new JLabel();
 	private JTextField jTextFieldSystemNumberingTable = new JTextField();
 	private JLabel jLabelSystemUserVariantsTable = new JLabel();
@@ -1001,6 +1003,8 @@ public class Editor extends JFrame {
 	private JRadioButton jRadioButtonFunction100ParmTypeKeys = new JRadioButton();
 	private JRadioButton jRadioButtonFunction100ParmTypeColumns = new JRadioButton();
 	private ButtonGroup buttonGroupFunction100ParmType = new ButtonGroup();
+	private JLabel jLabelFunction100ParmAdditional = new JLabel();
+	private JTextField jTextFieldFunction100ParmAdditional = new JTextField();
 	private JCheckBox jCheckBoxFunction100InitialListing = new JCheckBox();
 	private JLabel jLabelFunction100RowSelectionAction = new JLabel();
 	private JRadioButton jRadioButtonFunction100RowSelectionActionCall = new JRadioButton();
@@ -1130,6 +1134,8 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction100ButtonActionCallFunction = new JLabel();
 	private JTextField jTextFieldFunction100ButtonActionCallFunctionID = new JTextField();
 	private JTextField jTextFieldFunction100ButtonActionCallFunctionName = new JTextField();
+	private JLabel jLabelFunction100ButtonActionCallFunctionParm = new JLabel();
+	private JTextField jTextFieldFunction100ButtonActionCallFunctionParm = new JTextField();
 	private JLabel jLabelFunction100ButtonPositionComment = new JLabel();
 	private JScrollPane jScrollPaneFunction100UsageList = new JScrollPane();
 	private TableModelReadOnlyList tableModelFunction100UsageList = new TableModelReadOnlyList();
@@ -1387,7 +1393,7 @@ public class Editor extends JFrame {
 	private ButtonGroup buttonGroupFunction200Size = new ButtonGroup();
 	private JTextField jTextFieldFunction200SizeWidth = new JTextField();
 	private JTextField jTextFieldFunction200SizeHeight = new JTextField();
-	private JCheckBox jCheckBoxFunction200UpdateOnly = new JCheckBox();
+	//private JCheckBox jCheckBoxFunction200UpdateOnly = new JCheckBox();
 	private JCheckBox jCheckBoxFunction200ContinueAdd = new JCheckBox();
 	private JLabel jLabelFunction200InitialMsg = new JLabel();
 	private JTextField jTextFieldFunction200InitialMsg = new JTextField();
@@ -1521,6 +1527,8 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction200ButtonActionCallFunction = new JLabel();
 	private JTextField jTextFieldFunction200ButtonActionCallFunctionID = new JTextField();
 	private JTextField jTextFieldFunction200ButtonActionCallFunctionName = new JTextField();
+	private JLabel jLabelFunction200ButtonActionCallFunctionParm = new JLabel();
+	private JTextField jTextFieldFunction200ButtonActionCallFunctionParm = new JTextField();
 	private JLabel jLabelFunction200ButtonPositionComment = new JLabel();
 	//
 	private JScrollPane jScrollPaneFunction200UsageList = new JScrollPane();
@@ -1602,6 +1610,8 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction300HeaderFunctionIDCalled = new JLabel();
 	private JTextField jTextFieldFunction300HeaderFunctionIDCalled = new JTextField();
 	private JTextField jTextFieldFunction300HeaderFunctionNameCalled = new JTextField();
+	private JLabel jLabelFunction300HeaderFunctionParms = new JLabel();
+	private JTextField jTextFieldFunction300HeaderFunctionParms = new JTextField();
 	private JLabel jLabelFunction300Size = new JLabel();
 	private JRadioButton jRadioButtonFunction300SizeFull = new JRadioButton();
 	private JRadioButton jRadioButtonFunction300SizeAuto = new JRadioButton();
@@ -1695,6 +1705,8 @@ public class Editor extends JFrame {
 	private JRadioButton jRadioButtonFunction300DetailParmTypeKeys = new JRadioButton();
 	private JRadioButton jRadioButtonFunction300DetailParmTypeColumns = new JRadioButton();
 	private ButtonGroup buttonGroupFunction300DetailParmType = new ButtonGroup();
+	private JLabel jLabelFunction300DetailParmAdditional = new JLabel();
+	private JTextField jTextFieldFunction300DetailParmAdditional = new JTextField();
 	private JCheckBox jCheckBoxFunction300InitialListing = new JCheckBox();
 	private JLabel jLabelFunction300DetailRowSelectionAction = new JLabel();
 	private JRadioButton jRadioButtonFunction300DetailRowSelectionActionCall = new JRadioButton();
@@ -1819,6 +1831,8 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction300DetailButtonActionCallFunction = new JLabel();
 	private JTextField jTextFieldFunction300DetailButtonActionCallFunctionID = new JTextField();
 	private JTextField jTextFieldFunction300DetailButtonActionCallFunctionName = new JTextField();
+	private JLabel jLabelFunction300DetailButtonActionCallFunctionParm = new JLabel();
+	private JTextField jTextFieldFunction300DetailButtonActionCallFunctionParm = new JTextField();
 	private JLabel jLabelFunction300DetailButtonPositionComment = new JLabel();
 	//
 	private JScrollPane jScrollPaneFunction300UsageList = new JScrollPane();
@@ -2044,6 +2058,14 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction310ButtonAction = new JLabel();
 	private JComboBox jComboBoxFunction310ButtonAction = new JComboBox();
 	private JLabel jLabelFunction310ButtonPositionComment = new JLabel();
+	private JLabel jLabelFunction310ButtonActionCallFunction = new JLabel();
+	private JTextField jTextFieldFunction310ButtonActionCallFunctionID = new JTextField();
+	private JTextField jTextFieldFunction310ButtonActionCallFunctionName = new JTextField();
+	private JButton jButtonFunction310ButtonActionCallFunctionExchange = new JButton();
+	private String function310ButtonActionCallFunctionFieldsToPut = "";
+	private String function310ButtonActionCallFunctionFieldsToPutTo = "";
+	private String function310ButtonActionCallFunctionFieldsToGet = "";
+	private String function310ButtonActionCallFunctionFieldsToGetTo = "";
 	//
 	private JScrollPane jScrollPaneFunction310UsageList = new JScrollPane();
 	private TableModelReadOnlyList tableModelFunction310UsageList = new TableModelReadOnlyList();
@@ -2300,41 +2322,54 @@ public class Editor extends JFrame {
 	 * @return String :name of file
 	 */
 	String specifyNameOfExistingFile(String dialogTitle, String fileExtention) {
-		jFileChooser.setDialogTitle("X-TEA Editor - " + dialogTitle);
-		jFileChooser.resetChoosableFileFilters();
-		ArrayList<String> extentionList = new ArrayList<String>();
-		if (!fileExtention.equals("")) {
-			StringTokenizer workTokenizer = new StringTokenizer(fileExtention, "," );
-			while (workTokenizer.hasMoreTokens()) {
-				String extention = workTokenizer.nextToken();
-				extentionList.add(extention);
-				jFileChooser.setFileFilter(new FileNameExtensionFilter(extention, extention));
-			}
-		}
 		String name = "";
-		int reply = jFileChooser.showOpenDialog(this);
-		if (reply == JFileChooser.APPROVE_OPTION) {
-			File file = new File(jFileChooser.getSelectedFile().getPath());
-			if (getExtention(file) == null) {
-				for (int j = 0; j < extentionList.size(); j++) {
-					file = new File(jFileChooser.getSelectedFile().getPath() + "." + extentionList.get(j));
-					if (file.exists()) {
-						name = file.getPath();
-						break;
+		String osName = System.getProperty("os.name").toLowerCase();
+		if (osName.startsWith("mac")){
+			FileDialog fileDialog = new FileDialog(this);
+			fileDialog.setTitle("X-TEA Editor - " + dialogTitle);
+			fileDialog.setFile("*." + fileExtention);
+			fileDialog.setVisible(true);
+
+			String dir = fileDialog.getDirectory();
+			String fileName = fileDialog.getFile();
+			if (dir != null && fileName != null) name = dir + File.separator + fileName;
+
+		} else {
+			jFileChooser.setDialogTitle("X-TEA Editor - " + dialogTitle);
+			jFileChooser.resetChoosableFileFilters();
+			ArrayList<String> extentionList = new ArrayList<String>();
+			if (!fileExtention.equals("")) {
+				StringTokenizer workTokenizer = new StringTokenizer(fileExtention, "," );
+				while (workTokenizer.hasMoreTokens()) {
+					String extention = workTokenizer.nextToken();
+					extentionList.add(extention);
+					jFileChooser.setFileFilter(new FileNameExtensionFilter(extention, extention));
+				}
+			}
+			int reply = jFileChooser.showOpenDialog(this);
+			if (reply == JFileChooser.APPROVE_OPTION) {
+				File file = new File(jFileChooser.getSelectedFile().getPath());
+				if (getExtention(file) == null) {
+					for (int j = 0; j < extentionList.size(); j++) {
+						file = new File(jFileChooser.getSelectedFile().getPath() + "." + extentionList.get(j));
+						if (file.exists()) {
+							name = file.getPath();
+							break;
+						}
 					}
-				}
-				if (name.equals("")) {
-					JOptionPane.showMessageDialog(this, res.getString("FileSpecifiedNotFound"));
-				}
-			} else {
-				for (int j = 0; j < extentionList.size(); j++) {
-					if (getExtention(file).equals(extentionList.get(j))) {
-						name = file.getPath();
-						break;
+					if (name.equals("")) {
+						JOptionPane.showMessageDialog(this, res.getString("FileSpecifiedNotFound"));
 					}
-				}
-				if (name.equals("")) {
-					JOptionPane.showMessageDialog(this, res.getString("ExtentionInvalid"));
+				} else {
+					for (int j = 0; j < extentionList.size(); j++) {
+						if (getExtention(file).equals(extentionList.get(j))) {
+							name = file.getPath();
+							break;
+						}
+					}
+					if (name.equals("")) {
+						JOptionPane.showMessageDialog(this, res.getString("ExtentionInvalid"));
+					}
 				}
 			}
 		}
@@ -2352,27 +2387,19 @@ public class Editor extends JFrame {
 		String name = "";
 		int rtn = 0;
 
-		while (rtn != 2) {
+		String osName = System.getProperty("os.name").toLowerCase();
+		if (osName.startsWith("mac")){
+			FileDialog fileDialog = new FileDialog(this);
+			fileDialog.setTitle(dialogTitle);
+			fileDialog.setVisible(true);
 
-			if (name.equals("")) {
-				jFileChooser.setSelectedFile(new File(defaultFileName));
-				jFileChooser.resetChoosableFileFilters();
-				jFileChooser.setFileFilter(new FileNameExtensionFilter(extention, extention));
-			} else {
-				jFileChooser.setSelectedFile(new File(name));
-			}
-			jFileChooser.setDialogTitle(dialogTitle);
-			int reply = jFileChooser.showDialog(this, buttonText);
-
-			if (reply == JFileChooser.CANCEL_OPTION) {
-				name = "";
-				break;
-			}
-
-			if (reply == JFileChooser.APPROVE_OPTION) {
-				File file = new File(jFileChooser.getSelectedFile().getPath());
+			String dir = fileDialog.getDirectory();
+			String fileName = fileDialog.getFile();
+			if (dir != null && fileName != null) {
+				name = dir + File.separator + fileName;
+				File file = new File(name);
 				if (getExtention(file) == null) {
-					file = new File(jFileChooser.getSelectedFile().getPath() + "." + extention);
+					file = new File(name + "." + extention);
 				}
 				if (file.exists()) {
 					Object[] bts = {res.getString("ReplaceFile"), res.getString("SpecifyName"), res.getString("Cancel")};
@@ -2383,29 +2410,78 @@ public class Editor extends JFrame {
 							file.delete();
 							file.createNewFile();
 							name = file.getPath();
-						}
-						catch (IOException ex) {
+						} catch (IOException ex) {
 							JOptionPane.showMessageDialog(this, "Creating file has failed; Application will terminate.");
 							System.exit(0);
 						}
-						break;
 					}
 					if (rtn == 1) {
 						name = file.getPath();
-					}
-					if (rtn == 2) {
-						break;
 					}
 				} else {
 					try {
 						file.createNewFile();
 						name = file.getPath();
-					}
-					catch (IOException ex) {
+					} catch (IOException ex) {
 						JOptionPane.showMessageDialog(this, "Creating file has failed; Application will terminate.");
 						System.exit(0);
 					}
+				}
+			}
+
+		} else {
+			while (rtn != 2) {
+				if (name.equals("")) {
+					jFileChooser.setSelectedFile(new File(defaultFileName));
+					jFileChooser.resetChoosableFileFilters();
+					jFileChooser.setFileFilter(new FileNameExtensionFilter(extention, extention));
+				} else {
+					jFileChooser.setSelectedFile(new File(name));
+				}
+				jFileChooser.setDialogTitle(dialogTitle);
+				int reply = jFileChooser.showDialog(this, buttonText);
+
+				if (reply == JFileChooser.CANCEL_OPTION) {
+					name = "";
 					break;
+				}
+
+				if (reply == JFileChooser.APPROVE_OPTION) {
+					File file = new File(jFileChooser.getSelectedFile().getPath());
+					if (getExtention(file) == null) {
+						file = new File(jFileChooser.getSelectedFile().getPath() + "." + extention);
+					}
+					if (file.exists()) {
+						Object[] bts = {res.getString("ReplaceFile"), res.getString("SpecifyName"), res.getString("Cancel")};
+						rtn = JOptionPane.showOptionDialog(this, res.getString("AskIfReplacing"),
+								res.getString("SelectContent"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
+						if (rtn == 0) {
+							try {
+								file.delete();
+								file.createNewFile();
+								name = file.getPath();
+							} catch (IOException ex) {
+								JOptionPane.showMessageDialog(this, "Creating file has failed; Application will terminate.");
+								System.exit(0);
+							}
+							break;
+						}
+						if (rtn == 1) {
+							name = file.getPath();
+						}
+						if (rtn == 2) {
+							break;
+						}
+					} else {
+						try {
+							file.createNewFile();
+							name = file.getPath();
+						} catch (IOException ex) {
+							JOptionPane.showMessageDialog(this, "Creating file has failed; Application will terminate.");
+							System.exit(0);
+						}
+						break;
+					}
 				}
 			}
 		}
@@ -3363,62 +3439,69 @@ public class Editor extends JFrame {
 		jLabelSystemUserTable.setBounds(new Rectangle(230, 90, 130, 18));
 		jTextFieldSystemUserTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldSystemUserTable.setBounds(new Rectangle(365, 87, 80, 25));
+		jLabelSystemUserFilterValueTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelSystemUserFilterValueTable.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelSystemUserFilterValueTable.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelSystemUserFilterValueTable.setText(res.getString("SystemUserFilterValue"));
+		jLabelSystemUserFilterValueTable.setBounds(new Rectangle(455, 90, 130, 18));
+		jTextFieldSystemUserFilterValueTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemUserFilterValueTable.setBounds(new Rectangle(590, 87, 80, 25));
 		jLabelSystemNumberingTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemNumberingTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemNumberingTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemNumberingTable.setText(res.getString("SystemNumbering"));
-		jLabelSystemNumberingTable.setBounds(new Rectangle(455, 90, 130, 18));
+		jLabelSystemNumberingTable.setBounds(new Rectangle(680, 90, 130, 18));
 		jTextFieldSystemNumberingTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemNumberingTable.setBounds(new Rectangle(590, 87, 80, 25));
+		jTextFieldSystemNumberingTable.setBounds(new Rectangle(815, 87, 80, 25));
 		jLabelSystemUserVariantsTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemUserVariantsTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemUserVariantsTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemUserVariantsTable.setText(res.getString("SystemUserVariants"));
-		jLabelSystemUserVariantsTable.setBounds(new Rectangle(680, 90, 130, 18));
+		jLabelSystemUserVariantsTable.setBounds(new Rectangle(905, 90, 130, 18));
 		jTextFieldSystemUserVariantsTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemUserVariantsTable.setBounds(new Rectangle(815, 87, 80, 25));
+		jTextFieldSystemUserVariantsTable.setBounds(new Rectangle(1040, 87, 80, 25));
 		jLabelSystemSessionTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemSessionTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSessionTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemSessionTable.setText(res.getString("SystemSession"));
-		jLabelSystemSessionTable.setBounds(new Rectangle(905, 90, 130, 15));
+		jLabelSystemSessionTable.setBounds(new Rectangle(5, 121, 130, 15));
 		jTextFieldSystemSessionTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemSessionTable.setBounds(new Rectangle(1040, 87, 80, 25));
+		jTextFieldSystemSessionTable.setBounds(new Rectangle(140, 118, 80, 25));
 		jLabelSystemSessionDetailTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemSessionDetailTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSessionDetailTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemSessionDetailTable.setText(res.getString("SystemSessionDetail"));
-		jLabelSystemSessionDetailTable.setBounds(new Rectangle(5, 121, 130, 18));
+		jLabelSystemSessionDetailTable.setBounds(new Rectangle(230, 121, 130, 18));
 		jTextFieldSystemSessionDetailTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemSessionDetailTable.setBounds(new Rectangle(140, 118, 80, 25));
+		jTextFieldSystemSessionDetailTable.setBounds(new Rectangle(365, 118, 80, 25));
 		jLabelSystemTaxTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemTaxTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemTaxTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemTaxTable.setText(res.getString("SystemTax"));
-		jLabelSystemTaxTable.setBounds(new Rectangle(230, 121, 130, 18));
+		jLabelSystemTaxTable.setBounds(new Rectangle(455, 121, 130, 18));
 		jTextFieldSystemTaxTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemTaxTable.setBounds(new Rectangle(365, 118, 80, 25));
+		jTextFieldSystemTaxTable.setBounds(new Rectangle(590, 118, 80, 25));
 		jLabelSystemCalendarTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemCalendarTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemCalendarTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemCalendarTable.setText(res.getString("SystemCalendar"));
-		jLabelSystemCalendarTable.setBounds(new Rectangle(455, 121, 130, 18));
+		jLabelSystemCalendarTable.setBounds(new Rectangle(680, 121, 130, 18));
 		jTextFieldSystemCalendarTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemCalendarTable.setBounds(new Rectangle(590, 118, 80, 25));
+		jTextFieldSystemCalendarTable.setBounds(new Rectangle(815, 118, 80, 25));
 		jLabelSystemExchangeRateAnnualTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemExchangeRateAnnualTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemExchangeRateAnnualTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemExchangeRateAnnualTable.setText(res.getString("SystemExchangeRateAnnual"));
-		jLabelSystemExchangeRateAnnualTable.setBounds(new Rectangle(680, 121, 130, 18));
+		jLabelSystemExchangeRateAnnualTable.setBounds(new Rectangle(905, 121, 130, 18));
 		jTextFieldSystemExchangeRateAnnualTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemExchangeRateAnnualTable.setBounds(new Rectangle(815, 118, 80, 25));
+		jTextFieldSystemExchangeRateAnnualTable.setBounds(new Rectangle(1040, 118, 80, 25));
 		jLabelSystemExchangeRateMonthlyTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemExchangeRateMonthlyTable.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemExchangeRateMonthlyTable.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemExchangeRateMonthlyTable.setText(res.getString("SystemExchangeRateMonthly"));
-		jLabelSystemExchangeRateMonthlyTable.setBounds(new Rectangle(905, 121, 130, 18));
+		jLabelSystemExchangeRateMonthlyTable.setBounds(new Rectangle(1130, 121, 130, 18));
 		jTextFieldSystemExchangeRateMonthlyTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemExchangeRateMonthlyTable.setBounds(new Rectangle(1040, 118, 80, 25));
+		jTextFieldSystemExchangeRateMonthlyTable.setBounds(new Rectangle(1265, 118, 80, 25));
 		jPanelSystemConfigTop.setPreferredSize(new Dimension(1150, 154));
 		jPanelSystemConfigTop.add(jLabelSystemAppServerName);
 		jPanelSystemConfigTop.add(jTextFieldSystemAppServerName);
@@ -3434,6 +3517,8 @@ public class Editor extends JFrame {
 		jPanelSystemConfigTop.add(jTextFieldSystemVariantsTable);
 		jPanelSystemConfigTop.add(jLabelSystemUserTable);
 		jPanelSystemConfigTop.add(jTextFieldSystemUserTable);
+		jPanelSystemConfigTop.add(jLabelSystemUserFilterValueTable);
+		jPanelSystemConfigTop.add(jTextFieldSystemUserFilterValueTable);
 		jPanelSystemConfigTop.add(jLabelSystemNumberingTable);
 		jPanelSystemConfigTop.add(jTextFieldSystemNumberingTable);
 		jPanelSystemConfigTop.add(jLabelSystemUserVariantsTable);
@@ -5652,7 +5737,7 @@ public class Editor extends JFrame {
 		jScrollPaneFunction100Top.setBorder(null);
 		jScrollPaneFunction100Top.getViewport().add(jPanelFunction100Top);
 		jPanelFunction100Top.setBorder(BorderFactory.createEtchedBorder());
-		jPanelFunction100Top.setPreferredSize(new Dimension(1170, 229));
+		jPanelFunction100Top.setPreferredSize(new Dimension(1260, 229));
 		jPanelFunction100Top.setToolTipText("");
 		jPanelFunction100Top.setLayout(null);
 		//
@@ -5733,22 +5818,30 @@ public class Editor extends JFrame {
 		jTextFieldFunction100FunctionIDCalled.setBounds(new Rectangle(410, 133, 110, 25));
 		jTextFieldFunction100FunctionIDCalled.addKeyListener(new Editor_jTextFieldFunction100FunctionIDCalled_keyAdapter(this));
 		jTextFieldFunction100FunctionNameCalled.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction100FunctionNameCalled.setBounds(new Rectangle(525, 133, 315, 25));
+		jTextFieldFunction100FunctionNameCalled.setBounds(new Rectangle(525, 133, 215, 25));
 		jTextFieldFunction100FunctionNameCalled.setEditable(false);
 		jLabelFunction100ParmType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100ParmType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100ParmType.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction100ParmType.setText(res.getString("Parameters"));
-		jLabelFunction100ParmType.setBounds(new Rectangle(850, 136, 100, 20));
+		//jLabelFunction100ParmType.setText(res.getString("Parameters"));
+		jLabelFunction100ParmType.setText("With");
+		jLabelFunction100ParmType.setBounds(new Rectangle(750, 136, 40, 20));
 		jRadioButtonFunction100ParmTypeKeys.setText("KEYS");
 		jRadioButtonFunction100ParmTypeKeys.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jRadioButtonFunction100ParmTypeKeys.setBounds(new Rectangle(955, 133, 90, 25));
+		jRadioButtonFunction100ParmTypeKeys.setBounds(new Rectangle(795, 133, 90, 25));
 		jRadioButtonFunction100ParmTypeColumns.setText("COLUMNS");
 		jRadioButtonFunction100ParmTypeColumns.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jRadioButtonFunction100ParmTypeColumns.setBounds(new Rectangle(1045, 133, 120, 25));
+		jRadioButtonFunction100ParmTypeColumns.setBounds(new Rectangle(885, 133, 120, 25));
 		jRadioButtonFunction100ParmTypeColumns.addChangeListener(new Editor_jRadioButtonFunction100RowSelectionAction_changeAdapter(this));
 		buttonGroupFunction100ParmType.add(jRadioButtonFunction100ParmTypeKeys);
 		buttonGroupFunction100ParmType.add(jRadioButtonFunction100ParmTypeColumns);
+		jLabelFunction100ParmAdditional.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelFunction100ParmAdditional.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction100ParmAdditional.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction100ParmAdditional.setText("And");
+		jLabelFunction100ParmAdditional.setBounds(new Rectangle(1010, 136, 40, 20));
+		jTextFieldFunction100ParmAdditional.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100ParmAdditional.setBounds(new Rectangle(1055, 133, 200, 25));
 		//
 		jLabelFunction100Size.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100Size.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -5812,6 +5905,8 @@ public class Editor extends JFrame {
 		jPanelFunction100Top.add(jLabelFunction100ParmType);
 		jPanelFunction100Top.add(jRadioButtonFunction100ParmTypeKeys);
 		jPanelFunction100Top.add(jRadioButtonFunction100ParmTypeColumns);
+		jPanelFunction100Top.add(jLabelFunction100ParmAdditional);
+		jPanelFunction100Top.add(jTextFieldFunction100ParmAdditional);
 		jPanelFunction100Top.add(jCheckBoxFunction100InitialListing);
 		jPanelFunction100Top.add(jLabelFunction100RowSelectionAction);
 		jPanelFunction100Top.add(jRadioButtonFunction100RowSelectionActionReturn);
@@ -6353,8 +6448,15 @@ public class Editor extends JFrame {
 		jTextFieldFunction100ButtonActionCallFunctionID.setBounds(new Rectangle(550, 40, 120, 25));
 		jTextFieldFunction100ButtonActionCallFunctionID.addKeyListener(new Editor_jTextFieldFunction100ButtonActionCallFunctionID_keyAdapter(this));
 		jTextFieldFunction100ButtonActionCallFunctionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction100ButtonActionCallFunctionName.setBounds(new Rectangle(675, 40, 400, 25));
+		jTextFieldFunction100ButtonActionCallFunctionName.setBounds(new Rectangle(675, 40, 300, 25));
 		jTextFieldFunction100ButtonActionCallFunctionName.setEditable(false);
+		jLabelFunction100ButtonActionCallFunctionParm.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelFunction100ButtonActionCallFunctionParm.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction100ButtonActionCallFunctionParm.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction100ButtonActionCallFunctionParm.setText("With");
+		jLabelFunction100ButtonActionCallFunctionParm.setBounds(new Rectangle(980, 43, 40, 20));
+		jTextFieldFunction100ButtonActionCallFunctionParm.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction100ButtonActionCallFunctionParm.setBounds(new Rectangle(1025, 40, 200, 25));
 		//
 		jPanelFunction100ButtonDefinition.setLayout(null);
 		jPanelFunction100ButtonDefinition.setPreferredSize(new Dimension(100, 72));
@@ -6371,6 +6473,8 @@ public class Editor extends JFrame {
 		jPanelFunction100ButtonDefinition.add(jLabelFunction100ButtonActionCallFunction);
 		jPanelFunction100ButtonDefinition.add(jTextFieldFunction100ButtonActionCallFunctionID);
 		jPanelFunction100ButtonDefinition.add(jTextFieldFunction100ButtonActionCallFunctionName);
+		jPanelFunction100ButtonDefinition.add(jLabelFunction100ButtonActionCallFunctionParm);
+		jPanelFunction100ButtonDefinition.add(jTextFieldFunction100ButtonActionCallFunctionParm);
 		//
 		jScrollPaneFunction100UsageList.setBorder(null);
 		jScrollPaneFunction100UsageList.getViewport().add(jTableFunction100UsageList, null);
@@ -7511,10 +7615,10 @@ public class Editor extends JFrame {
 		jTextFieldFunction200SizeWidth.setBounds(new Rectangle(560, 133, 60, 25));
 		jTextFieldFunction200SizeHeight.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldFunction200SizeHeight.setBounds(new Rectangle(625, 133, 60, 25));
-		jCheckBoxFunction200UpdateOnly.setText(res.getString("CheckUpdateOnly"));
-		jCheckBoxFunction200UpdateOnly.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jCheckBoxFunction200UpdateOnly.setBounds(new Rectangle(705, 133, 150, 25));
-		jCheckBoxFunction200UpdateOnly.addChangeListener(new Editor_jCheckBoxFunction200UpdateOnly_changeAdapter(this));
+//		jCheckBoxFunction200UpdateOnly.setText(res.getString("CheckUpdateOnly"));
+//		jCheckBoxFunction200UpdateOnly.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+//		jCheckBoxFunction200UpdateOnly.setBounds(new Rectangle(705, 133, 150, 25));
+//		jCheckBoxFunction200UpdateOnly.addChangeListener(new Editor_jCheckBoxFunction200UpdateOnly_changeAdapter(this));
 		//
 		jLabelFunction200InitialMsg.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200InitialMsg.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -7545,7 +7649,7 @@ public class Editor extends JFrame {
 		jPanelFunction200Top.add(jRadioButtonFunction200SizeSpecify);
 		jPanelFunction200Top.add(jTextFieldFunction200SizeWidth);
 		jPanelFunction200Top.add(jTextFieldFunction200SizeHeight);
-		jPanelFunction200Top.add(jCheckBoxFunction200UpdateOnly);
+//		jPanelFunction200Top.add(jCheckBoxFunction200UpdateOnly);
 		jPanelFunction200Top.add(jCheckBoxFunction200ContinueAdd);
 		jPanelFunction200Top.add(jLabelFunction200InitialMsg);
 		jPanelFunction200Top.add(jTextFieldFunction200InitialMsg);
@@ -8152,8 +8256,15 @@ public class Editor extends JFrame {
 		jTextFieldFunction200ButtonActionCallFunctionID.setBounds(new Rectangle(550, 40, 120, 25));
 		jTextFieldFunction200ButtonActionCallFunctionID.addKeyListener(new Editor_jTextFieldFunction200ButtonActionCallFunctionID_keyAdapter(this));
 		jTextFieldFunction200ButtonActionCallFunctionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction200ButtonActionCallFunctionName.setBounds(new Rectangle(675, 40, 400, 25));
+		jTextFieldFunction200ButtonActionCallFunctionName.setBounds(new Rectangle(675, 40, 300, 25));
 		jTextFieldFunction200ButtonActionCallFunctionName.setEditable(false);
+		jLabelFunction200ButtonActionCallFunctionParm.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelFunction200ButtonActionCallFunctionParm.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction200ButtonActionCallFunctionParm.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction200ButtonActionCallFunctionParm.setText("With");
+		jLabelFunction200ButtonActionCallFunctionParm.setBounds(new Rectangle(980, 43, 40, 20));
+		jTextFieldFunction200ButtonActionCallFunctionParm.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200ButtonActionCallFunctionParm.setBounds(new Rectangle(1025, 40, 200, 25));
 		//
 		jPanelFunction200ButtonDefinition.setPreferredSize(new Dimension(100,74));
 		jPanelFunction200ButtonDefinition.setLayout(null);
@@ -8170,6 +8281,8 @@ public class Editor extends JFrame {
 		jPanelFunction200ButtonDefinition.add(jLabelFunction200ButtonActionCallFunction);
 		jPanelFunction200ButtonDefinition.add(jTextFieldFunction200ButtonActionCallFunctionID);
 		jPanelFunction200ButtonDefinition.add(jTextFieldFunction200ButtonActionCallFunctionName);
+		jPanelFunction200ButtonDefinition.add(jLabelFunction200ButtonActionCallFunctionParm);
+		jPanelFunction200ButtonDefinition.add(jTextFieldFunction200ButtonActionCallFunctionParm);
 		//
 		jScrollPaneFunction200UsageList.setBorder(null);
 		jScrollPaneFunction200UsageList.getViewport().add(jTableFunction200UsageList, null);
@@ -8587,6 +8700,13 @@ public class Editor extends JFrame {
 		jTextFieldFunction300HeaderFunctionNameCalled.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldFunction300HeaderFunctionNameCalled.setBounds(new Rectangle(265, 103, 355, 25));
 		jTextFieldFunction300HeaderFunctionNameCalled.setEditable(false);
+		jLabelFunction300HeaderFunctionParms.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelFunction300HeaderFunctionParms.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction300HeaderFunctionParms.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction300HeaderFunctionParms.setText("With");
+		jLabelFunction300HeaderFunctionParms.setBounds(new Rectangle(625, 105, 40, 20));
+		jTextFieldFunction300HeaderFunctionParms.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300HeaderFunctionParms.setBounds(new Rectangle(670, 103, 200, 25));
 		//
 		jLabelFunction300Size.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300Size.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -8626,6 +8746,8 @@ public class Editor extends JFrame {
 		jPanelFunction300Top.add(jLabelFunction300HeaderFunctionIDCalled);
 		jPanelFunction300Top.add(jTextFieldFunction300HeaderFunctionIDCalled);
 		jPanelFunction300Top.add(jTextFieldFunction300HeaderFunctionNameCalled);
+		jPanelFunction300Top.add(jLabelFunction300HeaderFunctionParms);
+		jPanelFunction300Top.add(jTextFieldFunction300HeaderFunctionParms);
 		jPanelFunction300Top.add(jLabelFunction300Size);
 		jPanelFunction300Top.add(jRadioButtonFunction300SizeFull);
 		jPanelFunction300Top.add(jRadioButtonFunction300SizeAuto);
@@ -8890,22 +9012,30 @@ public class Editor extends JFrame {
 		jTextFieldFunction300DetailFunctionIDCalled.setBounds(new Rectangle(410, 133, 110, 25));
 		jTextFieldFunction300DetailFunctionIDCalled.addKeyListener(new Editor_jTextFieldFunction300DetailFunctionIDCalled_keyAdapter(this));
 		jTextFieldFunction300DetailFunctionNameCalled.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction300DetailFunctionNameCalled.setBounds(new Rectangle(525, 133, 315, 25));
+		jTextFieldFunction300DetailFunctionNameCalled.setBounds(new Rectangle(525, 133, 215, 25));
 		jTextFieldFunction300DetailFunctionNameCalled.setEditable(false);
 		jLabelFunction300DetailParmType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailParmType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailParmType.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction300DetailParmType.setText(res.getString("Parameters"));
-		jLabelFunction300DetailParmType.setBounds(new Rectangle(850, 136, 100, 20));
+		//jLabelFunction300DetailParmType.setText(res.getString("Parameters"));
+		jLabelFunction300DetailParmType.setText("With");
+		jLabelFunction300DetailParmType.setBounds(new Rectangle(750, 136, 40, 20));
 		jRadioButtonFunction300DetailParmTypeKeys.setText("KEYS");
 		jRadioButtonFunction300DetailParmTypeKeys.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jRadioButtonFunction300DetailParmTypeKeys.setBounds(new Rectangle(955, 133, 90, 25));
+		jRadioButtonFunction300DetailParmTypeKeys.setBounds(new Rectangle(795, 133, 90, 25));
 		jRadioButtonFunction300DetailParmTypeColumns.setText("COLUMNS");
 		jRadioButtonFunction300DetailParmTypeColumns.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jRadioButtonFunction300DetailParmTypeColumns.setBounds(new Rectangle(1045, 133, 120, 25));
+		jRadioButtonFunction300DetailParmTypeColumns.setBounds(new Rectangle(890, 133, 115, 25));
 		jRadioButtonFunction300DetailParmTypeColumns.addChangeListener(new Editor_jRadioButtonFunction300DetailRowSelectionAction_changeAdapter(this));
 		buttonGroupFunction300DetailParmType.add(jRadioButtonFunction300DetailParmTypeKeys);
 		buttonGroupFunction300DetailParmType.add(jRadioButtonFunction300DetailParmTypeColumns);
+		jLabelFunction300DetailParmAdditional.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelFunction300DetailParmAdditional.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction300DetailParmAdditional.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction300DetailParmAdditional.setText("And");
+		jLabelFunction300DetailParmAdditional.setBounds(new Rectangle(1010, 136, 40, 20));
+		jTextFieldFunction300DetailParmAdditional.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailParmAdditional.setBounds(new Rectangle(1055, 133, 200, 25));
 		//
 		jPanelFunction300DetailListTop.add(jLabelFunction300DetailCaption);
 		jPanelFunction300DetailListTop.add(jTextFieldFunction300DetailCaption);
@@ -8922,6 +9052,8 @@ public class Editor extends JFrame {
 		jPanelFunction300DetailListTop.add(jLabelFunction300DetailParmType);
 		jPanelFunction300DetailListTop.add(jRadioButtonFunction300DetailParmTypeKeys);
 		jPanelFunction300DetailListTop.add(jRadioButtonFunction300DetailParmTypeColumns);
+		jPanelFunction300DetailListTop.add(jLabelFunction300DetailParmAdditional);
+		jPanelFunction300DetailListTop.add(jTextFieldFunction300DetailParmAdditional);
 		jPanelFunction300DetailListTop.add(jCheckBoxFunction300InitialListing);
 		jPanelFunction300DetailListTop.add(jLabelFunction300DetailRowSelectionAction);
 		jPanelFunction300DetailListTop.add(jRadioButtonFunction300DetailRowSelectionActionReturn);
@@ -9483,8 +9615,15 @@ public class Editor extends JFrame {
 		jTextFieldFunction300DetailButtonActionCallFunctionID.setBounds(new Rectangle(550, 40, 120, 25));
 		jTextFieldFunction300DetailButtonActionCallFunctionID.addKeyListener(new Editor_jTextFieldFunction300DetailButtonActionCallFunctionID_keyAdapter(this));
 		jTextFieldFunction300DetailButtonActionCallFunctionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction300DetailButtonActionCallFunctionName.setBounds(new Rectangle(675, 40, 400, 25));
+		jTextFieldFunction300DetailButtonActionCallFunctionName.setBounds(new Rectangle(675, 40, 300, 25));
 		jTextFieldFunction300DetailButtonActionCallFunctionName.setEditable(false);
+		jLabelFunction300DetailButtonActionCallFunctionParm.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelFunction300DetailButtonActionCallFunctionParm.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction300DetailButtonActionCallFunctionParm.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction300DetailButtonActionCallFunctionParm.setText("With");
+		jLabelFunction300DetailButtonActionCallFunctionParm.setBounds(new Rectangle(980, 43, 40, 20));
+		jTextFieldFunction300DetailButtonActionCallFunctionParm.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300DetailButtonActionCallFunctionParm.setBounds(new Rectangle(1025, 40, 200, 25));
 		//
 		jPanelFunction300DetailButtonDefinition.setPreferredSize(new Dimension(100, 74));
 		jPanelFunction300DetailButtonDefinition.setLayout(null);
@@ -9501,6 +9640,8 @@ public class Editor extends JFrame {
 		jPanelFunction300DetailButtonDefinition.add(jLabelFunction300DetailButtonActionCallFunction);
 		jPanelFunction300DetailButtonDefinition.add(jTextFieldFunction300DetailButtonActionCallFunctionID);
 		jPanelFunction300DetailButtonDefinition.add(jTextFieldFunction300DetailButtonActionCallFunctionName);
+		jPanelFunction300DetailButtonDefinition.add(jLabelFunction300DetailButtonActionCallFunctionParm);
+		jPanelFunction300DetailButtonDefinition.add(jTextFieldFunction300DetailButtonActionCallFunctionParm);
 		//
 		jTabbedPaneFunction300DetailList.setBorder(null);
 		jTabbedPaneFunction300DetailList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
@@ -10608,11 +10749,29 @@ public class Editor extends JFrame {
 		jComboBoxFunction310ButtonAction.setEditable(false);
 		jComboBoxFunction310ButtonAction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jComboBoxFunction310ButtonAction.setBounds(new Rectangle(140, 40, 265, 25));
+		jComboBoxFunction310ButtonAction.addActionListener(new Editor_jComboBoxFunction310ButtonAction_actionAdapter(this));
 		jComboBoxFunction310ButtonAction.addItem(res.getString("ActionExit"));
 		jComboBoxFunction310ButtonAction.addItem(res.getString("ActionAddRows"));
+		jComboBoxFunction310ButtonAction.addItem(res.getString("ActionCallToAddRows"));
 		jComboBoxFunction310ButtonAction.addItem(res.getString("ActionRemoveRow"));
 		jComboBoxFunction310ButtonAction.addItem(res.getString("ActionUpdate"));
+		jComboBoxFunction310ButtonAction.addItem(res.getString("ActionDeleteHDR"));
 		jComboBoxFunction310ButtonAction.addItem(res.getString("ActionOutputEXCEL"));
+		jLabelFunction310ButtonActionCallFunction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelFunction310ButtonActionCallFunction.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction310ButtonActionCallFunction.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction310ButtonActionCallFunction.setText(res.getString("FunctionID"));
+		jLabelFunction310ButtonActionCallFunction.setBounds(new Rectangle(415, 43, 130, 20));
+		jTextFieldFunction310ButtonActionCallFunctionID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310ButtonActionCallFunctionID.setBounds(new Rectangle(550, 40, 120, 25));
+		jTextFieldFunction310ButtonActionCallFunctionID.addKeyListener(new Editor_jTextFieldFunction310ButtonActionCallFunctionID_keyAdapter(this));
+		jTextFieldFunction310ButtonActionCallFunctionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310ButtonActionCallFunctionName.setBounds(new Rectangle(675, 40, 300, 25));
+		jTextFieldFunction310ButtonActionCallFunctionName.setEditable(false);
+		jButtonFunction310ButtonActionCallFunctionExchange.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jButtonFunction310ButtonActionCallFunctionExchange.setText(res.getString("ExchangeParms"));
+		jButtonFunction310ButtonActionCallFunctionExchange.setBounds(new Rectangle(975, 40, 100, 25));
+		jButtonFunction310ButtonActionCallFunctionExchange.addActionListener(new Editor_jButtonToEditPromptOptionCallFunctionExchange_actionAdapter(this));
 		//
 		jPanelFunction310ButtonDefinition.setPreferredSize(new Dimension(100, 74));
 		jPanelFunction310ButtonDefinition.setLayout(null);
@@ -10626,6 +10785,10 @@ public class Editor extends JFrame {
 		jPanelFunction310ButtonDefinition.add(jTextFieldFunction310ButtonCaption);
 		jPanelFunction310ButtonDefinition.add(jLabelFunction310ButtonAction);
 		jPanelFunction310ButtonDefinition.add(jComboBoxFunction310ButtonAction);
+		jPanelFunction310ButtonDefinition.add(jLabelFunction310ButtonActionCallFunction);
+		jPanelFunction310ButtonDefinition.add(jTextFieldFunction310ButtonActionCallFunctionID);
+		jPanelFunction310ButtonDefinition.add(jTextFieldFunction310ButtonActionCallFunctionName);
+		jPanelFunction310ButtonDefinition.add(jButtonFunction310ButtonActionCallFunctionExchange);
 		//
 		jTabbedPaneFunction310.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTabbedPaneFunction310.add(res.getString("HDRFields"), jPanelFunction310HeaderFieldList);
@@ -12545,6 +12708,7 @@ public class Editor extends JFrame {
     private boolean isSystemControlTable(String tableID) {
     	if (jTextFieldSystemVariantsTable.getText().equals(tableID)
     			|| jTextFieldSystemUserTable.getText().equals(tableID)
+    			|| jTextFieldSystemUserFilterValueTable.getText().equals(tableID)
     			|| jTextFieldSystemNumberingTable.getText().equals(tableID)
     			|| jTextFieldSystemUserVariantsTable.getText().equals(tableID)
     			|| jTextFieldSystemSessionTable.getText().equals(tableID)
@@ -12678,11 +12842,19 @@ public class Editor extends JFrame {
     	if (action.length() >= 7 && action.substring(0, 7).equals("ADD_ROW")) {
     		descriptions = res.getString("ActionAddRows");
     	}
+    	if (action.length() >= 11 && action.substring(0, 11).equals("CALL_TO_ADD")) {
+			int pos = action.indexOf(")");
+			String wrkStr = action.substring(12, pos);
+    		descriptions = res.getString("ActionCallToAddRows") + "(" + wrkStr + ")";
+    	}
     	if (action.length() >= 10 && action.substring(0, 10).equals("REMOVE_ROW")) {
     		descriptions = res.getString("ActionRemoveRow");
     	}
     	if (action.length() >= 6 && action.substring(0, 6).equals("UPDATE")) {
     		descriptions = res.getString("ActionUpdate");
+    	}
+    	if (action.length() >= 6 && action.substring(0, 6).equals("DELETE")) {
+    		descriptions = res.getString("ActionDeleteHDR");
     	}
     	if (action.length() >= 6 && action.substring(0, 6).equals("OUTPUT")) {
     		descriptions = res.getString("ActionOutputEXCEL");
@@ -15854,6 +16026,7 @@ public class Editor extends JFrame {
 			}
 			jTextFieldSystemVariantsTable.setText(domNode_.getAttribute("VariantsTable"));
 			jTextFieldSystemUserTable.setText(domNode_.getAttribute("UserTable"));
+			jTextFieldSystemUserFilterValueTable.setText(domNode_.getAttribute("UserFilterValueTable"));
 			jTextFieldSystemNumberingTable.setText(domNode_.getAttribute("NumberingTable"));
 			jTextFieldSystemUserVariantsTable.setText(domNode_.getAttribute("UserVariantsTable"));
 			jTextFieldSystemSessionTable.setText(domNode_.getAttribute("SessionTable"));
@@ -16888,6 +17061,11 @@ public class Editor extends JFrame {
 					}
 				}
 			}
+			if (domNode_.getAttribute("ParmAdditional").equals("")) {
+				jTextFieldFunction100ParmAdditional.setText("*None");
+			} else {
+				jTextFieldFunction100ParmAdditional.setText(domNode_.getAttribute("ParmAdditional"));
+			}
 			//
 			if (domNode_.getAttribute("InitialListing").equals("T")) {
 				jCheckBoxFunction100InitialListing.setSelected(true);
@@ -17464,11 +17642,11 @@ public class Editor extends JFrame {
 	        	jCheckBoxFunction200ContinueAdd.setEnabled(false);
 			}
 			//
-			if (domNode_.getAttribute("UpdateOnly").equals("T")) {
-	        	jCheckBoxFunction200UpdateOnly.setSelected(true);
-			} else {
-	        	jCheckBoxFunction200UpdateOnly.setSelected(false);
-			}
+//			if (domNode_.getAttribute("UpdateOnly").equals("T")) {
+//	        	jCheckBoxFunction200UpdateOnly.setSelected(true);
+//			} else {
+//	        	jCheckBoxFunction200UpdateOnly.setSelected(false);
+//			}
 			//
 			jTextFieldFunction200SizeWidth.setText("");
 			jTextFieldFunction200SizeHeight.setText("");
@@ -17868,6 +18046,11 @@ public class Editor extends JFrame {
 		        } else {
 					jTextFieldFunction300HeaderFunctionNameCalled.setText(functionNode.getElement().getAttribute("Name"));
 		        }
+			}
+			if (domNode_.getAttribute("HeaderParmAdditional").equals("")) {
+				jTextFieldFunction300HeaderFunctionParms.setText("*None");
+			} else {
+				jTextFieldFunction300HeaderFunctionParms.setText(domNode_.getAttribute("HeaderParmAdditional"));
 			}
 			//
 			jTextFieldFunction300SizeWidth.setText("");
@@ -18844,6 +19027,7 @@ public class Editor extends JFrame {
 				domNode_.setAttribute("EditorUserPassword", oldElement.getAttribute("EditorUserPassword"));
 				domNode_.setAttribute("VariantsTable", oldElement.getAttribute("VariantsTable"));
 				domNode_.setAttribute("UserTable", oldElement.getAttribute("UserTable"));
+				domNode_.setAttribute("UserFilterValueTable", oldElement.getAttribute("UserFilterValueTable"));
 				domNode_.setAttribute("NumberingTable", oldElement.getAttribute("NumberingTable"));
 				domNode_.setAttribute("UserVariantsTable", oldElement.getAttribute("UserVariantsTable"));
 				domNode_.setAttribute("SessionTable", oldElement.getAttribute("SessionTable"));
@@ -18971,6 +19155,7 @@ public class Editor extends JFrame {
 				domNode_.setAttribute("EditorUserPassword", newElement.getAttribute("EditorUserPassword"));
 				domNode_.setAttribute("VariantsTable", newElement.getAttribute("VariantsTable"));
 				domNode_.setAttribute("UserTable", newElement.getAttribute("UserTable"));
+				domNode_.setAttribute("UserFilterValueTable", newElement.getAttribute("UserFilterValueTable"));
 				domNode_.setAttribute("NumberingTable", newElement.getAttribute("NumberingTable"));
 				domNode_.setAttribute("UserVariantsTable", newElement.getAttribute("UserVariantsTable"));
 				domNode_.setAttribute("SessionTable", newElement.getAttribute("SessionTable"));
@@ -19194,6 +19379,9 @@ public class Editor extends JFrame {
 			if (!domNode_.getAttribute("UserTable").equals(jTextFieldSystemUserTable.getText())) {
 				valueOfFieldsChanged = true;
 			}
+			if (!domNode_.getAttribute("UserFilterValueTable").equals(jTextFieldSystemUserFilterValueTable.getText())) {
+				valueOfFieldsChanged = true;
+			}
 			if (!domNode_.getAttribute("NumberingTable").equals(jTextFieldSystemNumberingTable.getText())) {
 				valueOfFieldsChanged = true;
 			}
@@ -19342,6 +19530,7 @@ public class Editor extends JFrame {
 				//
 				domNode_.setAttribute("VariantsTable", jTextFieldSystemVariantsTable.getText());
 				domNode_.setAttribute("UserTable", jTextFieldSystemUserTable.getText());
+				domNode_.setAttribute("UserFilterValueTable", jTextFieldSystemUserFilterValueTable.getText());
 				domNode_.setAttribute("NumberingTable", jTextFieldSystemNumberingTable.getText());
 				domNode_.setAttribute("UserVariantsTable", jTextFieldSystemUserVariantsTable.getText());
 				domNode_.setAttribute("SessionTable", jTextFieldSystemSessionTable.getText());
@@ -20585,6 +20774,19 @@ public class Editor extends JFrame {
 				}
 			}
 			//
+			String wrkStr = jTextFieldFunction100ParmAdditional.getText();
+			if (wrkStr.equals("") || wrkStr.toUpperCase().equals("*NONE")) {
+				if (!domNode_.getAttribute("ParmAdditional").equals("")) {
+					valueOfFieldsChanged = true;
+					domNode_.setAttribute("ParmAdditional", "");
+				}
+			} else {
+				if (!wrkStr.equals(domNode_.getAttribute("ParmAdditional"))) {
+					valueOfFieldsChanged = true;
+					domNode_.setAttribute("ParmAdditional", wrkStr);
+				}
+			}
+			//
 			if (domNode_.getAttribute("InitialListing").equals("T")) {
 				if (!jCheckBoxFunction100InitialListing.isSelected()) {
 					valueOfFieldsChanged = true;
@@ -20632,7 +20834,7 @@ public class Editor extends JFrame {
 					if (jRadioButtonFunction100SizeSpecify.isSelected()
 							&& !jTextFieldFunction100SizeWidth.getText().equals("")
 							&& !jTextFieldFunction100SizeHeight.getText().equals("")) {
-						String wrkStr = getStringSizeValue(jTextFieldFunction100SizeWidth.getText(), jTextFieldFunction100SizeHeight.getText(), 50, 2000);
+						wrkStr = getStringSizeValue(jTextFieldFunction100SizeWidth.getText(), jTextFieldFunction100SizeHeight.getText(), 50, 2000);
 						if (!wrkStr.equals(domNode_.getAttribute("Size"))) {
 							valueOfFieldsChanged = true;
 							domNode_.setAttribute("Size", wrkStr);
@@ -21167,17 +21369,23 @@ public class Editor extends JFrame {
 					}
 				}
 				if (jComboBoxFunction100ButtonAction.getSelectedIndex() == 3) {
+					String actionCallEditted = jTextFieldFunction100ButtonActionCallFunctionID.getText();
+					if (!jTextFieldFunction100ButtonActionCallFunctionParm.getText().equals("")
+							&& !jTextFieldFunction100ButtonActionCallFunctionParm.getText().toUpperCase().equals("*NONE")) {
+						actionCallEditted = actionCallEditted + "," +jTextFieldFunction100ButtonActionCallFunctionParm.getText();
+						
+					}
 					pos1 = element.getAttribute("Action").indexOf("CALL(");
 					if (pos1 >= 0) {
 						pos2 = element.getAttribute("Action").indexOf(")", pos1);
-						String functionID = element.getAttribute("Action").substring(pos1+5, pos2);
-						if (!functionID.equals(jTextFieldFunction100ButtonActionCallFunctionID.getText())) {
+						String actionCallOriginal = element.getAttribute("Action").substring(pos1+5, pos2);
+						if (!actionCallEditted.equals(actionCallOriginal)) {
 							valueOfFieldsChanged = true;
-							element.setAttribute("Action", "CALL(" + jTextFieldFunction100ButtonActionCallFunctionID.getText() + ")");
+							element.setAttribute("Action", "CALL(" + actionCallEditted + ")");
 						}
 					} else {
 						valueOfFieldsChanged = true;
-						element.setAttribute("Action", "CALL(" + jTextFieldFunction100ButtonActionCallFunctionID.getText() + ")");
+						element.setAttribute("Action", "CALL(" + actionCallEditted + ")");
 					}
 				}
 				if (jComboBoxFunction100ButtonAction.getSelectedIndex() == 4) {
@@ -22270,17 +22478,17 @@ public class Editor extends JFrame {
 				}
 			}
 			//
-			if (domNode_.getAttribute("UpdateOnly").equals("T")) {
-				if (!jCheckBoxFunction200UpdateOnly.isSelected()) {
-					valueOfFieldsChanged = true;
-					domNode_.setAttribute("UpdateOnly", "");
-				}
-			} else {
-				if (jCheckBoxFunction200UpdateOnly.isSelected()) {
-					valueOfFieldsChanged = true;
-					domNode_.setAttribute("UpdateOnly", "T");
-				}
-			}
+//			if (domNode_.getAttribute("UpdateOnly").equals("T")) {
+//				if (!jCheckBoxFunction200UpdateOnly.isSelected()) {
+//					valueOfFieldsChanged = true;
+//					domNode_.setAttribute("UpdateOnly", "");
+//				}
+//			} else {
+//				if (jCheckBoxFunction200UpdateOnly.isSelected()) {
+//					valueOfFieldsChanged = true;
+//					domNode_.setAttribute("UpdateOnly", "T");
+//				}
+//			}
 			//
 			if (domNode_.getAttribute("ContinueAdd").equals("T")) {
 				if (!jCheckBoxFunction200ContinueAdd.isSelected()) {
@@ -23015,17 +23223,35 @@ public class Editor extends JFrame {
 					}
 				}
 				if (jComboBoxFunction200ButtonAction.getSelectedIndex() == 5) {
+//					pos1 = element.getAttribute("Action").indexOf("CALL(");
+//					if (pos1 >= 0) {
+//						pos2 = element.getAttribute("Action").indexOf(")", pos1);
+//						String functionID = element.getAttribute("Action").substring(pos1+5, pos2);
+//						if (!functionID.equals(jTextFieldFunction200ButtonActionCallFunctionID.getText())) {
+//							valueOfFieldsChanged = true;
+//							element.setAttribute("Action", "CALL(" + jTextFieldFunction200ButtonActionCallFunctionID.getText() + ")");
+//						}
+//					} else {
+//						valueOfFieldsChanged = true;
+//						element.setAttribute("Action", "CALL(" + jTextFieldFunction200ButtonActionCallFunctionID.getText() + ")");
+//					}
+					String actionCallEditted = jTextFieldFunction200ButtonActionCallFunctionID.getText();
+					if (!jTextFieldFunction200ButtonActionCallFunctionParm.getText().equals("")
+							&& !jTextFieldFunction200ButtonActionCallFunctionParm.getText().toUpperCase().equals("*NONE")) {
+						actionCallEditted = actionCallEditted + "," +jTextFieldFunction200ButtonActionCallFunctionParm.getText();
+						
+					}
 					pos1 = element.getAttribute("Action").indexOf("CALL(");
 					if (pos1 >= 0) {
 						pos2 = element.getAttribute("Action").indexOf(")", pos1);
-						String functionID = element.getAttribute("Action").substring(pos1+5, pos2);
-						if (!functionID.equals(jTextFieldFunction200ButtonActionCallFunctionID.getText())) {
+						String actionCallOriginal = element.getAttribute("Action").substring(pos1+5, pos2);
+						if (!actionCallEditted.equals(actionCallOriginal)) {
 							valueOfFieldsChanged = true;
-							element.setAttribute("Action", "CALL(" + jTextFieldFunction200ButtonActionCallFunctionID.getText() + ")");
+							element.setAttribute("Action", "CALL(" + actionCallEditted + ")");
 						}
 					} else {
 						valueOfFieldsChanged = true;
-						element.setAttribute("Action", "CALL(" + jTextFieldFunction200ButtonActionCallFunctionID.getText() + ")");
+						element.setAttribute("Action", "CALL(" + actionCallEditted + ")");
 					}
 				}
 				//
@@ -23248,7 +23474,7 @@ public class Editor extends JFrame {
 				}
 			}
 			//
-			if (jTextFieldFunction300HeaderFunctionIDCalled.getText().equals("") || jTextFieldFunction300HeaderFunctionIDCalled.getText().equals("*None")) { 
+			if (jTextFieldFunction300HeaderFunctionIDCalled.getText().equals("") || jTextFieldFunction300HeaderFunctionIDCalled.getText().toUpperCase().equals("*NONE")) { 
 				if (!domNode_.getAttribute("HeaderFunction").equals("")) { 
 					valueOfFieldsChanged = true;
 					domNode_.setAttribute("HeaderFunction", "");
@@ -23257,6 +23483,18 @@ public class Editor extends JFrame {
 				if (!domNode_.getAttribute("HeaderFunction").equals(jTextFieldFunction300HeaderFunctionIDCalled.getText())) { 
 					valueOfFieldsChanged = true;
 					domNode_.setAttribute("HeaderFunction", jTextFieldFunction300HeaderFunctionIDCalled.getText());
+				}
+			}
+			//
+			if (jTextFieldFunction300HeaderFunctionParms.getText().equals("") || jTextFieldFunction300HeaderFunctionParms.getText().toUpperCase().equals("*NONE")) { 
+				if (!domNode_.getAttribute("HeaderParmAdditional").equals("")) { 
+					valueOfFieldsChanged = true;
+					domNode_.setAttribute("HeaderParmAdditional", "");
+				}
+			} else {
+				if (!domNode_.getAttribute("HeaderParmAdditional").equals(jTextFieldFunction300HeaderFunctionParms.getText())) { 
+					valueOfFieldsChanged = true;
+					domNode_.setAttribute("HeaderParmAdditional", jTextFieldFunction300HeaderFunctionParms.getText());
 				}
 			}
 			//
@@ -23698,6 +23936,19 @@ public class Editor extends JFrame {
 					if (jRadioButtonFunction300DetailParmTypeColumns.isSelected()) {
 						valueOfFieldsChanged = true;
 						element.setAttribute("ParmType", "COLUMNS");
+					}
+				}
+				//
+				wrkStr = jTextFieldFunction300DetailParmAdditional.getText();
+				if (wrkStr.equals("") || wrkStr.toUpperCase().equals("*NONE")) {
+					if (!element.getAttribute("ParmAdditional").equals("")) {
+						valueOfFieldsChanged = true;
+						element.setAttribute("ParmAdditional", "");
+					}
+				} else {
+					if (!wrkStr.equals(element.getAttribute("ParmAdditional"))) {
+						valueOfFieldsChanged = true;
+						element.setAttribute("ParmAdditional", wrkStr);
 					}
 				}
 				//
@@ -24193,17 +24444,35 @@ public class Editor extends JFrame {
 					}
 				}
 				if (jComboBoxFunction300DetailButtonAction.getSelectedIndex() == 4) {
+//					pos1 = element.getAttribute("Action").indexOf("CALL(");
+//					if (pos1 >= 0) {
+//						pos2 = element.getAttribute("Action").indexOf(")", pos1);
+//						String functionID = element.getAttribute("Action").substring(pos1+5, pos2);
+//						if (!functionID.equals(jTextFieldFunction300DetailButtonActionCallFunctionID.getText())) {
+//							valueOfFieldsChanged = true;
+//							element.setAttribute("Action", "CALL(" + jTextFieldFunction300DetailButtonActionCallFunctionID.getText() + ")");
+//						}
+//					} else {
+//						valueOfFieldsChanged = true;
+//						element.setAttribute("Action", "CALL(" + jTextFieldFunction300DetailButtonActionCallFunctionID.getText() + ")");
+//					}
+					String actionCallEditted = jTextFieldFunction300DetailButtonActionCallFunctionID.getText();
+					if (!jTextFieldFunction300DetailButtonActionCallFunctionParm.getText().equals("")
+							&& !jTextFieldFunction300DetailButtonActionCallFunctionParm.getText().toUpperCase().equals("*NONE")) {
+						actionCallEditted = actionCallEditted + "," +jTextFieldFunction300DetailButtonActionCallFunctionParm.getText();
+						
+					}
 					pos1 = element.getAttribute("Action").indexOf("CALL(");
 					if (pos1 >= 0) {
 						pos2 = element.getAttribute("Action").indexOf(")", pos1);
-						String functionID = element.getAttribute("Action").substring(pos1+5, pos2);
-						if (!functionID.equals(jTextFieldFunction300DetailButtonActionCallFunctionID.getText())) {
+						String actionCallOriginal = element.getAttribute("Action").substring(pos1+5, pos2);
+						if (!actionCallEditted.equals(actionCallOriginal)) {
 							valueOfFieldsChanged = true;
-							element.setAttribute("Action", "CALL(" + jTextFieldFunction300DetailButtonActionCallFunctionID.getText() + ")");
+							element.setAttribute("Action", "CALL(" + actionCallEditted + ")");
 						}
 					} else {
 						valueOfFieldsChanged = true;
-						element.setAttribute("Action", "CALL(" + jTextFieldFunction300DetailButtonActionCallFunctionID.getText() + ")");
+						element.setAttribute("Action", "CALL(" + actionCallEditted + ")");
 					}
 				}
 				//
@@ -24500,6 +24769,7 @@ public class Editor extends JFrame {
 		private boolean updateFieldsForFunction310Button() throws Exception {
 			boolean valueOfFieldsChanged = informationOnThisPageChanged;
 			String wrkStr;
+			int pos1,pos2;
 			//
 			if (selectedRow_jTableFunction310ButtonList > -1) {
 				//
@@ -24537,18 +24807,95 @@ public class Editor extends JFrame {
 					}
 				}
 				if (jComboBoxFunction310ButtonAction.getSelectedIndex() == 2) {
+					if (!element.getAttribute("Action").contains("CALL_TO_ADD")) {
+						valueOfFieldsChanged = true;
+					}
+					String actionCallEditted = jTextFieldFunction310ButtonActionCallFunctionID.getText();
+					pos1 = element.getAttribute("Action").indexOf("CALL_TO_ADD(");
+					if (pos1 >= 0) {
+						pos2 = element.getAttribute("Action").indexOf(")", pos1);
+						String actionCallOriginal = element.getAttribute("Action").substring(pos1+12, pos2);
+						if (!actionCallEditted.equals(actionCallOriginal)) {
+							valueOfFieldsChanged = true;
+						}
+					} else {
+						valueOfFieldsChanged = true;
+					}
+					pos1 = element.getAttribute("Action").indexOf("PUT_FROM(");
+					if (pos1 >= 0) {
+						pos2 = element.getAttribute("Action").indexOf(")", pos1);
+						String putFromOriginal = element.getAttribute("Action").substring(pos1+9, pos2);
+						if (!function310ButtonActionCallFunctionFieldsToPut.equals(putFromOriginal)) {
+							valueOfFieldsChanged = true;
+						}
+					} else {
+						valueOfFieldsChanged = true;
+					}
+					pos1 = element.getAttribute("Action").indexOf("PUT_TO(");
+					if (pos1 >= 0) {
+						pos2 = element.getAttribute("Action").indexOf(")", pos1);
+						String putToOriginal = element.getAttribute("Action").substring(pos1+7, pos2);
+						if (!function310ButtonActionCallFunctionFieldsToPutTo.equals(putToOriginal)) {
+							valueOfFieldsChanged = true;
+						}
+					} else {
+						valueOfFieldsChanged = true;
+					}
+					pos1 = element.getAttribute("Action").indexOf("GET_FROM(");
+					if (pos1 >= 0) {
+						pos2 = element.getAttribute("Action").indexOf(")", pos1);
+						String getFromOriginal = element.getAttribute("Action").substring(pos1+9, pos2);
+						if (!function310ButtonActionCallFunctionFieldsToGet.equals(getFromOriginal)) {
+							valueOfFieldsChanged = true;
+						}
+					} else {
+						valueOfFieldsChanged = true;
+					}
+					pos1 = element.getAttribute("Action").indexOf("GET_TO(");
+					if (pos1 >= 0) {
+						pos2 = element.getAttribute("Action").indexOf(")", pos1);
+						String getToOriginal = element.getAttribute("Action").substring(pos1+7, pos2);
+						if (!function310ButtonActionCallFunctionFieldsToGetTo.equals(getToOriginal)) {
+							valueOfFieldsChanged = true;
+						}
+					} else {
+						valueOfFieldsChanged = true;
+					}
+					if (valueOfFieldsChanged) {
+						StringBuffer bf = new StringBuffer();
+						bf.append("CALL_TO_ADD(");
+						bf.append(actionCallEditted);
+						bf.append(") PUT_FROM(");
+						bf.append(function310ButtonActionCallFunctionFieldsToPut);
+						bf.append(") PUT_TO(");
+						bf.append(function310ButtonActionCallFunctionFieldsToPutTo);
+						bf.append(") GET_FROM(");
+						bf.append(function310ButtonActionCallFunctionFieldsToGet);
+						bf.append(") GET_TO(");
+						bf.append(function310ButtonActionCallFunctionFieldsToGetTo);
+						bf.append(")");
+						element.setAttribute("Action", bf.toString());
+					}
+				}
+				if (jComboBoxFunction310ButtonAction.getSelectedIndex() == 3) {
 					if (!element.getAttribute("Action").contains("REMOVE_ROW")) {
 						valueOfFieldsChanged = true;
 						element.setAttribute("Action", "REMOVE_ROW");
 					}
 				}
-				if (jComboBoxFunction310ButtonAction.getSelectedIndex() == 3) {
+				if (jComboBoxFunction310ButtonAction.getSelectedIndex() == 4) {
 					if (!element.getAttribute("Action").contains("UPDATE")) {
 						valueOfFieldsChanged = true;
 						element.setAttribute("Action", "UPDATE");
 					}
 				}
-				if (jComboBoxFunction310ButtonAction.getSelectedIndex() == 4) {
+				if (jComboBoxFunction310ButtonAction.getSelectedIndex() == 5) {
+					if (!element.getAttribute("Action").contains("DELETE")) {
+						valueOfFieldsChanged = true;
+						element.setAttribute("Action", "DELETE");
+					}
+				}
+				if (jComboBoxFunction310ButtonAction.getSelectedIndex() == 6) {
 					if (!element.getAttribute("Action").contains("OUTPUT")) {
 						valueOfFieldsChanged = true;
 						element.setAttribute("Action", "OUTPUT");
@@ -29918,6 +30265,7 @@ public class Editor extends JFrame {
 				jLabelFunction100ButtonCaption.setEnabled(false);
 				jLabelFunction100ButtonAction.setEnabled(false);
 				jLabelFunction100ButtonActionCallFunction.setEnabled(false);
+				jLabelFunction100ButtonActionCallFunctionParm.setEnabled(false);
 				jSpinnerFunction100ButtonPosition.setEnabled(false);
 				jSpinnerFunction100ButtonKey.setEnabled(false);
 				spinnerNumberModelFunction100ButtonPosition.setValue(0);
@@ -29927,6 +30275,7 @@ public class Editor extends JFrame {
 				jTextFieldFunction100ButtonActionCallFunctionID.setEnabled(false);
 				jTextFieldFunction100ButtonActionCallFunctionID.setText("");
 				jTextFieldFunction100ButtonActionCallFunctionName.setText("");
+				jTextFieldFunction100ButtonActionCallFunctionParm.setText("");
 				jComboBoxFunction100ButtonAction.setEnabled(false);
 				//
 				if (jTableFunction100ButtonList.getSelectedRow() != -1) {
@@ -29966,13 +30315,28 @@ public class Editor extends JFrame {
 						pos1 = element.getAttribute("Action").indexOf("CALL(");
 						if (pos1 >= 0) {
 							pos2 = element.getAttribute("Action").indexOf(")", pos1);
-							String functionID = element.getAttribute("Action").substring(pos1+5, pos2);
+							String callAction = element.getAttribute("Action").substring(pos1+5, pos2);
+							StringTokenizer workTokenizer1 = new StringTokenizer(callAction, "," );
+							String functionID = "";
+							String parmAdditional = "";
+							if (workTokenizer1.countTokens() >= 1) {
+								functionID = workTokenizer1.nextToken();
+								if (workTokenizer1.hasMoreTokens()) {
+									parmAdditional = workTokenizer1.nextToken();
+								}
+							}
+							
 							jTextFieldFunction100ButtonActionCallFunctionID.setText(functionID);
 							MainTreeNode functionNode = getSpecificXETreeNode("Function", functionID);
 							if (functionNode == null) {
 								jTextFieldFunction100ButtonActionCallFunctionName.setText("N/A");
 							} else {
 								jTextFieldFunction100ButtonActionCallFunctionName.setText(functionNode.getElement().getAttribute("Name"));
+							}
+							if (parmAdditional.equals("")) {
+								jTextFieldFunction100ButtonActionCallFunctionParm.setText("*None");
+							} else {
+								jTextFieldFunction100ButtonActionCallFunctionParm.setText(parmAdditional);
 							}
 						}
 					}
@@ -30524,6 +30888,12 @@ public class Editor extends JFrame {
 				jTextFieldFunction310ButtonCaption.setEnabled(false);
 				jTextFieldFunction310ButtonCaption.setText("");
 				jComboBoxFunction310ButtonAction.setEnabled(false);
+				jLabelFunction310ButtonActionCallFunction.setEnabled(false);
+				jTextFieldFunction310ButtonActionCallFunctionID.setEnabled(false);
+				jTextFieldFunction310ButtonActionCallFunctionID.setText("");
+				jTextFieldFunction310ButtonActionCallFunctionName.setEnabled(false);
+				jTextFieldFunction310ButtonActionCallFunctionName.setText("");
+				jButtonFunction310ButtonActionCallFunctionExchange.setEnabled(false);
 				//
 				if (jTableFunction310ButtonList.getSelectedRow() != -1) {
 					//
@@ -30552,14 +30922,56 @@ public class Editor extends JFrame {
 					if (element.getAttribute("Action").contains("ADD_ROW")) {
 						jComboBoxFunction310ButtonAction.setSelectedIndex(1);
 					}
-					if (element.getAttribute("Action").contains("REMOVE_ROW")) {
+					if (element.getAttribute("Action").contains("CALL_TO_ADD")) {
 						jComboBoxFunction310ButtonAction.setSelectedIndex(2);
+						jLabelFunction310ButtonActionCallFunction.setEnabled(true);
+						jTextFieldFunction310ButtonActionCallFunctionID.setEnabled(true);
+						jTextFieldFunction310ButtonActionCallFunctionName.setEnabled(true);
+						jButtonFunction310ButtonActionCallFunctionExchange.setEnabled(true);
+						int pos1 = element.getAttribute("Action").indexOf("CALL_TO_ADD(");
+						if (pos1 >= 0) {
+							int pos2 = element.getAttribute("Action").indexOf(")", pos1);
+							String functionID = element.getAttribute("Action").substring(pos1+12, pos2);
+							jTextFieldFunction310ButtonActionCallFunctionID.setText(functionID);
+							MainTreeNode functionNode = getSpecificXETreeNode("Function", functionID);
+							if (functionNode == null) {
+								jTextFieldFunction310ButtonActionCallFunctionName.setText("N/A");
+							} else {
+								jTextFieldFunction310ButtonActionCallFunctionName.setText(functionNode.getElement().getAttribute("Name"));
+							}
+							pos1 = element.getAttribute("Action").indexOf("PUT_FROM(");
+							if (pos1 >= 0) {
+								pos2 = element.getAttribute("Action").indexOf(")", pos1);
+								function310ButtonActionCallFunctionFieldsToPut = element.getAttribute("Action").substring(pos1+9, pos2);
+							}
+							pos1 = element.getAttribute("Action").indexOf("PUT_TO(");
+							if (pos1 >= 0) {
+								pos2 = element.getAttribute("Action").indexOf(")", pos1);
+								function310ButtonActionCallFunctionFieldsToPutTo = element.getAttribute("Action").substring(pos1+7, pos2);
+							}
+							pos1 = element.getAttribute("Action").indexOf("GET_FROM(");
+							if (pos1 >= 0) {
+								pos2 = element.getAttribute("Action").indexOf(")", pos1);
+								function310ButtonActionCallFunctionFieldsToGet = element.getAttribute("Action").substring(pos1+9, pos2);
+							}
+							pos1 = element.getAttribute("Action").indexOf("GET_TO(");
+							if (pos1 >= 0) {
+								pos2 = element.getAttribute("Action").indexOf(")", pos1);
+								function310ButtonActionCallFunctionFieldsToGetTo = element.getAttribute("Action").substring(pos1+7, pos2);
+							}
+						}
 					}
-					if (element.getAttribute("Action").contains("UPDATE")) {
+					if (element.getAttribute("Action").contains("REMOVE_ROW")) {
 						jComboBoxFunction310ButtonAction.setSelectedIndex(3);
 					}
-					if (element.getAttribute("Action").contains("OUTPUT")) {
+					if (element.getAttribute("Action").contains("UPDATE")) {
 						jComboBoxFunction310ButtonAction.setSelectedIndex(4);
+					}
+					if (element.getAttribute("Action").contains("DELETE")) {
+						jComboBoxFunction310ButtonAction.setSelectedIndex(5);
+					}
+					if (element.getAttribute("Action").contains("OUTPUT")) {
+						jComboBoxFunction310ButtonAction.setSelectedIndex(6);
 					}
 				}
 			} catch (Exception e1) {
@@ -31649,6 +32061,7 @@ public class Editor extends JFrame {
 				jLabelFunction200ButtonCaption.setEnabled(false);
 				jLabelFunction200ButtonAction.setEnabled(false);
 				jLabelFunction200ButtonActionCallFunction.setEnabled(false);
+				jLabelFunction200ButtonActionCallFunctionParm.setEnabled(false);
 				jSpinnerFunction200ButtonPosition.setEnabled(false);
 				jSpinnerFunction200ButtonKey.setEnabled(false);
 				spinnerNumberModelFunction200ButtonPosition.setValue(0);
@@ -31658,6 +32071,8 @@ public class Editor extends JFrame {
 				jTextFieldFunction200ButtonActionCallFunctionID.setEnabled(false);
 				jTextFieldFunction200ButtonActionCallFunctionID.setText("");
 				jTextFieldFunction200ButtonActionCallFunctionName.setText("");
+				jTextFieldFunction200ButtonActionCallFunctionParm.setEnabled(false);
+				jTextFieldFunction200ButtonActionCallFunctionParm.setText("");
 				jComboBoxFunction200ButtonAction.setEnabled(false);
 				//
 				if (jTableFunction200ButtonList.getSelectedRow() != -1) {
@@ -31702,14 +32117,40 @@ public class Editor extends JFrame {
 						jTextFieldFunction200ButtonActionCallFunctionID.setEnabled(true);
 						pos1 = element.getAttribute("Action").indexOf("CALL(");
 						if (pos1 >= 0) {
-							pos2 = element.getAttribute("Action").indexOf(")", pos1);
-							String functionID = element.getAttribute("Action").substring(pos1+5, pos2);
-							jTextFieldFunction200ButtonActionCallFunctionID.setText(functionID);
-							MainTreeNode functionNode = getSpecificXETreeNode("Function", functionID);
-							if (functionNode == null) {
-								jTextFieldFunction200ButtonActionCallFunctionName.setText("N/A");
-							} else {
-								jTextFieldFunction200ButtonActionCallFunctionName.setText(functionNode.getElement().getAttribute("Name"));
+//							pos2 = element.getAttribute("Action").indexOf(")", pos1);
+//							String functionID = element.getAttribute("Action").substring(pos1+5, pos2);
+//							jTextFieldFunction200ButtonActionCallFunctionID.setText(functionID);
+//							MainTreeNode functionNode = getSpecificXETreeNode("Function", functionID);
+//							if (functionNode == null) {
+//								jTextFieldFunction200ButtonActionCallFunctionName.setText("N/A");
+//							} else {
+//								jTextFieldFunction200ButtonActionCallFunctionName.setText(functionNode.getElement().getAttribute("Name"));
+//							}
+							if (pos1 >= 0) {
+								pos2 = element.getAttribute("Action").indexOf(")", pos1);
+								String callAction = element.getAttribute("Action").substring(pos1+5, pos2);
+								StringTokenizer workTokenizer1 = new StringTokenizer(callAction, "," );
+								String functionID = "";
+								String parmAdditional = "";
+								if (workTokenizer1.countTokens() >= 1) {
+									functionID = workTokenizer1.nextToken();
+									if (workTokenizer1.hasMoreTokens()) {
+										parmAdditional = workTokenizer1.nextToken();
+									}
+								}
+								
+								jTextFieldFunction200ButtonActionCallFunctionID.setText(functionID);
+								MainTreeNode functionNode = getSpecificXETreeNode("Function", functionID);
+								if (functionNode == null) {
+									jTextFieldFunction200ButtonActionCallFunctionName.setText("N/A");
+								} else {
+									jTextFieldFunction200ButtonActionCallFunctionName.setText(functionNode.getElement().getAttribute("Name"));
+								}
+								if (parmAdditional.equals("")) {
+									jTextFieldFunction200ButtonActionCallFunctionParm.setText("*None");
+								} else {
+									jTextFieldFunction200ButtonActionCallFunctionParm.setText(parmAdditional);
+								}
 							}
 						}
 					}
@@ -31740,6 +32181,7 @@ public class Editor extends JFrame {
 				jLabelFunction300DetailButtonCaption.setEnabled(false);
 				jLabelFunction300DetailButtonAction.setEnabled(false);
 				jLabelFunction300DetailButtonActionCallFunction.setEnabled(false);
+				jLabelFunction300DetailButtonActionCallFunctionParm.setEnabled(false);
 				jSpinnerFunction300DetailButtonPosition.setEnabled(false);
 				jSpinnerFunction300DetailButtonKey.setEnabled(false);
 				spinnerNumberModelFunction300DetailButtonPosition.setValue(0);
@@ -31749,6 +32191,8 @@ public class Editor extends JFrame {
 				jTextFieldFunction300DetailButtonActionCallFunctionID.setEnabled(false);
 				jTextFieldFunction300DetailButtonActionCallFunctionID.setText("");
 				jTextFieldFunction300DetailButtonActionCallFunctionName.setText("");
+				jTextFieldFunction300DetailButtonActionCallFunctionParm.setEnabled(false);
+				jTextFieldFunction300DetailButtonActionCallFunctionParm.setText("");
 				jComboBoxFunction300DetailButtonAction.setEnabled(false);
 				//
 				if (jTableFunction300DetailButtonList.getSelectedRow() != -1) {
@@ -31790,14 +32234,40 @@ public class Editor extends JFrame {
 						jTextFieldFunction300DetailButtonActionCallFunctionID.setEnabled(true);
 						pos1 = element.getAttribute("Action").indexOf("CALL(");
 						if (pos1 >= 0) {
-							pos2 = element.getAttribute("Action").indexOf(")", pos1);
-							String functionID = element.getAttribute("Action").substring(pos1+5, pos2);
-							jTextFieldFunction300DetailButtonActionCallFunctionID.setText(functionID);
-							MainTreeNode functionNode = getSpecificXETreeNode("Function", functionID);
-							if (functionNode == null) {
-								jTextFieldFunction300DetailButtonActionCallFunctionName.setText("N/A");
-							} else {
-								jTextFieldFunction300DetailButtonActionCallFunctionName.setText(functionNode.getElement().getAttribute("Name"));
+//							pos2 = element.getAttribute("Action").indexOf(")", pos1);
+//							String functionID = element.getAttribute("Action").substring(pos1+5, pos2);
+//							jTextFieldFunction300DetailButtonActionCallFunctionID.setText(functionID);
+//							MainTreeNode functionNode = getSpecificXETreeNode("Function", functionID);
+//							if (functionNode == null) {
+//								jTextFieldFunction300DetailButtonActionCallFunctionName.setText("N/A");
+//							} else {
+//								jTextFieldFunction300DetailButtonActionCallFunctionName.setText(functionNode.getElement().getAttribute("Name"));
+//							}
+							if (pos1 >= 0) {
+								pos2 = element.getAttribute("Action").indexOf(")", pos1);
+								String callAction = element.getAttribute("Action").substring(pos1+5, pos2);
+								StringTokenizer workTokenizer1 = new StringTokenizer(callAction, "," );
+								String functionID = "";
+								String parmAdditional = "";
+								if (workTokenizer1.countTokens() >= 1) {
+									functionID = workTokenizer1.nextToken();
+									if (workTokenizer1.hasMoreTokens()) {
+										parmAdditional = workTokenizer1.nextToken();
+									}
+								}
+								
+								jTextFieldFunction300DetailButtonActionCallFunctionID.setText(functionID);
+								MainTreeNode functionNode = getSpecificXETreeNode("Function", functionID);
+								if (functionNode == null) {
+									jTextFieldFunction300DetailButtonActionCallFunctionName.setText("N/A");
+								} else {
+									jTextFieldFunction300DetailButtonActionCallFunctionName.setText(functionNode.getElement().getAttribute("Name"));
+								}
+								if (parmAdditional.equals("")) {
+									jTextFieldFunction300DetailButtonActionCallFunctionParm.setText("*None");
+								} else {
+									jTextFieldFunction300DetailButtonActionCallFunctionParm.setText(parmAdditional);
+								}
 							}
 						}
 					}
@@ -36280,6 +36750,10 @@ public class Editor extends JFrame {
 		isValidFunctionID(jTextFieldFunction310DetailFieldPromptOptionCallFunctionID, jTextFieldFunction310DetailFieldPromptOptionCallFunctionName);
 	}
 	
+	void jTextFieldFunction310ButtonActionCallFunctionID_keyReleased(KeyEvent e) {
+		isValidFunctionID(jTextFieldFunction310ButtonActionCallFunctionID, jTextFieldFunction310ButtonActionCallFunctionName);
+	}
+	
 	void jTextFieldFunction300DetailFunctionIDCalled_keyReleased(KeyEvent e) {
 		isValidFunctionID(jTextFieldFunction300DetailFunctionIDCalled, jTextFieldFunction300DetailFunctionNameCalled);
 	}
@@ -37005,6 +37479,9 @@ public class Editor extends JFrame {
 				jLabelFunction300DetailParmType.setEnabled(false);
 				jRadioButtonFunction300DetailParmTypeColumns.setEnabled(false);
 				jRadioButtonFunction300DetailParmTypeKeys.setEnabled(false);
+				jLabelFunction300DetailParmAdditional.setEnabled(false);
+				jTextFieldFunction300DetailParmAdditional.setEnabled(false);
+				jTextFieldFunction300DetailParmAdditional.setText("");
 				jCheckBoxFunction300InitialListing.setSelected(false);
 				jCheckBoxFunction300InitialListing.setEnabled(false);
 				jLabelFunction300DetailInitialMsg.setEnabled(false);
@@ -37048,6 +37525,8 @@ public class Editor extends JFrame {
 					jLabelFunction300DetailParmType.setEnabled(true);
 					jRadioButtonFunction300DetailParmTypeColumns.setEnabled(true);
 					jRadioButtonFunction300DetailParmTypeKeys.setEnabled(true);
+					jLabelFunction300DetailParmAdditional.setEnabled(true);
+					jTextFieldFunction300DetailParmAdditional.setEnabled(true);
 					jCheckBoxFunction300InitialListing.setEnabled(true);
 					jLabelFunction300DetailInitialMsg.setEnabled(true);
 					jTextFieldFunction300DetailCaption.setEnabled(true);
@@ -37118,6 +37597,11 @@ public class Editor extends JFrame {
 						} else {
 				        	jRadioButtonFunction300DetailParmTypeKeys.setSelected(true);
 						}
+					}
+					if (tableRowNumber.getElement().getAttribute("ParmAdditional").equals("")) {
+						jTextFieldFunction300DetailParmAdditional.setText("*None");
+					} else {
+						jTextFieldFunction300DetailParmAdditional.setText(tableRowNumber.getElement().getAttribute("ParmAdditional"));
 					}
 					if (tableRowNumber.getElement().getAttribute("InitialListing").equals("T")) {
 						jCheckBoxFunction300InitialListing.setSelected(true);
@@ -38296,14 +38780,14 @@ public class Editor extends JFrame {
 		}
 	}
 
-	void jCheckBoxFunction200UpdateOnly_stateChanged(ChangeEvent e) {
-		if (jCheckBoxFunction200UpdateOnly.isSelected()) {
-			jCheckBoxFunction200ContinueAdd.setSelected(false);
-			jCheckBoxFunction200ContinueAdd.setEnabled(false);
-		} else {
-			jCheckBoxFunction200ContinueAdd.setEnabled(true);
-		}
-	}
+//	void jCheckBoxFunction200UpdateOnly_stateChanged(ChangeEvent e) {
+//		if (jCheckBoxFunction200UpdateOnly.isSelected()) {
+//			jCheckBoxFunction200ContinueAdd.setSelected(false);
+//			jCheckBoxFunction200ContinueAdd.setEnabled(false);
+//		} else {
+//			jCheckBoxFunction200ContinueAdd.setEnabled(true);
+//		}
+//	}
 	
 	String createScriptToCheckDelete(org.w3c.dom.Element tableElement) {
 		StringBuffer sbf = new StringBuffer();
@@ -38487,9 +38971,28 @@ public class Editor extends JFrame {
 		if (jComboBoxFunction100ButtonAction.getSelectedIndex() == 3) {
 			jLabelFunction100ButtonActionCallFunction.setEnabled(true);
 			jTextFieldFunction100ButtonActionCallFunctionID.setEnabled(true);
+			jLabelFunction100ButtonActionCallFunctionParm.setEnabled(true);
+			jTextFieldFunction100ButtonActionCallFunctionParm.setEnabled(true);
 		} else {
 			jLabelFunction100ButtonActionCallFunction.setEnabled(false);
 			jTextFieldFunction100ButtonActionCallFunctionID.setEnabled(false);
+			jLabelFunction100ButtonActionCallFunctionParm.setEnabled(false);
+			jTextFieldFunction100ButtonActionCallFunctionParm.setEnabled(false);
+			jTextFieldFunction100ButtonActionCallFunctionParm.setText("");
+		}
+	}
+	
+	void jComboBoxFunction310ButtonAction_actionPerformed(ActionEvent e) {
+		if (jComboBoxFunction310ButtonAction.getSelectedIndex() == 2) {
+			jLabelFunction310ButtonActionCallFunction.setEnabled(true);
+			jTextFieldFunction310ButtonActionCallFunctionID.setEnabled(true);
+			jTextFieldFunction310ButtonActionCallFunctionName.setEnabled(true);
+			jButtonFunction310ButtonActionCallFunctionExchange.setEnabled(true);
+		} else {
+			jLabelFunction310ButtonActionCallFunction.setEnabled(false);
+			jTextFieldFunction310ButtonActionCallFunctionID.setEnabled(false);
+			jTextFieldFunction310ButtonActionCallFunctionName.setEnabled(false);
+			jButtonFunction310ButtonActionCallFunctionExchange.setEnabled(false);
 		}
 	}
 	
@@ -38628,6 +39131,21 @@ public class Editor extends JFrame {
 				function310DetailFieldPromptOptionCallFunctionFieldsToPutTo = dialogPromptOptionCallFunctionExchangeEdit.getFieldsToPutTo();
 				function310DetailFieldPromptOptionCallFunctionFieldsToGet = dialogPromptOptionCallFunctionExchangeEdit.getFieldsToGet();
 				function310DetailFieldPromptOptionCallFunctionFieldsToGetTo = dialogPromptOptionCallFunctionExchangeEdit.getFieldsToGetTo();
+			}
+		}
+
+		if (e.getSource() == jButtonFunction310ButtonActionCallFunctionExchange) {
+			reply = dialogPromptOptionCallFunctionExchangeEdit.request(
+					function310ButtonActionCallFunctionFieldsToPut,
+					function310ButtonActionCallFunctionFieldsToPutTo,
+					function310ButtonActionCallFunctionFieldsToGet,
+					function310ButtonActionCallFunctionFieldsToGetTo,
+					function310HeaderTableID, function310HeaderReferList, function310DetailTableID, function310DetailReferList);
+			if (reply == 1) {
+				function310ButtonActionCallFunctionFieldsToPut = dialogPromptOptionCallFunctionExchangeEdit.getFieldsToPut();
+				function310ButtonActionCallFunctionFieldsToPutTo = dialogPromptOptionCallFunctionExchangeEdit.getFieldsToPutTo();
+				function310ButtonActionCallFunctionFieldsToGet = dialogPromptOptionCallFunctionExchangeEdit.getFieldsToGet();
+				function310ButtonActionCallFunctionFieldsToGetTo = dialogPromptOptionCallFunctionExchangeEdit.getFieldsToGetTo();
 			}
 		}
 	}
@@ -39801,11 +40319,11 @@ public class Editor extends JFrame {
 					+ " (IDVARIANT, TXNAME, TXTYPE, TXVALUE, TXREMARKS) values('LOGIN_PERMITTED', '"
 					+ res.getString("InsertInitialRecordData1") + "', 'STRING', 'T', '')");
 		}
-		if (tableID.equals(jTextFieldSystemUserTable.getText())) {
-			sql.add("Insert into " + tableID
-					+ " (IDUSER, TXNAME, TXPASSWORD, DTVALID, DTEXPIRE, TXEMAIL, TXMENUS, NREMPLOYEE) values('00000', '"
-					+ res.getString("InsertInitialRecordData2") + "', 'f1b708bba17f1ce948dc979f4d7092bc', " + dateValueSeparator + "2000-01-01" + dateValueSeparator + ", " + dateValueSeparator + "9999-12-31" + dateValueSeparator + ", '', 'ALL', '')");
-		}
+//		if (tableID.equals(jTextFieldSystemUserTable.getText())) {
+//			sql.add("Insert into " + tableID
+//					+ " (IDUSER, TXNAME, TXPASSWORD, DTVALID, DTEXPIRE, TXEMAIL, TXMENUS, NREMPLOYEE) values('00000', '"
+//					+ res.getString("InsertInitialRecordData2") + "', 'f1b708bba17f1ce948dc979f4d7092bc', " + dateValueSeparator + "2000-01-01" + dateValueSeparator + ", " + dateValueSeparator + "9999-12-31" + dateValueSeparator + ", '', 'ALL', '')");
+//		}
 		if (tableID.equals(jTextFieldSystemNumberingTable.getText())) {
 			sql.add("Insert into " + tableID
 					+ " (IDNUMBER, TXPREFIX, NRNUMDIGIT, NRCURRENT, FGWITHCD) values('NRSESSION', '', 7, 1, 'F')");
@@ -41647,9 +42165,13 @@ public class Editor extends JFrame {
 		if (jComboBoxFunction200ButtonAction.getSelectedIndex() == 5) {
 			jLabelFunction200ButtonActionCallFunction.setEnabled(true);
 			jTextFieldFunction200ButtonActionCallFunctionID.setEnabled(true);
+			jLabelFunction200ButtonActionCallFunctionParm.setEnabled(true);
+			jTextFieldFunction200ButtonActionCallFunctionParm.setEnabled(true);
 		} else {
 			jLabelFunction200ButtonActionCallFunction.setEnabled(false);
 			jTextFieldFunction200ButtonActionCallFunctionID.setEnabled(false);
+			jLabelFunction200ButtonActionCallFunctionParm.setEnabled(false);
+			jTextFieldFunction200ButtonActionCallFunctionParm.setEnabled(false);
 		}
 	}
 	
@@ -41685,9 +42207,13 @@ public class Editor extends JFrame {
 		if (jComboBoxFunction300DetailButtonAction.getSelectedIndex() == 4) {
 			jLabelFunction300DetailButtonActionCallFunction.setEnabled(true);
 			jTextFieldFunction300DetailButtonActionCallFunctionID.setEnabled(true);
+			jLabelFunction300DetailButtonActionCallFunctionParm.setEnabled(true);
+			jTextFieldFunction300DetailButtonActionCallFunctionParm.setEnabled(true);
 		} else {
 			jLabelFunction300DetailButtonActionCallFunction.setEnabled(false);
 			jTextFieldFunction300DetailButtonActionCallFunctionID.setEnabled(false);
+			jLabelFunction300DetailButtonActionCallFunctionParm.setEnabled(false);
+			jTextFieldFunction300DetailButtonActionCallFunctionParm.setEnabled(false);
 		}
 	}
 	
@@ -41813,14 +42339,14 @@ public class Editor extends JFrame {
 		if (jRadioButtonFunction200ActionAfterInsertCall.isSelected()) {
 			jTextFieldFunction200FunctionIDCalled.setEnabled(true);
 			jTextFieldFunction200FunctionNameCalled.setEnabled(true);
-			jCheckBoxFunction200UpdateOnly.setSelected(false);
-			jCheckBoxFunction200UpdateOnly.setEnabled(false);
+//			jCheckBoxFunction200UpdateOnly.setSelected(false);
+//			jCheckBoxFunction200UpdateOnly.setEnabled(false);
 			jCheckBoxFunction200ContinueAdd.setSelected(false);
 			jCheckBoxFunction200ContinueAdd.setEnabled(false);
 		} else {
 			jTextFieldFunction200FunctionIDCalled.setEnabled(false);
 			jTextFieldFunction200FunctionNameCalled.setEnabled(false);
-			jCheckBoxFunction200UpdateOnly.setEnabled(true);
+//			jCheckBoxFunction200UpdateOnly.setEnabled(true);
 			jCheckBoxFunction200ContinueAdd.setEnabled(true);
 		}
 	}
@@ -41969,11 +42495,13 @@ public class Editor extends JFrame {
 			jTextFieldFunction300DetailFunctionNameCalled.setEnabled(true);
         	jRadioButtonFunction300DetailParmTypeKeys.setEnabled(true);
         	jRadioButtonFunction300DetailParmTypeKeys.setSelected(true);
+			jTextFieldFunction300DetailParmAdditional.setEnabled(true);
 		} else {
 			jTextFieldFunction300DetailFunctionIDCalled.setEnabled(false);
 			jTextFieldFunction300DetailFunctionNameCalled.setEnabled(false);
         	jRadioButtonFunction300DetailParmTypeKeys.setEnabled(false);
         	jRadioButtonFunction300DetailParmTypeColumns.setSelected(true);
+			jTextFieldFunction300DetailParmAdditional.setEnabled(false);
 		}
 	}
 	
@@ -45395,15 +45923,15 @@ class Editor_jSpinnerTableFieldDecimal_changeAdapter implements ChangeListener {
 	}
 }
 
-class Editor_jCheckBoxFunction200UpdateOnly_changeAdapter implements ChangeListener {
-	Editor adaptee;
-	Editor_jCheckBoxFunction200UpdateOnly_changeAdapter(Editor adaptee) {
-		this.adaptee = adaptee;
-	}
-	public void stateChanged(ChangeEvent e) {
-		adaptee.jCheckBoxFunction200UpdateOnly_stateChanged(e);
-	}
-}
+//class Editor_jCheckBoxFunction200UpdateOnly_changeAdapter implements ChangeListener {
+//	Editor adaptee;
+//	Editor_jCheckBoxFunction200UpdateOnly_changeAdapter(Editor adaptee) {
+//		this.adaptee = adaptee;
+//	}
+//	public void stateChanged(ChangeEvent e) {
+//		adaptee.jCheckBoxFunction200UpdateOnly_stateChanged(e);
+//	}
+//}
 
 class Editor_jCheckBoxTableScriptEventPrimary_changeAdapter implements ChangeListener {
 	Editor adaptee;
@@ -45952,6 +46480,16 @@ class Editor_jComboBoxFunction200ButtonAction_actionAdapter implements java.awt.
 	}
 	public void actionPerformed(ActionEvent e) {
 		adaptee.jComboBoxFunction200ButtonAction_actionPerformed(e);
+	}
+}
+
+class Editor_jComboBoxFunction310ButtonAction_actionAdapter implements java.awt.event.ActionListener {
+	Editor adaptee;
+	Editor_jComboBoxFunction310ButtonAction_actionAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jComboBoxFunction310ButtonAction_actionPerformed(e);
 	}
 }
 
@@ -47806,6 +48344,16 @@ class Editor_jTextFieldFunction110FilterPromptOptionCallFunctionID_keyAdapter ex
 	}
 	public void keyReleased(KeyEvent e) {
 		adaptee.jTextFieldFunction110FilterPromptOptionCallFunctionID_keyReleased(e);
+	}
+}
+
+class Editor_jTextFieldFunction310ButtonActionCallFunctionID_keyAdapter extends java.awt.event.KeyAdapter {
+	Editor adaptee;
+	Editor_jTextFieldFunction310ButtonActionCallFunctionID_keyAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void keyReleased(KeyEvent e) {
+		adaptee.jTextFieldFunction310ButtonActionCallFunctionID_keyReleased(e);
 	}
 }
 

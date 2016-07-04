@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2014 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2016 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -87,13 +87,11 @@ public class DialogCheckFunctionsCalled extends JDialog {
 	}
 
 	private void jbInit() throws Exception {
-		//
 		panelMain.setLayout(borderLayoutMain);
-		//panelMain.setPreferredSize(new Dimension(1120, 400));
 		panelMain.setBorder(null);
 		panelMain.add(jPanelSouth, BorderLayout.SOUTH);
 		panelMain.add(jScrollPaneCheckResult, BorderLayout.CENTER);
-		//
+
 		jTableCheckResult.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTableCheckResult.setBackground(SystemColor.control);
 		jTableCheckResult.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -122,8 +120,8 @@ public class DialogCheckFunctionsCalled extends JDialog {
 		rendererTableHeader = (DefaultTableCellRenderer)jTableCheckResult.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(2); //LEFT//
 		jScrollPaneCheckResult.getViewport().add(jTableCheckResult, null);
-		//
-		//jPanelSouth and objects on it
+
+		//jPanelSouth and objects on it//
 		jPanelSouth.setBorder(BorderFactory.createEtchedBorder());
 		jPanelSouth.setPreferredSize(new Dimension(100, 43));
 		jButtonCloseDialog.setBounds(new Rectangle(50, 8, 100, 27));
@@ -137,7 +135,7 @@ public class DialogCheckFunctionsCalled extends JDialog {
 		jPanelSouth.setLayout(null);
 		jPanelSouth.add(jButtonGenerateListData);
 		jPanelSouth.add(jButtonCloseDialog);
-		//
+
 		this.setResizable(false);
 		this.setPreferredSize(new Dimension(1024, 400));
 		this.setTitle(res.getString("CheckFunctionsCalled"));
@@ -162,12 +160,12 @@ public class DialogCheckFunctionsCalled extends JDialog {
 		MainTreeNode node;
 		String wrkStr;
 		StringTokenizer tokenizer;
-		//
+
 		if (tableModelCheckResult.getRowCount() > 0) {
 			int rowCount = tableModelCheckResult.getRowCount();
 			for (int i = 0; i < rowCount; i++) {tableModelCheckResult.removeRow(0);}
 		}
-		//
+
 		nodeList1 = frame_.getDomDocument().getElementsByTagName("Function");
 		functionNodeList1 = frame_.getSortedListModel(nodeList1, "ID");
 		functionNodeList2 = frame_.getSortedListModel(nodeList1, "ID");
@@ -175,7 +173,7 @@ public class DialogCheckFunctionsCalled extends JDialog {
 		menuNodeList = frame_.getSortedListModel(nodeList1, "ID");
 		nodeList1 = frame_.getDomDocument().getElementsByTagName("Table");
 		tableNodeList = frame_.getSortedListModel(nodeList1, "ID");
-		//
+
 		for (int i = 0; i < tableNodeList.getSize(); i++) {
 			element1 = (org.w3c.dom.Element)tableNodeList.getElementAt(i);
 			nodeList1 = element1.getElementsByTagName("Script");
@@ -231,7 +229,7 @@ public class DialogCheckFunctionsCalled extends JDialog {
 				}
 			}
 		}
-		//
+
 		for (int i = 0; i < menuNodeList.getSize(); i++) {
 			element1 = (org.w3c.dom.Element)menuNodeList.getElementAt(i);
 			tokenizer = new StringTokenizer(element1.getAttribute("CrossCheckersToBeLoaded"), ";" );
@@ -277,10 +275,10 @@ public class DialogCheckFunctionsCalled extends JDialog {
 				}
 			}
 		}
-		//
+
 		for (int i = 0; i < functionNodeList1.getSize(); i++) {
 			element1 = (org.w3c.dom.Element)functionNodeList1.getElementAt(i);
-			//
+
 			isNotCalledByAnyElement = true;
 			for (int j = 0; j < menuNodeList.getSize(); j++) {
 				element2 = (org.w3c.dom.Element)menuNodeList.getElementAt(j);
@@ -308,10 +306,6 @@ public class DialogCheckFunctionsCalled extends JDialog {
 			if (isNotCalledByAnyElement) {
 				for (int j = 0; j < tableNodeList.getSize(); j++) {
 					element2 = (org.w3c.dom.Element)tableNodeList.getElementAt(j);
-					//if (!frame_.getFunctionUsageInTableScript(element2, element1.getAttribute("ID")).equals("")) {
-					//	isNotCalledByAnyElement = false;
-					//	break;
-					//}
 				    nodeList1 = element2.getElementsByTagName("Script");
 				    for (int k = 0; k < nodeList1.getLength(); k++) {
 				    	element3 = (org.w3c.dom.Element)nodeList1.item(k);
@@ -334,7 +328,7 @@ public class DialogCheckFunctionsCalled extends JDialog {
 				Cell[3] = res.getString("CheckFunctionsCalledMessage2");
 				tableModelCheckResult.addRow(Cell);
 			}
-			//
+
 			if (element1.getAttribute("Type").equals("XF000")) {
 				wrkStr = frame_.substringLinesWithTokenOfEOL(element1.getAttribute("Script"), "\n");
 				wrkStr = frame_.removeCommentsFromScriptText(wrkStr).replace(" ", "");
@@ -362,7 +356,7 @@ public class DialogCheckFunctionsCalled extends JDialog {
 					}
 				}
 			}
-			//
+
 			if (element1.getAttribute("Type").equals("XF100") || element1.getAttribute("Type").equals("XF110")) {
 				if (!element1.getAttribute("DetailFunction").equals("")) {
 					node = frame_.getSpecificXETreeNode("Function", element1.getAttribute("DetailFunction"));
@@ -382,7 +376,11 @@ public class DialogCheckFunctionsCalled extends JDialog {
 					pos1 = element2.getAttribute("Action").indexOf("CALL(");
 					if (pos1 >= 0) {
 						pos2 = element2.getAttribute("Action").indexOf(")");
-						node = frame_.getSpecificXETreeNode("Function", element2.getAttribute("Action").substring(pos1+5, pos2));
+						wrkStr = element2.getAttribute("Action").substring(pos1+5, pos2);
+						if (wrkStr.contains(",")) {
+							wrkStr = wrkStr.substring(0, wrkStr.indexOf(","));
+						}
+						node = frame_.getSpecificXETreeNode("Function", wrkStr);
 						if (node == null) {
 							numberOfInvalidCalls++;
 							Object[] Cell = new Object[4];
@@ -404,7 +402,7 @@ public class DialogCheckFunctionsCalled extends JDialog {
 					}
 				}
 			}
-			//
+
 			if (element1.getAttribute("Type").equals("XF200")) { 
 				nodeList1 = element1.getElementsByTagName("Button");
 				for (int j = 0; j < nodeList1.getLength(); j++) {
@@ -412,7 +410,11 @@ public class DialogCheckFunctionsCalled extends JDialog {
 					pos1 = element2.getAttribute("Action").indexOf("CALL(");
 					if (pos1 >= 0) {
 						pos2 = element2.getAttribute("Action").indexOf(")");
-						node = frame_.getSpecificXETreeNode("Function", element2.getAttribute("Action").substring(pos1+5, pos2));
+						wrkStr = element2.getAttribute("Action").substring(pos1+5, pos2);
+						if (wrkStr.contains(",")) {
+							wrkStr = wrkStr.substring(0, wrkStr.indexOf(","));
+						}
+						node = frame_.getSpecificXETreeNode("Function", wrkStr);
 						if (node == null) {
 							numberOfInvalidCalls++;
 							Object[] Cell = new Object[4];
@@ -437,7 +439,7 @@ public class DialogCheckFunctionsCalled extends JDialog {
 					}
 				}
 			}
-			//
+
 			if (element1.getAttribute("Type").equals("XF300")) { 
 				if (!element1.getAttribute("HeaderFunction").equals("")) {
 					node = frame_.getSpecificXETreeNode("Function", element1.getAttribute("HeaderFunction"));
@@ -472,7 +474,11 @@ public class DialogCheckFunctionsCalled extends JDialog {
 						pos1 = element3.getAttribute("Action").indexOf("CALL(");
 						if (pos1 >= 0) {
 							pos2 = element3.getAttribute("Action").indexOf(")");
-							node = frame_.getSpecificXETreeNode("Function", element3.getAttribute("Action").substring(pos1+5, pos2));
+							wrkStr = element3.getAttribute("Action").substring(pos1+5, pos2);
+							if (wrkStr.contains(",")) {
+								wrkStr = wrkStr.substring(0, wrkStr.indexOf(","));
+							}
+							node = frame_.getSpecificXETreeNode("Function", wrkStr);
 							if (node == null) {
 								numberOfInvalidCalls++;
 								Object[] Cell = new Object[4];
@@ -504,7 +510,7 @@ public class DialogCheckFunctionsCalled extends JDialog {
 					}
 				}
 			}
-			//
+
 			if (element1.getAttribute("Type").equals("XF310")) { 
 				nodeList1 = element1.getElementsByTagName("AddRowListButton");
 				for (int j = 0; j < nodeList1.getLength(); j++) {
@@ -512,7 +518,11 @@ public class DialogCheckFunctionsCalled extends JDialog {
 					pos1 = element2.getAttribute("Action").indexOf("CALL(");
 					if (pos1 >= 0) {
 						pos2 = element2.getAttribute("Action").indexOf(")");
-						node = frame_.getSpecificXETreeNode("Function", element2.getAttribute("Action").substring(pos1+5, pos2));
+						wrkStr = element2.getAttribute("Action").substring(pos1+5, pos2);
+						if (wrkStr.contains(",")) {
+							wrkStr = wrkStr.substring(0, wrkStr.indexOf(","));
+						}
+						node = frame_.getSpecificXETreeNode("Function", wrkStr);
 						if (node == null) {
 							numberOfInvalidCalls++;
 							Object[] Cell = new Object[4];
@@ -526,7 +536,7 @@ public class DialogCheckFunctionsCalled extends JDialog {
 				}
 			}
 		}
-		//
+
 		return numberOfInvalidCalls;
 	}
 

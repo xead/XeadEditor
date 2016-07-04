@@ -48,7 +48,20 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "X-TEA Editor";
 	public static final String COPYRIGHT = "Copyright 2016 DBC Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
-	public static final String FULL_VERSION  = "V1.R3.M2";
+	public static final String FULL_VERSION  = "V1.R3.M4";
+	//1.3.4
+	//・XF310で見出しレコード削除のための機能ボタンを追加できるようにした
+	//・XF310で行追加用機能を起動するための機能ボタンを追加できるようにした
+	//・「データベース設定」に「ユーザフィルター値」の項目を追加した
+	//・固定値の追加パラメータの指定にともなう機能関連性検査での不具合を修正した
+	//・Macでファイル名指定用ダイアログの動作が不安定である問題に対応した
+	//・モデルのインポート機能でIOテーブルのポジションに対応した
+	//
+	//1.3.3
+	//・XF100,XF200,XF300での機能起動の設定でINSTANCE_MODE等の固定値の追加パラメータを指定できるようにした
+	//・上記の改善にともなって、XF200の更新専用設定を廃止した
+	//・文字列走査のバグを修正した
+	//
 	//1.3.2
 	//・インポート機能とファイル差異分析で、処理対象となる属性を整理した
 	//・英語リソースの表現を一部改善した

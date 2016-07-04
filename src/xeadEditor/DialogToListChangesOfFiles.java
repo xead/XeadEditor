@@ -280,6 +280,7 @@ public class DialogToListChangesOfFiles extends JDialog {
 		jProgressBar.paintImmediately(0,0,jProgressBar.getWidth(),jProgressBar.getHeight());
 		compareNewAndOldElements(systemElementNew, systemElementOld, "VariantsTable", label);
 		compareNewAndOldElements(systemElementNew, systemElementOld, "UserTable", label);
+		compareNewAndOldElements(systemElementNew, systemElementOld, "UserFilterValueTable", label);
 		compareNewAndOldElements(systemElementNew, systemElementOld, "NumberingTable", label);
 		compareNewAndOldElements(systemElementNew, systemElementOld, "UserVariantsTable", label);
 		compareNewAndOldElements(systemElementNew, systemElementOld, "SessionTable", label);
@@ -902,12 +903,23 @@ public class DialogToListChangesOfFiles extends JDialog {
 				attrList.add("KeyFields");
 				attrList.add("OrderBy");
 				attrList.add("FixedWhere");
-				attrList.add("DetailFunction");
-				attrList.add("ParmType");
 				attrList.add("InitialListing");
 				attrList.add("Size");
 				attrList.add("InitialReadCount");
 				attrList.add("InitialMsg");
+				for (int i = 0; i < attrList.size(); i++) {
+					compareNewAndOldElements(newElement, oldElement, attrList.get(i), functionLabel);
+				}
+			}
+
+			/////////////////////////
+			// Function Type XF100 //
+			/////////////////////////
+			if (newElement.getAttribute("Type").equals("XF100")) {
+				attrList.clear();
+				attrList.add("DetailFunction");
+				attrList.add("ParmType");
+				attrList.add("ParmAdditional");
 				for (int i = 0; i < attrList.size(); i++) {
 					compareNewAndOldElements(newElement, oldElement, attrList.get(i), functionLabel);
 				}
@@ -971,6 +983,7 @@ public class DialogToListChangesOfFiles extends JDialog {
 				attrList.add("HeaderKeyFields");
 				attrList.add("FixedWhere");
 				attrList.add("HeaderFunction");
+				attrList.add("HeaderParmAdditional");
 				attrList.add("Size");
 				attrList.add("StructureTable");
 				attrList.add("StructureUpperKeys");
@@ -1342,6 +1355,7 @@ public class DialogToListChangesOfFiles extends JDialog {
 				attrList.clear();
 				attrList.add("Position");
 				attrList.add("Caption");
+				attrList.add("Action");
 				oldElementList = oldElement.getElementsByTagName(tagName);
 				newElementList = newElement.getElementsByTagName(tagName);
 				for (int i = 0; i < newElementList.getLength(); i++) {
@@ -1349,8 +1363,9 @@ public class DialogToListChangesOfFiles extends JDialog {
 					isNotFound = true;
 					for (int j = 0; j < oldElementList.getLength(); j++) {
 						oldElementWork = (org.w3c.dom.Element)oldElementList.item(j);
-						if (oldElementWork.getAttribute("Number").equals(newElementWork.getAttribute("Number"))
-								&& oldElementWork.getAttribute("Action").equals(newElementWork.getAttribute("Action"))) {
+//						if (oldElementWork.getAttribute("Number").equals(newElementWork.getAttribute("Number"))
+//								&& oldElementWork.getAttribute("Action").equals(newElementWork.getAttribute("Action"))) {
+						if (oldElementWork.getAttribute("Number").equals(newElementWork.getAttribute("Number"))) {
 							elementLabel = functionLabel+ res.getString("FileDiffMessage02")
 									+ elementName + res.getString("FileDiffMessage06")
 									+ "F" + newElementWork.getAttribute("Number")
@@ -1535,6 +1550,7 @@ public class DialogToListChangesOfFiles extends JDialog {
 				attrList.add("FixedWhere");
 				attrList.add("DetailFunction");
 				attrList.add("ParmType");
+				attrList.add("ParmAdditional");
 				attrList.add("InitialListing");
 				attrList.add("InitialMsg");
 				oldElementList = oldElement.getElementsByTagName(tagName);

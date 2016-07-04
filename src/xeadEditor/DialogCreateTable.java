@@ -100,7 +100,7 @@ public class DialogCreateTable extends JDialog {
 		jLabelTableName.setText(res.getString("TableName"));
 		jLabelTableName.setBounds(new Rectangle(450, 12, 130, 20));
 		jTextFieldTableName.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextFieldTableName.setBounds(new Rectangle(585, 9, 240, 22));
+		jTextFieldTableName.setBounds(new Rectangle(585, 9, 240, 25));
 		jPanelTop.setLayout(null);
 		jPanelTop.setBorder(BorderFactory.createEtchedBorder());
 		jPanelTop.setPreferredSize(new Dimension(100, 43));
