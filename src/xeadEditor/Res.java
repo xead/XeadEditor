@@ -961,6 +961,7 @@ public class Res extends java.util.ListResourceBundle {
 		{ "SqlConsoleMessage2", "Operation failed." },
 		{ "SqlListModules", "List Modules" },
 		{ "Start", "Start" },
+		{ "StartInAddMode", "Adding first if without row" },
 		{ "Status", "Status" },
 		{ "StrNodeIconField", "Structure Node Icon Field" },
 		{ "StrNodeText", "Structure Node Text Field" },

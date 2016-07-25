@@ -969,6 +969,7 @@ public class Res_ja extends java.util.ListResourceBundle {
 		{ "SqlConsoleMessage2", "操作に失敗しました。" },
 		{ "SqlListModules", "モジュール一覧" },
 		{ "Start", "スタート" },
+		{ "StartInAddMode", "明細行が0件ならば追加処理から開始" },
 		{ "Status", "状況" },
 		{ "StrNodeIconField", "構成ノードアイコンフィールド" },
 		{ "StrNodeText", "構成ノードテキストフィールド" },

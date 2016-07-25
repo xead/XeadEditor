@@ -1879,6 +1879,7 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldFunction310SizeHeight = new JTextField();
 	private JLabel jLabelFunction310InitialMsg = new JLabel();
 	private JTextField jTextFieldFunction310InitialMsg = new JTextField();
+	private JCheckBox jCheckBoxFunction310StartInAddMode = new JCheckBox();
 	private JTabbedPane jTabbedPaneFunction310 = new JTabbedPane();
 	private org.w3c.dom.Element function310HeaderTableElement;
 	private org.w3c.dom.Element function310DetailTableElement;
@@ -9896,6 +9897,9 @@ public class Editor extends JFrame {
 		jTextFieldFunction310SizeWidth.setBounds(new Rectangle(560, 195, 60, 25));
 		jTextFieldFunction310SizeHeight.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldFunction310SizeHeight.setBounds(new Rectangle(625, 195, 60, 25));
+		jCheckBoxFunction310StartInAddMode.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jCheckBoxFunction310StartInAddMode.setText(res.getString("StartInAddMode"));
+		jCheckBoxFunction310StartInAddMode.setBounds(new Rectangle(710, 195, 400, 25));
 		//
 		jLabelFunction310InitialMsg.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310InitialMsg.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -9929,6 +9933,7 @@ public class Editor extends JFrame {
 		jPanelFunction310Top.add(jRadioButtonFunction310SizeSpecify);
 		jPanelFunction310Top.add(jTextFieldFunction310SizeWidth);
 		jPanelFunction310Top.add(jTextFieldFunction310SizeHeight);
+		jPanelFunction310Top.add(jCheckBoxFunction310StartInAddMode);
 		jPanelFunction310Top.add(jLabelFunction310InitialMsg);
 		jPanelFunction310Top.add(jTextFieldFunction310InitialMsg);
 		jPanelFunction310.add(jScrollPaneFunction310Top, BorderLayout.NORTH);
@@ -12114,6 +12119,20 @@ public class Editor extends JFrame {
 					if (wrkStr.equals(functionID)) {
 						usage = res.getString("UsageColumnPrompter");
 						break;
+					}
+				}
+			}
+			if (usage.equals("")) {
+				nodeList = element.getElementsByTagName("Button");
+				for (int j = 0; j < nodeList.getLength(); j++) {
+					workElement = (org.w3c.dom.Element)nodeList.item(j);
+					pos1 = workElement.getAttribute("Action").indexOf("CALL_TO_ADD(");
+					if (pos1 >= 0) {
+						pos2 = workElement.getAttribute("Action").indexOf(")");
+						if (workElement.getAttribute("Action").substring(pos1 + 12, pos2).equals(functionID)) {
+							usage = res.getString("UsageLaunchedByFunctionKey");
+							break;
+						}
 					}
 				}
 			}
@@ -18386,6 +18405,12 @@ public class Editor extends JFrame {
 					jTextFieldFunction310SizeHeight.setText(workTokenizer.nextToken());
 		        }
 	        }
+	        //
+	        if (domNode_.getAttribute("StartInAddMode").equals("T")) {
+				jCheckBoxFunction310StartInAddMode.setSelected(true);
+	        } else {
+				jCheckBoxFunction310StartInAddMode.setSelected(false);
+	        }
 			//
 	        if (domNode_.getAttribute("InitialMsg").equals("")) {
 				jTextFieldFunction310InitialMsg.setText("*Default");
@@ -24589,6 +24614,15 @@ public class Editor extends JFrame {
 						}
 					}
 				}
+			}
+			//
+			if (!domNode_.getAttribute("StartInAddMode").equals("T") && jCheckBoxFunction310StartInAddMode.isSelected()) {
+				valueOfFieldsChanged = true;
+				domNode_.setAttribute("StartInAddMode", "T");
+			}
+			if (domNode_.getAttribute("StartInAddMode").equals("T") && !jCheckBoxFunction310StartInAddMode.isSelected()) {
+				valueOfFieldsChanged = true;
+				domNode_.setAttribute("StartInAddMode", "F");
 			}
 			//
 			if (domNode_.getAttribute("InitialMsg").equals("")) {
@@ -30894,6 +30928,10 @@ public class Editor extends JFrame {
 				jTextFieldFunction310ButtonActionCallFunctionName.setEnabled(false);
 				jTextFieldFunction310ButtonActionCallFunctionName.setText("");
 				jButtonFunction310ButtonActionCallFunctionExchange.setEnabled(false);
+				function310ButtonActionCallFunctionFieldsToPut = "";
+				function310ButtonActionCallFunctionFieldsToPutTo = "";
+				function310ButtonActionCallFunctionFieldsToGet = "";
+				function310ButtonActionCallFunctionFieldsToGetTo = "";
 				//
 				if (jTableFunction310ButtonList.getSelectedRow() != -1) {
 					//
@@ -42126,16 +42164,27 @@ public class Editor extends JFrame {
 		if (reply == 1) {
 			informationOnThisPageChanged = true;
 			if (!function310AddRowListTableID.equals(dialogAddRowListTableEdit.getAddRowListTableID())) {
+				TableRowNumber tableRowNumber;
+				org.w3c.dom.Element parentElement;
+				int rowCount;
 				if (tableModelFunction310AddRowListColumnList.getRowCount() > 0) {
 					selectedRow_jTableFunction310AddRowListColumnList = -1;
-					TableRowNumber tableRowNumber;
-					org.w3c.dom.Element parentElement;
-					int rowCount = tableModelFunction310AddRowListColumnList.getRowCount();
+					rowCount = tableModelFunction310AddRowListColumnList.getRowCount();
 					for (int i = 0; i < rowCount; i++) {
 						tableRowNumber = (TableRowNumber)tableModelFunction310AddRowListColumnList.getValueAt(0,0);
 						parentElement = (org.w3c.dom.Element)tableRowNumber.getElement().getParentNode();
 						parentElement.removeChild(tableRowNumber.getElement());
 						tableModelFunction310AddRowListColumnList.removeRow(0);
+					}
+				}
+				if (tableModelFunction310AddRowListButtonList.getRowCount() > 0) {
+					selectedRow_jTableFunction310AddRowListButtonList = -1;
+					rowCount = tableModelFunction310AddRowListButtonList.getRowCount();
+					for (int i = 0; i < rowCount; i++) {
+						tableRowNumber = (TableRowNumber)tableModelFunction310AddRowListButtonList.getValueAt(0,0);
+						parentElement = (org.w3c.dom.Element)tableRowNumber.getElement().getParentNode();
+						parentElement.removeChild(tableRowNumber.getElement());
+						tableModelFunction310AddRowListButtonList.removeRow(0);
 					}
 				}
 				function310AddRowListTableID = dialogAddRowListTableEdit.getAddRowListTableID();

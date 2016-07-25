@@ -48,7 +48,13 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "X-TEA Editor";
 	public static final String COPYRIGHT = "Copyright 2016 DBC Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
-	public static final String FULL_VERSION  = "V1.R3.M4";
+	public static final String FULL_VERSION  = "V1.R3.M5";
+	//1.3.5
+	//・XF310で行追加用機能を起動するための機能ボタンを追加できるようにした
+	//・XF310に「明細行が0件ならば追加処理から開始」の属性を組み込んだ
+	//・XF300に明細タブを新規追加しても「変更あり」にならなかったバグを修正した
+	//・XF300に明細タブを新規追加した際、「起動時に一覧表示する」がチェックされるようにした
+	//
 	//1.3.4
 	//・XF310で見出しレコード削除のための機能ボタンを追加できるようにした
 	//・XF310で行追加用機能を起動するための機能ボタンを追加できるようにした

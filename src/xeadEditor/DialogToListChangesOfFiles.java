@@ -1015,6 +1015,7 @@ public class DialogToListChangesOfFiles extends JDialog {
 				attrList.add("DetailFixedWhere");
 				attrList.add("DetailOrderBy");
 				attrList.add("Size");
+				attrList.add("StartInAddMode");
 				attrList.add("InitialMsg");
 				attrList.add("AddRowListTable");
 				attrList.add("AddRowListWithFields");

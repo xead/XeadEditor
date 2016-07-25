@@ -313,6 +313,7 @@ public class DialogAddDetailTable extends JDialog {
 			if (objectFunctionElement_.getAttribute("Type").equals("XF300")) {
 
 				newElement.setAttribute("DetailFunction", "NONE");
+				newElement.setAttribute("InitialListing", "T");
 				newElement.setAttribute("InitialMsg", "");
 
 				int columnCount = 0;
@@ -365,6 +366,7 @@ public class DialogAddDetailTable extends JDialog {
 				childElement.setAttribute("Caption", res.getString("Output"));
 				childElement.setAttribute("Action", "OUTPUT");
 				newElement.appendChild(childElement);
+				frame_.informationOnThisPageChanged = true;
 			}
 			
 			if (objectFunctionElement_.getAttribute("Type").equals("XF390")) {
@@ -410,6 +412,7 @@ public class DialogAddDetailTable extends JDialog {
 						break;
 					}
 				}
+				frame_.informationOnThisPageChanged = true;
 			}
 
 			this.setVisible(false);
