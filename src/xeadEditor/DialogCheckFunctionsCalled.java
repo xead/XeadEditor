@@ -511,30 +511,30 @@ public class DialogCheckFunctionsCalled extends JDialog {
 				}
 			}
 
-			if (element1.getAttribute("Type").equals("XF310")) { 
-				nodeList1 = element1.getElementsByTagName("AddRowListButton");
-				for (int j = 0; j < nodeList1.getLength(); j++) {
-					element2 = (org.w3c.dom.Element)nodeList1.item(j);
-					pos1 = element2.getAttribute("Action").indexOf("CALL(");
-					if (pos1 >= 0) {
-						pos2 = element2.getAttribute("Action").indexOf(")");
-						wrkStr = element2.getAttribute("Action").substring(pos1+5, pos2);
-						if (wrkStr.contains(",")) {
-							wrkStr = wrkStr.substring(0, wrkStr.indexOf(","));
-						}
-						node = frame_.getSpecificXETreeNode("Function", wrkStr);
-						if (node == null) {
-							numberOfInvalidCalls++;
-							Object[] Cell = new Object[4];
-							Cell[0] = numberOfInvalidCalls;
-							Cell[1] = res.getString("FunctionDefinition");
-							Cell[2] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
-							Cell[3] = res.getString("CheckFunctionsCalledMessage5") + element2.getAttribute("Action").substring(pos1+5, pos2) + res.getString("CheckFunctionsCalledMessage6");
-							tableModelCheckResult.addRow(Cell);
-						}
-					}
-				}
-			}
+//			if (element1.getAttribute("Type").equals("XF310")) { 
+//				nodeList1 = element1.getElementsByTagName("AddRowListButton");
+//				for (int j = 0; j < nodeList1.getLength(); j++) {
+//					element2 = (org.w3c.dom.Element)nodeList1.item(j);
+//					pos1 = element2.getAttribute("Action").indexOf("CALL(");
+//					if (pos1 >= 0) {
+//						pos2 = element2.getAttribute("Action").indexOf(")");
+//						wrkStr = element2.getAttribute("Action").substring(pos1+5, pos2);
+//						if (wrkStr.contains(",")) {
+//							wrkStr = wrkStr.substring(0, wrkStr.indexOf(","));
+//						}
+//						node = frame_.getSpecificXETreeNode("Function", wrkStr);
+//						if (node == null) {
+//							numberOfInvalidCalls++;
+//							Object[] Cell = new Object[4];
+//							Cell[0] = numberOfInvalidCalls;
+//							Cell[1] = res.getString("FunctionDefinition");
+//							Cell[2] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+//							Cell[3] = res.getString("CheckFunctionsCalledMessage5") + element2.getAttribute("Action").substring(pos1+5, pos2) + res.getString("CheckFunctionsCalledMessage6");
+//							tableModelCheckResult.addRow(Cell);
+//						}
+//					}
+//				}
+//			}
 		}
 
 		return numberOfInvalidCalls;

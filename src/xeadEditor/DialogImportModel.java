@@ -1722,7 +1722,14 @@ public class DialogImportModel extends JDialog {
 		}
 
 		if (functionType.equals("XF000")) {
-			newElementToBeAdded.setAttribute("Script", "");
+			String comment = "";
+			if (!modelElement.getAttribute("Summary").equals("")) {
+				comment = "//" + modelElement.getAttribute("Summary") + "\n";
+			}
+			if (!modelElement.getAttribute("Descriptions").equals("")) {
+				comment = comment + "//" + modelElement.getAttribute("Descriptions") + "\n";
+			}
+			newElementToBeAdded.setAttribute("Script", comment);
 		}
 
 		if (functionType.equals("XF100")) {
@@ -2315,6 +2322,22 @@ public class DialogImportModel extends JDialog {
 			if (workElement.getAttribute("ID").equals(modelFunctionElement.getAttribute("FunctionTypeID"))) {
 				functionType = workElement.getAttribute("SortKey").trim();
 				break;
+			}
+		}
+
+		/////////////////////////////////////
+		// Set comment as script for XF000 //
+		/////////////////////////////////////
+		if (functionType.equals("XF000")) {
+			if (currentFunctionElement.getAttribute("Script").equals("")) {
+				String comment = "";
+				if (!modelFunctionElement.getAttribute("Summary").equals("")) {
+					comment = "// " + modelFunctionElement.getAttribute("Summary") + "\n";
+				}
+				if (!modelFunctionElement.getAttribute("Descriptions").equals("")) {
+					comment = comment + "// " + modelFunctionElement.getAttribute("Descriptions") + "\n";
+				}
+				currentFunctionElement.setAttribute("Script", comment);
 			}
 		}
 

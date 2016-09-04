@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2014 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2016 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -727,17 +727,17 @@ public class DialogScan extends JDialog {
 								scanAttribute(workElement1, "Function310DetailField", res.getString("Function/DTLField"), "FieldOptions_CAPTION", res.getString("Caption"));
 							}
 							//
-							workList1 = workElement.getElementsByTagName("AddRowListColumn");
-							for (int j = 0; j < workList1.getLength(); j++) {
-								workElement1 = (org.w3c.dom.Element)workList1.item(j);
-								scanAttribute(workElement1, "FunctionAddRowListColumn", res.getString("Function/AddRowListField"), "FieldOptions_CAPTION", res.getString("Caption"));
-							}
-							//
-							workList1 = workElement.getElementsByTagName("AddRowListButton");
-							for (int j = 0; j < workList1.getLength(); j++) {
-								workElement1 = (org.w3c.dom.Element)workList1.item(j);
-								scanAttribute(workElement1, "FunctionAddRowListButton", res.getString("Function/AddRowListButton"), "Caption", res.getString("Caption"));
-							}
+//							workList1 = workElement.getElementsByTagName("AddRowListColumn");
+//							for (int j = 0; j < workList1.getLength(); j++) {
+//								workElement1 = (org.w3c.dom.Element)workList1.item(j);
+//								scanAttribute(workElement1, "FunctionAddRowListColumn", res.getString("Function/AddRowListField"), "FieldOptions_CAPTION", res.getString("Caption"));
+//							}
+//							//
+//							workList1 = workElement.getElementsByTagName("AddRowListButton");
+//							for (int j = 0; j < workList1.getLength(); j++) {
+//								workElement1 = (org.w3c.dom.Element)workList1.item(j);
+//								scanAttribute(workElement1, "FunctionAddRowListButton", res.getString("Function/AddRowListButton"), "Caption", res.getString("Caption"));
+//							}
 							//
 							workList1 = workElement.getElementsByTagName("Button");
 							for (int j = 0; j < workList1.getLength(); j++) {
@@ -1211,36 +1211,37 @@ public class DialogScan extends JDialog {
 			}
 		}
 		//
-		if (elementType.equals("FunctionAddRowListColumn")) {
-			workElement1 = (org.w3c.dom.Element)element.getParentNode();
-			//
-			MainTreeNode tableNode = frame_.getSpecificXETreeNode("Table", workElement1.getAttribute("AddRowListTable"));
-			if (tableNode != null) {
-				NodeList referList = tableNode.getElement().getElementsByTagName("Refer");
-				wrkStr = element.getAttribute("DataSource");
-				int pos1 = wrkStr.indexOf(".");
-				String tableAlias = wrkStr.substring(0, pos1);
-				String fieldID = wrkStr.substring(pos1+1, wrkStr.length());
-				org.w3c.dom.Element tableElement = tableNode.getElement();
-				String tableID = frame_.getTableIDOfTableAlias(tableAlias, referList, null);
-				String tableName = tableID + " " + tableElement.getAttribute("Name");
-				org.w3c.dom.Element fieldElement = frame_.getSpecificFieldElement(tableID, fieldID);
-				String fieldName = fieldID + " " + fieldElement.getAttribute("Name");
-				//
-				workList = frame_.getDomDocument().getElementsByTagName("Subsystem");
-				for (int m = 0; m < workList.getLength(); m++) {
-					workElement2 = (org.w3c.dom.Element)workList.item(m);
-					if (workElement1.getAttribute("SubsystemID").equals(workElement2.getAttribute("ID"))) {
-						itemName = workElement2.getAttribute("ID") + " " + workElement2.getAttribute("Name") + " + "
-						+ workElement1.getAttribute("ID") + " " + workElement1.getAttribute("Name") + " + "
-						+ tableName + " + " + fieldName;
-						break;
-					}
-				}
-			}
-		}
+//		if (elementType.equals("FunctionAddRowListColumn")) {
+//			workElement1 = (org.w3c.dom.Element)element.getParentNode();
+//			//
+//			MainTreeNode tableNode = frame_.getSpecificXETreeNode("Table", workElement1.getAttribute("AddRowListTable"));
+//			if (tableNode != null) {
+//				NodeList referList = tableNode.getElement().getElementsByTagName("Refer");
+//				wrkStr = element.getAttribute("DataSource");
+//				int pos1 = wrkStr.indexOf(".");
+//				String tableAlias = wrkStr.substring(0, pos1);
+//				String fieldID = wrkStr.substring(pos1+1, wrkStr.length());
+//				org.w3c.dom.Element tableElement = tableNode.getElement();
+//				String tableID = frame_.getTableIDOfTableAlias(tableAlias, referList, null);
+//				String tableName = tableID + " " + tableElement.getAttribute("Name");
+//				org.w3c.dom.Element fieldElement = frame_.getSpecificFieldElement(tableID, fieldID);
+//				String fieldName = fieldID + " " + fieldElement.getAttribute("Name");
+//				//
+//				workList = frame_.getDomDocument().getElementsByTagName("Subsystem");
+//				for (int m = 0; m < workList.getLength(); m++) {
+//					workElement2 = (org.w3c.dom.Element)workList.item(m);
+//					if (workElement1.getAttribute("SubsystemID").equals(workElement2.getAttribute("ID"))) {
+//						itemName = workElement2.getAttribute("ID") + " " + workElement2.getAttribute("Name") + " + "
+//						+ workElement1.getAttribute("ID") + " " + workElement1.getAttribute("Name") + " + "
+//						+ tableName + " + " + fieldName;
+//						break;
+//					}
+//				}
+//			}
+//		}
 		//
-		if (elementType.equals("FunctionButton") || elementType.equals("FunctionAddRowListButton")) {
+//		if (elementType.equals("FunctionButton") || elementType.equals("FunctionAddRowListButton")) {
+		if (elementType.equals("FunctionButton")) {
 			workElement1 = (org.w3c.dom.Element)element.getParentNode();
 			workList = frame_.getDomDocument().getElementsByTagName("Subsystem");
 			for (int m = 0; m < workList.getLength(); m++) {

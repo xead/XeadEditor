@@ -251,7 +251,7 @@ public class Editor extends JFrame {
 	private ImageIcon imageIconFunction300;
 	private ImageIcon imageIconFunction310;
 	private ImageIcon imageIconFunction390;
-	private ImageIcon imageIconDialog;
+//	private ImageIcon imageIconDialog;
 	private ImageIcon imageIconFunctionButton;
 	private ImageIcon imageIconFunctionFilter;
 	private ImageIcon imageIconFunctionTab;
@@ -1972,75 +1972,9 @@ public class Editor extends JFrame {
 	private String function310DetailFieldPromptOptionCallFunctionFieldsToGet;
 	private String function310DetailFieldPromptOptionCallFunctionFieldsToGetTo;
 	//
-	private JScrollPane jScrollPaneFunction310AddRowListTableAndField = new JScrollPane();
-	private JPanel jPanelFunction310AddRowListTableAndField = new JPanel();
-	private JPanel jPanelFunction310AddRowListTableAndFieldTop = new JPanel();
-	private JLabel jLabelFunction310AddRowListTableName = new JLabel();
-	private JTextField jTextFieldFunction310AddRowListTableName = new JTextField();
-	private JButton jButtonFunction310AddRowListTableNameEdit = new JButton();
-	private JLabel jLabelFunction310AddRowListReturnDataSources = new JLabel();
-	private JTextField jTextFieldFunction310AddRowListReturnDataSources = new JTextField();
-	private JButton jButtonFunction310AddRowListReturnDataSourcesEdit = new JButton();
-	private JLabel jLabelFunction310AddRowListOrderByFields = new JLabel();
-	private JTextField jTextFieldFunction310AddRowListOrderByFields = new JTextField();
-	private JButton jButtonFunction310AddRowListOrderByFieldsEdit = new JButton();
-	private JLabel jLabelFunction310AddRowListWhere = new JLabel();
-	private JTextField jTextFieldFunction310AddRowListWhere = new JTextField();
-	private JLabel jLabelFunction310AddRowListInitialMsg = new JLabel();
-	private JTextField jTextFieldFunction310AddRowListInitialMsg = new JTextField();
-	private JTabbedPane jTabbedPaneFunction310AddRowList = new JTabbedPane();
-	private JScrollPane jScrollPaneFunction310AddRowListColumnList = new JScrollPane();
-	private TableModelReadOnlyList tableModelFunction310AddRowListColumnList = new TableModelReadOnlyList();
-	private JTable jTableFunction310AddRowListColumnList = new JTable(tableModelFunction310AddRowListColumnList);
-	private int selectedRow_jTableFunction310AddRowListColumnList;
-	private JPanel jPanelFunction310AddRowListColumnList = new JPanel();
-	private JPanel jPanelFunction310AddRowListColumnDefinition = new JPanel();
-	private JLabel jLabelFunction310AddRowListColumnTable = new JLabel();
-	private JTextField jTextFieldFunction310AddRowListColumnTable = new JTextField();
-	private JLabel jLabelFunction310AddRowListColumnTableType = new JLabel();
-	private JTextField jTextFieldFunction310AddRowListColumnTableType = new JTextField();
-	private JLabel jLabelFunction310AddRowListColumn = new JLabel();
-	private JTextField jTextFieldFunction310AddRowListColumn = new JTextField();
-	private JLabel jLabelFunction310AddRowListColumnType = new JLabel();
-	private JTextField jTextFieldFunction310AddRowListColumnType = new JTextField();
-	private JLabel jLabelFunction310AddRowListColumnLayoutOption = new JLabel();
-	private JRadioButton jRadioButtonFunction310AddRowListColumnLayoutOptionVertical = new JRadioButton();
-	private JRadioButton jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal = new JRadioButton();
-	private ButtonGroup buttonGroupFunction310AddRowListColumnLayoutOption = new ButtonGroup();
-	private JLabel jLabelFunction310AddRowListColumnWidth = new JLabel();
-	private JTextField jTextFieldFunction310AddRowListColumnWidth = new JTextField();
-	private JLabel jLabelFunction310AddRowListColumnRows = new JLabel();
-	private JTextField jTextFieldFunction310AddRowListColumnRows = new JTextField();
-	private JLabel jLabelFunction310AddRowListColumnCaptionOption = new JLabel();
-	private JRadioButton jRadioButtonFunction310AddRowListColumnCaptionOptionName = new JRadioButton();
-	private JRadioButton jRadioButtonFunction310AddRowListColumnCaptionOptionValue = new JRadioButton();
-	private ButtonGroup buttonGroupFunction310AddRowListColumnCaptionOption = new ButtonGroup();
-	private Editor_KanjiTextField jTextFieldFunction310AddRowListColumnCaptionOptionValue = new Editor_KanjiTextField();
 	private Editor_DialogBatchTableEdit dialogBatchTableEdit;
 	private Editor_DialogStructureTableEdit dialogStructureTableEdit;
 	private Editor_DialogStructureNodeIconsEdit dialogStructureNodeIconsEdit;
-	private Editor_DialogAddRowListTableEdit dialogAddRowListTableEdit;
-	private Editor_DialogAddRowListReturnDataSourcesEdit dialogAddRowListReturnDataSourcesEdit;
-	private JScrollPane jScrollPaneFunction310AddRowListButtonList = new JScrollPane();
-	private TableModelReadOnlyList tableModelFunction310AddRowListButtonList = new TableModelReadOnlyList();
-	private JTable jTableFunction310AddRowListButtonList = new JTable(tableModelFunction310AddRowListButtonList);
-	private int selectedRow_jTableFunction310AddRowListButtonList;
-	private JPanel jPanelFunction310AddRowListButtonList = new JPanel();
-	private JPanel jPanelFunction310AddRowListButtonDefinition = new JPanel();
-	private JLabel jLabelFunction310AddRowListButtonPosition = new JLabel();
-	private SpinnerNumberModel spinnerNumberModelFunction310AddRowListButtonPosition = new SpinnerNumberModel(0, 0, 5, 1);
-	private JSpinner jSpinnerFunction310AddRowListButtonPosition = new JSpinner(spinnerNumberModelFunction310AddRowListButtonPosition);
-	private JLabel jLabelFunction310AddRowListButtonKey = new JLabel();
-	private SpinnerNumberModel spinnerNumberModelFunction310AddRowListButtonKey = new SpinnerNumberModel(1, 1, 12, 1);
-	private JSpinner jSpinnerFunction310AddRowListButtonKey = new JSpinner(spinnerNumberModelFunction310AddRowListButtonKey);
-	private JLabel jLabelFunction310AddRowListButtonCaption = new JLabel();
-	private Editor_KanjiTextField jTextFieldFunction310AddRowListButtonCaption = new Editor_KanjiTextField();
-	private JLabel jLabelFunction310AddRowListButtonAction = new JLabel();
-	private JComboBox jComboBoxFunction310AddRowListButtonAction = new JComboBox();
-	private JLabel jLabelFunction310AddRowListButtonActionCallFunction = new JLabel();
-	private JTextField jTextFieldFunction310AddRowListButtonActionCallFunctionID = new JTextField();
-	private JTextField jTextFieldFunction310AddRowListButtonActionCallFunctionName = new JTextField();
-	private JLabel jLabelFunction310AddRowListButtonPositionComment = new JLabel();
 	//
 	private JScrollPane jScrollPaneFunction310ButtonList = new JScrollPane();
 	private TableModelReadOnlyList tableModelFunction310ButtonList = new TableModelReadOnlyList();
@@ -2079,13 +2013,6 @@ public class Editor extends JFrame {
 	private String function310DetailTableKeys = "";
 	private NodeList function310DetailReferList;
 	private String function310DetailOrderByFields;
-	private String function310AddRowListTableID;
-	private NodeList function310AddRowListTableReferList;
-	private String function310AddRowListWithFields;
-	private String function310AddRowListWithHeaderFields;
-	private String function310AddRowListReturnDataSources;
-	private String function310AddRowListReturnToDetailDataSources;
-	private String function310AddRowListOrderByFields;
 	/**
 	 * Definition components on jPanelFunction390
 	 */
@@ -2101,15 +2028,6 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldFunction390HeaderTableName = new JTextField();
 	private JButton jButtonFunction390HeaderTableKeyFieldsEdit = new JButton();
 	private org.w3c.dom.Element function390HeaderTableElement;
-	//private JLabel jLabelFunction390DetailTableName = new JLabel();
-	//private JTextField jTextFieldFunction390DetailTableName = new JTextField();
-	//private JButton jButtonFunction390DetailTableKeyFieldsEdit = new JButton();
-	//private org.w3c.dom.Element function390DetailTableElement;
-	//private JLabel jLabelFunction390DetailTableOrderByFields = new JLabel();
-	//private JTextField jTextFieldFunction390DetailTableOrderByFields = new JTextField();
-	//private JButton jButtonFunction390DetailTableOrderByFieldsEdit = new JButton();
-	//private JLabel jLabelFunction390DetailFixedWhere = new JLabel();
-	//private JTextField jTextFieldFunction390DetailFixedWhere = new JTextField();
 	private JLabel jLabelFunction390PageSize = new JLabel();
 	private JComboBox jComboBoxFunction390PageSize = new JComboBox();
 	private JLabel jLabelFunction390Direction = new JLabel();
@@ -2943,7 +2861,7 @@ public class Editor extends JFrame {
 	    imageIconFunction300 = new ImageIcon(xeadEditor.Editor.class.getResource("ifnc300.png"));
 	    imageIconFunction310 = new ImageIcon(xeadEditor.Editor.class.getResource("ifnc310.png"));
 	    imageIconFunction390 = new ImageIcon(xeadEditor.Editor.class.getResource("ifnc390.png"));
-	    imageIconDialog = new ImageIcon(xeadEditor.Editor.class.getResource("idialog.png"));
+//	    imageIconDialog = new ImageIcon(xeadEditor.Editor.class.getResource("idialog.png"));
 	    imageIconFunctionButton = new ImageIcon(xeadEditor.Editor.class.getResource("ifncbtn.png"));
 	    imageIconFunctionFilter = new ImageIcon(xeadEditor.Editor.class.getResource("ifncflt.png"));
 	    imageIconFunctionTab = new ImageIcon(xeadEditor.Editor.class.getResource("ifnctab.png"));
@@ -2992,8 +2910,6 @@ public class Editor extends JFrame {
 		dialogBatchTableEdit = new Editor_DialogBatchTableEdit(this);
 		dialogStructureTableEdit = new Editor_DialogStructureTableEdit(this);
 		dialogStructureNodeIconsEdit = new Editor_DialogStructureNodeIconsEdit(this);
-		dialogAddRowListTableEdit = new Editor_DialogAddRowListTableEdit(this);
-		dialogAddRowListReturnDataSourcesEdit = new Editor_DialogAddRowListReturnDataSourcesEdit(this);
 
 		/**
 		 * table-cell property controller
@@ -10352,338 +10268,6 @@ public class Editor extends JFrame {
 		jPanelFunction310DetailFieldDefinition.add(jTextFieldFunction310DetailFieldPromptOptionCallFunctionName);
 		jPanelFunction310DetailFieldDefinition.add(jButtonFunction310DetailFieldPromptOptionCallFunctionExchange);
 		//
-		jScrollPaneFunction310AddRowListTableAndField.setBorder(null);
-		jScrollPaneFunction310AddRowListTableAndField.getViewport().add(jPanelFunction310AddRowListTableAndField);
-		jPanelFunction310AddRowListTableAndField.setLayout(new BorderLayout());
-		jPanelFunction310AddRowListTableAndField.setBorder(null);
-		jPanelFunction310AddRowListTableAndField.setPreferredSize(new Dimension(1030, 500));
-		jPanelFunction310AddRowListTableAndFieldTop.setLayout(null);
-		jPanelFunction310AddRowListTableAndFieldTop.setPreferredSize(new Dimension(1030, 167));
-		jPanelFunction310AddRowListTableAndFieldTop.setBorder(BorderFactory.createEtchedBorder());
-		//
-		jLabelFunction310AddRowListTableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jLabelFunction310AddRowListTableName.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction310AddRowListTableName.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310AddRowListTableName.setText(res.getString("ListTable"));
-		jLabelFunction310AddRowListTableName.setBounds(new Rectangle(5, 12, 130, 20));
-		jTextFieldFunction310AddRowListTableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction310AddRowListTableName.setBounds(new Rectangle(140, 9, 840, 25));
-		jTextFieldFunction310AddRowListTableName.setEditable(false);
-		jButtonFunction310AddRowListTableNameEdit.setIcon(imageIconPrompt);
-		jButtonFunction310AddRowListTableNameEdit.setBounds(new Rectangle(980, 8, 28, 27));
-		jButtonFunction310AddRowListTableNameEdit.addActionListener(new Editor_jButtonFunction310AddRowListTableNameEdit_actionAdapter(this));
-		//
-		jLabelFunction310AddRowListReturnDataSources.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jLabelFunction310AddRowListReturnDataSources.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction310AddRowListReturnDataSources.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310AddRowListReturnDataSources.setText(res.getString("ReturnFields"));
-		jLabelFunction310AddRowListReturnDataSources.setBounds(new Rectangle(5, 43, 130, 20));
-		jTextFieldFunction310AddRowListReturnDataSources.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction310AddRowListReturnDataSources.setBounds(new Rectangle(140, 40, 840, 25));
-		jTextFieldFunction310AddRowListReturnDataSources.setEditable(false);
-		jButtonFunction310AddRowListReturnDataSourcesEdit.setIcon(imageIconPrompt);
-		jButtonFunction310AddRowListReturnDataSourcesEdit.setBounds(new Rectangle(980, 39, 28, 27));
-		jButtonFunction310AddRowListReturnDataSourcesEdit.addActionListener(new Editor_jButtonFunction310AddRowListReturnDataSourcesEdit_actionAdapter(this));
-		//
-		jLabelFunction310AddRowListOrderByFields.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jLabelFunction310AddRowListOrderByFields.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction310AddRowListOrderByFields.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310AddRowListOrderByFields.setText(res.getString("OrderByFields"));
-		jLabelFunction310AddRowListOrderByFields.setBounds(new Rectangle(5, 74, 130, 20));
-		jTextFieldFunction310AddRowListOrderByFields.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction310AddRowListOrderByFields.setBounds(new Rectangle(140, 71, 840, 25));
-		jTextFieldFunction310AddRowListOrderByFields.setEditable(false);
-		jButtonFunction310AddRowListOrderByFieldsEdit.setIcon(imageIconPrompt);
-		jButtonFunction310AddRowListOrderByFieldsEdit.setBounds(new Rectangle(980, 70, 28, 27));
-		jButtonFunction310AddRowListOrderByFieldsEdit.addActionListener(new Editor_jButtonToEditOrderByFields_actionAdapter(this));
-		//
-		jLabelFunction310AddRowListWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jLabelFunction310AddRowListWhere.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction310AddRowListWhere.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310AddRowListWhere.setText(res.getString("FixedWhere"));
-		jLabelFunction310AddRowListWhere.setBounds(new Rectangle(5, 105, 130, 20));
-		jTextFieldFunction310AddRowListWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction310AddRowListWhere.setBounds(new Rectangle(140, 102, 840, 25));
-		//
-		jLabelFunction310AddRowListInitialMsg.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jLabelFunction310AddRowListInitialMsg.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction310AddRowListInitialMsg.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310AddRowListInitialMsg.setText(res.getString("InitialMessage"));
-		jLabelFunction310AddRowListInitialMsg.setBounds(new Rectangle(5, 136, 130, 20));
-		jTextFieldFunction310AddRowListInitialMsg.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction310AddRowListInitialMsg.setBounds(new Rectangle(140, 133, 840, 25));
-		//
-		jPanelFunction310AddRowListTableAndFieldTop.add(jLabelFunction310AddRowListTableName);
-		jPanelFunction310AddRowListTableAndFieldTop.add(jTextFieldFunction310AddRowListTableName);
-		jPanelFunction310AddRowListTableAndFieldTop.add(jButtonFunction310AddRowListTableNameEdit);
-		jPanelFunction310AddRowListTableAndFieldTop.add(jLabelFunction310AddRowListReturnDataSources);
-		jPanelFunction310AddRowListTableAndFieldTop.add(jTextFieldFunction310AddRowListReturnDataSources);
-		jPanelFunction310AddRowListTableAndFieldTop.add(jButtonFunction310AddRowListReturnDataSourcesEdit);
-		jPanelFunction310AddRowListTableAndFieldTop.add(jLabelFunction310AddRowListOrderByFields);
-		jPanelFunction310AddRowListTableAndFieldTop.add(jTextFieldFunction310AddRowListOrderByFields);
-		jPanelFunction310AddRowListTableAndFieldTop.add(jButtonFunction310AddRowListOrderByFieldsEdit);
-		jPanelFunction310AddRowListTableAndFieldTop.add(jLabelFunction310AddRowListWhere);
-		jPanelFunction310AddRowListTableAndFieldTop.add(jTextFieldFunction310AddRowListWhere);
-		jPanelFunction310AddRowListTableAndFieldTop.add(jLabelFunction310AddRowListInitialMsg);
-		jPanelFunction310AddRowListTableAndFieldTop.add(jTextFieldFunction310AddRowListInitialMsg);
-		//
-		jPanelFunction310AddRowListTableAndField.add(jPanelFunction310AddRowListTableAndFieldTop, BorderLayout.NORTH);
-		jPanelFunction310AddRowListTableAndField.add(jTabbedPaneFunction310AddRowList, BorderLayout.CENTER);
-		jTabbedPaneFunction310AddRowList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTabbedPaneFunction310AddRowList.add(res.getString("DTLFields"), jPanelFunction310AddRowListColumnList);
-		jTabbedPaneFunction310AddRowList.setIconAt(0, imageIconDetailField);
-		jTabbedPaneFunction310AddRowList.add(res.getString("FunctionKeys"), jPanelFunction310AddRowListButtonList);
-		jTabbedPaneFunction310AddRowList.setIconAt(1, imageIconFunctionButton);
-		//
-		jScrollPaneFunction310AddRowListColumnList.setBorder(null);
-		jScrollPaneFunction310AddRowListColumnList.getViewport().add(jTableFunction310AddRowListColumnList, null);
-		jScrollPaneFunction310AddRowListColumnList.addMouseListener(new Editor_jScrollPaneFunction310AddRowListColumnList_mouseAdapter(this));
-		jTableFunction310AddRowListColumnList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTableFunction310AddRowListColumnList.setBackground(SystemColor.control);
-		jTableFunction310AddRowListColumnList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		jTableFunction310AddRowListColumnList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		jTableFunction310AddRowListColumnList.getSelectionModel().addListSelectionListener(new Editor_jTableFunction310AddRowListColumnList_listSelectionAdapter(this));
-		jTableFunction310AddRowListColumnList.setSelectionBackground(SELECTED_INACTIVE_COLOR);
-		jTableFunction310AddRowListColumnList.setSelectionForeground(Color.black);
-		jTableFunction310AddRowListColumnList.addFocusListener(new Editor_FocusListener());
-		jTableFunction310AddRowListColumnList.addMouseListener(new Editor_jTableFunction310AddRowListColumnList_mouseAdapter(this));
-	    jTableFunction310AddRowListColumnList.addMouseMotionListener(new Editor_jTableFunction310AddRowListColumnList_mouseMotionAdapter(this));
-		jTableFunction310AddRowListColumnList.addKeyListener(new Editor_TableKeyAdapter(this));
-		jTableFunction310AddRowListColumnList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction310AddRowListColumnList.addColumn("NO.");
-		tableModelFunction310AddRowListColumnList.addColumn(res.getString("DataSource"));
-		tableModelFunction310AddRowListColumnList.addColumn(res.getString("FieldType"));
-		tableModelFunction310AddRowListColumnList.addColumn(res.getString("ControlOptions"));
-		column0 = jTableFunction310AddRowListColumnList.getColumnModel().getColumn(0);
-		column1 = jTableFunction310AddRowListColumnList.getColumnModel().getColumn(1);
-		column2 = jTableFunction310AddRowListColumnList.getColumnModel().getColumn(2);
-		column3 = jTableFunction310AddRowListColumnList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(40);
-		column1.setPreferredWidth(250);
-		column2.setPreferredWidth(350);
-		column3.setPreferredWidth(450);
-		column0.setCellRenderer(rendererAlignmentCenterControlColor);
-		column1.setCellRenderer(rendererAlignmentLeftControlColor);
-		column2.setCellRenderer(rendererAlignmentLeftControlColor);
-		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction310AddRowListColumnList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction310AddRowListColumnList.getTableHeader().getDefaultRenderer();
-		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		//
-		jPanelFunction310AddRowListColumnList.setLayout(new BorderLayout());
-		jPanelFunction310AddRowListColumnList.add(jScrollPaneFunction310AddRowListColumnList, BorderLayout.CENTER);
-		jPanelFunction310AddRowListColumnList.add(jPanelFunction310AddRowListColumnDefinition, BorderLayout.SOUTH);
-		//
-		jLabelFunction310AddRowListColumnTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jLabelFunction310AddRowListColumnTable.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction310AddRowListColumnTable.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310AddRowListColumnTable.setText(res.getString("Table"));
-		jLabelFunction310AddRowListColumnTable.setBounds(new Rectangle(5, 12, 130, 20));
-		jTextFieldFunction310AddRowListColumnTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction310AddRowListColumnTable.setBounds(new Rectangle(140, 9, 350, 25));
-		jTextFieldFunction310AddRowListColumnTable.setEditable(false);
-		jLabelFunction310AddRowListColumnTableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jLabelFunction310AddRowListColumnTableType.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction310AddRowListColumnTableType.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310AddRowListColumnTableType.setText(res.getString("Type"));
-		jLabelFunction310AddRowListColumnTableType.setBounds(new Rectangle(500, 12, 100, 20));
-		jTextFieldFunction310AddRowListColumnTableType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction310AddRowListColumnTableType.setBounds(new Rectangle(605, 9, 330, 25));
-		jTextFieldFunction310AddRowListColumnTableType.setEditable(false);
-		//
-		jLabelFunction310AddRowListColumn.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jLabelFunction310AddRowListColumn.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction310AddRowListColumn.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310AddRowListColumn.setText(res.getString("Field"));
-		jLabelFunction310AddRowListColumn.setBounds(new Rectangle(5, 43, 130, 20));
-		jTextFieldFunction310AddRowListColumn.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction310AddRowListColumn.setBounds(new Rectangle(140, 40, 350, 25));
-		jTextFieldFunction310AddRowListColumn.setEditable(false);
-		jLabelFunction310AddRowListColumnType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jLabelFunction310AddRowListColumnType.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction310AddRowListColumnType.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310AddRowListColumnType.setText(res.getString("Type"));
-		jLabelFunction310AddRowListColumnType.setBounds(new Rectangle(500, 43, 100, 20));
-		jTextFieldFunction310AddRowListColumnType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction310AddRowListColumnType.setBounds(new Rectangle(605, 40, 330, 25));
-		jTextFieldFunction310AddRowListColumnType.setEditable(false);
-		//
-		jLabelFunction310AddRowListColumnLayoutOption.setText(res.getString("LayoutOption"));
-		jLabelFunction310AddRowListColumnLayoutOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jLabelFunction310AddRowListColumnLayoutOption.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction310AddRowListColumnLayoutOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310AddRowListColumnLayoutOption.setBounds(new Rectangle(5, 74, 130, 20));
-		jRadioButtonFunction310AddRowListColumnLayoutOptionVertical.setText(res.getString("LayoutVertical"));
-		jRadioButtonFunction310AddRowListColumnLayoutOptionVertical.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jRadioButtonFunction310AddRowListColumnLayoutOptionVertical.setBounds(new Rectangle(140, 71, 130, 25));
-		jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal.setText(res.getString("LayoutHorizontal"));
-		jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal.setBounds(new Rectangle(270, 71, 130, 25));
-		buttonGroupFunction310AddRowListColumnLayoutOption.add(jRadioButtonFunction310AddRowListColumnLayoutOptionVertical);
-		buttonGroupFunction310AddRowListColumnLayoutOption.add(jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal);
-		jLabelFunction310AddRowListColumnWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jLabelFunction310AddRowListColumnWidth.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction310AddRowListColumnWidth.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310AddRowListColumnWidth.setText(res.getString("FieldWidth"));
-		jLabelFunction310AddRowListColumnWidth.setBounds(new Rectangle(500, 74, 100, 20));
-		jTextFieldFunction310AddRowListColumnWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction310AddRowListColumnWidth.setBounds(new Rectangle(605, 71, 60, 25));
-		jTextFieldFunction310AddRowListColumnWidth.setText("");
-		jLabelFunction310AddRowListColumnRows.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jLabelFunction310AddRowListColumnRows.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction310AddRowListColumnRows.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310AddRowListColumnRows.setText(res.getString("FieldRows"));
-		jLabelFunction310AddRowListColumnRows.setBounds(new Rectangle(675, 74, 60, 20));
-		jTextFieldFunction310AddRowListColumnRows.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction310AddRowListColumnRows.setBounds(new Rectangle(740, 71, 60, 25));
-		jTextFieldFunction310AddRowListColumnRows.setText("");
-		//
-		jLabelFunction310AddRowListColumnCaptionOption.setText(res.getString("Caption"));
-		jLabelFunction310AddRowListColumnCaptionOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jLabelFunction310AddRowListColumnCaptionOption.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction310AddRowListColumnCaptionOption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310AddRowListColumnCaptionOption.setBounds(new Rectangle(5, 105, 130, 20));
-		jRadioButtonFunction310AddRowListColumnCaptionOptionName.setText(res.getString("FieldColumnName2"));
-		jRadioButtonFunction310AddRowListColumnCaptionOptionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jRadioButtonFunction310AddRowListColumnCaptionOptionName.setBounds(new Rectangle(140, 102, 130, 25));
-		jRadioButtonFunction310AddRowListColumnCaptionOptionName.addChangeListener(new Editor_jRadioButtonFunction310AddRowListColumnCaptionOption_changeAdapter(this));
-		jRadioButtonFunction310AddRowListColumnCaptionOptionValue.setText(res.getString("ValueSpecified"));
-		jRadioButtonFunction310AddRowListColumnCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jRadioButtonFunction310AddRowListColumnCaptionOptionValue.setBounds(new Rectangle(270, 102, 130, 25));
-		jRadioButtonFunction310AddRowListColumnCaptionOptionValue.addChangeListener(new Editor_jRadioButtonFunction310AddRowListColumnCaptionOption_changeAdapter(this));
-		buttonGroupFunction310AddRowListColumnCaptionOption.add(jRadioButtonFunction310AddRowListColumnCaptionOptionName);
-		buttonGroupFunction310AddRowListColumnCaptionOption.add(jRadioButtonFunction310AddRowListColumnCaptionOptionValue);
-		jTextFieldFunction310AddRowListColumnCaptionOptionValue.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction310AddRowListColumnCaptionOptionValue.setBounds(new Rectangle(400, 102, 265, 25));
-		jTextFieldFunction310AddRowListColumnCaptionOptionValue.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
-		//
-		jPanelFunction310AddRowListColumnDefinition.setPreferredSize(new Dimension(100, 136));
-		jPanelFunction310AddRowListColumnDefinition.setLayout(null);
-		jPanelFunction310AddRowListColumnDefinition.setBorder(null);
-		jPanelFunction310AddRowListColumnDefinition.add(jLabelFunction310AddRowListColumnTable);
-		jPanelFunction310AddRowListColumnDefinition.add(jTextFieldFunction310AddRowListColumnTable);
-		jPanelFunction310AddRowListColumnDefinition.add(jLabelFunction310AddRowListColumnTableType);
-		jPanelFunction310AddRowListColumnDefinition.add(jTextFieldFunction310AddRowListColumnTableType);
-		jPanelFunction310AddRowListColumnDefinition.add(jLabelFunction310AddRowListColumn);
-		jPanelFunction310AddRowListColumnDefinition.add(jTextFieldFunction310AddRowListColumn);
-		jPanelFunction310AddRowListColumnDefinition.add(jLabelFunction310AddRowListColumnType);
-		jPanelFunction310AddRowListColumnDefinition.add(jTextFieldFunction310AddRowListColumnType);
-		jPanelFunction310AddRowListColumnDefinition.add(jLabelFunction310AddRowListColumnLayoutOption);
-		jPanelFunction310AddRowListColumnDefinition.add(jRadioButtonFunction310AddRowListColumnLayoutOptionVertical);
-		jPanelFunction310AddRowListColumnDefinition.add(jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal);
-		jPanelFunction310AddRowListColumnDefinition.add(jLabelFunction310AddRowListColumnWidth);
-		jPanelFunction310AddRowListColumnDefinition.add(jTextFieldFunction310AddRowListColumnWidth);
-		jPanelFunction310AddRowListColumnDefinition.add(jLabelFunction310AddRowListColumnRows);
-		jPanelFunction310AddRowListColumnDefinition.add(jTextFieldFunction310AddRowListColumnRows);
-		jPanelFunction310AddRowListColumnDefinition.add(jLabelFunction310AddRowListColumnCaptionOption);
-		jPanelFunction310AddRowListColumnDefinition.add(jRadioButtonFunction310AddRowListColumnCaptionOptionName);
-		jPanelFunction310AddRowListColumnDefinition.add(jRadioButtonFunction310AddRowListColumnCaptionOptionValue);
-		jPanelFunction310AddRowListColumnDefinition.add(jTextFieldFunction310AddRowListColumnCaptionOptionValue);
-		//
-		jScrollPaneFunction310AddRowListButtonList.setBorder(null);
-		jScrollPaneFunction310AddRowListButtonList.getViewport().add(jTableFunction310AddRowListButtonList, null);
-		jScrollPaneFunction310AddRowListButtonList.addMouseListener(new Editor_jScrollPaneFunction310AddRowListButtonList_mouseAdapter(this));
-		jTableFunction310AddRowListButtonList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTableFunction310AddRowListButtonList.setBackground(SystemColor.control);
-		jTableFunction310AddRowListButtonList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		jTableFunction310AddRowListButtonList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		jTableFunction310AddRowListButtonList.getSelectionModel().addListSelectionListener(new Editor_jTableFunction310AddRowListButtonList_listSelectionAdapter(this));
-		jTableFunction310AddRowListButtonList.setSelectionBackground(SELECTED_INACTIVE_COLOR);
-		jTableFunction310AddRowListButtonList.setSelectionForeground(Color.black);
-		jTableFunction310AddRowListButtonList.addFocusListener(new Editor_FocusListener());
-		jTableFunction310AddRowListButtonList.addMouseListener(new Editor_jTableFunction310AddRowListButtonList_mouseAdapter(this));
-		jTableFunction310AddRowListButtonList.addKeyListener(new Editor_TableKeyAdapter(this));
-		jTableFunction310AddRowListButtonList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction310AddRowListButtonList.addColumn("NO.");
-		tableModelFunction310AddRowListButtonList.addColumn(res.getString("Pos_short"));
-		tableModelFunction310AddRowListButtonList.addColumn(res.getString("Caption"));
-		tableModelFunction310AddRowListButtonList.addColumn(res.getString("Action"));
-		column0 = jTableFunction310AddRowListButtonList.getColumnModel().getColumn(0);
-		column1 = jTableFunction310AddRowListButtonList.getColumnModel().getColumn(1);
-		column2 = jTableFunction310AddRowListButtonList.getColumnModel().getColumn(2);
-		column3 = jTableFunction310AddRowListButtonList.getColumnModel().getColumn(3);
-		column0.setPreferredWidth(40);
-		column1.setPreferredWidth(50);
-		column2.setPreferredWidth(200);
-		column3.setPreferredWidth(300);
-		column0.setCellRenderer(rendererAlignmentCenterControlColor);
-		column1.setCellRenderer(rendererAlignmentCenterControlColor);
-		column2.setCellRenderer(rendererAlignmentLeftControlColor);
-		column3.setCellRenderer(rendererAlignmentLeftControlColor);
-		jTableFunction310AddRowListButtonList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		rendererTableHeader = (DefaultTableCellRenderer)jTableFunction310AddRowListButtonList.getTableHeader().getDefaultRenderer();
-		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		//
-		jPanelFunction310AddRowListButtonList.setLayout(new BorderLayout());
-		jPanelFunction310AddRowListButtonList.add(jScrollPaneFunction310AddRowListButtonList, BorderLayout.CENTER);
-		jPanelFunction310AddRowListButtonList.add(jPanelFunction310AddRowListButtonDefinition, BorderLayout.SOUTH);
-		//
-		jLabelFunction310AddRowListButtonPosition.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jLabelFunction310AddRowListButtonPosition.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction310AddRowListButtonPosition.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310AddRowListButtonPosition.setText(res.getString("Position"));
-		jLabelFunction310AddRowListButtonPosition.setBounds(new Rectangle(5, 12, 130, 20));
-		jSpinnerFunction310AddRowListButtonPosition.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jSpinnerFunction310AddRowListButtonPosition.setBounds(new Rectangle(140, 9, 40, 25));
-		jLabelFunction310AddRowListButtonPositionComment.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jLabelFunction310AddRowListButtonPositionComment.setText(res.getString("ButtonPositionComment"));
-		jLabelFunction310AddRowListButtonPositionComment.setBounds(new Rectangle(185, 12, 230, 20));
-		jLabelFunction310AddRowListButtonKey.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jLabelFunction310AddRowListButtonKey.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction310AddRowListButtonKey.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310AddRowListButtonKey.setText(res.getString("FunctionKeyNo"));
-		jLabelFunction310AddRowListButtonKey.setBounds(new Rectangle(415, 12, 130, 20));
-		jSpinnerFunction310AddRowListButtonKey.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jSpinnerFunction310AddRowListButtonKey.setBounds(new Rectangle(550, 9, 40, 25));
-		jLabelFunction310AddRowListButtonCaption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jLabelFunction310AddRowListButtonCaption.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction310AddRowListButtonCaption.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310AddRowListButtonCaption.setText(res.getString("Caption"));
-		jLabelFunction310AddRowListButtonCaption.setBounds(new Rectangle(600, 12, 130, 20));
-		jTextFieldFunction310AddRowListButtonCaption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction310AddRowListButtonCaption.setBounds(new Rectangle(735, 9, 100, 25));
-		//
-		jLabelFunction310AddRowListButtonAction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jLabelFunction310AddRowListButtonAction.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction310AddRowListButtonAction.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310AddRowListButtonAction.setText(res.getString("Action"));
-		jLabelFunction310AddRowListButtonAction.setBounds(new Rectangle(5, 43, 130, 20));
-		jComboBoxFunction310AddRowListButtonAction.setEditable(false);
-		jComboBoxFunction310AddRowListButtonAction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jComboBoxFunction310AddRowListButtonAction.setBounds(new Rectangle(140, 40, 265, 25));
-		jComboBoxFunction310AddRowListButtonAction.addActionListener(new Editor_jComboBoxFunction310AddRowListButtonAction_actionAdapter(this));
-		jComboBoxFunction310AddRowListButtonAction.addItem(res.getString("ActionExit"));
-		jComboBoxFunction310AddRowListButtonAction.addItem(res.getString("ActionAddRowWithSelected"));
-		jComboBoxFunction310AddRowListButtonAction.addItem(res.getString("ActionAddBlankRow"));
-		jComboBoxFunction310AddRowListButtonAction.addItem(res.getString("ActionCallFunction"));
-		jLabelFunction310AddRowListButtonActionCallFunction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jLabelFunction310AddRowListButtonActionCallFunction.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelFunction310AddRowListButtonActionCallFunction.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelFunction310AddRowListButtonActionCallFunction.setText(res.getString("FunctionID"));
-		jLabelFunction310AddRowListButtonActionCallFunction.setBounds(new Rectangle(415, 43, 130, 20));
-		jTextFieldFunction310AddRowListButtonActionCallFunctionID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction310AddRowListButtonActionCallFunctionID.setBounds(new Rectangle(550, 40, 120, 25));
-		jTextFieldFunction310AddRowListButtonActionCallFunctionID.addKeyListener(new Editor_jTextFieldFunction310AddRowListButtonActionCallFunctionID_keyAdapter(this));
-		jTextFieldFunction310AddRowListButtonActionCallFunctionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction310AddRowListButtonActionCallFunctionName.setBounds(new Rectangle(675, 40, 400, 25));
-		jTextFieldFunction310AddRowListButtonActionCallFunctionName.setEditable(false);
-		//
-		jPanelFunction310AddRowListButtonDefinition.setPreferredSize(new Dimension(100,74));
-		jPanelFunction310AddRowListButtonDefinition.setLayout(null);
-		jPanelFunction310AddRowListButtonDefinition.setBorder(null);
-		jPanelFunction310AddRowListButtonDefinition.add(jLabelFunction310AddRowListButtonPosition);
-		jPanelFunction310AddRowListButtonDefinition.add(jSpinnerFunction310AddRowListButtonPosition);
-		jPanelFunction310AddRowListButtonDefinition.add(jLabelFunction310AddRowListButtonPositionComment);
-		jPanelFunction310AddRowListButtonDefinition.add(jLabelFunction310AddRowListButtonKey);
-		jPanelFunction310AddRowListButtonDefinition.add(jSpinnerFunction310AddRowListButtonKey);
-		jPanelFunction310AddRowListButtonDefinition.add(jLabelFunction310AddRowListButtonCaption);
-		jPanelFunction310AddRowListButtonDefinition.add(jTextFieldFunction310AddRowListButtonCaption);
-		jPanelFunction310AddRowListButtonDefinition.add(jLabelFunction310AddRowListButtonAction);
-		jPanelFunction310AddRowListButtonDefinition.add(jComboBoxFunction310AddRowListButtonAction);
-		jPanelFunction310AddRowListButtonDefinition.add(jLabelFunction310AddRowListButtonActionCallFunction);
-		jPanelFunction310AddRowListButtonDefinition.add(jTextFieldFunction310AddRowListButtonActionCallFunctionID);
-		jPanelFunction310AddRowListButtonDefinition.add(jTextFieldFunction310AddRowListButtonActionCallFunctionName);
-		//
 		jScrollPaneFunction310ButtonList.setBorder(null);
 		jScrollPaneFunction310ButtonList.getViewport().add(jTableFunction310ButtonList, null);
 		jScrollPaneFunction310ButtonList.addMouseListener(new Editor_jScrollPaneFunction310ButtonList_mouseAdapter(this));
@@ -10800,12 +10384,10 @@ public class Editor extends JFrame {
 		jTabbedPaneFunction310.setIconAt(0, imageIconField);
 		jTabbedPaneFunction310.add(res.getString("DTLFields"), jPanelFunction310DetailFieldList);
 		jTabbedPaneFunction310.setIconAt(1, imageIconDetailField);
-		jTabbedPaneFunction310.add(res.getString("AddRowList"), jScrollPaneFunction310AddRowListTableAndField);
-		jTabbedPaneFunction310.setIconAt(2, imageIconDialog);
 		jTabbedPaneFunction310.add(res.getString("FunctionKeys"), jPanelFunction310ButtonList);
-		jTabbedPaneFunction310.setIconAt(3, imageIconFunctionButton);
+		jTabbedPaneFunction310.setIconAt(2, imageIconFunctionButton);
 		jTabbedPaneFunction310.add(res.getString("FunctionsWhereUsed"), jScrollPaneFunction310UsageList);
-		jTabbedPaneFunction310.setIconAt(4, imageIconFunctionUsage);
+		jTabbedPaneFunction310.setIconAt(3, imageIconFunctionUsage);
 		//
 		jScrollPaneFunction310UsageList.setBorder(null);
 		jScrollPaneFunction310UsageList.getViewport().add(jTableFunction310UsageList, null);
@@ -12834,25 +12416,6 @@ public class Editor extends JFrame {
     	return descriptions;
     }
 
-    private String getDescriptionsOfFunction310AddRowListButtonAction(String action) {
-    	String descriptions = "";
-    	if (action.length() >= 4 && action.substring(0, 4).equals("EXIT")) {
-    		descriptions = res.getString("ActionExit");
-    	}
-    	if (action.length() >= 12 && action.substring(0, 12).equals("ADD_SELECTED")) {
-    		descriptions = res.getString("ActionAddRowWithSelected");
-    	}
-    	if (action.length() >= 9 && action.substring(0, 9).equals("ADD_BLANK")) {
-    		descriptions = res.getString("ActionAddBlankRow");
-    	}
-    	if (action.length() >= 4 && action.substring(0, 4).equals("CALL")) {
-			int pos = action.indexOf(")");
-			String wrkStr = action.substring(5, pos);
-			descriptions = wrkStr + res.getString("ActionCall");
-    	}
-    	return descriptions;
-    }
-
     private String getDescriptionsOfFunction310ButtonAction(String action) {
     	String descriptions = "";
     	if (action.length() >= 4 && action.substring(0, 4).equals("EXIT")) {
@@ -14393,47 +13956,6 @@ public class Editor extends JFrame {
 	    	jPopupMenuComponent.add(jMenuItemComponentToDelete);
 	    }
 	    //
-	    if (e.getComponent().equals(jScrollPaneFunction310AddRowListColumnList) && !function310AddRowListTableID.equals("")) {
-	    	componentType_jPopupMenuComponent = "Function310AddRowListColumnList";
-    		jPopupMenuComponent.add(jMenuItemComponentToAdd);
-	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
-	    	jPopupMenuComponent.add(jMenuItemComponentToCheckLayout);
-			if (jTableFunction310AddRowListColumnList.getRowCount() == 0) {
-				jMenuItemComponentToListCsv.setEnabled(false);
-				jMenuItemComponentToCheckLayout.setEnabled(false);
-			}
-	    }
-	    if (e.getComponent().equals(jTableFunction310AddRowListColumnList) && !function310AddRowListTableID.equals("")) {
-	    	componentType_jPopupMenuComponent = "Function310AddRowListColumnList";
-	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
-	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
-	    	jPopupMenuComponent.add(jMenuItemComponentToCheckLayout);
-	    	jPopupMenuComponent.addSeparator();
-	    	jPopupMenuComponent.add(jMenuItemComponentToDelete);
-	    }
-	    //
-	    if (e.getComponent().equals(jScrollPaneFunction310AddRowListButtonList)) {
-	    	componentType_jPopupMenuComponent = "Function310AddRowListButtonList";
-	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
-			if (tableModelFunction310AddRowListButtonList.getRowCount() >= 7) {
-				jMenuItemComponentToAdd.setEnabled(false);
-			}
-	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
-			if (jTableFunction310AddRowListButtonList.getRowCount() == 0) {
-				jMenuItemComponentToListCsv.setEnabled(false);
-			}
-	    }
-	    if (e.getComponent().equals(jTableFunction310AddRowListButtonList)) {
-	    	componentType_jPopupMenuComponent = "Function310AddRowListButtonList";
-	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
-	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
-	    	jPopupMenuComponent.addSeparator();
-	    	jPopupMenuComponent.add(jMenuItemComponentToDelete);
-			if (tableModelFunction310AddRowListButtonList.getRowCount() >= 7) {
-				jMenuItemComponentToAdd.setEnabled(false);
-			}
-	    }
-	    //
 	    if (e.getComponent().equals(jScrollPaneFunction310ButtonList)) {
 	    	componentType_jPopupMenuComponent = "Function310ButtonList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToAdd);
@@ -15248,23 +14770,6 @@ public class Editor extends JFrame {
 	    		        		this.add(node);
 	    		        		node.add(new MenuTreeNode(null));
 	    		        	}
-	        			}
-	        		}
-	        	}
-	        }
-	        //
-	        if (domNode_.getAttribute("Type").equals("XF310")) { 
-	        	nodeList1 = domNode_.getElementsByTagName("AddRowListButton");
-	        	for (int j = 0; j < nodeList1.getLength(); j++) {
-	        		wrkElement = (org.w3c.dom.Element)nodeList1.item(j);
-	        		pos1 = wrkElement.getAttribute("Action").indexOf("CALL(");
-	        		if (pos1 >= 0) {
-	        			pos2 = wrkElement.getAttribute("Action").indexOf(")");
-	        			wrkNode = getSpecificXETreeNode("Function", wrkElement.getAttribute("Action").substring(pos1+5, pos2));
-	        			if (wrkNode != null) {
-	    	        		MenuTreeNode node = new MenuTreeNode(wrkNode.getElement());
-	    	        		this.add(node);
-	    	        		node.add(new MenuTreeNode(null));
 	        			}
 	        		}
 	        	}
@@ -16740,6 +16245,8 @@ public class Editor extends JFrame {
 			/////////////////////
 			// Table Data List //
 			/////////////////////
+			jTextFieldTableDataSelectWhere.setText("*All");
+			jTextFieldTableDataSelectOrderBy.setText("*Key");
 			jButtonTableDataFieldsToUpdate.setEnabled(false); //Refer to "Commit Check" of update method //
 			if (isTableDataEditable) {
 				String databaseName = databaseNameList.get(databaseIDList.indexOf(domNode_.getAttribute("DB")));
@@ -18327,8 +17834,6 @@ public class Editor extends JFrame {
 		    tableRowsAreBeingSetup = true;
 			selectedRow_jTableFunction310HeaderFieldList = -1;
 			selectedRow_jTableFunction310DetailFieldList = -1;
-			selectedRow_jTableFunction310AddRowListColumnList = -1;
-			selectedRow_jTableFunction310AddRowListButtonList = -1;
 			selectedRow_jTableFunction310ButtonList = -1;
 			//
 			jLabelSubtitle.setText(((MainTreeNode)this.getParent().getParent()).getName() + " - " + this.getName());
@@ -18478,62 +17983,12 @@ public class Editor extends JFrame {
 				tableModelFunction310DetailFieldList.addRow(Cell);
 			}
 		    //
-			//AddRowList Column List//
-			setupAddRowListInformation(domNode_);
-			//
-			if (tableModelFunction310AddRowListColumnList.getRowCount() > 0) {
-				int rowCount = tableModelFunction310AddRowListColumnList.getRowCount();
-				for (int i = 0; i < rowCount; i++) {tableModelFunction310AddRowListColumnList.removeRow(0);}
-			}
-			NodeList referFieldList = domNode_.getElementsByTagName("AddRowListColumn");
-			sortingList = getSortedListModel(referFieldList, "Order");
-		    for (int i = 0; i < sortingList.getSize(); i++) {
-		    	//
-		        element = (org.w3c.dom.Element)sortingList.getElementAt(i);
-		        //
-				Object[] Cell = new Object[4];
-				Cell[0] = new TableRowNumber(i+1, element);
-				wrkStr = element.getAttribute("DataSource");
-				wrkInt = wrkStr.indexOf(".");
-				tableAlias = wrkStr.substring(0, wrkInt);
-				//tableID = getTableIDOfTableAlias(tableAlias, function310DetailReferList, function310HeaderReferList);
-				tableID = getTableIDOfTableAlias(tableAlias, function310AddRowListTableReferList, null);
-				fieldID = wrkStr.substring(wrkInt+1, wrkStr.length());
-		        fieldElement = getSpecificFieldElement(tableID, fieldID);
-		        if (fieldElement.getAttribute("Name").equals("")) {
-					Cell[1] = tableAlias + "." + fieldID;
-		        } else {
-					Cell[1] = tableAlias + "." + fieldElement.getAttribute("Name");
-		        }
-		        wrkStr = getDescriptionsOfTypeOptions(fieldElement, true, null);
-		        Cell[2] = getDescriptionsOfTypeAndSize(fieldElement.getAttribute("Type"), fieldElement.getAttribute("Size"), fieldElement.getAttribute("Decimal")) + wrkStr;
-		        Cell[3] = getDescriptionsOfColumnOptions(element.getAttribute("FieldOptions"));
-				tableModelFunction310AddRowListColumnList.addRow(Cell);
-			}
-		    //
-			//AddRowListButton List//
-			if (tableModelFunction310AddRowListButtonList.getRowCount() > 0) {
-				int rowCount = tableModelFunction310AddRowListButtonList.getRowCount();
-				for (int i = 0; i < rowCount; i++) {tableModelFunction310AddRowListButtonList.removeRow(0);}
-			}
-			NodeList buttonList = domNode_.getElementsByTagName("AddRowListButton");
-			sortingList = getSortedListModel(buttonList, "Position");
-		    for (int i = 0; i < sortingList.getSize(); i++) {
-		        element = (org.w3c.dom.Element)sortingList.getElementAt(i);
-				Object[] Cell = new Object[4];
-				Cell[0] = new TableRowNumber(i+1, element);
-				Cell[1] = element.getAttribute("Position");
-				Cell[2] = "F" + element.getAttribute("Number") + " " + element.getAttribute("Caption");
-				Cell[3] = getDescriptionsOfFunction310AddRowListButtonAction(element.getAttribute("Action"));
-				tableModelFunction310AddRowListButtonList.addRow(Cell);
-			}
-		    //
 			//Button List//
 			if (tableModelFunction310ButtonList.getRowCount() > 0) {
 				int rowCount = tableModelFunction310ButtonList.getRowCount();
 				for (int i = 0; i < rowCount; i++) {tableModelFunction310ButtonList.removeRow(0);}
 			}
-			buttonList = domNode_.getElementsByTagName("Button");
+			NodeList buttonList = domNode_.getElementsByTagName("Button");
 			sortingList = getSortedListModel(buttonList, "Position");
 		    for (int i = 0; i < sortingList.getSize(); i++) {
 		        element = (org.w3c.dom.Element)sortingList.getElementAt(i);
@@ -18613,18 +18068,6 @@ public class Editor extends JFrame {
 				selectedRow_jTableFunction310DetailFieldList = 0;
 			} else {
 				jTableFunction310DetailFieldList_valueChanged(null);
-			}
-			if (tableModelFunction310AddRowListColumnList.getRowCount() > 0) {
-				jTableFunction310AddRowListColumnList.setRowSelectionInterval(0, 0);
-				selectedRow_jTableFunction310AddRowListColumnList = 0;
-			} else {
-				jTableFunction310AddRowListColumnList_valueChanged(null);
-			}
-			if (tableModelFunction310AddRowListButtonList.getRowCount() > 0) {
-				jTableFunction310AddRowListButtonList.setRowSelectionInterval(0, 0);
-				selectedRow_jTableFunction310AddRowListButtonList = 0;
-			} else {
-				jTableFunction310AddRowListButtonList_valueChanged(null);
 			}
 			if (tableModelFunction310ButtonList.getRowCount() > 0) {
 				jTableFunction310ButtonList.setRowSelectionInterval(0, 0);
@@ -24642,76 +24085,11 @@ public class Editor extends JFrame {
 				}
 			}
 			//
-			if (!domNode_.getAttribute("AddRowListTable").equals(function310AddRowListTableID)) {
-				valueOfFieldsChanged = true;
-				domNode_.setAttribute("AddRowListTable", function310AddRowListTableID);
-			}
-			if (!domNode_.getAttribute("AddRowListWithFields").equals(function310AddRowListWithFields)) {
-				valueOfFieldsChanged = true;
-				domNode_.setAttribute("AddRowListWithFields", function310AddRowListWithFields);
-			}
-			if (!domNode_.getAttribute("AddRowListWithHeaderFields").equals(function310AddRowListWithHeaderFields)) {
-				valueOfFieldsChanged = true;
-				domNode_.setAttribute("AddRowListWithHeaderFields", function310AddRowListWithHeaderFields);
-			}
-			if (!domNode_.getAttribute("AddRowListReturnDataSources").equals(function310AddRowListReturnDataSources)) {
-				valueOfFieldsChanged = true;
-				domNode_.setAttribute("AddRowListReturnDataSources", function310AddRowListReturnDataSources);
-			}
-			if (!domNode_.getAttribute("AddRowListReturnToDetailDataSources").equals(function310AddRowListReturnToDetailDataSources)) {
-				valueOfFieldsChanged = true;
-				domNode_.setAttribute("AddRowListReturnToDetailDataSources", function310AddRowListReturnToDetailDataSources);
-			}
-			if (!domNode_.getAttribute("AddRowListOrderBy").equals(function310AddRowListOrderByFields)) {
-				valueOfFieldsChanged = true;
-				domNode_.setAttribute("AddRowListOrderBy", function310AddRowListOrderByFields);
-			}
-			if (domNode_.getAttribute("AddRowListWhere").equals("")) {
-				if (!jTextFieldFunction310AddRowListWhere.getText().equals("*None") && !jTextFieldFunction310AddRowListWhere.getText().equals("")) {
-					valueOfFieldsChanged = true;
-					domNode_.setAttribute("AddRowListWhere", jTextFieldFunction310AddRowListWhere.getText());
-				}
-			} else {
-				if (jTextFieldFunction310AddRowListWhere.getText().equals("*None") || jTextFieldFunction310AddRowListWhere.getText().equals("")) {
-					valueOfFieldsChanged = true;
-					domNode_.setAttribute("AddRowListWhere", "");
-				} else {
-					if (!domNode_.getAttribute("AddRowListWhere").equals(jTextFieldFunction310AddRowListWhere.getText())) {
-						valueOfFieldsChanged = true;
-						domNode_.setAttribute("AddRowListWhere", jTextFieldFunction310AddRowListWhere.getText());
-					}
-				}
-			}
-			if (domNode_.getAttribute("AddRowListInitialMsg").equals("")) {
-				if (!jTextFieldFunction310AddRowListInitialMsg.getText().equals("*Default") && !jTextFieldFunction310AddRowListInitialMsg.getText().equals("")) {
-					valueOfFieldsChanged = true;
-					domNode_.setAttribute("AddRowListInitialMsg", jTextFieldFunction310AddRowListInitialMsg.getText());
-				}
-			} else {
-				if (jTextFieldFunction310AddRowListInitialMsg.getText().equals("*Default") || jTextFieldFunction310AddRowListInitialMsg.getText().equals("")) {
-					valueOfFieldsChanged = true;
-					domNode_.setAttribute("AddRowListInitialMsg", "");
-				} else {
-					if (!domNode_.getAttribute("AddRowListInitialMsg").equals(jTextFieldFunction310AddRowListInitialMsg.getText())) {
-						valueOfFieldsChanged = true;
-						domNode_.setAttribute("AddRowListInitialMsg", jTextFieldFunction310AddRowListInitialMsg.getText());
-					}
-				}
-			}
-			//
 			if (updateFieldsForFunction310HeaderField()) {
 				valueOfFieldsChanged = true;
 			}
 			//
 			if (updateFieldsForFunction310DetailField()) {
-				valueOfFieldsChanged = true;
-			}
-			//
-			if (updateFieldsForFunction310AddRowListColumn()) {
-				valueOfFieldsChanged = true;
-			}
-			//
-			if (updateFieldsForFunction310AddRowListButton()) {
 				valueOfFieldsChanged = true;
 			}
 			//
@@ -24726,77 +24104,6 @@ public class Editor extends JFrame {
 			}
 			//
 			//Return Update status//
-			return valueOfFieldsChanged;
-		}
-		
-		private boolean updateFieldsForFunction310AddRowListButton() throws Exception {
-			boolean valueOfFieldsChanged = informationOnThisPageChanged;
-			String wrkStr;
-			int pos1, pos2;
-			//
-			if (selectedRow_jTableFunction310AddRowListButtonList > -1) {
-				//
-				TableRowNumber tableRowNumber = (TableRowNumber)tableModelFunction310AddRowListButtonList.getValueAt(selectedRow_jTableFunction310AddRowListButtonList, 0);
-				org.w3c.dom.Element element = tableRowNumber.getElement();
-				//
-				wrkStr = spinnerNumberModelFunction310AddRowListButtonPosition.getNumber().toString();
-				if (!wrkStr.equals(element.getAttribute("Position"))) {
-					valueOfFieldsChanged = true;
-					element.setAttribute("Position", wrkStr);
-				}
-				//
-				wrkStr = spinnerNumberModelFunction310AddRowListButtonKey.getNumber().toString();
-				if (!wrkStr.equals(element.getAttribute("Number"))) {
-					valueOfFieldsChanged = true;
-					element.setAttribute("Number", wrkStr);
-				}
-				//
-				wrkStr = jTextFieldFunction310AddRowListButtonCaption.getText();
-				if (!wrkStr.equals(element.getAttribute("Caption"))) {
-					valueOfFieldsChanged = true;
-					element.setAttribute("Caption", wrkStr);
-				}
-				//
-				if (jComboBoxFunction310AddRowListButtonAction.getSelectedIndex() == 0) {
-					if (!element.getAttribute("Action").contains("EXIT")) {
-						valueOfFieldsChanged = true;
-						element.setAttribute("Action", "EXIT");
-					}
-				}
-				if (jComboBoxFunction310AddRowListButtonAction.getSelectedIndex() == 1) {
-					if (!element.getAttribute("Action").contains("ADD_SELECTED")) {
-						valueOfFieldsChanged = true;
-						element.setAttribute("Action", "ADD_SELECTED");
-					}
-				}
-				if (jComboBoxFunction310AddRowListButtonAction.getSelectedIndex() == 2) {
-					if (!element.getAttribute("Action").contains("ADD_BLANK")) {
-						valueOfFieldsChanged = true;
-						element.setAttribute("Action", "ADD_BLANK");
-					}
-				}
-				if (jComboBoxFunction310AddRowListButtonAction.getSelectedIndex() == 3) {
-					pos1 = element.getAttribute("Action").indexOf("CALL(");
-					if (pos1 >= 0) {
-						pos2 = element.getAttribute("Action").indexOf(")", pos1);
-						String functionID = element.getAttribute("Action").substring(pos1+5, pos2);
-						if (!functionID.equals(jTextFieldFunction310AddRowListButtonActionCallFunctionID.getText())) {
-							valueOfFieldsChanged = true;
-							element.setAttribute("Action", "CALL(" + jTextFieldFunction310AddRowListButtonActionCallFunctionID.getText() + ")");
-						}
-					} else {
-						valueOfFieldsChanged = true;
-						element.setAttribute("Action", "CALL(" + jTextFieldFunction310AddRowListButtonActionCallFunctionID.getText() + ")");
-					}
-				}
-				//
-				if (valueOfFieldsChanged) {
-					tableModelFunction310AddRowListButtonList.setValueAt(element.getAttribute("Position"), selectedRow_jTableFunction310AddRowListButtonList, 1);
-					tableModelFunction310AddRowListButtonList.setValueAt("F" + element.getAttribute("Number") + " " + element.getAttribute("Caption"), selectedRow_jTableFunction310AddRowListButtonList, 2);
-					tableModelFunction310AddRowListButtonList.setValueAt(getDescriptionsOfFunction310AddRowListButtonAction(element.getAttribute("Action")), selectedRow_jTableFunction310AddRowListButtonList, 3);
-				}
-			}
-			//
 			return valueOfFieldsChanged;
 		}
 		
@@ -25376,103 +24683,6 @@ public class Editor extends JFrame {
 			//
 			return valueOfFieldsChanged;
 		}
-
-		private boolean updateFieldsForFunction310AddRowListColumn() throws Exception {
-			boolean valueOfFieldsChanged = informationOnThisPageChanged;
-			String wrkOptions = "";
-			String wrkStr;
-			//
-			if (selectedRow_jTableFunction310AddRowListColumnList > -1) {
-				//
-				TableRowNumber tableRowNumber = (TableRowNumber)tableModelFunction310AddRowListColumnList.getValueAt(selectedRow_jTableFunction310AddRowListColumnList, 0);
-				org.w3c.dom.Element element = tableRowNumber.getElement();
-				ArrayList<String> optionList = getOptionList(element.getAttribute("FieldOptions"));
-				//
-				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "CAPTION");
-				if (jRadioButtonFunction310AddRowListColumnCaptionOptionValue.isSelected()) {
-					if (wrkStr.equals("")) {
-						valueOfFieldsChanged = true;
-					} else {
-						if (!wrkStr.equals(jTextFieldFunction310AddRowListColumnCaptionOptionValue.getText())) {
-							valueOfFieldsChanged = true;
-						}
-					}
-					if (!jTextFieldFunction310AddRowListColumnCaptionOptionValue.getText().equals("")) {
-						wrkOptions = "CAPTION(" + jTextFieldFunction310AddRowListColumnCaptionOptionValue.getText() + ")";
-					}
-				} else {
-					if (!wrkStr.equals("")) {
-						valueOfFieldsChanged = true;
-					}
-				}
-				//
-				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
-				if (jTextFieldFunction310AddRowListColumnWidth.getText().equals("*Auto") || jTextFieldFunction310AddRowListColumnWidth.getText().equals("")) {
-					if (!wrkStr.equals("")) {
-						valueOfFieldsChanged = true;
-					}
-				} else {
-					if (wrkStr.equals("")) {
-						valueOfFieldsChanged = true;
-					} else {
-						if (!wrkStr.equals(jTextFieldFunction310AddRowListColumnWidth.getText())) {
-							valueOfFieldsChanged = true;
-						}
-					}
-					wrkStr = getStringSizeValue(jTextFieldFunction310AddRowListColumnWidth.getText(), "", 10, 1000);
-					if (!wrkStr.equals("")) {
-						if (!wrkOptions.equals("")) {
-							wrkOptions = wrkOptions + ",";
-						}
-						wrkOptions = wrkOptions + "WIDTH(" + wrkStr + ")";
-					}
-				}
-				//
-				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "ROWS");
-				if (jTextFieldFunction310AddRowListColumnRows.getText().equals("*Auto") || jTextFieldFunction310AddRowListColumnRows.getText().equals("")) {
-					if (!wrkStr.equals("")) {
-						valueOfFieldsChanged = true;
-					}
-				} else {
-					if (wrkStr.equals("")) {
-						valueOfFieldsChanged = true;
-					} else {
-						if (!wrkStr.equals(jTextFieldFunction310AddRowListColumnRows.getText())) {
-							valueOfFieldsChanged = true;
-						}
-					}
-					wrkStr = getStringSizeValue(jTextFieldFunction310AddRowListColumnRows.getText(), "", 1, 50);
-					if (!wrkStr.equals("")) {
-						if (!wrkOptions.equals("")) {
-							wrkOptions = wrkOptions + ",";
-						}
-						wrkOptions = wrkOptions + "ROWS(" + wrkStr + ")";
-					}
-				}
-				//
-				if (jRadioButtonFunction310AddRowListColumnLayoutOptionVertical.isSelected()) {
-						if (!optionList.contains("VERTICAL")) {
-							valueOfFieldsChanged = true;
-						}
-						if (!wrkOptions.equals("")) {
-							wrkOptions = wrkOptions + ",";
-						}
-						wrkOptions = wrkOptions + "VERTICAL";
-				}
-				if (jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal.isSelected()) {
-					if (optionList.contains("VERTICAL")) {
-						valueOfFieldsChanged = true;
-					}
-				}
-				//
-				if (valueOfFieldsChanged) {
-					element.setAttribute("FieldOptions", wrkOptions);
-					tableModelFunction310AddRowListColumnList.setValueAt(getDescriptionsOfColumnOptions(wrkOptions), selectedRow_jTableFunction310AddRowListColumnList, 3);
-				}
-			}
-			//
-			return valueOfFieldsChanged;
-		}
 		
 		private boolean updateFieldsForFunction390() throws Exception {
 			boolean valueOfFieldsChanged = informationOnThisPageChanged;
@@ -25490,33 +24700,6 @@ public class Editor extends JFrame {
 					domNode_.setAttribute("HeaderKeyFields", function390HeaderTableKeys);
 				}
 			}
-			//
-//			if (!domNode_.getAttribute("DetailKeyFields").equals(function390DetailTableKeys)) {
-//				valueOfFieldsChanged = true;
-//				domNode_.setAttribute("DetailKeyFields", function390DetailTableKeys);
-//			}
-//			//
-//			if (!domNode_.getAttribute("DetailOrderBy").equals(function390DetailOrderByFields)) {
-//				valueOfFieldsChanged = true;
-//				domNode_.setAttribute("DetailOrderBy", function390DetailOrderByFields);
-//			}
-//			//
-//			if (domNode_.getAttribute("DetailFixedWhere").equals("")) {
-//				if (!jTextFieldFunction390DetailFixedWhere.getText().equals("*None") && !jTextFieldFunction390DetailFixedWhere.getText().equals("")) {
-//					valueOfFieldsChanged = true;
-//					domNode_.setAttribute("DetailFixedWhere", jTextFieldFunction390DetailFixedWhere.getText());
-//				}
-//			} else {
-//				if (jTextFieldFunction390DetailFixedWhere.getText().equals("*None") || jTextFieldFunction390DetailFixedWhere.getText().equals("")) {
-//					valueOfFieldsChanged = true;
-//					domNode_.setAttribute("DetailFixedWhere", "");
-//				} else {
-//					if (!domNode_.getAttribute("DetailFixedWhere").equals(jTextFieldFunction390DetailFixedWhere.getText())) {
-//						valueOfFieldsChanged = true;
-//						domNode_.setAttribute("DetailFixedWhere", jTextFieldFunction390DetailFixedWhere.getText());
-//					}
-//				}
-//			}
 			//
 			if (!domNode_.getAttribute("PageSize").equals(jComboBoxFunction390PageSize.getSelectedItem())) {
 				valueOfFieldsChanged = true;
@@ -28164,7 +27347,6 @@ public class Editor extends JFrame {
 						componentType_jPopupMenuComponent.equals("Function300DetailFilterList") ||
 						componentType_jPopupMenuComponent.equals("Function310HeaderFieldList") ||
 						componentType_jPopupMenuComponent.equals("Function310DetailFieldList") ||
-						componentType_jPopupMenuComponent.equals("Function310AddRowListColumnList") || 
 						componentType_jPopupMenuComponent.equals("Function390HeaderPhraseList") || 
 						componentType_jPopupMenuComponent.equals("Function390DetailFieldList") ) {
 					//
@@ -28320,12 +27502,6 @@ public class Editor extends JFrame {
 		}
 		if (componentType_jPopupMenuComponent.equals("Function310DetailFieldList")) {
 			table = jTableFunction310DetailFieldList;
-		}
-		if (componentType_jPopupMenuComponent.equals("Function310AddRowListColumnList")) {
-			table = jTableFunction310AddRowListColumnList;
-		}
-		if (componentType_jPopupMenuComponent.equals("Function310AddRowListButtonList")) {
-			table = jTableFunction310AddRowListButtonList;
 		}
 		if (componentType_jPopupMenuComponent.equals("Function310ButtonList")) {
 			table = jTableFunction310ButtonList;
@@ -28546,14 +27722,6 @@ public class Editor extends JFrame {
 				type.equals("Function310ButtonList")) {
 			newElement = domDocument.createElement("Button");
 			newElement.setAttribute("Position", "6");
-			newElement.setAttribute("Number", "3");
-			newElement.setAttribute("Caption", res.getString("Exit"));
-			newElement.setAttribute("Action", "EXIT");
-		}
-		//
-		if (type.equals("Function310AddRowListButtonList")) {
-			newElement = domDocument.createElement("AddRowListButton");
-			newElement.setAttribute("Position", "5");
 			newElement.setAttribute("Number", "3");
 			newElement.setAttribute("Caption", res.getString("Exit"));
 			newElement.setAttribute("Action", "EXIT");
@@ -29010,20 +28178,6 @@ public class Editor extends JFrame {
 					} else {
 						errorMsg = res.getString("ErrorMessage30");
 					}
-				}
-				if (componentType_jPopupMenuComponent.equals("Function310AddRowListColumnList")) {
-					table = jTableFunction310AddRowListColumnList;
-					rowNumberDeleted = jTableFunction310AddRowListColumnList.getSelectedRow();
-					if (jTableFunction310AddRowListColumnList.getRowCount() > 1) {
-						tableRowNumber = (TableRowNumber)tableModelFunction310AddRowListColumnList.getValueAt(jTableFunction310AddRowListColumnList.getSelectedRow(),0);
-					} else {
-						errorMsg = res.getString("ErrorMessage30");
-					}
-				}
-				if (componentType_jPopupMenuComponent.equals("Function310AddRowListButtonList")) {
-					table = jTableFunction310AddRowListButtonList;
-					rowNumberDeleted = jTableFunction310AddRowListButtonList.getSelectedRow();
-					tableRowNumber = (TableRowNumber)tableModelFunction310AddRowListButtonList.getValueAt(jTableFunction310AddRowListButtonList.getSelectedRow(),0);
 				}
 				if (componentType_jPopupMenuComponent.equals("Function310ButtonList")) {
 					table = jTableFunction310ButtonList;
@@ -29484,12 +28638,6 @@ public class Editor extends JFrame {
 	    }
 	    if (componentType_jPopupMenuComponent.equals("Function310DetailFieldList")) {
 			tableModel = tableModelFunction310DetailFieldList;
-	    }
-	    if (componentType_jPopupMenuComponent.equals("Function310AddRowListColumnList")) {
-			tableModel = tableModelFunction310AddRowListColumnList;
-	    }
-	    if (componentType_jPopupMenuComponent.equals("Function310AddRowListButtonList")) {
-			tableModel = tableModelFunction310AddRowListButtonList;
 	    }
 	    if (componentType_jPopupMenuComponent.equals("Function310ButtonList")) {
 			tableModel = tableModelFunction310ButtonList;
@@ -31018,89 +30166,6 @@ public class Editor extends JFrame {
 		}
 	}
 
-	/**
-	 * Event Handler for jTableFunction310AddRowListButtonList in case Row Selection Changed
-	 * @param e :List Selection Event
-	 */
-	void jTableFunction310AddRowListButtonList_valueChanged(ListSelectionEvent e) {
-		//
-		if (!tableRowsAreBeingSetup) {
-			//
-			try {
-				if (currentMainTreeNode.updateFieldsForFunction310AddRowListButton()) {
-					informationOnThisPageChanged = true;
-				}
-				//
-				jLabelFunction310AddRowListButtonPosition.setEnabled(false);
-				jLabelFunction310AddRowListButtonPositionComment.setEnabled(false);
-				jLabelFunction310AddRowListButtonKey.setEnabled(false);
-				jLabelFunction310AddRowListButtonCaption.setEnabled(false);
-				jLabelFunction310AddRowListButtonAction.setEnabled(false);
-				jSpinnerFunction310AddRowListButtonPosition.setEnabled(false);
-				jSpinnerFunction310AddRowListButtonKey.setEnabled(false);
-				spinnerNumberModelFunction310AddRowListButtonPosition.setValue(0);
-				spinnerNumberModelFunction310AddRowListButtonKey.setValue(1);
-				jTextFieldFunction310AddRowListButtonCaption.setEnabled(false);
-				jTextFieldFunction310AddRowListButtonCaption.setText("");
-				jComboBoxFunction310AddRowListButtonAction.setEnabled(false);
-				jTextFieldFunction310AddRowListButtonActionCallFunctionID.setEnabled(false);
-				jTextFieldFunction310AddRowListButtonActionCallFunctionID.setText("");
-				jTextFieldFunction310AddRowListButtonActionCallFunctionName.setText("");
-				//
-				if (jTableFunction310AddRowListButtonList.getSelectedRow() != -1) {
-					//
-					selectedRow_jTableFunction310AddRowListButtonList = jTableFunction310AddRowListButtonList.getSelectedRow();
-					TableRowNumber tableRowNumber = (TableRowNumber)tableModelFunction310AddRowListButtonList.getValueAt(selectedRow_jTableFunction310AddRowListButtonList, 0);
-					//
-					jLabelFunction310AddRowListButtonPosition.setEnabled(true);
-					jLabelFunction310AddRowListButtonPositionComment.setEnabled(true);
-					jLabelFunction310AddRowListButtonKey.setEnabled(true);
-					jLabelFunction310AddRowListButtonCaption.setEnabled(true);
-					jLabelFunction310AddRowListButtonAction.setEnabled(true);
-					jSpinnerFunction310AddRowListButtonPosition.setEnabled(true);
-					jSpinnerFunction310AddRowListButtonKey.setEnabled(true);
-					jTextFieldFunction310AddRowListButtonCaption.setEnabled(true);
-					jComboBoxFunction310AddRowListButtonAction.setEnabled(true);
-					//
-					org.w3c.dom.Element element = tableRowNumber.getElement();
-					//
-					spinnerNumberModelFunction310AddRowListButtonPosition.setValue(Integer.parseInt(element.getAttribute("Position")));
-					spinnerNumberModelFunction310AddRowListButtonKey.setValue(Integer.parseInt(element.getAttribute("Number")));
-					jTextFieldFunction310AddRowListButtonCaption.setText(element.getAttribute("Caption"));
-					//
-					if (element.getAttribute("Action").contains("EXIT")) {
-						jComboBoxFunction310AddRowListButtonAction.setSelectedIndex(0);
-					}
-					if (element.getAttribute("Action").contains("ADD_SELECTED")) {
-						jComboBoxFunction310AddRowListButtonAction.setSelectedIndex(1);
-					}
-					if (element.getAttribute("Action").contains("ADD_BLANK")) {
-						jComboBoxFunction310AddRowListButtonAction.setSelectedIndex(2);
-					}
-					if (element.getAttribute("Action").contains("CALL")) {
-						jComboBoxFunction310AddRowListButtonAction.setSelectedIndex(3);
-						jLabelFunction310AddRowListButtonActionCallFunction.setEnabled(true);
-						jTextFieldFunction310AddRowListButtonActionCallFunctionID.setEnabled(true);
-						int pos1 = element.getAttribute("Action").indexOf("CALL(");
-						if (pos1 >= 0) {
-							int pos2 = element.getAttribute("Action").indexOf(")", pos1);
-							String functionID = element.getAttribute("Action").substring(pos1+5, pos2);
-							jTextFieldFunction310AddRowListButtonActionCallFunctionID.setText(functionID);
-							MainTreeNode functionNode = getSpecificXETreeNode("Function", functionID);
-							if (functionNode == null) {
-								jTextFieldFunction310AddRowListButtonActionCallFunctionName.setText("N/A");
-							} else {
-								jTextFieldFunction310AddRowListButtonActionCallFunctionName.setText(functionNode.getElement().getAttribute("Name"));
-							}
-						}
-					}
-				}
-			} catch (Exception e1) {
-				processError(e1);
-			}
-		}
-	}
-
 	void jScrollPaneSystemSubDBList_mouseClicked(MouseEvent e) {
 		showPopupMenuComponentForScrollPane(e, jScrollPaneSystemSubDBList);
 	}
@@ -31576,35 +30641,12 @@ public class Editor extends JFrame {
 	void jTableFunction310DetailFieldList_mouseDragged(MouseEvent e) {
 		setupValuesWhileDraggingTableRow(e, jTableFunction310DetailFieldList);
 	}
-
-	void jScrollPaneFunction310AddRowListColumnList_mouseClicked(MouseEvent e) {
-		showPopupMenuComponentForScrollPane(e, jScrollPaneFunction310AddRowListColumnList);
-	}
-	void jTableFunction310AddRowListColumnList_mouseClicked(MouseEvent e) {
-		showPopupMenuComponentForTable(e, jTableFunction310AddRowListColumnList);
-	}
-	void jTableFunction310AddRowListColumnList_mousePressed(MouseEvent e) {
-		setupValuesToStartDraggingTableRow(e, jTableFunction310AddRowListColumnList);
-	}
-	void jTableFunction310AddRowListColumnList_mouseReleased(MouseEvent e) {
-		setupValuesToFinishDraggingTableRow(e, jTableFunction310AddRowListColumnList, "AddRowListColumn");
-	}
-	void jTableFunction310AddRowListColumnList_mouseDragged(MouseEvent e) {
-		setupValuesWhileDraggingTableRow(e, jTableFunction310AddRowListColumnList);
-	}
 	
 	void jScrollPaneFunction310ButtonList_mouseClicked(MouseEvent e) {
 		showPopupMenuComponentForScrollPane(e, jScrollPaneFunction310ButtonList);
 	}
 	void jTableFunction310ButtonList_mouseClicked(MouseEvent e) {
 		showPopupMenuComponentForTable(e, jTableFunction310ButtonList);
-	}
-	
-	void jScrollPaneFunction310AddRowListButtonList_mouseClicked(MouseEvent e) {
-		showPopupMenuComponentForScrollPane(e, jScrollPaneFunction310AddRowListButtonList);
-	}
-	void jTableFunction310AddRowListButtonList_mouseClicked(MouseEvent e) {
-		showPopupMenuComponentForTable(e, jTableFunction310AddRowListButtonList);
 	}
 
 	void jScrollPaneFunction300DetailButtonList_mouseClicked(MouseEvent e) {
@@ -31925,9 +30967,6 @@ public class Editor extends JFrame {
 		if (type.equals("Function310DetailFieldList")) {
 			tagName = "Column";
 		}
-		if (type.equals("Function310AddRowListColumnList")) {
-			tagName = "AddRowListColumn";
-		}
 		if (type.equals("Function390HeaderPhraseList")) {
 			tagName = "HeaderPhrase";
 		}
@@ -31938,67 +30977,6 @@ public class Editor extends JFrame {
 			tagName = "Column";
 		}
 		return tagName;
-	}
-
-	void setupAddRowListInformation(org.w3c.dom.Element functionElement) {
-		MainTreeNode tableNode;
-		org.w3c.dom.Element tableElement;
-		String wrkStr;
-		//
-		function310AddRowListTableID = functionElement.getAttribute("AddRowListTable");
-		function310AddRowListWithFields = functionElement.getAttribute("AddRowListWithFields");
-		function310AddRowListWithHeaderFields = functionElement.getAttribute("AddRowListWithHeaderFields");
-		function310AddRowListReturnDataSources = functionElement.getAttribute("AddRowListReturnDataSources");
-		function310AddRowListReturnToDetailDataSources = functionElement.getAttribute("AddRowListReturnToDetailDataSources");
-		function310AddRowListOrderByFields = functionElement.getAttribute("AddRowListOrderBy");
-		//
-		if (function310AddRowListTableID.equals("")) {
-			function310AddRowListTableReferList = null;
-			jTextFieldFunction310AddRowListTableName.setText("*None");
-			jTextFieldFunction310AddRowListReturnDataSources.setText("*Auto");
-			jTextFieldFunction310AddRowListOrderByFields.setText("*None");
-			jTextFieldFunction310AddRowListWhere.setText("*None");
-			jTextFieldFunction310AddRowListWhere.setEditable(false);
-			jTextFieldFunction310AddRowListInitialMsg.setText("*Default");
-			jTextFieldFunction310AddRowListInitialMsg.setEditable(false);
-			jButtonFunction310AddRowListReturnDataSourcesEdit.setEnabled(false);
-			jButtonFunction310AddRowListOrderByFieldsEdit.setEnabled(false);
-		} else {
-			tableNode = getSpecificXETreeNode("Table", function310AddRowListTableID);
-			tableElement = tableNode.getElement();
-			function310AddRowListTableReferList = tableElement.getElementsByTagName("Refer");
-			wrkStr = getFieldNames(function310AddRowListTableID, function310AddRowListWithFields, " + ", false);
-			jTextFieldFunction310AddRowListTableName.setText(function310AddRowListTableID + " " + tableElement.getAttribute("Name") + "  Select_With:" + wrkStr);
-			//
-			if (function310AddRowListReturnDataSources.equals("")) {
-				jTextFieldFunction310AddRowListReturnDataSources.setText("*Auto");
-			} else {
-				jTextFieldFunction310AddRowListReturnDataSources.setText(getDataSourceNames(function310DetailTableID, function310DetailReferList, function310AddRowListReturnToDetailDataSources, res.getString("Comma")));
-			}
-			//
-			if (function310AddRowListOrderByFields.equals("")) {
-				jTextFieldFunction310AddRowListOrderByFields.setText("*Key");
-			} else {
-				jTextFieldFunction310AddRowListOrderByFields.setText(getOrderByFieldNames(function310AddRowListTableID, function310AddRowListOrderByFields, " > ", function310AddRowListTableReferList, null));
-			}
-			//
-			jTextFieldFunction310AddRowListWhere.setEditable(true);
-			if (functionElement.getAttribute("AddRowListWhere").equals("")) {
-				jTextFieldFunction310AddRowListWhere.setText("*None");
-			} else {
-				jTextFieldFunction310AddRowListWhere.setText(functionElement.getAttribute("AddRowListWhere"));
-			}
-			//
-			jTextFieldFunction310AddRowListInitialMsg.setEditable(true);
-	        if (functionElement.getAttribute("AddRowListInitialMsg").equals("")) {
-				jTextFieldFunction310AddRowListInitialMsg.setText("*Default");
-	        } else {
-				jTextFieldFunction310AddRowListInitialMsg.setText(functionElement.getAttribute("AddRowListInitialMsg"));
-	        }
-			//
-			jButtonFunction310AddRowListReturnDataSourcesEdit.setEnabled(true);
-			jButtonFunction310AddRowListOrderByFieldsEdit.setEnabled(true);
-		}
 	}
 
 	static String getFormatted4ByteString(int number) {
@@ -33467,15 +32445,6 @@ public class Editor extends JFrame {
 	        		Cell[3] = res.getString("DTLTable");
 					tableModelTableUsageList.addRow(Cell);
 	        	}
-	        	if (element1.getAttribute("AddRowListTable").equals(jTextFieldTableID.getText())) {
-	        		countOfUsageRows++;
-	        		Object[] Cell = new Object[4];
-	        		Cell[0] = new TableRowNumber(countOfUsageRows, element1);
-	        		Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
-	        		Cell[2] = element1.getAttribute("Type");
-	        		Cell[3] = res.getString("AddRowListTable");
-					tableModelTableUsageList.addRow(Cell);
-	        	}
 	    	}
 
 	        if (element1.getAttribute("Type").equals("XF390")) { 
@@ -34722,140 +33691,6 @@ public class Editor extends JFrame {
 							Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
 							Cell[2] = element1.getAttribute("Type");
 							Cell[3] = res.getString("PrompterFunctionExchange");
-							tableModelTableFieldUsageList.addRow(Cell);
-							break;
-						}
-					}
-				}
-				//
-//				if (element1.getAttribute("DetailTable").equals(tableID) && element1.getAttribute("DetailRowNo").equals(fieldID)) {
-//					countOfUsageRows++;
-//					Object[] Cell = new Object[4];
-//					Cell[0] = new TableRowNumber(countOfUsageRows, element1);
-//					Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
-//					Cell[2] = element1.getAttribute("Type");
-//					Cell[3] = res.getString("AddRowDetailRowNo");
-//					tableModelTableFieldUsageList.addRow(Cell);
-//					break;
-//				}
-				//
-				if (!element1.getAttribute("AddRowListWithHeaderFields").equals("")) {
-					workTokenizer = new StringTokenizer(element1.getAttribute("AddRowListWithHeaderFields"), ";" );
-					while (workTokenizer.hasMoreTokens()) {
-						wrkStr = workTokenizer.nextToken();
-						pos1 = wrkStr.indexOf(".");
-						targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, referList2); 
-						targetFieldID = wrkStr.substring(pos1+1);
-						if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
-							countOfUsageRows++;
-							Object[] Cell = new Object[4];
-							Cell[0] = new TableRowNumber(countOfUsageRows, element1);
-							Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
-							Cell[2] = element1.getAttribute("Type");
-							Cell[3] = res.getString("AddRowListWithHeaderFields");
-							tableModelTableFieldUsageList.addRow(Cell);
-							break;
-						}
-					}
-				}
-				//
-				if (!element1.getAttribute("AddRowListReturnToDetailDataSources").equals("")) {
-					workTokenizer = new StringTokenizer(element1.getAttribute("AddRowListReturnToDetailDataSources"), ";" );
-					while (workTokenizer.hasMoreTokens()) {
-						wrkStr = workTokenizer.nextToken();
-						pos1 = wrkStr.indexOf(".");
-						targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, referList2); 
-						targetFieldID = wrkStr.substring(pos1+1);
-						if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
-							countOfUsageRows++;
-							Object[] Cell = new Object[4];
-							Cell[0] = new TableRowNumber(countOfUsageRows, element1);
-							Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
-							Cell[2] = element1.getAttribute("Type");
-							Cell[3] = res.getString("AddRowListReturnToField");
-							tableModelTableFieldUsageList.addRow(Cell);
-							break;
-						}
-					}
-				}
-				//
-				if (!element1.getAttribute("AddRowListTable").equals("")) {
-					workNode = getSpecificXETreeNode("Table", element1.getAttribute("AddRowListTable"));
-					element2 = workNode.getElement();
-					referList1 = element2.getElementsByTagName("Refer");
-					//
-					if (element1.getAttribute("AddRowListTable").equals(tableID)) {
-						workTokenizer = new StringTokenizer(element1.getAttribute("AddRowListWithFields"), ";" );
-						while (workTokenizer.hasMoreTokens()) {
-							if (workTokenizer.nextToken().equals(fieldID)) {
-								countOfUsageRows++;
-								Object[] Cell = new Object[4];
-								Cell[0] = new TableRowNumber(countOfUsageRows, element1);
-								Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
-								Cell[2] = element1.getAttribute("Type");
-								Cell[3] = res.getString("AddRowListWithFields");
-								tableModelTableFieldUsageList.addRow(Cell);
-								break;
-							}
-						}
-					}
-					//
-					if (!element1.getAttribute("AddRowListOrderBy").equals("")) {
-						workTokenizer = new StringTokenizer(element1.getAttribute("AddRowListOrderBy"), ";" );
-						while (workTokenizer.hasMoreTokens()) {
-							wrkStr = workTokenizer.nextToken();
-							wrkStr = wrkStr.replace("(A)", "");
-							wrkStr = wrkStr.replace("(D)", "");
-							pos1 = wrkStr.indexOf(".");
-							targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
-							targetFieldID = wrkStr.substring(pos1+1);
-							if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
-								countOfUsageRows++;
-								Object[] Cell = new Object[4];
-								Cell[0] = new TableRowNumber(countOfUsageRows, element1);
-								Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
-								Cell[2] = element1.getAttribute("Type");
-								Cell[3] = res.getString("AddRowListOrderBy");
-								tableModelTableFieldUsageList.addRow(Cell);
-								break;
-							}
-						}
-					}
-					//
-					if (!element1.getAttribute("AddRowListReturnDataSources").equals("")) {
-						workTokenizer = new StringTokenizer(element1.getAttribute("AddRowListReturnDataSources"), ";" );
-						while (workTokenizer.hasMoreTokens()) {
-							wrkStr = workTokenizer.nextToken();
-							pos1 = wrkStr.indexOf(".");
-							targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
-							targetFieldID = wrkStr.substring(pos1+1);
-							if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
-								countOfUsageRows++;
-								Object[] Cell = new Object[4];
-								Cell[0] = new TableRowNumber(countOfUsageRows, element1);
-								Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
-								Cell[2] = element1.getAttribute("Type");
-								Cell[3] = res.getString("AddRowListReturnFromField");
-								tableModelTableFieldUsageList.addRow(Cell);
-								break;
-							}
-						}
-					}
-					//
-					nodeList3 = element1.getElementsByTagName("AddRowListColumn");
-					for (int k = 0; k < nodeList3.getLength(); k++) {
-						element3 = (org.w3c.dom.Element)nodeList3.item(k);
-						wrkStr = element3.getAttribute("DataSource");
-						pos1 = wrkStr.indexOf(".");
-						targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
-						targetFieldID = wrkStr.substring(pos1+1);
-						if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
-							countOfUsageRows++;
-							Object[] Cell = new Object[4];
-							Cell[0] = new TableRowNumber(countOfUsageRows, element1);
-							Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
-							Cell[2] = element1.getAttribute("Type");
-							Cell[3] = res.getString("AddRowListColumn");
 							tableModelTableFieldUsageList.addRow(Cell);
 							break;
 						}
@@ -36184,15 +35019,6 @@ public class Editor extends JFrame {
 							buf.append(element1.getAttribute("ID") + " " + res.getString("ExchangeFields") + "(" + element2.getAttribute("DataSource") + ")"  + "\n");
 						}
 					}
-
-					if (!element1.getAttribute("AddRowListWithHeaderFields").equals("")) {
-						workTokenizer = new StringTokenizer(element1.getAttribute("AddRowListWithHeaderFields"), ";" );
-						while (workTokenizer.hasMoreTokens()) {
-							if (workTokenizer.nextToken().equals(dataSourceName)) {
-								buf.append(element1.getAttribute("ID") + " " + res.getString("AddRowListWithHeaderFields") + "\n");
-							}
-						}
-					}
 				}
 
 				if (element1.getAttribute("DetailTable").equals(tableID)) {
@@ -36217,49 +35043,6 @@ public class Editor extends JFrame {
 						}
 						if (isUsedAsPromptParm(element2.getAttribute("FieldOptions"), dataSourceName)) {
 							buf.append(element1.getAttribute("ID") + " " + res.getString("ExchangeFields") + "(" + element2.getAttribute("DataSource") + ")"  + "\n");
-						}
-					}
-
-					if (!element1.getAttribute("AddRowListReturnToDetailDataSources").equals("")) {
-						workTokenizer = new StringTokenizer(element1.getAttribute("AddRowListReturnToDetailDataSources"), ";" );
-						while (workTokenizer.hasMoreTokens()) {
-							if (workTokenizer.nextToken().equals(dataSourceName)) {
-								buf.append(element1.getAttribute("ID") + " " + res.getString("AddRowListReturnToField") + "\n");
-							}
-						}
-					}
-				}
-
-				if (!element1.getAttribute("AddRowListTable").equals("")) {
-					if (element1.getAttribute("AddRowListTable").equals(tableID)) {
-
-						if (!element1.getAttribute("AddRowListOrderBy").equals("")) {
-							workTokenizer = new StringTokenizer(element1.getAttribute("AddRowListOrderBy"), ";" );
-							while (workTokenizer.hasMoreTokens()) {
-								wrkStr = workTokenizer.nextToken();
-								wrkStr = wrkStr.replace("(D)", "");
-								wrkStr = wrkStr.replace("(A)", "");
-								if (wrkStr.equals(dataSourceName)) {
-									buf.append(element1.getAttribute("ID") + " " + res.getString("AddRowListOrderBy") + "\n");
-								}
-							}
-						}
-
-						if (!element1.getAttribute("AddRowListReturnDataSources").equals("")) {
-							workTokenizer = new StringTokenizer(element1.getAttribute("AddRowListReturnDataSources"), ";" );
-							while (workTokenizer.hasMoreTokens()) {
-								if (workTokenizer.nextToken().equals(dataSourceName)) {
-									buf.append(element1.getAttribute("ID") + " " + res.getString("AddRowListReturnFromField") + "\n");
-								}
-							}
-						}
-
-						nodeList3 = element1.getElementsByTagName("AddRowListColumn");
-						for (int k = 0; k < nodeList3.getLength(); k++) {
-							element3 = (org.w3c.dom.Element)nodeList3.item(k);
-							if (element3.getAttribute("DataSource").equals(dataSourceName)) {
-								buf.append(element1.getAttribute("ID") + " " + res.getString("AddRowListColumn") + "\n");
-							}
 						}
 					}
 				}
@@ -36800,10 +35583,6 @@ public class Editor extends JFrame {
 		isValidFunctionID(jTextFieldFunction300DetailButtonActionCallFunctionID, jTextFieldFunction300DetailButtonActionCallFunctionName);
 	}
 	
-	void jTextFieldFunction310AddRowListButtonActionCallFunctionID_keyReleased(KeyEvent e) {
-		isValidFunctionID(jTextFieldFunction310AddRowListButtonActionCallFunctionID, jTextFieldFunction310AddRowListButtonActionCallFunctionName);
-	}
-	
 	void jTableKeyReleased(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_DELETE) {
 		    if (e.getComponent().equals(jTableSystemSubDBList)) {
@@ -36901,12 +35680,6 @@ public class Editor extends JFrame {
 		    }
 		    if (e.getComponent().equals(jTableFunction310DetailFieldList)) {
 		    	componentType_jPopupMenuComponent = "Function310DetailFieldList";
-		    }
-		    if (e.getComponent().equals(jTableFunction310AddRowListColumnList) && !function310AddRowListTableID.equals("")) {
-		    	componentType_jPopupMenuComponent = "Function310AddRowListColumnList";
-		    }
-		    if (e.getComponent().equals(jTableFunction310AddRowListButtonList)) {
-		    	componentType_jPopupMenuComponent = "Function310AddRowListButtonList";
 		    }
 		    if (e.getComponent().equals(jTableFunction310ButtonList)) {
 		    	componentType_jPopupMenuComponent = "Function310ButtonList";
@@ -38495,133 +37268,6 @@ public class Editor extends JFrame {
 			}
 		}
 	}
-
-	/**
-	 * Event Handler for jTableFunction310AddRowListColumnList in case Row Selection Changed
-	 * @param e :List Selection Event
-	 */
-	void jTableFunction310AddRowListColumnList_valueChanged(ListSelectionEvent e) {
-		int pos1;
-		String wrkStr="";
-		//
-		if (!tableRowsAreBeingSetup) {
-			//
-			try {
-				if (currentMainTreeNode.updateFieldsForFunction310AddRowListColumn()) {
-					informationOnThisPageChanged = true;
-				}
-				//
-				jLabelFunction310AddRowListColumnTable.setEnabled(false);
-				jTextFieldFunction310AddRowListColumnTable.setEnabled(false);
-				jTextFieldFunction310AddRowListColumnTable.setText("");
-				jLabelFunction310AddRowListColumnTableType.setEnabled(false);
-				jTextFieldFunction310AddRowListColumnTableType.setEnabled(false);
-				jTextFieldFunction310AddRowListColumnTableType.setText("");
-				jLabelFunction310AddRowListColumn.setEnabled(false);
-				jTextFieldFunction310AddRowListColumn.setEnabled(false);
-				jTextFieldFunction310AddRowListColumn.setText("");
-				jLabelFunction310AddRowListColumnType.setEnabled(false);
-				jTextFieldFunction310AddRowListColumnType.setEnabled(false);
-				jTextFieldFunction310AddRowListColumnType.setText("");
-				jLabelFunction310AddRowListColumnLayoutOption.setEnabled(false);
-				jRadioButtonFunction310AddRowListColumnLayoutOptionVertical.setSelected(true);
-				jRadioButtonFunction310AddRowListColumnLayoutOptionVertical.setEnabled(false);
-				jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal.setEnabled(false);
-				jLabelFunction310AddRowListColumnWidth.setEnabled(false);
-				jTextFieldFunction310AddRowListColumnWidth.setText("");
-				jTextFieldFunction310AddRowListColumnWidth.setEnabled(false);
-				jLabelFunction310AddRowListColumnRows.setEnabled(false);
-				jTextFieldFunction310AddRowListColumnRows.setText("");
-				jTextFieldFunction310AddRowListColumnRows.setEnabled(false);
-				jLabelFunction310AddRowListColumnCaptionOption.setEnabled(false);
-				jRadioButtonFunction310AddRowListColumnCaptionOptionName.setEnabled(false);
-				jRadioButtonFunction310AddRowListColumnCaptionOptionName.setSelected(true);
-				jRadioButtonFunction310AddRowListColumnCaptionOptionValue.setEnabled(false);
-				jTextFieldFunction310AddRowListColumnCaptionOptionValue.setEnabled(false);
-				jTextFieldFunction310AddRowListColumnCaptionOptionValue.setText("");
-				//
-				if (jTableFunction310AddRowListColumnList.getSelectedRow() != -1) {
-					//
-					selectedRow_jTableFunction310AddRowListColumnList = jTableFunction310AddRowListColumnList.getSelectedRow();
-					TableRowNumber tableRowNumber = (TableRowNumber)tableModelFunction310AddRowListColumnList.getValueAt(selectedRow_jTableFunction310AddRowListColumnList, 0);
-					//
-					jLabelFunction310AddRowListColumnTable.setEnabled(true);
-					jTextFieldFunction310AddRowListColumnTable.setEnabled(true);
-					jLabelFunction310AddRowListColumnTableType.setEnabled(true);
-					jTextFieldFunction310AddRowListColumnTableType.setEnabled(true);
-					jLabelFunction310AddRowListColumn.setEnabled(true);
-					jTextFieldFunction310AddRowListColumn.setEnabled(true);
-					jLabelFunction310AddRowListColumnType.setEnabled(true);
-					jTextFieldFunction310AddRowListColumnType.setEnabled(true);
-					jLabelFunction310AddRowListColumnLayoutOption.setEnabled(true);
-					jRadioButtonFunction310AddRowListColumnLayoutOptionVertical.setEnabled(true);
-					jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal.setEnabled(true);
-					jLabelFunction310AddRowListColumnWidth.setEnabled(true);
-					jTextFieldFunction310AddRowListColumnWidth.setEnabled(true);
-					jLabelFunction310AddRowListColumnRows.setEnabled(true);
-					jTextFieldFunction310AddRowListColumnRows.setEnabled(true);
-					jLabelFunction310AddRowListColumnCaptionOption.setEnabled(true);
-					jRadioButtonFunction310AddRowListColumnCaptionOptionName.setEnabled(true);
-					jRadioButtonFunction310AddRowListColumnCaptionOptionValue.setEnabled(true);
-					//
-					org.w3c.dom.Element element = tableRowNumber.getElement();
-					//
-					wrkStr = element.getAttribute("DataSource");
-					pos1 = wrkStr.indexOf(".");
-					String tableAlias = wrkStr.substring(0, pos1);
-					String fieldID = wrkStr.substring(pos1+1, wrkStr.length());
-					String tableID = getTableIDOfTableAlias(tableAlias, function310AddRowListTableReferList, null);
-					MainTreeNode tableNode = getSpecificXETreeNode("Table", tableID);
-					org.w3c.dom.Element tableElement = tableNode.getElement();
-					jTextFieldFunction310AddRowListColumnTable.setText(tableID + " " + tableElement.getAttribute("Name"));
-					if (tableAlias.equals(function310AddRowListTableID) && tableID.equals(function310AddRowListTableID)) {
-						jTextFieldFunction310AddRowListColumnTableType.setText(res.getString("AddRowListTable"));
-					} else {
-						if (tableAlias.equals(tableID)) {
-							jTextFieldFunction310AddRowListColumnTableType.setText(res.getString("JoinTable"));
-						} else {
-							jTextFieldFunction310AddRowListColumnTableType.setText(res.getString("JoinTableWithAlias") + tableAlias);
-						}
-					}
-					//
-					org.w3c.dom.Element fieldElement = getSpecificFieldElement(tableID, fieldID);
-					jTextFieldFunction310AddRowListColumn.setText(fieldID + " " + fieldElement.getAttribute("Name"));
-					wrkStr = getDescriptionsOfTypeOptions(fieldElement, true, null);
-					jTextFieldFunction310AddRowListColumnType.setText(getDescriptionsOfTypeAndSize(fieldElement.getAttribute("Type"), fieldElement.getAttribute("Size"), fieldElement.getAttribute("Decimal")) + wrkStr);
-					//
-					ArrayList<String> optionList = getOptionList(element.getAttribute("FieldOptions"));
-					if (optionList.contains("VERTICAL")) {
-						jRadioButtonFunction310AddRowListColumnLayoutOptionVertical.setSelected(true);
-					} else {
-						jRadioButtonFunction310AddRowListColumnLayoutOptionHorizontal.setSelected(true);
-					}
-					//
-					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "WIDTH");
-					if (wrkStr.equals("")) {
-						jTextFieldFunction310AddRowListColumnWidth.setText("*Auto");
-					} else {
-						jTextFieldFunction310AddRowListColumnWidth.setText(wrkStr);
-					}
-					//
-					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "ROWS");
-					if (wrkStr.equals("")) {
-						jTextFieldFunction310AddRowListColumnRows.setText("*Auto");
-					} else {
-						jTextFieldFunction310AddRowListColumnRows.setText(wrkStr);
-					}
-					//
-					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "CAPTION");
-					if (!wrkStr.equals("")) {
-						jRadioButtonFunction310AddRowListColumnCaptionOptionValue.setSelected(true);
-						jTextFieldFunction310AddRowListColumnCaptionOptionValue.setText(wrkStr);
-						jTextFieldFunction310AddRowListColumnCaptionOptionValue.setEnabled(true);
-					}
-				}
-			} catch (Exception e1) {
-				processError(e1);
-			}
-		}
-	}
 	
 	/**
 	 * Event Handler for jTableFunction390ColumnList in case Row Selection Changed
@@ -39881,67 +38527,6 @@ public class Editor extends JFrame {
 				functionElement.setAttribute("DetailOrderBy", bf.toString());
 				function310DetailOrderByFields = bf.toString();
 			}
-			
-			String returnToDataSource = functionElement.getAttribute("AddRowListReturnToDetailDataSources");
-			if (!returnToDataSource.equals("")) {
-				bf = new StringBuffer();
-				tokenizer = new StringTokenizer(returnToDataSource, ";");
-				while (tokenizer.hasMoreTokens()) {
-					if (bf.length() > 0) {
-						bf.append(";");
-					}
-					dataSource = tokenizer.nextToken();
-					wrkInt = dataSource.indexOf(".");
-					tableID = dataSource.substring(0, wrkInt);
-					fieldID = dataSource.substring(wrkInt+1, dataSource.length());
-					if (tableID.equals(originalTableID)) {
-						tableID = newTableID;
-					}
-					bf.append(tableID);
-					bf.append(".");
-					bf.append(fieldID);
-				}
-				functionElement.setAttribute("AddRowListReturnToDetailDataSources", bf.toString());
-				function310AddRowListReturnToDetailDataSources = bf.toString();
-			}
-
-			orderByDataSources = functionElement.getAttribute("AddRowListOrderBy");
-			if (!orderByDataSources.equals("")) {
-				bf = new StringBuffer();
-				tokenizer = new StringTokenizer(orderByDataSources, ";");
-				while (tokenizer.hasMoreTokens()) {
-					isAscendingOrder = false;
-					isDescendingOrder = false;
-					dataSource = tokenizer.nextToken();
-					if (dataSource.contains("(A)")) {
-						isAscendingOrder = true;
-						dataSource = dataSource.replace("(A)", "");
-					}
-					if (dataSource.contains("(D)")) {
-						isDescendingOrder = true;
-						dataSource = dataSource.replace("(D)", "");
-					}
-					wrkInt = dataSource.indexOf(".");
-					tableID = dataSource.substring(0, wrkInt);
-					if (tableID.equals(originalTableID)) {
-						tableID = newTableID;
-						fieldID = dataSource.substring(wrkInt+1, dataSource.length());
-						dataSource = tableID + "." + fieldID;
-					}
-					if (bf.length() > 0) {
-						bf.append(";");
-					}
-					bf.append(dataSource);
-					if (isAscendingOrder) {
-						bf.append("(A)");
-					}
-					if (isDescendingOrder) {
-						bf.append("(D)");
-					}
-				}
-				functionElement.setAttribute("AddRowListOrderBy", bf.toString());
-				function310AddRowListOrderByFields = bf.toString();
-			}
 
 			functionElement.setAttribute("DetailTable", newTableID);
 			function310DetailTableID = newTableID;
@@ -40077,23 +38662,6 @@ public class Editor extends JFrame {
 					if (names != null) {
 						jTextFieldFunction310DetailTableOrderByFields.setText(names);
 						function310DetailOrderByFields = answer;
-					}
-				}
-			}
-		}
-
-		if (e.getSource() == jButtonFunction310AddRowListOrderByFieldsEdit) {
-			currentValue = function310AddRowListOrderByFields;
-			answer = JOptionPane.showInputDialog(this.getContentPane(), res.getString("EditOrderByMessage"), currentValue);
-			if (answer != null) {
-				if (answer.equals("")) {
-					jTextFieldFunction310AddRowListOrderByFields.setText("*Key");
-					function310AddRowListOrderByFields = answer;
-				} else {
-					names = getOrderByFieldNames(function310AddRowListTableID, answer, " > ", function310AddRowListTableReferList, null);
-					if (names != null) {
-						jTextFieldFunction310AddRowListOrderByFields.setText(names);
-						function310AddRowListOrderByFields = answer;
 					}
 				}
 			}
@@ -41307,7 +39875,7 @@ public class Editor extends JFrame {
 
 		} catch (SQLException ex) {
 			jTextAreaTableDataMessages.setText("SQLException:("+ ex.getErrorCode() + ") " + ex.getMessage() + "\nSQL: " + sql);
-			validateConnectionToShowMessage(connection);
+			//validateConnectionToShowMessage(connection);
 		} catch (OutOfMemoryError ex) {
 			jTextAreaTableDataMessages.setText("Exception : "+ ex.getMessage());
 		} catch (Exception ex) {
@@ -42158,57 +40726,6 @@ public class Editor extends JFrame {
 			jPanelFunction300StructureNodeIcons.setLayout(new GridLayout(1, countOfIcons));
 		}
 	}
-
-	void jButtonFunction310AddRowListTableNameEdit_actionPerformed(ActionEvent e) {
-		int reply = dialogAddRowListTableEdit.request(function310HeaderTableID, function310AddRowListTableID, function310AddRowListWithFields, function310AddRowListWithHeaderFields, function310HeaderReferList);
-		if (reply == 1) {
-			informationOnThisPageChanged = true;
-			if (!function310AddRowListTableID.equals(dialogAddRowListTableEdit.getAddRowListTableID())) {
-				TableRowNumber tableRowNumber;
-				org.w3c.dom.Element parentElement;
-				int rowCount;
-				if (tableModelFunction310AddRowListColumnList.getRowCount() > 0) {
-					selectedRow_jTableFunction310AddRowListColumnList = -1;
-					rowCount = tableModelFunction310AddRowListColumnList.getRowCount();
-					for (int i = 0; i < rowCount; i++) {
-						tableRowNumber = (TableRowNumber)tableModelFunction310AddRowListColumnList.getValueAt(0,0);
-						parentElement = (org.w3c.dom.Element)tableRowNumber.getElement().getParentNode();
-						parentElement.removeChild(tableRowNumber.getElement());
-						tableModelFunction310AddRowListColumnList.removeRow(0);
-					}
-				}
-				if (tableModelFunction310AddRowListButtonList.getRowCount() > 0) {
-					selectedRow_jTableFunction310AddRowListButtonList = -1;
-					rowCount = tableModelFunction310AddRowListButtonList.getRowCount();
-					for (int i = 0; i < rowCount; i++) {
-						tableRowNumber = (TableRowNumber)tableModelFunction310AddRowListButtonList.getValueAt(0,0);
-						parentElement = (org.w3c.dom.Element)tableRowNumber.getElement().getParentNode();
-						parentElement.removeChild(tableRowNumber.getElement());
-						tableModelFunction310AddRowListButtonList.removeRow(0);
-					}
-				}
-				function310AddRowListTableID = dialogAddRowListTableEdit.getAddRowListTableID();
-				function310AddRowListReturnDataSources = "";
-				function310AddRowListReturnToDetailDataSources = "";
-				function310AddRowListOrderByFields = "";
-			}
-			function310AddRowListWithFields = dialogAddRowListTableEdit.getAddRowListWhereFields();
-			function310AddRowListWithHeaderFields = dialogAddRowListTableEdit.getAddRowListWithHeaderFields();
-			currentMainTreeNode.updateFields();
-			setupAddRowListInformation(currentMainTreeNode.getElement());
-		}
-	}
-	
-	void jButtonFunction310AddRowListReturnDataSourcesEdit_actionPerformed(ActionEvent e) {
-		int reply = dialogAddRowListReturnDataSourcesEdit.request(function310AddRowListTableID, function310AddRowListReturnDataSources, function310AddRowListTableReferList, function310DetailTableID, function310AddRowListReturnToDetailDataSources, function310DetailReferList);
-		if (reply == 1) {
-			informationOnThisPageChanged = true;
-			function310AddRowListReturnDataSources = dialogAddRowListReturnDataSourcesEdit.getReturnFromFields(); 
-			function310AddRowListReturnToDetailDataSources = dialogAddRowListReturnDataSourcesEdit.getReturnToFields(); 
-			currentMainTreeNode.updateFields();
-			setupAddRowListInformation(currentMainTreeNode.getElement());
-		}
-	}
 	
 	void jComboBoxFunction200ButtonAction_actionPerformed(ActionEvent e) {
 		if (jComboBoxFunction200ButtonAction.getSelectedIndex() == 5) {
@@ -42263,16 +40780,6 @@ public class Editor extends JFrame {
 			jTextFieldFunction300DetailButtonActionCallFunctionID.setEnabled(false);
 			jLabelFunction300DetailButtonActionCallFunctionParm.setEnabled(false);
 			jTextFieldFunction300DetailButtonActionCallFunctionParm.setEnabled(false);
-		}
-	}
-	
-	void jComboBoxFunction310AddRowListButtonAction_actionPerformed(ActionEvent e) {
-		if (jComboBoxFunction310AddRowListButtonAction.getSelectedIndex() == 3) {
-			jLabelFunction310AddRowListButtonActionCallFunction.setEnabled(true);
-			jTextFieldFunction310AddRowListButtonActionCallFunctionID.setEnabled(true);
-		} else {
-			jLabelFunction310AddRowListButtonActionCallFunction.setEnabled(false);
-			jTextFieldFunction310AddRowListButtonActionCallFunctionID.setEnabled(false);
 		}
 	}
 	
@@ -42527,14 +41034,6 @@ public class Editor extends JFrame {
 			jCheckBoxFunction310HeaderFieldCaptionLengthVariable.setEnabled(false);
 		} else {
 			jCheckBoxFunction310HeaderFieldCaptionLengthVariable.setEnabled(true);
-		}
-	}
-	
-	void jRadioButtonFunction310AddRowListColumnCaptionOption_stateChanged(ChangeEvent e) {
-		if (jRadioButtonFunction310AddRowListColumnCaptionOptionValue.isSelected()) {
-			jTextFieldFunction310AddRowListColumnCaptionOptionValue.setEnabled(true);
-		} else {
-			jTextFieldFunction310AddRowListColumnCaptionOptionValue.setEnabled(false);
 		}
 	}
 	
@@ -43665,269 +42164,6 @@ class Editor_DialogStructureNodeIconsEdit extends JDialog {
 	}
 }
 
-class Editor_DialogAddRowListTableEdit extends JDialog {
-	private static final long serialVersionUID = 1L;
-	private static ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
-	private JButton jButtonOK = new JButton();
-	private JButton jButtonCancel = new JButton();
-	private Editor frame_;
-	private JLabel jLabelAddRowListTableID = new JLabel();
-	private JLabel jLabelAddRowListTableWithFields = new JLabel();
-	private JLabel jLabelHeaderTableWithFields = new JLabel();
-	private JTextField jTextFieldAddRowListTableID = new JTextField();
-	private JTextField jTextFieldAddRowListTableName = new JTextField();
-	private JTextField jTextFieldAddRowListTableWithFields = new JTextField();
-	private JTextField jTextFieldHeaderTableWithFields = new JTextField();
-	private JTextArea jTextAreaMessage = new JTextArea();
-	private JPanel jPanelCenter = new JPanel();
-	private JPanel jPanelButtons = new JPanel();
-	private xeadEditor.Editor.MainTreeNode tableNode = null;
-	private NodeList referList_ = null;
-	private String headerTableID_;
-	private int returnCode;
-
-	public Editor_DialogAddRowListTableEdit(Editor frame) {
-		super(frame, "", true);
-		frame_ = frame;
-		try {
-			init();
-		} catch(Exception ex) {
-			frame_.processError(ex);
-		}
-	}
-
-	private void init() throws Exception {
-		jPanelButtons.setBorder(BorderFactory.createEtchedBorder());
-		jPanelButtons.setPreferredSize(new Dimension(100, 43));
-		jPanelButtons.setLayout(null);
-		jButtonOK.setBounds(new Rectangle(430, 8, 100, 27));
-		jButtonOK.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jButtonOK.setText("OK");
-		jButtonOK.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (valuesValidated()) {
-					returnCode = 1;
-					setVisible(false);
-				}
-			}
-		});
-		jButtonCancel.setBounds(new Rectangle(50, 8, 100, 27));
-		jButtonCancel.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jButtonCancel.setText(res.getString("Cancel"));
-		jButtonCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
-			}
-		});
-		jPanelButtons.add(jButtonOK, null);
-		jPanelButtons.add(jButtonCancel, null);
-
-		jPanelCenter.setBorder(null);
-		jPanelCenter.setLayout(null);
-		jLabelAddRowListTableID.setText(res.getString("ListTable"));
-		jLabelAddRowListTableID.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jLabelAddRowListTableID.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelAddRowListTableID.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelAddRowListTableID.setBounds(new Rectangle(5, 12, 150, 20));
-		jTextFieldAddRowListTableID.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextFieldAddRowListTableID.setBounds(new Rectangle(160, 9, 120, 25));
-		jTextFieldAddRowListTableID.addKeyListener(new KeyAdapter() {
-			public void keyReleased(KeyEvent e) {
-				setTableAttribute();
-			}
-		});
-		jTextFieldAddRowListTableName.setEditable(false);
-		jTextFieldAddRowListTableName.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextFieldAddRowListTableName.setBounds(new Rectangle(285, 9, 300, 25));
-		jLabelAddRowListTableWithFields.setText(res.getString("AddRowListWithFieldsShort"));
-		jLabelAddRowListTableWithFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jLabelAddRowListTableWithFields.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelAddRowListTableWithFields.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelAddRowListTableWithFields.setBounds(new Rectangle(5, 43, 150, 20));
-		jTextFieldAddRowListTableWithFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextFieldAddRowListTableWithFields.setBounds(new Rectangle(160, 40, 425, 22));
-		jLabelHeaderTableWithFields.setText(res.getString("AddRowListWithHeaderFieldsShort"));
-		jLabelHeaderTableWithFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jLabelHeaderTableWithFields.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelHeaderTableWithFields.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelHeaderTableWithFields.setBounds(new Rectangle(5, 74, 150, 20));
-		jTextFieldHeaderTableWithFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextFieldHeaderTableWithFields.setBounds(new Rectangle(160, 71, 425, 25));
-		jTextAreaMessage.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextAreaMessage.setBounds(new Rectangle(7, 105, 579, 51));
-		jTextAreaMessage.setLineWrap(true);
-		jTextAreaMessage.setEditable(false);
-		jTextAreaMessage.setBorder(BorderFactory.createEtchedBorder());
-		jTextAreaMessage.setBackground(SystemColor.control);
-		jPanelCenter.add(jLabelAddRowListTableID, null);
-		jPanelCenter.add(jTextFieldAddRowListTableID, null);
-		jPanelCenter.add(jTextFieldAddRowListTableName, null);
-		jPanelCenter.add(jLabelAddRowListTableWithFields, null);
-		jPanelCenter.add(jTextFieldAddRowListTableWithFields, null);
-		jPanelCenter.add(jTextAreaMessage, null);
-		jPanelCenter.add(jLabelHeaderTableWithFields, null);
-		jPanelCenter.add(jTextFieldHeaderTableWithFields, null);
-
-		this.setTitle(res.getString("AddRowListTableDialogTitle"));
-		this.getContentPane().setLayout(new BorderLayout());
-		this.getContentPane().add(jPanelButtons,  BorderLayout.SOUTH);
-		this.getContentPane().add(jPanelCenter,  BorderLayout.CENTER);
-		this.setResizable(false);
-		this.pack();
-	}
-
-	public int request(String headerTableID, String addRowListTableID, String addRowListTableWhereFields, String headerTableWithKeys, NodeList referList) {
-		headerTableID_ = headerTableID;
-		jTextFieldAddRowListTableID.setText(addRowListTableID);
-		setTableAttribute();
-		jTextFieldAddRowListTableWithFields.setText(addRowListTableWhereFields);
-		jTextFieldHeaderTableWithFields.setText(headerTableWithKeys);
-		referList_ = referList;
-		//
-		returnCode = 0;
-		jTextAreaMessage.setText(res.getString("AddRowListTableDialogComment"));
-		//
-		this.setSize(new Dimension(600, 245));
-		Dimension dlgSize = this.getSize();
-		Dimension frmSize = frame_.getSize();
-		Point loc = frame_.getLocation();
-		this.setLocation((frmSize.width - dlgSize.width) / 2 + loc.x, (frmSize.height - dlgSize.height) / 2 + loc.y);
-		this.getRootPane().setDefaultButton(jButtonOK);
-		super.setVisible(true);
-		//
-		return returnCode;
-	}
-
-	void setTableAttribute() {
-		tableNode = null;
-		jTextFieldAddRowListTableName.setText("");
-		if (!jTextFieldAddRowListTableID.getText().equals("")) {
-			jTextFieldAddRowListTableName.setText("N/A");
-			tableNode = frame_.getSpecificXETreeNode("Table", jTextFieldAddRowListTableID.getText());
-			if (tableNode == null) {
-				tableNode = frame_.getSpecificXETreeNode("Table", frame_.getCaseShiftValue(jTextFieldAddRowListTableID.getText(), "Upper"));
-				if (tableNode != null) {
-					jTextFieldAddRowListTableName.setText(tableNode.getElement().getAttribute("Name"));
-					jTextFieldAddRowListTableID.setText(frame_.getCaseShiftValue(jTextFieldAddRowListTableID.getText(), "Upper"));
-				}
-			} else {
-				jTextFieldAddRowListTableName.setText(tableNode.getElement().getAttribute("Name"));
-			}
-		}
-	}
-
-	public String getAddRowListWhereFields() {
-		return jTextFieldAddRowListTableWithFields.getText();
-	}
-
-	public String getAddRowListWithHeaderFields() {
-		return jTextFieldHeaderTableWithFields.getText();
-	}
-
-	public String getAddRowListTableID() {
-		return jTextFieldAddRowListTableID.getText();
-	}
-
-	boolean valuesValidated() {
-		boolean isValid = true;
-		//
-		ArrayList<String> whereFieldList = new ArrayList<String>(); 
-		ArrayList<String> withDataSourceList = new ArrayList<String>(); 
-		org.w3c.dom.Element workElement1, workElement2, fieldElement, referElement;
-		StringTokenizer workTokenizer, workTokenizer2;
-		//
-		if (tableNode != null) {
-			if (jTextFieldAddRowListTableWithFields.getText().contains(".")) {
-				isValid = false;
-				jTextAreaMessage.setText(res.getString("ErrorMessage46"));
-			} else {
-				workTokenizer = new StringTokenizer(jTextFieldAddRowListTableWithFields.getText(), ";" );
-				while (workTokenizer.hasMoreTokens()) {
-					whereFieldList.add(workTokenizer.nextToken());
-				}
-				workTokenizer = new StringTokenizer(jTextFieldHeaderTableWithFields.getText(), ";" );
-				while (workTokenizer.hasMoreTokens()) {
-					withDataSourceList.add(workTokenizer.nextToken());
-				}
-				//
-				if (whereFieldList.size() == withDataSourceList.size()) {
-					if (whereFieldList.size() > 0) {
-						String workTableID, workAlias, workFieldID, workAlias2, workFieldID2;
-						for (int i = 0; i < whereFieldList.size(); i++) {
-							workElement1 = frame_.getSpecificFieldElement(jTextFieldAddRowListTableID.getText(), whereFieldList.get(i));
-							if (workElement1 == null) {
-								isValid = false;
-								jTextAreaMessage.setText(res.getString("ErrorMessage47"));
-							} else {
-								workTokenizer = new StringTokenizer(withDataSourceList.get(i), "." );
-								workAlias = workTokenizer.nextToken();
-								if (workTokenizer.hasMoreTokens()) {
-									workFieldID = workTokenizer.nextToken();
-									workTableID = frame_.getTableIDOfTableAlias(workAlias, referList_, null);
-									workElement2 = frame_.getSpecificFieldElement(workTableID, workFieldID);
-									if (workElement2 == null) {
-										isValid = false;
-										jTextAreaMessage.setText(res.getString("ErrorMessage48"));
-										break;
-									} else {
-										if (!workElement1.getAttribute("Type").equals(workElement2.getAttribute("Type")) || !workElement1.getAttribute("Size").equals(workElement2.getAttribute("Size"))) {
-											isValid = false;
-											jTextAreaMessage.setText(res.getString("ErrorMessage49"));
-											break;
-										} else {
-											isValid = false;
-											workElement2 = frame_.getSpecificXETreeNode("Table", headerTableID_).getElement();
-											NodeList nodeList = workElement2.getElementsByTagName("Field");
-											for (int j = 0; j < nodeList.getLength(); j++) {
-												fieldElement = (org.w3c.dom.Element)nodeList.item(j);
-												if (workAlias.equals(headerTableID_) && workFieldID.equals(fieldElement.getAttribute("ID"))) {
-													isValid = true;
-													break;
-												}
-											}
-											nodeList = workElement2.getElementsByTagName("Refer");
-											for (int j = 0; j < nodeList.getLength(); j++) {
-												referElement = (org.w3c.dom.Element)nodeList.item(j);
-												if (referElement.getAttribute("TableAlias").equals("")) {
-													workAlias2 = referElement.getAttribute("ToTable");
-												} else {
-													workAlias2 = referElement.getAttribute("TableAlias");
-												}
-												workTokenizer2 = new StringTokenizer(referElement.getAttribute("Fields"), ";" );
-												while (workTokenizer2.hasMoreTokens()) {
-													workFieldID2 = workTokenizer2.nextToken();
-													if (workAlias.equals(workAlias2) && workFieldID.equals(workFieldID2)) {
-														isValid = true;
-														break;
-													}
-												}
-											}
-											if (!isValid) {
-												jTextAreaMessage.setText(res.getString("ErrorMessage50"));
-												break;
-											}
-										}
-									}
-								} else {
-									isValid = false;
-									jTextAreaMessage.setText(res.getString("ErrorMessage51"));
-									break;
-								}
-							}
-						}
-					}
-				} else {
-					isValid = false;
-					jTextAreaMessage.setText(res.getString("ErrorMessage52"));
-				}
-			}
-		}
-		//
-		return isValid;
-	}
-}
-
-
 class LimitSizeTextField extends JTextField {
 	private static final long serialVersionUID = 1L;
 
@@ -44840,195 +43076,6 @@ class Editor_TextArea extends JScrollPane implements Editor_EditableField {
 				e.printStackTrace();
 			}
 		}
-	}
-}
-
-class Editor_DialogAddRowListReturnDataSourcesEdit extends JDialog {
-	private static final long serialVersionUID = 1L;
-	private static ResourceBundle res = ResourceBundle.getBundle("xeadEditor.Res");
-	private JButton jButtonOK = new JButton();
-	private JButton jButtonCancel = new JButton();
-	private Editor frame_;
-	private JLabel jLabelReturnFromFields = new JLabel();
-	private JLabel jLabelReturnToFields = new JLabel();
-	private JTextField jTextFieldReturnFromFields = new JTextField();
-	private JTextField jTextFieldReturnToFields = new JTextField();
-	private JTextArea jTextAreaMessage = new JTextArea();
-	private JPanel jPanelCenter = new JPanel();
-	private JPanel jPanelButtons = new JPanel();
-	private NodeList fromReferList_ = null;
-	private NodeList toReferList_ = null;
-	private int returnCode;
-
-	public Editor_DialogAddRowListReturnDataSourcesEdit(Editor frame) {
-		super(frame, "", true);
-		frame_ = frame;
-		try {
-			init();
-		} catch(Exception ex) {
-			frame_.processError(ex);
-		}
-	}
-
-	private void init() throws Exception {
-		jPanelButtons.setBorder(BorderFactory.createEtchedBorder());
-		jPanelButtons.setPreferredSize(new Dimension(100, 43));
-		jPanelButtons.setLayout(null);
-		jButtonOK.setBounds(new Rectangle(800, 8, 100, 27));
-		jButtonOK.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jButtonOK.setText("OK");
-		jButtonOK.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (isValidFields()) {
-					returnCode = 1;
-					setVisible(false);
-				}
-			}
-		});
-		jButtonCancel.setBounds(new Rectangle(50, 8, 100, 27));
-		jButtonCancel.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jButtonCancel.setText(res.getString("Cancel"));
-		jButtonCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				setVisible(false);
-			}
-		});
-		jPanelButtons.add(jButtonOK, null);
-		jPanelButtons.add(jButtonCancel, null);
-		//
-		jPanelCenter.setBorder(null);
-		jPanelCenter.setLayout(null);
-		jLabelReturnFromFields.setText(res.getString("AddRowListReturnFromFieldShort"));
-		jLabelReturnFromFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jLabelReturnFromFields.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelReturnFromFields.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelReturnFromFields.setBounds(new Rectangle(5, 12, 150, 15));
-		jTextFieldReturnFromFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextFieldReturnFromFields.setBounds(new Rectangle(160, 9, 800, 25));
-		jLabelReturnToFields.setText(res.getString("AddRowListReturnToFieldShort"));
-		jLabelReturnToFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jLabelReturnToFields.setHorizontalAlignment(SwingConstants.RIGHT);
-		jLabelReturnToFields.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelReturnToFields.setBounds(new Rectangle(5, 43, 150, 15));
-		jTextFieldReturnToFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextFieldReturnToFields.setBounds(new Rectangle(160, 40, 800, 25));
-		jTextAreaMessage.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextAreaMessage.setBounds(new Rectangle(7, 71, 954, 57));
-		jTextAreaMessage.setLineWrap(true);
-		jTextAreaMessage.setEditable(false);
-		jTextAreaMessage.setBorder(BorderFactory.createEtchedBorder());
-		jTextAreaMessage.setBackground(SystemColor.control);
-		jPanelCenter.add(jLabelReturnFromFields, null);
-		jPanelCenter.add(jTextFieldReturnFromFields, null);
-		jPanelCenter.add(jLabelReturnToFields, null);
-		jPanelCenter.add(jTextFieldReturnToFields, null);
-		jPanelCenter.add(jTextAreaMessage, null);
-		//
-		this.setTitle(res.getString("AddRowListFieldsDialogTitle"));
-		this.getContentPane().setLayout(new BorderLayout());
-		this.getContentPane().add(jPanelButtons,  BorderLayout.SOUTH);
-		this.getContentPane().add(jPanelCenter,  BorderLayout.CENTER);
-		this.setResizable(false);
-		this.pack();
-	}
-
-	public int request(String addRowListTableID, String returnFromFields, NodeList fromReferList, String detailTableID, String returnToFields, NodeList toReferList) {
-		jTextFieldReturnFromFields.setText(returnFromFields);
-		jTextFieldReturnFromFields.requestFocus();
-		jTextFieldReturnToFields.setText(returnToFields);
-		fromReferList_ = fromReferList;
-		toReferList_ = toReferList;
-		//
-		returnCode = 0;
-		jTextAreaMessage.setText(res.getString("AddRowListFieldsDialogComment"));
-		//
-		this.setSize(new Dimension(975, 218));
-		Dimension dlgSize = this.getSize();
-		Dimension frmSize = frame_.getSize();
-		Point loc = frame_.getLocation();
-		this.setLocation((frmSize.width - dlgSize.width) / 2 + loc.x, (frmSize.height - dlgSize.height) / 2 + loc.y);
-		this.getRootPane().setDefaultButton(jButtonOK);
-		super.setVisible(true);
-		//
-		return returnCode;
-	}
-
-	public String getReturnFromFields() {
-		return jTextFieldReturnFromFields.getText();
-	}
-
-	public String getReturnToFields() {
-		return jTextFieldReturnToFields.getText();
-	}
-
-	boolean isValidFields() {
-		boolean isValid = true;
-		//
-		ArrayList<String> fromDataSourceList = new ArrayList<String>(); 
-		ArrayList<String> toDataSourceList = new ArrayList<String>(); 
-		org.w3c.dom.Element workElement1, workElement2;
-		StringTokenizer workTokenizer;
-		//
-		workTokenizer = new StringTokenizer(frame_.getCaseShiftValue(jTextFieldReturnFromFields.getText(), "Upper"), ";");
-		while (workTokenizer.hasMoreTokens()) {
-			fromDataSourceList.add(workTokenizer.nextToken());
-		}
-		workTokenizer = new StringTokenizer(frame_.getCaseShiftValue(jTextFieldReturnToFields.getText(), "Upper"), ";");
-		while (workTokenizer.hasMoreTokens()) {
-			toDataSourceList.add(workTokenizer.nextToken());
-		}
-		//
-		if (fromDataSourceList.size() == toDataSourceList.size() && fromDataSourceList.size() > 0) {
-			String workTableID, workAlias, workFieldID;
-			for (int i = 0; i < fromDataSourceList.size(); i++) {
-				workTokenizer = new StringTokenizer(fromDataSourceList.get(i), "." );
-				workAlias = workTokenizer.nextToken();
-				if (workTokenizer.hasMoreTokens()) {
-					workFieldID = workTokenizer.nextToken();
-					workTableID = frame_.getTableIDOfTableAlias(workAlias, fromReferList_, null);
-					workElement1 = frame_.getSpecificFieldElement(workTableID, workFieldID);
-					if (workElement1 == null) {
-						isValid = false;
-						jTextAreaMessage.setText(res.getString("ErrorMessage53"));
-						break;
-					} else {
-						workTokenizer = new StringTokenizer(toDataSourceList.get(i), "." );
-						workAlias = workTokenizer.nextToken();
-						if (workTokenizer.hasMoreTokens()) {
-							workFieldID = workTokenizer.nextToken();
-							workTableID = frame_.getTableIDOfTableAlias(workAlias, toReferList_, null);
-							workElement2 = frame_.getSpecificFieldElement(workTableID, workFieldID);
-							if (workElement2 == null) {
-								isValid = false;
-								jTextAreaMessage.setText(res.getString("ErrorMessage54"));
-								break;
-							} else {
-								if (!workElement1.getAttribute("Type").equals(workElement2.getAttribute("Type")) || !workElement1.getAttribute("Size").equals(workElement2.getAttribute("Size"))) {
-									isValid = false;
-									jTextAreaMessage.setText(res.getString("ErrorMessage55"));
-									break;
-								}
-							}
-						} else {
-							isValid = false;
-							jTextAreaMessage.setText(res.getString("ErrorMessage56"));
-							break;
-						}
-					}
-				} else {
-					isValid = false;
-					jTextAreaMessage.setText(res.getString("ErrorMessage57"));
-					break;
-				}
-			}
-		} else {
-			if (fromDataSourceList.size() > 0 || toDataSourceList.size() > 0) {
-				isValid = false;
-				jTextAreaMessage.setText(res.getString("ErrorMessage58"));
-			}
-		}
-		//
-		return isValid;
 	}
 }
 
@@ -46112,16 +44159,6 @@ class Editor_jRadioButtonFunction310DetailFieldCaptionOption_changeAdapter imple
 	}
 }
 
-class Editor_jRadioButtonFunction310AddRowListColumnCaptionOption_changeAdapter implements ChangeListener {
-	Editor adaptee;
-	Editor_jRadioButtonFunction310AddRowListColumnCaptionOption_changeAdapter(Editor adaptee) {
-		this.adaptee = adaptee;
-	}
-	public void stateChanged(ChangeEvent e) {
-		adaptee.jRadioButtonFunction310AddRowListColumnCaptionOption_stateChanged(e);
-	}
-}
-
 class Editor_jRadioButtonFunction390DetailFieldCaptionOption_changeAdapter implements ChangeListener {
 	Editor adaptee;
 	Editor_jRadioButtonFunction390DetailFieldCaptionOption_changeAdapter(Editor adaptee) {
@@ -46319,26 +44356,6 @@ class Editor_jButtonFunction300StructureNodeIconsEdit_actionAdapter implements j
 	}
 	public void actionPerformed(ActionEvent e) {
 		adaptee.jButtonFunction300StructureNodeIconsEdit_actionPerformed(e);
-	}
-}
-
-class Editor_jButtonFunction310AddRowListTableNameEdit_actionAdapter implements java.awt.event.ActionListener {
-	Editor adaptee;
-	Editor_jButtonFunction310AddRowListTableNameEdit_actionAdapter(Editor adaptee) {
-		this.adaptee = adaptee;
-	}
-	public void actionPerformed(ActionEvent e) {
-		adaptee.jButtonFunction310AddRowListTableNameEdit_actionPerformed(e);
-	}
-}
-
-class Editor_jButtonFunction310AddRowListReturnDataSourcesEdit_actionAdapter implements java.awt.event.ActionListener {
-	Editor adaptee;
-	Editor_jButtonFunction310AddRowListReturnDataSourcesEdit_actionAdapter(Editor adaptee) {
-		this.adaptee = adaptee;
-	}
-	public void actionPerformed(ActionEvent e) {
-		adaptee.jButtonFunction310AddRowListReturnDataSourcesEdit_actionPerformed(e);
 	}
 }
 
@@ -46579,16 +44596,6 @@ class Editor_jComboBoxFunction300DetailButtonAction_actionAdapter implements jav
 	}
 	public void actionPerformed(ActionEvent e) {
 		adaptee.jComboBoxFunction300DetailButtonAction_actionPerformed(e);
-	}
-}
-
-class Editor_jComboBoxFunction310AddRowListButtonAction_actionAdapter implements java.awt.event.ActionListener {
-	Editor adaptee;
-	Editor_jComboBoxFunction310AddRowListButtonAction_actionAdapter(Editor adaptee) {
-		this.adaptee = adaptee;
-	}
-	public void actionPerformed(ActionEvent e) {
-		adaptee.jComboBoxFunction310AddRowListButtonAction_actionPerformed(e);
 	}
 }
 
@@ -47500,42 +45507,6 @@ class Editor_jTableFunction310HeaderFieldList_mouseMotionAdapter extends java.aw
 	}
 }
 
-class Editor_jTableFunction310AddRowListColumnList_listSelectionAdapter implements ListSelectionListener {
-	Editor adaptee;
-	Editor_jTableFunction310AddRowListColumnList_listSelectionAdapter(Editor adaptee) {
-		this.adaptee = adaptee;
-	}
-	public void valueChanged(ListSelectionEvent e) {
-		adaptee.jTableFunction310AddRowListColumnList_valueChanged(e);
-	}
-}
-
-class Editor_jTableFunction310AddRowListColumnList_mouseAdapter extends java.awt.event.MouseAdapter {
-	Editor adaptee;
-	Editor_jTableFunction310AddRowListColumnList_mouseAdapter(Editor adaptee) {
-		this.adaptee = adaptee;
-	}
-	public void mouseReleased(MouseEvent e) {
-		adaptee.jTableFunction310AddRowListColumnList_mouseReleased(e);
-	}
-	public void mousePressed(MouseEvent e) {
-		adaptee.jTableFunction310AddRowListColumnList_mousePressed(e);
-	}
-	public void mouseClicked(MouseEvent e) {
-		adaptee.jTableFunction310AddRowListColumnList_mouseClicked(e);
-	}
-}
-
-class Editor_jTableFunction310AddRowListColumnList_mouseMotionAdapter extends java.awt.event.MouseMotionAdapter {
-	Editor adaptee;
-	Editor_jTableFunction310AddRowListColumnList_mouseMotionAdapter(Editor adaptee) {
-		this.adaptee = adaptee;
-	}
-	public void mouseDragged(MouseEvent e) {
-		adaptee.jTableFunction310AddRowListColumnList_mouseDragged(e);
-	}
-}
-
 class Editor_jTableFunction310ButtonList_listSelectionAdapter implements ListSelectionListener {
 	Editor adaptee;
 	Editor_jTableFunction310ButtonList_listSelectionAdapter(Editor adaptee) {
@@ -47556,26 +45527,6 @@ class Editor_jTableFunction310ButtonList_mouseAdapter extends java.awt.event.Mou
 	}
 }
 
-class Editor_jTableFunction310AddRowListButtonList_listSelectionAdapter implements ListSelectionListener {
-	Editor adaptee;
-	Editor_jTableFunction310AddRowListButtonList_listSelectionAdapter(Editor adaptee) {
-		this.adaptee = adaptee;
-	}
-	public void valueChanged(ListSelectionEvent e) {
-		adaptee.jTableFunction310AddRowListButtonList_valueChanged(e);
-	}
-}
-
-class Editor_jTableFunction310AddRowListButtonList_mouseAdapter extends java.awt.event.MouseAdapter {
-	Editor adaptee;
-	Editor_jTableFunction310AddRowListButtonList_mouseAdapter(Editor adaptee) {
-		this.adaptee = adaptee;
-	}
-	public void mouseClicked(MouseEvent e) {
-		adaptee.jTableFunction310AddRowListButtonList_mouseClicked(e);
-	}
-}
-
 class Editor_jScrollPaneFunction310ButtonList_mouseAdapter extends java.awt.event.MouseAdapter {
 	Editor adaptee;
 	Editor_jScrollPaneFunction310ButtonList_mouseAdapter(Editor adaptee) {
@@ -47583,16 +45534,6 @@ class Editor_jScrollPaneFunction310ButtonList_mouseAdapter extends java.awt.even
 	}
 	public void mouseClicked(MouseEvent e) {
 		adaptee.jScrollPaneFunction310ButtonList_mouseClicked(e);
-	}
-}
-
-class Editor_jScrollPaneFunction310AddRowListButtonList_mouseAdapter extends java.awt.event.MouseAdapter {
-	Editor adaptee;
-	Editor_jScrollPaneFunction310AddRowListButtonList_mouseAdapter(Editor adaptee) {
-		this.adaptee = adaptee;
-	}
-	public void mouseClicked(MouseEvent e) {
-		adaptee.jScrollPaneFunction310AddRowListButtonList_mouseClicked(e);
 	}
 }
 
@@ -47731,16 +45672,6 @@ class Editor_jScrollPaneFunction310DetailFieldList_mouseAdapter extends java.awt
 	}
 	public void mouseClicked(MouseEvent e) {
 		adaptee.jScrollPaneFunction310DetailFieldList_mouseClicked(e);
-	}
-}
-
-class Editor_jScrollPaneFunction310AddRowListColumnList_mouseAdapter extends java.awt.event.MouseAdapter {
-	Editor adaptee;
-	Editor_jScrollPaneFunction310AddRowListColumnList_mouseAdapter(Editor adaptee) {
-		this.adaptee = adaptee;
-	}
-	public void mouseClicked(MouseEvent e) {
-		adaptee.jScrollPaneFunction310AddRowListColumnList_mouseClicked(e);
 	}
 }
 
@@ -48523,16 +46454,6 @@ class Editor_jTextFieldFunction300DetailFilterPromptOptionCallFunctionID_keyAdap
 	}
 	public void keyReleased(KeyEvent e) {
 		adaptee.jTextFieldFunction300DetailFilterPromptOptionCallFunctionID_keyReleased(e);
-	}
-}
-
-class Editor_jTextFieldFunction310AddRowListButtonActionCallFunctionID_keyAdapter extends java.awt.event.KeyAdapter {
-	Editor adaptee;
-	Editor_jTextFieldFunction310AddRowListButtonActionCallFunctionID_keyAdapter(Editor adaptee) {
-		this.adaptee = adaptee;
-	}
-	public void keyReleased(KeyEvent e) {
-		adaptee.jTextFieldFunction310AddRowListButtonActionCallFunctionID_keyReleased(e);
 	}
 }
 

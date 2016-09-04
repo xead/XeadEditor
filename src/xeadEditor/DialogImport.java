@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2015 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2016 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -1058,64 +1058,64 @@ public class DialogImport extends JDialog {
 					}
 				}
 			}
-			if (error.equals("") && !isValidTableID(element.getAttribute("AddRowListTable"))) {
-				error = res.getString("ImportMessage25");
-			}
-			if (error.equals("") && !element.getAttribute("AddRowListWithFields").equals("")) {
-				if (!isValidFields(element.getAttribute("AddRowListTable"), element.getAttribute("AddRowListWithFields"))) {
-					error = res.getString("ImportMessage26");
-				}
-			}
-			if (error.equals("") && !element.getAttribute("AddRowListWithHeaderFields").equals("")) {
-				workTokenizer = new StringTokenizer(element.getAttribute("AddRowListWithHeaderFields"), ";");
-				while (workTokenizer.hasMoreTokens()) {
-					wrkStr = workTokenizer.nextToken();
-					if (!isValidDataSourceName(element.getAttribute("HeaderTable"), wrkStr)) {
-						error = res.getString("ImportMessage26");
-						break;
-					}
-				}
-			}
-			if (error.equals("") && !element.getAttribute("AddRowListOrderBy").equals("")) {
-				workTokenizer = new StringTokenizer(element.getAttribute("AddRowListOrderBy"), ";");
-				while (workTokenizer.hasMoreTokens()) {
-					wrkStr = workTokenizer.nextToken();
-					if (!isValidDataSourceName(element.getAttribute("AddRowListTable"), wrkStr)) {
-						error = res.getString("ImportMessage27");
-						break;
-					}
-				}
-			}
-			if (error.equals("") && !element.getAttribute("AddRowListReturnDataSources").equals("")) {
-				workTokenizer = new StringTokenizer(element.getAttribute("AddRowListReturnDataSources"), ";");
-				while (workTokenizer.hasMoreTokens()) {
-					wrkStr = workTokenizer.nextToken();
-					if (!isValidDataSourceName(element.getAttribute("AddRowListTable"), wrkStr)) {
-						error = res.getString("ImportMessage28");
-						break;
-					}
-				}
-			}
-			if (error.equals("") && !element.getAttribute("AddRowListReturnToDetailDataSources").equals("")) {
-				workTokenizer = new StringTokenizer(element.getAttribute("AddRowListReturnToDetailDataSources"), ";");
-				while (workTokenizer.hasMoreTokens()) {
-					wrkStr = workTokenizer.nextToken();
-					if (!isValidDataSourceName(element.getAttribute("DetailTable"), wrkStr)) {
-						error = res.getString("ImportMessage28");
-						break;
-					}
-				}
-			}
-			if (error.equals("")) {
-				nodeList = element.getElementsByTagName("AddRowListColumn");
-				for (int i = 0; i < nodeList.getLength(); i++) {
-					workElement = (org.w3c.dom.Element)nodeList.item(i);
-					if (!isValidDataSourceName(element.getAttribute("AddRowListTable"), workElement.getAttribute("DataSource"))) {
-						error = res.getString("ImportMessage29");
-						break;
-					}
-				}
-			}
+//			if (error.equals("") && !isValidTableID(element.getAttribute("AddRowListTable"))) {
+//				error = res.getString("ImportMessage25");
+//			}
+//			if (error.equals("") && !element.getAttribute("AddRowListWithFields").equals("")) {
+//				if (!isValidFields(element.getAttribute("AddRowListTable"), element.getAttribute("AddRowListWithFields"))) {
+//					error = res.getString("ImportMessage26");
+//				}
+//			}
+//			if (error.equals("") && !element.getAttribute("AddRowListWithHeaderFields").equals("")) {
+//				workTokenizer = new StringTokenizer(element.getAttribute("AddRowListWithHeaderFields"), ";");
+//				while (workTokenizer.hasMoreTokens()) {
+//					wrkStr = workTokenizer.nextToken();
+//					if (!isValidDataSourceName(element.getAttribute("HeaderTable"), wrkStr)) {
+//						error = res.getString("ImportMessage26");
+//						break;
+//					}
+//				}
+//			}
+//			if (error.equals("") && !element.getAttribute("AddRowListOrderBy").equals("")) {
+//				workTokenizer = new StringTokenizer(element.getAttribute("AddRowListOrderBy"), ";");
+//				while (workTokenizer.hasMoreTokens()) {
+//					wrkStr = workTokenizer.nextToken();
+//					if (!isValidDataSourceName(element.getAttribute("AddRowListTable"), wrkStr)) {
+//						error = res.getString("ImportMessage27");
+//						break;
+//					}
+//				}
+//			}
+//			if (error.equals("") && !element.getAttribute("AddRowListReturnDataSources").equals("")) {
+//				workTokenizer = new StringTokenizer(element.getAttribute("AddRowListReturnDataSources"), ";");
+//				while (workTokenizer.hasMoreTokens()) {
+//					wrkStr = workTokenizer.nextToken();
+//					if (!isValidDataSourceName(element.getAttribute("AddRowListTable"), wrkStr)) {
+//						error = res.getString("ImportMessage28");
+//						break;
+//					}
+//				}
+//			}
+//			if (error.equals("") && !element.getAttribute("AddRowListReturnToDetailDataSources").equals("")) {
+//				workTokenizer = new StringTokenizer(element.getAttribute("AddRowListReturnToDetailDataSources"), ";");
+//				while (workTokenizer.hasMoreTokens()) {
+//					wrkStr = workTokenizer.nextToken();
+//					if (!isValidDataSourceName(element.getAttribute("DetailTable"), wrkStr)) {
+//						error = res.getString("ImportMessage28");
+//						break;
+//					}
+//				}
+//			}
+//			if (error.equals("")) {
+//				nodeList = element.getElementsByTagName("AddRowListColumn");
+//				for (int i = 0; i < nodeList.getLength(); i++) {
+//					workElement = (org.w3c.dom.Element)nodeList.item(i);
+//					if (!isValidDataSourceName(element.getAttribute("AddRowListTable"), workElement.getAttribute("DataSource"))) {
+//						error = res.getString("ImportMessage29");
+//						break;
+//					}
+//				}
+//			}
 		}
 		//
 		if (functionType.equals("XF390")) {

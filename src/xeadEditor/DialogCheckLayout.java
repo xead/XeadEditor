@@ -133,13 +133,15 @@ public class DialogCheckLayout extends JDialog {
 		detailTable = null;
 
 		if (panelType_.equals("Function100ColumnList")) {
-			showLayoutOfTableColumns(functionElement.getElementsByTagName("Column"), false);
+//			showLayoutOfTableColumns(functionElement.getElementsByTagName("Column"), false);
+			showLayoutOfTableColumns(functionElement.getElementsByTagName("Column"));
 		}
 		if (panelType_.equals("Function100FilterList")) {
 			showLayoutOfTableFilters(functionElement.getElementsByTagName("Filter"));
 		}
 		if (panelType_.equals("Function110ColumnList")) {
-			showLayoutOfTableColumns(functionElement.getElementsByTagName("Column"), false);
+//			showLayoutOfTableColumns(functionElement.getElementsByTagName("Column"), false);
+			showLayoutOfTableColumns(functionElement.getElementsByTagName("Column"));
 		}
 		if (panelType_.equals("Function110FilterList")) {
 			showLayoutOfTableFilters(functionElement.getElementsByTagName("Filter"));
@@ -161,7 +163,8 @@ public class DialogCheckLayout extends JDialog {
 			sortableList = editor.getSortedListModel(detailTableList, "Order");
 			org.w3c.dom.Element element = (org.w3c.dom.Element)sortableList.getElementAt(tabIndex);
 			detailTable = new DialogCheckLayoutDetailTable(element.getAttribute("Table"), element.getAttribute("KeyFields"), this);
-			showLayoutOfTableColumns(element.getElementsByTagName("Column"), false);
+//			showLayoutOfTableColumns(element.getElementsByTagName("Column"), false);
+			showLayoutOfTableColumns(element.getElementsByTagName("Column"));
 		}
 		if (panelType_.equals("Function300DetailFilterList") && tabIndex >= 0) {
 			NodeList detailTableList = functionElement.getElementsByTagName("Detail");
@@ -175,14 +178,16 @@ public class DialogCheckLayout extends JDialog {
 		}
 		if (panelType_.equals("Function310DetailFieldList")) {
 			detailTable = new DialogCheckLayoutDetailTable(functionElement.getAttribute("DetailTable"), functionElement.getAttribute("DetailKeyFields"), this);
-			showLayoutOfTableColumns(functionElement.getElementsByTagName("Column"), false);
+//			showLayoutOfTableColumns(functionElement.getElementsByTagName("Column"), false);
+			showLayoutOfTableColumns(functionElement.getElementsByTagName("Column"));
 		}
-		if (panelType_.equals("Function310AddRowListColumnList")) {
-			showLayoutOfTableColumns(functionElement.getElementsByTagName("AddRowListColumn"), true);
-		}
+//		if (panelType_.equals("Function310AddRowListColumnList")) {
+//			showLayoutOfTableColumns(functionElement.getElementsByTagName("AddRowListColumn"), true);
+//		}
 	}
 
-	private void showLayoutOfTableColumns(NodeList functionColumnList, boolean isForAddRowListTable) {
+//	private void showLayoutOfTableColumns(NodeList functionColumnList, boolean isForAddRowListTable) {
+	private void showLayoutOfTableColumns(NodeList functionColumnList) {
 		///////////////////////////////////////////////////////////
 		// Set panel size and position according specified sizes //
 		///////////////////////////////////////////////////////////
@@ -202,7 +207,8 @@ public class DialogCheckLayout extends JDialog {
 		// Setup the primary table and refer tables //
 		//////////////////////////////////////////////
 		org.w3c.dom.Element element;
-		primaryTable = new DialogCheckLayoutPrimaryTable(functionElement, this, isForAddRowListTable);
+//		primaryTable = new DialogCheckLayoutPrimaryTable(functionElement, this, isForAddRowListTable);
+		primaryTable = new DialogCheckLayoutPrimaryTable(functionElement, this, false);
 		NodeList referNodeList = primaryTable.getTableElement().getElementsByTagName("Refer");
 		sortableList = editor.getSortedListModel(referNodeList, "Order");
 		for (int i = 0; i < sortableList.getSize(); i++) {
@@ -2541,9 +2547,9 @@ class DialogCheckLayoutPrimaryTable extends Object {
 			if (functionElement_.getAttribute("Type").equals("XF110")) {
 				tableID = functionElement_.getAttribute("BatchTable"); //XF110 BatchTable//
 			}
-			if (functionElement_.getAttribute("Type").equals("XF310")) {
-				tableID = functionElement_.getAttribute("AddRowListTable"); //XF310 AddRowListTable//
-			}
+//			if (functionElement_.getAttribute("Type").equals("XF310")) {
+//				tableID = functionElement_.getAttribute("AddRowListTable"); //XF310 AddRowListTable//
+//			}
 		} else {
 			if (functionElement_.getAttribute("Type").equals("XF100")
 					|| functionElement_.getAttribute("Type").equals("XF110")

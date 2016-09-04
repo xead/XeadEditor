@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2015 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2016 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -1017,14 +1017,14 @@ public class DialogToListChangesOfFiles extends JDialog {
 				attrList.add("Size");
 				attrList.add("StartInAddMode");
 				attrList.add("InitialMsg");
-				attrList.add("AddRowListTable");
-				attrList.add("AddRowListWithFields");
-				attrList.add("AddRowListWithHeaderFields");
-				attrList.add("AddRowListOrderBy");
-				attrList.add("AddRowListWhere");
-				attrList.add("AddRowListInitialMsg");
-				attrList.add("AddRowListReturnDataSources");
-				attrList.add("AddRowListReturnToDetailDataSources");
+//				attrList.add("AddRowListTable");
+//				attrList.add("AddRowListWithFields");
+//				attrList.add("AddRowListWithHeaderFields");
+//				attrList.add("AddRowListOrderBy");
+//				attrList.add("AddRowListWhere");
+//				attrList.add("AddRowListInitialMsg");
+//				attrList.add("AddRowListReturnDataSources");
+//				attrList.add("AddRowListReturnToDetailDataSources");
 				for (int i = 0; i < attrList.size(); i++) {
 					compareNewAndOldElements(newElement, oldElement, attrList.get(i), functionLabel);
 				}
@@ -1636,123 +1636,123 @@ public class DialogToListChangesOfFiles extends JDialog {
 				}
 			}
 
-			////////////////////////////////////////////////
-			// Sub-Elements : AddRowList Columns of XF310 //
-			////////////////////////////////////////////////
-			if ((newElement.getAttribute("Type").equals("XF310")) && (newElement.getAttribute("AddRowListTable").equals(oldElement.getAttribute("AddRowListTable")))) {
-				tagName = "AddRowListColumn";
-				elementName = getElementNameByTagName(tagName);
-				attrList.clear();
-				attrList.add("Order");
-				attrList.add("FieldOptions");
-				oldElementList = oldElement.getElementsByTagName(tagName);
-				newElementList = newElement.getElementsByTagName(tagName);
-				for (int i = 0; i < newElementList.getLength(); i++) {
-					newElementWork = (org.w3c.dom.Element)newElementList.item(i);
-					isNotFound = true;
-					for (int j = 0; j < oldElementList.getLength(); j++) {
-						oldElementWork = (org.w3c.dom.Element)oldElementList.item(j);
-						if (oldElementWork.getAttribute("DataSource").equals(newElementWork.getAttribute("DataSource"))) {
-							elementLabel = functionLabel+ res.getString("FileDiffMessage02")
-									+ elementName + res.getString("FileDiffMessage06")
-									+ newElementWork.getAttribute("DataSource")
-									+ res.getString("FileDiffMessage07");
-							for (int k = 0; k < attrList.size(); k++) {
-								compareNewAndOldElements(newElementWork, oldElementWork, attrList.get(k), elementLabel);
-							}
-							isNotFound = false;
-							break;
-						}
-					}
-					if (isNotFound) {
-						countOfChanges++;
-						buffer.append("\n" + countOfChanges + "."
-								+ functionLabel+ res.getString("FileDiffMessage02")
-								+ elementName + res.getString("FileDiffMessage06")
-								+ newElementWork.getAttribute("DataSource") + res.getString("FileDiffMessage07")
-								+ res.getString("FileDiffMessage08"));
-					}
-				}
-				for (int i = 0; i < oldElementList.getLength(); i++) {
-					oldElementWork = (org.w3c.dom.Element)oldElementList.item(i);
-					isNotFound = true;
-					for (int j = 0; j < newElementList.getLength(); j++) {
-						newElementWork = (org.w3c.dom.Element)newElementList.item(j);
-						if (oldElementWork.getAttribute("DataSource").equals(newElementWork.getAttribute("DataSource"))) {
-							isNotFound = false;
-							break;
-						}
-					}
-					if (isNotFound) {
-						countOfChanges++;
-						buffer.append("\n" + countOfChanges + "."
-								+ functionLabel+ res.getString("FileDiffMessage02")
-								+ elementName + res.getString("FileDiffMessage06")
-								+ oldElementWork.getAttribute("DataSource") + res.getString("FileDiffMessage07")
-								+ res.getString("FileDiffMessage09"));
-					}
-				}
-			}
-
-			////////////////////////////////////////////////
-			// Sub-Elements : AddRowList Buttons of XF310 //
-			////////////////////////////////////////////////
-			if ((newElement.getAttribute("Type").equals("XF310")) && (newElement.getAttribute("AddRowListTable").equals(oldElement.getAttribute("AddRowListTable")))) {
-				tagName = "AddRowListButton";
-				elementName = getElementNameByTagName(tagName);
-				attrList.clear();
-				attrList.add("Position");
-				attrList.add("Caption");
-				oldElementList = oldElement.getElementsByTagName(tagName);
-				newElementList = newElement.getElementsByTagName(tagName);
-				for (int i = 0; i < newElementList.getLength(); i++) {
-					newElementWork = (org.w3c.dom.Element)newElementList.item(i);
-					isNotFound = true;
-					for (int j = 0; j < oldElementList.getLength(); j++) {
-						oldElementWork = (org.w3c.dom.Element)oldElementList.item(j);
-						if (oldElementWork.getAttribute("Number").equals(newElementWork.getAttribute("Number"))
-								&& oldElementWork.getAttribute("Action").equals(newElementWork.getAttribute("Action"))) {
-							elementLabel = functionLabel+ res.getString("FileDiffMessage02")
-									+ elementName + res.getString("FileDiffMessage06")
-									+ "F" + newElementWork.getAttribute("Number")
-									+ res.getString("FileDiffMessage07");
-							for (int k = 0; k < attrList.size(); k++) {
-								compareNewAndOldElements(newElementWork, oldElementWork, attrList.get(k), elementLabel);
-							}
-							isNotFound = false;
-							break;
-						}
-					}
-					if (isNotFound) {
-						countOfChanges++;
-						buffer.append("\n" + countOfChanges + "."
-								+ functionLabel+ res.getString("FileDiffMessage02")
-								+ elementName + res.getString("FileDiffMessage06")
-								+ "F" + newElementWork.getAttribute("Number") + res.getString("FileDiffMessage07")
-								+ res.getString("FileDiffMessage08"));
-					}
-				}
-				for (int i = 0; i < oldElementList.getLength(); i++) {
-					oldElementWork = (org.w3c.dom.Element)oldElementList.item(i);
-					isNotFound = true;
-					for (int j = 0; j < newElementList.getLength(); j++) {
-						newElementWork = (org.w3c.dom.Element)newElementList.item(j);
-						if (oldElementWork.getAttribute("Number").equals(newElementWork.getAttribute("Number"))
-								&& oldElementWork.getAttribute("Action").equals(newElementWork.getAttribute("Action"))) {
-							isNotFound = false;
-							break;
-						}
-					}
-					if (isNotFound) {
-						countOfChanges++;
-						buffer.append("\n" + countOfChanges + "."
-								+ functionLabel+ res.getString("FileDiffMessage02")
-								+ elementName + res.getString("FileDiffMessage06")
-								+ "F" + oldElementWork.getAttribute("Number") + res.getString("FileDiffMessage07")
-								+ res.getString("FileDiffMessage09"));
-					}
-				}
-			}
+//			////////////////////////////////////////////////
+//			// Sub-Elements : AddRowList Columns of XF310 //
+//			////////////////////////////////////////////////
+//			if ((newElement.getAttribute("Type").equals("XF310")) && (newElement.getAttribute("AddRowListTable").equals(oldElement.getAttribute("AddRowListTable")))) {
+//				tagName = "AddRowListColumn";
+//				elementName = getElementNameByTagName(tagName);
+//				attrList.clear();
+//				attrList.add("Order");
+//				attrList.add("FieldOptions");
+//				oldElementList = oldElement.getElementsByTagName(tagName);
+//				newElementList = newElement.getElementsByTagName(tagName);
+//				for (int i = 0; i < newElementList.getLength(); i++) {
+//					newElementWork = (org.w3c.dom.Element)newElementList.item(i);
+//					isNotFound = true;
+//					for (int j = 0; j < oldElementList.getLength(); j++) {
+//						oldElementWork = (org.w3c.dom.Element)oldElementList.item(j);
+//						if (oldElementWork.getAttribute("DataSource").equals(newElementWork.getAttribute("DataSource"))) {
+//							elementLabel = functionLabel+ res.getString("FileDiffMessage02")
+//									+ elementName + res.getString("FileDiffMessage06")
+//									+ newElementWork.getAttribute("DataSource")
+//									+ res.getString("FileDiffMessage07");
+//							for (int k = 0; k < attrList.size(); k++) {
+//								compareNewAndOldElements(newElementWork, oldElementWork, attrList.get(k), elementLabel);
+//							}
+//							isNotFound = false;
+//							break;
+//						}
+//					}
+//					if (isNotFound) {
+//						countOfChanges++;
+//						buffer.append("\n" + countOfChanges + "."
+//								+ functionLabel+ res.getString("FileDiffMessage02")
+//								+ elementName + res.getString("FileDiffMessage06")
+//								+ newElementWork.getAttribute("DataSource") + res.getString("FileDiffMessage07")
+//								+ res.getString("FileDiffMessage08"));
+//					}
+//				}
+//				for (int i = 0; i < oldElementList.getLength(); i++) {
+//					oldElementWork = (org.w3c.dom.Element)oldElementList.item(i);
+//					isNotFound = true;
+//					for (int j = 0; j < newElementList.getLength(); j++) {
+//						newElementWork = (org.w3c.dom.Element)newElementList.item(j);
+//						if (oldElementWork.getAttribute("DataSource").equals(newElementWork.getAttribute("DataSource"))) {
+//							isNotFound = false;
+//							break;
+//						}
+//					}
+//					if (isNotFound) {
+//						countOfChanges++;
+//						buffer.append("\n" + countOfChanges + "."
+//								+ functionLabel+ res.getString("FileDiffMessage02")
+//								+ elementName + res.getString("FileDiffMessage06")
+//								+ oldElementWork.getAttribute("DataSource") + res.getString("FileDiffMessage07")
+//								+ res.getString("FileDiffMessage09"));
+//					}
+//				}
+//			}
+//
+//			////////////////////////////////////////////////
+//			// Sub-Elements : AddRowList Buttons of XF310 //
+//			////////////////////////////////////////////////
+//			if ((newElement.getAttribute("Type").equals("XF310")) && (newElement.getAttribute("AddRowListTable").equals(oldElement.getAttribute("AddRowListTable")))) {
+//				tagName = "AddRowListButton";
+//				elementName = getElementNameByTagName(tagName);
+//				attrList.clear();
+//				attrList.add("Position");
+//				attrList.add("Caption");
+//				oldElementList = oldElement.getElementsByTagName(tagName);
+//				newElementList = newElement.getElementsByTagName(tagName);
+//				for (int i = 0; i < newElementList.getLength(); i++) {
+//					newElementWork = (org.w3c.dom.Element)newElementList.item(i);
+//					isNotFound = true;
+//					for (int j = 0; j < oldElementList.getLength(); j++) {
+//						oldElementWork = (org.w3c.dom.Element)oldElementList.item(j);
+//						if (oldElementWork.getAttribute("Number").equals(newElementWork.getAttribute("Number"))
+//								&& oldElementWork.getAttribute("Action").equals(newElementWork.getAttribute("Action"))) {
+//							elementLabel = functionLabel+ res.getString("FileDiffMessage02")
+//									+ elementName + res.getString("FileDiffMessage06")
+//									+ "F" + newElementWork.getAttribute("Number")
+//									+ res.getString("FileDiffMessage07");
+//							for (int k = 0; k < attrList.size(); k++) {
+//								compareNewAndOldElements(newElementWork, oldElementWork, attrList.get(k), elementLabel);
+//							}
+//							isNotFound = false;
+//							break;
+//						}
+//					}
+//					if (isNotFound) {
+//						countOfChanges++;
+//						buffer.append("\n" + countOfChanges + "."
+//								+ functionLabel+ res.getString("FileDiffMessage02")
+//								+ elementName + res.getString("FileDiffMessage06")
+//								+ "F" + newElementWork.getAttribute("Number") + res.getString("FileDiffMessage07")
+//								+ res.getString("FileDiffMessage08"));
+//					}
+//				}
+//				for (int i = 0; i < oldElementList.getLength(); i++) {
+//					oldElementWork = (org.w3c.dom.Element)oldElementList.item(i);
+//					isNotFound = true;
+//					for (int j = 0; j < newElementList.getLength(); j++) {
+//						newElementWork = (org.w3c.dom.Element)newElementList.item(j);
+//						if (oldElementWork.getAttribute("Number").equals(newElementWork.getAttribute("Number"))
+//								&& oldElementWork.getAttribute("Action").equals(newElementWork.getAttribute("Action"))) {
+//							isNotFound = false;
+//							break;
+//						}
+//					}
+//					if (isNotFound) {
+//						countOfChanges++;
+//						buffer.append("\n" + countOfChanges + "."
+//								+ functionLabel+ res.getString("FileDiffMessage02")
+//								+ elementName + res.getString("FileDiffMessage06")
+//								+ "F" + oldElementWork.getAttribute("Number") + res.getString("FileDiffMessage07")
+//								+ res.getString("FileDiffMessage09"));
+//					}
+//				}
+//			}
 
 			/////////////////////////////////////////
 			// Sub-Elements : Detail Tabs of XF390 //

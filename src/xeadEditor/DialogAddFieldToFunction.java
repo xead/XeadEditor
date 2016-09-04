@@ -189,9 +189,9 @@ public class DialogAddFieldToFunction extends JDialog {
 		if (tableType_.equals("Function310DetailFieldList")) {
 			tableID = objectElement.getAttribute("DetailTable");
 		}
-		if (tableType_.equals("Function310AddRowListColumnList")) {
-			tableID = objectElement.getAttribute("AddRowListTable");
-		}
+//		if (tableType_.equals("Function310AddRowListColumnList")) {
+//			tableID = objectElement.getAttribute("AddRowListTable");
+//		}
 		if (tableType_.equals("Function290PhraseList")) {
 			tableID = objectElement.getAttribute("PrimaryTable");
 		}

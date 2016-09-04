@@ -48,7 +48,15 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "X-TEA Editor";
 	public static final String COPYRIGHT = "Copyright 2016 DBC Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
-	public static final String FULL_VERSION  = "V1.R3.M5";
+	public static final String FULL_VERSION  = "V1.R3.M7";
+	//1.3.7
+	//・accdb向けの同期処理と補完処理の不具合を修正するとともに、DBドライバを更新した
+	//・データ保守ユーティリティの使い勝手を向上させた
+	//・モデルのインポート機能を修正・改善した
+	//
+	//1.3.6
+	//・XF310の「行追加設定」を廃止した
+	//
 	//1.3.5
 	//・XF310で行追加用機能を起動するための機能ボタンを追加できるようにした
 	//・XF310に「明細行が0件ならば追加処理から開始」の属性を組み込んだ

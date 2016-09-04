@@ -340,13 +340,13 @@ public class DialogEditDetailTableKey extends JDialog {
 					countOfFieldErrors++;
 				}
 			}
-			dataSource = functionElement_.getAttribute("AddRowListReturnToDetailDataSources");
-			tokenizer = new StringTokenizer(dataSource, ";");
-			while (tokenizer.hasMoreTokens()) {
-				if (isInvalidDataSourceName(tokenizer.nextToken(), buf, detailReferList, headerReferList, res.getString("AddRowListReturnToField"))) {
-					countOfFieldErrors++;
-				}
-			}
+//			dataSource = functionElement_.getAttribute("AddRowListReturnToDetailDataSources");
+//			tokenizer = new StringTokenizer(dataSource, ";");
+//			while (tokenizer.hasMoreTokens()) {
+//				if (isInvalidDataSourceName(tokenizer.nextToken(), buf, detailReferList, headerReferList, res.getString("AddRowListReturnToField"))) {
+//					countOfFieldErrors++;
+//				}
+//			}
 		}
 		
 		if (functionElement_.getAttribute("Type").equals("XF390")) {

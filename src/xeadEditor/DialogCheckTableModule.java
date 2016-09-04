@@ -368,9 +368,11 @@ public class DialogCheckTableModule extends JDialog {
 								if (databaseName.contains("jdbc:ucanaccess") && element.getAttribute("Type").equals("INTEGER")) {
 									NodeList keyList = tableElement.getElementsByTagName("Key");
 									keyElement = (org.w3c.dom.Element)keyList.item(0);
-									workTokenizer = new StringTokenizer(keyElement.getAttribute("Fields"), ";");
-									if (workTokenizer.countTokens() == 1 && workTokenizer.nextToken().equals(element.getAttribute("ID"))) {
-										isNullableOfModuleField = false;
+									if (keyElement != null) {
+										workTokenizer = new StringTokenizer(keyElement.getAttribute("Fields"), ";");
+										if (workTokenizer.countTokens() == 1 && workTokenizer.nextToken().equals(element.getAttribute("ID"))) {
+											isNullableOfModuleField = false;
+										}
 									}
 								}
 							} else {
@@ -502,7 +504,11 @@ public class DialogCheckTableModule extends JDialog {
 						if (rs3.getString("COLUMN_SIZE") == null || rs3.getString("COLUMN_SIZE").equals("")) {
 							sizeOfModuleField = 1;
 						} else {
-							sizeOfModuleField = Integer.parseInt(rs3.getString("COLUMN_SIZE"));
+							if (rs3.getString("TYPE_NAME").equals("BOOLEAN")) {
+								sizeOfModuleField = 1;
+							} else {
+								sizeOfModuleField = Integer.parseInt(rs3.getString("COLUMN_SIZE"));
+							}
 						}
 						if (rs3.getString("DECIMAL_DIGITS") == null) {
 							decimalOfModuleField = 0;
@@ -847,7 +853,7 @@ public class DialogCheckTableModule extends JDialog {
 					rs6.close();
 					if (!wrkStr.equals("")) {
 						countOfErrors++;
-						isDifferentPK = true;
+						//isDifferentPK = true;
 						buf.append("(" + countOfErrors + ") " + res.getString("ModuleCheckMessage29") + wrkStr + res.getString("ModuleCheckMessage30"));
 					}
 				}
