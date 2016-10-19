@@ -1100,7 +1100,7 @@ public class DialogAddFunction extends JDialog {
 			}
 		}
 	}
-	//
+
 	void jTextFieldHeaderTableID_keyReleased(KeyEvent e) {
 		headerTableNode = null;
 		jTextFieldHeaderTableName.setText("");
@@ -1124,7 +1124,7 @@ public class DialogAddFunction extends JDialog {
 			jButtonOK.setEnabled(false);
 		}
 	}
-	//
+
 	void jTextFieldDetailTableID_keyReleased(KeyEvent e) {
 		detailTableNode = null;
 		jTextFieldDetailTableName.setText("");
@@ -1151,7 +1151,20 @@ public class DialogAddFunction extends JDialog {
 	
 	void jButtonTableKeysEdit_actionPerformed(ActionEvent e) {
 		String names = "";
-		String currentValue = headerTableKeys;
+		String currentValue = tableKeys;
+		org.w3c.dom.Element element;
+
+		if (currentValue.equals("") && jTextFieldTableKeys.getText().equals("*Keys")) {
+	    	NodeList keyList = tableNode.getElement().getElementsByTagName("Key");
+	    	for (int i = 0; i < keyList.getLength(); i++) {
+	    		element = (org.w3c.dom.Element)keyList.item(i);
+	    		if (element.getAttribute("Type").equals("PK")) {
+	    			currentValue = element.getAttribute("Fields");
+	    			break;
+	    		}
+	    	}
+		}
+
 		String answer = JOptionPane.showInputDialog(this.getContentPane(), res.getString("ErrorMessage86"), currentValue);
 		if (answer != null) {
 			if (answer.equals("")) {
@@ -1172,6 +1185,19 @@ public class DialogAddFunction extends JDialog {
 	void jButtonHeaderTableKeysEdit_actionPerformed(ActionEvent e) {
 		String names = "";
 		String currentValue = headerTableKeys;
+		org.w3c.dom.Element element;
+
+		if (currentValue.equals("") && jTextFieldHeaderTableKeys.getText().equals("*Keys")) {
+	    	NodeList keyList = headerTableNode.getElement().getElementsByTagName("Key");
+	    	for (int i = 0; i < keyList.getLength(); i++) {
+	    		element = (org.w3c.dom.Element)keyList.item(i);
+	    		if (element.getAttribute("Type").equals("PK")) {
+	    			currentValue = element.getAttribute("Fields");
+	    			break;
+	    		}
+	    	}
+		}
+
 		String answer = JOptionPane.showInputDialog(this.getContentPane(), res.getString("ErrorMessage88"), currentValue);
 		if (answer != null) {
 			if (answer.equals("")) {
@@ -1192,6 +1218,19 @@ public class DialogAddFunction extends JDialog {
 	void jButtonDetailTableKeysEdit_actionPerformed(ActionEvent e) {
 		String names = "";
 		String currentValue = detailTableKeys;
+		org.w3c.dom.Element element;
+
+		if (currentValue.equals("") && jTextFieldDetailTableKeys.getText().equals("*Keys")) {
+	    	NodeList keyList = detailTableNode.getElement().getElementsByTagName("Key");
+	    	for (int i = 0; i < keyList.getLength(); i++) {
+	    		element = (org.w3c.dom.Element)keyList.item(i);
+	    		if (element.getAttribute("Type").equals("PK")) {
+	    			currentValue = element.getAttribute("Fields");
+	    			break;
+	    		}
+	    	}
+		}
+
 		String answer = JOptionPane.showInputDialog(this.getContentPane(), res.getString("ErrorMessage89"), currentValue);
 		if (answer != null) {
 			if (answer.equals("")) {

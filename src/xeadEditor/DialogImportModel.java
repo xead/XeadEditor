@@ -561,7 +561,9 @@ public class DialogImportModel extends JDialog {
 														+ alias + res.getString("ImportModelMessage24")
 														+ res.getString("ListOrder") + "\n");
 									}
-									if (!attrMap.get("Type").equals("DATE") && !attrMap.get("Type").equals("DATETIME")) {
+									if (!attrMap.get("Type").equals("DATE")
+											&& !attrMap.get("Type").equals("DATETIME")
+											&& !attrMap.get("Type").startsWith("TIME")) {
 										if (!attrMap.get("Size").equals(fieldElementInto.getAttribute("Size"))) {
 											countOfAltered++;
 											altered.append(countOfAltered + "." + "Field "
@@ -651,7 +653,7 @@ public class DialogImportModel extends JDialog {
 
 				keyElementFrom = (org.w3c.dom.Element)keyListFrom.item(i);
 				keyType = keyElementFrom.getAttribute("Type");
-				if (!keyType.equals("FK")) {
+				if (!keyType.equals("FK") && !keyType.equals("XK")) {
 
 					keyFieldID = getFieldIDListOfTableKeyFrom(elementFrom, keyElementFrom);
 					keyIsAdded = true;
@@ -684,7 +686,9 @@ public class DialogImportModel extends JDialog {
 			}
 			for (int j = 0; j < keyListInto.getLength(); j++) {
 				keyElementInto = (org.w3c.dom.Element)keyListInto.item(j);
-				if (!keyElementInto.getAttribute("Type").equals("PK") && !keyElementInto.getAttribute("Type").equals("FK")) {
+				if (!keyElementInto.getAttribute("Type").equals("PK")
+						&& !keyElementInto.getAttribute("Type").equals("FK")
+						&& !keyElementInto.getAttribute("Type").equals("XK")) {
 					keyIsDeleted = true;
 					for (int i = 0; i < keyListFrom.getLength(); i++) {
 						keyElementFrom = (org.w3c.dom.Element)keyListFrom.item(i);
@@ -2029,7 +2033,7 @@ public class DialogImportModel extends JDialog {
 				childElement.setAttribute("Order", Editor.getFormatted4ByteString((p+1)*10));
 				childElement.setAttribute("Table", detailTableIDList.get(p));
 				childElement.setAttribute("HeaderKeyFields", headerTableKeysList.get(p));
-				childElement.setAttribute("KeyFields", detailKeyFields);
+				childElement.setAttribute("KeyFields", getAdjustedOrderOfKeyFields(headerTableID, headerTableKeysList.get(p), detailTableIDList.get(p), detailKeyFields));
 				childElement.setAttribute("DetailFunction", "NONE");
 				childElement.setAttribute("Caption", detailTableElementList.get(p).getAttribute("Name"));
 				childElement.setAttribute("InitialMsg", "");
@@ -2301,6 +2305,76 @@ public class DialogImportModel extends JDialog {
 					}
 				}
 			}
+		}
+	}
+
+	private String getAdjustedOrderOfKeyFields(String headerTableID, String headerKeyFields, String detailTableID, String detailKeyFields) {
+		String returnValue = "";
+		boolean isError = false;
+		String wrkStr;
+		String correspondingFieldID;
+		org.w3c.dom.Element elementHeaderField, elementDetailField;
+		ArrayList<org.w3c.dom.Element> detailKeyFieldElementList = new ArrayList<org.w3c.dom.Element>();
+
+		StringTokenizer tokenizer = new StringTokenizer(detailKeyFields, ";");
+		while (tokenizer.hasMoreTokens()) {
+			wrkStr = tokenizer.nextToken();
+			elementDetailField = frame_.getSpecificFieldElement(detailTableID, wrkStr);
+			if (elementDetailField == null) {
+				isError = true;
+				break;
+			} else {
+				detailKeyFieldElementList.add(elementDetailField);
+			}
+		}
+
+		if (!isError) {
+			tokenizer = new StringTokenizer(headerKeyFields, ";");
+			while (tokenizer.hasMoreTokens()) {
+				wrkStr = tokenizer.nextToken();
+				elementHeaderField = frame_.getSpecificFieldElement(headerTableID, wrkStr);
+				correspondingFieldID = "";
+				for (int i = 0; i < detailKeyFieldElementList.size(); i++) {
+					elementDetailField = detailKeyFieldElementList.get(i);
+					if (elementHeaderField.getAttribute("ID").equals(elementDetailField.getAttribute("ID"))) {
+						correspondingFieldID = elementDetailField.getAttribute("ID");
+						detailKeyFieldElementList.remove(i);
+						break;
+					}
+				}
+				if (correspondingFieldID.equals("")) {
+					for (int i = 0; i < detailKeyFieldElementList.size(); i++) {
+						elementDetailField = detailKeyFieldElementList.get(i);
+						if (elementHeaderField.getAttribute("Type").equals(elementDetailField.getAttribute("Type"))) {
+							correspondingFieldID = elementDetailField.getAttribute("ID");
+							detailKeyFieldElementList.remove(i);
+							break;
+						}
+					}
+				}
+				if (correspondingFieldID.equals("")) {
+					isError = true;
+					break;
+				} else {
+					if (!returnValue.equals("")) {
+						returnValue = returnValue + ";";
+					}
+					returnValue = returnValue + correspondingFieldID;
+				}
+			}
+			if (!isError) {
+				for (int i = 0; i < detailKeyFieldElementList.size(); i++) {
+					if (!returnValue.equals("")) {
+						returnValue = returnValue + ";";
+					}
+					returnValue = returnValue + detailKeyFieldElementList.get(i).getAttribute("ID");
+				}
+			}
+		}
+		if (isError) {
+			return detailKeyFields;
+		} else {
+			return returnValue;
 		}
 	}
 

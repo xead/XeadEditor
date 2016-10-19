@@ -426,6 +426,7 @@ public class DialogEditPrimaryTableKey extends JDialog {
 	}
 
 	void jTextFieldID_keyReleased(KeyEvent e) {
+		org.w3c.dom.Element element;
 		jButtonOK.setEnabled(false);
 		tableNode = null;
 		jTextFieldName.setText("");
@@ -438,11 +439,15 @@ public class DialogEditPrimaryTableKey extends JDialog {
 					jButtonOK.setEnabled(true);
 					jTextFieldName.setText(tableNode.getElement().getAttribute("Name"));
 					jTextFieldID.setText(jTextFieldID.getText().toUpperCase());
+					element = frame_.getSpecificPKElement(jTextFieldID.getText());
+					jTextFieldKeyFields.setText(element.getAttribute("Fields"));
 					this.getRootPane().setDefaultButton(jButtonOK);
 				}
 			} else {
 				jButtonOK.setEnabled(true);
 				jTextFieldName.setText(tableNode.getElement().getAttribute("Name"));
+				element = frame_.getSpecificPKElement(jTextFieldID.getText());
+				jTextFieldKeyFields.setText(element.getAttribute("Fields"));
 				this.getRootPane().setDefaultButton(jButtonOK);
 			}
 		}

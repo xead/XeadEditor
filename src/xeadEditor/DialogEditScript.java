@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2011 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2016 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -117,10 +117,17 @@ public class DialogEditScript extends JDialog {
 			changeMode();
 		}
 	};
+	private Action listMethodsAction = new AbstractAction(){
+		private static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			dialogAssistList.listMethods(jScrollPaneStatement);
+		}
+	};
 	private String originalText = "";
 	private String idModeText = "";
 	private String returnText = "";
 	private UndoManager undoManager = new UndoManager();
+	private DialogAssistList dialogAssistList;
 	
 	public DialogEditScript(Editor frame) {
 		super(frame, "", true);
@@ -224,7 +231,10 @@ public class DialogEditScript extends JDialog {
 		actionMap.put("REDO", redoAction);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_DOWN_MASK), "MODE");
 		actionMap.put("MODE", modeAction);
-
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, KeyEvent.CTRL_DOWN_MASK), "LIST");
+		actionMap.put("LIST", listMethodsAction);
+		dialogAssistList = new DialogAssistList(frame_, this);
+		
 		this.setResizable(true);
         Rectangle screenRect = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
 		int screenWidth = (int)screenRect.getWidth();
@@ -316,6 +326,7 @@ public class DialogEditScript extends JDialog {
 	}
 
 	void jTextAreaStatement_caretUpdate(CaretEvent e) {
+		dialogAssistList.setVisible(false);
 		if (jTextAreaStatement.isEditable()) {
 			Point pos = frame_.getCaretPositionInText(jTextAreaStatement);
 			jLabelStatementCursorPos.setText(pos.x + " : " + pos.y);

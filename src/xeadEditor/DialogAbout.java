@@ -48,7 +48,13 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "X-TEA Editor";
 	public static final String COPYRIGHT = "Copyright 2016 DBC Ltd.";
 	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
-	public static final String FULL_VERSION  = "V1.R3.M7";
+	public static final String FULL_VERSION  = "V1.R3.M8";
+	//1.3.8
+	//・テーブルの使途要素の一覧ロジック中にTableEvaluatorに関する考慮が抜けていた問題を修正した
+	//・データ保守ユーティリティでのインポート処理の動きを改善した
+	//・軽減税率への対応にともなって、税率テーブルへのレコードの自動登録ステップをはずした
+	//・スクリプトの編集パネルに、メソッド候補を一覧するための支援機能を組み込んだ
+	//
 	//1.3.7
 	//・accdb向けの同期処理と補完処理の不具合を修正するとともに、DBドライバを更新した
 	//・データ保守ユーティリティの使い勝手を向上させた

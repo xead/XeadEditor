@@ -850,6 +850,12 @@ public class Editor extends JFrame {
 			checkSyntaxError(jTextAreaTableScriptText.getText(), true);
 		}
 	};
+	private Action actionListMethodsTableScript = new AbstractAction(){
+		private static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			listMethods(jScrollPaneTableScriptText);
+		}
+	};
 	public ArrayList<String> dataSourceAliasList = new ArrayList<String>();
 	public ArrayList<String> dataSourceIDList = new ArrayList<String>();
 	public ArrayList<String> dataSourceNameList = new ArrayList<String>();
@@ -978,6 +984,12 @@ public class Editor extends JFrame {
 			if (jTextAreaFunction000ScriptUndoManager.canRedo()) {
 				jTextAreaFunction000ScriptUndoManager.redo();
 			}
+		}
+	};
+	private Action actionListMethodsFunction000Script = new AbstractAction(){
+		private static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			listMethods(jScrollPaneFunction000Script);
 		}
 	};
 	/**
@@ -2168,6 +2180,7 @@ public class Editor extends JFrame {
 	private DialogEditScript dialogEditScript;
 	private DialogListLog dialogListLog;
 	private DialogAbout dialogAbout;
+	private DialogAssistList dialogAssistList;
 	/**
 	 * Definition of Exception log
 	 */
@@ -2910,6 +2923,7 @@ public class Editor extends JFrame {
 		dialogBatchTableEdit = new Editor_DialogBatchTableEdit(this);
 		dialogStructureTableEdit = new Editor_DialogStructureTableEdit(this);
 		dialogStructureNodeIconsEdit = new Editor_DialogStructureNodeIconsEdit(this);
+		dialogAssistList = new DialogAssistList(this);
 
 		/**
 		 * table-cell property controller
@@ -5241,6 +5255,8 @@ public class Editor extends JFrame {
 		actionMap.put("REDO", actionRedoTableScript);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0), "CHECK");
 		actionMap.put("CHECK", actionCheckTableScript);
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, KeyEvent.CTRL_DOWN_MASK), "LIST");
+		actionMap.put("LIST", actionListMethodsTableScript);
 		jPanelTableScriptCenter.setBorder(BorderFactory.createEtchedBorder());
 		jPanelTableScriptCenter.setLayout(new BorderLayout());
 		jLabelTableScript.setEnabled(false);
@@ -5574,6 +5590,8 @@ public class Editor extends JFrame {
 		actionMap.put("UNDO", actionUndoFunction000Script);
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_DOWN_MASK), "REDO");
 		actionMap.put("REDO", actionRedoFunction000Script);
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, KeyEvent.CTRL_DOWN_MASK), "LIST");
+		actionMap.put("LIST", actionListMethodsFunction000Script);
 		jTextAreaFunction000Script.setFont(new java.awt.Font(scriptFontName, 0, scriptFontSize));
 		jTextAreaFunction000Script.setForeground(colorScriptForeground);
 		jTextAreaFunction000Script.setBackground(colorScriptBackground);
@@ -25291,7 +25309,33 @@ public class Editor extends JFrame {
 			indentRows(scrollPane);
 		}
 	}
-	
+
+	public void listMethods(JScrollPane scrollPane) {
+		dialogAssistList.listMethods(scrollPane);
+	}
+	public ArrayList<String> getScriptFunctionList() {
+		ArrayList<String> list = new ArrayList<String>();
+		String text = jTextAreaSystemScriptFunctions.getText();
+		text = removeCommentsFromScriptText(text);
+		String wrkStr;
+		int pos1 = 0;
+		int pos2;
+		while (pos1 < text.length()) {
+			pos1 = text.indexOf("function ", pos1);
+			if (pos1 == -1) {
+				break;
+			} else {
+				pos2 = text.indexOf(")", pos1);
+				wrkStr = text.substring(pos1+9, pos2+1).replaceAll(" ", "");
+				if (!wrkStr.equals("")) {
+					list.add(wrkStr);
+				}
+				pos1 = pos2;
+			}
+		}
+		return list;
+	}
+
 	public void indentRows(JScrollPane scrollPane) {
 		StringBuffer buf = new StringBuffer();
 		String strOriginal, wrkStr1, wrkStr2;
@@ -32348,8 +32392,7 @@ public class Editor extends JFrame {
 	    for (int i = 0; i < sortingList.getSize(); i++) {
 	        element1 = (org.w3c.dom.Element)sortingList.getElementAt(i);
 
-	        if (element1.getAttribute("Type").equals("XF000")
-	        		|| element1.getAttribute("Type").equals("XF010")) { 
+	        if (element1.getAttribute("Type").equals("XF000")) { 
 	        	wrkStr = substringLinesWithTokenOfEOL(element1.getAttribute("Script"), "\n");
 	        	wrkStr = removeCommentsFromScriptText(wrkStr);
 	        	wrkStr = searchTableOperationsInScript(wrkStr, tableID);
@@ -32495,6 +32538,11 @@ public class Editor extends JFrame {
 		if (script.contains("INSERT INTO " + tableID + " ")
 				|| script.contains(".CREATETABLEOPERATOR('INSERT', '" + tableID + "'")) {
 			buf.append("C");
+		} else {
+			if (script.contains(".CREATETABLEEVALUATOR('" + tableID + "'")
+					&& script.contains(tableID + ".INSERT()")) {
+				buf.append("C");
+			}
 		}
 		if (script.contains("SELECT ") && script.contains("FROM " + tableID + " ")) {
 			pos1 = 0;
@@ -32513,18 +32561,33 @@ public class Editor extends JFrame {
 				}
 			}
 		} else {
-		if (script.contains(".CREATETABLEOPERATOR('SELECT', '" + tableID + "'")
-				|| script.contains(".CREATETABLEOPERATOR('COUNT', '" + tableID + "'")) {
-			buf.append("R");
-		}
+			if (script.contains(".CREATETABLEOPERATOR('SELECT', '" + tableID + "'")
+					|| script.contains(".CREATETABLEOPERATOR('COUNT', '" + tableID + "'")) {
+				buf.append("R");
+			} else {
+				if (script.contains(".CREATETABLEEVALUATOR('" + tableID + "'")
+						&& script.contains(tableID + ".NEXT()")) {
+					buf.append("R");
+				}
+			}
 		}
 		if (script.contains("UPDATE " + tableID + " ")
 				|| script.contains(".CREATETABLEOPERATOR('UPDATE', '" + tableID + "'")) {
 			buf.append("U");
+		} else {
+			if (script.contains(".CREATETABLEEVALUATOR('" + tableID + "'")
+					&& script.contains(tableID + ".UPDATE()")) {
+				buf.append("U");
+			}
 		}
 		if (script.contains("DELETE FROM " + tableID + " ")
 				|| script.contains(".CREATETABLEOPERATOR('DELETE', '" + tableID + "'")) {
 			buf.append("D");
+		} else {
+			if (script.contains(".CREATETABLEEVALUATOR('" + tableID + "'")
+					&& script.contains(tableID + ".DELETE()")) {
+				buf.append("D");
+			}
 		}
 		//
 		return buf.toString();
@@ -34008,6 +34071,7 @@ public class Editor extends JFrame {
 		}
 
 		buf.append(res.getString("ScriptNotesTitle3"));
+		buf.append(res.getString("ScriptNotesTitle4"));
 
 		jTextAreaTableScriptNotes.setText(buf.toString());
 		jTextAreaTableScriptNotes.setCaretPosition(0);
@@ -35423,6 +35487,7 @@ public class Editor extends JFrame {
 		}
 	}
 	void jTextAreaTableScriptText_caretUpdate(CaretEvent e) {
+		dialogAssistList.setVisible(false);
 		if (jTextAreaTableScriptText.isEditable()) {
 			Point pos = getCaretPositionInText(jTextAreaTableScriptText);
 			jLabelTableScriptCursorPos.setText(pos.x + " : " + pos.y);
@@ -35442,6 +35507,7 @@ public class Editor extends JFrame {
 	}
 
 	void jTextAreaFunction000Script_caretUpdate(CaretEvent e) {
+		dialogAssistList.setVisible(false);
 		if (jTextAreaFunction000Script.isEditable()) {
 			Point pos = getCaretPositionInText(jTextAreaFunction000Script);
 			jLabelFunction000ScriptEditToolCursorPos.setText(pos.x + " : " + pos.y);
@@ -38957,14 +39023,14 @@ public class Editor extends JFrame {
 					+ " (IDUSERKUBUN, KBUSERKUBUN, TXUSERKUBUN, SQLIST) values('KBFLAG1', 'F', '"
 					+ res.getString("InsertInitialRecordData7") + "', '02')");
 		}
-		if (tableID.equals(jTextFieldSystemTaxTable.getText())) {
-			sql.add("Insert into " + tableID
-					+ " (DTSTART, VLTAXRATE) values(" + dateValueSeparator + "1988-04-01" + dateValueSeparator + ", 0.03)");
-			sql.add("Insert into " + tableID
-					+ " (DTSTART, VLTAXRATE) values(" + dateValueSeparator + "1997-04-01" + dateValueSeparator + ", 0.05)");
-			sql.add("Insert into " + tableID
-					+ " (DTSTART, VLTAXRATE) values(" + dateValueSeparator + "2014-04-01" + dateValueSeparator + ", 0.08)");
-		}
+//		if (tableID.equals(jTextFieldSystemTaxTable.getText())) {
+//			sql.add("Insert into " + tableID
+//					+ " (DTSTART, VLTAXRATE) values(" + dateValueSeparator + "1988-04-01" + dateValueSeparator + ", 0.03)");
+//			sql.add("Insert into " + tableID
+//					+ " (DTSTART, VLTAXRATE) values(" + dateValueSeparator + "1997-04-01" + dateValueSeparator + ", 0.05)");
+//			sql.add("Insert into " + tableID
+//					+ " (DTSTART, VLTAXRATE) values(" + dateValueSeparator + "2014-04-01" + dateValueSeparator + ", 0.08)");
+//		}
 		return sql;
 	}
 
@@ -40371,8 +40437,8 @@ public class Editor extends JFrame {
 								fieldIDList.add(values[i]);
 							}
 						}
-					} else {
 
+					} else {
 						fieldValueList.clear();
 						for (int i=0; i < values.length; i++) {
 							fieldValueList.add(values[i]);
@@ -40480,6 +40546,8 @@ public class Editor extends JFrame {
 							int recordCount = statement.executeUpdate(statementBuf.toString());
 							if (recordCount == 1) {
 								numberOfInserted++;
+							} else {
+								throw new Exception("Inserting process failed with the statement:\n" + statementBuf.toString());
 							}
 						}
 						result.close();
@@ -40494,7 +40562,7 @@ public class Editor extends JFrame {
 				} else {
 					jTextAreaTableDataMessages.setText(ex.getMessage() + "\n" + statementBuf.toString());
 				}
-				validateConnectionToShowMessage(connection);
+				//validateConnectionToShowMessage(connection);
 			} catch (Exception ex) {
 				jTextAreaTableDataMessages.setText(ex.getMessage());
 			} finally {

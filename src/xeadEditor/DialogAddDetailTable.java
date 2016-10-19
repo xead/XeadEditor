@@ -210,7 +210,8 @@ public class DialogAddDetailTable extends JDialog {
 		}
 		//
 		workTokenizerHdr = new StringTokenizer(jTextFieldHdrKeyFields.getText(), ";");
-		if (workTokenizerHdr.countTokens() == 0) {
+		int countOfHeaderKeyFields = workTokenizerHdr.countTokens();
+		if (countOfHeaderKeyFields == 0) {
 			errorMessage = res.getString("ErrorMessage106");
 		} else {
 			while (workTokenizerHdr.hasMoreTokens()) {
@@ -228,7 +229,7 @@ public class DialogAddDetailTable extends JDialog {
 			if (workTokenizerDtl.countTokens() == 0) {
 				errorMessage = res.getString("ErrorMessage73");
 			} else {
-				if (workTokenizerHdr.countTokens() >= workTokenizerDtl.countTokens()) {
+				if (countOfHeaderKeyFields >= workTokenizerDtl.countTokens()) {
 					errorMessage = res.getString("ErrorMessage74");
 				} else {
 					while (workTokenizerDtl.hasMoreTokens()) {
@@ -349,7 +350,7 @@ public class DialogAddDetailTable extends JDialog {
 				childElement.setAttribute("Action", "EXIT");
 				newElement.appendChild(childElement);
 				childElement = frame_.getDomDocument().createElement("Button");
-				childElement.setAttribute("Position", "3");
+				childElement.setAttribute("Position", "2");
 				childElement.setAttribute("Number", "6");
 				childElement.setAttribute("Caption", res.getString("Add"));
 				childElement.setAttribute("Action", "ADD");

@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2015 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2016 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of X-TEA Editor.
@@ -114,6 +114,7 @@ public class Res_ja extends java.util.ListResourceBundle {
 		{ "Application", "アプリケーション" },
 		{ "AppServerName", "DBメソッドURL" },
 		{ "AskIfReplacing", "指定されたファイルは既に存在します。上書きしますか？" },
+		{ "AssistListMessage", "候補となるメソッドが見つかりません。" },
 		{ "AttributeName", "属性名" },
 		{ "AttributeType", "属性区分" },
 		{ "AttributeValue", "属性値" },
@@ -270,7 +271,7 @@ public class Res_ja extends java.util.ListResourceBundle {
 		{ "EditableOptions", "入力オプション" },
 		{ "EditCode", "編集コード" },
 		{ "EditDetailTableKeyTitle", "明細テーブルと処理キーの変更" },
-		{ "EditDetailTableKeyComment", "見出しKEY（見出しテーブルの処理キー）と明細KEY（明細テーブルの処理キー）の上位共通部分のデータタイプは同一でなければなりません。" },
+		{ "EditDetailTableKeyComment", "見出しKEY（見出しテーブルの処理キー）と明細KEY（明細テーブルの処理キー）の上位共通部分のデータタイプは同一でなければなりません。また、明細KEYには一次識別子（または二次識別子）を構成するフィールドをすべて含めてください。" },
 		{ "EditKeyFieldsToPutIntoKey", "キーに組み込む"},
 		{ "EditKeyFieldsToGoUp", "上へ"},
 		{ "EditKeyFieldsToGoDown", "下へ"},
@@ -355,13 +356,9 @@ public class Res_ja extends java.util.ListResourceBundle {
 		{ "ErrorMessage59", "エラー：渡し元フィールドの指定値 " },
 		{ "ErrorMessage60", " に対応するデータソース定義が存在しません。" },
 		{ "ErrorMessage61", "エラー：渡し元フィールドには、エイリアス（テーブルＩＤ）とフィールドＩＤとをピリオド(.)で区切って指定してください。" },
-		//{ "ErrorMessage62", "エラー：渡し先フィールドの指定値 " },
-		//{ "ErrorMessage63", " に対応するデータソース定義が存在しません。" },
 		{ "ErrorMessage64", "エラー：渡し先フィールドには、エイリアス（テーブルＩＤ）とフィールドＩＤとをピリオド(.)で区切って指定してください。" },
 		{ "ErrorMessage65", "エラー：渡しフィールドの数が元と先とで一致していません。" },
 		{ "ErrorMessage66", "エラー：返しフィールドの数が元と先とで一致していません。" },
-		//{ "ErrorMessage67", "エラー：返し元フィールドの指定値 " },
-		//{ "ErrorMessage68", " に対応するデータソース定義が存在しません。" },
 		{ "ErrorMessage69", "エラー：返し元フィールドには、エイリアス（テーブルＩＤ）とフィールドＩＤとをピリオド(.)で区切って指定してください。" },
 		{ "ErrorMessage70", "エラー：返し先フィールドの指定値 " },
 		{ "ErrorMessage71", " に対応するデータソース定義が存在しません。" },
@@ -932,7 +929,8 @@ public class Res_ja extends java.util.ListResourceBundle {
 		{ "ScriptHold", "一時保留" },
 		{ "ScriptNotesTitle1", "■フィールド値変数一覧" },
 		{ "ScriptNotesTitle2", "\n\n■結合フィールド値変数一覧" },
-		{ "ScriptNotesTitle3", "\n\n■変数名凡例\n[TableID]_[FieldID].value : フィールド値\n[TableID]_[FieldID].oldValue : 更新前のフィールド値。読取専用\n[TableID]_[FieldID].valueChanged : 値が変更されたかどうか(true,false)。読取専用\n[TableID]_[FieldID].color : 表示色(black,green,blue,red,orange)\n[TableID]_[FieldID].enabled : 有効設定(true,false)\n[TableID]_[FieldID].editable : 編集設定(true,false)\n[TableID]_[FieldID].valueList : 選択可能値リスト（配列）\n[TableID]_[FieldID].error : エラーメッセージ\n（セッションオブジェクトや機能オブジェクトも利用可能です。詳細についてはヘルプで確認してください）" },
+		{ "ScriptNotesTitle3", "\n\n■変数名凡例\n[TableID]_[FieldID].value : フィールド値\n[TableID]_[FieldID].oldValue : 更新前のフィールド値。読取専用\n[TableID]_[FieldID].valueChanged : 値が変更されたかどうか(true,false)。読取専用\n[TableID]_[FieldID].color : 表示色(black,green,blue,red,orange)\n[TableID]_[FieldID].enabled : 有効設定(true,false)\n[TableID]_[FieldID].editable : 編集設定(true,false)\n[TableID]_[FieldID].valueList : 選択可能値リスト（配列）\n[TableID]_[FieldID].error : エラーメッセージ" },
+		{ "ScriptNotesTitle4", "\n\n■各種関数\nセッションオブジェクト(session)や機能オブジェクト(instance)の関数、\nおよびこのシステム固有のスクリプト関数を利用できます。関数の上位\n桁をタイプしてCtrl+Spaceを押せば、関数候補が一覧されます。\n各関数の使い方についてはヘルプで確認してください。" },
 		{ "ScriptNotesVFMark", "(仮) " },
 		{ "Scripts", "スクリプト" },
 		{ "Sel", "選" },

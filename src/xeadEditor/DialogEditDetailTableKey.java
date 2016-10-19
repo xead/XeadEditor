@@ -111,7 +111,7 @@ public class DialogEditDetailTableKey extends JDialog {
 		jTextFieldDtlKeyFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTextFieldDtlKeyFields.setBounds(new Rectangle(140, 71, 575, 25));
 
-		jScrollPaneMessage.setBounds(new Rectangle(10, 102, 705, 60));
+		jScrollPaneMessage.setBounds(new Rectangle(10, 102, 705, 70));
 		jScrollPaneMessage.getViewport().add(jTextAreaMessage);
 		jTextAreaMessage.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTextAreaMessage.setLineWrap(true);
@@ -147,7 +147,7 @@ public class DialogEditDetailTableKey extends JDialog {
 		this.setTitle(res.getString("EditDetailTableKeyTitle"));
 		this.getContentPane().add(jPanelButtons,  BorderLayout.SOUTH);
 		this.setResizable(false);
-		this.setPreferredSize(new Dimension(730, 252));
+		this.setPreferredSize(new Dimension(730, 262));
 		this.getContentPane().add(panelMain,  BorderLayout.CENTER);
 		jPanelButtons.getRootPane().setDefaultButton(jButtonOK);
 		this.pack();
@@ -560,6 +560,7 @@ public class DialogEditDetailTableKey extends JDialog {
 	}
 
 	void jTextFieldID_keyReleased(KeyEvent e) {
+		org.w3c.dom.Element element;
 		jButtonOK.setEnabled(false);
 		detailTableNode = null;
 		jTextFieldName.setText("");
@@ -572,11 +573,15 @@ public class DialogEditDetailTableKey extends JDialog {
 					jButtonOK.setEnabled(true);
 					jTextFieldName.setText(detailTableNode.getElement().getAttribute("Name"));
 					jTextFieldID.setText(jTextFieldID.getText().toUpperCase());
+					element = frame_.getSpecificPKElement(jTextFieldID.getText());
+					jTextFieldDtlKeyFields.setText(element.getAttribute("Fields"));
 					this.getRootPane().setDefaultButton(jButtonOK);
 				}
 			} else {
 				jButtonOK.setEnabled(true);
 				jTextFieldName.setText(detailTableNode.getElement().getAttribute("Name"));
+				element = frame_.getSpecificPKElement(jTextFieldID.getText());
+				jTextFieldDtlKeyFields.setText(element.getAttribute("Fields"));
 				this.getRootPane().setDefaultButton(jButtonOK);
 			}
 		}
