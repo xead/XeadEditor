@@ -528,7 +528,7 @@ public class DialogAddFunction extends JDialog {
 				childElement.setAttribute("Action", "EXIT");
 				element.appendChild(childElement);
 				childElement = frame_.getDomDocument().createElement("Button");
-				childElement.setAttribute("Position", "3");
+				childElement.setAttribute("Position", "2");
 				childElement.setAttribute("Number", "6");
 				childElement.setAttribute("Caption", res.getString("Add"));
 				childElement.setAttribute("Action", "ADD");

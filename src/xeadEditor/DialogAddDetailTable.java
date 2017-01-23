@@ -201,14 +201,14 @@ public class DialogAddDetailTable extends JDialog {
 		StringTokenizer workTokenizerHdr, workTokenizerDtl;
 		String dataSourceHdr, dataSourceDtl;
 		String errorMessage = "";
-		//
+
 		NodeList detailList = objectFunctionElement_.getElementsByTagName("Detail");
 		sortingList = frame_.getSortedListModel(detailList, "Order");
 	    for (int i = 0; i < sortingList.getSize(); i++) {
 			workElement = (org.w3c.dom.Element)sortingList.getElementAt(i);
 			lastOrder = Integer.parseInt(workElement.getAttribute("Order"));
 		}
-		//
+
 		workTokenizerHdr = new StringTokenizer(jTextFieldHdrKeyFields.getText(), ";");
 		int countOfHeaderKeyFields = workTokenizerHdr.countTokens();
 		if (countOfHeaderKeyFields == 0) {
@@ -223,7 +223,13 @@ public class DialogAddDetailTable extends JDialog {
 				}
 			}
 		}
-		//
+
+		if (errorMessage.equals("")) {
+			if (objectFunctionElement_.getAttribute("Type").equals("XF300") && sortingList.getSize() >= 20) {
+				errorMessage = res.getString("ErrorMessage130");
+			}
+		}
+
 		if (errorMessage.equals("")) {
 			workTokenizerDtl = new StringTokenizer(jTextFieldDtlKeyFields.getText(), ";");
 			if (workTokenizerDtl.countTokens() == 0) {
@@ -262,7 +268,7 @@ public class DialogAddDetailTable extends JDialog {
 				}
 			}
 		}
-		//
+
 		if (errorMessage.equals("")) {
 			newElement = frame_.getDomDocument().createElement("Detail");
 			lastOrder = lastOrder + 10;

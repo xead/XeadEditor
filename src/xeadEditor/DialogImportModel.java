@@ -2015,7 +2015,7 @@ public class DialogImportModel extends JDialog {
 				}
 			}
 
-			for (int p = 0; p < detailTableElementList.size(); p++) {
+			for (int p = 0; p < detailTableElementList.size() || p < 20; p++) {
 				if (detailTableKeysList.get(p).equals("")) {
 					nodeList = detailTableElementList.get(p).getElementsByTagName("Key");
 					for (int i = 0; i < nodeList.getLength(); i++) {

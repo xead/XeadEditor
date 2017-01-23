@@ -32,6 +32,7 @@ package xeadEditor;
  */
 
 import java.awt.*;
+import java.awt.dnd.DragSource;
 import java.awt.event.*;
 
 import javax.swing.*;
@@ -69,8 +70,6 @@ public class DialogEditTableKeyFields extends JDialog {
 	private JButton jButtonReturn = new JButton();
 	private JPopupMenu jPopupMenu = new JPopupMenu();
 	private JMenuItem jMenuItemToSetAscDesc = new JMenuItem();
-	private JMenuItem jMenuItemToGoUp = new JMenuItem();
-	private JMenuItem jMenuItemToGoDown = new JMenuItem();
 	private JMenuItem jMenuItemToRemove = new JMenuItem();
 	private ArrayList<String> currentKeyFieldIDList = new ArrayList<String>();
 	private ArrayList<String> currentKeyFieldAscDescList = new ArrayList<String>();
@@ -79,6 +78,8 @@ public class DialogEditTableKeyFields extends JDialog {
 	private org.w3c.dom.Element tableElement_;
 	private String keyType_;
 	private boolean isTableBeingSetup = false;
+	private int dragObjectRow = 0;
+	private int dragTargetRow = 0;
 
 	public DialogEditTableKeyFields(Editor frame, String title, boolean modal) {
 		super(frame, title, modal);
@@ -137,6 +138,7 @@ public class DialogEditTableKeyFields extends JDialog {
 		jTableKeyFieldList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jTableKeyFieldList.getSelectionModel().addListSelectionListener(new DialogEditTableKeyFields_jTableKeyFieldList_listSelectionAdapter(this));
 		jTableKeyFieldList.addMouseListener(new DialogEditTableKeyFields_jTableKeyFieldList_mouseAdapter(this));
+	    jTableKeyFieldList.addMouseMotionListener(new DialogEditTableKeyFields_jTableKeyFieldList_mouseMotionAdapter(this));
 		jTableKeyFieldList.setRowSelectionAllowed(true);
 		jTableKeyFieldList.setRowHeight(Editor.TABLE_ROW_HEIGHT);
 		tableModelKeyFieldList.addColumn("NO.");
@@ -181,17 +183,10 @@ public class DialogEditTableKeyFields extends JDialog {
 		jPanelButtons.add(jButtonAddField);
 		jPanelButtons.add(jButtonReturn);
 
-		jMenuItemToGoUp.setText(res.getString("EditKeyFieldsToGoUp"));
-		jMenuItemToGoUp.addActionListener(new DialogEditTableKeyFields_jMenuItemToGoUp_actionAdapter(this));
-		jMenuItemToGoDown.setText(res.getString("EditKeyFieldsToGoDown"));
-		jMenuItemToGoDown.addActionListener(new DialogEditTableKeyFields_jMenuItemToGoDown_actionAdapter(this));
 		jMenuItemToSetAscDesc.setText(res.getString("EditKeyFieldsToSetAscDesc"));
 		jMenuItemToSetAscDesc.addActionListener(new DialogEditTableKeyFields_jMenuItemToSetAscDesc_actionAdapter(this));
 		jMenuItemToRemove.setText(res.getString("EditKeyFieldsToRemove"));
 		jMenuItemToRemove.addActionListener(new DialogEditTableKeyFields_jMenuItemToRemove_actionAdapter(this));
-		jPopupMenu.add(jMenuItemToGoUp);
-    	jPopupMenu.add(jMenuItemToGoDown);
-    	jPopupMenu.addSeparator();
     	jPopupMenu.add(jMenuItemToSetAscDesc);
     	jPopupMenu.addSeparator();
     	jPopupMenu.add(jMenuItemToRemove);
@@ -211,6 +206,8 @@ public class DialogEditTableKeyFields extends JDialog {
 		/////////////////////////////////////////////////
 		// Setup current key field list and field list //
 		/////////////////////////////////////////////////
+		dragObjectRow = -1;
+		dragTargetRow = -1;
 		String fieldID;
 		tableElement_ = tableElement;
 		keyType_ = keyType;
@@ -352,36 +349,84 @@ public class DialogEditTableKeyFields extends JDialog {
 	    }
 	}
 
-	void jMenuItemToGoUp_actionPerformed(ActionEvent e) {
-		int wrkInt = jTableKeyFieldList.getSelectedRow();
-
-		String curRowFieldID = currentKeyFieldIDList.get(wrkInt);
-		String prevRowFieldID = currentKeyFieldIDList.get(wrkInt-1);
-		currentKeyFieldIDList.set(wrkInt-1, curRowFieldID);
-		currentKeyFieldIDList.set(wrkInt, prevRowFieldID);
-
-		String curRowAscDesc = currentKeyFieldAscDescList.get(wrkInt);
-		String prevRowAscDesc = currentKeyFieldAscDescList.get(wrkInt-1);
-		currentKeyFieldAscDescList.set(wrkInt-1, curRowAscDesc);
-		currentKeyFieldAscDescList.set(wrkInt, prevRowAscDesc);
-
-		setupFields();
+	void jTableKeyFieldList_mousePressed(MouseEvent e) {
+		try {
+			if ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
+				dragObjectRow = jTableKeyFieldList.rowAtPoint(e.getPoint());
+				dragTargetRow = dragObjectRow;
+				jTableKeyFieldList.setRowSelectionInterval(dragObjectRow, dragObjectRow);
+			}
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(null, e1.getMessage());
+			e1.printStackTrace();
+		}
 	}
 
-	void jMenuItemToGoDown_actionPerformed(ActionEvent e) {
-		int wrkInt = jTableKeyFieldList.getSelectedRow();
+	void jTableKeyFieldList_mouseDragged(MouseEvent e) {
+		if ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
+			if (jTableKeyFieldList.getRowCount() > 1) {
+				jTableKeyFieldList.setRowSelectionAllowed(false);
 
-		String curRowFieldID = currentKeyFieldIDList.get(wrkInt);
-		String nextRowFieldID = currentKeyFieldIDList.get(wrkInt+1);
-		currentKeyFieldIDList.set(wrkInt, nextRowFieldID);
-		currentKeyFieldIDList.set(wrkInt+1, curRowFieldID);
+				dragTargetRow = jTableKeyFieldList.rowAtPoint(e.getPoint());
+				if (dragTargetRow == -1) {
+					dragTargetRow = jTableKeyFieldList.getRowCount()-1;
+				}
 
-		String curRowAscDesc = currentKeyFieldAscDescList.get(wrkInt);
-		String nextRowAscDesc = currentKeyFieldAscDescList.get(wrkInt+1);
-		currentKeyFieldAscDescList.set(wrkInt, nextRowAscDesc);
-		currentKeyFieldAscDescList.set(wrkInt+1, curRowAscDesc);
+				Rectangle cellRec1 = jTableKeyFieldList.getCellRect(dragObjectRow, dragObjectRow, false);
+				Rectangle listRec = jTableKeyFieldList.getBounds();
+				Graphics2D g2 = (Graphics2D)jTableKeyFieldList.getGraphics();
+				g2.setColor(jTableKeyFieldList.getSelectionBackground());
+				g2.drawRect(0, cellRec1.y, listRec.width, cellRec1.height);
+				g2.drawRect(1, cellRec1.y+1, listRec.width-2, cellRec1.height-2);
 
-		setupFields();
+				if (dragTargetRow != dragObjectRow) {
+					Rectangle cellRec2 = jTableKeyFieldList.getCellRect(dragTargetRow, dragTargetRow, false);
+					g2.setColor(Color.cyan);
+					g2.fillRect(0, cellRec2.y + cellRec2.height - 3, listRec.width, 3);
+					setCursor(DragSource.DefaultMoveDrop);
+				} else {
+					setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+				}
+			}
+		}
+	}
+
+	void jTableKeyFieldList_mouseReleased(MouseEvent e) {
+		jTableKeyFieldList.setRowSelectionAllowed(true);
+
+		if ((e.getModifiers() & InputEvent.BUTTON1_MASK) == InputEvent.BUTTON1_MASK) {
+			try {
+				setCursor(new Cursor(Cursor.WAIT_CURSOR));
+				if (dragTargetRow != dragObjectRow && dragObjectRow != -1) {
+					ArrayList<String> workFieldIDList = new ArrayList<String>();
+					ArrayList<String> workAscDescList = new ArrayList<String>();
+					String objectRowFieldID = currentKeyFieldIDList.get(dragObjectRow);
+					String objectRowAscDesc = currentKeyFieldAscDescList.get(dragObjectRow);
+
+					for (int i = 0; i < currentKeyFieldIDList.size(); i++) {
+				    	if (i != dragObjectRow) {
+				    		workFieldIDList.add(currentKeyFieldIDList.get(i));
+				    		workAscDescList.add(currentKeyFieldAscDescList.get(i));
+				    	}
+				    	if (i == dragTargetRow) {
+							workFieldIDList.add(objectRowFieldID);
+				    		workAscDescList.add(objectRowAscDesc);
+				    	}
+				    }
+
+					currentKeyFieldIDList = workFieldIDList;
+				    currentKeyFieldAscDescList = workAscDescList;
+					setupFields();
+
+					int workIndex = currentKeyFieldIDList.indexOf(objectRowFieldID);
+					jTableKeyFieldList.setRowSelectionInterval(workIndex, workIndex);
+					dragObjectRow = -1;
+					dragTargetRow = -1;
+				}
+			} finally {
+				setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+			}
+		}
 	}
 
 	void jMenuItemToSetAscDesc_actionPerformed(ActionEvent e) {
@@ -447,16 +492,6 @@ public class DialogEditTableKeyFields extends JDialog {
 			int selectedRow = jTableKeyFieldList.rowAtPoint(e.getPoint());
 			jTableKeyFieldList.setRowSelectionInterval(selectedRow, selectedRow);
 
-			if (jTableKeyFieldList.getSelectedRow() <= 0) {
-				jMenuItemToGoUp.setEnabled(false);
-			} else {
-				jMenuItemToGoUp.setEnabled(true);
-			}
-			if (jTableKeyFieldList.getSelectedRow() >= (jTableKeyFieldList.getRowCount()-1)) {
-				jMenuItemToGoDown.setEnabled(false);
-			} else {
-				jMenuItemToGoDown.setEnabled(true);
-			}
 			if (keyType_.equals("XK")) {
 				jMenuItemToSetAscDesc.setEnabled(true);
 			} else {
@@ -501,8 +536,10 @@ class DialogEditTableKeyFields_jTableKeyFieldList_mouseAdapter implements MouseL
 		adaptee.jTableKeyFieldList_mouseClicked(e);
 	}
 	public void mousePressed(MouseEvent e) {
+		adaptee.jTableKeyFieldList_mousePressed(e);
 	}
 	public void mouseReleased(MouseEvent e) {
+		adaptee.jTableKeyFieldList_mouseReleased(e);
 	}
 	public void mouseEntered(MouseEvent e) {
 	}
@@ -510,27 +547,37 @@ class DialogEditTableKeyFields_jTableKeyFieldList_mouseAdapter implements MouseL
 	}
 }
 
-class DialogEditTableKeyFields_jMenuItemToGoUp_actionAdapter implements java.awt.event.ActionListener {
+class DialogEditTableKeyFields_jTableKeyFieldList_mouseMotionAdapter extends java.awt.event.MouseMotionAdapter {
 	DialogEditTableKeyFields adaptee;
-
-	DialogEditTableKeyFields_jMenuItemToGoUp_actionAdapter(DialogEditTableKeyFields adaptee) {
+	DialogEditTableKeyFields_jTableKeyFieldList_mouseMotionAdapter(DialogEditTableKeyFields adaptee) {
 		this.adaptee = adaptee;
 	}
-	public void actionPerformed(ActionEvent e) {
-		adaptee.jMenuItemToGoUp_actionPerformed(e);
+	public void mouseDragged(MouseEvent e) {
+		adaptee.jTableKeyFieldList_mouseDragged(e);
 	}
 }
 
-class DialogEditTableKeyFields_jMenuItemToGoDown_actionAdapter implements java.awt.event.ActionListener {
-	DialogEditTableKeyFields adaptee;
-
-	DialogEditTableKeyFields_jMenuItemToGoDown_actionAdapter(DialogEditTableKeyFields adaptee) {
-		this.adaptee = adaptee;
-	}
-	public void actionPerformed(ActionEvent e) {
-		adaptee.jMenuItemToGoDown_actionPerformed(e);
-	}
-}
+//class DialogEditTableKeyFields_jMenuItemToGoUp_actionAdapter implements java.awt.event.ActionListener {
+//	DialogEditTableKeyFields adaptee;
+//
+//	DialogEditTableKeyFields_jMenuItemToGoUp_actionAdapter(DialogEditTableKeyFields adaptee) {
+//		this.adaptee = adaptee;
+//	}
+//	public void actionPerformed(ActionEvent e) {
+//		adaptee.jMenuItemToGoUp_actionPerformed(e);
+//	}
+//}
+//
+//class DialogEditTableKeyFields_jMenuItemToGoDown_actionAdapter implements java.awt.event.ActionListener {
+//	DialogEditTableKeyFields adaptee;
+//
+//	DialogEditTableKeyFields_jMenuItemToGoDown_actionAdapter(DialogEditTableKeyFields adaptee) {
+//		this.adaptee = adaptee;
+//	}
+//	public void actionPerformed(ActionEvent e) {
+//		adaptee.jMenuItemToGoDown_actionPerformed(e);
+//	}
+//}
 
 class DialogEditTableKeyFields_jMenuItemToSetAscDesc_actionAdapter implements java.awt.event.ActionListener {
 	DialogEditTableKeyFields adaptee;

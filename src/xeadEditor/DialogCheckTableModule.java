@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2014 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2017 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -65,6 +65,7 @@ public class DialogCheckTableModule extends JDialog {
 	private String errorStatus = "";
 	private ArrayList<String> keyFieldList = new ArrayList<String>();
 	private ArrayList<String> keyFieldTypeList = new ArrayList<String>();
+	private ArrayList<String> keyFieldListOfModule = new ArrayList<String>();
 	private ArrayList<String> fieldListToBeAdded = new ArrayList<String>();
 	private ArrayList<String> fieldListToBeDropped = new ArrayList<String>();
 	private ArrayList<String> fieldListToBeConverted = new ArrayList<String>();
@@ -207,6 +208,7 @@ public class DialogCheckTableModule extends JDialog {
 		try {
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
+			keyFieldListOfModule.clear();
 			keyFieldList.clear();
 			keyFieldTypeList.clear();
 			fieldListToBeAdded.clear();
@@ -677,6 +679,15 @@ public class DialogCheckTableModule extends JDialog {
 					}
 				}
 
+				//////////////////////////////////////////
+				// Collect primary key fields on module //
+				//////////////////////////////////////////
+				ResultSet rs5 = connection_.getMetaData().getPrimaryKeys(null, null, moduleID);
+				while (rs5.next()) {
+					keyFieldListOfModule.add(frame_.getCaseShiftValue(rs5.getString("COLUMN_NAME"), "Upper"));
+				}
+				rs5.close();
+
 				/////////////////////////////////////////
 				// Key check from definition to module //
 				/////////////////////////////////////////
@@ -716,21 +727,31 @@ public class DialogCheckTableModule extends JDialog {
 						count1 = 0;
 						count2 = 0;
 						wrkStr = "";
-
-						ResultSet rs5 = connection_.getMetaData().getPrimaryKeys(null, null, moduleID);
-						while (rs5.next()) {
+//						ResultSet rs5 = connection_.getMetaData().getPrimaryKeys(null, null, moduleID);
+//						while (rs5.next()) {
+//							count1++;
+//							if (keyFieldList.contains(frame_.getCaseShiftValue(rs5.getString("COLUMN_NAME"), "Upper"))) {
+//								count2++;
+//							}
+//							if (wrkStr.equals("")) {
+//								wrkStr = wrkStr + frame_.getCaseShiftValue(rs5.getString("COLUMN_NAME"), "Upper");
+//							} else {
+//								wrkStr = wrkStr + ";" + frame_.getCaseShiftValue(rs5.getString("COLUMN_NAME"), "Upper");
+//							}
+//							keyFieldListOfModule.add(frame_.getCaseShiftValue(rs5.getString("COLUMN_NAME"), "Upper"));
+//						}
+//						rs5.close();
+						for (int j = 0; j < keyFieldListOfModule.size(); j++) {
 							count1++;
-							if (keyFieldList.contains(frame_.getCaseShiftValue(rs5.getString("COLUMN_NAME"), "Upper"))) {
+							if (keyFieldList.contains(keyFieldListOfModule.get(j))) {
 								count2++;
 							}
 							if (wrkStr.equals("")) {
-								wrkStr = wrkStr + frame_.getCaseShiftValue(rs5.getString("COLUMN_NAME"), "Upper");
+								wrkStr = wrkStr + keyFieldListOfModule.get(j);
 							} else {
-								wrkStr = wrkStr + ";" + frame_.getCaseShiftValue(rs5.getString("COLUMN_NAME"), "Upper");
+								wrkStr = wrkStr + ";" + keyFieldListOfModule.get(j);
 							}
 						}
-						rs5.close();
-
 						if (count1 != count2) {
 							keyFieldList.clear();
 							countOfErrors++;
@@ -1708,6 +1729,36 @@ public class DialogCheckTableModule extends JDialog {
 					frame_.currentMainTreeNode.getElement().appendChild(newElement);
 				}
 			}
+
+			///////////////////////////////////////////////////////////////
+			// Put primary key into the table definition if it's missing //
+			///////////////////////////////////////////////////////////////
+			org.w3c.dom.Element element;
+			String keyFields = "";
+			boolean isMissingPK = true;
+			NodeList keyList = frame_.currentMainTreeNode.getElement().getElementsByTagName("Key");
+			for (int i = 0; i < keyList.getLength(); i++) {
+				element = (org.w3c.dom.Element)keyList.item(i);
+				if (element.getAttribute("Type").equals("PK")) {
+					isMissingPK = false;
+				}
+			}
+			if (isMissingPK) {
+				org.w3c.dom.Element newElement = frame_.createNewElementAccordingToType("TableKeyList");
+				if (newElement != null) {
+					for (int i = 0; i < keyFieldListOfModule.size(); i++) {
+						if (keyFields.equals("")) {
+							keyFields = keyFieldListOfModule.get(i);
+						} else {
+							keyFields = keyFields + ";" + keyFieldListOfModule.get(i);
+						}
+					}
+					newElement.setAttribute("Type", "PK");
+					newElement.setAttribute("Fields", keyFields);
+					frame_.currentMainTreeNode.getElement().appendChild(newElement);
+				}
+			}
+
 			frame_.currentMainTreeNode.updateFields();
 		}
 	}

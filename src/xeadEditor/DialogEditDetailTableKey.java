@@ -459,9 +459,8 @@ public class DialogEditDetailTableKey extends JDialog {
 			tableID = frame_.getTableIDOfTableAlias(tableAlias, detailReferList, headerReferList);
 		}
 		fieldID = dataSource.substring(wrkInt+1, dataSource.length());
-		fieldID = fieldID.replace("(D)", "");
-		fieldID = fieldID.replace("(A)", "");
-
+		fieldID = fieldID.replace("\\(D\\)", "");
+		fieldID = fieldID.replace("\\(A\\)", "");
 
 		fieldElement = frame_.getSpecificFieldElement(tableID, fieldID);
 		if (fieldElement == null) {

@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2014 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2017 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -133,14 +133,12 @@ public class DialogCheckLayout extends JDialog {
 		detailTable = null;
 
 		if (panelType_.equals("Function100ColumnList")) {
-//			showLayoutOfTableColumns(functionElement.getElementsByTagName("Column"), false);
 			showLayoutOfTableColumns(functionElement.getElementsByTagName("Column"));
 		}
 		if (panelType_.equals("Function100FilterList")) {
 			showLayoutOfTableFilters(functionElement.getElementsByTagName("Filter"));
 		}
 		if (panelType_.equals("Function110ColumnList")) {
-//			showLayoutOfTableColumns(functionElement.getElementsByTagName("Column"), false);
 			showLayoutOfTableColumns(functionElement.getElementsByTagName("Column"));
 		}
 		if (panelType_.equals("Function110FilterList")) {
@@ -159,14 +157,15 @@ public class DialogCheckLayout extends JDialog {
 			showLayoutOfPanelFields(functionElement.getElementsByTagName("Field"), false, false);
 		}
 		if (panelType_.equals("Function300DetailFieldList") && tabIndex >= 0) {
+			showLayoutOfPanelFields(functionElement.getElementsByTagName("Field"), false, false);
 			NodeList detailTableList = functionElement.getElementsByTagName("Detail");
 			sortableList = editor.getSortedListModel(detailTableList, "Order");
 			org.w3c.dom.Element element = (org.w3c.dom.Element)sortableList.getElementAt(tabIndex);
 			detailTable = new DialogCheckLayoutDetailTable(element.getAttribute("Table"), element.getAttribute("KeyFields"), this);
-//			showLayoutOfTableColumns(element.getElementsByTagName("Column"), false);
 			showLayoutOfTableColumns(element.getElementsByTagName("Column"));
 		}
 		if (panelType_.equals("Function300DetailFilterList") && tabIndex >= 0) {
+			showLayoutOfPanelFields(functionElement.getElementsByTagName("Field"), false, false);
 			NodeList detailTableList = functionElement.getElementsByTagName("Detail");
 			sortableList = editor.getSortedListModel(detailTableList, "Order");
 			org.w3c.dom.Element element = (org.w3c.dom.Element)sortableList.getElementAt(tabIndex);
@@ -177,16 +176,12 @@ public class DialogCheckLayout extends JDialog {
 			showLayoutOfPanelFields(functionElement.getElementsByTagName("Field"), true, false);
 		}
 		if (panelType_.equals("Function310DetailFieldList")) {
+			showLayoutOfPanelFields(functionElement.getElementsByTagName("Field"), true, false);
 			detailTable = new DialogCheckLayoutDetailTable(functionElement.getAttribute("DetailTable"), functionElement.getAttribute("DetailKeyFields"), this);
-//			showLayoutOfTableColumns(functionElement.getElementsByTagName("Column"), false);
 			showLayoutOfTableColumns(functionElement.getElementsByTagName("Column"));
 		}
-//		if (panelType_.equals("Function310AddRowListColumnList")) {
-//			showLayoutOfTableColumns(functionElement.getElementsByTagName("AddRowListColumn"), true);
-//		}
 	}
 
-//	private void showLayoutOfTableColumns(NodeList functionColumnList, boolean isForAddRowListTable) {
 	private void showLayoutOfTableColumns(NodeList functionColumnList) {
 		///////////////////////////////////////////////////////////
 		// Set panel size and position according specified sizes //
@@ -207,7 +202,6 @@ public class DialogCheckLayout extends JDialog {
 		// Setup the primary table and refer tables //
 		//////////////////////////////////////////////
 		org.w3c.dom.Element element;
-//		primaryTable = new DialogCheckLayoutPrimaryTable(functionElement, this, isForAddRowListTable);
 		primaryTable = new DialogCheckLayoutPrimaryTable(functionElement, this, false);
 		NodeList referNodeList = primaryTable.getTableElement().getElementsByTagName("Refer");
 		sortableList = editor.getSortedListModel(referNodeList, "Order");
@@ -268,29 +262,36 @@ public class DialogCheckLayout extends JDialog {
 		///////////////////////////////////////////////////////////////
 		// Adjust panel size and position according to fields layout //
 		///////////////////////////////////////////////////////////////
-		int workWidth = biggestWidth + 50;
-		if (functionElement.getAttribute("Size").equals("")) {
-			workWidth = screenRect.width;
-			posX = screenRect.x;
+		if (panelType_.equals("Function300DetailFieldList")
+				|| panelType_.equals("Function310DetailFieldList")) {
+			posY = ((screenRect.height - workHeight) / 2) + screenRect.y;
+			this.setPreferredSize(new Dimension(this.getPreferredSize().width, workHeight));
+			this.setLocation(this.getLocation().x, posY);
 		} else {
-			if (functionElement.getAttribute("Size").equals("AUTO")) {
-				if (workWidth > screenRect.width) {
-					workWidth = screenRect.width;
-					posX = screenRect.x;
-				} else {
-					posX = ((screenRect.width - workWidth) / 2) + screenRect.x;
-				}
-				if (workHeight > screenRect.height) {
-					workHeight = screenRect.height;
-				}
+			int workWidth = biggestWidth + 50;
+			if (functionElement.getAttribute("Size").equals("")) {
+				workWidth = screenRect.width;
+				posX = screenRect.x;
 			} else {
-				workWidth = this.getPreferredSize().width;
-				posX = this.getLocation().x;
+				if (functionElement.getAttribute("Size").equals("AUTO")) {
+					if (workWidth > screenRect.width) {
+						workWidth = screenRect.width;
+						posX = screenRect.x;
+					} else {
+						posX = ((screenRect.width - workWidth) / 2) + screenRect.x;
+					}
+					if (workHeight > screenRect.height) {
+						workHeight = screenRect.height;
+					}
+				} else {
+					workWidth = this.getPreferredSize().width;
+					posX = this.getLocation().x;
+				}
 			}
+			posY = ((screenRect.height - workHeight) / 2) + screenRect.y;
+			this.setPreferredSize(new Dimension(workWidth, workHeight));
+			this.setLocation(posX, posY);
 		}
-		posY = ((screenRect.height - workHeight) / 2) + screenRect.y;
-		this.setPreferredSize(new Dimension(workWidth, workHeight));
-		this.setLocation(posX, posY);
 
 		///////////////////////////////////////
 		// Arrange components and show panel //
@@ -359,35 +360,47 @@ public class DialogCheckLayout extends JDialog {
 		///////////////////////////////////////////////////////////////
 		// Adjust panel size and position according to fields layout //
 		///////////////////////////////////////////////////////////////
-		int workWidth = maxWidth + 50;
-		if (functionElement.getAttribute("Size").equals("")) {
-			workWidth = screenRect.width;
-			posX = screenRect.x;
-		} else {
-			if (functionElement.getAttribute("Size").equals("AUTO")) {
-				if (workWidth < 800) {
-					workWidth = 800;
-				}
-				if (workWidth > screenRect.width) {
-					workWidth = screenRect.width;
-					posX = screenRect.x;
-				} else {
-					posX = ((screenRect.width - workWidth) / 2) + screenRect.x;
-				}
+		if (panelType_.equals("Function300DetailFilterList")) {
+			int workHeight = maxHeight + 60;
+			if (workHeight > screenRect.height) {
+				workHeight = screenRect.height;
+				posY = screenRect.y;
 			} else {
-				workWidth = this.getPreferredSize().width;
-				posX = this.getLocation().x;
+				posY = ((screenRect.height - workHeight) / 2) + screenRect.y;
 			}
-		}
-		int workHeight = maxHeight + 60;
-		if (workHeight > screenRect.height) {
-			workHeight = screenRect.height;
-			posY = screenRect.y;
+			this.setPreferredSize(new Dimension(this.getPreferredSize().width, workHeight));
+			this.setLocation(this.getLocation().x, posY);
 		} else {
-			posY = ((screenRect.height - workHeight) / 2) + screenRect.y;
+			int workWidth = maxWidth + 50;
+			if (functionElement.getAttribute("Size").equals("")) {
+				workWidth = screenRect.width;
+				posX = screenRect.x;
+			} else {
+				if (functionElement.getAttribute("Size").equals("AUTO")) {
+					if (workWidth < 800) {
+						workWidth = 800;
+					}
+					if (workWidth > screenRect.width) {
+						workWidth = screenRect.width;
+						posX = screenRect.x;
+					} else {
+						posX = ((screenRect.width - workWidth) / 2) + screenRect.x;
+					}
+				} else {
+					workWidth = this.getPreferredSize().width;
+					posX = this.getLocation().x;
+				}
+			}
+			int workHeight = maxHeight + 60;
+			if (workHeight > screenRect.height) {
+				workHeight = screenRect.height;
+				posY = screenRect.y;
+			} else {
+				posY = ((screenRect.height - workHeight) / 2) + screenRect.y;
+			}
+			this.setPreferredSize(new Dimension(workWidth, workHeight));
+			this.setLocation(posX, posY);
 		}
-		this.setPreferredSize(new Dimension(workWidth, workHeight));
-		this.setLocation(posX, posY);
 
 		///////////////////////////////////////
 		// Arrange components and show panel //
@@ -504,8 +517,12 @@ public class DialogCheckLayout extends JDialog {
 		///////////////////////////////////////
 		// Arrange components and show panel //
 		///////////////////////////////////////
-		this.pack();
-		super.setVisible(true);
+		if (!panelType_.equals("Function300DetailFieldList")
+				&& !panelType_.equals("Function300DetailFilterList")
+				&& !panelType_.equals("Function310DetailFieldList")) {
+			this.pack();
+			super.setVisible(true);
+		}
 	}
 
 	protected void processWindowEvent(WindowEvent e) {

@@ -32,7 +32,9 @@ package xeadEditor;
  */
 
 import java.awt.*;
+
 import javax.swing.*;
+
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -198,6 +200,8 @@ public class DialogAssistList extends JDialog {
 		sessionAssistListArray.add("createJsonArray(text)");
 		sessionAssistListArray.add("getJsonObject(object, key)");
 		sessionAssistListArray.add("getJsonObject(array, index)");
+		sessionAssistListArray.add("showDialogToChooseFile(fileExtention, directory, defaultFile)");
+		sessionAssistListArray.add("copyTableRecords(fromFile, toFile, processType)");
 		Collections.sort(sessionAssistListArray);
 	}
 
@@ -237,7 +241,17 @@ public class DialogAssistList extends JDialog {
 			} else {
 				jListAssistList.setSelectedIndex(0);
 				jScrollPaneAssistList.getViewport().setViewPosition(new Point(0,0));
-				this.setLocation(areaPoint.x + caretPoint.x, areaPoint.y + caretPoint.y);
+				int posX = areaPoint.x + caretPoint.x;
+				int rightPosX = posX + this.getBounds().width;
+				if (rightPosX > frame_.screenWidth) {
+					posX = posX - (rightPosX - frame_.screenWidth);
+				}
+				int posY = areaPoint.y + caretPoint.y;
+				int bottomPosY = posY + this.getBounds().height;
+				if (bottomPosY > (frame_.screenHeight - 30)) {
+					posY = posY - (bottomPosY - frame_.screenHeight + 30);
+				}
+				this.setLocation(posX, posY);
 				this.setVisible(true);
 			}
 		}
@@ -320,6 +334,9 @@ public class DialogAssistList extends JDialog {
 		textAreaToBeAssisted.updateUI();
 		scrollPaneToBeAssisted.getViewport().setViewPosition(scrollPos);
 		textAreaToBeAssisted.setCaretPosition(slicedThru + codeToBeInserted.length());
+
+		// without this step edit tool will disappear //
+		frame_.jTextAreaFunction000Script.add(frame_.jPanelFunction000ScriptEditTool);
 	}
 }
 

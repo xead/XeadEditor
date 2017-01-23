@@ -122,8 +122,8 @@ public class Editor extends JFrame {
 	private String applicationFolder;
 	private String fileSeparator = "";
 	private long lastModifyTime = 0;
-	private int screenWidth = 800;
-	private int screenHeight = 600;
+	public int screenWidth = 800;
+	public int screenHeight = 600;
 	/**
 	 * Main Menu
 	 */
@@ -413,17 +413,18 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldSystemEditorUserPassword = new JTextField();
 	private JLabel jLabelSystemDriverVMOptions = new JLabel();
 	private JTextField jTextFieldSystemDriverVMOptions = new JTextField();
+	private JLabel jLabelSystemProxyIP = new JLabel();
+	private JTextField jTextFieldSystemProxyIP = new JTextField();
+	private JTextField jTextFieldSystemProxyPort = new JTextField();
 	private JCheckBox jCheckBoxSystemSkipPreload = new JCheckBox();
 	private JLabel jLabelSystemHashFormat = new JLabel();
 	private JTextField jTextFieldSystemHashFormat = new JTextField();
 	private JButton jButtonSystemHashFormat = new JButton();
 	private JLabel jLabelSystemSmtpHost = new JLabel();
 	private JTextField jTextFieldSystemSmtpHost = new JTextField();
-	//private JLabel jLabelSystemSmtpPort = new JLabel();
 	private JTextField jTextFieldSystemSmtpPort = new JTextField();
 	private JLabel jLabelSystemSmtpUser = new JLabel();
 	private JTextField jTextFieldSystemSmtpUser = new JTextField();
-	//private JLabel jLabelSystemSmtpPassword = new JLabel();
 	private JTextField jTextFieldSystemSmtpPassword = new JTextField();
 	private JLabel jLabelSystemDateFormat = new JLabel();
 	private JLabel jLabelSystemSmtpAdminEmail = new JLabel();
@@ -924,9 +925,9 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction000TimerMessage = new JLabel();
 	private JTextField jTextFieldFunction000TimerMessage = new JTextField();
 	private JScrollPane jScrollPaneFunction000Script = new JScrollPane();
-	private JTextArea jTextAreaFunction000Script = new JTextArea();
+	public JTextArea jTextAreaFunction000Script = new JTextArea();
 	private javax.swing.undo.UndoManager jTextAreaFunction000ScriptUndoManager = new javax.swing.undo.UndoManager();
-	private JPanel jPanelFunction000ScriptEditTool = new JPanel();
+	public JPanel jPanelFunction000ScriptEditTool = new JPanel();
 	private JLabel jLabelFunction000ScriptEditToolScan = new JLabel();
 	private JTextField jTextFieldFunction000ScriptEditToolScan = new JTextField();
 	private JCheckBox jCheckBoxFunction000ScriptEditToolScanCase = new JCheckBox();
@@ -3821,16 +3822,25 @@ public class Editor extends JFrame {
 		jLabelSystemEditorUserPassword.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemEditorUserPassword.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemEditorUserPassword.setText(res.getString("Password"));
-		jLabelSystemEditorUserPassword.setBounds(new Rectangle(230, 136, 130, 20));
+		jLabelSystemEditorUserPassword.setBounds(new Rectangle(225, 136, 100, 20));
 		jTextFieldSystemEditorUserPassword.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemEditorUserPassword.setBounds(new Rectangle(365, 133, 120, 25));
+		jTextFieldSystemEditorUserPassword.setBounds(new Rectangle(330, 133, 120, 25));
 		jLabelSystemDriverVMOptions.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemDriverVMOptions.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemDriverVMOptions.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemDriverVMOptions.setText(res.getString("DriverVMOptions"));
-		jLabelSystemDriverVMOptions.setBounds(new Rectangle(495, 136, 110, 20));
+		jLabelSystemDriverVMOptions.setBounds(new Rectangle(460, 136, 100, 20));
 		jTextFieldSystemDriverVMOptions.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemDriverVMOptions.setBounds(new Rectangle(610, 133, 470, 25));
+		jTextFieldSystemDriverVMOptions.setBounds(new Rectangle(565, 133, 230, 25));
+		jLabelSystemProxyIP.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelSystemProxyIP.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelSystemProxyIP.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelSystemProxyIP.setText("Proxy IP/Port");
+		jLabelSystemProxyIP.setBounds(new Rectangle(800, 136, 110, 20));
+		jTextFieldSystemProxyIP.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemProxyIP.setBounds(new Rectangle(915, 133, 150, 25));
+		jTextFieldSystemProxyPort.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemProxyPort.setBounds(new Rectangle(1070, 133, 80, 25));
 		jLabelSystemSmtpHost.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemSmtpHost.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSmtpHost.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -3838,11 +3848,6 @@ public class Editor extends JFrame {
 		jLabelSystemSmtpHost.setBounds(new Rectangle(5, 167, 130, 20));
 		jTextFieldSystemSmtpHost.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldSystemSmtpHost.setBounds(new Rectangle(140, 164, 150, 25));
-//		jLabelSystemSmtpPort.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-//		jLabelSystemSmtpPort.setHorizontalAlignment(SwingConstants.RIGHT);
-//		jLabelSystemSmtpPort.setHorizontalTextPosition(SwingConstants.LEADING);
-//		jLabelSystemSmtpPort.setText(res.getString("SmtpPort"));
-//		jLabelSystemSmtpPort.setBounds(new Rectangle(300, 167, 100, 20));
 		jTextFieldSystemSmtpPort.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldSystemSmtpPort.setBounds(new Rectangle(295, 164, 80, 25));
 		jLabelSystemSmtpUser.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
@@ -3852,20 +3857,15 @@ public class Editor extends JFrame {
 		jLabelSystemSmtpUser.setBounds(new Rectangle(380, 167, 180, 20));
 		jTextFieldSystemSmtpUser.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldSystemSmtpUser.setBounds(new Rectangle(565, 164, 100, 25));
-//		jLabelSystemSmtpPassword.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-//		jLabelSystemSmtpPassword.setHorizontalAlignment(SwingConstants.RIGHT);
-//		jLabelSystemSmtpPassword.setHorizontalTextPosition(SwingConstants.LEADING);
-//		jLabelSystemSmtpPassword.setText(res.getString("SmtpPassword"));
-//		jLabelSystemSmtpPassword.setBounds(new Rectangle(720, 167, 110, 20));
 		jTextFieldSystemSmtpPassword.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemSmtpPassword.setBounds(new Rectangle(670, 164, 130, 25));
+		jTextFieldSystemSmtpPassword.setBounds(new Rectangle(670, 164, 125, 25));
 		jLabelSystemSmtpAdminEmail.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemSmtpAdminEmail.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSmtpAdminEmail.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemSmtpAdminEmail.setText("Admin EMail");
 		jLabelSystemSmtpAdminEmail.setBounds(new Rectangle(800, 167, 110, 20));
 		jTextFieldSystemSmtpAdminEmail.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemSmtpAdminEmail.setBounds(new Rectangle(915, 164, 165, 25));
+		jTextFieldSystemSmtpAdminEmail.setBounds(new Rectangle(915, 164, 235, 25));
 		jSplitPaneSystemPrintFont.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneSystemPrintFont.add(jScrollPaneSystemPrintFontList, JSplitPane.TOP);
 		jSplitPaneSystemPrintFont.add(jPanelSystemPrintFont, JSplitPane.BOTTOM);
@@ -3888,14 +3888,15 @@ public class Editor extends JFrame {
 		jPanelSystemOtherConfigTop.add(jTextFieldSystemEditorUserPassword);
 		jPanelSystemOtherConfigTop.add(jLabelSystemDriverVMOptions);
 		jPanelSystemOtherConfigTop.add(jTextFieldSystemDriverVMOptions);
+		jPanelSystemOtherConfigTop.add(jLabelSystemProxyIP);
+		jPanelSystemOtherConfigTop.add(jTextFieldSystemProxyIP);
+		jPanelSystemOtherConfigTop.add(jTextFieldSystemProxyPort);
 		jPanelSystemOtherConfigTop.add(jCheckBoxSystemSkipPreload);
 		jPanelSystemOtherConfigTop.add(jLabelSystemSmtpHost);
 		jPanelSystemOtherConfigTop.add(jTextFieldSystemSmtpHost);
-		//jPanelSystemOtherConfigTop.add(jLabelSystemSmtpPort);
 		jPanelSystemOtherConfigTop.add(jTextFieldSystemSmtpPort);
 		jPanelSystemOtherConfigTop.add(jLabelSystemSmtpUser);
 		jPanelSystemOtherConfigTop.add(jTextFieldSystemSmtpUser);
-		//jPanelSystemOtherConfigTop.add(jLabelSystemSmtpPassword);
 		jPanelSystemOtherConfigTop.add(jTextFieldSystemSmtpPassword);
 		jPanelSystemOtherConfigTop.add(jLabelSystemSmtpAdminEmail);
 		jPanelSystemOtherConfigTop.add(jTextFieldSystemSmtpAdminEmail);
@@ -5603,6 +5604,8 @@ public class Editor extends JFrame {
 		actionMap = jTextAreaFunction000Script.getActionMap();
 		actionMap.put(DefaultEditorKit.pasteAction, actionPasteFunction000Script);
 		//
+		jTextFieldFunction000TimerMessage.setBounds(new Rectangle(140, 71, 840, 25));
+		//jPanelFunction000ScriptEditTool.setBounds(new Rectangle(990, 840, 303, 25));
 		jPanelFunction000ScriptEditTool.setBorder(BorderFactory.createLineBorder(Color.gray));
 		jPanelFunction000ScriptEditTool.setLayout(null);
 		jLabelFunction000ScriptEditToolScan.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
@@ -5613,6 +5616,7 @@ public class Editor extends JFrame {
 		jTextFieldFunction000ScriptEditToolScan.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldFunction000ScriptEditToolScan.setBounds(new Rectangle(74, 1, 130, 23));
 		jTextFieldFunction000ScriptEditToolScan.setForeground(Color.darkGray);
+		jTextFieldFunction000ScriptEditToolScan.setEditable(true);
 		jCheckBoxFunction000ScriptEditToolScanCase.setBounds(new Rectangle(204, 1, 29, 23));
 		jCheckBoxFunction000ScriptEditToolScanCase.setBackground(Color.lightGray);
 		jLabelFunction000ScriptEditToolCursorPos.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
@@ -5660,8 +5664,10 @@ public class Editor extends JFrame {
 	class JScrollPaneFunction000ScriptChangeListener implements javax.swing.event.ChangeListener {
 		public void stateChanged(javax.swing.event.ChangeEvent event) {
 			int width = jScrollPaneFunction000Script.getViewport().getWidth();
+			int height = jScrollPaneFunction000Script.getViewport().getHeight();
 			Point point = jScrollPaneFunction000Script.getViewport().getViewPosition();
-			jPanelFunction000ScriptEditTool.setBounds(new Rectangle(width - 303 + point.x, point.y, 303, 25));
+			//jPanelFunction000ScriptEditTool.setBounds(new Rectangle(width - 303 + point.x, point.y, 303, 25));
+			jPanelFunction000ScriptEditTool.setBounds(new Rectangle(width - 303 + point.x, height - 25 + point.y, 303, 25));
 		}
 	}
 	/**
@@ -11728,7 +11734,7 @@ public class Editor extends JFrame {
 					workElement = (org.w3c.dom.Element)nodeList.item(j);
 					pos1 = workElement.getAttribute("Action").indexOf("CALL_TO_ADD(");
 					if (pos1 >= 0) {
-						pos2 = workElement.getAttribute("Action").indexOf(")");
+						pos2 = workElement.getAttribute("Action").indexOf(")", pos1);
 						if (workElement.getAttribute("Action").substring(pos1 + 12, pos2).equals(functionID)) {
 							usage = res.getString("UsageLaunchedByFunctionKey");
 							break;
@@ -15656,6 +15662,8 @@ public class Editor extends JFrame {
 			} else {
 				jTextFieldSystemHashFormat.setText(domNode_.getAttribute("HashFormat"));
 			}
+			jTextFieldSystemProxyIP.setText(domNode_.getAttribute("ProxyIP"));
+			jTextFieldSystemProxyPort.setText(domNode_.getAttribute("ProxyPort"));
 			jTextFieldSystemSmtpHost.setText(domNode_.getAttribute("SmtpHost"));
 			jTextFieldSystemSmtpPort.setText(domNode_.getAttribute("SmtpPort"));
 			jTextFieldSystemSmtpUser.setText(domNode_.getAttribute("SmtpUser"));
@@ -18966,6 +18974,12 @@ public class Editor extends JFrame {
 					valueOfFieldsChanged = true;
 				}
 			}
+			if (!domNode_.getAttribute("ProxyIP").equals(jTextFieldSystemProxyIP.getText())) {
+				valueOfFieldsChanged = true;
+			}
+			if (!domNode_.getAttribute("ProxyPort").equals(jTextFieldSystemProxyPort.getText())) {
+				valueOfFieldsChanged = true;
+			}
 			if (!domNode_.getAttribute("SmtpHost").equals(jTextFieldSystemSmtpHost.getText())) {
 				valueOfFieldsChanged = true;
 			}
@@ -19039,6 +19053,9 @@ public class Editor extends JFrame {
 				} else {
 					domNode_.setAttribute("HashFormat", jTextFieldSystemHashFormat.getText());
 				}
+				//
+				domNode_.setAttribute("ProxyIP", jTextFieldSystemProxyIP.getText());
+				domNode_.setAttribute("ProxyPort", jTextFieldSystemProxyPort.getText());
 				//
 				domNode_.setAttribute("SmtpHost", jTextFieldSystemSmtpHost.getText());
 				domNode_.setAttribute("SmtpPort", jTextFieldSystemSmtpPort.getText());
@@ -33705,6 +33722,111 @@ public class Editor extends JFrame {
 					}
 				}
 				//
+				nodeList3 = element1.getElementsByTagName("Button");
+				for (int k = 0; k < nodeList3.getLength(); k++) {
+					element3 = (org.w3c.dom.Element)nodeList3.item(k);
+					pos1 = element3.getAttribute("Action").indexOf("CALL_TO_ADD(");
+					if (pos1 >= 0) {
+						pos1 = element3.getAttribute("Action").indexOf("PUT_FROM(");
+						if (pos1 >= 0) {
+							int pos2 = element3.getAttribute("Action").indexOf(")", pos1);
+							if (pos2 >= 0) {
+								wrkStr = element3.getAttribute("Action").substring(pos1 + 9, pos2);
+								workTokenizer = new StringTokenizer(wrkStr, ";" );
+								while (workTokenizer.hasMoreTokens()) {
+									wrkStr = workTokenizer.nextToken();
+									pos1 = wrkStr.indexOf(".");
+									targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, referList2); 
+									targetFieldID = wrkStr.substring(pos1+1);
+									if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+										countOfUsageRows++;
+										Object[] Cell = new Object[4];
+										Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+										Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+										Cell[2] = element1.getAttribute("Type");
+										Cell[3] = res.getString("UsageLaunchedByFunctionKey");
+										tableModelTableFieldUsageList.addRow(Cell);
+										break;
+									}
+								}
+							}
+						}
+						pos1 = element3.getAttribute("Action").indexOf("PUT_TO(");
+						if (pos1 >= 0) {
+							int pos2 = element3.getAttribute("Action").indexOf(")", pos1);
+							if (pos2 >= 0) {
+								wrkStr = element3.getAttribute("Action").substring(pos1 + 7, pos2);
+								workTokenizer = new StringTokenizer(wrkStr, ";" );
+								while (workTokenizer.hasMoreTokens()) {
+									wrkStr = workTokenizer.nextToken();
+									pos1 = wrkStr.indexOf(".");
+									targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, referList2); 
+									targetFieldID = wrkStr.substring(pos1+1);
+									if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+										countOfUsageRows++;
+										Object[] Cell = new Object[4];
+										Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+										Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+										Cell[2] = element1.getAttribute("Type");
+										Cell[3] = res.getString("UsageLaunchedByFunctionKey");
+										tableModelTableFieldUsageList.addRow(Cell);
+										break;
+									}
+								}
+							}
+						}
+						pos1 = element3.getAttribute("Action").indexOf("GET_FROM(");
+						if (pos1 >= 0) {
+							int pos2 = element3.getAttribute("Action").indexOf(")", pos1);
+							if (pos2 >= 0) {
+								wrkStr = element3.getAttribute("Action").substring(pos1 + 9, pos2);
+								workTokenizer = new StringTokenizer(wrkStr, ";" );
+								while (workTokenizer.hasMoreTokens()) {
+									wrkStr = workTokenizer.nextToken();
+									pos1 = wrkStr.indexOf(".");
+									targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, referList2); 
+									targetFieldID = wrkStr.substring(pos1+1);
+									if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+										countOfUsageRows++;
+										Object[] Cell = new Object[4];
+										Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+										Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+										Cell[2] = element1.getAttribute("Type");
+										Cell[3] = res.getString("UsageLaunchedByFunctionKey");
+										tableModelTableFieldUsageList.addRow(Cell);
+										break;
+									}
+								}
+							}
+						}
+						pos1 = element3.getAttribute("Action").indexOf("GET_TO(");
+						if (pos1 >= 0) {
+							int pos2 = element3.getAttribute("Action").indexOf(")", pos1);
+							if (pos2 >= 0) {
+								wrkStr = element3.getAttribute("Action").substring(pos1 + 7, pos2);
+								workTokenizer = new StringTokenizer(wrkStr, ";" );
+								while (workTokenizer.hasMoreTokens()) {
+									wrkStr = workTokenizer.nextToken();
+									pos1 = wrkStr.indexOf(".");
+									targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, referList2); 
+									targetFieldID = wrkStr.substring(pos1+1);
+									if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+										countOfUsageRows++;
+										Object[] Cell = new Object[4];
+										Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+										Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+										Cell[2] = element1.getAttribute("Type");
+										Cell[3] = res.getString("UsageLaunchedByFunctionKey");
+										tableModelTableFieldUsageList.addRow(Cell);
+										break;
+									}
+								}
+							}
+						}
+						break;
+					}
+				}
+				//
 				nodeList3 = element1.getElementsByTagName("Column");
 				for (int k = 0; k < nodeList3.getLength(); k++) {
 					element3 = (org.w3c.dom.Element)nodeList3.item(k);
@@ -34016,6 +34138,9 @@ public class Editor extends JFrame {
 			element = tableRowNumber.getElement();
 
 			buf.append("\n");
+			if (tableKeyFieldIDList.contains(element.getAttribute("ID"))) {
+				buf.append("*");
+			}
 			if (getOptionList(element.getAttribute("TypeOptions")).contains("VIRTUAL")) {
 				buf.append(res.getString("ScriptNotesVFMark"));
 			}
@@ -34886,6 +35011,7 @@ public class Editor extends JFrame {
 		NodeList nodeList1, nodeList2, nodeList3;
 		StringBuffer buf = new StringBuffer();
 		String wrkStr;
+		int pos1, pos2;
 
 		workTokenizer = new StringTokenizer(dataSourceName, "." );
 		String alias = workTokenizer.nextToken();
@@ -35107,6 +35233,75 @@ public class Editor extends JFrame {
 						}
 						if (isUsedAsPromptParm(element2.getAttribute("FieldOptions"), dataSourceName)) {
 							buf.append(element1.getAttribute("ID") + " " + res.getString("ExchangeFields") + "(" + element2.getAttribute("DataSource") + ")"  + "\n");
+						}
+					}
+
+					nodeList3 = element1.getElementsByTagName("Button");
+					for (int k = 0; k < nodeList3.getLength(); k++) {
+						element3 = (org.w3c.dom.Element)nodeList3.item(k);
+						pos1 = element3.getAttribute("Action").indexOf("CALL_TO_ADD(");
+						if (pos1 >= 0) {
+							pos1 = element3.getAttribute("Action").indexOf("PUT_FROM(");
+							if (pos1 >= 0) {
+								pos2 = element3.getAttribute("Action").indexOf(")", pos1);
+								if (pos2 >= 0) {
+									wrkStr = element3.getAttribute("Action").substring(pos1 + 9, pos2);
+									workTokenizer = new StringTokenizer(wrkStr, ";" );
+									while (workTokenizer.hasMoreTokens()) {
+										wrkStr = workTokenizer.nextToken();
+										if (wrkStr.equals(dataSourceName)) {
+											buf.append(element1.getAttribute("ID") + " " + res.getString("UsageLaunchedByFunctionKey") + "\n");
+											break;
+										}
+									}
+								}
+							}
+							pos1 = element3.getAttribute("Action").indexOf("PUT_TO(");
+							if (pos1 >= 0) {
+								pos2 = element3.getAttribute("Action").indexOf(")", pos1);
+								if (pos2 >= 0) {
+									wrkStr = element3.getAttribute("Action").substring(pos1 + 7, pos2);
+									workTokenizer = new StringTokenizer(wrkStr, ";" );
+									while (workTokenizer.hasMoreTokens()) {
+										wrkStr = workTokenizer.nextToken();
+										if (wrkStr.equals(dataSourceName)) {
+											buf.append(element1.getAttribute("ID") + " " + res.getString("UsageLaunchedByFunctionKey") + "\n");
+											break;
+										}
+									}
+								}
+							}
+							pos1 = element3.getAttribute("Action").indexOf("GET_FROM(");
+							if (pos1 >= 0) {
+								pos2 = element3.getAttribute("Action").indexOf(")", pos1);
+								if (pos2 >= 0) {
+									wrkStr = element3.getAttribute("Action").substring(pos1 + 9, pos2);
+									workTokenizer = new StringTokenizer(wrkStr, ";" );
+									while (workTokenizer.hasMoreTokens()) {
+										wrkStr = workTokenizer.nextToken();
+										if (wrkStr.equals(dataSourceName)) {
+											buf.append(element1.getAttribute("ID") + " " + res.getString("UsageLaunchedByFunctionKey") + "\n");
+											break;
+										}
+									}
+								}
+							}
+							pos1 = element3.getAttribute("Action").indexOf("GET_TO(");
+							if (pos1 >= 0) {
+								pos2 = element3.getAttribute("Action").indexOf(")", pos1);
+								if (pos2 >= 0) {
+									wrkStr = element3.getAttribute("Action").substring(pos1 + 7, pos2);
+									workTokenizer = new StringTokenizer(wrkStr, ";" );
+									while (workTokenizer.hasMoreTokens()) {
+										wrkStr = workTokenizer.nextToken();
+										if (wrkStr.equals(dataSourceName)) {
+											buf.append(element1.getAttribute("ID") + " " + res.getString("UsageLaunchedByFunctionKey") + "\n");
+											break;
+										}
+									}
+								}
+							}
+							break;
 						}
 					}
 				}
@@ -39673,6 +39868,7 @@ public class Editor extends JFrame {
 
 	private void setupCellAttributes(XSSFCell cell, XSSFWorkbook workbook, String basicType, Object object, XSSFFont font) {
 		String wrk;
+		boolean isTimeData = false;
 		XSSFDataFormat format = workbook.createDataFormat();
 		XSSFCellStyle style = workbook.createCellStyle();
 		style.setBorderBottom(XSSFCellStyle.BORDER_THIN);
@@ -39686,6 +39882,10 @@ public class Editor extends JFrame {
 				wrk = "";
 			} else {
 				wrk = object.toString().replace(",", "");
+				if (wrk.contains(":")) {
+					wrk = wrk.replace(":", "");
+					isTimeData = true;
+				}
 			}
 			if (wrk.equals("")) {
 				cell.setCellType(XSSFCell.CELL_TYPE_STRING);
@@ -39697,7 +39897,9 @@ public class Editor extends JFrame {
 
 			style.setAlignment(XSSFCellStyle.ALIGN_RIGHT);
 			style.setVerticalAlignment(XSSFCellStyle.VERTICAL_TOP);
-			style.setDataFormat(format.getFormat("#,##0"));
+			if (!isTimeData) {
+				style.setDataFormat(format.getFormat("#,##0"));
+			}
 			cell.setCellStyle(style);
 		} else {
 			if (basicType.equals("FLOAT")) {
@@ -40478,7 +40680,23 @@ public class Editor extends JFrame {
 										statementBuf.append("'");
 									}
 								} else {
-									throw new Exception(res.getString("ImportDataMessage4"));
+									if (fieldIDList.indexOf(editableTableFieldList.get(i).getFieldName()) >= 0) {
+										if (editableTableFieldList.get(i).getBasicType().equals("INTEGER")
+												|| editableTableFieldList.get(i).getBasicType().equals("FLOAT")) {
+											statementBuf.append(fieldValueList.get(fieldIDList.indexOf(editableTableFieldList.get(i).getFieldName())).replaceAll("\"", "").replaceAll(",", "")) ;
+										} else {
+											text = fieldValueList.get(fieldIDList.indexOf(editableTableFieldList.get(i).getFieldName()));
+											if (dbName.contains("jdbc:mysql:")) {
+												text = text.replaceAll("\\\\", "\\\\\\\\");
+											}
+											statementBuf.append("'");
+											statementBuf.append(text);
+											statementBuf.append("'");
+										}
+									} else {
+										throw new Exception(res.getString("ImportDataMessage4"));
+									}
+//									throw new Exception(res.getString("ImportDataMessage4"));
 								}
 								firstField = false;
 							}
@@ -40537,7 +40755,18 @@ public class Editor extends JFrame {
 										}
 									}
 								} else {
-									throw new Exception(res.getString("ImportDataMessage4"));
+//									throw new Exception(res.getString("ImportDataMessage4"));
+									if (editableTableFieldList.get(i).getBasicType().equals("INTEGER")
+											|| editableTableFieldList.get(i).getBasicType().equals("FLOAT")) {
+										statementBuf.append("0");
+									} else {
+										if (editableTableFieldList.get(i).getBasicType().equals("DATE")
+												|| editableTableFieldList.get(i).getBasicType().equals("DATETIME")) {
+												statementBuf.append("NULL");
+										} else {
+											statementBuf.append("''");
+										}
+									}
 								}
 								firstField = false;
 							}
@@ -40573,7 +40802,11 @@ public class Editor extends JFrame {
 				} catch (IOException e1) {
 				}
 				if (noErrors) {
-					jTextAreaTableDataMessages.setText(res.getString("ImportDataMessage1") + numberOfInserted + res.getString("ImportDataMessage2") + numberOfSkipped + res.getString("ImportDataMessage3"));
+					if (numberOfSkipped == 0) {
+						jTextAreaTableDataMessages.setText(res.getString("ImportDataMessage1") + numberOfInserted + res.getString("ImportDataMessage6"));
+					} else {
+						jTextAreaTableDataMessages.setText(res.getString("ImportDataMessage1") + numberOfInserted + res.getString("ImportDataMessage2") + numberOfSkipped + res.getString("ImportDataMessage3"));
+					}
 				}
 				setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			}

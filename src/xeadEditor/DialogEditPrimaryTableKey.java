@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2014 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2016 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -212,13 +212,11 @@ public class DialogEditPrimaryTableKey extends JDialog {
 
 		if (functionElement_.getAttribute("Type").equals("XF100")
 				|| functionElement_.getAttribute("Type").equals("XF110")) {
+
 			String dataSource = functionElement_.getAttribute("OrderBy");
-			if (dataSource.contains("(D)")) {
-				dataSource = dataSource.replaceAll("(D)", "");
-			}
-			if (dataSource.contains("(A)")) {
-				dataSource = dataSource.replaceAll("(A)", "");
-			}
+			dataSource = dataSource.replaceAll("\\(D\\)", "");
+			dataSource = dataSource.replaceAll("\\(A\\)", "");
+
 			tokenizer = new StringTokenizer(dataSource, ";");
 			while (tokenizer.hasMoreTokens()) {
 				if (isInvalidDataSourceName(tokenizer.nextToken(), buf, referList, res.getString("OrderByFields"))) {
@@ -339,7 +337,7 @@ public class DialogEditPrimaryTableKey extends JDialog {
 		StringTokenizer tokenizer;
 		org.w3c.dom.Element fieldElement, element;
 		boolean isInvalid = false;
-		
+	
 		wrkInt = dataSource.indexOf(".");
 		tableAlias = dataSource.substring(0, wrkInt);
 		if (tableAlias.equals(originalTableID)) {
@@ -349,8 +347,8 @@ public class DialogEditPrimaryTableKey extends JDialog {
 			tableID = frame_.getTableIDOfTableAlias(tableAlias, referList, null);
 		}
 		fieldID = dataSource.substring(wrkInt+1, dataSource.length());
-		fieldID = fieldID.replace("(D)", "");
-		fieldID = fieldID.replace("(A)", "");
+		fieldID = fieldID.replace("\\(D\\)", "");
+		fieldID = fieldID.replace("\\(A\\)", "");
 
 		fieldElement = frame_.getSpecificFieldElement(tableID, fieldID);
 		if (fieldElement == null) {

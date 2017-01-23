@@ -46,9 +46,24 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String APPLICATION_NAME  = "X-TEA Editor 1.3";
 	public static final String FORMAT_VERSION  = "1.2";
 	public static final String PRODUCT_NAME = "X-TEA Editor";
-	public static final String COPYRIGHT = "Copyright 2016 DBC Ltd.";
-	public static final String URL_DBC = "http://homepage2.nifty.com/dbc/";
-	public static final String FULL_VERSION  = "V1.R3.M8";
+	public static final String COPYRIGHT = "Copyright 2017 DBC Ltd.";
+	public static final String URL_DBC = "http://dbc.in.coocan.jp/";
+	public static final String FULL_VERSION  = "V1.R3.M11";
+	//1.3.11
+	//・XF310の行追加用機能の交換フィールドに関する利用検査ロジックの不足を補った
+	//・スクリプトアシストの表示領域がスクリーンをはみ出ないようにした
+	//
+	//1.3.10
+	//・時刻編集フィールドを含むテーブルデータをエクセル出力するとエラーになる問題を修正した
+	//・XF100,110,300で「降順」の並び順を指定すると、テーブルの差し替えができなくなる問題を修正した
+	//・データ保守ユーティリティのインポート処理で、ゼロやブランクを許すフィールドであればインポートデータに含めなくても処理されるようにした
+	//
+	//1.3.9
+	//・XF300で明細タブを新規追加したときの追加ボタン位置の初期値を修正した
+	//・XF300で明細タブを20個以上追加できないようにした
+	//・テーブルキーのフィールド構成を編集するためのダイアログの使い勝手を改善した
+	//・住所検索用WEBサービスのためのプロキシ設定を組み込んだ
+	//
 	//1.3.8
 	//・テーブルの使途要素の一覧ロジック中にTableEvaluatorに関する考慮が抜けていた問題を修正した
 	//・データ保守ユーティリティでのインポート処理の動きを改善した
