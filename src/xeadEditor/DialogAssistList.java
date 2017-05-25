@@ -106,6 +106,7 @@ public class DialogAssistList extends JDialog {
 		instanceAssistListArray.add("setUserValueOf(dataSourceName, value)");
 		instanceAssistListArray.add("getVariant(variantID)");
 		instanceAssistListArray.add("setVariant(variantID, value)");
+		instanceAssistListArray.add("setStatusMessage(message)");
 		Collections.sort(instanceAssistListArray);
 		sessionAssistListArray = new ArrayList<String>();
 		sessionAssistListArray.add("getDatabaseName()");

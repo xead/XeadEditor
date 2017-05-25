@@ -92,6 +92,7 @@ public class DialogImportModel extends JDialog {
 	private ArrayList<String> newlyAddedTableIDList = new ArrayList<String>();
 	private ArrayList<String> newlyAddedFunctionIDList = new ArrayList<String>();
 	private boolean isListBeingRebuild = false;
+	private boolean isToConvertCamel = true;
 	private org.w3c.dom.Element subsystemElementFrom = null;
 
 	public DialogImportModel(Editor frame, String title, boolean modal) {
@@ -278,6 +279,11 @@ public class DialogImportModel extends JDialog {
 			domDocumentImportingFrom = parser.getDocument();
 			NodeList nodeList = domDocumentImportingFrom.getElementsByTagName("System");
 			org.w3c.dom.Element systemElementImportFrom = (org.w3c.dom.Element)nodeList.item(0);
+			if (systemElementImportFrom.getAttribute("DDLConvertCamel").equals("false")) {
+				isToConvertCamel = false;
+			} else {
+				isToConvertCamel = true;
+			}
 			jTextFieldSystemNameFrom.setText(systemElementImportFrom.getAttribute("Name"));
 			jTextFieldSystemVersionFrom.setText(systemElementImportFrom.getAttribute("Version"));
 			functionTypeList = domDocumentImportingFrom.getElementsByTagName("FunctionType");
@@ -311,6 +317,29 @@ public class DialogImportModel extends JDialog {
 		return (newlyAddedTableIDList.size() > 0 || newlyAddedFunctionIDList.size() > 0);
 	}
 
+	private String convertCamelNotation(String originalText) {
+		StringBuffer bf = new StringBuffer();
+		String letter = "";
+		if (isToConvertCamel) {
+			if (originalText.equals(originalText.toUpperCase())) {
+				return originalText;
+			} else {
+				for (int i = 0; i < originalText.length(); i++) {
+					letter = originalText.substring(i, i+1);
+					if (!letter.equals("") && !letter.equals("@")) {
+						if (i > 0 && letter.equals(letter.toUpperCase())) {
+							bf.append("_");
+						}
+						bf.append(letter.toUpperCase());
+					}
+				}
+			}
+		} else {
+			return originalText;
+		}
+		return bf.toString();
+	}
+
 	public void jComboBoxSubsystemFrom_actionPerformed(ActionEvent e) {
 		org.w3c.dom.Element element, functionTypeElement;
 		isListBeingRebuild = true;
@@ -341,7 +370,11 @@ public class DialogImportModel extends JDialog {
 						if (element.getAttribute("SubsystemID").equals(subsystemID)) {
 							Object[] Cell = new Object[5];
 							Cell[0] = new TableRowNumber(rowNumber++, element, "Table", this);
-							Cell[1] = element.getAttribute("SortKey");
+							if (element.getAttribute("Alias").equals("")) {
+								Cell[1] = convertCamelNotation(element.getAttribute("SortKey"));
+							} else {
+								Cell[1] = convertCamelNotation(element.getAttribute("Alias"));
+							}
 							Cell[2] = element.getAttribute("Name");
 							Cell[3] = "TABLE";
 							wrkStr = getStatusOfTable(element);
@@ -381,32 +414,26 @@ public class DialogImportModel extends JDialog {
 									Cell[3] = functionTypeElement.getAttribute("SortKey") + " " + functionTypeElement.getAttribute("Name");
 								}
 							}
-//							try {
-								wrkStr = getStatusOfFunction(element);
-								if (wrkStr.startsWith("ALTERED:")) {
-									Cell[4] = "ALTERED";
+							wrkStr = getStatusOfFunction(element);
+							if (wrkStr.startsWith("ALTERED:")) {
+								Cell[4] = "ALTERED";
+							} else {
+								if (wrkStr.startsWith("ERROR:")) {
+									Cell[4] = "ERROR";
 								} else {
-									if (wrkStr.startsWith("ERROR:")) {
-										Cell[4] = "ERROR";
-									} else {
-										Cell[4] = wrkStr;
-									}
+									Cell[4] = wrkStr;
 								}
-								((TableRowNumber)Cell[0]).setMessage(wrkStr);
-								if (Cell[4].equals("NEW") || Cell[4].equals("ALTERED")) {
-									Cell[1] = "<html><b>" + Cell[1];
-									Cell[2] = "<html><b>" + Cell[2];
-									Cell[3] = "<html><b>" + Cell[3];
-									Cell[4] = "<html><b>" + Cell[4];
-								}
-								tableModelElementListFrom.addRow(Cell);
-//							} catch (Exception e1) {
-//								jTextAreaMessage.setText(e1.getStackTrace().toString());
-//								break;
-//							}
+							}
+							((TableRowNumber)Cell[0]).setMessage(wrkStr);
+							if (Cell[4].equals("NEW") || Cell[4].equals("ALTERED")) {
+								Cell[1] = "<html><b>" + Cell[1];
+								Cell[2] = "<html><b>" + Cell[2];
+								Cell[3] = "<html><b>" + Cell[3];
+								Cell[4] = "<html><b>" + Cell[4];
+							}
+							tableModelElementListFrom.addRow(Cell);
 						}
 					}
-//					jButtonImport.setEnabled(false);
 				}
 				jTextAreaMessage.setText(res.getString("ImportModelMessage1"));
 			} catch (Exception e1) {
@@ -463,9 +490,16 @@ public class DialogImportModel extends JDialog {
 		////////////////////////////////
 		for (int i = 0; i < currentTableList.getLength(); i++) {
 			workElement = (org.w3c.dom.Element)currentTableList.item(i);
-			if (workElement.getAttribute("ID").equals(elementFrom.getAttribute("SortKey"))) {
-				elementInto = workElement;
-				break;
+			if (elementFrom.getAttribute("Alias").equals("")) {
+				if (workElement.getAttribute("ID").equals(convertCamelNotation(elementFrom.getAttribute("SortKey")))) {
+					elementInto = workElement;
+					break;
+				}
+			} else {
+				if (workElement.getAttribute("ID").equals(convertCamelNotation(elementFrom.getAttribute("Alias")))) {
+					elementInto = workElement;
+					break;
+				}
 			}
 		}
 		if (elementInto != null) {
@@ -499,7 +533,7 @@ public class DialogImportModel extends JDialog {
 			if (fieldElementFrom.getAttribute("Alias").equals("")) {
 				alias = fieldElementFrom.getAttribute("Name");
 			} else {
-				alias = fieldElementFrom.getAttribute("Alias");
+				alias = convertCamelNotation(fieldElementFrom.getAttribute("Alias"));
 			}
 			if (alias.equals("")) {
 				countOfErrors++;
@@ -629,7 +663,7 @@ public class DialogImportModel extends JDialog {
 				fieldElementInto = (org.w3c.dom.Element)fieldListInto.getElementAt(j);
 				for (int i = 0; i < fieldListFrom.size(); i++) {
 					fieldElementFrom = (org.w3c.dom.Element)fieldListFrom.getElementAt(i);
-					alias = fieldElementFrom.getAttribute("Alias");
+					alias = convertCamelNotation(fieldElementFrom.getAttribute("Alias"));
 					if (alias.equals(fieldElementInto.getAttribute("ID"))) {
 						fieldIsDeleted = false;
 						break;
@@ -738,7 +772,7 @@ public class DialogImportModel extends JDialog {
 	}
 
 	private String getFieldIDListOfTableKeyFrom(org.w3c.dom.Element tableElementFrom, org.w3c.dom.Element keyElementFrom) {
-		String fieldID = "";
+		String fieldIDs = "";
 		org.w3c.dom.Element workElement1, workElement2;
 		String externalID, internalID;
 		ArrayList<String> fieldInternalIDList = new ArrayList<String>();
@@ -755,9 +789,9 @@ public class DialogImportModel extends JDialog {
 				workElement2 = (org.w3c.dom.Element)fieldListFrom.item(j);
 				if (workElement2.getAttribute("ID").equals(internalID)) {
 					if (workElement2.getAttribute("Alias").equals("")) {
-						externalID = workElement2.getAttribute("Name");
+						externalID = convertCamelNotation(workElement2.getAttribute("Name"));
 					} else {
-						externalID = workElement2.getAttribute("Alias");
+						externalID = convertCamelNotation(workElement2.getAttribute("Alias"));
 					}
 					if (keyElementFrom.getAttribute("Type").equals("XK")) {
 						if (workElement1.getAttribute("AscDesc").equals("D")) {
@@ -774,12 +808,12 @@ public class DialogImportModel extends JDialog {
 		}
 
 		for (int i = 0; i < fieldExternalIDList.size(); i++) {
-			if (!fieldID.equals("")) {
-				fieldID = fieldID + ";";
+			if (!fieldIDs.equals("")) {
+				fieldIDs = fieldIDs + ";";
 			}
-			fieldID = fieldID + fieldExternalIDList.get(i);
+			fieldIDs = fieldIDs + fieldExternalIDList.get(i);
 		}
-		return fieldID;
+		return fieldIDs;
 	}
 	
 	private String getStatusOfFunction(org.w3c.dom.Element elementFrom) throws Exception {
@@ -1170,7 +1204,7 @@ public class DialogImportModel extends JDialog {
 							for (int m = 0; m < fieldList.getLength(); m++) {
 								element3 = (org.w3c.dom.Element)fieldList.item(m);
 								if (element2.getAttribute("FieldID").equals(element3.getAttribute("ID"))) {
-									keyFieldIDList.add(element3.getAttribute("Alias"));
+									keyFieldIDList.add(convertCamelNotation(element3.getAttribute("Alias")));
 								}
 							}
 						}
@@ -1183,7 +1217,7 @@ public class DialogImportModel extends JDialog {
 							for (int m = 0; m < fieldList.getLength(); m++) {
 								element3 = (org.w3c.dom.Element)fieldList.item(m);
 								if (element2.getAttribute("FieldID").equals(element3.getAttribute("ID"))) {
-									primaryKeyFieldIDList.add(element3.getAttribute("Alias"));
+									primaryKeyFieldIDList.add(convertCamelNotation(element3.getAttribute("Alias")));
 								}
 							}
 						}

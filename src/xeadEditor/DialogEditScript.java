@@ -51,8 +51,12 @@ public class DialogEditScript extends JDialog {
 	private JLabel jLabelScanText = new JLabel();
 	private JTextField jTextFieldScanText = new JTextField();
 	private JCheckBox jCheckBoxScanText = new JCheckBox();
+	private JLabel jLabelReplaceText = new JLabel();
+	private JTextField jTextFieldReplaceText = new JTextField();
+	private JCheckBox jCheckBoxReplaceAll = new JCheckBox();
 	private JLabel jLabelFunctionKeys1 = new JLabel();
 	private JLabel jLabelFunctionKeys2 = new JLabel();
+	private JLabel jLabelFunctionKeys3 = new JLabel();
 	private JPanel jPanelStatement = new JPanel();
 	private JPanel jPanelStatementHeader = new JPanel();
 	private JLabel jLabelStatementHeader = new JLabel();
@@ -72,7 +76,7 @@ public class DialogEditScript extends JDialog {
 	private Action scanAction = new AbstractAction(){
 		private static final long serialVersionUID = 1L;
 		public void actionPerformed(ActionEvent e){
-			frame_.scanStringInTextArea(jTextAreaStatement, jTextFieldScanText.getText(), jCheckBoxScanText.isSelected());
+			frame_.scanStringInTextArea(jTextAreaStatement, jTextFieldScanText.getText(), jCheckBoxScanText.isSelected(), jTextFieldReplaceText.getText(), jCheckBoxReplaceAll.isSelected());
 		}
 	};
 	private Action checkAction = new AbstractAction(){
@@ -162,27 +166,44 @@ public class DialogEditScript extends JDialog {
 		jPanelStatementHeader.add(jLabelStatementHeader, BorderLayout.WEST);
 		jPanelStatementHeader.add(jLabelStatementCursorPos, BorderLayout.EAST);
 
-		jPanelScan.setPreferredSize(new Dimension(10, 150));
+		jPanelScan.setPreferredSize(new Dimension(10, 181));
 		jPanelScan.setLayout(null);
 		jLabelScanText.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelScanText.setText(res.getString("ScanStringInScript"));
-		jLabelScanText.setBounds(new Rectangle(11, 10, 200, 20));
+		jLabelScanText.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelScanText.setBounds(new Rectangle(5, 10, 90, 20));
 		jTextFieldScanText.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextFieldScanText.setBounds(new Rectangle(11, 32, 400, 25));
+		jTextFieldScanText.setBounds(new Rectangle(100, 7, 340, 25));
+		jLabelReplaceText.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jLabelReplaceText.setText(res.getString("ReplaceStringInScript"));
+		jLabelReplaceText.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelReplaceText.setBounds(new Rectangle(5, 39, 90, 20));
+		jTextFieldReplaceText.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jTextFieldReplaceText.setBounds(new Rectangle(100, 36, 340, 25));
 		jCheckBoxScanText.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jCheckBoxScanText.setBounds(new Rectangle(7, 63, 250, 22));
+		jCheckBoxScanText.setBounds(new Rectangle(5, 68, 230, 22));
 		jCheckBoxScanText.setText(res.getString("CaseSensitive"));
+		jCheckBoxReplaceAll.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jCheckBoxReplaceAll.setBounds(new Rectangle(240, 68, 230, 22));
+		jCheckBoxReplaceAll.setText(res.getString("ReplaceAll"));
 		jLabelFunctionKeys1.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelFunctionKeys1.setText(res.getString("ScriptEditorFunctionKeys1"));
-		jLabelFunctionKeys1.setBounds(new Rectangle(11, 94, 450, 20));
+		jLabelFunctionKeys1.setBounds(new Rectangle(11, 99, 450, 20));
 		jLabelFunctionKeys2.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelFunctionKeys2.setText(res.getString("ScriptEditorFunctionKeys2"));
-		jLabelFunctionKeys2.setBounds(new Rectangle(11, 120, 450, 20));
+		jLabelFunctionKeys2.setBounds(new Rectangle(11, 125, 450, 20));
+		jLabelFunctionKeys3.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jLabelFunctionKeys3.setText(res.getString("ScriptEditorFunctionKeys3"));
+		jLabelFunctionKeys3.setBounds(new Rectangle(11, 151, 450, 20));
 		jPanelScan.add(jLabelScanText);
 		jPanelScan.add(jTextFieldScanText);
 		jPanelScan.add(jCheckBoxScanText);
+		jPanelScan.add(jLabelReplaceText);
+		jPanelScan.add(jTextFieldReplaceText);
+		jPanelScan.add(jCheckBoxReplaceAll);
 		jPanelScan.add(jLabelFunctionKeys1);
 		jPanelScan.add(jLabelFunctionKeys2);
+		jPanelScan.add(jLabelFunctionKeys3);
 
 		jPanelInformation.setLayout(new BorderLayout());
 		jPanelInformation.add(jScrollPaneFieldInformation, BorderLayout.CENTER);
@@ -346,6 +367,9 @@ public class DialogEditScript extends JDialog {
 	public void undo() {
 		if (undoManager.canUndo()) {
 			undoManager.undo();
+			if (jTextAreaStatement.getText().equals("") && undoManager.canUndo()) {
+				undoManager.undo();
+			}
 		}
 	}
 	
@@ -371,9 +395,9 @@ public class DialogEditScript extends JDialog {
 			}
 		}
 
-		//////////////////
-		// Reverse mode //
-		//////////////////
+		///////////////////////////////////////////////
+		// Change mode between id-mode and name-mode //
+		///////////////////////////////////////////////
 		if (jTextAreaStatement.isEditable()) {
 			jTextAreaStatement.setEditable(false);
 			jLabelStatementCursorPos.setText("NAME");
@@ -382,25 +406,25 @@ public class DialogEditScript extends JDialog {
 			for (int i = 0; i < frame_.dataSourceIDList.size(); i++) {
 				nameModeText = nameModeText.replaceAll(
 						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceIDList.get(i)+".value",
-						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceNameList.get(i)+".value"); 
+						frame_.dataSourceAliasNameList.get(i)+"_"+frame_.dataSourceNameList.get(i)+".value"); 
 				nameModeText = nameModeText.replaceAll(
 						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceIDList.get(i)+".oldValue",
-						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceNameList.get(i)+".oldValue"); 
+						frame_.dataSourceAliasNameList.get(i)+"_"+frame_.dataSourceNameList.get(i)+".oldValue"); 
 				nameModeText = nameModeText.replaceAll(
 						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceIDList.get(i)+".valueChanged",
-						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceNameList.get(i)+".valueChanged"); 
+						frame_.dataSourceAliasNameList.get(i)+"_"+frame_.dataSourceNameList.get(i)+".valueChanged"); 
 				nameModeText = nameModeText.replaceAll(
 						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceIDList.get(i)+".color",
-						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceNameList.get(i)+".color"); 
+						frame_.dataSourceAliasNameList.get(i)+"_"+frame_.dataSourceNameList.get(i)+".color"); 
 				nameModeText = nameModeText.replaceAll(
 						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceIDList.get(i)+".editable",
-						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceNameList.get(i)+".editable"); 
+						frame_.dataSourceAliasNameList.get(i)+"_"+frame_.dataSourceNameList.get(i)+".editable"); 
 				nameModeText = nameModeText.replaceAll(
 						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceIDList.get(i)+".enabled",
-						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceNameList.get(i)+".enabled"); 
+						frame_.dataSourceAliasNameList.get(i)+"_"+frame_.dataSourceNameList.get(i)+".enabled"); 
 				nameModeText = nameModeText.replaceAll(
 						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceIDList.get(i)+".error",
-						frame_.dataSourceAliasList.get(i)+"_"+frame_.dataSourceNameList.get(i)+".error"); 
+						frame_.dataSourceAliasNameList.get(i)+"_"+frame_.dataSourceNameList.get(i)+".error"); 
 			}
 			nameModeText = frame_.translateTableOperationInScript(nameModeText);
 			jTextAreaStatement.setText(nameModeText);

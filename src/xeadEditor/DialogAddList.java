@@ -350,12 +350,17 @@ public class DialogAddList extends JDialog {
 	void jButtonOK_actionPerformed(ActionEvent e) {
 		org.w3c.dom.Element element;
 		reply = 1;
-		boolean noError = true;
+		boolean hasNoError = true;
 		boolean duplicated;
 		NodeList nodeList;
 
-		if (noError) {
-			for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 10; i++) {
+			if (idList.get(i).getText().contains(" ") || idList.get(i).getText().contains("@")) {
+				if (hasNoError) {
+					JOptionPane.showMessageDialog(null, res.getString("ErrorMessage131"));
+					hasNoError = false;
+				}
+			} else {
 				if (!idList.get(i).getText().equals("") && !nameList.get(i).getText().equals("")) {
 					idList.get(i).setText(frame_.getCaseShiftValue(idList.get(i).getText(), "Upper"));
 					if (parentType_.equals("TableFieldList")) {
@@ -384,8 +389,8 @@ public class DialogAddList extends JDialog {
 					}
 				}
 			}
-			this.setVisible(false);
 		}
+		this.setVisible(false);
 	}
 
 	void jButtonImport_actionPerformed(ActionEvent e) {

@@ -102,10 +102,10 @@ public class DialogSQL extends JDialog {
 		jLabelConnection.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelConnection.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelConnection.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelConnection.setText(res.getString("Connection"));
-		jLabelConnection.setBounds(new Rectangle(5, 12, 130, 20));
+		jLabelConnection.setText(res.getString("AvailableConnection"));
+		jLabelConnection.setBounds(new Rectangle(5, 12, 190, 20));
 		jComboBoxConnection.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jComboBoxConnection.setBounds(new Rectangle(140, 9, 850, 25));
+		jComboBoxConnection.setBounds(new Rectangle(200, 9, 790, 25));
 		jPanelStatementTop.setLayout(null);
 		jPanelStatementTop.setPreferredSize(new Dimension(10, 43));
 		jPanelStatementTop.add(jLabelConnection);
@@ -118,6 +118,7 @@ public class DialogSQL extends JDialog {
 		jTextAreaStatement.setEditable(true);
 		jTextAreaStatement.setOpaque(true);
 		jTextAreaStatement.setLineWrap(true);
+		jTextAreaStatement.setWrapStyleWord(true);
 		jScrollPaneStatement.getViewport().add(jTextAreaStatement);
 		//
 		jLabelMessage.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
@@ -167,9 +168,17 @@ public class DialogSQL extends JDialog {
 
 	public boolean request(Connection connection) {
 		sqlExecuted = false;
+		int selectedIndex = jComboBoxConnection.getSelectedIndex();
 		jComboBoxConnection.removeAllItems();
 		for (int i = 0; i < frame_.getDatabaseNameList().size(); i++) {
-			jComboBoxConnection.addItem(frame_.getDatabaseNameList().get(i));
+			try {
+				if (frame_.getDatabaseConnList().get(i) != null && !frame_.getDatabaseConnList().get(i).isClosed()) {
+					jComboBoxConnection.addItem(frame_.getDatabaseNameList().get(i));
+				}
+			} catch (SQLException e) {}
+		}
+		if (selectedIndex > -1 && selectedIndex < jComboBoxConnection.getItemCount()) {
+			jComboBoxConnection.setSelectedIndex(selectedIndex);
 		}
 		dbIDList = frame_.getDatabaseIDList();
 		jTextAreaStatement.requestFocus();
@@ -272,33 +281,59 @@ public class DialogSQL extends JDialog {
 			Connection connection = frame_.getDatabaseConnList().get(jComboBoxConnection.getSelectedIndex());
 			Statement statement = connection.createStatement();
 			DatabaseMetaData metaData = connection.getMetaData();
-		    resultSet1 = metaData.getTables(null, null, "%", null);
+//		    resultSet1 = metaData.getTables(null, null, "%", null);
+		    resultSet1 = metaData.getTables(null, null, "%", new String[] {"TABLE"}); 
 		    while (resultSet1.next()) {
 				try {
-					resultSet2= statement.executeQuery("SELECT COUNT(*) AS COUNT FROM " + resultSet1.getString(3));
-					if (resultSet2.next()) {
-						bf.append(resultSet1.getString(3));
+					if (jComboBoxConnection.getSelectedItem().toString().contains("postgres")) {
+						bf.append(resultSet1.getString("TABLE_NAME"));
 						bf.append("\t");
-				    	wrkStr = resultSet1.getString(3).toUpperCase();
 						tableName = "N/A";
-					    for (int i = 0; i < tableList.getLength(); i++) {
-					    	tableElement = (org.w3c.dom.Element)tableList.item(i);
-					    	if (tableElement.getAttribute("DB").equals(dbIDList.get(jComboBoxConnection.getSelectedIndex()))) {
-					    		if (tableElement.getAttribute("ModuleID").equals("")) {
-					    			moduleID = tableElement.getAttribute("ID");
-					    		} else {
-					    			moduleID = tableElement.getAttribute("ModuleID");
-					    		}
-					    		if (moduleID.equals(wrkStr)) {
-					    			tableName = tableElement.getAttribute("Name");
-					    			break;
-					    		}
-					    	}
-					    }
+						for (int i = 0; i < tableList.getLength(); i++) {
+							tableElement = (org.w3c.dom.Element)tableList.item(i);
+							if (tableElement.getAttribute("DB").equals(dbIDList.get(jComboBoxConnection.getSelectedIndex()))) {
+								if (tableElement.getAttribute("ModuleID").equals("")) {
+									moduleID = tableElement.getAttribute("ID");
+								} else {
+									moduleID = tableElement.getAttribute("ModuleID");
+								}
+								wrkStr = resultSet1.getString("TABLE_NAME").toUpperCase();
+								if (moduleID.equals(wrkStr)) {
+									tableName = tableElement.getAttribute("Name");
+									break;
+								}
+							}
+						}
 						bf.append(tableName);
 						bf.append("\t");
-						bf.append(resultSet2.getInt("COUNT"));
+						bf.append("N/A");
 						bf.append("\n");
+					} else {
+						resultSet2= statement.executeQuery("SELECT COUNT(*) AS COUNT FROM " + resultSet1.getString(3));
+						if (resultSet2.next()) {
+							bf.append(resultSet1.getString(3));
+							bf.append("\t");
+							wrkStr = resultSet1.getString(3).toUpperCase();
+							tableName = "N/A";
+							for (int i = 0; i < tableList.getLength(); i++) {
+								tableElement = (org.w3c.dom.Element)tableList.item(i);
+								if (tableElement.getAttribute("DB").equals(dbIDList.get(jComboBoxConnection.getSelectedIndex()))) {
+									if (tableElement.getAttribute("ModuleID").equals("")) {
+										moduleID = tableElement.getAttribute("ID");
+									} else {
+										moduleID = tableElement.getAttribute("ModuleID");
+									}
+									if (moduleID.equals(wrkStr)) {
+										tableName = tableElement.getAttribute("Name");
+										break;
+									}
+								}
+							}
+							bf.append(tableName);
+							bf.append("\t");
+							bf.append(resultSet2.getInt("COUNT"));
+							bf.append("\n");
+						}
 					}
 				} catch (Exception e1) {
 				}

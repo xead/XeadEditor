@@ -48,10 +48,22 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "X-TEA Editor";
 	public static final String COPYRIGHT = "Copyright 2017 DBC Ltd.";
 	public static final String URL_DBC = "http://dbc.in.coocan.jp/";
-	public static final String FULL_VERSION  = "V1.R3.M11";
+	public static final String FULL_VERSION  = "V1.R3.M13";
+	//1.3.13
+	//・機能定義からその機能のみを起動するためのボタンを組み込んだ
+	//
+	//1.3.12
+	//・編集コードを変更しても変更されない場合があるバグを修正した
+	//・削除ルーチンの自動設定の仕様を改善した
+	//・無効なDB接続が存在する場合でも、利用可能なDB接続だけで「SQLコンソール」を使えるようにした
+	//・データ保守ユーティリティでの「編集なし」の整数フィールドの表示仕様を変更した
+	//・スクリプトエディタの検索ツールに置換機能を組み込んだ
+	//
 	//1.3.11
 	//・XF310の行追加用機能の交換フィールドに関する利用検査ロジックの不足を補った
 	//・スクリプトアシストの表示領域がスクリーンをはみ出ないようにした
+	//・既存のテーブルモジュールからフィールド定義だけでなくキー定義も補完できるようにした
+	//・スクリプトエディタのNAMEモードを強化した
 	//
 	//1.3.10
 	//・時刻編集フィールドを含むテーブルデータをエクセル出力するとエラーになる問題を修正した

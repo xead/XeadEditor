@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2016 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2017 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -256,6 +256,7 @@ public class Editor extends JFrame {
 	private ImageIcon imageIconFunctionFilter;
 	private ImageIcon imageIconFunctionTab;
 	private ImageIcon imageIconFunctionUsage;
+	private ImageIcon imageIconExecute;
 	public ImageIcon imageIconPrompt;
 	/**
 	 * Main TreeView
@@ -500,13 +501,15 @@ public class Editor extends JFrame {
 	private Action actionScanSystemLoginScript = new AbstractAction(){
 		private static final long serialVersionUID = 1L;
 		public void actionPerformed(ActionEvent e){
-			scanStringInTextArea(jTextAreaSystemLoginScript, jTextFieldSystemLoginScriptEditToolScan.getText(), jCheckBoxSystemLoginScriptEditToolScanCase.isSelected());
+			scanStringInTextArea(jTextAreaSystemLoginScript, jTextFieldSystemLoginScriptEditToolScan.getText(), jCheckBoxSystemLoginScriptEditToolScanCase.isSelected(), jTextFieldSystemLoginScriptEditToolReplace.getText(), jCheckBoxSystemLoginScriptEditToolReplaceAll.isSelected());
 		}
 	};
 	private JPanel jPanelSystemLoginScriptEditTool = new JPanel();
 	private JLabel jLabelSystemLoginScriptEditToolScan = new JLabel();
 	private JTextField jTextFieldSystemLoginScriptEditToolScan = new JTextField();
 	private JCheckBox jCheckBoxSystemLoginScriptEditToolScanCase = new JCheckBox();
+	private JTextField jTextFieldSystemLoginScriptEditToolReplace = new JTextField();
+	private JCheckBox jCheckBoxSystemLoginScriptEditToolReplaceAll = new JCheckBox();
 	private JLabel jLabelSystemLoginScriptEditToolCursorPos = new JLabel();
 	//
 	private JScrollPane jScrollPaneSystemScriptFunctions = new JScrollPane();
@@ -555,13 +558,15 @@ public class Editor extends JFrame {
 	private Action actionScanSystemScriptFunctions = new AbstractAction(){
 		private static final long serialVersionUID = 1L;
 		public void actionPerformed(ActionEvent e){
-			scanStringInTextArea(jTextAreaSystemScriptFunctions, jTextFieldSystemScriptFunctionsEditToolScan.getText(), jCheckBoxSystemScriptFunctionsEditToolScanCase.isSelected());
+			scanStringInTextArea(jTextAreaSystemScriptFunctions, jTextFieldSystemScriptFunctionsEditToolScan.getText(), jCheckBoxSystemScriptFunctionsEditToolScanCase.isSelected(), jTextFieldSystemScriptFunctionsEditToolReplace.getText(), jCheckBoxSystemScriptFunctionsEditToolReplaceAll.isSelected());
 		}
 	};
 	private JPanel jPanelSystemScriptFunctionsEditTool = new JPanel();
 	private JLabel jLabelSystemScriptFunctionsEditToolScan = new JLabel();
 	private JTextField jTextFieldSystemScriptFunctionsEditToolScan = new JTextField();
 	private JCheckBox jCheckBoxSystemScriptFunctionsEditToolScanCase = new JCheckBox();
+	private JTextField jTextFieldSystemScriptFunctionsEditToolReplace = new JTextField();
+	private JCheckBox jCheckBoxSystemScriptFunctionsEditToolReplaceAll = new JCheckBox();
 	private JLabel jLabelSystemScriptFunctionsEditToolCursorPos = new JLabel();
 	//
 	private int selectedRow_jTableSystemMaintenanceLog;
@@ -858,6 +863,7 @@ public class Editor extends JFrame {
 		}
 	};
 	public ArrayList<String> dataSourceAliasList = new ArrayList<String>();
+	public ArrayList<String> dataSourceAliasNameList = new ArrayList<String>();
 	public ArrayList<String> dataSourceIDList = new ArrayList<String>();
 	public ArrayList<String> dataSourceNameList = new ArrayList<String>();
 	private String idModeText = "";
@@ -913,6 +919,7 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction000ID = new JLabel();
 	private JTextField jTextFieldFunction000ID = new JTextField();
 	private JTextField jTextFieldFunction000Name = new JTextField();
+	private JButton jButtonFunction000Execute = new JButton();
 	private JLabel jLabelFunction000Type = new JLabel();
 	private JTextField jTextFieldFunction000Type = new JTextField();
 	private JLabel jLabelFunction000ConsoleOption = new JLabel();
@@ -931,6 +938,8 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction000ScriptEditToolScan = new JLabel();
 	private JTextField jTextFieldFunction000ScriptEditToolScan = new JTextField();
 	private JCheckBox jCheckBoxFunction000ScriptEditToolScanCase = new JCheckBox();
+	private JTextField jTextFieldFunction000ScriptEditToolReplace = new JTextField();
+	private JCheckBox jCheckBoxFunction000ScriptEditToolReplaceAll = new JCheckBox();
 	private JLabel jLabelFunction000ScriptEditToolCursorPos = new JLabel();
 	private JScrollPane jScrollPaneFunction000UsageList = new JScrollPane();
 	private TableModelReadOnlyList tableModelFunction000UsageList = new TableModelReadOnlyList();
@@ -968,7 +977,7 @@ public class Editor extends JFrame {
 	private Action actionScanFunction000Script = new AbstractAction(){
 		private static final long serialVersionUID = 1L;
 		public void actionPerformed(ActionEvent e){
-			scanStringInTextArea(jTextAreaFunction000Script, jTextFieldFunction000ScriptEditToolScan.getText(), jCheckBoxFunction000ScriptEditToolScanCase.isSelected());
+			scanStringInTextArea(jTextAreaFunction000Script, jTextFieldFunction000ScriptEditToolScan.getText(), jCheckBoxFunction000ScriptEditToolScanCase.isSelected(), jTextFieldFunction000ScriptEditToolReplace.getText(), jCheckBoxFunction000ScriptEditToolReplaceAll.isSelected());
 		}
 	};
 	private Action actionUndoFunction000Script = new AbstractAction(){
@@ -1002,6 +1011,7 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction100ID = new JLabel();
 	private JTextField jTextFieldFunction100ID = new JTextField();
 	private JTextField jTextFieldFunction100Name = new JTextField();
+	private JButton jButtonFunction100Execute = new JButton();
 	private JLabel jLabelFunction100Type = new JLabel();
 	private JTextField jTextFieldFunction100Type = new JTextField();
 	private JLabel jLabelFunction100TableName = new JLabel();
@@ -1166,6 +1176,7 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction110ID = new JLabel();
 	private JTextField jTextFieldFunction110ID = new JTextField();
 	private JTextField jTextFieldFunction110Name = new JTextField();
+	private JButton jButtonFunction110Execute = new JButton();
 	private JLabel jLabelFunction110Type = new JLabel();
 	private JTextField jTextFieldFunction110Type = new JTextField();
 	private JLabel jLabelFunction110TableName = new JLabel();
@@ -1385,6 +1396,7 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction200ID = new JLabel();
 	private JTextField jTextFieldFunction200ID = new JTextField();
 	private JTextField jTextFieldFunction200Name = new JTextField();
+	private JButton jButtonFunction200Execute = new JButton();
 	private JLabel jLabelFunction200Type = new JLabel();
 	private JTextField jTextFieldFunction200Type = new JTextField();
 	private String function200PrimaryTableID = "";
@@ -1556,6 +1568,7 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction290ID = new JLabel();
 	private JTextField jTextFieldFunction290ID = new JTextField();
 	private JTextField jTextFieldFunction290Name = new JTextField();
+	private JButton jButtonFunction290Execute = new JButton();
 	private JLabel jLabelFunction290Type = new JLabel();
 	private JTextField jTextFieldFunction290Type = new JTextField();
 	private JLabel jLabelFunction290TableName = new JLabel();
@@ -1615,6 +1628,7 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction300Type = new JLabel();
 	private JTextField jTextFieldFunction300Type = new JTextField();
 	private JTextField jTextFieldFunction300Name = new JTextField();
+	private JButton jButtonFunction300Execute = new JButton();
 	private JLabel jLabelFunction300HeaderTableName = new JLabel();
 	private JTextField jTextFieldFunction300HeaderTableName = new JTextField();
 	private JButton jButtonFunction300HeaderTableKeyFieldsEdit = new JButton();
@@ -1870,6 +1884,7 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction310Type = new JLabel();
 	private JTextField jTextFieldFunction310Type = new JTextField();
 	private JTextField jTextFieldFunction310Name = new JTextField();
+	private JButton jButtonFunction310Execute = new JButton();
 	private JLabel jLabelFunction310HeaderTableName = new JLabel();
 	private JTextField jTextFieldFunction310HeaderTableName = new JTextField();
 	private JButton jButtonFunction310HeaderTableKeyFieldsEdit = new JButton();
@@ -2035,6 +2050,7 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction390ID = new JLabel();
 	private JTextField jTextFieldFunction390ID = new JTextField();
 	private JTextField jTextFieldFunction390Name = new JTextField();
+	private JButton jButtonFunction390Execute = new JButton();
 	private JLabel jLabelFunction390Type = new JLabel();
 	private JTextField jTextFieldFunction390Type = new JTextField();
 	private JLabel jLabelFunction390HeaderTableName = new JLabel();
@@ -2883,6 +2899,7 @@ public class Editor extends JFrame {
 	    imageIconMenu = new ImageIcon(xeadEditor.Editor.class.getResource("imenu.png"));
 	    imageIconTree = new ImageIcon(xeadEditor.Editor.class.getResource("itree.png"));
 	    imageIconPrompt = new ImageIcon(xeadEditor.Editor.class.getResource("prompt.png"));
+	    imageIconExecute = new ImageIcon(xeadEditor.Editor.class.getResource("execute.png"));
 
 	    /**
 		 * Title Name and Title Icon
@@ -3647,18 +3664,33 @@ public class Editor extends JFrame {
 		jLabelSystemLoginScriptEditToolScan.setBounds(new Rectangle(0, 1, 74, 23));
 		jLabelSystemLoginScriptEditToolScan.setForeground(Color.darkGray);
 		jTextFieldSystemLoginScriptEditToolScan.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemLoginScriptEditToolScan.setBounds(new Rectangle(74, 1, 130, 23));
+		jTextFieldSystemLoginScriptEditToolScan.setBounds(new Rectangle(74, 1, 120, 23));
 		jTextFieldSystemLoginScriptEditToolScan.setForeground(Color.darkGray);
-		jCheckBoxSystemLoginScriptEditToolScanCase.setBounds(new Rectangle(204, 1, 29, 23));
+		jCheckBoxSystemLoginScriptEditToolScanCase.setBounds(new Rectangle(194, 1, 29, 23));
 		jCheckBoxSystemLoginScriptEditToolScanCase.setBackground(Color.lightGray);
+		jTextFieldSystemLoginScriptEditToolReplace.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemLoginScriptEditToolReplace.setBounds(new Rectangle(223, 1, 100, 23));
+		jTextFieldSystemLoginScriptEditToolReplace.setForeground(Color.darkGray);
+		jTextFieldSystemLoginScriptEditToolReplace.setEditable(true);
+		jCheckBoxSystemLoginScriptEditToolReplaceAll.setBounds(new Rectangle(323, 1, 29, 23));
+		jCheckBoxSystemLoginScriptEditToolReplaceAll.setBackground(Color.lightGray);
 		jLabelSystemLoginScriptEditToolCursorPos.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemLoginScriptEditToolCursorPos.setForeground(Color.darkGray);
-		jLabelSystemLoginScriptEditToolCursorPos.setBounds(new Rectangle(233, 1, 70, 23));
+		jLabelSystemLoginScriptEditToolCursorPos.setBounds(new Rectangle(352, 1, 70, 23));
 		jLabelSystemLoginScriptEditToolCursorPos.setHorizontalAlignment(SwingConstants.CENTER);
 		jLabelSystemLoginScriptEditToolCursorPos.setForeground(Color.darkGray);
+//		jCheckBoxSystemLoginScriptEditToolScanCase.setBounds(new Rectangle(204, 1, 29, 23));
+//		jCheckBoxSystemLoginScriptEditToolScanCase.setBackground(Color.lightGray);
+//		jLabelSystemLoginScriptEditToolCursorPos.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+//		jLabelSystemLoginScriptEditToolCursorPos.setForeground(Color.darkGray);
+//		jLabelSystemLoginScriptEditToolCursorPos.setBounds(new Rectangle(233, 1, 70, 23));
+//		jLabelSystemLoginScriptEditToolCursorPos.setHorizontalAlignment(SwingConstants.CENTER);
+//		jLabelSystemLoginScriptEditToolCursorPos.setForeground(Color.darkGray);
 		jPanelSystemLoginScriptEditTool.add(jLabelSystemLoginScriptEditToolScan);
 		jPanelSystemLoginScriptEditTool.add(jTextFieldSystemLoginScriptEditToolScan);
 		jPanelSystemLoginScriptEditTool.add(jCheckBoxSystemLoginScriptEditToolScanCase);
+		jPanelSystemLoginScriptEditTool.add(jTextFieldSystemLoginScriptEditToolReplace);
+		jPanelSystemLoginScriptEditTool.add(jCheckBoxSystemLoginScriptEditToolReplaceAll);
 		jPanelSystemLoginScriptEditTool.add(jLabelSystemLoginScriptEditToolCursorPos);
 		jTextAreaSystemLoginScript.add(jPanelSystemLoginScriptEditTool);
 		//
@@ -3700,18 +3732,25 @@ public class Editor extends JFrame {
 		jLabelSystemScriptFunctionsEditToolScan.setBounds(new Rectangle(0, 1, 74, 23));
 		jLabelSystemScriptFunctionsEditToolScan.setForeground(Color.darkGray);
 		jTextFieldSystemScriptFunctionsEditToolScan.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemScriptFunctionsEditToolScan.setBounds(new Rectangle(74, 1, 130, 23));
+		jTextFieldSystemScriptFunctionsEditToolScan.setBounds(new Rectangle(74, 1, 120, 23));
 		jTextFieldSystemScriptFunctionsEditToolScan.setForeground(Color.darkGray);
-		jCheckBoxSystemScriptFunctionsEditToolScanCase.setBounds(new Rectangle(204, 1, 29, 23));
+		jCheckBoxSystemScriptFunctionsEditToolScanCase.setBounds(new Rectangle(194, 1, 29, 23));
 		jCheckBoxSystemScriptFunctionsEditToolScanCase.setBackground(Color.lightGray);
+		jTextFieldSystemScriptFunctionsEditToolReplace.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemScriptFunctionsEditToolReplace.setBounds(new Rectangle(223, 1, 100, 23));
+		jTextFieldSystemScriptFunctionsEditToolReplace.setForeground(Color.darkGray);
+		jCheckBoxSystemScriptFunctionsEditToolReplaceAll.setBounds(new Rectangle(323, 1, 29, 23));
+		jCheckBoxSystemScriptFunctionsEditToolReplaceAll.setBackground(Color.lightGray);
 		jLabelSystemScriptFunctionsEditToolCursorPos.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemScriptFunctionsEditToolCursorPos.setForeground(Color.darkGray);
-		jLabelSystemScriptFunctionsEditToolCursorPos.setBounds(new Rectangle(233, 1, 70, 23));
+		jLabelSystemScriptFunctionsEditToolCursorPos.setBounds(new Rectangle(352, 1, 70, 23));
 		jLabelSystemScriptFunctionsEditToolCursorPos.setHorizontalAlignment(SwingConstants.CENTER);
 		jLabelSystemScriptFunctionsEditToolCursorPos.setForeground(Color.darkGray);
 		jPanelSystemScriptFunctionsEditTool.add(jLabelSystemScriptFunctionsEditToolScan);
 		jPanelSystemScriptFunctionsEditTool.add(jTextFieldSystemScriptFunctionsEditToolScan);
 		jPanelSystemScriptFunctionsEditTool.add(jCheckBoxSystemScriptFunctionsEditToolScanCase);
+		jPanelSystemScriptFunctionsEditTool.add(jTextFieldSystemScriptFunctionsEditToolReplace);
+		jPanelSystemScriptFunctionsEditTool.add(jCheckBoxSystemScriptFunctionsEditToolReplaceAll);
 		jPanelSystemScriptFunctionsEditTool.add(jLabelSystemScriptFunctionsEditToolCursorPos);
 		jTextAreaSystemScriptFunctions.add(jPanelSystemScriptFunctionsEditTool);
 		//
@@ -4104,15 +4143,19 @@ public class Editor extends JFrame {
 	class JScrollPaneSystemLoginScriptChangeListener implements javax.swing.event.ChangeListener {
 		public void stateChanged(javax.swing.event.ChangeEvent event) {
 			int width = jScrollPaneSystemLoginScript.getViewport().getWidth();
+			int height = jScrollPaneSystemLoginScript.getViewport().getHeight();
 			Point point = jScrollPaneSystemLoginScript.getViewport().getViewPosition();
-			jPanelSystemLoginScriptEditTool.setBounds(new Rectangle(width - 303 + point.x, point.y, 303, 25));
+			//jPanelSystemLoginScriptEditTool.setBounds(new Rectangle(width - 303 + point.x, point.y, 303, 25));
+			jPanelSystemLoginScriptEditTool.setBounds(new Rectangle(width - 422 + point.x, height - 25 + point.y, 422, 25));
 		}
 	}
 	class JScrollPaneSystemScriptFunctionsChangeListener implements javax.swing.event.ChangeListener {
 		public void stateChanged(javax.swing.event.ChangeEvent event) {
 			int width = jScrollPaneSystemScriptFunctions.getViewport().getWidth();
+			int height = jScrollPaneSystemLoginScript.getViewport().getHeight();
 			Point point = jScrollPaneSystemScriptFunctions.getViewport().getViewPosition();
-			jPanelSystemScriptFunctionsEditTool.setBounds(new Rectangle(width - 303 + point.x, point.y, 303, 25));
+			//jPanelSystemScriptFunctionsEditTool.setBounds(new Rectangle(width - 303 + point.x, point.y, 303, 25));
+			jPanelSystemScriptFunctionsEditTool.setBounds(new Rectangle(width - 422 + point.x, height - 25 + point.y, 422, 25));
 		}
 	}
 
@@ -4455,9 +4498,9 @@ public class Editor extends JFrame {
 		jLabelTableModuleID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableModuleID.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableModuleID.setText(res.getString("TableModuleID"));
-		jLabelTableModuleID.setBounds(new Rectangle(705, 12, 130, 20));
+		jLabelTableModuleID.setBounds(new Rectangle(705, 12, 100, 20));
 		jTextFieldTableModuleID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldTableModuleID.setBounds(new Rectangle(840, 9, 150, 25));
+		jTextFieldTableModuleID.setBounds(new Rectangle(810, 9, 180, 25));
 		jLabelTablePK.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTablePK.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTablePK.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -5400,7 +5443,7 @@ public class Editor extends JFrame {
 		jButtonTableDataFieldsToDelete.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jButtonTableDataFieldsToDelete.setText(res.getString("Delete"));
 		jButtonTableDataFieldsToDelete.addActionListener(new Editor_jButtonTableDataFieldsToDelete_actionAdapter(this));
-		jButtonTableDataFieldsToCompress.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jButtonTableDataFieldsToCompress.setFont(new java.awt.Font("Times New Roman", 0, MAIN_FONT_SIZE-2));
 		jButtonTableDataFieldsToCompress.setText(res.getString("Compress"));
 		jButtonTableDataFieldsToCompress.addActionListener(new Editor_jButtonTableDataFieldsToCompress_actionAdapter(this));
 		jButtonTableDataFieldsToListLog.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
@@ -5508,6 +5551,9 @@ public class Editor extends JFrame {
 		jTextFieldFunction000ID.setEditable(false);
 		jTextFieldFunction000Name.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldFunction000Name.setBounds(new Rectangle(630, 9, 350, 25));
+		jButtonFunction000Execute.setIcon(imageIconExecute);
+		jButtonFunction000Execute.setBounds(new Rectangle(980, 7, 28, 27));
+		jButtonFunction000Execute.addActionListener(new Editor_jButtonToExecuteFunction_actionAdapter(this));
 		//
 		jLabelFunction000ConsoleOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction000ConsoleOption.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -5548,6 +5594,7 @@ public class Editor extends JFrame {
 		jPanelFunction000Top.add(jLabelFunction000ID);
 		jPanelFunction000Top.add(jTextFieldFunction000ID);
 		jPanelFunction000Top.add(jTextFieldFunction000Name);
+		jPanelFunction000Top.add(jButtonFunction000Execute);
 		jPanelFunction000Top.add(jLabelFunction000Type);
 		jPanelFunction000Top.add(jTextFieldFunction000Type);
 		jPanelFunction000Top.add(jLabelFunction000ConsoleOption);
@@ -5614,19 +5661,27 @@ public class Editor extends JFrame {
 		jLabelFunction000ScriptEditToolScan.setBounds(new Rectangle(0, 1, 74, 23));
 		jLabelFunction000ScriptEditToolScan.setForeground(Color.darkGray);
 		jTextFieldFunction000ScriptEditToolScan.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction000ScriptEditToolScan.setBounds(new Rectangle(74, 1, 130, 23));
+		jTextFieldFunction000ScriptEditToolScan.setBounds(new Rectangle(74, 1, 120, 23));
 		jTextFieldFunction000ScriptEditToolScan.setForeground(Color.darkGray);
 		jTextFieldFunction000ScriptEditToolScan.setEditable(true);
-		jCheckBoxFunction000ScriptEditToolScanCase.setBounds(new Rectangle(204, 1, 29, 23));
+		jCheckBoxFunction000ScriptEditToolScanCase.setBounds(new Rectangle(194, 1, 29, 23));
 		jCheckBoxFunction000ScriptEditToolScanCase.setBackground(Color.lightGray);
+		jTextFieldFunction000ScriptEditToolReplace.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction000ScriptEditToolReplace.setBounds(new Rectangle(223, 1, 100, 23));
+		jTextFieldFunction000ScriptEditToolReplace.setForeground(Color.darkGray);
+		jTextFieldFunction000ScriptEditToolReplace.setEditable(true);
+		jCheckBoxFunction000ScriptEditToolReplaceAll.setBounds(new Rectangle(323, 1, 29, 23));
+		jCheckBoxFunction000ScriptEditToolReplaceAll.setBackground(Color.lightGray);
 		jLabelFunction000ScriptEditToolCursorPos.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction000ScriptEditToolCursorPos.setForeground(Color.darkGray);
-		jLabelFunction000ScriptEditToolCursorPos.setBounds(new Rectangle(233, 1, 70, 23));
+		jLabelFunction000ScriptEditToolCursorPos.setBounds(new Rectangle(352, 1, 70, 23));
 		jLabelFunction000ScriptEditToolCursorPos.setHorizontalAlignment(SwingConstants.CENTER);
 		jLabelFunction000ScriptEditToolCursorPos.setForeground(Color.darkGray);
 		jPanelFunction000ScriptEditTool.add(jLabelFunction000ScriptEditToolScan);
 		jPanelFunction000ScriptEditTool.add(jTextFieldFunction000ScriptEditToolScan);
 		jPanelFunction000ScriptEditTool.add(jCheckBoxFunction000ScriptEditToolScanCase);
+		jPanelFunction000ScriptEditTool.add(jTextFieldFunction000ScriptEditToolReplace);
+		jPanelFunction000ScriptEditTool.add(jCheckBoxFunction000ScriptEditToolReplaceAll);
 		jPanelFunction000ScriptEditTool.add(jLabelFunction000ScriptEditToolCursorPos);
 		jTextAreaFunction000Script.add(jPanelFunction000ScriptEditTool);
 		//
@@ -5667,7 +5722,7 @@ public class Editor extends JFrame {
 			int height = jScrollPaneFunction000Script.getViewport().getHeight();
 			Point point = jScrollPaneFunction000Script.getViewport().getViewPosition();
 			//jPanelFunction000ScriptEditTool.setBounds(new Rectangle(width - 303 + point.x, point.y, 303, 25));
-			jPanelFunction000ScriptEditTool.setBounds(new Rectangle(width - 303 + point.x, height - 25 + point.y, 303, 25));
+			jPanelFunction000ScriptEditTool.setBounds(new Rectangle(width - 422 + point.x, height - 25 + point.y, 422, 25));
 		}
 	}
 	/**
@@ -5707,6 +5762,9 @@ public class Editor extends JFrame {
 		jTextFieldFunction100ID.setEditable(false);
 		jTextFieldFunction100Name.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldFunction100Name.setBounds(new Rectangle(630, 9, 350, 25));
+		jButtonFunction100Execute.setIcon(imageIconExecute);
+		jButtonFunction100Execute.setBounds(new Rectangle(980, 7, 28, 27));
+		jButtonFunction100Execute.addActionListener(new Editor_jButtonToExecuteFunction_actionAdapter(this));
 		//
 		jLabelFunction100TableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100TableName.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -5833,6 +5891,7 @@ public class Editor extends JFrame {
 		jPanelFunction100Top.add(jLabelFunction100ID);
 		jPanelFunction100Top.add(jTextFieldFunction100ID);
 		jPanelFunction100Top.add(jTextFieldFunction100Name);
+		jPanelFunction100Top.add(jButtonFunction100Execute);
 		jPanelFunction100Top.add(jLabelFunction100Type);
 		jPanelFunction100Top.add(jTextFieldFunction100Type);
 		jPanelFunction100Top.add(jLabelFunction100TableName);
@@ -6485,6 +6544,9 @@ public class Editor extends JFrame {
 		jTextFieldFunction110ID.setEditable(false);
 		jTextFieldFunction110Name.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldFunction110Name.setBounds(new Rectangle(630, 9, 350, 25));
+		jButtonFunction110Execute.setIcon(imageIconExecute);
+		jButtonFunction110Execute.setBounds(new Rectangle(980, 7, 28, 27));
+		jButtonFunction110Execute.addActionListener(new Editor_jButtonToExecuteFunction_actionAdapter(this));
 		//
 		jLabelFunction110TableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction110TableName.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -6565,6 +6627,7 @@ public class Editor extends JFrame {
 		jPanelFunction110Top.add(jLabelFunction110ID);
 		jPanelFunction110Top.add(jTextFieldFunction110ID);
 		jPanelFunction110Top.add(jTextFieldFunction110Name);
+		jPanelFunction110Top.add(jButtonFunction110Execute);
 		jPanelFunction110Top.add(jLabelFunction110Type);
 		jPanelFunction110Top.add(jTextFieldFunction110Type);
 		jPanelFunction110Top.add(jLabelFunction110TableName);
@@ -7479,6 +7542,9 @@ public class Editor extends JFrame {
 		jTextFieldFunction200ID.setEditable(false);
 		jTextFieldFunction200Name.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldFunction200Name.setBounds(new Rectangle(630, 9, 350, 25));
+		jButtonFunction200Execute.setIcon(imageIconExecute);
+		jButtonFunction200Execute.setBounds(new Rectangle(980, 7, 28, 27));
+		jButtonFunction200Execute.addActionListener(new Editor_jButtonToExecuteFunction_actionAdapter(this));
 		//
 		jLabelFunction200TableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200TableName.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -7556,10 +7622,6 @@ public class Editor extends JFrame {
 		jTextFieldFunction200SizeWidth.setBounds(new Rectangle(560, 133, 60, 25));
 		jTextFieldFunction200SizeHeight.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldFunction200SizeHeight.setBounds(new Rectangle(625, 133, 60, 25));
-//		jCheckBoxFunction200UpdateOnly.setText(res.getString("CheckUpdateOnly"));
-//		jCheckBoxFunction200UpdateOnly.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-//		jCheckBoxFunction200UpdateOnly.setBounds(new Rectangle(705, 133, 150, 25));
-//		jCheckBoxFunction200UpdateOnly.addChangeListener(new Editor_jCheckBoxFunction200UpdateOnly_changeAdapter(this));
 		//
 		jLabelFunction200InitialMsg.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction200InitialMsg.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -7572,6 +7634,7 @@ public class Editor extends JFrame {
 		jPanelFunction200Top.add(jLabelFunction200ID);
 		jPanelFunction200Top.add(jTextFieldFunction200ID);
 		jPanelFunction200Top.add(jTextFieldFunction200Name);
+		jPanelFunction200Top.add(jButtonFunction200Execute);
 		jPanelFunction200Top.add(jLabelFunction200Type);
 		jPanelFunction200Top.add(jTextFieldFunction200Type);
 		jPanelFunction200Top.add(jLabelFunction200TableName);
@@ -8293,6 +8356,9 @@ public class Editor extends JFrame {
 		jTextFieldFunction290ID.setEditable(false);
 		jTextFieldFunction290Name.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldFunction290Name.setBounds(new Rectangle(630, 9, 350, 25));
+		jButtonFunction290Execute.setIcon(imageIconExecute);
+		jButtonFunction290Execute.setBounds(new Rectangle(980, 7, 28, 27));
+		jButtonFunction290Execute.addActionListener(new Editor_jButtonToExecuteFunction_actionAdapter(this));
 		//
 		jLabelFunction290TableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction290TableName.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -8347,6 +8413,7 @@ public class Editor extends JFrame {
 		jPanelFunction290Top.add(jLabelFunction290ID);
 		jPanelFunction290Top.add(jTextFieldFunction290ID);
 		jPanelFunction290Top.add(jTextFieldFunction290Name);
+		jPanelFunction290Top.add(jButtonFunction290Execute);
 		jPanelFunction290Top.add(jLabelFunction290Type);
 		jPanelFunction290Top.add(jTextFieldFunction290Type);
 		jPanelFunction290Top.add(jLabelFunction290TableName);
@@ -8609,6 +8676,9 @@ public class Editor extends JFrame {
 		jTextFieldFunction300ID.setEditable(false);
 		jTextFieldFunction300Name.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldFunction300Name.setBounds(new Rectangle(630, 9, 350, 25));
+		jButtonFunction300Execute.setIcon(imageIconExecute);
+		jButtonFunction300Execute.setBounds(new Rectangle(980, 7, 28, 27));
+		jButtonFunction300Execute.addActionListener(new Editor_jButtonToExecuteFunction_actionAdapter(this));
 		//
 		jLabelFunction300HeaderTableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300HeaderTableName.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -8677,6 +8747,7 @@ public class Editor extends JFrame {
 		jPanelFunction300Top.add(jLabelFunction300ID);
 		jPanelFunction300Top.add(jTextFieldFunction300ID);
 		jPanelFunction300Top.add(jTextFieldFunction300Name);
+		jPanelFunction300Top.add(jButtonFunction300Execute);
 		jPanelFunction300Top.add(jLabelFunction300Type);
 		jPanelFunction300Top.add(jTextFieldFunction300Type);
 		jPanelFunction300Top.add(jLabelFunction300HeaderTableName);
@@ -9760,6 +9831,9 @@ public class Editor extends JFrame {
 		jTextFieldFunction310ID.setEditable(false);
 		jTextFieldFunction310Name.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldFunction310Name.setBounds(new Rectangle(630, 9, 350, 25));
+		jButtonFunction310Execute.setIcon(imageIconExecute);
+		jButtonFunction310Execute.setBounds(new Rectangle(980, 7, 28, 27));
+		jButtonFunction310Execute.addActionListener(new Editor_jButtonToExecuteFunction_actionAdapter(this));
 		//
 		jLabelFunction310HeaderTableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction310HeaderTableName.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -9852,6 +9926,7 @@ public class Editor extends JFrame {
 		jPanelFunction310Top.add(jLabelFunction310ID);
 		jPanelFunction310Top.add(jTextFieldFunction310ID);
 		jPanelFunction310Top.add(jTextFieldFunction310Name);
+		jPanelFunction310Top.add(jButtonFunction310Execute);
 		jPanelFunction310Top.add(jLabelFunction310Type);
 		jPanelFunction310Top.add(jTextFieldFunction310Type);
 		jPanelFunction310Top.add(jLabelFunction310HeaderTableName);
@@ -10481,6 +10556,9 @@ public class Editor extends JFrame {
 		jTextFieldFunction390ID.setEditable(false);
 		jTextFieldFunction390Name.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTextFieldFunction390Name.setBounds(new Rectangle(630, 9, 350, 25));
+		jButtonFunction390Execute.setIcon(imageIconExecute);
+		jButtonFunction390Execute.setBounds(new Rectangle(980, 7, 28, 27));
+		jButtonFunction390Execute.addActionListener(new Editor_jButtonToExecuteFunction_actionAdapter(this));
 		//
 		jLabelFunction390HeaderTableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390HeaderTableName.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -10494,38 +10572,6 @@ public class Editor extends JFrame {
 		jButtonFunction390HeaderTableKeyFieldsEdit.setBounds(new Rectangle(980, 39, 28, 27));
 		jButtonFunction390HeaderTableKeyFieldsEdit.addActionListener(new Editor_jButtonToEditKeyFields_actionAdapter(this));
 		//
-//		jLabelFunction390DetailTableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-//		jLabelFunction390DetailTableName.setHorizontalAlignment(SwingConstants.RIGHT);
-//		jLabelFunction390DetailTableName.setHorizontalTextPosition(SwingConstants.LEADING);
-//		jLabelFunction390DetailTableName.setText(res.getString("DTLTable"));
-//		jLabelFunction390DetailTableName.setBounds(new Rectangle(5, 74, 130, 20));
-//		jTextFieldFunction390DetailTableName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-//		jTextFieldFunction390DetailTableName.setBounds(new Rectangle(140, 71, 840, 25));
-//		jTextFieldFunction390DetailTableName.setEditable(false);
-//		jButtonFunction390DetailTableKeyFieldsEdit.setIcon(imageIconPrompt);
-//		jButtonFunction390DetailTableKeyFieldsEdit.setBounds(new Rectangle(980, 70, 28, 27));
-//		jButtonFunction390DetailTableKeyFieldsEdit.addActionListener(new Editor_jButtonToEditKeyFields_actionAdapter(this));
-//		//
-//		jLabelFunction390DetailTableOrderByFields.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-//		jLabelFunction390DetailTableOrderByFields.setHorizontalAlignment(SwingConstants.RIGHT);
-//		jLabelFunction390DetailTableOrderByFields.setHorizontalTextPosition(SwingConstants.LEADING);
-//		jLabelFunction390DetailTableOrderByFields.setText(res.getString("OrderByFields"));
-//		jLabelFunction390DetailTableOrderByFields.setBounds(new Rectangle(5, 105, 130, 20));
-//		jTextFieldFunction390DetailTableOrderByFields.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-//		jTextFieldFunction390DetailTableOrderByFields.setBounds(new Rectangle(140, 102, 840, 25));
-//		jTextFieldFunction390DetailTableOrderByFields.setEditable(false);
-//		jButtonFunction390DetailTableOrderByFieldsEdit.setIcon(imageIconPrompt);
-//		jButtonFunction390DetailTableOrderByFieldsEdit.setBounds(new Rectangle(980, 101, 28, 27));
-//		jButtonFunction390DetailTableOrderByFieldsEdit.addActionListener(new Editor_jButtonToEditOrderByFields_actionAdapter(this));
-//		//
-//		jLabelFunction390DetailFixedWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-//		jLabelFunction390DetailFixedWhere.setHorizontalAlignment(SwingConstants.RIGHT);
-//		jLabelFunction390DetailFixedWhere.setHorizontalTextPosition(SwingConstants.LEADING);
-//		jLabelFunction390DetailFixedWhere.setText(res.getString("FixedWhere"));
-//		jLabelFunction390DetailFixedWhere.setBounds(new Rectangle(5, 136, 130, 20));
-//		jTextFieldFunction390DetailFixedWhere.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-//		jTextFieldFunction390DetailFixedWhere.setBounds(new Rectangle(140, 133, 840, 25));
-//		//
 		jLabelFunction390PageSize.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction390PageSize.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction390PageSize.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -10564,52 +10610,15 @@ public class Editor extends JFrame {
 		jCheckBoxFunction390WithPageNumber.setText(res.getString("PageNo"));
 		jCheckBoxFunction390WithPageNumber.setBounds(new Rectangle(860, 71, 200, 25));
 		//
-//		jLabelFunction390TableFontName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-//		jLabelFunction390TableFontName.setHorizontalAlignment(SwingConstants.RIGHT);
-//		jLabelFunction390TableFontName.setHorizontalTextPosition(SwingConstants.LEADING);
-//		jLabelFunction390TableFontName.setText(res.getString("DTLFont"));
-//		jLabelFunction390TableFontName.setBounds(new Rectangle(5, 105, 130, 20));
-//		jComboBoxFunction390TableFontName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-//		jComboBoxFunction390TableFontName.setBounds(new Rectangle(140, 102, 200, 25));
-//		jLabelFunction390TableFontSize.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-//		jLabelFunction390TableFontSize.setHorizontalAlignment(SwingConstants.RIGHT);
-//		jLabelFunction390TableFontSize.setHorizontalTextPosition(SwingConstants.LEADING);
-//		jLabelFunction390TableFontSize.setText(res.getString("FontSize"));
-//		jLabelFunction390TableFontSize.setBounds(new Rectangle(350, 105, 110, 20));
-//		jSpinnerFunction390TableFontSize.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-//		jSpinnerFunction390TableFontSize.setBounds(new Rectangle(465, 102, 50, 25));
-//	    JSpinner.NumberEditor editor1 = new JSpinner.NumberEditor(jSpinnerFunction390TableFontSize, "#0");
-//	    jSpinnerFunction390TableFontSize.setEditor(editor1);
-//	    JFormattedTextField ftext1 = editor1.getTextField();
-//	    ftext1.setEditable(false);
-//		ftext1.setBackground(Color.white);
-//		jLabelFunction390TableRowNoWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-//		jLabelFunction390TableRowNoWidth.setHorizontalAlignment(SwingConstants.RIGHT);
-//		jLabelFunction390TableRowNoWidth.setHorizontalTextPosition(SwingConstants.LEADING);
-//		jLabelFunction390TableRowNoWidth.setText(res.getString("RowNoWidth"));
-//		jLabelFunction390TableRowNoWidth.setBounds(new Rectangle(555, 105, 130, 20));
-//		jTextFieldFunction390TableRowNoWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-//		jTextFieldFunction390TableRowNoWidth.setBounds(new Rectangle(690, 102, 50, 25));
-//		jLabelFunction390TableRowNoWidthPercentMark.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-//		jLabelFunction390TableRowNoWidthPercentMark.setText("(%)");
-//		jLabelFunction390TableRowNoWidthPercentMark.setBounds(new Rectangle(740, 105, 50, 20));
-		//
 		jPanelFunction390Top.add(jLabelFunction390ID);
 		jPanelFunction390Top.add(jTextFieldFunction390ID);
 		jPanelFunction390Top.add(jTextFieldFunction390Name);
+		jPanelFunction390Top.add(jButtonFunction390Execute);
 		jPanelFunction390Top.add(jLabelFunction390Type);
 		jPanelFunction390Top.add(jTextFieldFunction390Type);
 		jPanelFunction390Top.add(jLabelFunction390HeaderTableName);
 		jPanelFunction390Top.add(jTextFieldFunction390HeaderTableName);
 		jPanelFunction390Top.add(jButtonFunction390HeaderTableKeyFieldsEdit);
-//		jPanelFunction390Top.add(jLabelFunction390DetailTableName);
-//		jPanelFunction390Top.add(jTextFieldFunction390DetailTableName);
-//		jPanelFunction390Top.add(jButtonFunction390DetailTableKeyFieldsEdit);
-//		jPanelFunction390Top.add(jLabelFunction390DetailTableOrderByFields);
-//		jPanelFunction390Top.add(jTextFieldFunction390DetailTableOrderByFields);
-//		jPanelFunction390Top.add(jButtonFunction390DetailTableOrderByFieldsEdit);
-//		jPanelFunction390Top.add(jLabelFunction390DetailFixedWhere);
-//		jPanelFunction390Top.add(jTextFieldFunction390DetailFixedWhere);
 		jPanelFunction390Top.add(jLabelFunction390PageSize);
 		jPanelFunction390Top.add(jComboBoxFunction390PageSize);
 		jPanelFunction390Top.add(jLabelFunction390Direction);
@@ -10617,13 +10626,6 @@ public class Editor extends JFrame {
 		jPanelFunction390Top.add(jLabelFunction390Margins);
 		jPanelFunction390Top.add(jTextFieldFunction390Margins);
 		jPanelFunction390Top.add(jCheckBoxFunction390WithPageNumber);
-//		jPanelFunction390Top.add(jLabelFunction390TableFontName);
-//		jPanelFunction390Top.add(jComboBoxFunction390TableFontName);
-//		jPanelFunction390Top.add(jLabelFunction390TableFontSize);
-//		jPanelFunction390Top.add(jSpinnerFunction390TableFontSize);
-//		jPanelFunction390Top.add(jLabelFunction390TableRowNoWidth);
-//		jPanelFunction390Top.add(jTextFieldFunction390TableRowNoWidth);
-//		jPanelFunction390Top.add(jLabelFunction390TableRowNoWidthPercentMark);
 		jPanelFunction390.add(jScrollPaneFunction390Top, BorderLayout.NORTH);
 		jPanelFunction390.add(jTabbedPaneFunction390, BorderLayout.CENTER);
 		//
@@ -12967,7 +12969,6 @@ public class Editor extends JFrame {
 	org.w3c.dom.Element getSpecificFieldElement(String tableID, String fieldID) {
 		org.w3c.dom.Element returnElement = null;
 		org.w3c.dom.Element element;
-		//
 		MainTreeNode tableNode = getSpecificXETreeNode("Table", tableID);
 		if (tableNode != null) {
 			NodeList fieldList = tableNode.getElement().getElementsByTagName("Field");
@@ -12978,7 +12979,15 @@ public class Editor extends JFrame {
 				}
 			}
 		}
-		//
+		return returnElement;
+	}
+
+	org.w3c.dom.Element getSpecificTableElement(String tableID) {
+		org.w3c.dom.Element returnElement = null;
+		MainTreeNode tableNode = getSpecificXETreeNode("Table", tableID);
+		if (tableNode != null) {
+			returnElement = tableNode.getElement();
+		}
 		return returnElement;
 	}
 
@@ -15185,7 +15194,11 @@ public class Editor extends JFrame {
 						int rtn = JOptionPane.showOptionDialog(null, res.getString("DeleteTableMessage"),
 								res.getString("DeleteTableModule"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
 						if (rtn == 2) {
-							dialogCheckTableModule.deleteTable(connection, domNode_.getAttribute("ID"));
+							String tableID = domNode_.getAttribute("ID");
+							if (!domNode_.getAttribute("ModuleID").equals("")) {
+								tableID = domNode_.getAttribute("ModuleID");
+							}
+							dialogCheckTableModule.deleteTable(connection, tableID);
 						}
 						if (rtn != 1 && rtn != 2) {
 							errorMessage = res.getString("DeleteCanceled");
@@ -16436,6 +16449,11 @@ public class Editor extends JFrame {
 			jSplitPaneFunction000.setDividerLocation(104);
 			jTextFieldFunction000ID.setText(domNode_.getAttribute("ID"));
 			jTextFieldFunction000Name.setText(domNode_.getAttribute("Name"));
+			if (isAnyConnectionReady()) {
+				jButtonFunction000Execute.setEnabled(true);
+			} else {
+				jButtonFunction000Execute.setEnabled(false);
+			}
 
 			if (domNode_.getAttribute("TimerOption").equals("")) {
 	        	jRadioButtonFunction000ConsoleOptionNo.setSelected(true);
@@ -16452,8 +16470,12 @@ public class Editor extends JFrame {
 		    		jTextFieldFunction000TimerDefault.setEnabled(false);
 		    		jTextFieldFunction000TimerDefault.setText("");
 		        	jLabelFunction000TimerMessage.setEnabled(false);
-					jTextFieldFunction000TimerMessage.setEnabled(false);
-					jTextFieldFunction000TimerMessage.setText("*Default");
+					jTextFieldFunction000TimerMessage.setEnabled(true);
+					if (domNode_.getAttribute("TimerMessage").equals("")) {
+						jTextFieldFunction000TimerMessage.setText("*Default");
+					} else {
+						jTextFieldFunction000TimerMessage.setText(domNode_.getAttribute("TimerMessage"));
+					}
 				} else {
 					jRadioButtonFunction000ConsoleOptionTimer.setSelected(true);
 					jLabelFunction000TimerDefault.setEnabled(true);
@@ -16552,6 +16574,11 @@ public class Editor extends JFrame {
 			//
 			jTextFieldFunction100ID.setText(domNode_.getAttribute("ID"));
 			jTextFieldFunction100Name.setText(domNode_.getAttribute("Name"));
+			if (isAnyConnectionReady()) {
+				jButtonFunction100Execute.setEnabled(true);
+			} else {
+				jButtonFunction100Execute.setEnabled(false);
+			}
 			//
 	        tableNode = getSpecificXETreeNode("Table", domNode_.getAttribute("PrimaryTable"));
 	        function100TableElement = tableNode.getElement();
@@ -16839,6 +16866,11 @@ public class Editor extends JFrame {
 			//
 			jTextFieldFunction110ID.setText(domNode_.getAttribute("ID"));
 			jTextFieldFunction110Name.setText(domNode_.getAttribute("Name"));
+			if (isAnyConnectionReady()) {
+				jButtonFunction110Execute.setEnabled(true);
+			} else {
+				jButtonFunction110Execute.setEnabled(false);
+			}
 			//
 	        tableNode = getSpecificXETreeNode("Table", domNode_.getAttribute("PrimaryTable"));
 	        function110TableElement = tableNode.getElement();
@@ -17152,6 +17184,12 @@ public class Editor extends JFrame {
 			//
 			jTextFieldFunction200ID.setText(domNode_.getAttribute("ID"));
 			jTextFieldFunction200Name.setText(domNode_.getAttribute("Name"));
+			if (isAnyConnectionReady()) {
+				jButtonFunction200Execute.setEnabled(true);
+			} else {
+				jButtonFunction200Execute.setEnabled(false);
+			}
+			//
 	        tableNode = getSpecificXETreeNode("Table", domNode_.getAttribute("PrimaryTable"));
 	        function200TableElement = tableNode.getElement();
 			function200ReferList = function200TableElement.getElementsByTagName("Refer");
@@ -17399,6 +17437,12 @@ public class Editor extends JFrame {
 			//
 			jTextFieldFunction290ID.setText(domNode_.getAttribute("ID"));
 			jTextFieldFunction290Name.setText(domNode_.getAttribute("Name"));
+			if (isAnyConnectionReady()) {
+				jButtonFunction290Execute.setEnabled(true);
+			} else {
+				jButtonFunction290Execute.setEnabled(false);
+			}
+			//
 			function290PrimaryTableID = domNode_.getAttribute("PrimaryTable");
 	        tableNode = getSpecificXETreeNode("Table", function290PrimaryTableID);
 	        function290TableElement = tableNode.getElement();
@@ -17566,6 +17610,11 @@ public class Editor extends JFrame {
 			//
 			jTextFieldFunction300ID.setText(domNode_.getAttribute("ID"));
 			jTextFieldFunction300Name.setText(domNode_.getAttribute("Name"));
+			if (isAnyConnectionReady()) {
+				jButtonFunction300Execute.setEnabled(true);
+			} else {
+				jButtonFunction300Execute.setEnabled(false);
+			}
 			//
 			function300HeaderTableID = domNode_.getAttribute("HeaderTable");
 	        tableNode = getSpecificXETreeNode("Table", function300HeaderTableID);
@@ -17871,6 +17920,11 @@ public class Editor extends JFrame {
 			//
 			jTextFieldFunction310ID.setText(domNode_.getAttribute("ID"));
 			jTextFieldFunction310Name.setText(domNode_.getAttribute("Name"));
+			if (isAnyConnectionReady()) {
+				jButtonFunction310Execute.setEnabled(true);
+			} else {
+				jButtonFunction310Execute.setEnabled(false);
+			}
 			//
 			function310HeaderTableID = domNode_.getAttribute("HeaderTable");
 	        tableNode = getSpecificXETreeNode("Table", function310HeaderTableID);
@@ -18124,6 +18178,11 @@ public class Editor extends JFrame {
 
 			jTextFieldFunction390ID.setText(domNode_.getAttribute("ID"));
 			jTextFieldFunction390Name.setText(domNode_.getAttribute("Name"));
+			if (isAnyConnectionReady()) {
+				jButtonFunction390Execute.setEnabled(true);
+			} else {
+				jButtonFunction390Execute.setEnabled(false);
+			}
 
 			function390HeaderTableID = domNode_.getAttribute("HeaderTable");
 	        tableNode = getSpecificXETreeNode("Table", function390HeaderTableID);
@@ -19412,11 +19471,12 @@ public class Editor extends JFrame {
 			} else {
 				if (!domNode_.getAttribute("ModuleID").equals(jTextFieldTableModuleID.getText())) {
 					valueOfFieldsChanged = true;
-					if (getCaseShiftValue(jTextFieldTableModuleID.getText(), "Upper").equals(jTextFieldTableID.getText())) {
-						domNode_.setAttribute("ModuleID", "");
-					} else {
-						domNode_.setAttribute("ModuleID", getCaseShiftValue(jTextFieldTableModuleID.getText().trim(), "Upper"));
-					}
+//					if (getCaseShiftValue(jTextFieldTableModuleID.getText(), "Upper").equals(jTextFieldTableID.getText())) {
+//						domNode_.setAttribute("ModuleID", "");
+//					} else {
+//						domNode_.setAttribute("ModuleID", getCaseShiftValue(jTextFieldTableModuleID.getText().trim(), "Upper"));
+//					}
+					domNode_.setAttribute("ModuleID", jTextFieldTableModuleID.getText().trim());
 				}
 			}
 			if (!domNode_.getAttribute("DB").equals(databaseIDList.get(jComboBoxTableDB.getSelectedIndex()))) {
@@ -19587,6 +19647,9 @@ public class Editor extends JFrame {
 					if (!typeOptionList.contains("VIRTUAL")) {
 						valueOfFieldsChanged = true;
 					}
+					if (optionsNotNull) {
+						options.append(",");
+					}
 					options.append("VIRTUAL");
 					optionsNotNull = true;
 					tableModelTableFieldList.setValueAt("(" + jTextFieldTableFieldID.getText() + ")", selectedRow_jTableTableFieldList, 1);
@@ -19620,6 +19683,7 @@ public class Editor extends JFrame {
 						options.append(",");
 					}
 					options.append("NO_EDIT");
+					optionsNotNull = true;
 				}
 				if (jComboBoxTableFieldEditType.getSelectedIndex() == 2) {
 					if (!typeOptionList.contains("ZERO_SUPPRESS")) {
@@ -19629,6 +19693,7 @@ public class Editor extends JFrame {
 						options.append(",");
 					}
 					options.append("ZERO_SUPPRESS");
+					optionsNotNull = true;
 				}
 				if (jComboBoxTableFieldEditType.getSelectedIndex() == 3) {
 					if (!typeOptionList.contains("HH_MM")) {
@@ -19638,6 +19703,7 @@ public class Editor extends JFrame {
 						options.append(",");
 					}
 					options.append("HH_MM");
+					optionsNotNull = true;
 				}
 				if (jRadioButtonFieldTypeOptionKANJI.isSelected()) {
 					if (!typeOptionList.contains("KANJI")) {
@@ -20170,8 +20236,8 @@ public class Editor extends JFrame {
 				}
 			}
 			//
-			if (jRadioButtonFunction000ConsoleOptionTimer.isSelected()) {
-				if (jTextFieldFunction000TimerMessage.getText().equals("") || jTextFieldFunction000TimerMessage.getText().equals("*Default")) {
+			if (jRadioButtonFunction000ConsoleOptionTimer.isSelected() || jRadioButtonFunction000ConsoleOptionYes.isSelected()) {
+				if (jTextFieldFunction000TimerMessage.getText().equals("") || jTextFieldFunction000TimerMessage.getText().toUpperCase().equals("*DEFAULT")) {
 					if (!domNode_.getAttribute("TimerMessage").equals("")) {
 						valueOfFieldsChanged = true;
 						domNode_.setAttribute("TimerMessage", "");
@@ -25549,25 +25615,25 @@ public class Editor extends JFrame {
 				for (int i = 0; i < dataSourceIDList.size(); i++) {
 					nameModeText = nameModeText.replaceAll(
 							dataSourceAliasList.get(i)+"_"+dataSourceIDList.get(i)+".value",
-							dataSourceAliasList.get(i)+"_"+dataSourceNameList.get(i)+".value"); 
+							dataSourceAliasNameList.get(i)+"_"+dataSourceNameList.get(i)+".value"); 
 					nameModeText = nameModeText.replaceAll(
 							dataSourceAliasList.get(i)+"_"+dataSourceIDList.get(i)+".oldValue",
-							dataSourceAliasList.get(i)+"_"+dataSourceNameList.get(i)+".oldValue"); 
+							dataSourceAliasNameList.get(i)+"_"+dataSourceNameList.get(i)+".oldValue"); 
 					nameModeText = nameModeText.replaceAll(
 							dataSourceAliasList.get(i)+"_"+dataSourceIDList.get(i)+".valueChanged",
-							dataSourceAliasList.get(i)+"_"+dataSourceNameList.get(i)+".valueChanged"); 
+							dataSourceAliasNameList.get(i)+"_"+dataSourceNameList.get(i)+".valueChanged"); 
 					nameModeText = nameModeText.replaceAll(
 							dataSourceAliasList.get(i)+"_"+dataSourceIDList.get(i)+".color",
-							dataSourceAliasList.get(i)+"_"+dataSourceNameList.get(i)+".color"); 
+							dataSourceAliasNameList.get(i)+"_"+dataSourceNameList.get(i)+".color"); 
 					nameModeText = nameModeText.replaceAll(
 							dataSourceAliasList.get(i)+"_"+dataSourceIDList.get(i)+".editable",
-							dataSourceAliasList.get(i)+"_"+dataSourceNameList.get(i)+".editable"); 
+							dataSourceAliasNameList.get(i)+"_"+dataSourceNameList.get(i)+".editable"); 
 					nameModeText = nameModeText.replaceAll(
 							dataSourceAliasList.get(i)+"_"+dataSourceIDList.get(i)+".enabled",
-							dataSourceAliasList.get(i)+"_"+dataSourceNameList.get(i)+".enabled"); 
+							dataSourceAliasNameList.get(i)+"_"+dataSourceNameList.get(i)+".enabled"); 
 					nameModeText = nameModeText.replaceAll(
 							dataSourceAliasList.get(i)+"_"+dataSourceIDList.get(i)+".error",
-							dataSourceAliasList.get(i)+"_"+dataSourceNameList.get(i)+".error"); 
+							dataSourceAliasNameList.get(i)+"_"+dataSourceNameList.get(i)+".error"); 
 				}
 			}
 			nameModeText = translateTableOperationInScript(nameModeText);
@@ -26562,11 +26628,12 @@ public class Editor extends JFrame {
 			}
 		}
 	}
+
 	/**
 	 * [File|Run]
 	 * @param e :Action Event
 	 */
-	void jMenuItemFileRun_actionPerformed(ActionEvent e) {
+	void jMenuItemFileRun(String functionID) {
 		currentMainTreeNode.updateFields();
 		int rtn1 = 0;
 
@@ -26603,6 +26670,9 @@ public class Editor extends JFrame {
 				if (jCheckBoxSystemSkipPreload.isSelected()) {
 					bf.append(" \"SKIP_PRELOAD\"");
 				}
+				if (!functionID.equals("")) {
+					bf.append(" \"FUNCTION=" + functionID + "\"");
+				}
 			} else {
 				bf.append("java ");
 				bf.append(jTextFieldSystemDriverVMOptions.getText());
@@ -26621,6 +26691,9 @@ public class Editor extends JFrame {
 				if (jCheckBoxSystemSkipPreload.isSelected()) {
 					bf.append(" SKIP_PRELOAD");
 				}
+				if (!functionID.equals("")) {
+					bf.append(" FUNCTION=" + functionID);
+				}
 			}
 
 			try {
@@ -26631,11 +26704,21 @@ public class Editor extends JFrame {
 			}
 		}
 	}
+
 	/**
 	 * Event Handler for jMenuTool in case menu selected
 	 * @param e :Menu Event
 	 */
 	void jMenuTool_menuSelected(MenuEvent e) {
+		if (isAllConnectionReady()) {
+			jMenuItemToolConnectDB.setEnabled(false);
+			jMenuItemToolCheckAllModules.setEnabled(true);
+		} else {
+			jMenuItemToolConnectDB.setEnabled(true);
+			jMenuItemToolCheckAllModules.setEnabled(false);
+		}
+	}
+	boolean isAllConnectionReady() {
 		boolean allConnectionReady = true;
 		for (int i = 0; i < databaseConnList.size(); i++) {
 			try {
@@ -26646,16 +26729,22 @@ public class Editor extends JFrame {
 				allConnectionReady = false;
 			}
 		}
-		if (allConnectionReady) {
-			jMenuItemToolConnectDB.setEnabled(false);
-			jMenuItemToolCheckAllModules.setEnabled(true);
-			jMenuItemToolSQL.setEnabled(true);
-		} else {
-			jMenuItemToolConnectDB.setEnabled(true);
-			jMenuItemToolCheckAllModules.setEnabled(false);
-			jMenuItemToolSQL.setEnabled(false);
-		}
+		return allConnectionReady;
 	}
+	boolean isAnyConnectionReady() {
+		boolean anyConnectionReady = false;
+		for (int i = 0; i < databaseConnList.size(); i++) {
+			try {
+				if (databaseConnList.get(i) != null && !databaseConnList.get(i).isClosed()) {
+					anyConnectionReady = true;
+					break;
+				}
+			} catch (SQLException ex) {
+			}
+		}
+		return anyConnectionReady;
+	}
+
 	/**
 	 * [Tool|Create Table]
 	 * @param e :Action Event
@@ -27870,7 +27959,6 @@ public class Editor extends JFrame {
 						if (answer.length() > 40) {
 							JOptionPane.showMessageDialog(null, res.getString("ErrorMessage127"));
 						} else {
-							//answer = answer.toUpperCase();
 							answer = getCaseShiftValue(answer, "Upper");
 							duplicated = false;
 							for (int i = 0; i < tableModelTableFieldList.getRowCount(); i++) {
@@ -32551,7 +32639,7 @@ public class Editor extends JFrame {
 		StringBuffer buf = new StringBuffer();
 		script = getCaseShiftValue(script, "Upper");
 		int pos1, pos2, pos3, pos4;
-		//
+
 		if (script.contains("INSERT INTO " + tableID + " ")
 				|| script.contains(".CREATETABLEOPERATOR('INSERT', '" + tableID + "'")) {
 			buf.append("C");
@@ -32559,8 +32647,19 @@ public class Editor extends JFrame {
 			if (script.contains(".CREATETABLEEVALUATOR('" + tableID + "'")
 					&& script.contains(tableID + ".INSERT()")) {
 				buf.append("C");
+			} else {
+				pos1 = script.indexOf(".COPYTABLERECORDS(", 0);
+				if (pos1 >  -1 ) {
+					pos2 = script.indexOf(",", pos1);
+					pos3 = script.indexOf("'" + tableID + "'", pos1);
+					pos4 = script.indexOf(")", pos1);
+					if (pos3 > -1 && pos3 > pos2 && pos3 < pos4) {
+						buf.append("C");
+					}
+				}
 			}
 		}
+
 		if (script.contains("SELECT ") && script.contains("FROM " + tableID + " ")) {
 			pos1 = 0;
 			pos2 = 0;
@@ -32585,9 +32684,30 @@ public class Editor extends JFrame {
 				if (script.contains(".CREATETABLEEVALUATOR('" + tableID + "'")
 						&& script.contains(tableID + ".NEXT()")) {
 					buf.append("R");
+				} else {
+					pos1 = 0;
+					pos2 = 0;
+					while (pos2 > -1) {
+						pos2 = script.indexOf("SELECT ", pos1);
+						if (pos2 >  -1 ) {
+							pos3 = script.indexOf("FROM " + tableID + " ", pos2);
+							pos4 = script.indexOf(";", pos2);
+							if (pos4 > pos3) {
+								buf.append("R");
+								pos2 = -1;
+							} else {
+								pos1 = pos2 + 1;
+							}
+						}
+					}
+					pos1 = script.indexOf(".COPYTABLERECORDS('" + tableID + "'", 0);
+					if (pos1 >  -1 ) {
+						buf.append("R");
+					}
 				}
 			}
 		}
+
 		if (script.contains("UPDATE " + tableID + " ")
 				|| script.contains(".CREATETABLEOPERATOR('UPDATE', '" + tableID + "'")) {
 			buf.append("U");
@@ -32597,6 +32717,7 @@ public class Editor extends JFrame {
 				buf.append("U");
 			}
 		}
+
 		if (script.contains("DELETE FROM " + tableID + " ")
 				|| script.contains(".CREATETABLEOPERATOR('DELETE', '" + tableID + "'")) {
 			buf.append("D");
@@ -32606,7 +32727,7 @@ public class Editor extends JFrame {
 				buf.append("D");
 			}
 		}
-		//
+
 		return buf.toString();
 	}
 
@@ -34122,11 +34243,12 @@ public class Editor extends JFrame {
 
 	private void setupTableScriptNotes(org.w3c.dom.Element tableElement) {
 		TableRowNumber tableRowNumber;
-		org.w3c.dom.Element element, fieldElement;
+		org.w3c.dom.Element element, fieldElement, referTableElement;
 		StringTokenizer workTokenizer;
 		StringBuffer buf = new StringBuffer();
 		String wrkStr;
 		dataSourceAliasList.clear();
+		dataSourceAliasNameList.clear();
 		dataSourceIDList.clear();
 		dataSourceNameList.clear();
 
@@ -34153,6 +34275,7 @@ public class Editor extends JFrame {
 			buf.append(getDescriptionsOfTypeAndSize(element.getAttribute("Type"), element.getAttribute("Size"), element.getAttribute("Decimal")));
 
 			dataSourceAliasList.add(jTextFieldTableID.getText());
+			dataSourceAliasNameList.add(jTextFieldTableName.getText());
 			dataSourceIDList.add(element.getAttribute("ID"));
 			dataSourceNameList.add(element.getAttribute("Name"));
 		}
@@ -34182,6 +34305,9 @@ public class Editor extends JFrame {
 						buf.append(element.getAttribute("TableAlias"));
 						dataSourceAliasList.add(element.getAttribute("TableAlias"));
 					}
+					referTableElement = getSpecificTableElement(element.getAttribute("ToTable"));
+					dataSourceAliasNameList.add(referTableElement.getAttribute("Name"));
+
 					buf.append("_");
 					buf.append(wrkStr);
 					buf.append(".value ");
@@ -34215,6 +34341,8 @@ public class Editor extends JFrame {
 		int posTo = 0;
 		StringTokenizer tokenizer;
 		ArrayList<String> variantIDList = new ArrayList<String>();
+		ArrayList<String> tableIDList = new ArrayList<String>();
+		ArrayList<String> tableNameList = new ArrayList<String>();
 		ArrayList<HashMap> mapList = new ArrayList<HashMap>();
 		ArrayList<Integer> maxSizeList = new ArrayList<Integer>();
 		StringBuffer bf;
@@ -34262,14 +34390,16 @@ public class Editor extends JFrame {
 						variantID = newText.substring(posFrom, posTo).replaceAll(" ", "").replaceAll("\t", "").replaceAll("\n", "");
 					}
 
-					/////////////////////////
-					// Register to ID List //
-					/////////////////////////
+					////////////////////////////////
+					// Put the element to ID List //
+					////////////////////////////////
 					if (!variantID.equals("") && !tableID.equals("") && !variantIDList.contains(variantID)) {
 						node = getSpecificXETreeNode("Table", tableID);
 						if (node != null) {
 							idNameMap = new HashMap<String, String>();
 							tableElement = node.getElement();
+							tableIDList.add(tableID);
+							tableNameList.add(tableElement.getAttribute("Name"));
 							nodeList = tableElement.getElementsByTagName("Field");
 						    for (int i = 0; i < nodeList.getLength(); i++) {
 						    	fieldElement = (org.w3c.dom.Element)nodeList.item(i);
@@ -34304,15 +34434,36 @@ public class Editor extends JFrame {
 				}
 			}
 	    }
+	    for (int i = 0; i < tableIDList.size(); i++) {
+			newText = newText.replaceAll("'"+tableIDList.get(i)+"'", "'"+tableNameList.get(i)+"'");
+	    }
 
-		/////////////////////////////////////////////
-		// Trim space and tab between ID and Value //
-		/////////////////////////////////////////////
+		///////////////////////////////////////////////
+		// Trim spaces and tabs between ID and Value //
+		///////////////////////////////////////////////
 	    pos = 0;
 		while (pos >= 0) {
 			pos = newText.indexOf(".addValue(\'", pos);
 			if (pos > -1) {
 				posFrom = pos + 11;
+				posTo = newText.indexOf(",", posFrom);
+				wrkStr = newText.substring(posFrom, posTo+1);
+				while (newText.substring(posTo+1, posTo+2).equals(" ") || newText.substring(posTo+1, posTo+2).equals("\t")) {
+					posTo++;
+				}
+				bf = new StringBuffer();
+				bf.append(newText.substring(0, posFrom));
+				bf.append(wrkStr);
+				bf.append(newText.substring(posTo+1, newText.length()));
+				newText = bf.toString();
+				pos++;
+			}
+		}
+	    pos = 0;
+		while (pos >= 0) {
+			pos = newText.indexOf(".setValueOf(\'", pos);
+			if (pos > -1) {
+				posFrom = pos + 13;
 				posTo = newText.indexOf(",", posFrom);
 				wrkStr = newText.substring(posFrom, posTo+1);
 				while (newText.substring(posTo+1, posTo+2).equals(" ") || newText.substring(posTo+1, posTo+2).equals("\t")) {
@@ -34348,6 +34499,7 @@ public class Editor extends JFrame {
 	    ///////////////////////////////////////////////
 	    // Adjust indent of 'addValue' by variant ID //
 	    ///////////////////////////////////////////////
+		maxSizeList.clear();
 	    for (int i = 0; i < variantIDList.size(); i++) {
 			pos = 0;
 			maxSize = 1;
@@ -34395,9 +34547,61 @@ public class Editor extends JFrame {
 			}
 	    }
 	    
+	    ///////////////////////////////////////////////
+	    // Adjust indent of 'setValue' by variant ID //
+	    ///////////////////////////////////////////////
+		maxSizeList.clear();
+	    for (int i = 0; i < variantIDList.size(); i++) {
+			pos = 0;
+			maxSize = 1;
+			while (pos >= 0) {
+				pos = newText.indexOf(variantIDList.get(i) + ".setValueOf(\'", pos);
+				if (pos > -1) {
+					posFrom = pos + variantIDList.get(i).length() + 13;
+					posTo = newText.indexOf("\'", posFrom);
+					wrkStr = newText.substring(posFrom, posTo);
+					wrkInt = 1;
+					wrkInt = wrkStr.getBytes().length;
+					if (wrkInt > maxSize) {
+						maxSize = wrkInt;
+					}
+					pos++;
+				}
+			}
+			maxSizeList.add(maxSize);
+	    }
+	    for (int i = 0; i < variantIDList.size(); i++) {
+			pos = 0;
+			while (pos >= 0) {
+				pos = newText.indexOf(variantIDList.get(i) + ".setValueOf(\'", pos);
+				if (pos > -1) {
+					posFrom = pos + variantIDList.get(i).length() + 13;
+					posTo = newText.indexOf("\',", posFrom);
+					strOriginal = newText.substring(posFrom, posTo+2);
+
+					wrkInt = 1;
+					wrkInt = strOriginal.getBytes().length;
+					wrkInt = (maxSizeList.get(i) + 3) - wrkInt;
+					strProcessed = strOriginal;
+					for (int j = 0; j < wrkInt; j++) {
+						strProcessed = strProcessed + " ";
+					}
+
+					bf = new StringBuffer();
+					bf.append(newText.substring(0, posFrom));
+					bf.append(strProcessed);
+					bf.append(newText.substring(posTo+2, newText.length()));
+					newText = bf.toString();
+
+					pos++;
+				}
+			}
+	    }
+	    
 	    //////////////////////////////////////////////////
 	    // Adjust indent of 'addKeyValue' by variant ID //
 	    //////////////////////////////////////////////////
+		maxSizeList.clear();
 	    for (int i = 0; i < variantIDList.size(); i++) {
 			pos = 0;
 			maxSize = 1;
@@ -34451,7 +34655,6 @@ public class Editor extends JFrame {
 	void setupRadioButtonsOfTableFieldType() {
 		jLabelTableFieldSize.setVisible(false);
 		jSpinnerTableFieldSize.setVisible(false);
-		//jLabelTableFieldDecimal.setVisible(false);
 		jSpinnerTableFieldDecimal.setVisible(false);
 		jCheckBoxTableFieldAcceptMinus.setVisible(false);
 		jComboBoxTableFieldEditType.setVisible(false);
@@ -37709,7 +37912,6 @@ public class Editor extends JFrame {
 		String answer = dialogEditTableKeyFields.request(currentMainTreeNode.getElement(), "XK", ""); 
 		if (answer != null && !answer.equals("")) {
 			answer = getCaseShiftValue(answer, "Upper");
-			//String names = getIndexKeyNames(currentMainTreeNode.getElement().getAttribute("ID"), answer, " > ");
 			String names = getFieldNames(currentMainTreeNode.getElement().getAttribute("ID"), answer, " > ", true, true);
 			if (names != null && !names.equals("")) {
 				org.w3c.dom.Element newElement = createNewElementAccordingToType("TableKeyList");
@@ -37741,13 +37943,15 @@ public class Editor extends JFrame {
 				res.getString("AppendCheckDeleteTitle"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[1]);
 		if (rtn == 0) {
 
-			/////////////////////////////////////////////////////
-			// Scripts example being appended for delete-check //
-			/////////////////////////////////////////////////////					
-			//var rTTTTT = instance.createTableOperator('Count', 'TTTTT');
-			//rTTTTT.addKeyValue('FFFFF',	TABLE_KEYFIELD.value);
-			//if (rTTTTT.execute() > 0) {
-			//	TABLE_KEYFIELD.error = 'Deleting not allowed as this record is joined by TTTTT';
+			//////////////////////////////////////
+			// Scripts example for delete-check //
+			//////////////////////////////////////	
+			//if (TABLE_KEYFIELD.error == '') {
+			//	var rTTTTT = instance.createTableOperator('Count', 'TTTTT');
+			//	rTTTTT.addKeyValue('FFFFF',	TABLE_KEYFIELD.value);
+			//	if (rTTTTT.execute() > 0) {
+			//		TABLE_KEYFIELD.error = 'Deleting not allowed as this record is joined by TTTTT';
+			//	}
 			//}
 
 			org.w3c.dom.Element element1, element2, element3;
@@ -37803,14 +38007,20 @@ public class Editor extends JFrame {
 									if (countOfBlocks > 0) {
 										sbf.append("\n\n");
 									}
-									sbf.append("var r");
+									sbf.append("if (");
+									sbf.append(tableElement.getAttribute("ID"));
+									sbf.append("_");
+									sbf.append(toKeyFieldsList.get(0));
+									sbf.append(".error == '') {\n");
+									
+									sbf.append("\tvar r");
 									sbf.append(element1.getAttribute("ID"));
 									sbf.append(" = instance.createTableOperator('Count', '");
 									sbf.append(element1.getAttribute("ID"));
 									sbf.append("');\n");
 
 									for (int j = 0; j < toKeyFieldsList.size(); j++) {
-										sbf.append("r");
+										sbf.append("\tr");
 										sbf.append(element1.getAttribute("ID"));
 										sbf.append(".addKeyValue('");
 										sbf.append(withKeyFieldsList.get(j));
@@ -37829,9 +38039,9 @@ public class Editor extends JFrame {
 										}
 									}
 
-									sbf.append("if (r");
+									sbf.append("\tif (r");
 									sbf.append(element1.getAttribute("ID"));
-									sbf.append(".execute() > 0) {\n\t");
+									sbf.append(".execute() > 0) {\n\t\t");
 									sbf.append(tableElement.getAttribute("ID"));
 									sbf.append("_");
 									sbf.append(toKeyFieldsList.get(0));
@@ -37839,7 +38049,9 @@ public class Editor extends JFrame {
 									sbf.append(res.getString("AppendCheckDeleteError1"));
 									sbf.append(element1.getAttribute("Name"));
 									sbf.append(res.getString("AppendCheckDeleteError2"));
-									sbf.append("';\n}");
+									sbf.append("';\n\t}");
+
+									sbf.append("\n}");
 									countOfBlocks++;
 								}
 							}
@@ -38163,6 +38375,11 @@ public class Editor extends JFrame {
 				}
 			}
 		}
+	}
+
+	void jButtonToExecuteFunction_actionPerformed(ActionEvent e) {
+		org.w3c.dom.Element functionElement = currentMainTreeNode.getElement();
+		jMenuItemFileRun(functionElement.getAttribute("ID"));
 	}
 
 	void jButtonToEditKeyFields_actionPerformed(ActionEvent e) {
@@ -39363,20 +39580,20 @@ public class Editor extends JFrame {
 	
 	public int getLengthOfEdittedNumericValue(int dataSize, int decimalSize, boolean acceptMinus) {
 		int length = dataSize;
-		//
+
 		if (decimalSize > 0) {
 			length = length + decimalSize + 1;
 		}
 		if (acceptMinus) {
 			length = length + 1;
 		}
-		//
+
 		int intSize = dataSize - decimalSize;
 		while (intSize > 3) {
 			length = length + 1;
 			intSize = intSize - 3;
 		}
-		//
+
 		return length;
 	}
 	
@@ -39393,22 +39610,28 @@ public class Editor extends JFrame {
 		DecimalFormat floatFormat7 = new DecimalFormat("#,##0.0000000");
 		DecimalFormat floatFormat8 = new DecimalFormat("#,##0.00000000");
 		DecimalFormat floatFormat9 = new DecimalFormat("#,##0.000000000");
-		//
+
 		if (object != null && !object.toString().equals("")) {
+
 			if (basicType.equals("INTEGER")) {
 				long numberValue = Long.parseLong(getStringNumber(object.toString()));
 				if (dataTypeOptionList.contains("NO_EDIT")) {
-					String strWrk = Long.toString(numberValue);
-					StringBuffer buf = new StringBuffer();
-					if (strWrk.contains("-")) {
-						buf.append("-");
-						strWrk = strWrk.replace("-", "");
+					if (numberValue == 0) {
+						value = "";
+					} else {
+						String strWrk = Long.toString(numberValue);
+						StringBuffer buf = new StringBuffer();
+						if (strWrk.contains("-")) {
+							buf.append("-");
+							strWrk = strWrk.replace("-", "");
+						}
+						for (int i = 0; i < length - strWrk.length(); i++) {
+							buf.append("0");
+						}
+						buf.append(strWrk);
+						value = buf.toString();
 					}
-					for (int i = 0; i < length - strWrk.length(); i++) {
-						buf.append("0");
-					}
-					buf.append(strWrk);
-					value = buf.toString();
+
 				} else {
 					if (dataTypeOptionList.contains("ZERO_SUPPRESS")) {
 						value = Long.toString(numberValue);
@@ -39440,6 +39663,7 @@ public class Editor extends JFrame {
 					}
 				}
 			}
+
 			if (basicType.equals("FLOAT")) {
 				double numberValue = Double.parseDouble(getStringNumber(object.toString()));
 				if (decimal == 0) {
@@ -39474,30 +39698,9 @@ public class Editor extends JFrame {
 				}
 			}
 		}
+
 		return value;
 	}
-	
-//	void jButtonTableRangeKeyFieldsEdit_actionPerformed(ActionEvent e) {
-//		String currentValue = tableRangeKeyFields;
-//		String answer = JOptionPane.showInputDialog(this.getContentPane(), res.getString("EditRangeKeyMessage"), currentValue);
-//		if (answer != null) {
-//			//answer = answer.toUpperCase();
-//			answer = getCaseShiftValue(answer, "Upper");
-//			if (!answer.equals(tableRangeKeyFields)) {
-//				informationOnThisPageChanged = true;
-//			}
-//			if (answer.equals("")) {
-//				jTextFieldTableRangeKeyFields.setText("*None");
-//				tableRangeKeyFields = "";
-//			} else {
-//				String names = getRangeFieldNames(jTextFieldTableID.getText(), answer);
-//				if (!names.equals("")) {
-//					jTextFieldTableRangeKeyFields.setText(names);
-//					tableRangeKeyFields = answer;
-//				}
-//			}
-//		}
-//	}
 	
 	void jButtonTableKeyFieldsEdit_actionPerformed(ActionEvent e) {
 		String names = "";
@@ -39519,11 +39722,14 @@ public class Editor extends JFrame {
 							names = getFieldNames(jTextFieldTableID.getText(), answer, " + ", false, true);
 						}
 						if (tableKeyType.equals("XK")) {
-							//names = getIndexKeyNames(jTextFieldTableID.getText(), answer, " > ");
 							names = getFieldNames(jTextFieldTableID.getText(), answer, " > ", true, true);
 						}
 						if (!names.equals("")) {
 							jTextFieldTableKeyFields.setText(names);
+							if (tableKeyType.equals("PK")) {
+								jTextFieldTablePK.setText(names);
+							}
+							tableModelTableKeyList.setValueAt(names, selectedRow_jTableTableKeyList, 2);
 							tableKeyFields = answer;
 						}
 					}
@@ -39532,206 +39738,93 @@ public class Editor extends JFrame {
 		}
 	}
 	
-	public void scanStringInTextArea(JTextArea textArea, String stringToBeScanned, boolean isCaseChecked) {
+	public void scanStringInTextArea(JTextArea textArea, String stringToBeScanned, boolean isCaseChecked, String stringToBeReplaced, boolean isToReplaceAll) {
 		int pos;
-		//
-		if (isCaseChecked) {
-			pos = textArea.getText().indexOf(stringToBeScanned, textArea.getCaretPosition());
-		} else {
-			pos = textArea.getText().toUpperCase().indexOf(stringToBeScanned.toUpperCase(), textArea.getCaretPosition());
+
+		if (!stringToBeScanned.equals("")) {
+
+			if (stringToBeReplaced.equals("")) {
+				if (isCaseChecked) {
+					pos = textArea.getText().indexOf(stringToBeScanned, textArea.getCaretPosition());
+				} else {
+					pos = textArea.getText().toUpperCase().indexOf(stringToBeScanned.toUpperCase(), textArea.getCaretPosition());
+				}
+				if (pos == -1) {
+					textArea.select(textArea.getCaretPosition(), textArea.getCaretPosition());
+					JOptionPane.showMessageDialog(null, res.getString("ScanStringInScriptMessage1"));
+				} else {
+					textArea.select(pos, pos + stringToBeScanned.length());
+				}
+
+			} else {
+				if (isToReplaceAll) {
+					int work, count = 0;
+					int fromPos = textArea.getCaretPosition();
+
+					if (isCaseChecked) {
+						StringBuffer bf = new StringBuffer();
+						bf.append(textArea.getText().substring(0, fromPos));
+						for (;;) {
+							work = textArea.getText().indexOf(stringToBeScanned, fromPos);
+							if (work == -1) {
+								bf.append(textArea.getText().substring(fromPos, textArea.getText().length()));
+								break;
+							} else {
+								count++;
+								bf.append(textArea.getText().substring(fromPos, work));
+								bf.append(stringToBeReplaced);
+								fromPos = work + stringToBeScanned.length();
+							}
+						}
+						textArea.setText(bf.toString());
+						JOptionPane.showMessageDialog(null, count + res.getString("ScanStringInScriptMessage2"));
+						textArea.setCaretPosition(fromPos);
+
+					} else {
+						StringBuffer bf = new StringBuffer();
+						bf.append(textArea.getText().substring(0, fromPos));
+						String upperCaseText = textArea.getText().toUpperCase();
+						for (;;) {
+							work = upperCaseText.indexOf(stringToBeScanned.toUpperCase(), fromPos);
+							if (work == -1) {
+								bf.append(textArea.getText().substring(fromPos, upperCaseText.length()));
+								break;
+							} else {
+								count++;
+								bf.append(textArea.getText().substring(fromPos, work));
+								bf.append(stringToBeReplaced);
+								fromPos = work + stringToBeScanned.length();
+							}
+						}
+						textArea.setText(bf.toString());
+						JOptionPane.showMessageDialog(null, count + res.getString("ScanStringInScriptMessage2"));
+						textArea.setCaretPosition(fromPos);
+					}
+
+				} else {
+					if (isCaseChecked) {
+						pos = textArea.getText().indexOf(stringToBeScanned, textArea.getCaretPosition());
+					} else {
+						pos = textArea.getText().toUpperCase().indexOf(stringToBeScanned.toUpperCase(), textArea.getCaretPosition());
+					}
+					if (pos == -1) {
+						textArea.select(textArea.getCaretPosition(), textArea.getCaretPosition());
+						JOptionPane.showMessageDialog(null, res.getString("ScanStringInScriptMessage1"));
+					} else {
+						StringBuffer bf = new StringBuffer();
+						bf.append(textArea.getText().substring(0, pos));
+						bf.append(stringToBeReplaced);
+						bf.append(textArea.getText().substring(pos+stringToBeScanned.length(), textArea.getText().length()));
+						textArea.setText(bf.toString());
+						textArea.setCaretPosition(pos + stringToBeReplaced.length());
+					}
+				}
+			}
 		}
-		//
-	    if (pos == -1) {
-	    	textArea.select(textArea.getCaretPosition(), textArea.getCaretPosition());
-	    	JOptionPane.showMessageDialog(null, res.getString("ScanStringInScriptMessage"));
-	    } else {
-	    	textArea.select(pos, pos + stringToBeScanned.length());
-	    }
-	    //
-	    textArea.requestFocus();
+
+		textArea.requestFocus();
 	}
 
-
-//	private URI getExcellBookURI() {
-//		File xlsFile = null;
-//		String xlsFileName = "";
-//		FileOutputStream fileOutputStream = null;
-//
-//		HSSFWorkbook workBook = new HSSFWorkbook();
-//		HSSFSheet workSheet = workBook.createSheet(jTextFieldTableID.getText());
-//		workSheet.setDefaultRowHeight( (short) 300);
-//		HSSFFooter workSheetFooter = workSheet.getFooter();
-//		workSheetFooter.setRight(jTextFieldTableID.getText() + "  Page " + HSSFFooter.page() + " / " + HSSFFooter.numPages() );
-//
-//		HSSFCellStyle styleHeader = workBook.createCellStyle();
-//		styleHeader.setAlignment(HSSFCellStyle.ALIGN_LEFT);
-//
-//		HSSFCellStyle styleHeaderNumber = workBook.createCellStyle();
-//		styleHeaderNumber.setAlignment(HSSFCellStyle.ALIGN_LEFT);
-//
-//		HSSFCellStyle styleDataInteger = workBook.createCellStyle();
-//		styleDataInteger.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
-//		styleDataInteger.setVerticalAlignment(HSSFCellStyle.VERTICAL_TOP);
-//		styleDataInteger.setDataFormat(HSSFDataFormat.getBuiltinFormat("#,##0"));
-//
-//		int currentRowNumber = -1;
-//
-//		try {
-//			File outputFolder = null;
-//			String wrkStr = systemNode.getElement().getAttribute("OutputFolder"); 
-//			if (wrkStr.equals("")) {
-//				outputFolder = null;
-//			} else {
-//				if (wrkStr.contains("<CURRENT>")) {
-//					wrkStr = wrkStr.replace("<CURRENT>", currentFileFolder);
-//				}
-//				outputFolder = new File(wrkStr);
-//				if (!outputFolder.exists()) {
-//					outputFolder = null;
-//				}
-//			}
-//
-//			xlsFile = File.createTempFile("XeadEditor_" + jTextFieldTableID.getText() + "_", ".xls", outputFolder);
-//			if (outputFolder == null) {
-//				xlsFile.deleteOnExit();
-//			}
-//			xlsFileName = xlsFile.getPath();
-//			fileOutputStream = new FileOutputStream(xlsFileName);
-//			int columnIndex;
-//
-//			currentRowNumber++;
-//			HSSFRow rowCaption = workSheet.createRow(currentRowNumber);
-//			for (int i = 0; i < tableModelTableDataList.getColumnCount(); i++) {
-//				HSSFCell cell = rowCaption.createCell(i);
-//				if (i == 0) {
-//					cell.setCellStyle(styleHeaderNumber);
-//					cell.setCellValue(new HSSFRichTextString(tableModelTableDataList.getColumnName(i)));
-//				} else {
-//					cell.setCellStyle(styleHeader);
-//					if (isCaptionWithName) {
-//						cell.setCellValue(new HSSFRichTextString(editableTableFieldList.get(i-1).getFieldName()));
-//					} else {
-//						cell.setCellValue(new HSSFRichTextString(editableTableFieldList.get(i-1).getFieldID()));
-//					}
-//				}
-//				Rectangle rect = jTableTableDataList.getCellRect(0, i, true);
-//				workSheet.setColumnWidth(i, rect.width * 40);
-//			}
-//
-//			for (int i = 0; i < tableModelTableDataList.getRowCount(); i++) {
-//				currentRowNumber++;
-//				HSSFRow rowData = workSheet.createRow(currentRowNumber);
-//				//
-//				HSSFCell cell = rowData.createCell(0); //Column of Sequence Number
-//				cell.setCellType(HSSFCell.CELL_TYPE_NUMERIC);
-//				cell.setCellStyle(styleDataInteger);
-//				cell.setCellValue(i + 1);
-//				//
-//				columnIndex = 0;
-//				for (int j = 0; j < editableTableFieldList.size(); j++) {
-//					columnIndex++;
-//					//setupCellAttributes(rowData.createCell(columnIndex), workBook, editableTableFieldList.get(j).getBasicType(), tableModelTableDataList.getValueAt(i,columnIndex), fontDetail);
-//					setupCellAttributes(rowData.createCell(columnIndex), workBook, editableTableFieldList.get(j).getBasicType(), tableModelTableDataList.getValueAt(i,columnIndex));
-//				}
-//			}
-//			//
-//			StringBuffer buf = new StringBuffer();
-//			if (!jTextFieldTableDataSelectWhere.getText().equals("*All") && !jTextFieldTableDataSelectWhere.getText().equals("")) {
-//				buf.append(" where ");
-//				buf.append(jTextFieldTableDataSelectWhere.getText());
-//			}
-//			if (!jTextFieldTableDataSelectOrderBy.getText().equals("*Key") && !jTextFieldTableDataSelectOrderBy.getText().equals("")) {
-//				buf.append(" order by ");
-//				buf.append(jTextFieldTableDataSelectOrderBy.getText());
-//			}
-//			if (!buf.toString().equals("")) {
-//				currentRowNumber++;
-//				HSSFRow rowRemarks = workSheet.createRow(currentRowNumber);
-//				HSSFCell cell = rowRemarks.createCell(0);
-//				wrkStr = res.getString("XLSComment") + buf.toString();
-//				cell.setCellValue(new HSSFRichTextString(wrkStr));
-//			}
-//			//
-//			workBook.write(fileOutputStream);
-//			fileOutputStream.close();
-//			//
-//		} catch (Exception ex1) {
-//			JOptionPane.showMessageDialog(null, res.getString("XLSErrorMessage"));
-//			ex1.printStackTrace(exceptionStream);
-//			try {
-//				fileOutputStream.close();
-//			} catch (Exception ex2) {
-//				ex2.printStackTrace(exceptionStream);
-//			}
-//		}
-//		return xlsFile.toURI();
-//	}
-//
-//	//private void setupCellAttributes(HSSFCell cell, HSSFWorkbook workbook, String basicType, Object object, HSSFFont font) {
-//	private void setupCellAttributes(HSSFCell cell, HSSFWorkbook workbook, String basicType, Object object) {
-//		String wrk;
-//		//
-//		HSSFCellStyle style = workbook.createCellStyle();
-//		//style.setFont(font);
-//		//style.setBorderBottom(HSSFCellStyle.BORDER_THIN);
-//		//style.setBorderLeft(HSSFCellStyle.BORDER_THIN);
-//		//style.setBorderRight(HSSFCellStyle.BORDER_THIN);
-//		//style.setBorderTop(HSSFCellStyle.BORDER_THIN);
-//		//
-//		if (basicType.equals("INTEGER")) {
-//			if (object == null) {
-//				wrk = "";
-//			} else {
-//				wrk = object.toString().replace(",", "");
-//			}
-//			if (wrk.equals("")) {
-//				cell.setCellType(HSSFCell.CELL_TYPE_STRING);
-//				cell.setCellValue(new HSSFRichTextString(wrk));
-//			} else {
-//				cell.setCellType(HSSFCell.CELL_TYPE_NUMERIC);
-//				cell.setCellValue(Double.parseDouble(wrk));
-//			}
-//			//
-//			style.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
-//			style.setVerticalAlignment(HSSFCellStyle.VERTICAL_TOP);
-//			style.setDataFormat(HSSFDataFormat.getBuiltinFormat("#,##0"));
-//			cell.setCellStyle(style);
-//		} else {
-//			if (basicType.equals("FLOAT")) {
-//				if (object == null) {
-//					wrk = "";
-//				} else {
-//					wrk =object.toString().replace(",", "");
-//				}
-//				if (wrk.equals("")) {
-//					cell.setCellType(HSSFCell.CELL_TYPE_STRING);
-//					cell.setCellValue(new HSSFRichTextString(wrk));
-//				} else {
-//					cell.setCellType(HSSFCell.CELL_TYPE_NUMERIC);
-//					cell.setCellValue(Double.parseDouble(wrk));
-//				}
-//				//
-//				style.setAlignment(HSSFCellStyle.ALIGN_RIGHT);
-//				style.setVerticalAlignment(HSSFCellStyle.VERTICAL_TOP);
-//				style.setDataFormat(HSSFDataFormat.getBuiltinFormat("#,##0.000"));
-//				cell.setCellStyle(style);
-//			} else {
-//				cell.setCellType(HSSFCell.CELL_TYPE_STRING);
-//				if (object == null) {
-//					wrk = "";
-//				} else {
-//					wrk = object.toString();
-//				}
-//				cell.setCellValue(new HSSFRichTextString(wrk));
-//				//
-//				style.setAlignment(HSSFCellStyle.ALIGN_LEFT);
-//				style.setVerticalAlignment(HSSFCellStyle.VERTICAL_TOP);
-//				style.setWrapText(true);
-//				style.setDataFormat(HSSFDataFormat.getBuiltinFormat("text"));
-//				cell.setCellStyle(style);
-//			}
-//		}
-//	}
 	private URI getExcellBookURI() {
 		File xlsFile = null;
 		String xlsFileName = "";
@@ -40096,14 +40189,8 @@ public class Editor extends JFrame {
 						if (editableTableFieldList.get(i).getDataTypeOptionList().contains("FYEAR")) {
 							Cell[i+1] = result.getInt(editableTableFieldList.get(i).getFieldID());
 						} else {
-//							Cell[i+1] = getFormattedNumber(
-//									result.getBigDecimal(editableTableFieldList.get(i).getFieldID()),
-//									basicType,
-//									editableTableFieldList.get(i).getDataSize(),
-//									editableTableFieldList.get(i).getDecimalSize(),
-//									editableTableFieldList.get(i).getDataTypeOptionList());
 							Cell[i+1] = getFormattedNumber(
-									result.getObject(editableTableFieldList.get(i).getFieldID()),
+									result.getBigDecimal(editableTableFieldList.get(i).getFieldID()),
 									basicType,
 									editableTableFieldList.get(i).getDataSize(),
 									editableTableFieldList.get(i).getDecimalSize(),
@@ -40304,7 +40391,9 @@ public class Editor extends JFrame {
 					}
 				}
 				if (!updateCounterID.toUpperCase().equals("*NONE")) {
-					statementBuf.append(" and ") ;
+					if (!firstField) {
+						statementBuf.append(" and ") ;
+					}
 					statementBuf.append(updateCounterID) ;
 					statementBuf.append("=") ;
 					statementBuf.append(tableRowNumber.getUpdateCounter()) ;
@@ -41239,17 +41328,24 @@ public class Editor extends JFrame {
 	}
 	
 	void jRadioButtonFunction000ConsoleOption_stateChanged(ChangeEvent e) {
-		if (jRadioButtonFunction000ConsoleOptionNo.isSelected() || jRadioButtonFunction000ConsoleOptionYes.isSelected()) {
+		if (jRadioButtonFunction000ConsoleOptionNo.isSelected()) {
         	jLabelFunction000TimerDefault.setEnabled(false);
 			jTextFieldFunction000TimerDefault.setEnabled(false);
         	jLabelFunction000TimerMessage.setEnabled(false);
 			jTextFieldFunction000TimerMessage.setEnabled(false);
-		} else {
+		}
+		if (jRadioButtonFunction000ConsoleOptionYes.isSelected()) {
+        	jLabelFunction000TimerDefault.setEnabled(false);
+			jTextFieldFunction000TimerDefault.setEnabled(false);
+        	jLabelFunction000TimerMessage.setEnabled(false);
+			jTextFieldFunction000TimerMessage.setEnabled(true);
+		}
+		if (jRadioButtonFunction000ConsoleOptionTimer.isSelected()) {
         	jLabelFunction000TimerDefault.setEnabled(true);
 			jTextFieldFunction000TimerDefault.setEnabled(true);
         	jLabelFunction000TimerMessage.setEnabled(true);
 			jTextFieldFunction000TimerMessage.setEnabled(true);
-		}
+			}
 	}
 	
 	void jRadioButtonFunction100FieldCaptionOption_stateChanged(ChangeEvent e) {
@@ -42100,7 +42196,7 @@ class Editor_DialogStructureTableEdit extends JDialog {
 				tableNode = frame_.getSpecificXETreeNode("Table", jTextFieldStructureTableID.getText().toUpperCase());
 				if (tableNode != null) {
 					jTextFieldStructureTableName.setText(tableNode.getElement().getAttribute("Name"));
-					jTextFieldStructureTableID.setText(frame_.getCaseShiftValue(jTextFieldStructureTableID.getText(), "Upper"));
+					//jTextFieldStructureTableID.setText(frame_.getCaseShiftValue(jTextFieldStructureTableID.getText(), "Upper"));
 					org.w3c.dom.Element tablePKElement = frame_.getSpecificPKElement(jTextFieldStructureTableID.getText());
 					if (jTextFieldStructureUpperKeys.getText().equals("")) {
 						jTextFieldStructureUpperKeys.setText(tablePKElement.getAttribute("Fields"));
@@ -42148,17 +42244,22 @@ class Editor_DialogStructureTableEdit extends JDialog {
 		String wrkStr;
 		//
 		if (tableNode != null) {
-			jTextFieldStructureUpperKeys.setText(frame_.getCaseShiftValue(jTextFieldStructureUpperKeys.getText(), "Upper"));
-			jTextFieldStructureChildKeys.setText(frame_.getCaseShiftValue(jTextFieldStructureChildKeys.getText(), "Upper"));
-			jTextFieldStructureOrderBy.setText(frame_.getCaseShiftValue(jTextFieldStructureOrderBy.getText(), "Upper"));
+//			jTextFieldStructureUpperKeys.setText(frame_.getCaseShiftValue(jTextFieldStructureUpperKeys.getText(), "Upper"));
+//			jTextFieldStructureChildKeys.setText(frame_.getCaseShiftValue(jTextFieldStructureChildKeys.getText(), "Upper"));
+//			jTextFieldStructureOrderBy.setText(frame_.getCaseShiftValue(jTextFieldStructureOrderBy.getText(), "Upper"));
+			jTextFieldStructureUpperKeys.setText(jTextFieldStructureUpperKeys.getText());
+			jTextFieldStructureChildKeys.setText(jTextFieldStructureChildKeys.getText());
+			jTextFieldStructureOrderBy.setText(jTextFieldStructureOrderBy.getText());
 			if (jTextFieldStructureUpperKeys.getText().contains(".")
 					|| jTextFieldStructureChildKeys.getText().contains(".")
 					|| jTextFieldStructureOrderBy.getText().contains(".")) {
 				isValid = false;
 				jTextAreaMessage.setText(res.getString("ErrorMessage109"));
 			} else {
-				jTextFieldStructureUpperKeys.setText(frame_.getCaseShiftValue(jTextFieldStructureUpperKeys.getText(), "Upper"));
-				jTextFieldStructureChildKeys.setText(frame_.getCaseShiftValue(jTextFieldStructureChildKeys.getText(), "Upper"));
+//				jTextFieldStructureUpperKeys.setText(frame_.getCaseShiftValue(jTextFieldStructureUpperKeys.getText(), "Upper"));
+//				jTextFieldStructureChildKeys.setText(frame_.getCaseShiftValue(jTextFieldStructureChildKeys.getText(), "Upper"));
+				jTextFieldStructureUpperKeys.setText(jTextFieldStructureUpperKeys.getText());
+				jTextFieldStructureChildKeys.setText(jTextFieldStructureChildKeys.getText());
 				//
 				workTokenizer = new StringTokenizer(headerTableKeys_, ";" );
 				while (workTokenizer.hasMoreTokens()) {
@@ -42415,7 +42516,7 @@ class Editor_DialogStructureNodeIconsEdit extends JDialog {
 		org.w3c.dom.Element workElement;
 		StringTokenizer workTokenizer;
 		//
-		jTextFieldFieldID.setText(frame_.getCaseShiftValue(jTextFieldFieldID.getText(), "Upper"));
+		//jTextFieldFieldID.setText(frame_.getCaseShiftValue(jTextFieldFieldID.getText(), "Upper"));
 		//
 		if (tableNode != null) {
 			if (jTextFieldFieldID.getText().contains(".")) {
@@ -43648,11 +43749,13 @@ class Editor_DialogPromptOptionCallFunctionExchangeEdit extends JDialog {
 		ArrayList<String> toDataSourceList = new ArrayList<String>(); 
 		StringTokenizer workTokenizer;
 
-		workTokenizer = new StringTokenizer(frame_.getCaseShiftValue(jTextFieldFieldsToPut.getText(), "Upper"), ";");
+//		workTokenizer = new StringTokenizer(frame_.getCaseShiftValue(jTextFieldFieldsToPut.getText(), "Upper"), ";");
+		workTokenizer = new StringTokenizer(jTextFieldFieldsToPut.getText(), ";");
 		while (workTokenizer.hasMoreTokens()) {
 			fromDataSourceList.add(workTokenizer.nextToken());
 		}
-		workTokenizer = new StringTokenizer(frame_.getCaseShiftValue(jTextFieldFieldsToPutTo.getText(), "Upper"), ";");
+//		workTokenizer = new StringTokenizer(frame_.getCaseShiftValue(jTextFieldFieldsToPutTo.getText(), "Upper"), ";");
+		workTokenizer = new StringTokenizer(jTextFieldFieldsToPutTo.getText(), ";");
 		while (workTokenizer.hasMoreTokens()) {
 			toDataSourceList.add(workTokenizer.nextToken());
 		}
@@ -43712,12 +43815,14 @@ class Editor_DialogPromptOptionCallFunctionExchangeEdit extends JDialog {
 
 		if (isValid) {
 			fromDataSourceList.clear();
-			workTokenizer = new StringTokenizer(frame_.getCaseShiftValue(jTextFieldFieldsToGet.getText(), "Upper"), ";");
+			//workTokenizer = new StringTokenizer(frame_.getCaseShiftValue(jTextFieldFieldsToGet.getText(), "Upper"), ";");
+			workTokenizer = new StringTokenizer(jTextFieldFieldsToGet.getText(), ";");
 			while (workTokenizer.hasMoreTokens()) {
 				fromDataSourceList.add(workTokenizer.nextToken());
 			}
 			toDataSourceList.clear();
-			workTokenizer = new StringTokenizer(frame_.getCaseShiftValue(jTextFieldFieldsToGetTo.getText(), "Upper"), ";");
+//			workTokenizer = new StringTokenizer(frame_.getCaseShiftValue(jTextFieldFieldsToGetTo.getText(), "Upper"), ";");
+			workTokenizer = new StringTokenizer(jTextFieldFieldsToGetTo.getText(), ";");
 			while (workTokenizer.hasMoreTokens()) {
 				toDataSourceList.add(workTokenizer.nextToken());
 			}
@@ -44587,6 +44692,16 @@ class Editor_jButtonToEditKeyFields_actionAdapter implements java.awt.event.Acti
 	}
 	public void actionPerformed(ActionEvent e) {
 		adaptee.jButtonToEditKeyFields_actionPerformed(e);
+	}
+}
+
+class Editor_jButtonToExecuteFunction_actionAdapter implements java.awt.event.ActionListener {
+	Editor adaptee;
+	Editor_jButtonToExecuteFunction_actionAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jButtonToExecuteFunction_actionPerformed(e);
 	}
 }
 
@@ -46302,7 +46417,7 @@ class Editor_jMenuItemFileRun_actionAdapter implements java.awt.event.ActionList
 		this.adaptee = adaptee;
 	}
 	public void actionPerformed(ActionEvent e) {
-		adaptee.jMenuItemFileRun_actionPerformed(e);
+		adaptee.jMenuItemFileRun("");
 	}
 }
 
