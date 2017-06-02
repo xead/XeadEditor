@@ -202,7 +202,7 @@ public class DialogAssistList extends JDialog {
 		sessionAssistListArray.add("getJsonObject(object, key)");
 		sessionAssistListArray.add("getJsonObject(array, index)");
 		sessionAssistListArray.add("showDialogToChooseFile(fileExtention, directory, defaultFile)");
-		sessionAssistListArray.add("copyTableRecords(fromFile, toFile, processType)");
+		sessionAssistListArray.add("copyTableRecords(fromFile, toFile, processType, count, isToCommitEachTime)");
 		Collections.sort(sessionAssistListArray);
 	}
 
