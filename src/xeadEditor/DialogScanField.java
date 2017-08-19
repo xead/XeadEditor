@@ -145,7 +145,7 @@ public class DialogScanField extends JDialog {
 		jTableScanResult.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jTableScanResult.setRowSelectionAllowed(true);
 		jTableScanResult.setRowHeight(Editor.TABLE_ROW_HEIGHT);
-		tableModelScanResult.addColumn("NO.");
+		tableModelScanResult.addColumn("No.");
 		tableModelScanResult.addColumn(res.getString("SubsystemName"));
 		tableModelScanResult.addColumn(res.getString("TableID"));
 		tableModelScanResult.addColumn(res.getString("TableName"));

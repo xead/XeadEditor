@@ -238,7 +238,7 @@ public class DialogScan extends JDialog {
 		jTableScanResult.setRowHeight(Editor.TABLE_ROW_HEIGHT);
 		jTableScanResult.addMouseListener(new DialogScan_jTableScanResult_mouseAdapter(this));
 		jTableScanResult.getTableHeader().setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		tableModelScanResult.addColumn("NO.");
+		tableModelScanResult.addColumn("No.");
 		tableModelScanResult.addColumn("");
 		tableModelScanResult.addColumn(res.getString("ElementType"));
 		tableModelScanResult.addColumn(res.getString("ElementName"));

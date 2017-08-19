@@ -206,7 +206,7 @@ public class DialogListLog extends JDialog {
 		jTableScanResult.setRowSelectionAllowed(true);
 		jTableScanResult.getSelectionModel().addListSelectionListener(new DialogListLog_jTableScanResult_listSelectionAdapter(this));
 		jTableScanResult.setRowHeight(Editor.TABLE_ROW_HEIGHT);
-		tableModelScanResult.addColumn("NO.");
+		tableModelScanResult.addColumn("No.");
 		tableModelScanResult.addColumn(res.getString("SessionNo"));
 		tableModelScanResult.addColumn(res.getString("UserID"));
 		tableModelScanResult.addColumn(res.getString("LoginTime"));

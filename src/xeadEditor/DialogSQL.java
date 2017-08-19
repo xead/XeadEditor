@@ -277,7 +277,7 @@ public class DialogSQL extends JDialog {
 		try {
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			bf.append(jTextAreaMessage.getText());
-			bf.append("\n<Table module>\t<XEAD defined name>\t<Number of rows>\n");
+			bf.append("\n<Table Module>\t<X-TEA Defined Name>\t<Rows>\n");
 			Connection connection = frame_.getDatabaseConnList().get(jComboBoxConnection.getSelectedIndex());
 			Statement statement = connection.createStatement();
 			DatabaseMetaData metaData = connection.getMetaData();

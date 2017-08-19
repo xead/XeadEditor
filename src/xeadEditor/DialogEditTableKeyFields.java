@@ -112,7 +112,7 @@ public class DialogEditTableKeyFields extends JDialog {
 		//jTableFieldList.addKeyListener(new DialogEditTableKeyFields_jTableFieldList_keyAdapter(this));
 		jTableFieldList.setRowSelectionAllowed(true);
 		jTableFieldList.setRowHeight(Editor.TABLE_ROW_HEIGHT);
-		tableModelFieldList.addColumn("NO.");
+		tableModelFieldList.addColumn("No.");
 		tableModelFieldList.addColumn(res.getString("FieldID"));
 		tableModelFieldList.addColumn(res.getString("FieldName"));
 		column0 = jTableFieldList.getColumnModel().getColumn(0);
@@ -141,7 +141,7 @@ public class DialogEditTableKeyFields extends JDialog {
 	    jTableKeyFieldList.addMouseMotionListener(new DialogEditTableKeyFields_jTableKeyFieldList_mouseMotionAdapter(this));
 		jTableKeyFieldList.setRowSelectionAllowed(true);
 		jTableKeyFieldList.setRowHeight(Editor.TABLE_ROW_HEIGHT);
-		tableModelKeyFieldList.addColumn("NO.");
+		tableModelKeyFieldList.addColumn("No.");
 		tableModelKeyFieldList.addColumn(res.getString("KeyFieldID"));
 		tableModelKeyFieldList.addColumn(res.getString("KeyFieldName"));
 		tableModelKeyFieldList.addColumn("A/D");

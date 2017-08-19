@@ -205,7 +205,7 @@ public class DialogImportModel extends JDialog {
 		jTableElementListFrom.getSelectionModel().addListSelectionListener(new DialogImportModel_jTableElementListFrom_listSelectionAdapter(this));
 		jTableElementListFrom.setRowSelectionAllowed(true);
 		jTableElementListFrom.setRowHeight(Editor.TABLE_ROW_HEIGHT);
-		tableModelElementListFrom.addColumn("NO.");
+		tableModelElementListFrom.addColumn("No.");
 		tableModelElementListFrom.addColumn("ID");
 		tableModelElementListFrom.addColumn(res.getString("ElementName"));
 		tableModelElementListFrom.addColumn(res.getString("ElementType"));

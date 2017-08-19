@@ -97,7 +97,7 @@ public class DialogCheckFunctionsCalled extends JDialog {
 		jTableCheckResult.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		jTableCheckResult.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jTableCheckResult.setRowHeight(Editor.TABLE_ROW_HEIGHT);
-		tableModelCheckResult.addColumn("NO.");
+		tableModelCheckResult.addColumn("No.");
 		tableModelCheckResult.addColumn(res.getString("ElementType"));
 		tableModelCheckResult.addColumn(res.getString("ElementName"));
 		tableModelCheckResult.addColumn(res.getString("Status"));

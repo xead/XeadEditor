@@ -239,7 +239,7 @@ public class DialogImport extends JDialog {
 		jTableTableListFrom.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jTableTableListFrom.setRowSelectionAllowed(true);
 		jTableTableListFrom.setRowHeight(Editor.TABLE_ROW_HEIGHT);
-		tableModelTableListFrom.addColumn("NO.");
+		tableModelTableListFrom.addColumn("No.");
 		tableModelTableListFrom.addColumn("");
 		tableModelTableListFrom.addColumn(res.getString("TableID"));
 		tableModelTableListFrom.addColumn(res.getString("TableName"));
@@ -274,7 +274,7 @@ public class DialogImport extends JDialog {
 		jTableFunctionListFrom.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jTableFunctionListFrom.setRowSelectionAllowed(true);
 		jTableFunctionListFrom.setRowHeight(Editor.TABLE_ROW_HEIGHT);
-		tableModelFunctionListFrom.addColumn("NO.");
+		tableModelFunctionListFrom.addColumn("No.");
 		tableModelFunctionListFrom.addColumn("");
 		tableModelFunctionListFrom.addColumn(res.getString("FunctionID"));
 		tableModelFunctionListFrom.addColumn(res.getString("FunctionName"));
@@ -307,7 +307,7 @@ public class DialogImport extends JDialog {
 		jTableTableListInto.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jTableTableListInto.setRowSelectionAllowed(true);
 		jTableTableListInto.setRowHeight(Editor.TABLE_ROW_HEIGHT);
-		tableModelTableListInto.addColumn("NO.");
+		tableModelTableListInto.addColumn("No.");
 		tableModelTableListInto.addColumn(res.getString("TableID"));
 		tableModelTableListInto.addColumn(res.getString("TableName"));
 		column0 = jTableTableListInto.getColumnModel().getColumn(0);
@@ -329,7 +329,7 @@ public class DialogImport extends JDialog {
 		jTableFunctionListInto.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jTableFunctionListInto.setRowSelectionAllowed(true);
 		jTableFunctionListInto.setRowHeight(Editor.TABLE_ROW_HEIGHT);
-		tableModelFunctionListInto.addColumn("NO.");
+		tableModelFunctionListInto.addColumn("No.");
 		tableModelFunctionListInto.addColumn(res.getString("FunctionID"));
 		tableModelFunctionListInto.addColumn(res.getString("FunctionName"));
 		column0 = jTableFunctionListInto.getColumnModel().getColumn(0);

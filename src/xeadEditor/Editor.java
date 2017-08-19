@@ -94,10 +94,10 @@ public class Editor extends JFrame {
     public static final Color INACTIVE_COLOR = SystemColor.control;
 	public static final Color SELECTED_INACTIVE_COLOR = new Color(193,204,219);
 	public static final Color SELECTED_ACTIVE_COLOR = new Color(49,106,197);
-	public static final int MAIN_FONT_SIZE = 16;
-	public static final int TREE_ROW_HEIGHT = 20;
-	public static final int TABLE_ROW_HEIGHT = 22;
-	public static final int TABLE_ROW_HEIGHT_EDITABLE = 25;
+	public static int MAIN_FONT_SIZE = 18;
+	public static final int TREE_ROW_HEIGHT = 22;
+	public static final int TABLE_ROW_HEIGHT = 24;
+	public static final int TABLE_ROW_HEIGHT_EDITABLE = 27;
 	public static String[] SECTION_DIGIT = {"(", ")", "{", "}", "+", "-", "/", "*", "=", "<", ">", ";", "|", "&", "\n", "\t", ",", " ", "!"};
 	public static String[] TABLE_OPERATION_METHOD = {"addValue(", "addKeyValue(", "setSelectFields(", "setDistinctFields(", "setOrderBy(", "getValueOf("};
 
@@ -1714,6 +1714,14 @@ public class Editor extends JFrame {
 	private ButtonGroup buttonGroupFunction300HeaderFieldCaptionOption = new ButtonGroup();
 	private Editor_KanjiTextField jTextFieldFunction300HeaderFieldCaptionOptionValue = new Editor_KanjiTextField();
 	private JCheckBox jCheckBoxFunction300HeaderFieldCaptionLengthVariable = new JCheckBox();
+	private JLabel jLabelFunction300HeaderFieldLinkedFunction = new JLabel();
+	private JTextField jTextFieldFunction300HeaderFieldLinkedFunctionID = new JTextField();
+	private JTextField jTextFieldFunction300HeaderFieldLinkedFunctionName = new JTextField();
+	private JButton jButtonFunction300HeaderFieldLinkedFunctionExchange = new JButton();
+	private String function300HeaderFieldLinkedFunctionFieldsToPut;
+	private String function300HeaderFieldLinkedFunctionFieldsToPutTo;
+	private String function300HeaderFieldLinkedFunctionFieldsToGet;
+	private String function300HeaderFieldLinkedFunctionFieldsToGetTo;
 	private JLabel jLabelFunction300HeaderFieldComment = new JLabel();
 	private Editor_KanjiTextField jTextFieldFunction300HeaderFieldComment = new Editor_KanjiTextField();
 	//
@@ -2815,6 +2823,13 @@ public class Editor extends JFrame {
 				if (wrkStr != null && !wrkStr.equals("")) {
 					mainFontName = wrkStr;
 				}
+				wrkStr = properties.getProperty("MainFontSize");
+				if (wrkStr != null && !wrkStr.equals("")) {
+					int size = Integer.parseInt(wrkStr);
+					if (size > 18) {
+						MAIN_FONT_SIZE = size;
+					}
+				}
 				wrkStr = properties.getProperty("ScriptFontSize");
 				if (wrkStr != null && !wrkStr.equals("")) {
 					scriptFontSize = Integer.parseInt(wrkStr);
@@ -2964,7 +2979,7 @@ public class Editor extends JFrame {
 		 */
 		jPanelMain = (JPanel) this.getContentPane();
 		jPanelMain.setLayout(new BorderLayout());
-		jPanelJumpButtons.setPreferredSize(new Dimension(10, 25));
+		jPanelJumpButtons.setPreferredSize(new Dimension(10, 26));
 		jPanelJumpButtons.setLayout(gridLayoutJumpButtons);
 		gridLayoutJumpButtons.setColumns(8);
 		gridLayoutJumpButtons.setRows(0);
@@ -2972,11 +2987,11 @@ public class Editor extends JFrame {
 		jProgressBar.setBorder(borderOriginal1);
 		jLabelChangeState.setBorder(jProgressBar.getBorder());
 		jLabelChangeState.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE-2));
-		jPanelTopMargin1.setPreferredSize(new Dimension(10, 24));
+		jPanelTopMargin1.setPreferredSize(new Dimension(10, 26));
 		jPanelTopMargin1.setLayout(new BorderLayout());
 		jPanelTopMargin1.setBorder(null);
 		GridLayout gridLayoutTopMargin = new GridLayout();
-		jPanelTopMargin2.setPreferredSize(new Dimension(190, 18));
+		jPanelTopMargin2.setPreferredSize(new Dimension(190, 20));
 		jPanelTopMargin2.setLayout(gridLayoutTopMargin);
 		jPanelTopMargin2.setBorder(null);
 		jLabelSubtitle.setBorder(jProgressBar.getBorder());
@@ -3505,7 +3520,7 @@ public class Editor extends JFrame {
 		jTableSystemSubDBList.addMouseListener(new Editor_jTableSystemSubDBList_mouseAdapter(this));
 		jTableSystemSubDBList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableSystemSubDBList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelSystemSubDBList.addColumn("NO.");
+		tableModelSystemSubDBList.addColumn("No.");
 		tableModelSystemSubDBList.addColumn(res.getString("DatabaseSubReadOnly"));
 		tableModelSystemSubDBList.addColumn(res.getString("Descriptions"));
 		column0 = jTableSystemSubDBList.getColumnModel().getColumn(0);
@@ -3534,7 +3549,7 @@ public class Editor extends JFrame {
 		jTableSystemSubDBUsageList.setSelectionForeground(Color.black);
 		jTableSystemSubDBUsageList.addFocusListener(new Editor_FocusListener());
 		jTableSystemSubDBUsageList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelSystemSubDBUsageList.addColumn("NO.");
+		tableModelSystemSubDBUsageList.addColumn("No.");
 		tableModelSystemSubDBUsageList.addColumn(res.getString("SubsystemName"));
 		tableModelSystemSubDBUsageList.addColumn(res.getString("WhereUsedTable"));
 		column0 = jTableSystemSubDBUsageList.getColumnModel().getColumn(0);
@@ -3959,7 +3974,7 @@ public class Editor extends JFrame {
 		jTableSystemPrintFontList.addMouseListener(new Editor_jTableSystemPrintFontList_mouseAdapter(this));
 		jTableSystemPrintFontList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableSystemPrintFontList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelSystemPrintFontList.addColumn("NO.");
+		tableModelSystemPrintFontList.addColumn("No.");
 		tableModelSystemPrintFontList.addColumn(res.getString("PrintFont"));
 		tableModelSystemPrintFontList.addColumn("PDF Font Name");
 		tableModelSystemPrintFontList.addColumn("PDF Encoding");
@@ -3991,7 +4006,7 @@ public class Editor extends JFrame {
 		jTableSystemPrintFontUsageList.setSelectionForeground(Color.black);
 		jTableSystemPrintFontUsageList.addFocusListener(new Editor_FocusListener());
 		jTableSystemPrintFontUsageList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelSystemPrintFontUsageList.addColumn("NO.");
+		tableModelSystemPrintFontUsageList.addColumn("No.");
 		tableModelSystemPrintFontUsageList.addColumn(res.getString("WhereUsed"));
 		tableModelSystemPrintFontUsageList.addColumn(res.getString("Type"));
 		column0 = jTableSystemPrintFontUsageList.getColumnModel().getColumn(0);
@@ -4120,7 +4135,7 @@ public class Editor extends JFrame {
 		jTableSystemMaintenanceLog.addFocusListener(new Editor_FocusListener());
 		jTableSystemMaintenanceLog.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableSystemMaintenanceLog.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelSystemMaintenanceLog.addColumn("NO.");
+		tableModelSystemMaintenanceLog.addColumn("No.");
 		tableModelSystemMaintenanceLog.addColumn(res.getString("SystemMaintenanceLogDateTime"));
 		tableModelSystemMaintenanceLog.addColumn(res.getString("SystemMaintenanceLogVersion"));
 		tableModelSystemMaintenanceLog.addColumn(res.getString("SystemMaintenanceLogRemarks"));
@@ -4180,7 +4195,7 @@ public class Editor extends JFrame {
 		jTableMenuList.addFocusListener(new Editor_FocusListener());
 		jTableMenuList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableMenuList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelMenuList.addColumn("NO.");
+		tableModelMenuList.addColumn("No.");
 		tableModelMenuList.addColumn("ID");
 		tableModelMenuList.addColumn(res.getString("MenuName"));
 		tableModelMenuList.addColumn(res.getString("MenuCrossCheckers"));
@@ -4350,7 +4365,7 @@ public class Editor extends JFrame {
 		jTableSubsystemList.addFocusListener(new Editor_FocusListener());
 		jTableSubsystemList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableSubsystemList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelSubsystemList.addColumn("NO.");
+		tableModelSubsystemList.addColumn("No.");
 		tableModelSubsystemList.addColumn("ID");
 		tableModelSubsystemList.addColumn(res.getString("SubsystemName"));
 		tableModelSubsystemList.addColumn(res.getString("SubsystemTables"));
@@ -4442,7 +4457,7 @@ public class Editor extends JFrame {
 		jTableTableList.addFocusListener(new Editor_FocusListener());
 		jTableTableList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableTableList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelTableList.addColumn("NO.");
+		tableModelTableList.addColumn("No.");
 		tableModelTableList.addColumn("ID");
 		tableModelTableList.addColumn(res.getString("TableName"));
 		tableModelTableList.addColumn(res.getString("PKey"));
@@ -4585,7 +4600,7 @@ public class Editor extends JFrame {
 		jTableTableFieldList.addFocusListener(new Editor_FocusListener());
 		jTableTableFieldList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableTableFieldList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelTableFieldList.addColumn("NO.");
+		tableModelTableFieldList.addColumn("No.");
 		tableModelTableFieldList.addColumn("ID");
 		tableModelTableFieldList.addColumn(res.getString("FieldName"));
 		tableModelTableFieldList.addColumn(res.getString("FieldType"));
@@ -4627,7 +4642,7 @@ public class Editor extends JFrame {
 		jTableTableKeyList.addFocusListener(new Editor_FocusListener());
 		jTableTableKeyList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableTableKeyList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelTableKeyList.addColumn("NO.");
+		tableModelTableKeyList.addColumn("No.");
 		tableModelTableKeyList.addColumn(res.getString("KeyType"));
 		tableModelTableKeyList.addColumn(res.getString("KeyFields"));
 		column0 = jTableTableKeyList.getColumnModel().getColumn(0);
@@ -4658,7 +4673,7 @@ public class Editor extends JFrame {
 		jTableTableReferList.addFocusListener(new Editor_FocusListener());
 		jTableTableReferList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableTableReferList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelTableReferList.addColumn("NO.");
+		tableModelTableReferList.addColumn("No.");
 		tableModelTableReferList.addColumn(res.getString("JoinTable"));
 		tableModelTableReferList.addColumn(res.getString("Alias"));
 		tableModelTableReferList.addColumn(res.getString("JoinWithKeys"));
@@ -4702,7 +4717,7 @@ public class Editor extends JFrame {
 		jTableTableScriptList.addFocusListener(new Editor_FocusListener());
 		jTableTableScriptList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableTableScriptList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelTableScriptList.addColumn("NO.");
+		tableModelTableScriptList.addColumn("No.");
 		tableModelTableScriptList.addColumn(res.getString("Name"));
 		tableModelTableScriptList.addColumn(res.getString("ExecuteWhen"));
 		tableModelTableScriptList.addColumn(res.getString("ExecuteWhenJoin"));
@@ -4733,7 +4748,7 @@ public class Editor extends JFrame {
 		jTableTableUsageList.setSelectionForeground(Color.black);
 		jTableTableUsageList.addFocusListener(new Editor_FocusListener());
 		jTableTableUsageList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelTableUsageList.addColumn("NO.");
+		tableModelTableUsageList.addColumn("No.");
 		tableModelTableUsageList.addColumn(res.getString("WhereUsed"));
 		tableModelTableUsageList.addColumn(res.getString("Type"));
 		tableModelTableUsageList.addColumn(res.getString("WhereUsedForm"));
@@ -5020,7 +5035,7 @@ public class Editor extends JFrame {
 		jTableTableFieldUsageList.setSelectionForeground(Color.black);
 		jTableTableFieldUsageList.addFocusListener(new Editor_FocusListener());
 		jTableTableFieldUsageList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelTableFieldUsageList.addColumn("NO.");
+		tableModelTableFieldUsageList.addColumn("No.");
 		tableModelTableFieldUsageList.addColumn(res.getString("WhereUsed"));
 		tableModelTableFieldUsageList.addColumn(res.getString("Type"));
 		tableModelTableFieldUsageList.addColumn(res.getString("WhereUsedForm"));
@@ -5091,7 +5106,7 @@ public class Editor extends JFrame {
 		jTableTableKeyRelationshipList.setSelectionForeground(Color.black);
 		jTableTableKeyRelationshipList.addFocusListener(new Editor_FocusListener());
 		jTableTableKeyRelationshipList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelTableKeyRelationshipList.addColumn("NO.");
+		tableModelTableKeyRelationshipList.addColumn("No.");
 		tableModelTableKeyRelationshipList.addColumn(res.getString("JoinTable"));
 		tableModelTableKeyRelationshipList.addColumn(res.getString("Alias"));
 		tableModelTableKeyRelationshipList.addColumn(res.getString("JoinWithKeys"));
@@ -5461,7 +5476,7 @@ public class Editor extends JFrame {
 		jPanelTableDataFieldsEditButtons.add(jButtonTableDataFieldsToCompress);
 		jPanelTableDataFieldsEditButtons.add(jButtonTableDataFieldsToListLog);
 		jPanelTableDataFieldsEditButtons.add(jButtonTableDataFieldsToImport);
-		jScrollPaneTableDataMessages.setPreferredSize(new Dimension(100,50));
+		jScrollPaneTableDataMessages.setPreferredSize(new Dimension(100,60));
 		jScrollPaneTableDataMessages.setBorder(null);
 		jScrollPaneTableDataMessages.getViewport().add(jTextAreaTableDataMessages, null);
 		jTextAreaTableDataMessages.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
@@ -5491,7 +5506,7 @@ public class Editor extends JFrame {
 		jTableFunctionList.addMouseListener(new Editor_jTableFunctionList_mouseAdapter(this));
 		jTableFunctionList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableFunctionList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunctionList.addColumn("NO.");
+		tableModelFunctionList.addColumn("No.");
 		tableModelFunctionList.addColumn("ID");
 		tableModelFunctionList.addColumn(res.getString("FunctionName"));
 		tableModelFunctionList.addColumn(res.getString("FunctionType"));
@@ -5696,7 +5711,7 @@ public class Editor extends JFrame {
 		jTableFunction000UsageList.addFocusListener(new Editor_FocusListener());
 		jTableFunction000UsageList.addMouseListener(new Editor_jTableFunction000UsageList_mouseAdapter(this));
 		jTableFunction000UsageList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction000UsageList.addColumn("NO.");
+		tableModelFunction000UsageList.addColumn("No.");
 		tableModelFunction000UsageList.addColumn(res.getString("FunctionsWhereUsed"));
 		tableModelFunction000UsageList.addColumn(res.getString("Type"));
 		tableModelFunction000UsageList.addColumn(res.getString("WhereUsedForm"));
@@ -5805,11 +5820,11 @@ public class Editor extends JFrame {
 		jLabelFunction100RowSelectionAction.setBounds(new Rectangle(5, 136, 130, 20));
 		jRadioButtonFunction100RowSelectionActionReturn.setText(res.getString("RowActionReturn"));
 		jRadioButtonFunction100RowSelectionActionReturn.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jRadioButtonFunction100RowSelectionActionReturn.setBounds(new Rectangle(140, 133, 130, 25));
+		jRadioButtonFunction100RowSelectionActionReturn.setBounds(new Rectangle(140, 133, 135, 25));
 		jRadioButtonFunction100RowSelectionActionReturn.addChangeListener(new Editor_jRadioButtonFunction100RowSelectionAction_changeAdapter(this));
 		jRadioButtonFunction100RowSelectionActionCall.setText(res.getString("RowActionCall"));
 		jRadioButtonFunction100RowSelectionActionCall.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jRadioButtonFunction100RowSelectionActionCall.setBounds(new Rectangle(270, 133, 130, 25));
+		jRadioButtonFunction100RowSelectionActionCall.setBounds(new Rectangle(275, 133, 125, 25));
 		jRadioButtonFunction100RowSelectionActionCall.addChangeListener(new Editor_jRadioButtonFunction100RowSelectionAction_changeAdapter(this));
 		buttonGroupFunction100RowSelectionAction.add(jRadioButtonFunction100RowSelectionActionReturn);
 		buttonGroupFunction100RowSelectionAction.add(jRadioButtonFunction100RowSelectionActionCall);
@@ -5824,13 +5839,13 @@ public class Editor extends JFrame {
 		jLabelFunction100ParmType.setHorizontalTextPosition(SwingConstants.LEADING);
 		//jLabelFunction100ParmType.setText(res.getString("Parameters"));
 		jLabelFunction100ParmType.setText("With");
-		jLabelFunction100ParmType.setBounds(new Rectangle(750, 136, 40, 20));
+		jLabelFunction100ParmType.setBounds(new Rectangle(750, 136, 50, 20));
 		jRadioButtonFunction100ParmTypeKeys.setText("KEYS");
 		jRadioButtonFunction100ParmTypeKeys.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jRadioButtonFunction100ParmTypeKeys.setBounds(new Rectangle(795, 133, 90, 25));
+		jRadioButtonFunction100ParmTypeKeys.setBounds(new Rectangle(805, 133, 90, 25));
 		jRadioButtonFunction100ParmTypeColumns.setText("COLUMNS");
 		jRadioButtonFunction100ParmTypeColumns.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jRadioButtonFunction100ParmTypeColumns.setBounds(new Rectangle(885, 133, 120, 25));
+		jRadioButtonFunction100ParmTypeColumns.setBounds(new Rectangle(895, 133, 120, 25));
 		jRadioButtonFunction100ParmTypeColumns.addChangeListener(new Editor_jRadioButtonFunction100RowSelectionAction_changeAdapter(this));
 		buttonGroupFunction100ParmType.add(jRadioButtonFunction100ParmTypeKeys);
 		buttonGroupFunction100ParmType.add(jRadioButtonFunction100ParmTypeColumns);
@@ -5838,9 +5853,9 @@ public class Editor extends JFrame {
 		jLabelFunction100ParmAdditional.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100ParmAdditional.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100ParmAdditional.setText("And");
-		jLabelFunction100ParmAdditional.setBounds(new Rectangle(1010, 136, 40, 20));
+		jLabelFunction100ParmAdditional.setBounds(new Rectangle(1020, 136, 40, 20));
 		jTextFieldFunction100ParmAdditional.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction100ParmAdditional.setBounds(new Rectangle(1055, 133, 200, 25));
+		jTextFieldFunction100ParmAdditional.setBounds(new Rectangle(1065, 133, 200, 25));
 		//
 		jLabelFunction100Size.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100Size.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -5849,11 +5864,11 @@ public class Editor extends JFrame {
 		jLabelFunction100Size.setBounds(new Rectangle(5, 167, 130, 20));
 		jRadioButtonFunction100SizeFull.setText(res.getString("SizeFull"));
 		jRadioButtonFunction100SizeFull.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jRadioButtonFunction100SizeFull.setBounds(new Rectangle(140, 164, 130, 25));
+		jRadioButtonFunction100SizeFull.setBounds(new Rectangle(140, 164, 135, 25));
 		jRadioButtonFunction100SizeFull.addChangeListener(new Editor_jRadioButtonFunction100Size_changeAdapter(this));
 		jRadioButtonFunction100SizeAuto.setText(res.getString("SizeAuto"));
 		jRadioButtonFunction100SizeAuto.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jRadioButtonFunction100SizeAuto.setBounds(new Rectangle(270, 164, 130, 25));
+		jRadioButtonFunction100SizeAuto.setBounds(new Rectangle(275, 164, 125, 25));
 		jRadioButtonFunction100SizeAuto.addChangeListener(new Editor_jRadioButtonFunction200Size_changeAdapter(this));
 		jRadioButtonFunction100SizeSpecify.setText(res.getString("SizeSpecified"));
 		jRadioButtonFunction100SizeSpecify.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
@@ -5951,7 +5966,7 @@ public class Editor extends JFrame {
 	    jTableFunction100ColumnList.addMouseMotionListener(new Editor_jTableFunction100ColumnList_mouseMotionAdapter(this));
 		jTableFunction100ColumnList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableFunction100ColumnList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction100ColumnList.addColumn("NO.");
+		tableModelFunction100ColumnList.addColumn("No.");
 		tableModelFunction100ColumnList.addColumn(res.getString("DataSource"));
 		tableModelFunction100ColumnList.addColumn(res.getString("FieldType"));
 		tableModelFunction100ColumnList.addColumn(res.getString("ControlOptions"));
@@ -6108,7 +6123,7 @@ public class Editor extends JFrame {
 	    jTableFunction100FilterList.addMouseMotionListener(new Editor_jTableFunction100FilterList_mouseMotionAdapter(this));
 		jTableFunction100FilterList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableFunction100FilterList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction100FilterList.addColumn("NO.");
+		tableModelFunction100FilterList.addColumn("No.");
 		tableModelFunction100FilterList.addColumn(res.getString("DataSource"));
 		tableModelFunction100FilterList.addColumn(res.getString("FieldType"));
 		tableModelFunction100FilterList.addColumn(res.getString("ControlOptions"));
@@ -6376,7 +6391,7 @@ public class Editor extends JFrame {
 		jTableFunction100ButtonList.addMouseListener(new Editor_jTableFunction100ButtonList_mouseAdapter(this));
 		jTableFunction100ButtonList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableFunction100ButtonList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction100ButtonList.addColumn("NO.");
+		tableModelFunction100ButtonList.addColumn("No.");
 		tableModelFunction100ButtonList.addColumn(res.getString("Pos_short"));
 		tableModelFunction100ButtonList.addColumn(res.getString("Caption"));
 		tableModelFunction100ButtonList.addColumn(res.getString("Action"));
@@ -6454,9 +6469,9 @@ public class Editor extends JFrame {
 		jLabelFunction100ButtonActionCallFunctionParm.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction100ButtonActionCallFunctionParm.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction100ButtonActionCallFunctionParm.setText("With");
-		jLabelFunction100ButtonActionCallFunctionParm.setBounds(new Rectangle(980, 43, 40, 20));
+		jLabelFunction100ButtonActionCallFunctionParm.setBounds(new Rectangle(980, 43, 50, 20));
 		jTextFieldFunction100ButtonActionCallFunctionParm.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction100ButtonActionCallFunctionParm.setBounds(new Rectangle(1025, 40, 200, 25));
+		jTextFieldFunction100ButtonActionCallFunctionParm.setBounds(new Rectangle(1035, 40, 200, 25));
 		//
 		jPanelFunction100ButtonDefinition.setLayout(null);
 		jPanelFunction100ButtonDefinition.setPreferredSize(new Dimension(100, 72));
@@ -6487,7 +6502,7 @@ public class Editor extends JFrame {
 		jTableFunction100UsageList.addFocusListener(new Editor_FocusListener());
 		jTableFunction100UsageList.addMouseListener(new Editor_jTableFunction100UsageList_mouseAdapter(this));
 		jTableFunction100UsageList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction100UsageList.addColumn("NO.");
+		tableModelFunction100UsageList.addColumn("No.");
 		tableModelFunction100UsageList.addColumn(res.getString("FunctionsWhereUsed"));
 		tableModelFunction100UsageList.addColumn(res.getString("Type"));
 		tableModelFunction100UsageList.addColumn(res.getString("WhereUsedForm"));
@@ -6678,7 +6693,7 @@ public class Editor extends JFrame {
 	    jTableFunction110ColumnList.addMouseMotionListener(new Editor_jTableFunction110ColumnList_mouseMotionAdapter(this));
 		jTableFunction110ColumnList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableFunction110ColumnList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction110ColumnList.addColumn("NO.");
+		tableModelFunction110ColumnList.addColumn("No.");
 		tableModelFunction110ColumnList.addColumn(res.getString("DataSource"));
 		tableModelFunction110ColumnList.addColumn(res.getString("FieldType"));
 		tableModelFunction110ColumnList.addColumn(res.getString("ControlOptions"));
@@ -6863,7 +6878,7 @@ public class Editor extends JFrame {
 	    jTableFunction110FilterList.addMouseMotionListener(new Editor_jTableFunction110FilterList_mouseMotionAdapter(this));
 		jTableFunction110FilterList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableFunction110FilterList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction110FilterList.addColumn("NO.");
+		tableModelFunction110FilterList.addColumn("No.");
 		tableModelFunction110FilterList.addColumn(res.getString("DataSource"));
 		tableModelFunction110FilterList.addColumn(res.getString("FieldType"));
 		tableModelFunction110FilterList.addColumn(res.getString("ControlOptions"));
@@ -7181,7 +7196,7 @@ public class Editor extends JFrame {
 	    jTableFunction110BatchFieldList.addMouseMotionListener(new Editor_jTableFunction110BatchFieldList_mouseMotionAdapter(this));
 		jTableFunction110BatchFieldList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableFunction110BatchFieldList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction110BatchFieldList.addColumn("NO.");
+		tableModelFunction110BatchFieldList.addColumn("No.");
 		tableModelFunction110BatchFieldList.addColumn(res.getString("DataSource"));
 		tableModelFunction110BatchFieldList.addColumn(res.getString("FieldType"));
 		tableModelFunction110BatchFieldList.addColumn(res.getString("ControlOptions"));
@@ -7398,7 +7413,7 @@ public class Editor extends JFrame {
 		jTableFunction110ButtonList.addMouseListener(new Editor_jTableFunction110ButtonList_mouseAdapter(this));
 		jTableFunction110ButtonList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableFunction110ButtonList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction110ButtonList.addColumn("NO.");
+		tableModelFunction110ButtonList.addColumn("No.");
 		tableModelFunction110ButtonList.addColumn(res.getString("Pos_short"));
 		tableModelFunction110ButtonList.addColumn(res.getString("Caption"));
 		tableModelFunction110ButtonList.addColumn(res.getString("Action"));
@@ -7485,7 +7500,7 @@ public class Editor extends JFrame {
 		jTableFunction110UsageList.addFocusListener(new Editor_FocusListener());
 		jTableFunction110UsageList.addMouseListener(new Editor_jTableFunction110UsageList_mouseAdapter(this));
 		jTableFunction110UsageList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction110UsageList.addColumn("NO.");
+		tableModelFunction110UsageList.addColumn("No.");
 		tableModelFunction110UsageList.addColumn(res.getString("FunctionsWhereUsed"));
 		tableModelFunction110UsageList.addColumn(res.getString("Type"));
 		tableModelFunction110UsageList.addColumn(res.getString("WhereUsedForm"));
@@ -7687,7 +7702,7 @@ public class Editor extends JFrame {
 	    jTableFunction200FieldList.addMouseMotionListener(new Editor_jTableFunction200FieldList_mouseMotionAdapter(this));
 		jTableFunction200FieldList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableFunction200FieldList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction200FieldList.addColumn("NO.");
+		tableModelFunction200FieldList.addColumn("No.");
 		tableModelFunction200FieldList.addColumn(res.getString("DataSource"));
 		tableModelFunction200FieldList.addColumn(res.getString("FieldType"));
 		tableModelFunction200FieldList.addColumn(res.getString("ControlOptions"));
@@ -7917,7 +7932,7 @@ public class Editor extends JFrame {
 	    jTableFunction200TabList.addMouseMotionListener(new Editor_jTableFunction200TabList_mouseMotionAdapter(this));
 		jTableFunction200TabList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableFunction200TabList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction200TabList.addColumn("NO.");
+		tableModelFunction200TabList.addColumn("No.");
 		tableModelFunction200TabList.addColumn(res.getString("Caption"));
 		column0 = jTableFunction200TabList.getColumnModel().getColumn(0);
 		column1 = jTableFunction200TabList.getColumnModel().getColumn(1);
@@ -7963,7 +7978,7 @@ public class Editor extends JFrame {
 	    jTableFunction200TabFieldList.addMouseMotionListener(new Editor_jTableFunction200TabFieldList_mouseMotionAdapter(this));
 		jTableFunction200TabFieldList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableFunction200TabFieldList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction200TabFieldList.addColumn("NO.");
+		tableModelFunction200TabFieldList.addColumn("No.");
 		tableModelFunction200TabFieldList.addColumn(res.getString("DataSource"));
 		tableModelFunction200TabFieldList.addColumn(res.getString("FieldType"));
 		tableModelFunction200TabFieldList.addColumn(res.getString("ControlOptions"));
@@ -8187,7 +8202,7 @@ public class Editor extends JFrame {
 		jTableFunction200ButtonList.addMouseListener(new Editor_jTableFunction200ButtonList_mouseAdapter(this));
 		jTableFunction200ButtonList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableFunction200ButtonList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction200ButtonList.addColumn("NO.");
+		tableModelFunction200ButtonList.addColumn("No.");
 		tableModelFunction200ButtonList.addColumn(res.getString("Pos_short"));
 		tableModelFunction200ButtonList.addColumn(res.getString("Caption"));
 		tableModelFunction200ButtonList.addColumn(res.getString("Action"));
@@ -8266,9 +8281,9 @@ public class Editor extends JFrame {
 		jLabelFunction200ButtonActionCallFunctionParm.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction200ButtonActionCallFunctionParm.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction200ButtonActionCallFunctionParm.setText("With");
-		jLabelFunction200ButtonActionCallFunctionParm.setBounds(new Rectangle(980, 43, 40, 20));
+		jLabelFunction200ButtonActionCallFunctionParm.setBounds(new Rectangle(980, 43, 50, 20));
 		jTextFieldFunction200ButtonActionCallFunctionParm.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction200ButtonActionCallFunctionParm.setBounds(new Rectangle(1025, 40, 200, 25));
+		jTextFieldFunction200ButtonActionCallFunctionParm.setBounds(new Rectangle(1035, 40, 200, 25));
 		//
 		jPanelFunction200ButtonDefinition.setPreferredSize(new Dimension(100,74));
 		jPanelFunction200ButtonDefinition.setLayout(null);
@@ -8299,7 +8314,7 @@ public class Editor extends JFrame {
 		jTableFunction200UsageList.addFocusListener(new Editor_FocusListener());
 		jTableFunction200UsageList.addMouseListener(new Editor_jTableFunction200UsageList_mouseAdapter(this));
 		jTableFunction200UsageList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction200UsageList.addColumn("NO.");
+		tableModelFunction200UsageList.addColumn("No.");
 		tableModelFunction200UsageList.addColumn(res.getString("FunctionsWhereUsed"));
 		tableModelFunction200UsageList.addColumn(res.getString("Type"));
 		tableModelFunction200UsageList.addColumn(res.getString("WhereUsedForm"));
@@ -8444,7 +8459,7 @@ public class Editor extends JFrame {
 	    jTableFunction290PhraseList.addMouseMotionListener(new Editor_jTableFunction290PhraseList_mouseMotionAdapter(this));
 		jTableFunction290PhraseList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableFunction290PhraseList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction290PhraseList.addColumn("NO.");
+		tableModelFunction290PhraseList.addColumn("No.");
 		tableModelFunction290PhraseList.addColumn("B");
 		tableModelFunction290PhraseList.addColumn(res.getString("PhraseFormula"));
 		tableModelFunction290PhraseList.addColumn("Align");
@@ -8619,7 +8634,7 @@ public class Editor extends JFrame {
 		jTableFunction290UsageList.addFocusListener(new Editor_FocusListener());
 		jTableFunction290UsageList.addMouseListener(new Editor_jTableFunction290UsageList_mouseAdapter(this));
 		jTableFunction290UsageList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction290UsageList.addColumn("NO.");
+		tableModelFunction290UsageList.addColumn("No.");
 		tableModelFunction290UsageList.addColumn(res.getString("FunctionsWhereUsed"));
 		tableModelFunction290UsageList.addColumn(res.getString("Type"));
 		tableModelFunction290UsageList.addColumn(res.getString("WhereUsedForm"));
@@ -8715,9 +8730,9 @@ public class Editor extends JFrame {
 		jLabelFunction300HeaderFunctionParms.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300HeaderFunctionParms.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300HeaderFunctionParms.setText("With");
-		jLabelFunction300HeaderFunctionParms.setBounds(new Rectangle(625, 105, 40, 20));
+		jLabelFunction300HeaderFunctionParms.setBounds(new Rectangle(625, 105, 50, 20));
 		jTextFieldFunction300HeaderFunctionParms.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction300HeaderFunctionParms.setBounds(new Rectangle(670, 103, 200, 25));
+		jTextFieldFunction300HeaderFunctionParms.setBounds(new Rectangle(680, 103, 200, 25));
 		//
 		jLabelFunction300Size.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300Size.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -8784,7 +8799,7 @@ public class Editor extends JFrame {
 	    jTableFunction300HeaderFieldList.addMouseMotionListener(new Editor_jTableFunction300HeaderFieldList_mouseMotionAdapter(this));
 		jTableFunction300HeaderFieldList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableFunction300HeaderFieldList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction300HeaderFieldList.addColumn("NO.");
+		tableModelFunction300HeaderFieldList.addColumn("No.");
 		tableModelFunction300HeaderFieldList.addColumn(res.getString("DataSource"));
 		tableModelFunction300HeaderFieldList.addColumn(res.getString("FieldType"));
 		tableModelFunction300HeaderFieldList.addColumn(res.getString("ControlOptions"));
@@ -8909,18 +8924,34 @@ public class Editor extends JFrame {
 		jCheckBoxFunction300HeaderFieldCaptionLengthVariable.setBounds(new Rectangle(760, 102, 200, 25));
 		jCheckBoxFunction300HeaderFieldCaptionLengthVariable.setText(res.getString("CaptionLengthVariable"));
 		//
+		jLabelFunction300HeaderFieldLinkedFunction.setText(res.getString("LinkedFunction"));
+		jLabelFunction300HeaderFieldLinkedFunction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelFunction300HeaderFieldLinkedFunction.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction300HeaderFieldLinkedFunction.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction300HeaderFieldLinkedFunction.setBounds(new Rectangle(5, 136, 130, 20));
+		jTextFieldFunction300HeaderFieldLinkedFunctionID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300HeaderFieldLinkedFunctionID.setBounds(new Rectangle(140, 133, 120, 25));
+		jTextFieldFunction300HeaderFieldLinkedFunctionID.addKeyListener(new Editor_jTextFieldFunction300HeaderFieldLinkedFunctionID_keyAdapter(this));
+		jTextFieldFunction300HeaderFieldLinkedFunctionName.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300HeaderFieldLinkedFunctionName.setBounds(new Rectangle(265, 133, 280, 25));
+		jTextFieldFunction300HeaderFieldLinkedFunctionName.setEditable(false);
+		jButtonFunction300HeaderFieldLinkedFunctionExchange.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jButtonFunction300HeaderFieldLinkedFunctionExchange.setText(res.getString("ExchangeParms"));
+		jButtonFunction300HeaderFieldLinkedFunctionExchange.setBounds(new Rectangle(545, 132, 100, 27));
+		jButtonFunction300HeaderFieldLinkedFunctionExchange.addActionListener(new Editor_jButtonToEditPromptOptionCallFunctionExchange_actionAdapter(this));
+		//
 		jLabelFunction300HeaderFieldComment.setEnabled(false);
 		jLabelFunction300HeaderFieldComment.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300HeaderFieldComment.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300HeaderFieldComment.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300HeaderFieldComment.setText(res.getString("Comment"));
-		jLabelFunction300HeaderFieldComment.setBounds(new Rectangle(5, 136, 130, 20));
+		jLabelFunction300HeaderFieldComment.setBounds(new Rectangle(5, 167, 130, 20));
 		jTextFieldFunction300HeaderFieldComment.setEnabled(false);
 		jTextFieldFunction300HeaderFieldComment.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction300HeaderFieldComment.setBounds(new Rectangle(140, 133, 795, 25));
+		jTextFieldFunction300HeaderFieldComment.setBounds(new Rectangle(140, 164, 795, 25));
 		jTextFieldFunction300HeaderFieldComment.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
 		//
-		jPanelFunction300HeaderFieldDefinition.setPreferredSize(new Dimension(990, 167));
+		jPanelFunction300HeaderFieldDefinition.setPreferredSize(new Dimension(990, 198));
 		jPanelFunction300HeaderFieldDefinition.setLayout(null);
 		jPanelFunction300HeaderFieldDefinition.setBorder(null);
 		jPanelFunction300HeaderFieldDefinition.add(jLabelFunction300HeaderTable);
@@ -8946,6 +8977,10 @@ public class Editor extends JFrame {
 		jPanelFunction300HeaderFieldDefinition.add(jRadioButtonFunction300HeaderFieldCaptionOptionNone);
 		jPanelFunction300HeaderFieldDefinition.add(jTextFieldFunction300HeaderFieldCaptionOptionValue);
 		jPanelFunction300HeaderFieldDefinition.add(jCheckBoxFunction300HeaderFieldCaptionLengthVariable);
+		jPanelFunction300HeaderFieldDefinition.add(jLabelFunction300HeaderFieldLinkedFunction);
+		jPanelFunction300HeaderFieldDefinition.add(jTextFieldFunction300HeaderFieldLinkedFunctionID);
+		jPanelFunction300HeaderFieldDefinition.add(jTextFieldFunction300HeaderFieldLinkedFunctionName);
+		jPanelFunction300HeaderFieldDefinition.add(jButtonFunction300HeaderFieldLinkedFunctionExchange);
 		jPanelFunction300HeaderFieldDefinition.add(jLabelFunction300HeaderFieldComment);
 		jPanelFunction300HeaderFieldDefinition.add(jTextFieldFunction300HeaderFieldComment);
 		//
@@ -9003,7 +9038,7 @@ public class Editor extends JFrame {
 		jTextFieldFunction300DetailFixedWhere.setBounds(new Rectangle(140, 102, 700, 25));
 		jCheckBoxFunction300InitialListing.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jCheckBoxFunction300InitialListing.setText(res.getString("InitialListing"));
-		jCheckBoxFunction300InitialListing.setBounds(new Rectangle(850, 102, 200, 25));
+		jCheckBoxFunction300InitialListing.setBounds(new Rectangle(850, 102, 230, 25));
 		//
 		jLabelFunction300DetailRowSelectionAction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailRowSelectionAction.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -9012,11 +9047,11 @@ public class Editor extends JFrame {
 		jLabelFunction300DetailRowSelectionAction.setBounds(new Rectangle(5, 136, 130, 20));
 		jRadioButtonFunction300DetailRowSelectionActionReturn.setText(res.getString("RowActionReturn"));
 		jRadioButtonFunction300DetailRowSelectionActionReturn.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jRadioButtonFunction300DetailRowSelectionActionReturn.setBounds(new Rectangle(140, 133, 130, 25));
+		jRadioButtonFunction300DetailRowSelectionActionReturn.setBounds(new Rectangle(140, 133, 135, 25));
 		jRadioButtonFunction300DetailRowSelectionActionReturn.addChangeListener(new Editor_jRadioButtonFunction300DetailRowSelectionAction_changeAdapter(this));
 		jRadioButtonFunction300DetailRowSelectionActionCall.setText(res.getString("RowActionCall"));
 		jRadioButtonFunction300DetailRowSelectionActionCall.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jRadioButtonFunction300DetailRowSelectionActionCall.setBounds(new Rectangle(270, 133, 130, 25));
+		jRadioButtonFunction300DetailRowSelectionActionCall.setBounds(new Rectangle(275, 133, 125, 25));
 		jRadioButtonFunction300DetailRowSelectionActionCall.addChangeListener(new Editor_jRadioButtonFunction300DetailRowSelectionAction_changeAdapter(this));
 		buttonGroupFunction300DetailRowSelectionAction.add(jRadioButtonFunction300DetailRowSelectionActionReturn);
 		buttonGroupFunction300DetailRowSelectionAction.add(jRadioButtonFunction300DetailRowSelectionActionCall);
@@ -9031,13 +9066,13 @@ public class Editor extends JFrame {
 		jLabelFunction300DetailParmType.setHorizontalTextPosition(SwingConstants.LEADING);
 		//jLabelFunction300DetailParmType.setText(res.getString("Parameters"));
 		jLabelFunction300DetailParmType.setText("With");
-		jLabelFunction300DetailParmType.setBounds(new Rectangle(750, 136, 40, 20));
+		jLabelFunction300DetailParmType.setBounds(new Rectangle(750, 136, 50, 20));
 		jRadioButtonFunction300DetailParmTypeKeys.setText("KEYS");
 		jRadioButtonFunction300DetailParmTypeKeys.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jRadioButtonFunction300DetailParmTypeKeys.setBounds(new Rectangle(795, 133, 90, 25));
+		jRadioButtonFunction300DetailParmTypeKeys.setBounds(new Rectangle(815, 133, 90, 25));
 		jRadioButtonFunction300DetailParmTypeColumns.setText("COLUMNS");
 		jRadioButtonFunction300DetailParmTypeColumns.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jRadioButtonFunction300DetailParmTypeColumns.setBounds(new Rectangle(890, 133, 115, 25));
+		jRadioButtonFunction300DetailParmTypeColumns.setBounds(new Rectangle(900, 133, 120, 25));
 		jRadioButtonFunction300DetailParmTypeColumns.addChangeListener(new Editor_jRadioButtonFunction300DetailRowSelectionAction_changeAdapter(this));
 		buttonGroupFunction300DetailParmType.add(jRadioButtonFunction300DetailParmTypeKeys);
 		buttonGroupFunction300DetailParmType.add(jRadioButtonFunction300DetailParmTypeColumns);
@@ -9045,9 +9080,9 @@ public class Editor extends JFrame {
 		jLabelFunction300DetailParmAdditional.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailParmAdditional.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailParmAdditional.setText("And");
-		jLabelFunction300DetailParmAdditional.setBounds(new Rectangle(1010, 136, 40, 20));
+		jLabelFunction300DetailParmAdditional.setBounds(new Rectangle(1025, 136, 40, 20));
 		jTextFieldFunction300DetailParmAdditional.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction300DetailParmAdditional.setBounds(new Rectangle(1055, 133, 200, 25));
+		jTextFieldFunction300DetailParmAdditional.setBounds(new Rectangle(1070, 133, 200, 25));
 		//
 		jPanelFunction300DetailListTop.add(jLabelFunction300DetailCaption);
 		jPanelFunction300DetailListTop.add(jTextFieldFunction300DetailCaption);
@@ -9093,7 +9128,7 @@ public class Editor extends JFrame {
 	    jTableFunction300DetailList.addMouseMotionListener(new Editor_jTableFunction300DetailList_mouseMotionAdapter(this));
 		jTableFunction300DetailList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableFunction300DetailList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction300DetailList.addColumn("NO.");
+		tableModelFunction300DetailList.addColumn("No.");
 		tableModelFunction300DetailList.addColumn(res.getString("Caption"));
 		tableModelFunction300DetailList.addColumn(res.getString("DTLTable"));
 		tableModelFunction300DetailList.addColumn(res.getString("DTLFunction"));
@@ -9134,7 +9169,7 @@ public class Editor extends JFrame {
 	    jTableFunction300DetailFieldList.addMouseMotionListener(new Editor_jTableFunction300DetailFieldList_mouseMotionAdapter(this));
 		jTableFunction300DetailFieldList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableFunction300DetailFieldList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction300DetailFieldList.addColumn("NO.");
+		tableModelFunction300DetailFieldList.addColumn("No.");
 		tableModelFunction300DetailFieldList.addColumn(res.getString("DataSource"));
 		tableModelFunction300DetailFieldList.addColumn(res.getString("FieldType"));
 		tableModelFunction300DetailFieldList.addColumn(res.getString("ControlOptions"));
@@ -9289,7 +9324,7 @@ public class Editor extends JFrame {
 	    jTableFunction300DetailFilterList.addMouseMotionListener(new Editor_jTableFunction300DetailFilterList_mouseMotionAdapter(this));
 		jTableFunction300DetailFilterList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableFunction300DetailFilterList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction300DetailFilterList.addColumn("NO.");
+		tableModelFunction300DetailFilterList.addColumn("No.");
 		tableModelFunction300DetailFilterList.addColumn(res.getString("DataSource"));
 		tableModelFunction300DetailFilterList.addColumn(res.getString("FieldType"));
 		tableModelFunction300DetailFilterList.addColumn(res.getString("ControlOptions"));
@@ -9555,7 +9590,7 @@ public class Editor extends JFrame {
 		jTableFunction300DetailButtonList.addMouseListener(new Editor_jTableFunction300DetailButtonList_mouseAdapter(this));
 		jTableFunction300DetailButtonList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableFunction300DetailButtonList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction300DetailButtonList.addColumn("NO.");
+		tableModelFunction300DetailButtonList.addColumn("No.");
 		tableModelFunction300DetailButtonList.addColumn(res.getString("Pos_short"));
 		tableModelFunction300DetailButtonList.addColumn(res.getString("Caption"));
 		tableModelFunction300DetailButtonList.addColumn(res.getString("Action"));
@@ -9633,9 +9668,9 @@ public class Editor extends JFrame {
 		jLabelFunction300DetailButtonActionCallFunctionParm.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailButtonActionCallFunctionParm.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFunction300DetailButtonActionCallFunctionParm.setText("With");
-		jLabelFunction300DetailButtonActionCallFunctionParm.setBounds(new Rectangle(980, 43, 40, 20));
+		jLabelFunction300DetailButtonActionCallFunctionParm.setBounds(new Rectangle(980, 43, 50, 20));
 		jTextFieldFunction300DetailButtonActionCallFunctionParm.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldFunction300DetailButtonActionCallFunctionParm.setBounds(new Rectangle(1025, 40, 200, 25));
+		jTextFieldFunction300DetailButtonActionCallFunctionParm.setBounds(new Rectangle(1035, 40, 200, 25));
 		//
 		jPanelFunction300DetailButtonDefinition.setPreferredSize(new Dimension(100, 74));
 		jPanelFunction300DetailButtonDefinition.setLayout(null);
@@ -9774,7 +9809,7 @@ public class Editor extends JFrame {
 		jTableFunction300UsageList.addFocusListener(new Editor_FocusListener());
 		jTableFunction300UsageList.addMouseListener(new Editor_jTableFunction300UsageList_mouseAdapter(this));
 		jTableFunction300UsageList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction300UsageList.addColumn("NO.");
+		tableModelFunction300UsageList.addColumn("No.");
 		tableModelFunction300UsageList.addColumn(res.getString("FunctionsWhereUsed"));
 		tableModelFunction300UsageList.addColumn(res.getString("Type"));
 		tableModelFunction300UsageList.addColumn(res.getString("WhereUsedForm"));
@@ -9969,7 +10004,7 @@ public class Editor extends JFrame {
 	    jTableFunction310HeaderFieldList.addMouseMotionListener(new Editor_jTableFunction310HeaderFieldList_mouseMotionAdapter(this));
 		jTableFunction310HeaderFieldList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableFunction310HeaderFieldList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction310HeaderFieldList.addColumn("NO.");
+		tableModelFunction310HeaderFieldList.addColumn("No.");
 		tableModelFunction310HeaderFieldList.addColumn(res.getString("DataSource"));
 		tableModelFunction310HeaderFieldList.addColumn(res.getString("FieldType"));
 		tableModelFunction310HeaderFieldList.addColumn(res.getString("ControlOptions"));
@@ -10194,7 +10229,7 @@ public class Editor extends JFrame {
 	    jTableFunction310DetailFieldList.addMouseMotionListener(new Editor_jTableFunction310DetailFieldList_mouseMotionAdapter(this));
 		jTableFunction310DetailFieldList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableFunction310DetailFieldList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction310DetailFieldList.addColumn("NO.");
+		tableModelFunction310DetailFieldList.addColumn("No.");
 		tableModelFunction310DetailFieldList.addColumn(res.getString("DataSource"));
 		tableModelFunction310DetailFieldList.addColumn(res.getString("FieldType"));
 		tableModelFunction310DetailFieldList.addColumn(res.getString("ControlOptions"));
@@ -10381,7 +10416,7 @@ public class Editor extends JFrame {
 		jTableFunction310ButtonList.addMouseListener(new Editor_jTableFunction310ButtonList_mouseAdapter(this));
 		jTableFunction310ButtonList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableFunction310ButtonList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction310ButtonList.addColumn("NO.");
+		tableModelFunction310ButtonList.addColumn("No.");
 		tableModelFunction310ButtonList.addColumn(res.getString("Pos_short"));
 		tableModelFunction310ButtonList.addColumn(res.getString("Caption"));
 		tableModelFunction310ButtonList.addColumn(res.getString("Action"));
@@ -10499,7 +10534,7 @@ public class Editor extends JFrame {
 		jTableFunction310UsageList.addFocusListener(new Editor_FocusListener());
 		jTableFunction310UsageList.addMouseListener(new Editor_jTableFunction310UsageList_mouseAdapter(this));
 		jTableFunction310UsageList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction310UsageList.addColumn("NO.");
+		tableModelFunction310UsageList.addColumn("No.");
 		tableModelFunction310UsageList.addColumn(res.getString("FunctionsWhereUsed"));
 		tableModelFunction310UsageList.addColumn(res.getString("Type"));
 		tableModelFunction310UsageList.addColumn(res.getString("WhereUsedForm"));
@@ -10644,7 +10679,7 @@ public class Editor extends JFrame {
 	    jTableFunction390HeaderPhraseList.addMouseMotionListener(new Editor_jTableFunction390HeaderPhraseList_mouseMotionAdapter(this));
 		jTableFunction390HeaderPhraseList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableFunction390HeaderPhraseList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction390HeaderPhraseList.addColumn("NO.");
+		tableModelFunction390HeaderPhraseList.addColumn("No.");
 		tableModelFunction390HeaderPhraseList.addColumn("B");
 		tableModelFunction390HeaderPhraseList.addColumn(res.getString("PhraseFormula"));
 		tableModelFunction390HeaderPhraseList.addColumn("Align");
@@ -10820,7 +10855,7 @@ public class Editor extends JFrame {
 	    jTableFunction390DetailList.addMouseMotionListener(new Editor_jTableFunction390DetailList_mouseMotionAdapter(this));
 		jTableFunction390DetailList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableFunction390DetailList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction390DetailList.addColumn("NO.");
+		tableModelFunction390DetailList.addColumn("No.");
 		tableModelFunction390DetailList.addColumn(res.getString("Caption"));
 		tableModelFunction390DetailList.addColumn(res.getString("DTLTable"));
 		column0 = jTableFunction390DetailList.getColumnModel().getColumn(0);
@@ -10985,7 +11020,7 @@ public class Editor extends JFrame {
 	    jTableFunction390DetailFieldList.addMouseMotionListener(new Editor_jTableFunction390DetailFieldList_mouseMotionAdapter(this));
 		jTableFunction390DetailFieldList.addKeyListener(new Editor_TableKeyAdapter(this));
 		jTableFunction390DetailFieldList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction390DetailFieldList.addColumn("NO.");
+		tableModelFunction390DetailFieldList.addColumn("No.");
 		tableModelFunction390DetailFieldList.addColumn(res.getString("DataSource"));
 		tableModelFunction390DetailFieldList.addColumn(res.getString("FieldType"));
 		tableModelFunction390DetailFieldList.addColumn(res.getString("WidthRate"));
@@ -11157,7 +11192,7 @@ public class Editor extends JFrame {
 		jTableFunction390UsageList.addFocusListener(new Editor_FocusListener());
 		jTableFunction390UsageList.addMouseListener(new Editor_jTableFunction390UsageList_mouseAdapter(this));
 		jTableFunction390UsageList.setRowHeight(TABLE_ROW_HEIGHT);
-		tableModelFunction390UsageList.addColumn("NO.");
+		tableModelFunction390UsageList.addColumn("No.");
 		tableModelFunction390UsageList.addColumn(res.getString("FunctionsWhereUsed"));
 		tableModelFunction390UsageList.addColumn(res.getString("Type"));
 		tableModelFunction390UsageList.addColumn(res.getString("WhereUsedForm"));
@@ -12891,6 +12926,13 @@ public class Editor extends JFrame {
 						result = result + res.getString("Comma");
 					}
 					result = result + res.getString("PrompterFunction");
+					break;
+				}
+				if (optionList.get(i).contains("LINKED_CALL")) {
+					if (!result.equals("")) {
+						result = result + res.getString("Comma");
+					}
+					result = result + res.getString("LinkedFunction");
 					break;
 				}
 			}
@@ -15789,11 +15831,6 @@ public class Editor extends JFrame {
 			jLabelSubtitle.setText(this.getName());
 			jTextFieldMenuID.setText(domNode_.getAttribute("ID"));
 			jTextFieldMenuName.setText(domNode_.getAttribute("Name"));
-//			if (domNode_.getAttribute("CrossCheckersToBeLoaded").equals("")) {
-//				jTextFieldMenuPreloadedCrossCheckers.setText("*None");
-//			} else {
-//				jTextFieldMenuPreloadedCrossCheckers.setText(domNode_.getAttribute("CrossCheckersToBeLoaded"));
-//			}
 			if (domNode_.getAttribute("FunctionsToBeLoaded").equals("")) {
 				jTextFieldMenuPreloadedFunctions.setText("*None");
 			} else {
@@ -15814,7 +15851,7 @@ public class Editor extends JFrame {
 			jTableMenuFunctionList.setBackground(SystemColor.control);
 			jTableMenuFunctionList.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 			jTableMenuFunctionList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-			tableModelMenuFunctionList.addColumn("NO.");
+			tableModelMenuFunctionList.addColumn("No.");
 			tableModelMenuFunctionList.addColumn("Index");
 			tableModelMenuFunctionList.addColumn(res.getString("FunctionID"));
 			tableModelMenuFunctionList.addColumn(res.getString("FunctionName"));
@@ -16000,7 +16037,7 @@ public class Editor extends JFrame {
 
 					tableModelTableDataList = new TableModelReadOnlyList();
 					jTableTableDataList.setModel(tableModelTableDataList);
-					tableModelTableDataList.addColumn("NO.");
+					tableModelTableDataList.addColumn("No.");
 					columnWidthList.add(60);
 					columnTypeList.add("INTEGER");
 
@@ -16389,11 +16426,6 @@ public class Editor extends JFrame {
 					Cell[3] = res.getString("FunctionTypeXF000");
 					Cell[4] = "*None";
 				}
-				if (node.getElement().getAttribute("Type").equals("XF010")) {
-					Cell[3] = res.getString("FunctionTypeXF010");
-			        tableNode = getSpecificXETreeNode("Table", node.getElement().getAttribute("PrimaryTable"));
-					Cell[4] = node.getElement().getAttribute("PrimaryTable") + " " + tableNode.getElement().getAttribute("Name");
-				}
 				if (node.getElement().getAttribute("Type").equals("XF100")) {
 					Cell[3] = res.getString("FunctionTypeXF100");
 			        tableNode = getSpecificXETreeNode("Table", node.getElement().getAttribute("PrimaryTable"));
@@ -16406,11 +16438,6 @@ public class Editor extends JFrame {
 				}
 				if (node.getElement().getAttribute("Type").equals("XF200")) {
 					Cell[3] = res.getString("FunctionTypeXF200");
-			        tableNode = getSpecificXETreeNode("Table", node.getElement().getAttribute("PrimaryTable"));
-					Cell[4] = node.getElement().getAttribute("PrimaryTable") + " " + tableNode.getElement().getAttribute("Name");
-				}
-				if (node.getElement().getAttribute("Type").equals("XF210")) {
-					Cell[3] = res.getString("FunctionTypeXF210");
 			        tableNode = getSpecificXETreeNode("Table", node.getElement().getAttribute("PrimaryTable"));
 					Cell[4] = node.getElement().getAttribute("PrimaryTable") + " " + tableNode.getElement().getAttribute("Name");
 				}
@@ -23370,6 +23397,63 @@ public class Editor extends JFrame {
 								wrkOptions = wrkOptions + ",";
 							}
 							wrkOptions = wrkOptions + "VERTICAL(" + wrkStr2 + ")";
+						}
+					}
+				}
+				//
+				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "LINKED_CALL");
+				if (jTextFieldFunction300HeaderFieldLinkedFunctionID.getText().toUpperCase().equals("*NONE")
+						|| jTextFieldFunction300HeaderFieldLinkedFunctionID.getText().equals("")) {
+					if (!wrkStr.equals("")) {
+						valueOfFieldsChanged = true;
+					}
+				} else {
+					if (!wrkStr.equals(jTextFieldFunction300HeaderFieldLinkedFunctionID.getText())) {
+						valueOfFieldsChanged = true;
+						if (!wrkOptions.equals("")) {
+							wrkOptions = wrkOptions + ",";
+						}
+						wrkOptions = wrkOptions + "LINKED_CALL(" + jTextFieldFunction300HeaderFieldLinkedFunctionID.getText() + ")";
+						//
+						wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "LINKED_CALL_TO_PUT");
+						if (!wrkStr.equals(function300HeaderFieldLinkedFunctionFieldsToPut)) {
+							valueOfFieldsChanged = true;
+						}
+						if (!function300HeaderFieldLinkedFunctionFieldsToPut.equals("")) {
+							if (!wrkOptions.equals("")) {
+								wrkOptions = wrkOptions + ",";
+							}
+							wrkOptions = wrkOptions + "LINKED_CALL_TO_PUT(" + function300HeaderFieldLinkedFunctionFieldsToPut + ")";
+						}
+						wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "LINKED_CALL_TO_PUT_TO");
+						if (!wrkStr.equals(function300HeaderFieldLinkedFunctionFieldsToPutTo)) {
+							valueOfFieldsChanged = true;
+						}
+						if (!function300HeaderFieldLinkedFunctionFieldsToPutTo.equals("")) {
+							if (!wrkOptions.equals("")) {
+								wrkOptions = wrkOptions + ",";
+							}
+							wrkOptions = wrkOptions + "LINKED_CALL_TO_PUT_TO(" + function300HeaderFieldLinkedFunctionFieldsToPutTo + ")";
+						}
+						wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "LINKED_CALL_TO_GET");
+						if (!wrkStr.equals(function300HeaderFieldLinkedFunctionFieldsToGet)) {
+							valueOfFieldsChanged = true;
+						}
+						if (!function300HeaderFieldLinkedFunctionFieldsToGet.equals("")) {
+							if (!wrkOptions.equals("")) {
+								wrkOptions = wrkOptions + ",";
+							}
+							wrkOptions = wrkOptions + "LINKED_CALL_TO_GET(" + function300HeaderFieldLinkedFunctionFieldsToGet + ")";
+						}
+						wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "LINKED_CALL_TO_GET_TO");
+						if (!wrkStr.equals(function300HeaderFieldLinkedFunctionFieldsToGetTo)) {
+							valueOfFieldsChanged = true;
+						}
+						if (!function300HeaderFieldLinkedFunctionFieldsToGetTo.equals("")) {
+							if (!wrkOptions.equals("")) {
+								wrkOptions = wrkOptions + ",";
+							}
+							wrkOptions = wrkOptions + "LINKED_CALL_TO_GET_TO(" + function300HeaderFieldLinkedFunctionFieldsToGetTo + ")";
 						}
 					}
 				}
@@ -32866,20 +32950,6 @@ public class Editor extends JFrame {
 		for (int i = 0; i < sortingList.getSize(); i++) {
 			element1 = (org.w3c.dom.Element)sortingList.getElementAt(i);
 			//
-			if (element1.getAttribute("Type").equals("XF010")) { 
-				wrkStr = substringLinesWithTokenOfEOL(element1.getAttribute("Script"), "\n");
-				wrkStr = removeCommentsFromScriptText(wrkStr);
-				if (wrkStr.contains(fieldExpInScript)) {
-					countOfUsageRows++;
-					Object[] Cell = new Object[4];
-					Cell[0] = new TableRowNumber(countOfUsageRows, element1);
-					Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
-					Cell[2] = element1.getAttribute("Type");
-					Cell[3] = res.getString("FieldUsageInScript3");
-					tableModelTableFieldUsageList.addRow(Cell);
-				}
-			}
-			//
 			if (element1.getAttribute("Type").equals("XF100")) { 
 				workNode = getSpecificXETreeNode("Table", element1.getAttribute("PrimaryTable"));
 				element2 = workNode.getElement();
@@ -33226,9 +33296,7 @@ public class Editor extends JFrame {
 				}
 			}
 			//
-			if (element1.getAttribute("Type").equals("XF010")
-					|| element1.getAttribute("Type").equals("XF200") 
-					|| element1.getAttribute("Type").equals("XF210") 
+			if (element1.getAttribute("Type").equals("XF200") 
 					|| element1.getAttribute("Type").equals("XF290")) { 
 				workNode = getSpecificXETreeNode("Table", element1.getAttribute("PrimaryTable"));
 				element2 = workNode.getElement();
@@ -33514,7 +33582,42 @@ public class Editor extends JFrame {
 						Cell[2] = element1.getAttribute("Type");
 						Cell[3] = res.getString("HDRField");
 						tableModelTableFieldUsageList.addRow(Cell);
-						break;
+					}
+					//
+					workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "LINKED_CALL_TO_PUT"), ";" );
+					while (workTokenizer.hasMoreTokens()) {
+						wrkStr = workTokenizer.nextToken();
+						pos1 = wrkStr.indexOf(".");
+						targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null);
+						targetFieldID = wrkStr.substring(pos1+1);
+						if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+							countOfUsageRows++;
+							Object[] Cell = new Object[4];
+							Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+							Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+							Cell[2] = element1.getAttribute("Type");
+							Cell[3] = res.getString("LinkedFunctionExchange");
+							tableModelTableFieldUsageList.addRow(Cell);
+							break;
+						}
+					}
+					//
+					workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "LINKED_CALL_TO_GET_TO"), ";" );
+					while (workTokenizer.hasMoreTokens()) {
+						wrkStr = workTokenizer.nextToken();
+						pos1 = wrkStr.indexOf(".");
+						targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+						targetFieldID = wrkStr.substring(pos1+1);
+						if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+							countOfUsageRows++;
+							Object[] Cell = new Object[4];
+							Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+							Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+							Cell[2] = element1.getAttribute("Type");
+							Cell[3] = res.getString("LinkedFunctionExchange");
+							tableModelTableFieldUsageList.addRow(Cell);
+							break;
+						}
 					}
 				}
 				//
@@ -36027,6 +36130,14 @@ public class Editor extends JFrame {
 		isValidFunctionID(jTextFieldFunction300DetailFilterPromptOptionCallFunctionID, jTextFieldFunction300DetailFilterPromptOptionCallFunctionName);
 	}
 	
+	void jTextFieldFunction300HeaderFieldLinkedFunctionID_keyReleased(KeyEvent e) {
+		if (isValidFunctionID(jTextFieldFunction300HeaderFieldLinkedFunctionID, jTextFieldFunction300HeaderFieldLinkedFunctionName)) { 
+			jButtonFunction300HeaderFieldLinkedFunctionExchange.setEnabled(true);
+		} else {
+			jButtonFunction300HeaderFieldLinkedFunctionExchange.setEnabled(false);
+		}
+	}
+	
 	void jTextFieldFunction310HeaderFieldPromptOptionCallFunctionID_keyReleased(KeyEvent e) {
 		isValidFunctionID(jTextFieldFunction310HeaderFieldPromptOptionCallFunctionID, jTextFieldFunction310HeaderFieldPromptOptionCallFunctionName);
 	}
@@ -36402,7 +36513,11 @@ public class Editor extends JFrame {
 				jTextFieldFunction300HeaderFieldCaptionOptionValue.setText("");
 				jTextFieldFunction300HeaderFieldCaptionOptionValue.setEnabled(false);
 				jCheckBoxFunction300HeaderFieldCaptionLengthVariable.setEnabled(false);
-				jLabelFunction300HeaderFieldComment.setEnabled(false);
+				jLabelFunction300HeaderFieldLinkedFunction.setEnabled(false);
+				jTextFieldFunction300HeaderFieldLinkedFunctionID.setText("");
+				jTextFieldFunction300HeaderFieldLinkedFunctionID.setEnabled(false);
+				jTextFieldFunction300HeaderFieldLinkedFunctionName.setText("");
+				jButtonFunction300HeaderFieldLinkedFunctionExchange.setEnabled(false);
 				jTextFieldFunction300HeaderFieldComment.setText("");
 				jTextFieldFunction300HeaderFieldComment.setEnabled(false);
 				//
@@ -36424,6 +36539,8 @@ public class Editor extends JFrame {
 					jRadioButtonFunction300HeaderFieldCaptionOptionValue.setEnabled(true);
 					jRadioButtonFunction300HeaderFieldCaptionOptionNone.setEnabled(true);
 					jCheckBoxFunction300HeaderFieldCaptionLengthVariable.setEnabled(true);
+					jLabelFunction300HeaderFieldLinkedFunction.setEnabled(true);
+					jTextFieldFunction300HeaderFieldLinkedFunctionID.setEnabled(true);
 					jTextFieldFunction300HeaderFieldComment.setEnabled(true);
 					//
 					org.w3c.dom.Element element = tableRowNumber.getElement();
@@ -36506,6 +36623,24 @@ public class Editor extends JFrame {
 					} else {
 						jCheckBoxFunction300HeaderFieldCaptionLengthVariable.setSelected(false);
 					}
+					//
+					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "LINKED_CALL");
+					if (wrkStr.equals("")) {
+						jTextFieldFunction300HeaderFieldLinkedFunctionID.setText("*None");
+					} else {
+						jTextFieldFunction300HeaderFieldLinkedFunctionID.setText(wrkStr);
+						MainTreeNode functionNode = getSpecificXETreeNode("Function", wrkStr);
+						if (functionNode == null) {
+							jTextFieldFunction300HeaderFieldLinkedFunctionName.setText("N/A");
+						} else {
+							jTextFieldFunction300HeaderFieldLinkedFunctionName.setText(functionNode.getElement().getAttribute("Name"));
+							jButtonFunction300HeaderFieldLinkedFunctionExchange.setEnabled(true);
+						}
+					}
+					function300HeaderFieldLinkedFunctionFieldsToPut = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "PROMPT_CALL_TO_PUT");
+					function300HeaderFieldLinkedFunctionFieldsToPutTo = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "PROMPT_CALL_TO_PUT_TO");
+					function300HeaderFieldLinkedFunctionFieldsToGet = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "PROMPT_CALL_TO_GET");
+					function300HeaderFieldLinkedFunctionFieldsToGetTo = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "PROMPT_CALL_TO_GET_TO");
 					//
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "COMMENT");
 					if (!wrkStr.equals("")) {
@@ -38243,6 +38378,21 @@ public class Editor extends JFrame {
 				function200TabFieldPromptOptionCallFunctionFieldsToPutTo = dialogPromptOptionCallFunctionExchangeEdit.getFieldsToPutTo();
 				function200TabFieldPromptOptionCallFunctionFieldsToGet = dialogPromptOptionCallFunctionExchangeEdit.getFieldsToGet();
 				function200TabFieldPromptOptionCallFunctionFieldsToGetTo = dialogPromptOptionCallFunctionExchangeEdit.getFieldsToGetTo();
+			}
+		}
+
+		if (e.getSource() == jButtonFunction300HeaderFieldLinkedFunctionExchange) {
+			reply = dialogPromptOptionCallFunctionExchangeEdit.request(
+					function300HeaderFieldLinkedFunctionFieldsToPut,
+					function300HeaderFieldLinkedFunctionFieldsToPutTo,
+					function300HeaderFieldLinkedFunctionFieldsToGet,
+					function300HeaderFieldLinkedFunctionFieldsToGetTo,
+					function300HeaderTableID, function300HeaderReferList, "", null);
+			if (reply == 1) {
+				function300HeaderFieldLinkedFunctionFieldsToPut = dialogPromptOptionCallFunctionExchangeEdit.getFieldsToPut();
+				function300HeaderFieldLinkedFunctionFieldsToPutTo = dialogPromptOptionCallFunctionExchangeEdit.getFieldsToPutTo();
+				function300HeaderFieldLinkedFunctionFieldsToGet = dialogPromptOptionCallFunctionExchangeEdit.getFieldsToGet();
+				function300HeaderFieldLinkedFunctionFieldsToGetTo = dialogPromptOptionCallFunctionExchangeEdit.getFieldsToGetTo();
 			}
 		}
 
@@ -40438,11 +40588,11 @@ public class Editor extends JFrame {
 					JOptionPane.showMessageDialog(jPanelMain, res.getString("DataUtilityMessage3"));
 					try {
 						connection.rollback();
+						jButtonTableDataSelect.doClick();
+						jTextAreaTableDataMessages.setText("Failed SQL:\n" + sql);
 					} catch (SQLException e6) {
 						jTextAreaTableDataMessages.setText("SQLException : "+ e6.getMessage());
 					}
-					jButtonTableDataSelect.doClick();
-					jTextAreaTableDataMessages.setText("Rf. failed SQL:\n" + sql);
 				}
 			}
 		} catch (SQLException e1) {
@@ -40458,7 +40608,7 @@ public class Editor extends JFrame {
 		String msg;
 		jTextAreaTableDataMessages.setText("");
 		for (int i = 0; i < editableTableFieldList.size(); i++) {
-			editableTableFieldList.get(i).checkNull();
+			editableTableFieldList.get(i).checkNullAndValueSize();
 			msg = editableTableFieldList.get(i).getErrorMessage();
 			if (msg.equals("")) {
 				editableTableFieldList.get(i).setError(false);
@@ -43021,7 +43171,7 @@ class Editor_EditableTableField extends JPanel {
 		return	errorMessage;
 	}
 
-	public void checkNull(){
+	public void checkNullAndValueSize(){
 		this.setErrorMessage("");
 		String basicType = this.getBasicType();
 		if (basicType.equals("INTEGER")) {
@@ -43050,6 +43200,9 @@ class Editor_EditableTableField extends JPanel {
 		}
 		if (basicType.equals("STRING")) {
 			String strWrk = (String)component.getInternalValue();
+			if (!dataType.contains("VARCHAR") && strWrk.length() > this.dataSize) {
+				this.setErrorMessage(res.getString("SizeCheckMessage"));
+			}
 			if (!this.isNullable) {
 				if (strWrk.equals("")) {
 					this.setErrorMessage(res.getString("NullCheckMessage"));
@@ -43092,7 +43245,12 @@ class Editor_TextField extends JTextField implements Editor_EditableField {
 		if (basicType_.equals("DATE")) {
 			digits_ = 10;
 		} else {
-			digits_ = digits;
+//			digits_ = digits;
+			if (basicType_.equals("DATETIME")) {
+				digits_ = 23;
+			} else {
+				digits_ = digits;
+			}
 		}
 		decimal_ = decimal;
 		editor_ = editor;
@@ -46800,6 +46958,16 @@ class Editor_jTextFieldFunction200TabFieldPromptOptionCallFunctionID_keyAdapter 
 	}
 	public void keyReleased(KeyEvent e) {
 		adaptee.jTextFieldFunction200TabFieldPromptOptionCallFunctionID_keyReleased(e);
+	}
+}
+
+class Editor_jTextFieldFunction300HeaderFieldLinkedFunctionID_keyAdapter extends java.awt.event.KeyAdapter {
+	Editor adaptee;
+	Editor_jTextFieldFunction300HeaderFieldLinkedFunctionID_keyAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void keyReleased(KeyEvent e) {
+		adaptee.jTextFieldFunction300HeaderFieldLinkedFunctionID_keyReleased(e);
 	}
 }
 

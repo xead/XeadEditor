@@ -48,7 +48,16 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "X-TEA Editor";
 	public static final String COPYRIGHT = "Copyright 2017 DBC Ltd.";
 	public static final String URL_DBC = "http://dbc.in.coocan.jp/";
-	public static final String FULL_VERSION  = "V1.R3.M13";
+	public static final String FULL_VERSION  = "V1.R3.M15";
+	//1.3.15
+	//・レイアウトチェックのロジックを修正した
+	//・モジュールチェックでのpostgresql向けのバグを修正した
+	//・高解像度環境に合わせてメインフォントの文字サイズの省略値を16から18に変更した
+	//・propertiesファイルでメインフォントサイズを設定できるようにした
+	//
+	//1.3.14
+	//・データ保守ユーティリティのメッセージハンドリングを改善した
+	//
 	//1.3.13
 	//・機能定義からその機能のみを起動するためのボタンを組み込んだ
 	//
