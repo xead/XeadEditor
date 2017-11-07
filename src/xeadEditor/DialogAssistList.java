@@ -52,6 +52,8 @@ public class DialogAssistList extends JDialog {
 	private Point scrollPos;
 	private int caretPos;
 	private int stringPosInTextFrom;
+	private String assistMode = "";
+	private String idSelected = "";
 	private Editor frame_;
 
 	public DialogAssistList(Editor frame) {
@@ -67,6 +69,17 @@ public class DialogAssistList extends JDialog {
 
 	public DialogAssistList(Editor frame, JDialog dialog) {
 		super(dialog, false);
+		frame_ = frame;
+		try {
+			jbInit();
+			pack();
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	public DialogAssistList(Editor frame, JDialog dialog, boolean isMordal) {
+		super(dialog, isMordal);
 		frame_ = frame;
 		try {
 			jbInit();
@@ -206,7 +219,37 @@ public class DialogAssistList extends JDialog {
 		Collections.sort(sessionAssistListArray);
 	}
 
+	public String listIDs(String text, ArrayList<String> idList, ArrayList<String> nameList, JTextField nameField) {
+		String wrkStr;
+		assistMode = "IDS";
+		idSelected = "";
+		DefaultListModel model = (DefaultListModel)jListAssistList.getModel();
+		model.removeAllElements();
+		model.addElement("(" + res.getString("Close") + ")");
+		for (int i = 0; i < idList.size(); i++) {
+			wrkStr = idList.get(i).toUpperCase();
+			if (wrkStr.startsWith(text.toUpperCase())) {
+				model.addElement(idList.get(i) + " - " + nameList.get(i));
+			}
+		}
+		if (jListAssistList.getModel().getSize() == 0) {
+			JOptionPane.showMessageDialog(null, res.getString("AssistListMessage"));
+		} else {
+			if (jListAssistList.getModel().getSize() <= 2) {
+				idSelected = jListAssistList.getModel().getElementAt(1).toString();
+			} else {
+				jListAssistList.setSelectedIndex(0);
+				jScrollPaneAssistList.getViewport().setViewPosition(new Point(0,0));
+				this.setLocation(this.getParent().getLocation().x + nameField.getBounds().x, this.getParent().getLocation().y + nameField.getBounds().y);
+				this.setVisible(true);
+			}
+		}
+		return idSelected;
+	}
+	
+
 	public void listMethods(JScrollPane scrollPane) {
+		assistMode = "METHODS";
 		scrollPaneToBeAssisted = scrollPane;
 		textAreaToBeAssisted = (JTextArea)scrollPaneToBeAssisted.getViewport().getView();
 
@@ -300,8 +343,15 @@ public class DialogAssistList extends JDialog {
 
 	void keyReleased(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-			if (jListAssistList.getSelectedIndex() > -1) {
-				updateTextWithAssistCode(jListAssistList.getSelectedValue().toString() + ";");
+			if (assistMode.equals("METHODS")) {
+				if (jListAssistList.getSelectedIndex() > -1) {
+					updateTextWithAssistCode(jListAssistList.getSelectedValue().toString() + ";");
+				}
+			}
+			if (assistMode.equals("IDS")) {
+				if (jListAssistList.getSelectedIndex() > -1) {
+					idSelected = jListAssistList.getSelectedValue().toString();
+				}
 			}
 			this.setVisible(false);
 		}

@@ -93,6 +93,7 @@ public class DialogImportModel extends JDialog {
 	private ArrayList<String> newlyAddedFunctionIDList = new ArrayList<String>();
 	private boolean isListBeingRebuild = false;
 	private boolean isToConvertCamel = true;
+	private boolean isToUseTableNameToCreateTable = false;
 	private org.w3c.dom.Element subsystemElementFrom = null;
 
 	public DialogImportModel(Editor frame, String title, boolean modal) {
@@ -284,6 +285,9 @@ public class DialogImportModel extends JDialog {
 			} else {
 				isToConvertCamel = true;
 			}
+			if (systemElementImportFrom.getAttribute("UseTableNameToCreateTable").equals("true")) {
+				isToUseTableNameToCreateTable = true;
+			}
 			jTextFieldSystemNameFrom.setText(systemElementImportFrom.getAttribute("Name"));
 			jTextFieldSystemVersionFrom.setText(systemElementImportFrom.getAttribute("Version"));
 			functionTypeList = domDocumentImportingFrom.getElementsByTagName("FunctionType");
@@ -319,18 +323,34 @@ public class DialogImportModel extends JDialog {
 
 	private String convertCamelNotation(String originalText) {
 		StringBuffer bf = new StringBuffer();
-		String letter = "";
+		String currLetter = "";
+		String nextLetter = "";
 		if (isToConvertCamel) {
 			if (originalText.equals(originalText.toUpperCase())) {
 				return originalText;
 			} else {
+//				for (int i = 0; i < originalText.length(); i++) {
+//					letter = originalText.substring(i, i+1);
+//					if (!letter.equals("") && !letter.equals("@")) {
+//						if (i > 0 && letter.equals(letter.toUpperCase())) {
+//							bf.append("_");
+//						}
+//						bf.append(letter.toUpperCase());
+//					}
+//				}
 				for (int i = 0; i < originalText.length(); i++) {
-					letter = originalText.substring(i, i+1);
-					if (!letter.equals("") && !letter.equals("@")) {
-						if (i > 0 && letter.equals(letter.toUpperCase())) {
+					currLetter = originalText.substring(i, i+1);
+					if (i < originalText.length()-1) {
+						nextLetter = originalText.substring(i+1, i+2);
+					} else {
+						nextLetter = "";
+					}
+					if (!currLetter.equals("") && !currLetter.equals("@")) {
+						if (i > 0 && currLetter.equals(currLetter.toUpperCase())
+								&& !nextLetter.equals(nextLetter.toUpperCase())) {
 							bf.append("_");
 						}
-						bf.append(letter.toUpperCase());
+						bf.append(currLetter.toUpperCase());
 					}
 				}
 			}
@@ -370,10 +390,14 @@ public class DialogImportModel extends JDialog {
 						if (element.getAttribute("SubsystemID").equals(subsystemID)) {
 							Object[] Cell = new Object[5];
 							Cell[0] = new TableRowNumber(rowNumber++, element, "Table", this);
-							if (element.getAttribute("Alias").equals("")) {
-								Cell[1] = convertCamelNotation(element.getAttribute("SortKey"));
+							if (isToUseTableNameToCreateTable) {
+								Cell[1] = convertCamelNotation(element.getAttribute("Name"));
 							} else {
-								Cell[1] = convertCamelNotation(element.getAttribute("Alias"));
+								if (element.getAttribute("Alias").equals("")) {
+									Cell[1] = convertCamelNotation(element.getAttribute("SortKey"));
+								} else {
+									Cell[1] = convertCamelNotation(element.getAttribute("Alias"));
+								}
 							}
 							Cell[2] = element.getAttribute("Name");
 							Cell[3] = "TABLE";
@@ -490,15 +514,23 @@ public class DialogImportModel extends JDialog {
 		////////////////////////////////
 		for (int i = 0; i < currentTableList.getLength(); i++) {
 			workElement = (org.w3c.dom.Element)currentTableList.item(i);
-			if (elementFrom.getAttribute("Alias").equals("")) {
-				if (workElement.getAttribute("ID").equals(convertCamelNotation(elementFrom.getAttribute("SortKey")))) {
+			if (isToUseTableNameToCreateTable) {
+				if (workElement.getAttribute("ID").equals(convertCamelNotation(elementFrom.getAttribute("Name")))) {
 					elementInto = workElement;
 					break;
 				}
+
 			} else {
-				if (workElement.getAttribute("ID").equals(convertCamelNotation(elementFrom.getAttribute("Alias")))) {
-					elementInto = workElement;
-					break;
+				if (elementFrom.getAttribute("Alias").equals("")) {
+					if (workElement.getAttribute("ID").equals(convertCamelNotation(elementFrom.getAttribute("SortKey")))) {
+						elementInto = workElement;
+						break;
+					}
+				} else {
+					if (workElement.getAttribute("ID").equals(convertCamelNotation(elementFrom.getAttribute("Alias")))) {
+						elementInto = workElement;
+						break;
+					}
 				}
 			}
 		}
@@ -1329,7 +1361,14 @@ public class DialogImportModel extends JDialog {
 		if (jTableElementListFrom.getSelectedRow() != -1) {
 			TableRowNumber tableRowNumber = (TableRowNumber)tableModelElementListFrom.getValueAt(jTableElementListFrom.getSelectedRow(), 0);
 			org.w3c.dom.Element element = tableRowNumber.getElement();
-			String id = element.getAttribute("SortKey").toUpperCase();
+			String id = convertCamelNotation(element.getAttribute("SortKey"));
+			if (isToUseTableNameToCreateTable) {
+				id = convertCamelNotation(element.getAttribute("Name"));
+			} else {
+				if (!element.getAttribute("Alias").equals("")) {
+					id = convertCamelNotation(element.getAttribute("Alias"));
+				}
+			}
 
 			if (jCheckBoxOverrideID.isSelected()) {
 				id = JOptionPane.showInputDialog(null, res.getString("ImportModelMessage4"), id);

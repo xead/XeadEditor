@@ -36,8 +36,10 @@ import java.awt.*;
 import javax.swing.*;
 
 import org.w3c.dom.NodeList;
+
 import xeadEditor.Editor.SortableDomElementListModel;
 import xeadEditor.Editor.MainTreeNode;
+
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -90,8 +92,29 @@ public class DialogAddFunction extends JDialog {
 	private SortableDomElementListModel sortingList;
 	private ArrayList<String> headerKeyList = new ArrayList<String>(); 
 	private ArrayList<String> detailKeyList = new ArrayList<String>(); 
+	private ArrayList<String> tableIDList = new ArrayList<String>();
+	private ArrayList<String> tableNameList = new ArrayList<String>();
 	private int returnCode = 0;
 	private Color selectionColor = null;
+	private DialogAssistList dialogAssistList;
+	private Action actionListTables = new AbstractAction(){
+		private static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			listTables(jTextFieldTableID, jTextFieldTableName);
+		}
+	};
+	private Action actionListHeaderTables = new AbstractAction(){
+		private static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			listTables(jTextFieldHeaderTableID, jTextFieldHeaderTableName);
+		}
+	};
+	private Action actionListDetailTables = new AbstractAction(){
+		private static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			listTables(jTextFieldDetailTableID, jTextFieldDetailTableName);
+		}
+	};
 
 	public DialogAddFunction(Editor frame) {
 		super(frame, "", true);
@@ -108,17 +131,17 @@ public class DialogAddFunction extends JDialog {
 	private void jbInit() throws Exception {
 		//
 		jPanelButtons.setBorder(BorderFactory.createEtchedBorder());
-		jPanelButtons.setPreferredSize(new Dimension(100, 43));
+		jPanelButtons.setPreferredSize(new Dimension(100, 45));
 		jPanelButtons.setLayout(null);
-		jButtonNext.setBounds(new Rectangle(390, 8, 100, 27));
+		jButtonNext.setBounds(new Rectangle(390, 8, 100, 29));
 		jButtonNext.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonNext.setText(res.getString("Next"));
 		jButtonNext.addActionListener(new DialogAddFunction_jButtonNext_actionAdapter(this));
-		jButtonOK.setBounds(new Rectangle(390, 8, 100, 27));
+		jButtonOK.setBounds(new Rectangle(390, 8, 100, 29));
 		jButtonOK.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonOK.setText("OK");
 		jButtonOK.addActionListener(new DialogAddFunction_jButtonOK_actionAdapter(this));
-		jButtonCancel.setBounds(new Rectangle(60, 8, 100, 27));
+		jButtonCancel.setBounds(new Rectangle(60, 8, 100, 29));
 		jButtonCancel.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonCancel.setText(res.getString("Cancel"));
 		jButtonCancel.addActionListener(new DialogAddFunction_jButtonCancel_actionAdapter(this));
@@ -129,20 +152,20 @@ public class DialogAddFunction extends JDialog {
 		jLabelID.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelID.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelID.setBounds(new Rectangle(5, 12, 130, 20));
+		jLabelID.setBounds(new Rectangle(5, 12, 130, 24));
 		jTextFieldID.setMaxLength(10);
 		jTextFieldID.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextFieldID.setBounds(new Rectangle(140, 9, 120, 25));
+		jTextFieldID.setBounds(new Rectangle(140, 9, 120, 29));
 		selectionColor = jTextFieldID.getSelectionColor();
 		//
 		jLabelType.setText(res.getString("FunctionType"));
 		jLabelType.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelType.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelType.setBounds(new Rectangle(5, 43, 130, 20));
+		jLabelType.setBounds(new Rectangle(5, 47, 130, 24));
 		jComboBoxType.setEditable(false);
 		jComboBoxType.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jComboBoxType.setBounds(new Rectangle(140, 40, 350, 25));
+		jComboBoxType.setBounds(new Rectangle(140, 44, 400, 29));
         DefaultComboBoxModel model = new DefaultComboBoxModel();
         model.addElement(new ComboBoxItem("", res.getString("SelectFromList"), null));
 		model.addElement(new ComboBoxItem("XF000", res.getString("FunctionTypeXF000"), new ImageIcon(xeadEditor.Editor.class.getResource("ifnc000.png"))));
@@ -157,7 +180,7 @@ public class DialogAddFunction extends JDialog {
 		jComboBoxType.setMaximumRowCount(model.getSize());
         jComboBoxType.setRenderer(new ComboBoxItemRenderer());
 		jTextFieldType.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextFieldType.setBounds(new Rectangle(140, 40, 350, 25));
+		jTextFieldType.setBounds(new Rectangle(140, 44, 400, 29));
 		jTextFieldType.setEditable(false);
 		defaultMargin = jTextFieldType.getMargin();
 		//
@@ -165,84 +188,104 @@ public class DialogAddFunction extends JDialog {
 		jLabelName.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelName.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelName.setBounds(new Rectangle(5, 74, 130, 20));
+		jLabelName.setBounds(new Rectangle(5, 82, 130, 24));
 		jTextFieldName.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextFieldName.setBounds(new Rectangle(140, 71, 350, 25));
+		jTextFieldName.setBounds(new Rectangle(140, 79, 400, 29));
 		//
 		jLabelTableID.setText(res.getString("PrimaryTable"));
 		jLabelTableID.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelTableID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableID.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelTableID.setBounds(new Rectangle(5, 105, 130, 20));
+		jLabelTableID.setBounds(new Rectangle(5, 117, 130, 24));
 		jTextFieldTableID.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextFieldTableID.setBounds(new Rectangle(140, 102, 120, 25));
+		jTextFieldTableID.setBounds(new Rectangle(140, 114, 120, 29));
 		jTextFieldTableID.addKeyListener(new DialogAddFunction_jTextFieldTableID_keyAdapter(this));
+		InputMap inputMap1 = jTextFieldTableID.getInputMap(JTextField.WHEN_FOCUSED);
+		inputMap1.clear();
+		ActionMap actionMap1 = jTextFieldTableID.getActionMap();
+		actionMap1.clear();
+		inputMap1.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, KeyEvent.CTRL_DOWN_MASK), "LIST");
+		actionMap1.put("LIST", actionListTables);
 		jTextFieldTableName.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextFieldTableName.setBounds(new Rectangle(265, 102, 225, 25));
+		jTextFieldTableName.setBounds(new Rectangle(265, 114, 275, 29));
 		jTextFieldTableName.setEditable(false);
 		//
 		jLabelTableKeys.setText(res.getString("Keys"));
 		jLabelTableKeys.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelTableKeys.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableKeys.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelTableKeys.setBounds(new Rectangle(5, 136, 130, 20));
+		jLabelTableKeys.setBounds(new Rectangle(5, 152, 130, 24));
 		jTextFieldTableKeys.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextFieldTableKeys.setBounds(new Rectangle(140, 133, 350, 25));
+		jTextFieldTableKeys.setBounds(new Rectangle(140, 149, 372, 29));
 		jTextFieldTableKeys.setEditable(false);
 		jTextFieldTableKeys.setFocusable(false);
 		jButtonTableKeysEdit.setIcon(frame_.imageIconPrompt);
-		jButtonTableKeysEdit.setBounds(new Rectangle(490, 132, 28, 27));
+		jButtonTableKeysEdit.setBounds(new Rectangle(512, 150, 28, 29));
 		jButtonTableKeysEdit.addActionListener(new DialogAddFunction_jButtonTableKeysEdit_actionAdapter(this));
 		//
 		jLabelHeaderTableID.setText(res.getString("HDRTable"));
 		jLabelHeaderTableID.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelHeaderTableID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelHeaderTableID.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelHeaderTableID.setBounds(new Rectangle(5, 105, 130, 20));
+		jLabelHeaderTableID.setBounds(new Rectangle(5, 117, 130, 24));
 		jTextFieldHeaderTableID.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextFieldHeaderTableID.setBounds(new Rectangle(140, 102, 120, 25));
+		jTextFieldHeaderTableID.setBounds(new Rectangle(140, 114, 120, 29));
 		jTextFieldHeaderTableID.addKeyListener(new DialogAddFunction_jTextFieldHeaderTableID_keyAdapter(this));
+		InputMap inputMap2 = jTextFieldHeaderTableID.getInputMap(JTextField.WHEN_FOCUSED);
+		inputMap2.clear();
+		ActionMap actionMap2 = jTextFieldHeaderTableID.getActionMap();
+		actionMap2.clear();
+		inputMap2.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, KeyEvent.CTRL_DOWN_MASK), "LIST");
+		actionMap2.put("LIST", actionListHeaderTables);
 		jTextFieldHeaderTableName.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextFieldHeaderTableName.setBounds(new Rectangle(265, 102, 225, 25));
+		jTextFieldHeaderTableName.setBounds(new Rectangle(265, 114, 275, 29));
 		jTextFieldHeaderTableName.setEditable(false);
 		//
 		jLabelHeaderTableKeys.setText(res.getString("HDRTableKeys"));
 		jLabelHeaderTableKeys.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelHeaderTableKeys.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelHeaderTableKeys.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelHeaderTableKeys.setBounds(new Rectangle(5, 136, 130, 20));
+		jLabelHeaderTableKeys.setBounds(new Rectangle(5, 152, 130, 24));
 		jTextFieldHeaderTableKeys.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextFieldHeaderTableKeys.setBounds(new Rectangle(140, 133, 350, 25));
+		jTextFieldHeaderTableKeys.setBounds(new Rectangle(140, 149, 372, 29));
 		jTextFieldHeaderTableKeys.setEditable(false);
 		jTextFieldHeaderTableKeys.setFocusable(false);
 		jButtonHeaderTableKeysEdit.setIcon(frame_.imageIconPrompt);
-		jButtonHeaderTableKeysEdit.setBounds(new Rectangle(490, 132, 28, 27));
+		jButtonHeaderTableKeysEdit.setBounds(new Rectangle(512, 150, 28, 29));
 		jButtonHeaderTableKeysEdit.addActionListener(new DialogAddFunction_jButtonHeaderTableKeysEdit_actionAdapter(this));
 		//
 		jLabelDetailTableID.setText(res.getString("DTLTable"));
 		jLabelDetailTableID.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelDetailTableID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelDetailTableID.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelDetailTableID.setBounds(new Rectangle(5, 167, 130, 20));
+		jLabelDetailTableID.setBounds(new Rectangle(5, 187, 130, 24));
 		jTextFieldDetailTableID.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextFieldDetailTableID.setBounds(new Rectangle(140, 164, 120, 25));
+		jTextFieldDetailTableID.setBounds(new Rectangle(140, 184, 120, 29));
 		jTextFieldDetailTableID.addKeyListener(new DialogAddFunction_jTextFieldDetailTableID_keyAdapter(this));
+		InputMap inputMap3 = jTextFieldDetailTableID.getInputMap(JTextField.WHEN_FOCUSED);
+		inputMap3.clear();
+		ActionMap actionMap3 = jTextFieldDetailTableID.getActionMap();
+		actionMap3.clear();
+		inputMap3.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, KeyEvent.CTRL_DOWN_MASK), "LIST");
+		actionMap3.put("LIST", actionListDetailTables);
 		jTextFieldDetailTableName.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextFieldDetailTableName.setBounds(new Rectangle(265, 164, 225, 25));
+		jTextFieldDetailTableName.setBounds(new Rectangle(265, 184, 275, 29));
 		jTextFieldDetailTableName.setEditable(false);
 		//
 		jLabelDetailTableKeys.setText(res.getString("DTLTableKeys"));
 		jLabelDetailTableKeys.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelDetailTableKeys.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelDetailTableKeys.setHorizontalTextPosition(SwingConstants.LEADING);
-		jLabelDetailTableKeys.setBounds(new Rectangle(5, 198, 130, 20));
+		jLabelDetailTableKeys.setBounds(new Rectangle(5, 222, 130, 24));
 		jTextFieldDetailTableKeys.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextFieldDetailTableKeys.setBounds(new Rectangle(140, 195, 350, 25));
+		jTextFieldDetailTableKeys.setBounds(new Rectangle(140, 219, 372, 29));
 		jTextFieldDetailTableKeys.setEditable(false);
 		jTextFieldDetailTableKeys.setFocusable(false);
 		jButtonDetailTableKeysEdit.setIcon(frame_.imageIconPrompt);
-		jButtonDetailTableKeysEdit.setBounds(new Rectangle(490, 194, 28, 27));
+		jButtonDetailTableKeysEdit.setBounds(new Rectangle(512, 220, 28, 29));
 		jButtonDetailTableKeysEdit.addActionListener(new DialogAddFunction_jButtonDetailTableKeysEdit_actionAdapter(this));
+		//
+		dialogAssistList = new DialogAssistList(frame_, this, true);
 		//
 		this.setTitle(res.getString("AddFunction"));
 		this.getContentPane().setLayout(new BorderLayout());
@@ -277,7 +320,18 @@ public class DialogAddFunction extends JDialog {
 		jPanelButtons.add(jButtonCancel);
 		jPanelButtons.getRootPane().setDefaultButton(jButtonNext);
 		//
-		this.setSize(new Dimension(550, 190));
+		org.w3c.dom.Element element;
+		tableIDList.clear();
+		tableNameList.clear();
+		NodeList xmlnodelist1 = frame_.getDomDocument().getElementsByTagName("Table");
+		sortingList = frame_.getSortedListModel(xmlnodelist1, "ID");
+		for (int i = 0; i < sortingList.getSize(); i++) {
+	    	element = (org.w3c.dom.Element)sortingList.getElementAt(i);
+	    	tableIDList.add(element.getAttribute("ID"));
+	    	tableNameList.add(element.getAttribute("Name"));
+		}
+		//
+		this.setSize(new Dimension(570, 202));
 		Dimension dlgSize = this.getSize();
 		Dimension frmSize = frame_.getSize();
 		Point loc = frame_.getLocation();
@@ -285,6 +339,23 @@ public class DialogAddFunction extends JDialog {
 		super.setVisible(true);
 		//
 		return returnCode;
+	}
+	//
+	void listTables(JTextField idField, JTextField nameField) {
+		String selectedValue = dialogAssistList.listIDs(idField.getText(), tableIDList, tableNameList, nameField);
+		if (selectedValue.contains(" - ")) {
+			StringTokenizer tokenizer = new StringTokenizer(selectedValue, " - ");
+			idField.setText(tokenizer.nextToken());
+			if (idField == jTextFieldTableID) {
+				jTextFieldTableID_keyReleased(null);					
+			}
+			if (idField == jTextFieldHeaderTableID) {
+				jTextFieldHeaderTableID_keyReleased(null);					
+			}
+			if (idField == jTextFieldDetailTableID) {
+				jTextFieldDetailTableID_keyReleased(null);					
+			}
+		}
 	}
 	//
 	public org.w3c.dom.Element getNewElement() {
@@ -333,7 +404,7 @@ public class DialogAddFunction extends JDialog {
 						jTextFieldType.setMargin(new Insets(defaultMargin.top, defaultMargin.left+item.getIcon().getIconWidth()+2, defaultMargin.bottom, defaultMargin.right)); 
 						JLabel label = new JLabel(item.getIcon());
 						label.setBorder(null); 
-						label.setBounds(defaultMargin.left, defaultMargin.top, item.getIcon().getIconWidth(), item.getIcon().getIconHeight()); 
+						label.setBounds(defaultMargin.left, defaultMargin.top+5, item.getIcon().getIconWidth(), item.getIcon().getIconHeight()); 
 						jTextFieldType.add(label);
 						//
 						jTextFieldID.setText(jTextFieldID.getText().toUpperCase());
@@ -362,7 +433,7 @@ public class DialogAddFunction extends JDialog {
 								|| functionType.equals("XF200")
 								|| functionType.equals("XF290")) {
 							jTextFieldTableID.setText("");
-							jTextFieldTableName.setText("");
+							jTextFieldTableName.setText("(Ctrl+Space to list)");
 							jTextFieldTableKeys.setText("*Keys");
 							jButtonTableKeysEdit.setEnabled(false);
 							jPanelCenter.add(jLabelTableID, null);
@@ -373,7 +444,7 @@ public class DialogAddFunction extends JDialog {
 							jPanelCenter.add(jButtonTableKeysEdit, null);
 							tableNode = null;
 							tableKeys = "";
-							this.setSize(new Dimension(550, 255));
+							this.setSize(new Dimension(570, 271));
 							jButtonOK.setEnabled(false);
 							jTextFieldTableID.requestFocus();
 						}
@@ -381,13 +452,15 @@ public class DialogAddFunction extends JDialog {
 								|| functionType.equals("XF310")
 								|| functionType.equals("XF390")) {
 							jTextFieldHeaderTableID.setText("");
-							jTextFieldHeaderTableName.setText("");
+							jTextFieldHeaderTableName.setText("(Ctrl+Space to list)");
 							jTextFieldHeaderTableKeys.setText("*Keys");
+							jButtonHeaderTableKeysEdit.setEnabled(false);
 							headerTableNode = null;
 							headerTableKeys = "";
 							jTextFieldDetailTableID.setText("");
-							jTextFieldDetailTableName.setText("");
+							jTextFieldDetailTableName.setText("(Ctrl+Space to list)");
 							jTextFieldDetailTableKeys.setText("*Keys");
+							jButtonDetailTableKeysEdit.setEnabled(false);
 							detailTableNode = null;
 							detailTableKeys = "";
 							jPanelCenter.add(jLabelHeaderTableID, null);
@@ -402,7 +475,7 @@ public class DialogAddFunction extends JDialog {
 							jPanelCenter.add(jLabelDetailTableKeys, null);
 							jPanelCenter.add(jTextFieldDetailTableKeys, null);
 							jPanelCenter.add(jButtonDetailTableKeysEdit, null);
-							this.setSize(new Dimension(550, 320));
+							this.setSize(new Dimension(570, 342));
 							jButtonOK.setEnabled(false);
 							jTextFieldHeaderTableID.requestFocus();
 						}
@@ -1073,7 +1146,7 @@ public class DialogAddFunction extends JDialog {
 	void jButtonCancel_actionPerformed(ActionEvent e) {
 		this.setVisible(false);
 	}
-	//
+
 	void jTextFieldTableID_keyReleased(KeyEvent e) {
 		jButtonOK.setEnabled(false);
 		jButtonTableKeysEdit.setEnabled(false);
@@ -1102,6 +1175,7 @@ public class DialogAddFunction extends JDialog {
 	}
 
 	void jTextFieldHeaderTableID_keyReleased(KeyEvent e) {
+		jButtonHeaderTableKeysEdit.setEnabled(false);
 		headerTableNode = null;
 		jTextFieldHeaderTableName.setText("");
 		if (!jTextFieldHeaderTableID.getText().equals("")) {
@@ -1110,10 +1184,12 @@ public class DialogAddFunction extends JDialog {
 			if (headerTableNode == null) {
 				headerTableNode = frame_.getSpecificXETreeNode("Table", jTextFieldHeaderTableID.getText().toUpperCase());
 				if (headerTableNode != null) {
+					jButtonHeaderTableKeysEdit.setEnabled(true);
 					jTextFieldHeaderTableName.setText(headerTableNode.getElement().getAttribute("Name"));
 					jTextFieldHeaderTableID.setText(jTextFieldHeaderTableID.getText().toUpperCase());
 				}
 			} else {
+				jButtonHeaderTableKeysEdit.setEnabled(true);
 				jTextFieldHeaderTableName.setText(headerTableNode.getElement().getAttribute("Name"));
 			}
 		}
@@ -1126,6 +1202,7 @@ public class DialogAddFunction extends JDialog {
 	}
 
 	void jTextFieldDetailTableID_keyReleased(KeyEvent e) {
+		jButtonDetailTableKeysEdit.setEnabled(false);
 		detailTableNode = null;
 		jTextFieldDetailTableName.setText("");
 		if (!jTextFieldDetailTableID.getText().equals("")) {
@@ -1134,10 +1211,12 @@ public class DialogAddFunction extends JDialog {
 			if (detailTableNode == null) {
 				detailTableNode = frame_.getSpecificXETreeNode("Table", jTextFieldDetailTableID.getText().toUpperCase());
 				if (detailTableNode != null) {
+					jButtonDetailTableKeysEdit.setEnabled(true);
 					jTextFieldDetailTableName.setText(detailTableNode.getElement().getAttribute("Name"));
 					jTextFieldDetailTableID.setText(jTextFieldDetailTableID.getText().toUpperCase());
 				}
 			} else {
+				jButtonDetailTableKeysEdit.setEnabled(true);
 				jTextFieldDetailTableName.setText(detailTableNode.getElement().getAttribute("Name"));
 			}
 		}

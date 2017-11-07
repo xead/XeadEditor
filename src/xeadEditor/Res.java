@@ -227,7 +227,7 @@ public class Res extends java.util.ListResourceBundle {
 		{ "DeleteDefinitionAndModule", "Delete definition and module" },
 		{ "DeleteDefinitionOnly", "Delete definition only" },
 		{ "DeleteFunction", "Deleting a function" },
-		{ "DeleteTableMessage", "Deleting the table module as well as its definition?" },
+		{ "DeleteTableMessage", "Deleting the table module as well as its definition?\nNote that records will be cleared if module is deleted." },
 		{ "DeleteTableModule", "Deleting Table Module" },
 		{ "Descent", "(Descent)" },
 		{ "Descriptions", "Descriptions" },

@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2016 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2017 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -48,7 +48,19 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "X-TEA Editor";
 	public static final String COPYRIGHT = "Copyright 2017 DBC Ltd.";
 	public static final String URL_DBC = "http://dbc.in.coocan.jp/";
-	public static final String FULL_VERSION  = "V1.R3.M15";
+	public static final String FULL_VERSION  = "V1.R3.M17";
+	//1.3.17
+	//・モデルのインポート仕様を改善した
+	//・結合テーブルの追加ダイアログのテーブルIDにアシスト機能を組み込んだ
+	//・テーブルノードのエラーアイコンの操作に関する不具合を修正した
+	//・スクリプトの検索置換テキスト指定フィールドがフォーカスされたとき全選択されるようにした
+	//
+	//1.3.16
+	//・テーブル定義のモデルインポートにおけるエイリアスの扱いを改善した
+	//・DB接続とモジュールチェック実行との関係を改善した
+	//・テーブルIDの入力項目にアシスト機能を組み込んだ
+	//・varchar項目に上限サイズチェックを組み込んだ
+	//
 	//1.3.15
 	//・レイアウトチェックのロジックを修正した
 	//・モジュールチェックでのpostgresql向けのバグを修正した

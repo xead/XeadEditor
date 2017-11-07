@@ -32,10 +32,14 @@ package xeadEditor;
  */
 
 import java.awt.*;
+
 import javax.swing.*;
+
 import org.w3c.dom.NodeList;
+
 import xeadEditor.Editor.SortableDomElementListModel;
 import xeadEditor.Editor.MainTreeNode;
+
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -70,6 +74,16 @@ public class DialogAddReferTable extends JDialog {
 	private ArrayList<String> tableIDList = new ArrayList<String>();
 	private ArrayList<String> fieldIDList = new ArrayList<String>();
 	private ArrayList<String> dataSourceList = new ArrayList<String>();
+	private ArrayList<String> candidateTableIDList = new ArrayList<String>();
+	private ArrayList<String> candidateTableNameList = new ArrayList<String>();
+	private DialogAssistList dialogAssistList;
+	private SortableDomElementListModel sortingList;
+	private Action actionListTables = new AbstractAction(){
+		private static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			listTables(jTextFieldID, jTextFieldName);
+		}
+	};
 
 	public DialogAddReferTable(Editor frame) {
 		super(frame, "", true);
@@ -94,6 +108,12 @@ public class DialogAddReferTable extends JDialog {
 		jTextFieldID.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTextFieldID.setBounds(new Rectangle(140, 9, 120, 25));
 		jTextFieldID.addKeyListener(new DialogAddReferTable_jTextFieldID_keyAdapter(this));
+		InputMap inputMap1 = jTextFieldID.getInputMap(JTextField.WHEN_FOCUSED);
+		inputMap1.clear();
+		ActionMap actionMap1 = jTextFieldID.getActionMap();
+		actionMap1.clear();
+		inputMap1.put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, KeyEvent.CTRL_DOWN_MASK), "LIST");
+		actionMap1.put("LIST", actionListTables);
 		jTextFieldName.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTextFieldName.setBounds(new Rectangle(265, 9, 300, 25));
 		jTextFieldName.setEditable(false);
@@ -164,6 +184,8 @@ public class DialogAddReferTable extends JDialog {
 		jPanelButtons.add(jButtonNext);
 		jPanelButtons.add(jButtonCancel);
 		//
+		dialogAssistList = new DialogAssistList(frame_, this, true);
+		//
 		this.setTitle(res.getString("AddJoinTable"));
 		this.getContentPane().add(jPanelButtons,  BorderLayout.SOUTH);
 		this.setResizable(false);
@@ -182,7 +204,7 @@ public class DialogAddReferTable extends JDialog {
 		jTextFieldID.setEditable(true);
 		jTextFieldID.setFocusable(true);
 		jTextFieldID.requestFocus();
-		jTextFieldName.setText("");
+		jTextFieldName.setText("(Ctrl+Space to list)");
 		jTextFieldAlias.setText("*TableID");
 		jTextFieldAlias.setEditable(true);
 		jTextFieldAlias.setFocusable(true);
@@ -197,6 +219,17 @@ public class DialogAddReferTable extends JDialog {
 		jButtonOK.setVisible(false);
 		jTextAreaMessage.setText(res.getString("AddJoinTableMessage1"));
 		//
+		org.w3c.dom.Element element;
+		candidateTableIDList.clear();
+		candidateTableNameList.clear();
+		NodeList xmlnodelist1 = frame_.getDomDocument().getElementsByTagName("Table");
+		sortingList = frame_.getSortedListModel(xmlnodelist1, "ID");
+		for (int i = 0; i < sortingList.getSize(); i++) {
+	    	element = (org.w3c.dom.Element)sortingList.getElementAt(i);
+	    	candidateTableIDList.add(element.getAttribute("ID"));
+	    	candidateTableNameList.add(element.getAttribute("Name"));
+		}
+		//
 		Dimension dlgSize = this.getPreferredSize();
 		Dimension frmSize = frame_.getSize();
 		Point loc = frame_.getLocation();
@@ -205,6 +238,17 @@ public class DialogAddReferTable extends JDialog {
 		super.setVisible(true);
 		//
 		return newElement;
+	}
+
+	void listTables(JTextField idField, JTextField nameField) {
+		String selectedValue = dialogAssistList.listIDs(idField.getText(), candidateTableIDList, candidateTableNameList, nameField);
+		if (selectedValue.contains(" - ")) {
+			StringTokenizer tokenizer = new StringTokenizer(selectedValue, " - ");
+			idField.setText(tokenizer.nextToken());
+			if (idField == jTextFieldID) {
+				jTextFieldID_keyReleased(null);					
+			}
+		}
 	}
 
 	void jButtonNext_actionPerformed(ActionEvent e) {

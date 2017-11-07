@@ -227,7 +227,7 @@ public class Res_ja extends java.util.ListResourceBundle {
 		{ "DeleteFunction", "機能定義の削除確認" },
 		{ "DeleteTableDefinitionAndModule", "モジュールと定義を削除" },
 		{ "DeleteTableDefinitionOnly", "定義のみを削除" },
-		{ "DeleteTableMessage", "テーブルモジュールが存在します。定義とともにモジュールを削除しますか？" },
+		{ "DeleteTableMessage", "テーブルモジュールが存在します。定義とともにモジュールを削除しますか？\nモジュールを削除すれば、登録済データも消える点に注意してください。" },
 		{ "DeleteTableModule", "モジュールの削除確認" },
 		{ "Descent", "(降順)" },
 		{ "Descriptions", "摘要" },

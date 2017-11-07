@@ -33,6 +33,8 @@ package xeadEditor;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
@@ -174,12 +176,22 @@ public class DialogEditScript extends JDialog {
 		jLabelScanText.setBounds(new Rectangle(5, 10, 90, 20));
 		jTextFieldScanText.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTextFieldScanText.setBounds(new Rectangle(100, 7, 340, 25));
+		jTextFieldScanText.addFocusListener(new FocusAdapter() {
+			@Override public void focusGained(FocusEvent e) {
+				((JTextField)e.getComponent()).selectAll();
+			}
+		});
 		jLabelReplaceText.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelReplaceText.setText(res.getString("ReplaceStringInScript"));
 		jLabelReplaceText.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelReplaceText.setBounds(new Rectangle(5, 39, 90, 20));
 		jTextFieldReplaceText.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTextFieldReplaceText.setBounds(new Rectangle(100, 36, 340, 25));
+		jTextFieldReplaceText.addFocusListener(new FocusAdapter() {
+			@Override public void focusGained(FocusEvent e) {
+				((JTextField)e.getComponent()).selectAll();
+			}
+		});
 		jCheckBoxScanText.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jCheckBoxScanText.setBounds(new Rectangle(5, 68, 230, 22));
 		jCheckBoxScanText.setText(res.getString("CaseSensitive"));

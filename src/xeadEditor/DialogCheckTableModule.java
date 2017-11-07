@@ -159,6 +159,10 @@ public class DialogCheckTableModule extends JDialog {
 	}
 
 	public String request(MainTreeNode tableNode, boolean isShowDialog) {
+		return request(tableNode, isShowDialog, false);
+	}
+
+	public String request(MainTreeNode tableNode, boolean isShowDialog, boolean isShowProgress) {
 		if (frame_.getSystemNode().getElement().getAttribute("AutoConnectToEdit").equals("T")) {
 			errorStatus = tableNode.getErrorStatus();
 			tableElement = tableNode.getElement();
@@ -166,7 +170,7 @@ public class DialogCheckTableModule extends JDialog {
 			connection_ = frame_.getDatabaseConnection(tableElement.getAttribute("DB"));
 			if (connection_ != null) {
 				if (tableNode.getType().equals("Table")) {
-					checkTableModule("");
+					checkTableModule("", isShowProgress);
 					if (isShowDialog) {
 						jPanelButtons.getRootPane().setDefaultButton(jButtonClose);
 						Dimension dlgSize = this.getPreferredSize();
@@ -181,7 +185,7 @@ public class DialogCheckTableModule extends JDialog {
 		return errorStatus;
 	}
 
-	void checkTableModule(String requestType) {
+	void checkTableModule(String requestType, boolean isShowProgress) {
 		org.w3c.dom.Element element, keyElement, workElement;
 		String wrkStr, tableID, moduleID, fieldID;
 		StringBuffer buf = new StringBuffer();
@@ -264,8 +268,21 @@ public class DialogCheckTableModule extends JDialog {
 				// Field check from definition to module //
 				///////////////////////////////////////////
 				NodeList fieldList = tableElement.getElementsByTagName("Field");
+				if (isShowProgress) {
+					NodeList keyList = tableElement.getElementsByTagName("Key");
+					ResultSet rs3 = connection_.getMetaData().getColumns(null, null, moduleID, null);
+					ResultSet rs4 = connection_.getMetaData().getIndexInfo(null, null, moduleID, false, true);
+					ResultSet rs5 = connection_.getMetaData().getPrimaryKeys(null, null, moduleID);
+					ResultSet rs7 = connection_.getMetaData().getImportedKeys(null, null, moduleID);
+					frame_.jProgressBar.setMaximum(fieldList.getLength() + keyList.getLength() + rs3.getRow() + rs4.getRow() + rs5.getRow() + rs7.getRow());
+					frame_.jProgressBar.setValue(0);
+				}
 				SortableDomElementListModel sortingList = frame_.getSortedListModel(fieldList, "Order");
 			    for (int i = 0; i < sortingList.getSize(); i++) {
+					if (isShowProgress) {
+						frame_.jProgressBar.setValue(frame_.jProgressBar.getValue()+1);
+						frame_.jProgressBar.paintImmediately(0,0,frame_.jProgressBar.getWidth(),frame_.jProgressBar.getHeight());
+					}
 			        element = (org.w3c.dom.Element)sortingList.getElementAt(i);
 			        optionList = frame_.getOptionList(element.getAttribute("TypeOptions"));
 					if (!optionList.contains("VIRTUAL")) {
@@ -492,6 +509,10 @@ public class DialogCheckTableModule extends JDialog {
 				///////////////////////////////////////////
 				ResultSet rs3 = connection_.getMetaData().getColumns(null, null, moduleID, null);
 				while (rs3.next()) {
+					if (isShowProgress) {
+						frame_.jProgressBar.setValue(frame_.jProgressBar.getValue()+1);
+						frame_.jProgressBar.paintImmediately(0,0,frame_.jProgressBar.getWidth(),frame_.jProgressBar.getHeight());
+					}
 
 					exist = false;
 					if (updateCounterID.equals(frame_.getCaseShiftValue(rs3.getString("COLUMN_NAME"), "Upper"))) {
@@ -558,6 +579,10 @@ public class DialogCheckTableModule extends JDialog {
 				indexNotUniqueListOfModule.clear();
 				ResultSet rs4 = connection_.getMetaData().getIndexInfo(null, null, moduleID, false, true);
 				while (rs4.next()) {
+					if (isShowProgress) {
+						frame_.jProgressBar.setValue(frame_.jProgressBar.getValue()+1);
+						frame_.jProgressBar.paintImmediately(0,0,frame_.jProgressBar.getWidth(),frame_.jProgressBar.getHeight());
+					}
 					if (rs4.getString("INDEX_NAME") != null && rs4.getString("COLUMN_NAME") != null) {
 
 						workIndex = indexNameListOfModule.indexOf(rs4.getString("INDEX_NAME"));
@@ -709,6 +734,10 @@ public class DialogCheckTableModule extends JDialog {
 				//////////////////////////////////////////
 				ResultSet rs5 = connection_.getMetaData().getPrimaryKeys(null, null, moduleID);
 				while (rs5.next()) {
+					if (isShowProgress) {
+						frame_.jProgressBar.setValue(frame_.jProgressBar.getValue()+1);
+						frame_.jProgressBar.paintImmediately(0,0,frame_.jProgressBar.getWidth(),frame_.jProgressBar.getHeight());
+					}
 					pkFieldListOfModule.add(rs5.getString("COLUMN_NAME"));
 				}
 				rs5.close();
@@ -721,6 +750,10 @@ public class DialogCheckTableModule extends JDialog {
 				int countOfSK = 0;
 				boolean isWithoutPKDefined = true;
 				for (int i = 0; i < keyList.getLength(); i++) {
+					if (isShowProgress) {
+						frame_.jProgressBar.setValue(frame_.jProgressBar.getValue()+1);
+						frame_.jProgressBar.paintImmediately(0,0,frame_.jProgressBar.getWidth(),frame_.jProgressBar.getHeight());
+					}
 					element = (org.w3c.dom.Element)keyList.item(i);
 					if (element.getAttribute("Type").equals("PK")) {
 
@@ -875,6 +908,10 @@ public class DialogCheckTableModule extends JDialog {
 				foreignKeyFieldListOfModule.clear();
 				ResultSet rs7 = connection_.getMetaData().getImportedKeys(null, null, moduleID);
 				while (rs7.next()) {
+					if (isShowProgress) {
+						frame_.jProgressBar.setValue(frame_.jProgressBar.getValue()+1);
+						frame_.jProgressBar.paintImmediately(0,0,frame_.jProgressBar.getWidth(),frame_.jProgressBar.getHeight());
+					}
 					workIndex = foreignKeyNameListOfModule.indexOf(rs7.getString("FK_NAME"));
 					if (workIndex == -1) {
 						workIndex = 0;
@@ -1001,6 +1038,10 @@ public class DialogCheckTableModule extends JDialog {
 				JOptionPane.showMessageDialog(null, res.getString("DBConnectMessage9"));
 			}
 		} finally {
+			if (isShowProgress) {
+				frame_.jProgressBar.setValue(0);
+				frame_.jProgressBar.paintImmediately(0,0,frame_.jProgressBar.getWidth(),frame_.jProgressBar.getHeight());
+			}
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
 	}
@@ -1597,7 +1638,7 @@ public class DialogCheckTableModule extends JDialog {
 				///////////////////////////////////////////
 				// Check module and refresh error status //
 				///////////////////////////////////////////
-				checkTableModule("ALTER");
+				checkTableModule("ALTER", false);
 
 			} catch (SQLException ex1) {
 				JOptionPane.showMessageDialog(this, res.getString("ModuleCheckMessage37") + buf .toString() + "\n" + ex1.getMessage());
@@ -1727,7 +1768,7 @@ public class DialogCheckTableModule extends JDialog {
 						}
 					}
 
-					checkTableModule("CREATE");
+					checkTableModule("CREATE", false);
 
 				} catch (SQLException ex1) {
 					jTextAreaMessage.setText(res.getString("ModuleCheckMessage40") + sqlText + "\n" + ex1.getMessage());
@@ -1760,7 +1801,7 @@ public class DialogCheckTableModule extends JDialog {
 			}
 			Statement statement = connection.createStatement();
 			statement.executeUpdate("DROP TABLE " + tableID);
-			checkTableModule("DROP");
+			checkTableModule("DROP", false);
 		} catch (SQLException ex1) {
 			JOptionPane.showMessageDialog(this, res.getString("ModuleCheckMessage42"));
 		} catch (Exception ex1) {
