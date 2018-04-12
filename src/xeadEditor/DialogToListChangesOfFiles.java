@@ -1552,6 +1552,7 @@ public class DialogToListChangesOfFiles extends JDialog {
 				attrList.add("DetailFunction");
 				attrList.add("ParmType");
 				attrList.add("ParmAdditional");
+				attrList.add("InitialReadCount");
 				attrList.add("InitialListing");
 				attrList.add("InitialMsg");
 				oldElementList = oldElement.getElementsByTagName(tagName);

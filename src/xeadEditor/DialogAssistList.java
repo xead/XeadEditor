@@ -169,8 +169,8 @@ public class DialogAssistList extends JDialog {
 		sessionAssistListArray.add("getSystemVariantInteger(variantID)");
 		sessionAssistListArray.add("getSystemVariantString(variantID)");
 		sessionAssistListArray.add("setSystemVariant(variantID, value)");
-		sessionAssistListArray.add("getTaxAmout(date, amount)");
-		sessionAssistListArray.add("getTaxAmout(date, amount, kbKazei)");
+		sessionAssistListArray.add("getTaxAmount(date, amount)");
+		sessionAssistListArray.add("getTaxAmount(date, amount, kbKazei)");
 		sessionAssistListArray.add("getUserVariantDescription(variantID, value)");
 		sessionAssistListArray.add("getDaysBetweenDates(dateFrom, dateThru, countType, kbCalendar)");
 		sessionAssistListArray.add("getMinutesBetweenTimes(timeFrom, timeThru)");

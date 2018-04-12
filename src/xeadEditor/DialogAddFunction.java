@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2011 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2018 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -43,7 +43,6 @@ import xeadEditor.Editor.MainTreeNode;
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
-//import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
 public class DialogAddFunction extends JDialog {
@@ -294,7 +293,7 @@ public class DialogAddFunction extends JDialog {
 		this.setResizable(false);
 		this.pack();
 	}
-	//
+
 	public int request(String subsystemID) {
 		subsystemID_ = subsystemID;
 		returnCode = 0;
@@ -303,7 +302,7 @@ public class DialogAddFunction extends JDialog {
 		jTextFieldID.setText("");
 		jTextFieldID.requestFocus();
 		jTextFieldID.setEditable(true);
-		jTextFieldName.setText("");
+		jTextFieldName.setText("*AUTO");
 		jTextFieldName.setEditable(true);
 		jComboBoxType.setSelectedIndex(0);
 		//
@@ -340,7 +339,7 @@ public class DialogAddFunction extends JDialog {
 		//
 		return returnCode;
 	}
-	//
+
 	void listTables(JTextField idField, JTextField nameField) {
 		String selectedValue = dialogAssistList.listIDs(idField.getText(), tableIDList, tableNameList, nameField);
 		if (selectedValue.contains(" - ")) {
@@ -357,11 +356,11 @@ public class DialogAddFunction extends JDialog {
 			}
 		}
 	}
-	//
+
 	public org.w3c.dom.Element getNewElement() {
 		return element;
 	}
-	//
+
 	void jButtonNext_actionPerformed(ActionEvent e) {
 		boolean duplicated = false;
 		MainTreeNode childNode1, childNode2, childNode3;
@@ -409,8 +408,8 @@ public class DialogAddFunction extends JDialog {
 						//
 						jTextFieldID.setText(jTextFieldID.getText().toUpperCase());
 						jTextFieldID.setEditable(false);
-						jTextFieldName.setEditable(false);
 						jComboBoxType.setEditable(false);
+						jTextFieldName.setEditable(false);
 						//
 						jPanelCenter.removeAll();
 						jPanelCenter.add(jLabelID, null);
@@ -484,7 +483,7 @@ public class DialogAddFunction extends JDialog {
 			}
 		}
 	}
-	//
+
 	void jButtonOK_actionPerformed(ActionEvent e) {
 		org.w3c.dom.Element workElement, childElement, grandChildElement;
 		boolean noErrors = true;
@@ -535,6 +534,47 @@ public class DialogAddFunction extends JDialog {
 		}
 		//
 		if (noErrors) {
+			//
+			if (jTextFieldName.getText().toUpperCase().equals("*AUTO")) {
+				if (functionType.equals("XF000")) {
+					jTextFieldName.setText(res.getString("DefaultFunctionNameXF000"));
+				}
+				if (functionType.equals("XF100")) {
+					jTextFieldName.setText(res.getString("DefaultFunctionNameXF100A")
+							+ jTextFieldTableName.getText() 
+							+ res.getString("DefaultFunctionNameXF100B"));
+				}
+				if (functionType.equals("XF110")) {
+					jTextFieldName.setText(res.getString("DefaultFunctionNameXF110A")
+							+ jTextFieldTableName.getText() 
+							+ res.getString("DefaultFunctionNameXF110B"));
+				}
+				if (functionType.equals("XF200")) {
+					jTextFieldName.setText(res.getString("DefaultFunctionNameXF200A")
+							+ jTextFieldTableName.getText() 
+							+ res.getString("DefaultFunctionNameXF200B"));
+				}
+				if (functionType.equals("XF290")) {
+					jTextFieldName.setText(res.getString("DefaultFunctionNameXF290A")
+							+ jTextFieldTableName.getText() 
+							+ res.getString("DefaultFunctionNameXF290B"));
+				}
+				if (functionType.equals("XF300")) {
+					jTextFieldName.setText(res.getString("DefaultFunctionNameXF300A")
+							+ jTextFieldTableName.getText() 
+							+ res.getString("DefaultFunctionNameXF300B"));
+				}
+				if (functionType.equals("XF310")) {
+					jTextFieldName.setText(res.getString("DefaultFunctionNameXF310A")
+							+ jTextFieldTableName.getText() 
+							+ res.getString("DefaultFunctionNameXF310B"));
+				}
+				if (functionType.equals("XF390")) {
+					jTextFieldName.setText(res.getString("DefaultFunctionNameXF310A")
+							+ jTextFieldTableName.getText() 
+							+ res.getString("DefaultFunctionNameXF310B"));
+				}
+			}
 			//
 			element = frame_.getDomDocument().createElement("Function");
 			element.setAttribute("Type", functionType);
@@ -764,7 +804,7 @@ public class DialogAddFunction extends JDialog {
 				childElement = frame_.getDomDocument().createElement("Phrase");
 				childElement.setAttribute("Order", "0000");
 				childElement.setAttribute("Block", "HEADER");
-				childElement.setAttribute("Value", "&Text(" + jTextFieldName.getText().replace("ÇÃàÛç¸", "") + ")");
+				childElement.setAttribute("Value", "&Text(" + jTextFieldName.getText().replace("ÔøΩÃàÔøΩÔøΩÔøΩ", "") + ")");
 				childElement.setAttribute("Alignment", "CENTER");
 				childElement.setAttribute("FontID", defaultFontID);
 				childElement.setAttribute("FontSize", "15");
@@ -991,7 +1031,7 @@ public class DialogAddFunction extends JDialog {
 					childElement = frame_.getDomDocument().createElement("HeaderPhrase");
 					childElement.setAttribute("Order", "0000");
 					childElement.setAttribute("Block", "HEADER");
-					childElement.setAttribute("Value", "&Text(" + jTextFieldName.getText().replace("ÇÃàÛç¸", "") + ")");
+					childElement.setAttribute("Value", "&Text(" + jTextFieldName.getText().replace("ÔøΩÃàÔøΩÔøΩÔøΩ", "") + ")");
 					childElement.setAttribute("Alignment", "CENTER");
 					childElement.setAttribute("FontID", defaultFontID);
 					childElement.setAttribute("FontSize", "15");
@@ -1457,3 +1497,4 @@ class DialogAddFunction_jButtonDetailTableKeysEdit_actionAdapter implements java
 		adaptee.jButtonDetailTableKeysEdit_actionPerformed(e);
 	}
 }
+

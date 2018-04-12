@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2017 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2018 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -46,9 +46,19 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String APPLICATION_NAME  = "X-TEA Editor 1.3";
 	public static final String FORMAT_VERSION  = "1.2";
 	public static final String PRODUCT_NAME = "X-TEA Editor";
-	public static final String COPYRIGHT = "Copyright 2017 DBC Ltd.";
+	public static final String COPYRIGHT = "Copyright 2018 DBC Ltd.";
 	public static final String URL_DBC = "http://dbc.in.coocan.jp/";
-	public static final String FULL_VERSION  = "V1.R3.M17";
+	public static final String FULL_VERSION  = "V1.R3.M19";
+	//1.3.19
+	//・機能定義の追加用ダイアログで機能名を自動設定できるようにした
+	//
+	//1.3.18
+	//・AssistListでsession.getTaxAmount(...)がsession.getTaxAmout(...)になっていたミスを修正
+	//・データ保守ユーティリティのWhere条件とOrderBy条件をフォーカスすれば全選択されるようにした
+	//・データ保守ユーティリティでのレコード件数がゼロ件でもエクセル出力できるようにした
+	//・データ保守ユーティリティでインポート機能で、数字項目がブランクならばゼロをセットするようにした
+	//・XF300の明細タブで「初期検索件数」を指定できるようにした
+	//
 	//1.3.17
 	//・モデルのインポート仕様を改善した
 	//・結合テーブルの追加ダイアログのテーブルIDにアシスト機能を組み込んだ
