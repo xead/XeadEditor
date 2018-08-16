@@ -110,26 +110,26 @@ public class DialogScanField extends JDialog {
 		//
 		//jPanelNorth and objects on it
 		jPanelNorth.setBorder(null);
-		jPanelNorth.setPreferredSize(new Dimension(100, 43));
+		jPanelNorth.setPreferredSize(new Dimension(100, 45));
 		jLabelFieldID.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelFieldID.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFieldID.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFieldID.setText(res.getString("FieldID"));
-		jLabelFieldID.setBounds(new Rectangle(5, 12, 120, 20));
+		jLabelFieldID.setBounds(new Rectangle(5, 9, 120, 28));
 		jTextFieldFieldID.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextFieldFieldID.setBounds(new Rectangle(130, 9, 300, 25));
+		jTextFieldFieldID.setBounds(new Rectangle(130, 9, 300, 28));
 		jLabelFieldName.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelFieldName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFieldName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFieldName.setText(res.getString("FieldName"));
-		jLabelFieldName.setBounds(new Rectangle(440, 12, 120, 20));
+		jLabelFieldName.setBounds(new Rectangle(440, 9, 120, 28));
 		jTextFieldFieldName.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextFieldFieldName.setBounds(new Rectangle(565, 9, 300, 25));
-		jButtonScan.setBounds(new Rectangle(880, 8, 120, 27));
+		jTextFieldFieldName.setBounds(new Rectangle(565, 9, 300, 28));
+		jButtonScan.setBounds(new Rectangle(880, 9, 120, 28));
 		jButtonScan.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jButtonScan.setText(res.getString("ScanStart"));
 		jButtonScan.addActionListener(new DialogScanField_jButtonScan_actionAdapter(this));
-		jProgressBar.setBounds(new Rectangle(880, 8, 120, 27));
+		jProgressBar.setBounds(new Rectangle(880, 9, 120, 28));
 		jProgressBar.setVisible(false);
 		jPanelNorth.setLayout(null);
 		jPanelNorth.add(jLabelFieldID);

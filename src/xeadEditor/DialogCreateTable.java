@@ -90,17 +90,17 @@ public class DialogCreateTable extends JDialog {
 		jLabelSubsystem.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSubsystem.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSubsystem.setText(res.getString("CreateInSubsystem"));
-		jLabelSubsystem.setBounds(new Rectangle(5, 12, 130, 20));
+		jLabelSubsystem.setBounds(new Rectangle(5, 12, 160, 20));
 		jComboBoxSubsystem.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jComboBoxSubsystem.setBounds(new Rectangle(140, 9, 300, 25));
+		jComboBoxSubsystem.setBounds(new Rectangle(170, 9, 300, 25));
 		jComboBoxSubsystem.addActionListener(new DialogCreateTable_jComboBoxSubsystem_actionAdapter(this));
 		jLabelTableName.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelTableName.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableName.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelTableName.setText(res.getString("TableName"));
-		jLabelTableName.setBounds(new Rectangle(450, 12, 130, 20));
+		jLabelTableName.setBounds(new Rectangle(480, 12, 130, 20));
 		jTextFieldTableName.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextFieldTableName.setBounds(new Rectangle(585, 9, 240, 25));
+		jTextFieldTableName.setBounds(new Rectangle(615, 9, 240, 25));
 		jPanelTop.setLayout(null);
 		jPanelTop.setBorder(BorderFactory.createEtchedBorder());
 		jPanelTop.setPreferredSize(new Dimension(100, 43));
@@ -174,7 +174,7 @@ public class DialogCreateTable extends JDialog {
 		this.setTitle(res.getString("CreateTableTitle"));
 		this.getContentPane().add(jPanelButtons,  BorderLayout.SOUTH);
 		this.setResizable(false);
-		this.setPreferredSize(new Dimension(850, 700));
+		this.setPreferredSize(new Dimension(880, 740));
 		this.getContentPane().add(jSplitPane,  BorderLayout.CENTER);
 	}
 

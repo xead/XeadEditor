@@ -48,7 +48,16 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "X-TEA Editor";
 	public static final String COPYRIGHT = "Copyright 2018 DBC Ltd.";
 	public static final String URL_DBC = "http://dbc.in.coocan.jp/";
-	public static final String FULL_VERSION  = "V1.R3.M19";
+	public static final String FULL_VERSION  = "V1.R3.M21";
+	//1.3.21
+	//・テーブルの参照定義追加ダイアログで、エイリアスのフォーカス時に全選択させるようにした
+	//・データ保守ユーティリティのインポート処理で、既存レコードについては無視されるのではなく更新されるようにした
+	//・XF110,200,300,310のフラットパネルにおいて、フィールドのアラインメントを指定できるようにした
+	//・スクリプトエディタでテーブル定義のコメントを貼り付けられるようにした
+	//
+	//1.3.20
+	//・テーブル定義のXF000に対する使途検索のバグを修正
+	//
 	//1.3.19
 	//・機能定義の追加用ダイアログで機能名を自動設定できるようにした
 	//

@@ -126,6 +126,11 @@ public class DialogAddReferTable extends JDialog {
 		jTextFieldAlias.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTextFieldAlias.setBounds(new Rectangle(710, 9, 120, 25));
 		jTextFieldAlias.addKeyListener(new DialogAddReferTable_jTextFieldAlias_keyAdapter(this));
+		jTextFieldAlias.addFocusListener(new FocusAdapter() {
+			@Override public void focusGained(FocusEvent e) {
+				((JTextField)e.getComponent()).selectAll();
+			}
+		});
 		//
 		jLabelToKeyFields.setText(res.getString("JoinToKeys"));
 		jLabelToKeyFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));

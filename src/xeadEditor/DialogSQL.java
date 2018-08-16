@@ -103,11 +103,11 @@ public class DialogSQL extends JDialog {
 		jLabelConnection.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelConnection.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelConnection.setText(res.getString("AvailableConnection"));
-		jLabelConnection.setBounds(new Rectangle(5, 12, 190, 20));
+		jLabelConnection.setBounds(new Rectangle(5, 9, 190, 28));
 		jComboBoxConnection.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jComboBoxConnection.setBounds(new Rectangle(200, 9, 790, 25));
+		jComboBoxConnection.setBounds(new Rectangle(200, 9, 790, 28));
 		jPanelStatementTop.setLayout(null);
-		jPanelStatementTop.setPreferredSize(new Dimension(10, 43));
+		jPanelStatementTop.setPreferredSize(new Dimension(10, 45));
 		jPanelStatementTop.add(jLabelConnection);
 		jPanelStatementTop.add(jComboBoxConnection);
 		jPanelStatement.setLayout(new BorderLayout());
@@ -123,7 +123,7 @@ public class DialogSQL extends JDialog {
 		//
 		jLabelMessage.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelMessage.setText(" " + res.getString("Message"));
-		jLabelMessage.setPreferredSize(new Dimension(100, 23));
+		jLabelMessage.setPreferredSize(new Dimension(100, 28));
 		jTextAreaMessage.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTextAreaMessage.setEditable(false);
 		jTextAreaMessage.setOpaque(false);

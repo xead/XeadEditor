@@ -35,10 +35,15 @@ import java.awt.*;
 
 import javax.swing.*;
 
+import org.w3c.dom.NodeList;
+
+import xeadEditor.Editor.SortableDomElementListModel;
+
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ResourceBundle;
+import java.util.StringTokenizer;
 
 public class DialogAssistList extends JDialog {
 	private static final long serialVersionUID = 1L;
@@ -306,6 +311,10 @@ public class DialogAssistList extends JDialog {
 		DefaultListModel model = (DefaultListModel)jListAssistList.getModel();
 		model.removeAllElements();
 
+		if (string.equals("")) {
+			model.addElement("Table definition");
+		}
+
 		ArrayList<String> functionList = frame_.getScriptFunctionList();
 		for (int i = 0; i < functionList.size(); i++) {
 			wrkStr = functionList.get(i).toUpperCase();
@@ -345,7 +354,14 @@ public class DialogAssistList extends JDialog {
 		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 			if (assistMode.equals("METHODS")) {
 				if (jListAssistList.getSelectedIndex() > -1) {
-					updateTextWithAssistCode(jListAssistList.getSelectedValue().toString() + ";");
+					if (jListAssistList.getSelectedValue().toString().equals("Table definition")) {
+						String tableID = JOptionPane.showInputDialog(null, res.getString("SpecifyTableID"));
+						if (tableID != null && !tableID.equals("")) {
+							updateTextWithAssistCode(getTableDefinition(tableID));
+						}
+					} else {
+						updateTextWithAssistCode(jListAssistList.getSelectedValue().toString() + ";");
+					}
 				}
 			}
 			if (assistMode.equals("IDS")) {
@@ -358,6 +374,103 @@ public class DialogAssistList extends JDialog {
 		if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			this.setVisible(false);
 		}
+	}
+
+	String getTableDefinition(String tableID) {
+		org.w3c.dom.Element tableElement, element;
+		String databaseName, wrkStr, moduleKeyFields;
+		ArrayList<String> optionList = new ArrayList<String>();
+		ArrayList<String> pkFieldList = new ArrayList<String>();
+		StringTokenizer workTokenizer;
+		StringBuffer moduleBuf = new StringBuffer();
+
+		tableElement = frame_.getSpecificTableElement(tableID);
+		if (tableElement == null) {
+			JOptionPane.showMessageDialog(null, "ID is invalid.");
+
+		} else {
+			databaseName = frame_.getDatabaseName(tableElement.getAttribute("DB"));
+			moduleBuf.append("// " + tableID + " " + tableElement.getAttribute("Name") + "\n");
+
+			NodeList keyList = tableElement.getElementsByTagName("Key");
+			for (int i = 0; i < keyList.getLength(); i++) {
+				element = (org.w3c.dom.Element)keyList.item(i);
+				if (element.getAttribute("Type").equals("PK")) {
+					moduleKeyFields = element.getAttribute("Fields");
+					workTokenizer = new StringTokenizer(moduleKeyFields, ";");
+					while (workTokenizer.hasMoreTokens()) {
+						wrkStr = workTokenizer.nextToken();
+						pkFieldList.add(wrkStr);
+					}
+				}
+			}
+
+			NodeList fieldList = tableElement.getElementsByTagName("Field");
+			SortableDomElementListModel sortingList = frame_.getSortedListModel(fieldList, "Order");
+			for (int i = 0; i < sortingList.getSize(); i++) {
+				element = (org.w3c.dom.Element)sortingList.getElementAt(i);
+				optionList = frame_.getOptionList(element.getAttribute("TypeOptions"));
+				if (!optionList.contains("VIRTUAL")) {
+
+					if (pkFieldList.contains(element.getAttribute("ID"))) {
+						moduleBuf.append("// * ");
+					} else {
+						moduleBuf.append("// ");
+					}
+					moduleBuf.append(element.getAttribute("ID") + " " + element.getAttribute("Name") + " ");
+					if ((databaseName.contains("jdbc:sqlserver") || databaseName.contains("jdbc:oracle"))
+							&& element.getAttribute("Type").equals("CHAR")
+							&& optionList.contains("KANJI")) {
+						moduleBuf.append("NCHAR");
+						moduleBuf.append("(");
+						moduleBuf.append(element.getAttribute("Size"));
+						moduleBuf.append(")");
+					} else {
+						if (databaseName.contains("jdbc:sqlserver")
+								&& element.getAttribute("Type").equals("DOUBLE")) {
+							moduleBuf.append("FLOAT");
+						} else {
+							moduleBuf.append(element.getAttribute("Type"));
+
+						}
+						if (frame_.getBasicTypeOf(element.getAttribute("Type")).equals("INTEGER")) {
+							moduleBuf.append(" Default 0");
+						} else {
+							if (frame_.getBasicTypeOf(element.getAttribute("Type")).equals("FLOAT")) {
+								if (element.getAttribute("Type").equals("DECIMAL") || element.getAttribute("Type").equals("NUMERIC")) {
+									moduleBuf.append("(");
+									moduleBuf.append(element.getAttribute("Size"));
+									moduleBuf.append(",");
+									moduleBuf.append(element.getAttribute("Decimal"));
+									moduleBuf.append(")");
+								}
+								moduleBuf.append(" Default 0.0");
+							} else {
+								if (element.getAttribute("Type").equals("CHAR")) {
+									moduleBuf.append("(");
+									moduleBuf.append(element.getAttribute("Size"));
+									moduleBuf.append(")");
+								}
+								if (element.getAttribute("Type").contains("VARCHAR")
+										&& !element.getAttribute("Size").equals("0")) {
+									moduleBuf.append("(");
+									moduleBuf.append(element.getAttribute("Size"));
+									moduleBuf.append(")");
+								}
+							}
+						}
+					}
+
+					// DDL Not Null and Comment //
+					if (!element.getAttribute("Nullable").equals("T")) {
+						moduleBuf.append(" Not null");
+					}
+					moduleBuf.append("\n");
+				}
+			}
+		}
+
+		return moduleBuf.toString();
 	}
 
 	void updateTextWithAssistCode(String codeToBeInserted) {
