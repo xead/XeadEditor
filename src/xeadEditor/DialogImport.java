@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2016 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2018 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -37,10 +37,16 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 import java.awt.event.*;
+import java.io.File;
 import java.io.FileInputStream;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
@@ -100,10 +106,14 @@ public class DialogImport extends JDialog {
 	private DefaultTableCellRenderer rendererAlignmentLeft = new DefaultTableCellRenderer();
 	private JButton jButtonCloseDialog = new JButton();
 	private JButton jButtonImport = new JButton();
+	private JCheckBox jCheckBoxImportData = new JCheckBox();
 	private Document domDocumentImportingFrom = null;
 	private Calendar calendar;
 	private SimpleDateFormat formatter = new SimpleDateFormat("dd-HH:mm:ss");
 	private boolean anyElementsImported = false;
+	private ArrayList<String> databaseIDList = new ArrayList<String>();
+	private ArrayList<String> databaseNameList = new ArrayList<String>();
+	private ArrayList<Connection> databaseConnList = new ArrayList<Connection>();
 
 	public DialogImport(Editor frame, String title, boolean modal) {
 		super(frame, title, modal);
@@ -122,7 +132,6 @@ public class DialogImport extends JDialog {
 	}
 
 	private void jbInit() throws Exception {
-		//
 		//panelMain
 		panelMain.setLayout(new BorderLayout());
 		panelMain.setPreferredSize(new Dimension(1115, 800));
@@ -130,7 +139,7 @@ public class DialogImport extends JDialog {
 		panelMain.add(jPanelNorth, BorderLayout.NORTH);
 		panelMain.add(jPanelCenter, BorderLayout.CENTER);
 		panelMain.add(jPanelSouth, BorderLayout.SOUTH);
-		//
+
 		//jPanelNorth and objects on it
 		jPanelNorth.setBorder(BorderFactory.createEtchedBorder());
 		jPanelNorth.setPreferredSize(new Dimension(100, 74));
@@ -138,27 +147,27 @@ public class DialogImport extends JDialog {
 		jLabelFileNameFrom.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFileNameFrom.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelFileNameFrom.setText(res.getString("FileNameImporting"));
-		jLabelFileNameFrom.setBounds(new Rectangle(5, 12, 180, 20));
+		jLabelFileNameFrom.setBounds(new Rectangle(5, 12, 180, 23));
 		jTextFieldFileNameFrom.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextFieldFileNameFrom.setBounds(new Rectangle(190, 9, 675, 25));
+		jTextFieldFileNameFrom.setBounds(new Rectangle(190, 9, 675, 28));
 		jTextFieldFileNameFrom.setEditable(false);
 		jLabelSystemNameFrom.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelSystemNameFrom.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemNameFrom.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemNameFrom.setText(res.getString("SystemNameImporting"));
-		jLabelSystemNameFrom.setBounds(new Rectangle(5, 43, 180, 20));
+		jLabelSystemNameFrom.setBounds(new Rectangle(5, 43, 180, 23));
 		jTextFieldSystemNameFrom.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextFieldSystemNameFrom.setBounds(new Rectangle(190, 40, 430, 25));
+		jTextFieldSystemNameFrom.setBounds(new Rectangle(190, 40, 430, 28));
 		jTextFieldSystemNameFrom.setEditable(false);
 		jLabelSystemVersionFrom.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelSystemVersionFrom.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemVersionFrom.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemVersionFrom.setText(res.getString("SystemVersion"));
-		jLabelSystemVersionFrom.setBounds(new Rectangle(630, 43, 130, 20));
+		jLabelSystemVersionFrom.setBounds(new Rectangle(630, 43, 130, 23));
 		jTextFieldSystemVersionFrom.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
-		jTextFieldSystemVersionFrom.setBounds(new Rectangle(765, 40, 100, 25));
+		jTextFieldSystemVersionFrom.setBounds(new Rectangle(765, 40, 100, 28));
 		jTextFieldSystemVersionFrom.setEditable(false);
-		//
+
 		jPanelNorth.setLayout(null);
 		jPanelNorth.add(jLabelFileNameFrom);
 		jPanelNorth.add(jTextFieldFileNameFrom);
@@ -166,7 +175,7 @@ public class DialogImport extends JDialog {
 		jPanelNorth.add(jTextFieldSystemNameFrom);
 		jPanelNorth.add(jLabelSystemVersionFrom);
 		jPanelNorth.add(jTextFieldSystemVersionFrom);
-		//
+
 		//jPanelCenterTop and objects on it
 		jLabelSubsystemFrom.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelSubsystemFrom.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -197,7 +206,7 @@ public class DialogImport extends JDialog {
 		jPanelCenterTop.setLayout(new BorderLayout());
 		jPanelCenterTop.add(jPanelImportFromTop, BorderLayout.WEST);
 		jPanelCenterTop.add(jPanelImportIntoTop, BorderLayout.CENTER);
-		//
+
 		//jSplitPane and objects on it
 		jSplitPane.setBorder(null);
 		jSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
@@ -228,11 +237,11 @@ public class DialogImport extends JDialog {
 		jPanelCenter.add(jPanelCenterTop, BorderLayout.NORTH);
 		jPanelCenter.add(jSplitPane, BorderLayout.CENTER);
 		jPanelCenter.add(jScrollPaneMessage, BorderLayout.SOUTH);
-		//
+
 		rendererAlignmentCenter.setHorizontalAlignment(0); //CENTER//
 		rendererAlignmentRight.setHorizontalAlignment(4); //RIGHT//
 		rendererAlignmentLeft.setHorizontalAlignment(2); //LEFT//
-		//
+
 		jTableTableListFrom.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTableTableListFrom.setBackground(SystemColor.control);
 		jTableTableListFrom.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -267,7 +276,7 @@ public class DialogImport extends JDialog {
 		jTableTableListFrom.getTableHeader().setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableTableListFrom.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(2); //LEFT//
-		//
+
 		jTableFunctionListFrom.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTableFunctionListFrom.setBackground(SystemColor.control);
 		jTableFunctionListFrom.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -300,7 +309,7 @@ public class DialogImport extends JDialog {
 		jTableFunctionListFrom.getTableHeader().setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunctionListFrom.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(2); //LEFT//
-		//
+
 		jTableTableListInto.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTableTableListInto.setBackground(SystemColor.control);
 		jTableTableListInto.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -322,7 +331,7 @@ public class DialogImport extends JDialog {
 		jTableTableListInto.getTableHeader().setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableTableListInto.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(2); //LEFT//
-		//
+
 		jTableFunctionListInto.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTableFunctionListInto.setBackground(SystemColor.control);
 		jTableFunctionListInto.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -344,7 +353,7 @@ public class DialogImport extends JDialog {
 		jTableFunctionListInto.getTableHeader().setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableFunctionListInto.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(2); //LEFT//
-		//
+
 		//jPanelSouth and objects on it
 		jPanelSouth.setBorder(BorderFactory.createEtchedBorder());
 		jPanelSouth.setPreferredSize(new Dimension(100, 43));
@@ -358,10 +367,16 @@ public class DialogImport extends JDialog {
 		jButtonImport.addActionListener(new DialogImport_jButtonImport_actionAdapter(this));
 		jButtonImport.setEnabled(false);
 		jButtonImport.setFocusCycleRoot(true);
+		jCheckBoxImportData.setBounds(new Rectangle(660, 8, 150, 27));
+		jCheckBoxImportData.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
+		jCheckBoxImportData.setText(res.getString("ImportDataFromTable"));
+		jCheckBoxImportData.setEnabled(false);
+		jCheckBoxImportData.setFocusCycleRoot(true);
 		jPanelSouth.setLayout(null);
 		jPanelSouth.add(jButtonCloseDialog);
 		jPanelSouth.add(jButtonImport);
-		//
+		jPanelSouth.add(jCheckBoxImportData);
+
 		//DialogImport
 		this.setTitle(res.getString("ImportDialogTitle"));
 		this.setResizable(false);
@@ -377,13 +392,17 @@ public class DialogImport extends JDialog {
 		org.w3c.dom.Element element;
 		MainTreeNode node;
 		anyElementsImported = false;
-		//
+
 		try {
+			databaseIDList.clear();
+			databaseNameList.clear();
+			databaseConnList.clear();
+
 			jTextFieldFileNameFrom.setText(fileName);
 			DOMParser parser = new DOMParser();
 			parser.parse(new InputSource(new FileInputStream(fileName)));
 			domDocumentImportingFrom = parser.getDocument();
-			//
+
 			NodeList nodeList = domDocumentImportingFrom.getElementsByTagName("System");
 			org.w3c.dom.Element systemElementImportFrom = (org.w3c.dom.Element)nodeList.item(0);
 			float importFileFormat = Float.parseFloat(systemElementImportFrom.getAttribute("FormatVersion"));
@@ -395,12 +414,12 @@ public class DialogImport extends JDialog {
 			} else {
 				jTextFieldSystemNameFrom.setText(systemElementImportFrom.getAttribute("Name"));
 				jTextFieldSystemVersionFrom.setText(systemElementImportFrom.getAttribute("Version"));
-				//
+
 				jComboBoxSubsystemFrom.removeAllItems();
 				jComboBoxSubsystemFrom.addItem(res.getString("SelectFromList"));
 				subsystemNodeListFrom = new ArrayList<org.w3c.dom.Element>();
 				subsystemNodeListFrom.add(null);
-				//
+
 				NodeList nodelist = domDocumentImportingFrom.getElementsByTagName("Subsystem");
 				SortableDomElementListModel sortingList = frame_.getSortedListModel(nodelist, "ID");
 				for (int i = 0; i < sortingList.getSize(); i++) {
@@ -408,19 +427,19 @@ public class DialogImport extends JDialog {
 					jComboBoxSubsystemFrom.addItem(element.getAttribute("ID") + " " + element.getAttribute("Name"));
 					subsystemNodeListFrom.add(element);
 				}
-				//
+
 				jComboBoxSubsystemInto.removeAllItems();
 				jComboBoxSubsystemInto.addItem(res.getString("SelectFromList"));
 				subsystemNodeListInto = new ArrayList<org.w3c.dom.Element>();
 				subsystemNodeListInto.add(null);
-				//
+
 				MainTreeNode subsystemListInto = frame_.getSubsystemListNode();
 				for (int i = 0; i < subsystemListInto.getChildCount(); i++) {
 					node = (MainTreeNode)subsystemListInto.getChildAt(i);
 					jComboBoxSubsystemInto.addItem(node.getElement().getAttribute("ID") + " " + node.getElement().getAttribute("Name"));
 					subsystemNodeListInto.add(node.getElement());
 				}
-				//
+
 				checkBoxHeaderRendererTableListFrom.setSelected(false);
 				if (tableModelTableListFrom.getRowCount() > 0) {
 					int rowCount = tableModelTableListFrom.getRowCount();
@@ -439,41 +458,46 @@ public class DialogImport extends JDialog {
 					int rowCount = tableModelFunctionListInto.getRowCount();
 					for (int i = 0; i < rowCount; i++) {tableModelFunctionListInto.removeRow(0);}
 				}
-				//
+
 				if (jTextAreaMessage.getText().equals("")) {
 					jTextAreaMessage.setText(res.getString("ImportMessage1") + "\n");
 				} else {
 					jTextAreaMessage.setText(jTextAreaMessage.getText() + "\n");
 				}
 				jButtonImport.setEnabled(false);
-				//
+				jCheckBoxImportData.setSelected(false);
+				jCheckBoxImportData.setEnabled(false);
+
 				super.setVisible(true);
 			}
 		} catch(Exception e) {
 			JOptionPane.showMessageDialog(this, res.getString("FailedToParse") + "\n\n" + e.getMessage());
-			e.printStackTrace();
 		}
-		//
+
 		return anyElementsImported;
 	}
 
 	void jButtonImport_actionPerformed(ActionEvent e) {
 		TableRowNumber tableRowNumber;
 		String message;
-		//
+
 		try {
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
-			//
+
 			for (int i = 0; i < tableModelTableListFrom.getRowCount(); i++) {
 				if (tableModelTableListFrom.getValueAt(i, 1).equals(Boolean.TRUE)) {
 					tableRowNumber = (TableRowNumber)tableModelTableListFrom.getValueAt(i, 0);
-					message = importTableElement(tableRowNumber.getElement());
+					if (tableModelTableListFrom.getValueAt(i, 4).equals("MERGE") && jCheckBoxImportData.isSelected()) {
+						message = importTableData(tableRowNumber.getElement());
+					} else {
+						message = importTableElement(tableRowNumber.getElement());
+					}
 					jTextAreaMessage.setText(getNewMessage(message, ""));
 					jScrollPaneMessage.validate();
 					jScrollPaneMessage.paintImmediately(0,0,jScrollPaneMessage.getWidth(),jScrollPaneMessage.getHeight());
 				}
 			}
-			//
+
 			for (int i = 0; i < tableModelFunctionListFrom.getRowCount(); i++) {
 				if (tableModelFunctionListFrom.getValueAt(i, 1).equals(Boolean.TRUE)) {
 					tableRowNumber = (TableRowNumber)tableModelFunctionListFrom.getValueAt(i, 0);
@@ -483,10 +507,10 @@ public class DialogImport extends JDialog {
 					jScrollPaneMessage.paintImmediately(0,0,jScrollPaneMessage.getWidth(),jScrollPaneMessage.getHeight());
 				}
 			}
-			//
+
 			jComboBoxSubsystemFrom_actionPerformed(null);
 			jComboBoxSubsystemInto_actionPerformed(null);
-			//
+
 		} finally {
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
@@ -496,15 +520,15 @@ public class DialogImport extends JDialog {
 		String error, message = "";
 		String tableID = importingElement.getAttribute("ID");
 		org.w3c.dom.Element currentElement;
-		//
+
 		NodeList nodeList = frame_.getDomDocument().getElementsByTagName("System");
 		org.w3c.dom.Element systemElementImportInto = (org.w3c.dom.Element)nodeList.item(0);
 		org.w3c.dom.Element subsystemElementImportInto = subsystemNodeListInto.get(jComboBoxSubsystemInto.getSelectedIndex());
 		String subsystemIDImportInto = subsystemElementImportInto.getAttribute("ID");
-		//
+
 		org.w3c.dom.Element newElement = (org.w3c.dom.Element)frame_.getDomDocument().importNode(importingElement, true);
 		newElement.setAttribute("SubsystemID", subsystemIDImportInto);
-		//
+
 		NodeList currentElementList = frame_.getDomDocument().getElementsByTagName("Table");
 		for (int i = 0; i < currentElementList.getLength(); i++) {
 			currentElement = (org.w3c.dom.Element)currentElementList.item(i);
@@ -530,6 +554,7 @@ public class DialogImport extends JDialog {
 				break;
 			}
 		}
+
 		if (message.equals("")) {
 			/////////////////////////////
 			// Steps to ADD definition //
@@ -543,10 +568,141 @@ public class DialogImport extends JDialog {
 				message = "Table " + tableID + " " + res.getString("ImportMessage5") + error;
 			}
 		}
-		//
+
 		return message;
 	}
-	
+
+	private String importTableData(org.w3c.dom.Element tableElementFrom) {
+		String sql, basicType, message = "";
+		boolean firstField = true;
+		String tableID = tableElementFrom.getAttribute("ID");
+		org.w3c.dom.Element tableElementInto, workElement;
+		Connection connectionFrom = null;
+		Connection connectionInto = null;
+		StringBuffer statementBuf;
+		int countInsertSucceeded= 0;
+		int countInsertFailed= 0;
+
+		if (databaseIDList.size() == 0) {
+			setupDBConnection();
+		}
+
+		if (databaseIDList.size() > 0 && databaseIDList.size() == databaseConnList.size()) {
+			NodeList nodeList = frame_.getDomDocument().getElementsByTagName("System");
+			HashMap<String, Object> fieldValueMap = new HashMap<String, Object>();
+
+			NodeList tableElementIntoList = frame_.getDomDocument().getElementsByTagName("Table");
+			for (int i = 0; i < tableElementIntoList.getLength(); i++) {
+				tableElementInto = (org.w3c.dom.Element)tableElementIntoList.item(i);
+				if (tableElementInto.getAttribute("ID").equals(tableID)) {
+					try {
+						connectionFrom = databaseConnList.get(databaseIDList.indexOf(tableElementFrom.getAttribute("DB")));
+						Statement statement = connectionFrom.createStatement();
+						statementBuf = new StringBuffer();
+						statementBuf.append("select * from ");
+						statementBuf.append(tableID);
+						ResultSet result = statement.executeQuery(statementBuf.toString());
+						while (result.next()) {
+							nodeList = tableElementFrom.getElementsByTagName("Field");
+							for (int j = 0; j < nodeList.getLength(); j++) {
+								workElement = (org.w3c.dom.Element)nodeList.item(j);
+								fieldValueMap.put(workElement.getAttribute("ID"), result.getObject(workElement.getAttribute("ID")));
+							}
+
+							connectionInto = frame_.databaseConnList.get(frame_.databaseIDList.indexOf(tableElementInto.getAttribute("DB")));
+							statement = connectionInto.createStatement();
+							statementBuf = new StringBuffer();
+							statementBuf.append("insert into ");
+							statementBuf.append(tableID);
+							statementBuf.append(" (");
+							firstField = true;
+							nodeList = tableElementInto.getElementsByTagName("Field");
+							for (int j = 0; j < nodeList.getLength(); j++) {
+								if (!firstField) {
+									statementBuf.append(", ") ;
+								}
+								workElement = (org.w3c.dom.Element)nodeList.item(j);
+								statementBuf.append(workElement.getAttribute("ID")) ;
+								firstField = false;
+							}
+							statementBuf.append(") values(") ;
+							firstField = true;
+							for (int j = 0; j < nodeList.getLength(); j++) {
+								if (!firstField) {
+									statementBuf.append(", ") ;
+								}
+								workElement = (org.w3c.dom.Element)nodeList.item(j);
+								basicType = frame_.getBasicTypeOf(workElement.getAttribute("Type"));
+								if (basicType.equals("INTEGER") | basicType.equals("FLOAT")) {
+									statementBuf.append(fieldValueMap.get(workElement.getAttribute("ID")));
+								} else {
+									if (fieldValueMap.get(workElement.getAttribute("ID")) == null) {
+										statementBuf.append("NULL");
+									} else {
+										statementBuf.append("'");
+										statementBuf.append(fieldValueMap.get(workElement.getAttribute("ID")));
+										statementBuf.append("'");
+									}
+								}
+								firstField = false;
+							}
+							statementBuf.append(")") ;
+
+							try {
+								sql = statementBuf.toString();
+								int recordCount = statement.executeUpdate(sql);
+								if (recordCount == 1) {
+									countInsertSucceeded++;
+								}
+							} catch (SQLException e) {
+								countInsertFailed++;
+							}
+						}
+
+					} catch (SQLException e) {
+					}
+
+					message = "Table " + tableID + " " + countInsertSucceeded + res.getString("ImportMessage38") + countInsertFailed + res.getString("ImportMessage39");
+					break;
+				}
+			}
+
+		} else {
+			message = res.getString("ImportMessage37");
+		}
+
+		return message;
+	}
+
+	private void setupDBConnection() {
+		org.w3c.dom.Element element;
+		String databaseName, user, password;
+		File file = new File(jTextFieldFileNameFrom.getText());
+
+		NodeList nodeList = domDocumentImportingFrom.getElementsByTagName("System");
+		org.w3c.dom.Element systemElementImportFrom = (org.w3c.dom.Element)nodeList.item(0);
+		databaseName = systemElementImportFrom.getAttribute("DatabaseName");
+		databaseName = databaseName.replace("<CURRENT>", file.getParent());
+		user = systemElementImportFrom.getAttribute("DatabaseUser");
+		password = systemElementImportFrom.getAttribute("DatabasePassword");
+		databaseIDList.add("");
+		databaseNameList.add(databaseName);
+		databaseConnList.add(frame_.createConnection(databaseName, user, password));
+
+		NodeList subDBList = systemElementImportFrom.getElementsByTagName("SubDB");
+		SortableDomElementListModel sortingList = frame_.getSortedListModel(subDBList, "ID");
+		for (int i = 0; i < sortingList.getSize(); i++) {
+			element = (org.w3c.dom.Element)sortingList.getElementAt(i);
+			databaseName = element.getAttribute("Name");
+			databaseName = databaseName.replace("<CURRENT>", file.getParent());
+			user = element.getAttribute("User");
+			password = element.getAttribute("Password");
+			databaseIDList.add(element.getAttribute("ID"));
+			databaseNameList.add(databaseName);
+			databaseConnList.add(frame_.createConnection(databaseName, user, password));
+		}
+	}
+
 	private String getErrorWithTable(org.w3c.dom.Element newElement, org.w3c.dom.Element currentElement) {
 		String error = "";
 		boolean isTheSamePK = false;
@@ -1371,6 +1527,20 @@ public class DialogImport extends JDialog {
 		}
 		return isReady;
 	}
+	
+	boolean isReadyToCheckImportData() {
+		boolean isReady = false;
+		if (jComboBoxSubsystemInto.getSelectedIndex() > 0) {
+			for (int i = 0; i < tableModelTableListFrom.getRowCount(); i++) {
+				if (tableModelTableListFrom.getValueAt(i, 1).equals(Boolean.TRUE)
+						&& tableModelTableListFrom.getValueAt(i, 4).equals("MERGE")) {
+					isReady = true;
+					break;
+				}
+			}
+		}
+		return isReady;
+	}
 
 	void jButtonCloseDialog_actionPerformed(ActionEvent e) {
 		this.setVisible(false);
@@ -1449,6 +1619,8 @@ public class DialogImport extends JDialog {
 				}
 				//
 				jButtonImport.setEnabled(false);
+				//jCheckBoxImportData.setSelected(false);
+				jCheckBoxImportData.setEnabled(false);
 			}
 		}
 	}
@@ -1558,6 +1730,7 @@ public class DialogImport extends JDialog {
 				}
 				//
 				jButtonImport.setEnabled(isReadyToStartImport());
+				jCheckBoxImportData.setEnabled(isReadyToCheckImportData());
 			}
 		}
 	}
@@ -1597,6 +1770,7 @@ public class DialogImport extends JDialog {
 				}
 				//
 				jButtonImport.setEnabled(isReadyToStartImport());
+				jCheckBoxImportData.setEnabled(isReadyToCheckImportData());
 			}
 		}   
 	}   
@@ -1675,6 +1849,7 @@ public class DialogImport extends JDialog {
 			setSelected((value != null && ((Boolean)value).booleanValue()));
 			//
 			jButtonImport.setEnabled(isReadyToStartImport());
+			jCheckBoxImportData.setEnabled(isReadyToCheckImportData());
 			//
 			return this;
 		}

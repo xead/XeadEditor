@@ -561,17 +561,17 @@ public class DialogAddFunction extends JDialog {
 				}
 				if (functionType.equals("XF300")) {
 					jTextFieldName.setText(res.getString("DefaultFunctionNameXF300A")
-							+ jTextFieldTableName.getText() 
+							+ jTextFieldHeaderTableName.getText() 
 							+ res.getString("DefaultFunctionNameXF300B"));
 				}
 				if (functionType.equals("XF310")) {
 					jTextFieldName.setText(res.getString("DefaultFunctionNameXF310A")
-							+ jTextFieldTableName.getText() 
+							+ jTextFieldHeaderTableName.getText() 
 							+ res.getString("DefaultFunctionNameXF310B"));
 				}
 				if (functionType.equals("XF390")) {
 					jTextFieldName.setText(res.getString("DefaultFunctionNameXF310A")
-							+ jTextFieldTableName.getText() 
+							+ jTextFieldHeaderTableName.getText() 
 							+ res.getString("DefaultFunctionNameXF310B"));
 				}
 			}

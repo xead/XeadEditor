@@ -48,12 +48,25 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "X-TEA Editor";
 	public static final String COPYRIGHT = "Copyright 2018 DBC Ltd.";
 	public static final String URL_DBC = "http://dbc.in.coocan.jp/";
-	public static final String FULL_VERSION  = "V1.R3.M21";
+	public static final String FULL_VERSION  = "V1.R3.M24";
+	//1.3.24
+	//・スクリプトでのフィールドプロパティ情報としてwarningを追加した
+	//・システム定義のインポートダイアログでテーブルデータをインポートできるようにした
+	//
+	//1.3.23
+	//・検索・置換ダイアログでキャプション値が置換できないバグを修正した
+	//・「その他の設定」に、ログファイルフォルダとログ最大サイズを設けた
+	//
+	//1.3.22
+	//・XF100,300で機能ボタンのアクションに「選択行を返す」を追加した
+	//・スクリプトエディタでテーブル定義のコメントを貼り付けられるようにした
+	//・機能追加時の機能名の自動設定ロジックのバグを修正した
+	//・XF110,200,300,310のフィールド設定にキャプション幅を追加した
+	//
 	//1.3.21
 	//・テーブルの参照定義追加ダイアログで、エイリアスのフォーカス時に全選択させるようにした
 	//・データ保守ユーティリティのインポート処理で、既存レコードについては無視されるのではなく更新されるようにした
 	//・XF110,200,300,310のフラットパネルにおいて、フィールドのアラインメントを指定できるようにした
-	//・スクリプトエディタでテーブル定義のコメントを貼り付けられるようにした
 	//
 	//1.3.20
 	//・テーブル定義のXF000に対する使途検索のバグを修正

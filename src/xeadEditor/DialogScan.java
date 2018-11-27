@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2016 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2018 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -1327,7 +1327,11 @@ public class DialogScan extends JDialog {
 					//
 					countOfRowsReplaced++;
 					countOfStringsReplaced = countOfStringsReplaced + countOfHits;
-					element.setAttribute(attributeType, targetString);
+					if (attributeType.startsWith("FieldOptions_")) {
+						element.setAttribute("FieldOptions", targetString);
+					} else {
+						element.setAttribute(attributeType, targetString);
+					}
 					//
 					if (attributeType.equals("TypeOptions")) {
 						tableModelScanResult.setValueAt(frame_.getOptionValueWithKeyword(element.getAttribute(attributeType), keyword), i, 5);
@@ -1360,7 +1364,8 @@ public class DialogScan extends JDialog {
 	String replaceValueWithKeyword(String originalString, String keyword, String value) {
 		StringBuffer buf = new StringBuffer();
 		int pos1 = originalString.indexOf(keyword + "(");
-		if (pos1 > -1) {
+//		if (pos1 > -1) {
+		if (pos1 == 0) {
 			int pos2 = originalString.indexOf(")", pos1);
 			if (pos2 > pos1) {
 				String str1 = originalString.substring(0, pos1 + keyword.length() + 1);
@@ -1494,15 +1499,6 @@ public class DialogScan extends JDialog {
 		workSheet.setDefaultRowHeight( (short) 300);
 		HSSFFooter workSheetFooter = workSheet.getFooter();
 		workSheetFooter.setRight(jTextFieldScan.getText() + "  Page " + HSSFFooter.page() + " / " + HSSFFooter.numPages() );
-		//
-//		HSSFFont fontHeader = workBook.createFont();
-//		fontHeader = workBook.createFont();
-//		fontHeader.setFontName(res.getString("XLSFontHDR"));
-//		fontHeader.setFontHeightInPoints((short)11);
-		//
-//		HSSFFont fontDetail = workBook.createFont();
-//		fontDetail.setFontName(res.getString("XLSFontDTL"));
-//		fontDetail.setFontHeightInPoints((short)11);
 		//
 		HSSFCellStyle styleHeader = workBook.createCellStyle();
 		styleHeader.setAlignment(HSSFCellStyle.ALIGN_LEFT);

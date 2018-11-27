@@ -384,10 +384,10 @@ public class DialogAssistList extends JDialog {
 		StringTokenizer workTokenizer;
 		StringBuffer moduleBuf = new StringBuffer();
 
+		tableID = tableID.toUpperCase();
 		tableElement = frame_.getSpecificTableElement(tableID);
 		if (tableElement == null) {
-			JOptionPane.showMessageDialog(null, "ID is invalid.");
-
+				JOptionPane.showMessageDialog(null, "ID is invalid.");
 		} else {
 			databaseName = frame_.getDatabaseName(tableElement.getAttribute("DB"));
 			moduleBuf.append("// " + tableID + " " + tableElement.getAttribute("Name") + "\n");

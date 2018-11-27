@@ -324,9 +324,9 @@ public class Editor extends JFrame {
 	private boolean tableRowsAreBeingSetup;
 	private int dragObjectRow = 0;
 	private int dragTargetRow = 0;
-	private ArrayList<String> databaseIDList = new ArrayList<String>();
-	private ArrayList<String> databaseNameList = new ArrayList<String>();
-	private ArrayList<Connection> databaseConnList = new ArrayList<Connection>();
+	public ArrayList<String> databaseIDList = new ArrayList<String>();
+	public ArrayList<String> databaseNameList = new ArrayList<String>();
+	public ArrayList<Connection> databaseConnList = new ArrayList<Connection>();
 	/**
 	 * Definition components on jPanelSystem
 	 */
@@ -406,6 +406,10 @@ public class Editor extends JFrame {
 	private JPanel jPanelSystemOtherConfigTop = new JPanel();
 	private JLabel jLabelSystemOutputFolder = new JLabel();
 	private JTextField jTextFieldSystemOutputFolder = new JTextField();
+	private JLabel jLabelSystemLogFileFolder = new JLabel();
+	private JTextField jTextFieldSystemLogFileFolder = new JTextField();
+	private JLabel jLabelSystemLoggingSize = new JLabel();
+	private JTextField jTextFieldSystemLoggingSize = new JTextField();
 	private JLabel jLabelSystemImageFileFolder = new JLabel();
 	private JTextField jTextFieldSystemImageFileFolder = new JTextField();
 	private JLabel jLabelSystemWelcomePageURL = new JLabel();
@@ -1349,6 +1353,8 @@ public class Editor extends JFrame {
 	private ButtonGroup buttonGroupFunction110BatchFieldCaptionOption = new ButtonGroup();
 	private Editor_KanjiTextField jTextFieldFunction110BatchFieldCaptionOptionValue = new Editor_KanjiTextField();
 	private JCheckBox jCheckBoxFunction110BatchFieldCaptionLengthVariable = new JCheckBox();
+	private JLabel jLabelFunction110BatchFieldCaptionWidth = new JLabel();
+	private JTextField jTextFieldFunction110BatchFieldCaptionWidth = new JTextField();
 	private JLabel jLabelFunction110BatchFieldPromptOption = new JLabel();
 	private JRadioButton jRadioButtonFunction110BatchFieldPromptOptionNone = new JRadioButton();
 	private JRadioButton jRadioButtonFunction110BatchFieldPromptOptionList = new JRadioButton();
@@ -1467,6 +1473,8 @@ public class Editor extends JFrame {
 	private ButtonGroup buttonGroupFunction200FieldCaptionOption = new ButtonGroup();
 	private Editor_KanjiTextField jTextFieldFunction200FieldCaptionOptionValue = new Editor_KanjiTextField();
 	private JCheckBox jCheckBoxFunction200FieldCaptionLengthVariable = new JCheckBox();
+	private JLabel jLabelFunction200FieldCaptionWidth = new JLabel();
+	private JTextField jTextFieldFunction200FieldCaptionWidth = new JTextField();
 	private JLabel jLabelFunction200FieldPromptOption = new JLabel();
 	private JRadioButton jRadioButtonFunction200FieldPromptOptionNone = new JRadioButton();
 	private JRadioButton jRadioButtonFunction200FieldPromptOptionList = new JRadioButton();
@@ -1724,6 +1732,8 @@ public class Editor extends JFrame {
 	private ButtonGroup buttonGroupFunction300HeaderFieldCaptionOption = new ButtonGroup();
 	private Editor_KanjiTextField jTextFieldFunction300HeaderFieldCaptionOptionValue = new Editor_KanjiTextField();
 	private JCheckBox jCheckBoxFunction300HeaderFieldCaptionLengthVariable = new JCheckBox();
+	private JLabel jLabelFunction300HeaderFieldCaptionWidth = new JLabel();
+	private JTextField jTextFieldFunction300HeaderFieldCaptionWidth = new JTextField();
 	private JLabel jLabelFunction300HeaderFieldLinkedFunction = new JLabel();
 	private JTextField jTextFieldFunction300HeaderFieldLinkedFunctionID = new JTextField();
 	private JTextField jTextFieldFunction300HeaderFieldLinkedFunctionName = new JTextField();
@@ -1964,6 +1974,8 @@ public class Editor extends JFrame {
 	private ButtonGroup buttonGroupFunction310HeaderFieldCaptionOption = new ButtonGroup();
 	private Editor_KanjiTextField jTextFieldFunction310HeaderFieldCaptionOptionValue = new Editor_KanjiTextField();
 	private JCheckBox jCheckBoxFunction310HeaderFieldCaptionLengthVariable = new JCheckBox();
+	private JLabel jLabelFunction310HeaderFieldCaptionWidth = new JLabel();
+	private JTextField jTextFieldFunction310HeaderFieldCaptionWidth = new JTextField();
 	private JLabel jLabelFunction310HeaderFieldPromptOption = new JLabel();
 	private JRadioButton jRadioButtonFunction310HeaderFieldPromptOptionNone = new JRadioButton();
 	private JRadioButton jRadioButtonFunction310HeaderFieldPromptOptionList = new JRadioButton();
@@ -2296,6 +2308,7 @@ public class Editor extends JFrame {
 		if (osName.startsWith("mac")){
 			FileDialog fileDialog = new FileDialog(this);
 			fileDialog.setTitle("X-TEA Editor - " + dialogTitle);
+			fileDialog.setDirectory(currentFileFolder);
 			fileDialog.setFile("*." + fileExtention);
 			fileDialog.setVisible(true);
 
@@ -2305,6 +2318,7 @@ public class Editor extends JFrame {
 
 		} else {
 			jFileChooser.setDialogTitle("X-TEA Editor - " + dialogTitle);
+			jFileChooser.setCurrentDirectory(new File(currentFileFolder));
 			jFileChooser.resetChoosableFileFilters();
 			ArrayList<String> extentionList = new ArrayList<String>();
 			if (!fileExtention.equals("")) {
@@ -2359,6 +2373,7 @@ public class Editor extends JFrame {
 		String osName = System.getProperty("os.name").toLowerCase();
 		if (osName.startsWith("mac")){
 			FileDialog fileDialog = new FileDialog(this);
+			fileDialog.setDirectory(currentFileFolder);
 			fileDialog.setTitle(dialogTitle);
 			fileDialog.setVisible(true);
 
@@ -2402,6 +2417,7 @@ public class Editor extends JFrame {
 			while (rtn != 2) {
 				if (name.equals("")) {
 					jFileChooser.setSelectedFile(new File(defaultFileName));
+					jFileChooser.setCurrentDirectory(new File(currentFileFolder));
 					jFileChooser.resetChoosableFileFilters();
 					jFileChooser.setFileFilter(new FileNameExtensionFilter(extention, extention));
 				} else {
@@ -3824,7 +3840,7 @@ public class Editor extends JFrame {
 		jPanelSystemOtherConfig.setLayout(new BorderLayout());
 		jPanelSystemOtherConfigTop.setBorder(BorderFactory.createEtchedBorder());
 		jPanelSystemOtherConfigTop.setLayout(null);
-		jPanelSystemOtherConfigTop.setPreferredSize(new Dimension(10, 197));
+		jPanelSystemOtherConfigTop.setPreferredSize(new Dimension(10, 231));
 		jLabelSystemImageFileFolder.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemImageFileFolder.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemImageFileFolder.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -3855,13 +3871,27 @@ public class Editor extends JFrame {
 		jCheckBoxSystemSkipPreload.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jCheckBoxSystemSkipPreload.setText(res.getString("SkipPreload"));
 		jCheckBoxSystemSkipPreload.setBounds(new Rectangle(795, 71, 400, 28));
+		jLabelSystemLogFileFolder.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelSystemLogFileFolder.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelSystemLogFileFolder.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelSystemLogFileFolder.setText(res.getString("LogFileFolder"));
+		jLabelSystemLogFileFolder.setBounds(new Rectangle(5, 102, 130, 28));
+		jTextFieldSystemLogFileFolder.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemLogFileFolder.setBounds(new Rectangle(140, 102, 635, 28));
+		jLabelSystemLoggingSize.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelSystemLoggingSize.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelSystemLoggingSize.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelSystemLoggingSize.setText(res.getString("LoggingSize"));
+		jLabelSystemLoggingSize.setBounds(new Rectangle(780, 102, 130, 28));
+		jTextFieldSystemLoggingSize.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldSystemLoggingSize.setBounds(new Rectangle(915, 102, 100, 28));
 		jLabelSystemDateFormat.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemDateFormat.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemDateFormat.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemDateFormat.setText(res.getString("DateFormat"));
-		jLabelSystemDateFormat.setBounds(new Rectangle(5, 102, 130, 28));
+		jLabelSystemDateFormat.setBounds(new Rectangle(5, 133, 130, 28));
 		jComboBoxSystemDateFormat.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jComboBoxSystemDateFormat.setBounds(new Rectangle(140, 102, 240, 28));
+		jComboBoxSystemDateFormat.setBounds(new Rectangle(140, 133, 240, 28));
 		jComboBoxSystemDateFormat.setEditable(false);
 		jComboBoxSystemDateFormat.addItem("en00 06/17/10");
 		jComboBoxSystemDateFormat.addItem("en01 Thur,06/17/01");
@@ -3899,75 +3929,75 @@ public class Editor extends JFrame {
 		jLabelSystemFont.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemFont.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemFont.setText(res.getString("Font"));
-		jLabelSystemFont.setBounds(new Rectangle(390, 102, 130, 28));
+		jLabelSystemFont.setBounds(new Rectangle(390, 133, 130, 28));
 		jTextFieldSystemFont.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemFont.setBounds(new Rectangle(525, 102, 250, 28));
+		jTextFieldSystemFont.setBounds(new Rectangle(525, 133, 250, 28));
 		jLabelSystemHashFormat.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemHashFormat.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemHashFormat.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemHashFormat.setText(res.getString("HashFormat"));
-		jLabelSystemHashFormat.setBounds(new Rectangle(780, 102, 130, 28));
+		jLabelSystemHashFormat.setBounds(new Rectangle(780, 133, 130, 28));
 		jTextFieldSystemHashFormat.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemHashFormat.setBounds(new Rectangle(915, 102, 165, 28));
+		jTextFieldSystemHashFormat.setBounds(new Rectangle(915, 133, 165, 28));
 		jButtonSystemHashFormat.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jButtonSystemHashFormat.setText("CHK");
-		jButtonSystemHashFormat.setBounds(new Rectangle(1080, 102, 70, 28));
+		jButtonSystemHashFormat.setBounds(new Rectangle(1080, 133, 70, 28));
 		jButtonSystemHashFormat.addActionListener(new Editor_jButtonSystemHashFormat_actionAdapter(this));
 		jLabelSystemEditorUser.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemEditorUser.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemEditorUser.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemEditorUser.setText(res.getString("EditorUser"));
-		jLabelSystemEditorUser.setBounds(new Rectangle(5, 133, 130, 28));
+		jLabelSystemEditorUser.setBounds(new Rectangle(5, 164, 130, 28));
 		jTextFieldSystemEditorUser.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemEditorUser.setBounds(new Rectangle(140, 133, 80, 28));
+		jTextFieldSystemEditorUser.setBounds(new Rectangle(140, 164, 80, 28));
 		jLabelSystemEditorUserPassword.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemEditorUserPassword.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemEditorUserPassword.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemEditorUserPassword.setText(res.getString("Password"));
-		jLabelSystemEditorUserPassword.setBounds(new Rectangle(225, 133, 100, 28));
+		jLabelSystemEditorUserPassword.setBounds(new Rectangle(225, 164, 100, 28));
 		jTextFieldSystemEditorUserPassword.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemEditorUserPassword.setBounds(new Rectangle(330, 133, 120, 28));
+		jTextFieldSystemEditorUserPassword.setBounds(new Rectangle(330, 164, 120, 28));
 		jLabelSystemDriverVMOptions.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemDriverVMOptions.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemDriverVMOptions.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemDriverVMOptions.setText(res.getString("DriverVMOptions"));
-		jLabelSystemDriverVMOptions.setBounds(new Rectangle(460, 133, 100, 28));
+		jLabelSystemDriverVMOptions.setBounds(new Rectangle(460, 164, 100, 28));
 		jTextFieldSystemDriverVMOptions.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemDriverVMOptions.setBounds(new Rectangle(565, 133, 230, 28));
+		jTextFieldSystemDriverVMOptions.setBounds(new Rectangle(565, 164, 230, 28));
 		jLabelSystemProxyIP.setFont(new java.awt.Font(mainFontName, 0, 16));
 		jLabelSystemProxyIP.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemProxyIP.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemProxyIP.setText("Proxy IP/Port");
-		jLabelSystemProxyIP.setBounds(new Rectangle(800, 133, 110, 28));
+		jLabelSystemProxyIP.setBounds(new Rectangle(800, 164, 110, 28));
 		jTextFieldSystemProxyIP.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemProxyIP.setBounds(new Rectangle(915, 133, 150, 28));
+		jTextFieldSystemProxyIP.setBounds(new Rectangle(915, 164, 150, 28));
 		jTextFieldSystemProxyPort.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemProxyPort.setBounds(new Rectangle(1070, 133, 80, 28));
+		jTextFieldSystemProxyPort.setBounds(new Rectangle(1070, 164, 80, 28));
 		jLabelSystemSmtpHost.setFont(new java.awt.Font(mainFontName, 0, 16));
 		jLabelSystemSmtpHost.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSmtpHost.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemSmtpHost.setText("SMTP Host/Port");
-		jLabelSystemSmtpHost.setBounds(new Rectangle(5, 164, 130, 28));
+		jLabelSystemSmtpHost.setBounds(new Rectangle(5, 195, 130, 28));
 		jTextFieldSystemSmtpHost.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemSmtpHost.setBounds(new Rectangle(140, 164, 150, 28));
+		jTextFieldSystemSmtpHost.setBounds(new Rectangle(140, 195, 150, 28));
 		jTextFieldSystemSmtpPort.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemSmtpPort.setBounds(new Rectangle(295, 164, 80, 28));
+		jTextFieldSystemSmtpPort.setBounds(new Rectangle(295, 195, 80, 28));
 		jLabelSystemSmtpUser.setFont(new java.awt.Font(mainFontName, 0, 16));
 		jLabelSystemSmtpUser.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSmtpUser.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemSmtpUser.setText("SMTP User/Password");
-		jLabelSystemSmtpUser.setBounds(new Rectangle(380, 164, 180, 28));
+		jLabelSystemSmtpUser.setBounds(new Rectangle(380, 195, 180, 28));
 		jTextFieldSystemSmtpUser.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemSmtpUser.setBounds(new Rectangle(565, 164, 100, 28));
+		jTextFieldSystemSmtpUser.setBounds(new Rectangle(565, 195, 100, 28));
 		jTextFieldSystemSmtpPassword.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemSmtpPassword.setBounds(new Rectangle(670, 164, 125, 28));
+		jTextFieldSystemSmtpPassword.setBounds(new Rectangle(670, 195, 125, 28));
 		jLabelSystemSmtpAdminEmail.setFont(new java.awt.Font(mainFontName, 0, 16));
 		jLabelSystemSmtpAdminEmail.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemSmtpAdminEmail.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemSmtpAdminEmail.setText("Admin EMail");
-		jLabelSystemSmtpAdminEmail.setBounds(new Rectangle(800, 164, 110, 28));
+		jLabelSystemSmtpAdminEmail.setBounds(new Rectangle(800, 195, 110, 28));
 		jTextFieldSystemSmtpAdminEmail.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemSmtpAdminEmail.setBounds(new Rectangle(915, 164, 235, 28));
+		jTextFieldSystemSmtpAdminEmail.setBounds(new Rectangle(915, 195, 235, 28));
 		jSplitPaneSystemPrintFont.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPaneSystemPrintFont.add(jScrollPaneSystemPrintFontList, JSplitPane.TOP);
 		jSplitPaneSystemPrintFont.add(jPanelSystemPrintFont, JSplitPane.BOTTOM);
@@ -3977,8 +4007,12 @@ public class Editor extends JFrame {
 		jPanelSystemOtherConfigTop.add(jLabelSystemWelcomePageURL);
 		jPanelSystemOtherConfigTop.add(jTextFieldSystemWelcomePageURL);
 		jPanelSystemOtherConfigTop.add(jTextFieldSystemOutputFolder);
+		jPanelSystemOtherConfigTop.add(jTextFieldSystemLogFileFolder);
+		jPanelSystemOtherConfigTop.add(jTextFieldSystemLoggingSize);
 		jPanelSystemOtherConfigTop.add(jCheckBoxSystemAutoConnectToEdit);
 		jPanelSystemOtherConfigTop.add(jLabelSystemOutputFolder);
+		jPanelSystemOtherConfigTop.add(jLabelSystemLogFileFolder);
+		jPanelSystemOtherConfigTop.add(jLabelSystemLoggingSize);
 		jPanelSystemOtherConfigTop.add(jComboBoxSystemDateFormat);
 		jPanelSystemOtherConfigTop.add(jLabelSystemDateFormat);
 		jPanelSystemOtherConfigTop.add(jLabelSystemFont);
@@ -6514,6 +6548,7 @@ public class Editor extends JFrame {
 		jComboBoxFunction100ButtonAction.addItem(res.getString("ActionCallDTLFunctionToAdd"));
 		jComboBoxFunction100ButtonAction.addItem(res.getString("ActionOutputEXCEL"));
 		jComboBoxFunction100ButtonAction.addItem(res.getString("ActionCallFunction"));
+		jComboBoxFunction100ButtonAction.addItem(res.getString("ActionReturnSelectedRows"));
 		jComboBoxFunction100ButtonAction.addItem(res.getString("ActionReturnNull"));
 		jLabelFunction100ButtonActionCallFunction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction100ButtonActionCallFunction.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -7390,8 +7425,17 @@ public class Editor extends JFrame {
 		jTextFieldFunction110BatchFieldCaptionOptionValue.setBounds(new Rectangle(530, 102, 200, 28));
 		jTextFieldFunction110BatchFieldCaptionOptionValue.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
 		jCheckBoxFunction110BatchFieldCaptionLengthVariable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jCheckBoxFunction110BatchFieldCaptionLengthVariable.setBounds(new Rectangle(760, 102, 220, 28));
+		jCheckBoxFunction110BatchFieldCaptionLengthVariable.setBounds(new Rectangle(760, 102, 170, 28));
 		jCheckBoxFunction110BatchFieldCaptionLengthVariable.setText(res.getString("CaptionLengthVariable"));
+		jCheckBoxFunction110BatchFieldCaptionLengthVariable.addChangeListener(new Editor_jCheckBoxFunction110BatchFieldCaptionLengthVariable_changeAdapter(this));
+		jLabelFunction110BatchFieldCaptionWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelFunction110BatchFieldCaptionWidth.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction110BatchFieldCaptionWidth.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction110BatchFieldCaptionWidth.setText(res.getString("FieldWidth"));
+		jLabelFunction110BatchFieldCaptionWidth.setBounds(new Rectangle(930, 102, 60, 28));
+		jTextFieldFunction110BatchFieldCaptionWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction110BatchFieldCaptionWidth.setBounds(new Rectangle(995, 102, 60, 28));
+		jTextFieldFunction110BatchFieldCaptionWidth.setText("");
 		//
 		jLabelFunction110BatchFieldPromptOption.setText(res.getString("Prompt"));
 		jLabelFunction110BatchFieldPromptOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
@@ -7463,6 +7507,8 @@ public class Editor extends JFrame {
 		jPanelFunction110BatchFieldDefinition.add(jRadioButtonFunction110BatchFieldCaptionOptionNone);
 		jPanelFunction110BatchFieldDefinition.add(jTextFieldFunction110BatchFieldCaptionOptionValue);
 		jPanelFunction110BatchFieldDefinition.add(jCheckBoxFunction110BatchFieldCaptionLengthVariable);
+		jPanelFunction110BatchFieldDefinition.add(jLabelFunction110BatchFieldCaptionWidth);
+		jPanelFunction110BatchFieldDefinition.add(jTextFieldFunction110BatchFieldCaptionWidth);
 		jPanelFunction110BatchFieldDefinition.add(jLabelFunction110BatchFieldPromptOption);
 		jPanelFunction110BatchFieldDefinition.add(jRadioButtonFunction110BatchFieldPromptOptionNone);
 		jPanelFunction110BatchFieldDefinition.add(jRadioButtonFunction110BatchFieldPromptOptionList);
@@ -7912,8 +7958,17 @@ public class Editor extends JFrame {
 		jTextFieldFunction200FieldCaptionOptionValue.setBounds(new Rectangle(530, 102, 195, 28));
 		jTextFieldFunction200FieldCaptionOptionValue.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
 		jCheckBoxFunction200FieldCaptionLengthVariable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jCheckBoxFunction200FieldCaptionLengthVariable.setBounds(new Rectangle(730, 102, 220, 28));
+		jCheckBoxFunction200FieldCaptionLengthVariable.setBounds(new Rectangle(730, 102, 200, 28));
 		jCheckBoxFunction200FieldCaptionLengthVariable.setText(res.getString("CaptionLengthVariable"));
+		jCheckBoxFunction200FieldCaptionLengthVariable.addChangeListener(new Editor_jCheckBoxFunction200FieldCaptionLengthVariable_changeAdapter(this));
+		jLabelFunction200FieldCaptionWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelFunction200FieldCaptionWidth.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction200FieldCaptionWidth.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction200FieldCaptionWidth.setText(res.getString("FieldWidth"));
+		jLabelFunction200FieldCaptionWidth.setBounds(new Rectangle(930, 102, 60, 28));
+		jTextFieldFunction200FieldCaptionWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction200FieldCaptionWidth.setBounds(new Rectangle(995, 102, 60, 28));
+		jTextFieldFunction200FieldCaptionWidth.setText("");
 		//
 		jLabelFunction200FieldPromptOption.setText(res.getString("Prompt"));
 		jLabelFunction200FieldPromptOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
@@ -7992,6 +8047,8 @@ public class Editor extends JFrame {
 		jPanelFunction200FieldDefinition.add(jRadioButtonFunction200FieldCaptionOptionValue);
 		jPanelFunction200FieldDefinition.add(jTextFieldFunction200FieldCaptionOptionValue);
 		jPanelFunction200FieldDefinition.add(jCheckBoxFunction200FieldCaptionLengthVariable);
+		jPanelFunction200FieldDefinition.add(jLabelFunction200FieldCaptionWidth);
+		jPanelFunction200FieldDefinition.add(jTextFieldFunction200FieldCaptionWidth);
 		jPanelFunction200FieldDefinition.add(jLabelFunction200FieldPromptOption);
 		jPanelFunction200FieldDefinition.add(jRadioButtonFunction200FieldPromptOptionNone);
 		jPanelFunction200FieldDefinition.add(jRadioButtonFunction200FieldPromptOptionList);
@@ -9038,8 +9095,17 @@ public class Editor extends JFrame {
 		jTextFieldFunction300HeaderFieldCaptionOptionValue.setBounds(new Rectangle(530, 102, 200, 28));
 		jTextFieldFunction300HeaderFieldCaptionOptionValue.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
 		jCheckBoxFunction300HeaderFieldCaptionLengthVariable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jCheckBoxFunction300HeaderFieldCaptionLengthVariable.setBounds(new Rectangle(730, 102, 220, 28));
+		jCheckBoxFunction300HeaderFieldCaptionLengthVariable.setBounds(new Rectangle(730, 102, 200, 28));
 		jCheckBoxFunction300HeaderFieldCaptionLengthVariable.setText(res.getString("CaptionLengthVariable"));
+		jCheckBoxFunction300HeaderFieldCaptionLengthVariable.addChangeListener(new Editor_jCheckBoxFunction300HeaderFieldCaptionLengthVariable_changeAdapter(this));
+		jLabelFunction300HeaderFieldCaptionWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelFunction300HeaderFieldCaptionWidth.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction300HeaderFieldCaptionWidth.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction300HeaderFieldCaptionWidth.setText(res.getString("FieldWidth"));
+		jLabelFunction300HeaderFieldCaptionWidth.setBounds(new Rectangle(930, 102, 60, 28));
+		jTextFieldFunction300HeaderFieldCaptionWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction300HeaderFieldCaptionWidth.setBounds(new Rectangle(995, 102, 60, 28));
+		jTextFieldFunction300HeaderFieldCaptionWidth.setText("");
 		//
 		jLabelFunction300HeaderFieldLinkedFunction.setText(res.getString("LinkedFunction"));
 		jLabelFunction300HeaderFieldLinkedFunction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
@@ -9096,6 +9162,8 @@ public class Editor extends JFrame {
 		jPanelFunction300HeaderFieldDefinition.add(jRadioButtonFunction300HeaderFieldCaptionOptionNone);
 		jPanelFunction300HeaderFieldDefinition.add(jTextFieldFunction300HeaderFieldCaptionOptionValue);
 		jPanelFunction300HeaderFieldDefinition.add(jCheckBoxFunction300HeaderFieldCaptionLengthVariable);
+		jPanelFunction300HeaderFieldDefinition.add(jLabelFunction300HeaderFieldCaptionWidth);
+		jPanelFunction300HeaderFieldDefinition.add(jTextFieldFunction300HeaderFieldCaptionWidth);
 		jPanelFunction300HeaderFieldDefinition.add(jLabelFunction300HeaderFieldLinkedFunction);
 		jPanelFunction300HeaderFieldDefinition.add(jTextFieldFunction300HeaderFieldLinkedFunctionID);
 		jPanelFunction300HeaderFieldDefinition.add(jTextFieldFunction300HeaderFieldLinkedFunctionName);
@@ -9781,6 +9849,7 @@ public class Editor extends JFrame {
 		jComboBoxFunction300DetailButtonAction.addItem(res.getString("ActionCallHDRFunction"));
 		jComboBoxFunction300DetailButtonAction.addItem(res.getString("ActionOutputEXCEL"));
 		jComboBoxFunction300DetailButtonAction.addItem(res.getString("ActionCallFunction"));
+		jComboBoxFunction300DetailButtonAction.addItem(res.getString("ActionReturnSelectedRows"));
 		jLabelFunction300DetailButtonActionCallFunction.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelFunction300DetailButtonActionCallFunction.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelFunction300DetailButtonActionCallFunction.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -10264,8 +10333,17 @@ public class Editor extends JFrame {
 		jTextFieldFunction310HeaderFieldCaptionOptionValue.setBounds(new Rectangle(530, 102, 200, 28));
 		jTextFieldFunction310HeaderFieldCaptionOptionValue.addKeyListener(new Editor_CaptionOptionValue_keyAdapter(this));
 		jCheckBoxFunction310HeaderFieldCaptionLengthVariable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jCheckBoxFunction310HeaderFieldCaptionLengthVariable.setBounds(new Rectangle(760, 102, 220, 28));
+		jCheckBoxFunction310HeaderFieldCaptionLengthVariable.setBounds(new Rectangle(760, 102, 170, 28));
 		jCheckBoxFunction310HeaderFieldCaptionLengthVariable.setText(res.getString("CaptionLengthVariable"));
+		jCheckBoxFunction310HeaderFieldCaptionLengthVariable.addChangeListener(new Editor_jCheckBoxFunction310HeaderFieldCaptionLengthVariable_changeAdapter(this));
+		jLabelFunction310HeaderFieldCaptionWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jLabelFunction310HeaderFieldCaptionWidth.setHorizontalAlignment(SwingConstants.RIGHT);
+		jLabelFunction310HeaderFieldCaptionWidth.setHorizontalTextPosition(SwingConstants.LEADING);
+		jLabelFunction310HeaderFieldCaptionWidth.setText(res.getString("FieldWidth"));
+		jLabelFunction310HeaderFieldCaptionWidth.setBounds(new Rectangle(930, 102, 60, 28));
+		jTextFieldFunction310HeaderFieldCaptionWidth.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
+		jTextFieldFunction310HeaderFieldCaptionWidth.setBounds(new Rectangle(995, 102, 60, 28));
+		jTextFieldFunction310HeaderFieldCaptionWidth.setText("");
 		//
 		jLabelFunction310HeaderFieldPromptOption.setText(res.getString("Prompt"));
 		jLabelFunction310HeaderFieldPromptOption.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
@@ -10346,6 +10424,8 @@ public class Editor extends JFrame {
 		jPanelFunction310HeaderFieldDefinition.add(jRadioButtonFunction310HeaderFieldCaptionOptionNone);
 		jPanelFunction310HeaderFieldDefinition.add(jTextFieldFunction310HeaderFieldCaptionOptionValue);
 		jPanelFunction310HeaderFieldDefinition.add(jCheckBoxFunction310HeaderFieldCaptionLengthVariable);
+		jPanelFunction310HeaderFieldDefinition.add(jLabelFunction310HeaderFieldCaptionWidth);
+		jPanelFunction310HeaderFieldDefinition.add(jTextFieldFunction310HeaderFieldCaptionWidth);
 		jPanelFunction310HeaderFieldDefinition.add(jLabelFunction310HeaderFieldPromptOption);
 		jPanelFunction310HeaderFieldDefinition.add(jRadioButtonFunction310HeaderFieldPromptOptionNone);
 		jPanelFunction310HeaderFieldDefinition.add(jRadioButtonFunction310HeaderFieldPromptOptionList);
@@ -11484,7 +11564,8 @@ public class Editor extends JFrame {
 			ArrayList<String> typeOptionList = getOptionList(options);
 			for (int i = 0; i < typeOptionList.size(); i++) {
 				pos1 = typeOptionList.get(i).indexOf(keyword + "(");
-				if (pos1 > -1) {
+//				if (pos1 > -1) { Note that keywords contain "WIDTH" as well as "CAPTION_WIDTH"
+				if (pos1 == 0) {
 					pos2 = typeOptionList.get(i).length() - 1;
 					value = typeOptionList.get(i).substring(pos1 + lengthOfKeyword, pos2);
 					break;
@@ -12545,6 +12626,9 @@ public class Editor extends JFrame {
 			String wrkStr = action.substring(5, pos);
 			descriptions = wrkStr + res.getString("ActionCall");
 		}
+		if (action.length() >= 11 && action.substring(0, 11).equals("RETURN_ROWS")) {
+			descriptions = res.getString("ActionReturnSelectedRows");
+		}
 		if (action.length() >= 4 && action.substring(0, 4).equals("NULL")) {
 			descriptions = res.getString("ActionReturnNull");
 		}
@@ -12616,6 +12700,9 @@ public class Editor extends JFrame {
 			String wrkStr = action.substring(5, pos);
 			descriptions = wrkStr + res.getString("ActionCall");
     	}
+		if (action.length() >= 11 && action.substring(0, 11).equals("RETURN_ROWS")) {
+			descriptions = res.getString("ActionReturnSelectedRows");
+		}
     	return descriptions;
     }
 
@@ -15828,6 +15915,16 @@ public class Editor extends JFrame {
 			} else {
 				jTextFieldSystemOutputFolder.setText(domNode_.getAttribute("OutputFolder"));
 			}
+			if (domNode_.getAttribute("LogFileFolder").equals("")) {
+				jTextFieldSystemLogFileFolder.setText("*Default");
+			} else {
+				jTextFieldSystemLogFileFolder.setText(domNode_.getAttribute("LogFileFolder"));
+			}
+			if (domNode_.getAttribute("LoggingSize").equals("")) {
+				jTextFieldSystemLoggingSize.setText("*Default");
+			} else {
+				jTextFieldSystemLoggingSize.setText(domNode_.getAttribute("LoggingSize"));
+			}
 			if (domNode_.getAttribute("AutoConnectToEdit").equals("T")) {
 				jCheckBoxSystemAutoConnectToEdit.setSelected(true);
 			} else {
@@ -18797,6 +18894,8 @@ public class Editor extends JFrame {
 				domNode_.setAttribute("ScriptFunctions", oldElement.getAttribute("ScriptFunctions"));
 				domNode_.setAttribute("ImageFileFolder", oldElement.getAttribute("ImageFileFolder"));
 				domNode_.setAttribute("OutputFolder", oldElement.getAttribute("OutputFolder"));
+				domNode_.setAttribute("LogFileFolder", oldElement.getAttribute("LogFileFolder"));
+				domNode_.setAttribute("LoggingSize", oldElement.getAttribute("LoggingSize"));
 				domNode_.setAttribute("WelcomePageURL", oldElement.getAttribute("WelcomePageURL"));
 				domNode_.setAttribute("DateFormat", oldElement.getAttribute("DateFormat"));
 				domNode_.setAttribute("DBCP", oldElement.getAttribute("DBCP"));
@@ -18925,6 +19024,8 @@ public class Editor extends JFrame {
 				domNode_.setAttribute("ScriptFunctions", newElement.getAttribute("ScriptFunctions"));
 				domNode_.setAttribute("ImageFileFolder", newElement.getAttribute("ImageFileFolder"));
 				domNode_.setAttribute("OutputFolder", newElement.getAttribute("OutputFolder"));
+				domNode_.setAttribute("LogFileFolder", newElement.getAttribute("LogFileFolder"));
+				domNode_.setAttribute("LoggingSize", newElement.getAttribute("LoggingSize"));
 				domNode_.setAttribute("WelcomePageURL", newElement.getAttribute("WelcomePageURL"));
 				domNode_.setAttribute("DateFormat", newElement.getAttribute("DateFormat"));
 				domNode_.setAttribute("DBCP", newElement.getAttribute("DBCP"));
@@ -19176,6 +19277,24 @@ public class Editor extends JFrame {
 					valueOfFieldsChanged = true;
 				}
 			}
+			if (jTextFieldSystemLogFileFolder.getText().equals("") || jTextFieldSystemLogFileFolder.getText().equals("*Default")) {
+				if (!domNode_.getAttribute("LogFileFolder").equals("")) {
+					valueOfFieldsChanged = true;
+				}
+			} else {
+				if (!domNode_.getAttribute("LogFileFolder").equals(jTextFieldSystemLogFileFolder.getText())) {
+					valueOfFieldsChanged = true;
+				}
+			}
+			if (jTextFieldSystemLoggingSize.getText().equals("") || jTextFieldSystemLoggingSize.getText().equals("*Default")) {
+				if (!domNode_.getAttribute("LoggingSize").equals("")) {
+					valueOfFieldsChanged = true;
+				}
+			} else {
+				if (!domNode_.getAttribute("LoggingSize").equals(jTextFieldSystemLoggingSize.getText())) {
+					valueOfFieldsChanged = true;
+				}
+			}
 			if (domNode_.getAttribute("AutoConnectToEdit").equals("T")) {
 				if (!jCheckBoxSystemAutoConnectToEdit.isSelected()) {
 					valueOfFieldsChanged = true;
@@ -19331,6 +19450,16 @@ public class Editor extends JFrame {
 					domNode_.setAttribute("OutputFolder", "");
 				} else {
 					domNode_.setAttribute("OutputFolder", jTextFieldSystemOutputFolder.getText());
+				}
+				if (jTextFieldSystemLogFileFolder.getText().equals("") || jTextFieldSystemLogFileFolder.getText().equals("*Default")) {
+					domNode_.setAttribute("LogFileFolder", "");
+				} else {
+					domNode_.setAttribute("LogFileFolder", jTextFieldSystemLogFileFolder.getText());
+				}
+				if (jTextFieldSystemLoggingSize.getText().equals("") || jTextFieldSystemLoggingSize.getText().equals("*Default")) {
+					domNode_.setAttribute("LoggingSize", "");
+				} else {
+					domNode_.setAttribute("LoggingSize", jTextFieldSystemLoggingSize.getText());
 				}
 				if (jCheckBoxSystemAutoConnectToEdit.isSelected()) {
 					domNode_.setAttribute("AutoConnectToEdit", "T");
@@ -21177,6 +21306,12 @@ public class Editor extends JFrame {
 					}
 				}
 				if (jComboBoxFunction100ButtonAction.getSelectedIndex() == 4) {
+					if (!element.getAttribute("Action").contains("RETURN_ROWS")) {
+						valueOfFieldsChanged = true;
+						element.setAttribute("Action", "RETURN_ROWS");
+					}
+				}
+				if (jComboBoxFunction100ButtonAction.getSelectedIndex() == 5) {
 					if (!element.getAttribute("Action").contains("NULL")) {
 						valueOfFieldsChanged = true;
 						element.setAttribute("Action", "NULL");
@@ -22067,6 +22202,28 @@ public class Editor extends JFrame {
 					}
 				}
 
+				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "CAPTION_WIDTH");
+				if (jTextFieldFunction110BatchFieldCaptionWidth.getText().equals("*Auto") || jTextFieldFunction110BatchFieldCaptionWidth.getText().equals("")) {
+					if (!wrkStr.equals("")) {
+						valueOfFieldsChanged = true;
+					}
+				} else {
+					if (wrkStr.equals("")) {
+						valueOfFieldsChanged = true;
+					} else {
+						if (!wrkStr.equals(jTextFieldFunction110BatchFieldCaptionWidth.getText())) {
+							valueOfFieldsChanged = true;
+						}
+					}
+					wrkStr = getStringSizeValue(jTextFieldFunction110BatchFieldCaptionWidth.getText(), "", 10, 2000);
+					if (!wrkStr.equals("")) {
+						if (!wrkOptions.equals("")) {
+							wrkOptions = wrkOptions + ",";
+						}
+						wrkOptions = wrkOptions + "CAPTION_WIDTH(" + wrkStr + ")";
+					}
+				}
+
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "PROMPT_CALL");
 		        if (jRadioButtonFunction110BatchFieldPromptOptionNone.isSelected()) {
 			        if (optionList.contains("PROMPT_LIST") || !wrkStr.equals("")) {
@@ -22587,6 +22744,28 @@ public class Editor extends JFrame {
 							}
 							wrkOptions = wrkOptions + "VERTICAL(" + wrkStr2 + ")";
 						}
+					}
+				}
+
+				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "CAPTION_WIDTH");
+				if (jTextFieldFunction200FieldCaptionWidth.getText().equals("*Auto") || jTextFieldFunction200FieldCaptionWidth.getText().equals("")) {
+					if (!wrkStr.equals("")) {
+						valueOfFieldsChanged = true;
+					}
+				} else {
+					if (wrkStr.equals("")) {
+						valueOfFieldsChanged = true;
+					} else {
+						if (!wrkStr.equals(jTextFieldFunction200FieldCaptionWidth.getText())) {
+							valueOfFieldsChanged = true;
+						}
+					}
+					wrkStr = getStringSizeValue(jTextFieldFunction200FieldCaptionWidth.getText(), "", 10, 2000);
+					if (!wrkStr.equals("")) {
+						if (!wrkOptions.equals("")) {
+							wrkOptions = wrkOptions + ",";
+						}
+						wrkOptions = wrkOptions + "CAPTION_WIDTH(" + wrkStr + ")";
 					}
 				}
 
@@ -23641,6 +23820,28 @@ public class Editor extends JFrame {
 					}
 				}
 
+				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "CAPTION_WIDTH");
+				if (jTextFieldFunction300HeaderFieldCaptionWidth.getText().equals("*Auto") || jTextFieldFunction300HeaderFieldCaptionWidth.getText().equals("")) {
+					if (!wrkStr.equals("")) {
+						valueOfFieldsChanged = true;
+					}
+				} else {
+					if (wrkStr.equals("")) {
+						valueOfFieldsChanged = true;
+					} else {
+						if (!wrkStr.equals(jTextFieldFunction300HeaderFieldCaptionWidth.getText())) {
+							valueOfFieldsChanged = true;
+						}
+					}
+					wrkStr = getStringSizeValue(jTextFieldFunction300HeaderFieldCaptionWidth.getText(), "", 10, 2000);
+					if (!wrkStr.equals("")) {
+						if (!wrkOptions.equals("")) {
+							wrkOptions = wrkOptions + ",";
+						}
+						wrkOptions = wrkOptions + "CAPTION_WIDTH(" + wrkStr + ")";
+					}
+				}
+
 				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "LINKED_CALL");
 				if (jTextFieldFunction300HeaderFieldLinkedFunctionID.getText().toUpperCase().equals("*NONE")
 						|| jTextFieldFunction300HeaderFieldLinkedFunctionID.getText().equals("")) {
@@ -24368,6 +24569,12 @@ public class Editor extends JFrame {
 						element.setAttribute("Action", "CALL(" + actionCallEditted + ")");
 					}
 				}
+				if (jComboBoxFunction300DetailButtonAction.getSelectedIndex() == 5) {
+					if (!element.getAttribute("Action").contains("RETURN_ROWS")) {
+						valueOfFieldsChanged = true;
+						element.setAttribute("Action", "RETURN_ROWS");
+					}
+				}
 				//
 				if (valueOfFieldsChanged) {
 					tableModelFunction300DetailButtonList.setValueAt(element.getAttribute("Position"), selectedRow_jTableFunction300DetailButtonList, 1);
@@ -24859,6 +25066,28 @@ public class Editor extends JFrame {
 							}
 							wrkOptions = wrkOptions + "VERTICAL(" + wrkStr2 + ")";
 						}
+					}
+				}
+
+				wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "CAPTION_WIDTH");
+				if (jTextFieldFunction310HeaderFieldCaptionWidth.getText().equals("*Auto") || jTextFieldFunction310HeaderFieldCaptionWidth.getText().equals("")) {
+					if (!wrkStr.equals("")) {
+						valueOfFieldsChanged = true;
+					}
+				} else {
+					if (wrkStr.equals("")) {
+						valueOfFieldsChanged = true;
+					} else {
+						if (!wrkStr.equals(jTextFieldFunction310HeaderFieldCaptionWidth.getText())) {
+							valueOfFieldsChanged = true;
+						}
+					}
+					wrkStr = getStringSizeValue(jTextFieldFunction310HeaderFieldCaptionWidth.getText(), "", 10, 2000);
+					if (!wrkStr.equals("")) {
+						if (!wrkOptions.equals("")) {
+							wrkOptions = wrkOptions + ",";
+						}
+						wrkOptions = wrkOptions + "CAPTION_WIDTH(" + wrkStr + ")";
 					}
 				}
 
@@ -27017,56 +27246,58 @@ public class Editor extends JFrame {
 		if (rtn1 == 0) {
 			StringBuffer bf = new StringBuffer();
 
-			if (System.getProperty("os.name").toLowerCase().startsWith("windows")) {
-				bf.append("javaw ");
-				bf.append(jTextFieldSystemDriverVMOptions.getText());
-				bf.append(" -jar \"");
-				bf.append(applicationFolder);
-				bf.append("xteadrv.jar\" \"");
-				bf.append(currentFileName);
-				bf.append("\"");
-				if (!jTextFieldSystemEditorUser.getText().equals("")) {
-					bf.append(" \"");
-					bf.append(jTextFieldSystemEditorUser.getText());
-					bf.append("\"");
-					if (!jTextFieldSystemEditorUserPassword.getText().equals("")) {
-						bf.append(" \"");
-						bf.append(jTextFieldSystemEditorUserPassword.getText());
-						bf.append("\"");
-					}
-				}
-				if (jCheckBoxSystemSkipPreload.isSelected()) {
-					bf.append(" \"SKIP_PRELOAD\"");
-				}
-				if (!functionID.equals("")) {
-					bf.append(" \"FUNCTION=" + functionID + "\"");
-				}
-			} else {
-				bf.append("java ");
-				bf.append(jTextFieldSystemDriverVMOptions.getText());
-				bf.append(" -jar ");
-				bf.append(applicationFolder);
-				bf.append("xteadrv.jar ");
-				bf.append(currentFileName);
-				if (!jTextFieldSystemEditorUser.getText().equals("")) {
-					bf.append(" ");
-					bf.append(jTextFieldSystemEditorUser.getText());
-					if (!jTextFieldSystemEditorUserPassword.getText().equals("")) {
-						bf.append(" ");
-						bf.append(jTextFieldSystemEditorUserPassword.getText());
-					}
-				}
-				if (jCheckBoxSystemSkipPreload.isSelected()) {
-					bf.append(" SKIP_PRELOAD");
-				}
-				if (!functionID.equals("")) {
-					bf.append(" FUNCTION=" + functionID);
-				}
-			}
-
 			try {
+				if (System.getProperty("os.name").toLowerCase().startsWith("windows")) {
+					bf.append("javaw ");
+					bf.append(jTextFieldSystemDriverVMOptions.getText());
+					bf.append(" -jar \"");
+					bf.append(applicationFolder);
+					bf.append("xteadrv.jar\" \"");
+					bf.append(currentFileName);
+					bf.append("\"");
+					if (!jTextFieldSystemEditorUser.getText().equals("")) {
+						bf.append(" \"");
+						bf.append(jTextFieldSystemEditorUser.getText());
+						bf.append("\"");
+						if (!jTextFieldSystemEditorUserPassword.getText().equals("")) {
+							bf.append(" \"");
+							bf.append(jTextFieldSystemEditorUserPassword.getText());
+							bf.append("\"");
+						}
+					}
+					if (jCheckBoxSystemSkipPreload.isSelected()) {
+						bf.append(" \"SKIP_PRELOAD\"");
+					}
+					if (!functionID.equals("")) {
+						bf.append(" \"FUNCTION=" + functionID + "\"");
+					}
+
+				} else {
+					bf.append("java ");
+					bf.append(jTextFieldSystemDriverVMOptions.getText());
+					bf.append(" -jar ");
+					bf.append(applicationFolder);
+					bf.append("xteadrv.jar ");
+					bf.append(currentFileName);
+					if (!jTextFieldSystemEditorUser.getText().equals("")) {
+						bf.append(" ");
+						bf.append(jTextFieldSystemEditorUser.getText());
+						if (!jTextFieldSystemEditorUserPassword.getText().equals("")) {
+							bf.append(" ");
+							bf.append(jTextFieldSystemEditorUserPassword.getText());
+						}
+					}
+					if (jCheckBoxSystemSkipPreload.isSelected()) {
+						bf.append(" SKIP_PRELOAD");
+					}
+					if (!functionID.equals("")) {
+						bf.append(" FUNCTION=" + functionID);
+					}
+				}
+
 				Runtime rt = Runtime.getRuntime();
 				rt.exec(bf.toString());
+
 			} catch (Exception ex) {
 				JOptionPane.showMessageDialog(this, res.getString("ErrorMessage25") + bf.toString() + res.getString("ErrorMessage26") + ex.getMessage());
 			}
@@ -30041,8 +30272,11 @@ public class Editor extends JFrame {
 							}
 						}
 					}
-					if (element.getAttribute("Action").contains("NULL")) {
+					if (element.getAttribute("Action").contains("RETURN_ROWS")) {
 						jComboBoxFunction100ButtonAction.setSelectedIndex(4);
+					}
+					if (element.getAttribute("Action").contains("NULL")) {
+						jComboBoxFunction100ButtonAction.setSelectedIndex(5);
 					}
 				}
 			} catch (Exception e1) {
@@ -31806,6 +32040,9 @@ public class Editor extends JFrame {
 							}
 						}
 					}
+					if (element.getAttribute("Action").contains("RETURN_ROWS")) {
+						jComboBoxFunction300DetailButtonAction.setSelectedIndex(5);
+					}
 				}
 			} catch (Exception e1) {
 				processError(e1);
@@ -31857,6 +32094,9 @@ public class Editor extends JFrame {
 				jTextFieldFunction200FieldCaptionOptionValue.setText("");
 				jTextFieldFunction200FieldCaptionOptionValue.setEnabled(false);
 				jCheckBoxFunction200FieldCaptionLengthVariable.setEnabled(false);
+				jLabelFunction200FieldCaptionWidth.setEnabled(false);
+				jTextFieldFunction200FieldCaptionWidth.setText("");
+				jTextFieldFunction200FieldCaptionWidth.setEnabled(false);
 				jLabelFunction200FieldPromptOption.setEnabled(false);
 				jRadioButtonFunction200FieldPromptOptionNone.setSelected(true);
 				jRadioButtonFunction200FieldPromptOptionNone.setEnabled(false);
@@ -31889,6 +32129,7 @@ public class Editor extends JFrame {
 					jRadioButtonFunction200FieldCaptionOptionNone.setEnabled(true);
 					jRadioButtonFunction200FieldCaptionOptionValue.setEnabled(true);
 					jCheckBoxFunction200FieldCaptionLengthVariable.setEnabled(true);
+					jLabelFunction200FieldCaptionWidth.setEnabled(true);
 					jLabelFunction200FieldPromptOption.setEnabled(true);
 					jRadioButtonFunction200FieldPromptOptionNone.setEnabled(true);
 					jTextFieldFunction200FieldComment.setEnabled(true);
@@ -31983,10 +32224,16 @@ public class Editor extends JFrame {
 						}
 					}
 
+					jTextFieldFunction200FieldCaptionWidth.setText("*Auto");
 					if (optionList.contains("CAPTION_LENGTH_VARIABLE")) {
 						jCheckBoxFunction200FieldCaptionLengthVariable.setSelected(true);
 					} else {
 						jCheckBoxFunction200FieldCaptionLengthVariable.setSelected(false);
+						jTextFieldFunction200FieldCaptionWidth.setEnabled(true);
+						wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "CAPTION_WIDTH");
+						if (!wrkStr.equals("")) {
+							jTextFieldFunction200FieldCaptionWidth.setText(wrkStr);
+						}
 					}
 
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "PROMPT_CALL");
@@ -36615,6 +36862,9 @@ public class Editor extends JFrame {
 				jTextFieldFunction110BatchFieldCaptionOptionValue.setText("");
 				jTextFieldFunction110BatchFieldCaptionOptionValue.setEnabled(false);
 				jCheckBoxFunction110BatchFieldCaptionLengthVariable.setEnabled(false);
+				jLabelFunction110BatchFieldCaptionWidth.setEnabled(false);
+				jTextFieldFunction110BatchFieldCaptionWidth.setText("");
+				jTextFieldFunction110BatchFieldCaptionWidth.setEnabled(false);
 				jLabelFunction110BatchFieldPromptOption.setEnabled(false);
 				jRadioButtonFunction110BatchFieldPromptOptionNone.setSelected(true);
 				jRadioButtonFunction110BatchFieldPromptOptionNone.setEnabled(false);
@@ -36647,6 +36897,7 @@ public class Editor extends JFrame {
 					jRadioButtonFunction110BatchFieldCaptionOptionValue.setEnabled(true);
 					jRadioButtonFunction110BatchFieldCaptionOptionNone.setEnabled(true);
 					jCheckBoxFunction110BatchFieldCaptionLengthVariable.setEnabled(true);
+					jLabelFunction110BatchFieldCaptionWidth.setEnabled(true);
 					jLabelFunction110BatchFieldPromptOption.setEnabled(true);
 					jRadioButtonFunction110BatchFieldPromptOptionNone.setEnabled(true);
 					jRadioButtonFunction110BatchFieldPromptOptionCall.setEnabled(true);
@@ -36738,10 +36989,16 @@ public class Editor extends JFrame {
 						}
 					}
 
+					jTextFieldFunction110BatchFieldCaptionWidth.setText("*Auto");
 					if (optionList.contains("CAPTION_LENGTH_VARIABLE")) {
 						jCheckBoxFunction110BatchFieldCaptionLengthVariable.setSelected(true);
 					} else {
 						jCheckBoxFunction110BatchFieldCaptionLengthVariable.setSelected(false);
+						jTextFieldFunction110BatchFieldCaptionWidth.setEnabled(true);
+						wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "CAPTION_WIDTH");
+						if (!wrkStr.equals("")) {
+							jTextFieldFunction110BatchFieldCaptionWidth.setText(wrkStr);
+						}
 					}
 
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "PROMPT_CALL");
@@ -36821,6 +37078,9 @@ public class Editor extends JFrame {
 				jTextFieldFunction300HeaderFieldCaptionOptionValue.setText("");
 				jTextFieldFunction300HeaderFieldCaptionOptionValue.setEnabled(false);
 				jCheckBoxFunction300HeaderFieldCaptionLengthVariable.setEnabled(false);
+				jLabelFunction300HeaderFieldCaptionWidth.setEnabled(false);
+				jTextFieldFunction300HeaderFieldCaptionWidth.setText("");
+				jTextFieldFunction300HeaderFieldCaptionWidth.setEnabled(false);
 				jLabelFunction300HeaderFieldLinkedFunction.setEnabled(false);
 				jTextFieldFunction300HeaderFieldLinkedFunctionID.setText("");
 				jTextFieldFunction300HeaderFieldLinkedFunctionID.setEnabled(false);
@@ -36848,6 +37108,7 @@ public class Editor extends JFrame {
 					jRadioButtonFunction300HeaderFieldCaptionOptionValue.setEnabled(true);
 					jRadioButtonFunction300HeaderFieldCaptionOptionNone.setEnabled(true);
 					jCheckBoxFunction300HeaderFieldCaptionLengthVariable.setEnabled(true);
+					jLabelFunction300HeaderFieldCaptionWidth.setEnabled(true);
 					jLabelFunction300HeaderFieldLinkedFunction.setEnabled(true);
 					jTextFieldFunction300HeaderFieldComment.setEnabled(true);
 
@@ -36933,10 +37194,16 @@ public class Editor extends JFrame {
 						}
 					}
 
+					jTextFieldFunction300HeaderFieldCaptionWidth.setText("*Auto");
 					if (optionList.contains("CAPTION_LENGTH_VARIABLE")) {
 						jCheckBoxFunction300HeaderFieldCaptionLengthVariable.setSelected(true);
 					} else {
 						jCheckBoxFunction300HeaderFieldCaptionLengthVariable.setSelected(false);
+						jTextFieldFunction300HeaderFieldCaptionWidth.setEnabled(true);
+						wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "CAPTION_WIDTH");
+						if (!wrkStr.equals("")) {
+							jTextFieldFunction300HeaderFieldCaptionWidth.setText(wrkStr);
+						}
 					}
 
 					jTextFieldFunction300HeaderFieldLinkedFunctionID.setText("*None");
@@ -37021,6 +37288,9 @@ public class Editor extends JFrame {
 				jTextFieldFunction310HeaderFieldCaptionOptionValue.setText("");
 				jTextFieldFunction310HeaderFieldCaptionOptionValue.setEnabled(false);
 				jCheckBoxFunction310HeaderFieldCaptionLengthVariable.setEnabled(false);
+				jLabelFunction310HeaderFieldCaptionWidth.setEnabled(false);
+				jTextFieldFunction310HeaderFieldCaptionWidth.setText("");
+				jTextFieldFunction310HeaderFieldCaptionWidth.setEnabled(false);
 				jLabelFunction310HeaderFieldPromptOption.setEnabled(false);
 				jRadioButtonFunction310HeaderFieldPromptOptionNone.setSelected(true);
 				jRadioButtonFunction310HeaderFieldPromptOptionNone.setEnabled(false);
@@ -37053,6 +37323,7 @@ public class Editor extends JFrame {
 					jRadioButtonFunction310HeaderFieldCaptionOptionValue.setEnabled(true);
 					jRadioButtonFunction310HeaderFieldCaptionOptionNone.setEnabled(true);
 					jCheckBoxFunction310HeaderFieldCaptionLengthVariable.setEnabled(true);
+					jLabelFunction310HeaderFieldCaptionWidth.setEnabled(true);
 					jLabelFunction310HeaderFieldPromptOption.setEnabled(true);
 					jRadioButtonFunction310HeaderFieldPromptOptionNone.setEnabled(true);
 					jTextFieldFunction310HeaderFieldComment.setEnabled(true);
@@ -37147,10 +37418,16 @@ public class Editor extends JFrame {
 						}
 					}
 
+					jTextFieldFunction310HeaderFieldCaptionWidth.setText("*Auto");
 					if (optionList.contains("CAPTION_LENGTH_VARIABLE")) {
 						jCheckBoxFunction310HeaderFieldCaptionLengthVariable.setSelected(true);
 					} else {
 						jCheckBoxFunction310HeaderFieldCaptionLengthVariable.setSelected(false);
+						jTextFieldFunction310HeaderFieldCaptionWidth.setEnabled(true);
+						wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "CAPTION_WIDTH");
+						if (!wrkStr.equals("")) {
+							jTextFieldFunction310HeaderFieldCaptionWidth.setText(wrkStr);
+						}
 					}
 
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("FieldOptions"), "PROMPT_CALL");
@@ -38534,7 +38811,7 @@ public class Editor extends JFrame {
 		}
 		return sbf.toString();
 	}
-	
+
 	void jCheckBoxTableScriptEventPrimary_stateChanged(ChangeEvent e) {
 		if (jCheckBoxTableScriptEventPrimaryBC.isSelected() || jCheckBoxTableScriptEventPrimaryBU.isSelected()
 			|| jCheckBoxTableScriptEventPrimaryBD.isSelected() || jCheckBoxTableScriptEventPrimaryAR.isSelected()) {
@@ -38562,7 +38839,43 @@ public class Editor extends JFrame {
 			jCheckBoxTableScriptEventPrimaryBD.setSelected(!jCheckBoxTableScriptEventPrimaryBD.isSelected());
 		}
 	}
-	
+
+	void jCheckBoxFunction110BatchFieldCaptionLengthVariable_stateChanged(ChangeEvent e) {
+		if (jCheckBoxFunction110BatchFieldCaptionLengthVariable.isSelected()) {
+			jTextFieldFunction110BatchFieldCaptionWidth.setEnabled(false);
+			jTextFieldFunction110BatchFieldCaptionWidth.setText("*Auto");
+		} else {
+			jTextFieldFunction110BatchFieldCaptionWidth.setEnabled(true);
+		}
+	}
+
+	void jCheckBoxFunction200FieldCaptionLengthVariable_stateChanged(ChangeEvent e) {
+		if (jCheckBoxFunction200FieldCaptionLengthVariable.isSelected()) {
+			jTextFieldFunction200FieldCaptionWidth.setEnabled(false);
+			jTextFieldFunction200FieldCaptionWidth.setText("*Auto");
+		} else {
+			jTextFieldFunction200FieldCaptionWidth.setEnabled(true);
+		}
+	}
+
+	void jCheckBoxFunction300HeaderFieldCaptionLengthVariable_stateChanged(ChangeEvent e) {
+		if (jCheckBoxFunction300HeaderFieldCaptionLengthVariable.isSelected()) {
+			jTextFieldFunction300HeaderFieldCaptionWidth.setEnabled(false);
+			jTextFieldFunction300HeaderFieldCaptionWidth.setText("*Auto");
+		} else {
+			jTextFieldFunction300HeaderFieldCaptionWidth.setEnabled(true);
+		}
+	}
+
+	void jCheckBoxFunction310HeaderFieldCaptionLengthVariable_stateChanged(ChangeEvent e) {
+		if (jCheckBoxFunction310HeaderFieldCaptionLengthVariable.isSelected()) {
+			jTextFieldFunction310HeaderFieldCaptionWidth.setEnabled(false);
+			jTextFieldFunction310HeaderFieldCaptionWidth.setText("*Auto");
+		} else {
+			jTextFieldFunction310HeaderFieldCaptionWidth.setEnabled(true);
+		}
+	}
+
 	void jTabbedPaneTable_stateChanged(ChangeEvent e) {
 		if (currentMainTreeNode != null && !tableRowsAreBeingSetup) {
 			boolean isUpdated = false;
@@ -45059,6 +45372,46 @@ class Editor_jCheckBoxTableScriptEventPrimary_changeAdapter implements ChangeLis
 	}
 	public void stateChanged(ChangeEvent e) {
 		adaptee.jCheckBoxTableScriptEventPrimary_stateChanged(e);
+	}
+}
+
+class Editor_jCheckBoxFunction110BatchFieldCaptionLengthVariable_changeAdapter implements ChangeListener {
+	Editor adaptee;
+	Editor_jCheckBoxFunction110BatchFieldCaptionLengthVariable_changeAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void stateChanged(ChangeEvent e) {
+		adaptee.jCheckBoxFunction110BatchFieldCaptionLengthVariable_stateChanged(e);
+	}
+}
+
+class Editor_jCheckBoxFunction200FieldCaptionLengthVariable_changeAdapter implements ChangeListener {
+	Editor adaptee;
+	Editor_jCheckBoxFunction200FieldCaptionLengthVariable_changeAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void stateChanged(ChangeEvent e) {
+		adaptee.jCheckBoxFunction200FieldCaptionLengthVariable_stateChanged(e);
+	}
+}
+
+class Editor_jCheckBoxFunction300HeaderFieldCaptionLengthVariable_changeAdapter implements ChangeListener {
+	Editor adaptee;
+	Editor_jCheckBoxFunction300HeaderFieldCaptionLengthVariable_changeAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void stateChanged(ChangeEvent e) {
+		adaptee.jCheckBoxFunction300HeaderFieldCaptionLengthVariable_stateChanged(e);
+	}
+}
+
+class Editor_jCheckBoxFunction310HeaderFieldCaptionLengthVariable_changeAdapter implements ChangeListener {
+	Editor adaptee;
+	Editor_jCheckBoxFunction310HeaderFieldCaptionLengthVariable_changeAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void stateChanged(ChangeEvent e) {
+		adaptee.jCheckBoxFunction310HeaderFieldCaptionLengthVariable_stateChanged(e);
 	}
 }
 

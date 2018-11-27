@@ -182,6 +182,10 @@ public class DialogCheckLayout extends JDialog {
 		}
 	}
 
+	public int getExtForXF110() {
+		return extForXF110_;
+	}
+
 	private void showLayoutOfTableColumns(NodeList functionColumnList) {
 		///////////////////////////////////////////////////////////
 		// Set panel size and position according specified sizes //
@@ -1281,6 +1285,12 @@ class DialogCheckLayoutColumn extends Object {
 		if (!wrkStr.equals("")) {
 			Connection connection = null;
 			try {
+				int widthAdj = 0;
+				if (dialog_.getFunctionElement().getAttribute("Type").equals("XF310") || dialog_.getExtForXF110() == 2) {
+					widthAdj = 30; //width for JComboBox
+				} else {
+					widthAdj = 10; //width for JTextField
+				}
 				String wrk = "";
 				StringBuffer buf1 = new StringBuffer();
 				buf1.append("select * from ");
@@ -1297,8 +1307,8 @@ class DialogCheckLayoutColumn extends Object {
 						if (value.equals("")) {
 							value = wrk;
 						}
-						if (metrics.stringWidth(wrk)+10 > fieldWidth) {
-							fieldWidth = metrics.stringWidth(wrk)+10;
+						if (metrics.stringWidth(wrk) + widthAdj > fieldWidth) {
+							fieldWidth = metrics.stringWidth(wrk) + widthAdj;
 							value = wrk;
 						}
 					}
@@ -1758,8 +1768,13 @@ class DialogCheckLayoutField extends JPanel {
 			FontMetrics metrics = jLabelField.getFontMetrics(jLabelField.getFont());
 			jLabelField.setPreferredSize(new Dimension(metrics.stringWidth(fieldCaption), DialogCheckLayout.FIELD_UNIT_HEIGHT));
 		} else {
-			jLabelField.setPreferredSize(new Dimension(DialogCheckLayout.DEFAULT_LABEL_WIDTH, DialogCheckLayout.FIELD_UNIT_HEIGHT));
-			DialogCheckLayout.adjustFontSizeToGetPreferredWidthOfLabel(jLabelField, DialogCheckLayout.DEFAULT_LABEL_WIDTH);
+			int captionWidth = DialogCheckLayout.DEFAULT_LABEL_WIDTH;
+			wrkStr = dialog_.getEditor().getOptionValueWithKeyword(fieldOptions, "CAPTION_WIDTH");
+			if (!wrkStr.equals("")) {
+				captionWidth = Integer.parseInt(wrkStr);
+			}
+			jLabelField.setPreferredSize(new Dimension(captionWidth, DialogCheckLayout.FIELD_UNIT_HEIGHT));
+			DialogCheckLayout.adjustFontSizeToGetPreferredWidthOfLabel(jLabelField, captionWidth);
 		}
 		//
 		component.setPreferredSize(new Dimension(120, dialog_.getFieldUnitHeight()));
@@ -1953,7 +1968,7 @@ class DialogCheckLayoutComboBox extends JComboBox {
 		//
 		StringTokenizer workTokenizer;
 		org.w3c.dom.Element workElement;
-		int fieldWidth = 0;
+		int fieldWidth = 50;
 		String wrk = "";
 		String strWrk;
 		//
@@ -2005,12 +2020,12 @@ class DialogCheckLayoutComboBox extends JComboBox {
 						while (result.next()) {
 							wrk = result.getString("TXUSERKUBUN").trim();
 							this.addItem(wrk);
-							if (metrics.stringWidth(wrk) > fieldWidth) {
-								fieldWidth = metrics.stringWidth(wrk);
+							if (metrics.stringWidth(wrk) + 30 > fieldWidth) {
+								fieldWidth = metrics.stringWidth(wrk) + 30;
 							}
 						}
 					}
-					fieldWidth = fieldWidth + 30;
+					//fieldWidth = fieldWidth + 30;
 				} catch(Exception e) {
 				}
 			} else {
