@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2018 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2019 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -46,9 +46,21 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String APPLICATION_NAME  = "X-TEA Editor 1.3";
 	public static final String FORMAT_VERSION  = "1.2";
 	public static final String PRODUCT_NAME = "X-TEA Editor";
-	public static final String COPYRIGHT = "Copyright 2018 DBC Ltd.";
+	public static final String COPYRIGHT = "Copyright 2019 DBC Ltd.";
 	public static final String URL_DBC = "http://dbc.in.coocan.jp/";
-	public static final String FULL_VERSION  = "V1.R3.M24";
+	public static final String FULL_VERSION  = "V1.R3.M26";
+	//1.3.26
+	//区分値リストをフィールド定義上で編集できるようにした
+	//採番レコードをフィールド定義上で追加できるようにした
+	//・XF100,300の明細行でリンク機能を使えるようにした
+	//・XF300の見出し域からレイアウトインポートすると、不要なLINKED_CALLまでコピーされる問題を修正した
+	//・フィルター条件のレイアウトチェックの仕様を変更した
+	//
+	//1.3.25
+	//・フィールドリンク機能が機能別使途に挙がっていなかった問題を修正した
+	//・ID・ラベルの対応表をファイル出力できるようにした
+	//・フィルター条件の「ゼロならば無視」をはずした
+	//
 	//1.3.24
 	//・スクリプトでのフィールドプロパティ情報としてwarningを追加した
 	//・システム定義のインポートダイアログでテーブルデータをインポートできるようにした

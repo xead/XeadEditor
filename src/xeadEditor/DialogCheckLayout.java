@@ -1528,6 +1528,9 @@ class DialogCheckLayoutFilter extends JPanel {
 		wrkStr = dialog_.getEditor().getOptionValueWithKeyword(fieldOptions, "CAPTION");
 		if (!wrkStr.equals("")) {
 			fieldCaption = wrkStr;
+			fieldCaption = fieldCaption.replace("SCAN","");
+			fieldCaption = fieldCaption.replace("ÅÜ","");
+			fieldCaption = fieldCaption.replace("è„à åÖ","");
 		}
 		jLabelField = new JLabel(fieldCaption);
 		jLabelField.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -1619,7 +1622,7 @@ class DialogCheckLayoutFilter extends JPanel {
 		} else {
 			component.setBounds(new Rectangle(component.getBounds().x, component.getBounds().y, Integer.parseInt(wrkStr), 24));
 		}
-		this.setPreferredSize(new Dimension(jLabelField.getPreferredSize().width + component.getBounds().width + 5, component.getBounds().height));
+		this.setPreferredSize(new Dimension(jLabelField.getPreferredSize().width + component.getBounds().width + 20, component.getBounds().height));
 	}
 	
 	public boolean isHidden() {
