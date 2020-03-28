@@ -425,6 +425,11 @@ public class DialogAddReferTable extends JDialog {
 				message = res.getString("ErrorMessage118");
 			}
 		}
+		if (message.equals("")) {
+			if (objectTableElement_.getAttribute("ID").equals(jTextFieldID.getText()) && alias.equals("")) {
+				message = res.getString("ErrorMessage132");
+			}
+		}
 		return message;
 	}
 	

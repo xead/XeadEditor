@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2019 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2020 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -46,9 +46,21 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String APPLICATION_NAME  = "X-TEA Editor 1.3";
 	public static final String FORMAT_VERSION  = "1.2";
 	public static final String PRODUCT_NAME = "X-TEA Editor";
-	public static final String COPYRIGHT = "Copyright 2019 DBC Ltd.";
+	public static final String COPYRIGHT = "Copyright 2020 DBC Ltd.";
 	public static final String URL_DBC = "http://dbc.in.coocan.jp/";
-	public static final String FULL_VERSION  = "V1.R3.M26";
+	public static final String FULL_VERSION  = "V1.R3.M29";
+	//1.3.29
+	//・検索・置換ダイアログの使い勝手を向上させた
+	//
+	//1.3.28
+	//・XF000向けにジャンプ用のリストボックスを設けた
+	//・色設定にmagentaを追加した
+	//・結合テーブルにエイリアス指定なしで自分自身を設定できないようにした
+	//
+	//1.3.27
+	//・SQLコンソールでのテーブル別データ件数について、postgresql向けの取得ロジックを修正した
+	//・DB接続設定の右側に接続用ボタンを設けた
+	//
 	//1.3.26
 	//区分値リストをフィールド定義上で編集できるようにした
 	//採番レコードをフィールド定義上で追加できるようにした

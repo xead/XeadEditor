@@ -110,6 +110,13 @@ public class DialogScan extends JDialog {
 	private SimpleAttributeSet attrs = new SimpleAttributeSet();
 	private StyledDocument doc = null;
 	private Style style = null;
+	private Action actionScanScanResult = new AbstractAction(){
+		private static final long serialVersionUID = 1L;
+		public void actionPerformed(ActionEvent e){
+			scanString();
+		}
+	};
+	private int firstSelectionPos = -1;
 
 	public DialogScan(Editor frame, String title, boolean modal) {
 		super(frame, title, modal);
@@ -126,7 +133,7 @@ public class DialogScan extends JDialog {
 	public DialogScan(Editor frame) {
 		this(frame, "", true);
 	}
-
+	
 	private void jbInit() throws Exception {
 		//
 		//panelMain
@@ -277,6 +284,12 @@ public class DialogScan extends JDialog {
 		rendererTableHeader = (DefaultTableCellRenderer)jTableScanResult.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(2); //LEFT//
 		jScrollPaneScanResult.getViewport().add(jTableScanResult, null);
+		InputMap inputMap = jScrollPaneScanResult.getInputMap(JSplitPane.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		inputMap.clear();
+		ActionMap actionMap = jScrollPaneScanResult.getActionMap();
+		actionMap.clear();
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0), "SCAN");
+		actionMap.put("SCAN", actionScanScanResult);
 		jTextPaneScanDetail.setFont(new java.awt.Font(frame_.scriptFontName, 0, Editor.MAIN_FONT_SIZE + 2));
 		jTextPaneScanDetail.setEditable(false);
 		jTextPaneScanDetail.setBackground(SystemColor.control);
@@ -1448,6 +1461,7 @@ public class DialogScan extends JDialog {
 			styledDocument.setCharacterAttributes(0, 9999, style1, false);
 			int scanningPosFrom = 0;
 			int workInt = 0;
+			firstSelectionPos = -1;
 			if (attrType.equals("TypeOptions")
 					|| attrType.equals("FieldOptions_CAPTION")
 					|| attrType.equals("FieldOptions_COMMENT")
@@ -1469,6 +1483,9 @@ public class DialogScan extends JDialog {
 					if (workInt == -1) {
 						scanningPosFrom = -1;
 					} else {
+						if (firstSelectionPos == -1) {
+							firstSelectionPos = workInt;
+						}
 						doc.setCharacterAttributes(workInt, stringToBeScanned.length(), style, false);
 						scanningPosFrom = workInt + stringToBeScanned.length();
 					}
@@ -1476,6 +1493,25 @@ public class DialogScan extends JDialog {
 			}
 			doc.setParagraphAttributes(0, jTextPaneScanDetail.getDocument().getLength(), attrs, false); 
 			jTextPaneScanDetail.setCaretPosition(0);
+			jTextPaneScanDetail.setSelectionStart(firstSelectionPos);
+			jTextPaneScanDetail.setSelectionEnd(firstSelectionPos+stringToBeScanned.length());
+		}
+	}
+
+	private void scanString() {
+		if (firstSelectionPos != -1) {
+			String workString = jTextPaneScanDetail.getText();
+			String workStringToBeScanned = stringToBeScanned;
+			if (!jCheckBoxCaseSensitive.isSelected()) {
+				workString = jTextPaneScanDetail.getText().toUpperCase();
+				workStringToBeScanned = stringToBeScanned.toUpperCase();
+			}
+			firstSelectionPos = workString.indexOf(workStringToBeScanned, firstSelectionPos+1);
+			if (firstSelectionPos == -1) {
+				firstSelectionPos = workString.indexOf(workStringToBeScanned, 0);
+			}
+			jTextPaneScanDetail.setSelectionStart(firstSelectionPos);
+			jTextPaneScanDetail.setSelectionEnd(firstSelectionPos+stringToBeScanned.length());
 		}
 	}
 

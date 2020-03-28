@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2014 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2019 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -98,7 +98,7 @@ public class DialogSQL extends JDialog {
 		actionMap.clear();
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0), "RUN");
 		actionMap.put("RUN", commitAction);
-		//
+
 		jLabelConnection.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelConnection.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelConnection.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -113,14 +113,14 @@ public class DialogSQL extends JDialog {
 		jPanelStatement.setLayout(new BorderLayout());
 		jPanelStatement.add(jPanelStatementTop, BorderLayout.NORTH);
 		jPanelStatement.add(jScrollPaneStatement, BorderLayout.CENTER);
-		//
+
 		jTextAreaStatement.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTextAreaStatement.setEditable(true);
 		jTextAreaStatement.setOpaque(true);
 		jTextAreaStatement.setLineWrap(true);
 		jTextAreaStatement.setWrapStyleWord(true);
 		jScrollPaneStatement.getViewport().add(jTextAreaStatement);
-		//
+
 		jLabelMessage.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jLabelMessage.setText(" " + res.getString("Message"));
 		jLabelMessage.setPreferredSize(new Dimension(100, 28));
@@ -134,12 +134,12 @@ public class DialogSQL extends JDialog {
 		jPanelMessage.setLayout(new BorderLayout());
 		jPanelMessage.add(jLabelMessage, BorderLayout.NORTH);
 		jPanelMessage.add(jScrollPaneMessage, BorderLayout.CENTER);
-		//
+
 		jSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
 		jSplitPane.setDividerLocation(200);
 		jSplitPane.add(jPanelStatement, JSplitPane.TOP);
 		jSplitPane.add(jPanelMessage, JSplitPane.BOTTOM);
-		//
+
 		jButtonClose.setText(res.getString("Close"));
 		jButtonClose.setBounds(new Rectangle(30, 8, 100, 27));
 		jButtonClose.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
@@ -158,7 +158,7 @@ public class DialogSQL extends JDialog {
 		jPanelButtons.add(jButtonClose, null);
 		jPanelButtons.add(jButtonCommit, null);
 		jPanelButtons.add(jButtonListTables, null);
-		//
+
 		this.setTitle(res.getString("SqlConsole"));
 		this.getContentPane().add(jPanelButtons,  BorderLayout.SOUTH);
 		this.setResizable(false);
@@ -274,6 +274,7 @@ public class DialogSQL extends JDialog {
 		String tableName, moduleID, wrkStr;
 		org.w3c.dom.Element tableElement;
 		NodeList tableList = frame_.getDomDocument().getElementsByTagName("Table");
+
 		try {
 			setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			bf.append(jTextAreaMessage.getText());
@@ -281,13 +282,19 @@ public class DialogSQL extends JDialog {
 			Connection connection = frame_.getDatabaseConnList().get(jComboBoxConnection.getSelectedIndex());
 			Statement statement = connection.createStatement();
 			DatabaseMetaData metaData = connection.getMetaData();
-//		    resultSet1 = metaData.getTables(null, null, "%", null);
 		    resultSet1 = metaData.getTables(null, null, "%", new String[] {"TABLE"}); 
 		    while (resultSet1.next()) {
-				try {
+
+		    	try {
 					if (jComboBoxConnection.getSelectedItem().toString().contains("postgres")) {
-						bf.append(resultSet1.getString("TABLE_NAME"));
+						resultSet2= statement.executeQuery("SELECT COUNT(*) FROM " + resultSet1.getString(3));
+					} else {
+						resultSet2= statement.executeQuery("SELECT COUNT(*) AS COUNT FROM " + resultSet1.getString(3));
+					}
+					if (resultSet2.next()) {
+						bf.append(resultSet1.getString(3));
 						bf.append("\t");
+						wrkStr = resultSet1.getString(3).toUpperCase();
 						tableName = "N/A";
 						for (int i = 0; i < tableList.getLength(); i++) {
 							tableElement = (org.w3c.dom.Element)tableList.item(i);
@@ -297,7 +304,6 @@ public class DialogSQL extends JDialog {
 								} else {
 									moduleID = tableElement.getAttribute("ModuleID");
 								}
-								wrkStr = resultSet1.getString("TABLE_NAME").toUpperCase();
 								if (moduleID.equals(wrkStr)) {
 									tableName = tableElement.getAttribute("Name");
 									break;
@@ -306,43 +312,19 @@ public class DialogSQL extends JDialog {
 						}
 						bf.append(tableName);
 						bf.append("\t");
-						bf.append("N/A");
+						bf.append(resultSet2.getInt("COUNT"));
 						bf.append("\n");
-					} else {
-						resultSet2= statement.executeQuery("SELECT COUNT(*) AS COUNT FROM " + resultSet1.getString(3));
-						if (resultSet2.next()) {
-							bf.append(resultSet1.getString(3));
-							bf.append("\t");
-							wrkStr = resultSet1.getString(3).toUpperCase();
-							tableName = "N/A";
-							for (int i = 0; i < tableList.getLength(); i++) {
-								tableElement = (org.w3c.dom.Element)tableList.item(i);
-								if (tableElement.getAttribute("DB").equals(dbIDList.get(jComboBoxConnection.getSelectedIndex()))) {
-									if (tableElement.getAttribute("ModuleID").equals("")) {
-										moduleID = tableElement.getAttribute("ID");
-									} else {
-										moduleID = tableElement.getAttribute("ModuleID");
-									}
-									if (moduleID.equals(wrkStr)) {
-										tableName = tableElement.getAttribute("Name");
-										break;
-									}
-								}
-							}
-							bf.append(tableName);
-							bf.append("\t");
-							bf.append(resultSet2.getInt("COUNT"));
-							bf.append("\n");
-						}
 					}
 				} catch (Exception e1) {
 				}
 			}
-			bf.append("(");
+
+		    bf.append("(");
 			calendar = Calendar.getInstance();
 			bf.append(formatter.format(calendar.getTime()));
 			bf.append(")\n");
 			jTextAreaMessage.setText(bf.toString());
+
 		} catch (SQLException ex1) {
 			bf.append(jTextAreaMessage.getText());
 			bf.append("\n> Listing tables failed.\n");
@@ -352,6 +334,7 @@ public class DialogSQL extends JDialog {
 			bf.append(formatter.format(calendar.getTime()));
 			bf.append(")\n");
 			jTextAreaMessage.setText(bf.toString());
+
 		} finally {
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
