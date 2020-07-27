@@ -289,6 +289,7 @@ public class Res extends java.util.ListResourceBundle {
 		{ "EditTypeNoEdit", "No Edit" },
 		{ "EditTypeZeroSuppress", "Zero Suppress" },
 		{ "EditTypeHourMinuite", "Time(HH:MM)" },
+		{ "EditTypePercent", "Percent(%)" },
 		{ "EditValuesOfKUBUN", "Editting User-Definition Codes" },
 		{ "EditValuesOfKUBUNError", "DB connection is invalid." },
 		{ "EditValuesOfKUBUNNotes", "In order to update codes and their value, list them as follow.\nYEN:Japanese Yen\nUSD:US Dollor\n" },

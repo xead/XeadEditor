@@ -4213,9 +4213,9 @@ public class Editor extends JFrame {
 		jLabelSystemMaintenanceLogSortKey.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemMaintenanceLogSortKey.setHorizontalTextPosition(SwingConstants.LEADING);
 		jLabelSystemMaintenanceLogSortKey.setText(res.getString("SystemMaintenanceLogSortKey"));
-		jLabelSystemMaintenanceLogSortKey.setBounds(new Rectangle(450, 9, 130, 28));
+		jLabelSystemMaintenanceLogSortKey.setBounds(new Rectangle(470, 9, 150, 28));
 		jTextFieldSystemMaintenanceLogSortKey.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldSystemMaintenanceLogSortKey.setBounds(new Rectangle(585, 9, 150, 28));
+		jTextFieldSystemMaintenanceLogSortKey.setBounds(new Rectangle(625, 9, 150, 28));
 		jLabelSystemMaintenanceLogDescriptions.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelSystemMaintenanceLogDescriptions.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelSystemMaintenanceLogDescriptions.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -4946,6 +4946,7 @@ public class Editor extends JFrame {
 		jComboBoxTableFieldEditType.addItem(res.getString("EditTypeNoEdit"));
 		jComboBoxTableFieldEditType.addItem(res.getString("EditTypeZeroSuppress"));
 		jComboBoxTableFieldEditType.addItem(res.getString("EditTypeHourMinuite"));
+		jComboBoxTableFieldEditType.addItem(res.getString("EditTypePercent"));
 
 		jLabelTableFieldByteaType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableFieldByteaType.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -12637,6 +12638,13 @@ public class Editor extends JFrame {
 			}
 			result = result + res.getString("EditTypeZeroSuppress");
 		}
+		if (optionList.contains("PERCENT")) {
+			if (!result.equals("")) {
+				result = result + ",";
+			}
+			result = result + res.getString("EditTypePercent");
+		}
+		//
 		//
         if (fieldElement.getAttribute("Nullable").equals("T")) {
 			if (!result.equals("")) {
@@ -20184,6 +20192,7 @@ public class Editor extends JFrame {
 				if (jComboBoxTableFieldEditType.getSelectedIndex() == 0) {
 					if (typeOptionList.contains("NO_EDIT")
 							|| typeOptionList.contains("HH_MM")
+							|| typeOptionList.contains("PERCENT")
 							|| typeOptionList.contains("ZERO_SUPPRESS")) {
 						valueOfFieldsChanged = true;
 					}
@@ -20216,6 +20225,16 @@ public class Editor extends JFrame {
 						options.append(",");
 					}
 					options.append("HH_MM");
+					optionsNotNull = true;
+				}
+				if (jComboBoxTableFieldEditType.getSelectedIndex() == 4) {
+					if (!typeOptionList.contains("PERCENT")) {
+						valueOfFieldsChanged = true;
+					}
+					if (optionsNotNull) {
+						options.append(",");
+					}
+					options.append("PERCENT");
 					optionsNotNull = true;
 				}
 				if (jRadioButtonFieldTypeOptionKANJI.isSelected()) {
@@ -20485,42 +20504,42 @@ public class Editor extends JFrame {
 
 		private boolean updateFieldsForTableKey() throws Exception {
 			boolean valueOfFieldsChanged = false;
-			//
+
 			if (selectedRow_jTableTableKeyList > -1 && tableModelTableKeyList.getRowCount() > 0) {
-				//
+
 				if (domNode_.getAttribute("DetailRowNumberAuto").equals("T")) {
-					if (!jCheckBoxTableDetailRowNumberAuto.isSelected()) {
+					if (!jCheckBoxTableDetailRowNumberAuto.isSelected() && jCheckBoxTableDetailRowNumberAuto.isVisible()) {
 						valueOfFieldsChanged = true;
 						domNode_.setAttribute("DetailRowNumberAuto", "F");
 					}
 				} else {
-					if (jCheckBoxTableDetailRowNumberAuto.isSelected()) {
+					if (jCheckBoxTableDetailRowNumberAuto.isSelected() && jCheckBoxTableDetailRowNumberAuto.isVisible()) {
 						valueOfFieldsChanged = true;
 						domNode_.setAttribute("DetailRowNumberAuto", "T");
 					}
 				}
-				//
+
 				TableRowNumber tableRowNumber = (TableRowNumber)tableModelTableKeyList.getValueAt(selectedRow_jTableTableKeyList, 0);
 				org.w3c.dom.Element element = tableRowNumber.getElement();
-				//
+
 				if (!element.getAttribute("Fields").equals(tableKeyFields)) {
 					valueOfFieldsChanged = true;
 					element.setAttribute("Fields", tableKeyFields);
 					tableModelTableKeyList.setValueAt(jTextFieldTableKeyFields.getText(), selectedRow_jTableTableKeyList, 2);
 				}
 			}
-			//
+
 			return valueOfFieldsChanged;
 		}
 
 		private boolean updateFieldsForTableRefer() throws Exception {
 			boolean valueOfFieldsChanged = informationOnThisPageChanged;
-			//
+
 			if (selectedRow_jTableTableReferList > -1 && tableModelTableReferList.getRowCount() > 0) {
-				//
+
 				TableRowNumber tableRowNumber = (TableRowNumber)tableModelTableReferList.getValueAt(selectedRow_jTableTableReferList, 0);
 				org.w3c.dom.Element element = tableRowNumber.getElement();
-				//
+
 				if (element.getAttribute("Optional").equals("T") && !jCheckBoxTableReferOptional.isSelected()) {
 					valueOfFieldsChanged = true;
 					element.setAttribute("Optional", "F");
@@ -20531,11 +20550,11 @@ public class Editor extends JFrame {
 					element.setAttribute("Optional", "T");
 					tableModelTableReferList.setValueAt(Boolean.TRUE, selectedRow_jTableTableReferList, 4);
 				}
-				//
+
 				if (valueOfFieldsChanged) {
-					//
+
 					element.setAttribute("WithKeyFields", tableReferWithKeyFields);
-					//
+
 					int count = -1;
 					StringBuffer buf = new StringBuffer();
 					for (int i = 0; i < listModelTableReferFields.getSize(); i++) {
@@ -20554,11 +20573,11 @@ public class Editor extends JFrame {
 					} else {
 						tableModelTableReferList.setValueAt(getFieldNames(element.getAttribute("ToTable"), element.getAttribute("Fields"), res.getString("Comma"), false), selectedRow_jTableTableReferList, 5);
 					}
-					//
+
 				    setupTableScriptNotes(domNode_);
 				}
 			}
-			//
+
 			return valueOfFieldsChanged;
 		}
 
@@ -20567,12 +20586,12 @@ public class Editor extends JFrame {
 			String wrkStr;
 			StringBuffer eventP = new StringBuffer();
 			boolean eventNotNull = false;
-			//
+
 			if (selectedRow_jTableTableScriptList > -1 && tableModelTableScriptList.getRowCount() > 0) {
-				//
+
 				TableRowNumber tableRowNumber = (TableRowNumber)tableModelTableScriptList.getValueAt(selectedRow_jTableTableScriptList, 0);
 				org.w3c.dom.Element element = tableRowNumber.getElement();
-				//
+
 				boolean checkRequired = true;
 				while (checkRequired) {
 					checkRequired = false;	
@@ -20585,7 +20604,7 @@ public class Editor extends JFrame {
 						}
 					}
 				}
-				//
+
 				if (element.getAttribute("Hold").equals("") || element.getAttribute("Hold").equals("F")) {
 					if (jCheckBoxTableScriptHold.isSelected()) {
 						valueOfFieldsChanged = true;
@@ -20608,7 +20627,7 @@ public class Editor extends JFrame {
 					tableModelTableScriptList.setValueAt(jTextFieldTableScriptName.getText(), selectedRow_jTableTableScriptList, 1);
 					
 				}
-				//
+
 				if (jCheckBoxTableScriptEventPrimaryBR.isSelected()) {
 					eventP.append("BR");
 					eventNotNull = true;
@@ -20667,13 +20686,13 @@ public class Editor extends JFrame {
 					element.setAttribute("EventP", eventP.toString());
 					tableModelTableScriptList.setValueAt(getTableEventNames(eventP.toString()), selectedRow_jTableTableScriptList, 2);
 				}
-				//
+
 				if (jComboBoxTableScriptEventRefer.isEnabled()) {
 					wrkStr = listTableScriptEventRefer.get(jComboBoxTableScriptEventRefer.getSelectedIndex());
 					if (!element.getAttribute("EventR").equals(wrkStr)) {
 						valueOfFieldsChanged = true;
 						element.setAttribute("EventR", wrkStr);
-						//
+
 						int wrkInt = listTableScriptEventRefer.indexOf(wrkStr);
 						if (wrkInt == -1) {
 							tableModelTableScriptList.setValueAt("*None", selectedRow_jTableTableScriptList, 3);
@@ -20688,7 +20707,7 @@ public class Editor extends JFrame {
 						tableModelTableScriptList.setValueAt("*None", selectedRow_jTableTableScriptList, 3);
 					}
 				}
-				//
+
 				if (jTextAreaTableScriptText.isEditable()) {
 					wrkStr = concatLinesWithTokenOfEOL(jTextAreaTableScriptText.getText());
 				} else {
@@ -20699,7 +20718,7 @@ public class Editor extends JFrame {
 					element.setAttribute("Text", wrkStr);
 				}
 			}
-			//
+
 			return valueOfFieldsChanged;
 		}
 
@@ -33096,14 +33115,14 @@ public class Editor extends JFrame {
 		TableRowNumber tableRowNumber;
 		org.w3c.dom.Element element, element1;
 		ArrayList<String> typeOptionList;
-		//
+
 		if (!tableRowsAreBeingSetup) {
-			//
+
 			try {
 				if (currentMainTreeNode.updateFieldsForTableField()) {
 					informationOnThisPageChanged = true;
 				}
-				//
+
 				jLabelTableFieldID.setEnabled(false);
 				jTextFieldTableFieldID.setText("");
 				jTextFieldTableFieldID.setEnabled(false);
@@ -33160,15 +33179,15 @@ public class Editor extends JFrame {
 				jLabelTableFieldByteaType.setVisible(false);
 				jTextFieldTableFieldByteaType.setText("");
 				jTextFieldTableFieldByteaType.setVisible(false);
-				//
+
 				if (tableModelTableFieldUsageList.getRowCount() > 0) {
 					int rowCount = tableModelTableFieldUsageList.getRowCount();
 					for (int i = 0; i < rowCount; i++) {tableModelTableFieldUsageList.removeRow(0);}
 				}
-				//
+
 				selectedRow_jTableTableFieldList = jTableTableFieldList.getSelectedRow();
 				if (selectedRow_jTableTableFieldList != -1) {
-					//
+
 					jLabelTableFieldID.setEnabled(true);
 					jTextFieldTableFieldID.setEnabled(true);
 					jLabelTableFieldName.setEnabled(true);
@@ -33184,11 +33203,11 @@ public class Editor extends JFrame {
 					jCheckBoxTableFieldNullable.setEnabled(true);
 					jLabelTableFieldRemarks.setEnabled(true);
 					jTextAreaTableFieldRemarks.setEnabled(true);
-					//
+
 					tableRowNumber = (TableRowNumber)tableModelTableFieldList.getValueAt(selectedRow_jTableTableFieldList, 0);
 					element = tableRowNumber.getElement();
 					typeOptionList = getOptionList(element.getAttribute("TypeOptions"));
-					//
+
 					String fieldID = element.getAttribute("ID");
 					jTextFieldTableFieldID.setText(fieldID);
 					if (!tableKeyFieldIDList.contains(jTextFieldTableFieldID.getText())) {
@@ -33199,7 +33218,7 @@ public class Editor extends JFrame {
 					if (jTextFieldTableFieldColumnName.getText().equals("")) {
 						jTextFieldTableFieldColumnName.setText("*Name");
 					}
-					//
+
 					jComboBoxTableFieldType.setSelectedItem(element.getAttribute("Type"));
 					if (!element.getAttribute("Size").equals("")) {
 						jSpinnerTableFieldSize.setValue(Integer.parseInt(element.getAttribute("Size")));
@@ -33208,7 +33227,7 @@ public class Editor extends JFrame {
 						jComboBoxTableFieldType.setEnabled(false);
 					}
 					jRadioButtonFieldTypeOptionNONE.setSelected(true);
-					//
+
 					if (element.getAttribute("Decimal").equals("")) {
 						jSpinnerTableFieldDecimal.setValue(0);
 					} else {
@@ -33219,13 +33238,13 @@ public class Editor extends JFrame {
 							jSpinnerTableFieldDecimal.setValue(9);
 						}
 					}
-					//
+
 					if (typeOptionList.contains("ACCEPT_MINUS")) {
 						jCheckBoxTableFieldAcceptMinus.setSelected(true);
 					} else {
 						jCheckBoxTableFieldAcceptMinus.setSelected(false);
 					}
-					//
+
 					if (typeOptionList.contains("NO_EDIT")) {
 						jComboBoxTableFieldEditType.setSelectedIndex(1);
 					} else {
@@ -33235,27 +33254,31 @@ public class Editor extends JFrame {
 							if (typeOptionList.contains("HH_MM")) {
 								jComboBoxTableFieldEditType.setSelectedIndex(3);
 							} else {
-								jComboBoxTableFieldEditType.setSelectedIndex(0);
+								if (typeOptionList.contains("PERCENT")) {
+									jComboBoxTableFieldEditType.setSelectedIndex(4);
+								} else {
+									jComboBoxTableFieldEditType.setSelectedIndex(0);
+								}
 							}
 						}
 					}
-					//
+
 					if (!element.getAttribute("ByteaTypeField").equals("")) {
 						jTextFieldTableFieldByteaType.setText(element.getAttribute("ByteaTypeField"));
 					}
-					//
+
 					if (typeOptionList.contains("VIRTUAL")) {
 						jCheckBoxTableFieldPhysical.setSelected(false);
 					} else {
 						jCheckBoxTableFieldPhysical.setSelected(true);
 					}
-					//
+
 					if (element.getAttribute("Nullable").equals("T")) {
 						jCheckBoxTableFieldNullable.setSelected(true);
 					} else {
 						jCheckBoxTableFieldNullable.setSelected(false);
 					}
-					//
+
 					if (tableKeyFieldIDList.contains(jTextFieldTableFieldID.getText())) {
 						jCheckBoxTableFieldNoUpdate.setSelected(true);
 					} else {
@@ -33265,7 +33288,7 @@ public class Editor extends JFrame {
 							jCheckBoxTableFieldNoUpdate.setSelected(false);
 						}
 					}
-					//
+
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("TypeOptions"), "AUTO_NUMBER");
 					if (!wrkStr.equals("")) {
 						jTextFieldTableFieldTypeOptionAUTO_NUMBER.setText(wrkStr);
@@ -33303,7 +33326,7 @@ public class Editor extends JFrame {
 					if (typeOptionList.contains("FYEAR")) {
 						jRadioButtonFieldTypeOptionFYEAR.setSelected(true);
 					}
-					//
+
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("TypeOptions"), "KUBUN");
 					if (!wrkStr.equals("")) {
 						jRadioButtonFieldTypeOptionKUBUN.setSelected(true);
@@ -33312,28 +33335,29 @@ public class Editor extends JFrame {
 						jButtonTableFieldTypeOptionKUBUN.setEnabled(true);
 						setupDescriptionsOfKUBUN();
 					}
-					//
+
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("TypeOptions"), "BOOLEAN");
 					if (!wrkStr.equals("")) {
 						jTextFieldTableFieldTypeOptionBOOLEAN.setText(wrkStr);
 						jTextFieldTableFieldTypeOptionBOOLEAN.setEnabled(true);
 						jRadioButtonFieldTypeOptionBOOLEAN.setSelected(true);
 					}
-					//
+
 					wrkStr = getOptionValueWithKeyword(element.getAttribute("TypeOptions"), "VALUES");
 					if (!wrkStr.equals("")) {
 						jRadioButtonFieldTypeOptionVALUES.setSelected(true);
 						jTextFieldTableFieldTypeOptionVALUES.setText(wrkStr);
 						jTextFieldTableFieldTypeOptionVALUES.setEnabled(true);
 					}
-					//
+
 					jTextAreaTableFieldRemarks.setText(substringLinesWithTokenOfEOL(element.getAttribute("Remarks"), "\n"));
 					jTextAreaTableFieldRemarks.setCaretPosition(0);
-					//
+
 					element1 = (org.w3c.dom.Element)element.getParentNode();
 					String tableID = element1.getAttribute("ID");
 					setupTableFieldUsageList(tableID, fieldID);
 				}
+
 			} catch (Exception e1) {
 				processError(e1);
 			}
@@ -33584,11 +33608,11 @@ public class Editor extends JFrame {
 	
 	String searchTableOperationsInScript(String script, String tableID) {
 		StringBuffer buf = new StringBuffer();
-		script = getCaseShiftValue(script, "Upper");
+		script = getCaseShiftValue(script, "Upper").replaceAll(", ", ",");
 		int pos1, pos2, pos3, pos4;
 
 		if (script.contains("INSERT INTO " + tableID + " ")
-				|| script.contains(".CREATETABLEOPERATOR('INSERT', '" + tableID + "'")) {
+				|| script.contains(".CREATETABLEOPERATOR('INSERT','" + tableID + "'")) {
 			buf.append("C");
 		} else {
 			if (script.contains(".CREATETABLEEVALUATOR('" + tableID + "'")
@@ -33624,8 +33648,8 @@ public class Editor extends JFrame {
 				}
 			}
 		} else {
-			if (script.contains(".CREATETABLEOPERATOR('SELECT', '" + tableID + "'")
-					|| script.contains(".CREATETABLEOPERATOR('COUNT', '" + tableID + "'")) {
+			if (script.contains(".CREATETABLEOPERATOR('SELECT','" + tableID + "'")
+					|| script.contains(".CREATETABLEOPERATOR('COUNT','" + tableID + "'")) {
 				buf.append("R");
 			} else {
 				if (script.contains(".CREATETABLEEVALUATOR('" + tableID + "'")
@@ -33666,7 +33690,7 @@ public class Editor extends JFrame {
 		}
 
 		if (script.contains("DELETE FROM " + tableID + " ")
-				|| script.contains(".CREATETABLEOPERATOR('DELETE', '" + tableID + "'")) {
+				|| script.contains(".CREATETABLEOPERATOR('DELETE','" + tableID + "'")) {
 			buf.append("D");
 		} else {
 			if (script.contains(".CREATETABLEEVALUATOR('" + tableID + "'")
@@ -33677,7 +33701,123 @@ public class Editor extends JFrame {
 
 		return buf.toString();
 	}
+	
+	String searchTableFieldOperationsInScript(String script, String tableID, String fieldID) {
+		StringBuffer buf = new StringBuffer();
+		script = getCaseShiftValue(script, "Upper").replaceAll(", ", ",");
+		int index;
 
+		index = script.indexOf(".CREATETABLEOPERATOR('INSERT','" + tableID + "'");
+		if (index == -1) {
+			index = script.indexOf(".CREATETABLEEVALUATOR('" + tableID + "'");
+			if (containsFieldUsage(script, fieldID, index, "INSERT")) {
+				buf.append("C");
+			}
+		} else {
+			if (containsFieldUsage(script, fieldID, index)) {
+				buf.append("C");
+			}
+		}
+		index = script.indexOf(".CREATETABLEOPERATOR('SELECT','" + tableID + "'");
+		if (index != -1) {
+			if (containsFieldUsage(script, fieldID, index)) {
+				buf.append("R");
+			}
+		}
+		index = script.indexOf(".CREATETABLEOPERATOR('UPDATE','" + tableID + "'");
+		if (index == -1) {
+			index = script.indexOf(".CREATETABLEEVALUATOR('" + tableID + "'");
+			if (containsFieldUsage(script, fieldID, index, "UPDATE")) {
+				buf.append("U");
+			}
+		} else {
+			if (containsFieldUsage(script, fieldID, index)) {
+				buf.append("U");
+			}
+		}
+		index = script.indexOf(".CREATETABLEOPERATOR('DELETE','" + tableID + "'");
+		if (index == -1) {
+			index = script.indexOf(".CREATETABLEEVALUATOR('" + tableID + "'");
+			if (containsFieldUsage(script, fieldID, index, "DELETE")) {
+				buf.append("D");
+			}
+		} else {
+			if (containsFieldUsage(script, fieldID, index)) {
+				buf.append("D");
+			}
+		}
+
+		return buf.toString();
+	}
+
+	boolean containsFieldUsage(String script, String fieldID, int index) {
+		return containsFieldUsage(script, fieldID, index, "");
+	}
+
+	boolean containsFieldUsage(String script, String fieldID, int index, String operation) {
+		boolean isContained = false;
+
+		int index0 = script.lastIndexOf("=", index);
+		if (index0 > 0) {
+
+			int index1 = script.lastIndexOf("\t", index0);
+			int wrkindex = script.lastIndexOf(";", index0);
+			if (index1 < wrkindex) {
+				index1 = wrkindex;
+			}
+			String variantName = script.substring(index1+1, index0-1).trim();
+			int indexFrom = index;
+
+			for (;;) {
+				int offset = 14;
+				index0 = script.indexOf(variantName+".ADDKEYVALUE('", indexFrom);
+				if (index0 == -1) {
+					index0 = script.indexOf(variantName+".ADDVALUE('", indexFrom);
+					offset = 11;
+				}
+				if (index0 == -1) {
+					index0 = script.indexOf(variantName+".SETVALUEOF('", indexFrom);
+					offset = 13;
+				}
+				if (index0 == -1) {
+					index0 = script.indexOf(variantName+".SETORDERBY('", indexFrom);
+					offset = 13;
+				}
+				if (index0 == -1) {
+					index0 = script.indexOf(variantName+".SETSELECTFIELDS('", indexFrom);
+					offset = 18;
+				}
+				if (index0 == -1) {
+					index0 = script.indexOf(variantName+".SETDISTINCTFIELDS('", indexFrom);
+					offset = 20;
+				}
+				if (index0 != -1) {
+					index1 = script.indexOf(")", index0);
+					if (index1 != -1) {
+						String fields = script.substring(index0 + variantName.length() + offset, index1);
+						fields = fields.replaceAll("'", "").replaceAll(" ", ",").replaceAll("\t", "");
+						fields = "," + fields + ",";
+						if (fields.contains(","+fieldID+",")) {
+							isContained = true;
+						}
+					}
+				}
+				if (index0 != -1 && !operation.equals("")) {
+					int index2 = script.indexOf(variantName+"." + operation + "()", index0);
+					if (index2 == -1) {
+						isContained = false;
+					}
+				}
+				if (isContained || index0 == -1) {
+					break;
+				} else {
+					indexFrom = index0 + variantName.length() + offset;
+				}
+			}
+		}
+		return isContained;
+	}
+	
 	void setupTableFieldUsageList(String tableID, String fieldID) {
 		int pos1;
 		String wrkStr="";
@@ -33692,14 +33832,14 @@ public class Editor extends JFrame {
 		StringTokenizer workTokenizer;
 		int countOfUsageRows = 0;
 		int index;
-		//
+
 		nodeList1 = domDocument.getElementsByTagName("Table");
 		sortingList = getSortedListModel(nodeList1, "ID");
 		for (int i = 0; i < sortingList.getSize(); i++) {
 			element1 = (org.w3c.dom.Element)sortingList.getElementAt(i);
-			//
+
 			if (element1.getAttribute("ID").equals(tableID)) {
-				//
+
 				nodeList2 = element1.getElementsByTagName("Key");
 			    for (int j = 0; j < nodeList2.getLength(); j++) {
 			        element2 = (org.w3c.dom.Element)nodeList2.item(j);
@@ -33727,7 +33867,7 @@ public class Editor extends JFrame {
 					}
 				}
 			}
-			//
+
 			nodeList2 = element1.getElementsByTagName("Refer");
 			for (int k = 0; k < nodeList2.getLength(); k++) {
 				element2 = (org.w3c.dom.Element)nodeList2.item(k);
@@ -33780,7 +33920,7 @@ public class Editor extends JFrame {
 					}
 				}
 			}
-			//
+
 		    nodeList2 = element1.getElementsByTagName("Script");
 		    for (int j = 0; j < nodeList2.getLength(); j++) {
 		    	element2 = (org.w3c.dom.Element)nodeList2.item(j);
@@ -33807,17 +33947,32 @@ public class Editor extends JFrame {
 				}
 		    }
 		}
-		//
+
 		nodeList1 = domDocument.getElementsByTagName("Function");
 		sortingList = getSortedListModel(nodeList1, "ID");
 		for (int i = 0; i < sortingList.getSize(); i++) {
 			element1 = (org.w3c.dom.Element)sortingList.getElementAt(i);
-			//
+
+	        if (element1.getAttribute("Type").equals("XF000")) { 
+	        	wrkStr = substringLinesWithTokenOfEOL(element1.getAttribute("Script"), "\n");
+	        	wrkStr = removeCommentsFromScriptText(wrkStr);
+	        	wrkStr = searchTableFieldOperationsInScript(wrkStr, tableID, fieldID);
+	        	if (!wrkStr.equals("")) {
+	        		countOfUsageRows++;
+	        		Object[] Cell = new Object[4];
+	        		Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+	        		Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+	        		Cell[2] = element1.getAttribute("Type");
+	        		Cell[3] = res.getString("TableUsageInScript4") + wrkStr + res.getString("TableUsageInScript3");
+	        		tableModelTableFieldUsageList.addRow(Cell);
+	        	}
+	        }
+
 			if (element1.getAttribute("Type").equals("XF100")) { 
 				workNode = getSpecificXETreeNode("Table", element1.getAttribute("PrimaryTable"));
 				element2 = workNode.getElement();
 				referList1 = element2.getElementsByTagName("Refer");
-				//
+
 				if (element1.getAttribute("PrimaryTable").equals(tableID)) {
 					if (element1.getAttribute("KeyFields").equals("")) {
 						NodeList keyList = element2.getElementsByTagName("Key");
@@ -33856,7 +34011,7 @@ public class Editor extends JFrame {
 						}
 					}
 				}
-				//
+
 				if (!element1.getAttribute("OrderBy").equals("")) {
 					workTokenizer = new StringTokenizer(element1.getAttribute("OrderBy"), ";" );
 					while (workTokenizer.hasMoreTokens()) {
@@ -33878,7 +34033,7 @@ public class Editor extends JFrame {
 						}
 					}
 				}
-				//
+
 				nodeList2 = element1.getElementsByTagName("Filter");
 				for (int j = 0; j < nodeList2.getLength(); j++) {
 					element2 = (org.w3c.dom.Element)nodeList2.item(j);
@@ -33897,7 +34052,7 @@ public class Editor extends JFrame {
 						break;
 					}
 				}
-				//
+
 				nodeList2 = element1.getElementsByTagName("Column");
 				for (int j = 0; j < nodeList2.getLength(); j++) {
 					element2 = (org.w3c.dom.Element)nodeList2.item(j);
@@ -33917,13 +34072,13 @@ public class Editor extends JFrame {
 					}
 				}
 			}
-			//
+
 			if (element1.getAttribute("Type").equals("XF110")) { 
 				primaryTableID = element1.getAttribute("PrimaryTable");
 				workNode = getSpecificXETreeNode("Table", primaryTableID);
 				element2 = workNode.getElement();
 				referList1 = element2.getElementsByTagName("Refer");
-				//
+
 				if (primaryTableID.equals(tableID)) {
 					if (element1.getAttribute("KeyFields").equals("")) {
 						NodeList keyList = element2.getElementsByTagName("Key");
@@ -33962,7 +34117,7 @@ public class Editor extends JFrame {
 						}
 					}
 				}
-				//
+
 				if (!element1.getAttribute("OrderBy").equals("")) {
 					workTokenizer = new StringTokenizer(element1.getAttribute("OrderBy"), ";" );
 					while (workTokenizer.hasMoreTokens()) {
@@ -33984,7 +34139,7 @@ public class Editor extends JFrame {
 						}
 					}
 				}
-				//
+
 				nodeList2 = element1.getElementsByTagName("Filter");
 				for (int j = 0; j < nodeList2.getLength(); j++) {
 					element2 = (org.w3c.dom.Element)nodeList2.item(j);
@@ -34003,7 +34158,7 @@ public class Editor extends JFrame {
 						break;
 					}
 				}
-				//
+
 				nodeList2 = element1.getElementsByTagName("Column");
 				for (int j = 0; j < nodeList2.getLength(); j++) {
 					element2 = (org.w3c.dom.Element)nodeList2.item(j);
@@ -34021,7 +34176,7 @@ public class Editor extends JFrame {
 						tableModelTableFieldUsageList.addRow(Cell);
 						break;
 					}
-					//
+
 					workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "PROMPT_CALL_TO_PUT"), ";" );
 					while (workTokenizer.hasMoreTokens()) {
 						wrkStr = workTokenizer.nextToken();
@@ -34039,7 +34194,7 @@ public class Editor extends JFrame {
 							break;
 						}
 					}
-					//
+
 					workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "PROMPT_CALL_TO_GET_TO"), ";" );
 					while (workTokenizer.hasMoreTokens()) {
 						wrkStr = workTokenizer.nextToken();
@@ -34058,7 +34213,7 @@ public class Editor extends JFrame {
 						}
 					}
 				}
-				//
+
 				subTableID = element1.getAttribute("BatchTable");
 				if (!subTableID.equals("")) {
 					workNode = getSpecificXETreeNode("Table", subTableID);
@@ -34081,7 +34236,7 @@ public class Editor extends JFrame {
 							tableModelTableFieldUsageList.addRow(Cell);
 							break;
 						}
-						//
+
 						workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "PROMPT_CALL_TO_PUT"), ";" );
 						while (workTokenizer.hasMoreTokens()) {
 							wrkStr = workTokenizer.nextToken();
@@ -34099,7 +34254,7 @@ public class Editor extends JFrame {
 								break;
 							}
 						}
-						//
+
 						workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "PROMPT_CALL_TO_GET_TO"), ";" );
 						while (workTokenizer.hasMoreTokens()) {
 							wrkStr = workTokenizer.nextToken();
@@ -34118,7 +34273,7 @@ public class Editor extends JFrame {
 							}
 						}
 					}
-					//
+
 					if (!element1.getAttribute("BatchWithKeyFields").equals("")) {
 						workTokenizer = new StringTokenizer(element1.getAttribute("BatchWithKeyFields"), ";" );
 						while (workTokenizer.hasMoreTokens()) {
@@ -34138,7 +34293,7 @@ public class Editor extends JFrame {
 							}
 						}
 					}
-					//
+
 					if (!element1.getAttribute("BatchKeyFields").equals("")) {
 						workTokenizer = new StringTokenizer(element1.getAttribute("BatchKeyFields"), ";" );
 						while (workTokenizer.hasMoreTokens()) {
@@ -34158,13 +34313,13 @@ public class Editor extends JFrame {
 					}
 				}
 			}
-			//
+
 			if (element1.getAttribute("Type").equals("XF200") 
 					|| element1.getAttribute("Type").equals("XF290")) { 
 				workNode = getSpecificXETreeNode("Table", element1.getAttribute("PrimaryTable"));
 				element2 = workNode.getElement();
 				referList1 = element2.getElementsByTagName("Refer");
-				//
+
 				if (element1.getAttribute("PrimaryTable").equals(tableID)) {
 					if (element1.getAttribute("KeyFields").equals("")) {
 						NodeList keyList = element2.getElementsByTagName("Key");
@@ -34203,7 +34358,7 @@ public class Editor extends JFrame {
 						}
 					}
 				}
-				//
+
 				if (element1.getAttribute("Type").equals("XF200")) { 
 					nodeList2 = element1.getElementsByTagName("Field");
 					for (int j = 0; j < nodeList2.getLength(); j++) {
@@ -34222,7 +34377,7 @@ public class Editor extends JFrame {
 							tableModelTableFieldUsageList.addRow(Cell);
 							break;
 						}
-						//
+
 						workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "PROMPT_CALL_TO_PUT"), ";" );
 						while (workTokenizer.hasMoreTokens()) {
 							wrkStr = workTokenizer.nextToken();
@@ -34240,7 +34395,7 @@ public class Editor extends JFrame {
 								break;
 							}
 						}
-						//
+
 						workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "PROMPT_CALL_TO_GET_TO"), ";" );
 						while (workTokenizer.hasMoreTokens()) {
 							wrkStr = workTokenizer.nextToken();
@@ -34279,7 +34434,7 @@ public class Editor extends JFrame {
 								tableModelTableFieldUsageList.addRow(Cell);
 								break;
 							}
-							//
+
 							workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "PROMPT_CALL_TO_PUT"), ";" );
 							while (workTokenizer.hasMoreTokens()) {
 								wrkStr = workTokenizer.nextToken();
@@ -34297,7 +34452,7 @@ public class Editor extends JFrame {
 									break;
 								}
 							}
-							//
+
 							workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "PROMPT_CALL_TO_GET_TO"), ";" );
 							while (workTokenizer.hasMoreTokens()) {
 								wrkStr = workTokenizer.nextToken();
@@ -34318,7 +34473,7 @@ public class Editor extends JFrame {
 						}
 					}
 				}
-				//
+
 				if (element1.getAttribute("Type").equals("XF290")) { 
 					nodeList2 = element1.getElementsByTagName("Phrase");
 					for (int j = 0; j < nodeList2.getLength(); j++) {
@@ -34337,12 +34492,12 @@ public class Editor extends JFrame {
 					}
 				}
 			}
-			//
+
 			if (element1.getAttribute("Type").equals("XF300")) { 
 				workNode = getSpecificXETreeNode("Table", element1.getAttribute("HeaderTable"));
 				element2 = workNode.getElement();
 				referList1 = element2.getElementsByTagName("Refer");
-				//
+
 				if (element1.getAttribute("HeaderTable").equals(tableID)) {
 					if (element1.getAttribute("HeaderKeyFields").equals("")) {
 						NodeList keyList = element2.getElementsByTagName("Key");
@@ -34425,11 +34580,10 @@ public class Editor extends JFrame {
 							Cell[2] = element1.getAttribute("Type");
 							Cell[3] = res.getString("StrNodeIconField");
 							tableModelTableFieldUsageList.addRow(Cell);
-							break;
 						}
 					}
 				}
-				//
+
 				nodeList2 = element1.getElementsByTagName("Field");
 				for (int j = 0; j < nodeList2.getLength(); j++) {
 					element2 = (org.w3c.dom.Element)nodeList2.item(j);
@@ -34446,7 +34600,7 @@ public class Editor extends JFrame {
 						Cell[3] = res.getString("HDRField");
 						tableModelTableFieldUsageList.addRow(Cell);
 					}
-					//
+
 					workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "LINKED_CALL_TO_PUT"), ";" );
 					while (workTokenizer.hasMoreTokens()) {
 						wrkStr = workTokenizer.nextToken();
@@ -34464,7 +34618,7 @@ public class Editor extends JFrame {
 							break;
 						}
 					}
-					//
+
 					workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "LINKED_CALL_TO_GET_TO"), ";" );
 					while (workTokenizer.hasMoreTokens()) {
 						wrkStr = workTokenizer.nextToken();
@@ -34483,7 +34637,7 @@ public class Editor extends JFrame {
 						}
 					}
 				}
-				//
+
 				if (element1.getAttribute("StructureTable").equals(tableID)) {
 					if (!element1.getAttribute("StructureUpperKeys").equals("")) {
 						workTokenizer = new StringTokenizer(element1.getAttribute("StructureUpperKeys"), ";" );
@@ -34537,7 +34691,7 @@ public class Editor extends JFrame {
 						}
 					}
 				}
-				//
+
 				nodeList2 = element1.getElementsByTagName("Detail");
 				for (int j = 0; j < nodeList2.getLength(); j++) {
 					element2 = (org.w3c.dom.Element)nodeList2.item(j);
@@ -34582,7 +34736,7 @@ public class Editor extends JFrame {
 							}
 						}
 					}
-					//
+
 					if (!element2.getAttribute("OrderBy").equals("")) {
 						workTokenizer = new StringTokenizer(element2.getAttribute("OrderBy"), ";" );
 						while (workTokenizer.hasMoreTokens()) {
@@ -34604,7 +34758,7 @@ public class Editor extends JFrame {
 							}
 						}
 					}
-					//
+
 					nodeList3 = element2.getElementsByTagName("Filter");
 					for (int k = 0; k < nodeList3.getLength(); k++) {
 						element3 = (org.w3c.dom.Element)nodeList3.item(k);
@@ -34623,7 +34777,7 @@ public class Editor extends JFrame {
 							break;
 						}
 					}
-					//
+
 					nodeList3 = element2.getElementsByTagName("Column");
 					for (int k = 0; k < nodeList3.getLength(); k++) {
 						element3 = (org.w3c.dom.Element)nodeList3.item(k);
@@ -34644,12 +34798,12 @@ public class Editor extends JFrame {
 					}
 				}
 			}
-			//
+
 			if (element1.getAttribute("Type").equals("XF310")) { 
 				workNode = getSpecificXETreeNode("Table", element1.getAttribute("HeaderTable"));
 				element2 = workNode.getElement();
 				referList1 = element2.getElementsByTagName("Refer");
-				//
+
 				if (element1.getAttribute("HeaderTable").equals(tableID)) {
 					if (element1.getAttribute("HeaderKeyFields").equals("")) {
 						NodeList keyList = element2.getElementsByTagName("Key");
@@ -34688,7 +34842,7 @@ public class Editor extends JFrame {
 						}
 					}
 				}
-				//
+
 				nodeList2 = element1.getElementsByTagName("Field");
 				for (int j = 0; j < nodeList2.getLength(); j++) {
 					element2 = (org.w3c.dom.Element)nodeList2.item(j);
@@ -34706,7 +34860,7 @@ public class Editor extends JFrame {
 						tableModelTableFieldUsageList.addRow(Cell);
 						break;
 					}
-					//
+
 					workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "PROMPT_CALL_TO_PUT"), ";" );
 					while (workTokenizer.hasMoreTokens()) {
 						wrkStr = workTokenizer.nextToken();
@@ -34724,7 +34878,7 @@ public class Editor extends JFrame {
 							break;
 						}
 					}
-					//
+
 					workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "PROMPT_CALL_TO_GET_TO"), ";" );
 					while (workTokenizer.hasMoreTokens()) {
 						wrkStr = workTokenizer.nextToken();
@@ -34743,11 +34897,11 @@ public class Editor extends JFrame {
 						}
 					}
 				}
-				//
+
 				workNode = getSpecificXETreeNode("Table", element1.getAttribute("DetailTable"));
 				element2 = workNode.getElement();
 				referList2 = element2.getElementsByTagName("Refer");
-				//
+
 				if (element1.getAttribute("DetailTable").equals(tableID)) {
 					if (element1.getAttribute("DetailKeyFields").equals("")) {
 						NodeList keyList = element2.getElementsByTagName("Key");
@@ -34786,7 +34940,7 @@ public class Editor extends JFrame {
 						}
 					}
 				}
-				//
+
 				if (!element1.getAttribute("DetailOrderBy").equals("")) {
 					workTokenizer = new StringTokenizer(element1.getAttribute("DetailOrderBy"), ";" );
 					while (workTokenizer.hasMoreTokens()) {
@@ -34808,7 +34962,7 @@ public class Editor extends JFrame {
 						}
 					}
 				}
-				//
+
 				nodeList3 = element1.getElementsByTagName("Button");
 				for (int k = 0; k < nodeList3.getLength(); k++) {
 					element3 = (org.w3c.dom.Element)nodeList3.item(k);
@@ -34913,7 +35067,7 @@ public class Editor extends JFrame {
 						break;
 					}
 				}
-				//
+
 				nodeList3 = element1.getElementsByTagName("Column");
 				for (int k = 0; k < nodeList3.getLength(); k++) {
 					element3 = (org.w3c.dom.Element)nodeList3.item(k);
@@ -34931,7 +35085,7 @@ public class Editor extends JFrame {
 						tableModelTableFieldUsageList.addRow(Cell);
 						break;
 					}
-					//
+
 					workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element3.getAttribute("FieldOptions"), "PROMPT_CALL_TO_PUT"), ";" );
 					while (workTokenizer.hasMoreTokens()) {
 						wrkStr = workTokenizer.nextToken();
@@ -34949,7 +35103,7 @@ public class Editor extends JFrame {
 							break;
 						}
 					}
-					//
+
 					workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element3.getAttribute("FieldOptions"), "PROMPT_CALL_TO_GET_TO"), ";" );
 					while (workTokenizer.hasMoreTokens()) {
 						wrkStr = workTokenizer.nextToken();
@@ -34969,12 +35123,12 @@ public class Editor extends JFrame {
 					}
 				}
 			}
-			//
+
 			if (element1.getAttribute("Type").equals("XF390")) { 
 				workNode = getSpecificXETreeNode("Table", element1.getAttribute("HeaderTable"));
 				element2 = workNode.getElement();
 				referList1 = element2.getElementsByTagName("Refer");
-				//
+
 				if (element1.getAttribute("HeaderTable").equals(tableID)) {
 					if (element1.getAttribute("HeaderKeyFields").equals("")) {
 						NodeList keyList = element2.getElementsByTagName("Key");
@@ -35013,7 +35167,7 @@ public class Editor extends JFrame {
 						}
 					}
 				}
-				//
+
 				nodeList2 = element1.getElementsByTagName("HeaderPhrase");
 				for (int j = 0; j < nodeList2.getLength(); j++) {
 					element2 = (org.w3c.dom.Element)nodeList2.item(j);
@@ -35029,14 +35183,14 @@ public class Editor extends JFrame {
 						break;
 					}
 				}
-				//
+
 				nodeList2 = element1.getElementsByTagName("Detail");
 				if (nodeList2.getLength() == 0) {
-					//
+
 					workNode = getSpecificXETreeNode("Table", element1.getAttribute("DetailTable"));
 					element2 = workNode.getElement();
 					referList2 = element2.getElementsByTagName("Refer");
-					//
+
 					if (element1.getAttribute("DetailTable").equals(tableID)) {
 						if (element1.getAttribute("DetailKeyFields").equals("")) {
 							NodeList keyList = element2.getElementsByTagName("Key");
@@ -35075,7 +35229,7 @@ public class Editor extends JFrame {
 							}
 						}
 					}
-					//
+
 					if (!element1.getAttribute("DetailOrderBy").equals("")) {
 						workTokenizer = new StringTokenizer(element1.getAttribute("DetailOrderBy"), ";" );
 						while (workTokenizer.hasMoreTokens()) {
@@ -35097,7 +35251,7 @@ public class Editor extends JFrame {
 							}
 						}
 					}
-					//
+
 					nodeList3 = element1.getElementsByTagName("Column");
 					for (int k = 0; k < nodeList3.getLength(); k++) {
 						element3 = (org.w3c.dom.Element)nodeList3.item(k);
@@ -35116,6 +35270,7 @@ public class Editor extends JFrame {
 							break;
 						}
 					}
+
 				} else {
 					for (int j = 0; j < nodeList2.getLength(); j++) {
 						element2 = (org.w3c.dom.Element)nodeList2.item(j);
@@ -35160,7 +35315,7 @@ public class Editor extends JFrame {
 								}
 							}
 						}
-						//
+
 						if (!element2.getAttribute("OrderBy").equals("")) {
 							workTokenizer = new StringTokenizer(element2.getAttribute("OrderBy"), ";" );
 							while (workTokenizer.hasMoreTokens()) {
@@ -35182,7 +35337,7 @@ public class Editor extends JFrame {
 								}
 							}
 						}
-						//
+
 						nodeList3 = element2.getElementsByTagName("Column");
 						for (int k = 0; k < nodeList3.getLength(); k++) {
 							element3 = (org.w3c.dom.Element)nodeList3.item(k);
@@ -35920,14 +36075,14 @@ public class Editor extends JFrame {
 		TableRowNumber tableRowNumber;
 		org.w3c.dom.Element element, element1, element2, element3, fieldElement;
 		NodeList nodeList1, nodeList2;
-		//
+
 		if (!tableRowsAreBeingSetup) {
-			//
+
 			try {
 				if (currentMainTreeNode.updateFieldsForTableKey()) {
 					informationOnThisPageChanged = true;
 				}
-				//
+
 				jLabelTableKeyType.setEnabled(false);
 				jTextFieldTableKeyType.setEnabled(false);
 				jTextFieldTableKeyType.setText("");
@@ -35937,23 +36092,23 @@ public class Editor extends JFrame {
 				jButtonTableKeyFieldsEdit.setEnabled(false);
 				jCheckBoxTableDetailRowNumberAuto.setVisible(false);
 				jCheckBoxTableDetailRowNumberAuto.setSelected(false);
-				//
+
 				if (tableModelTableKeyRelationshipList.getRowCount() > 0) {
 					int rowCount = tableModelTableKeyRelationshipList.getRowCount();
 					for (int i = 0; i < rowCount; i++) {tableModelTableKeyRelationshipList.removeRow(0);}
 				}
-				//
+
 				selectedRow_jTableTableKeyList = jTableTableKeyList.getSelectedRow();
 				if (selectedRow_jTableTableKeyList != -1) {
-					//
+
 					jLabelTableKeyType.setEnabled(true);
 					jTextFieldTableKeyType.setEnabled(true);
 					jLabelTableKeyFields.setEnabled(true);
 					jTextFieldTableKeyFields.setEnabled(true);
-					//
+
 					tableRowNumber = (TableRowNumber)tableModelTableKeyList.getValueAt(selectedRow_jTableTableKeyList, 0);
 					element = tableRowNumber.getElement();
-					//
+
 					String tableID = currentMainTreeNode.getElement().getAttribute("ID");
 					tableKeyType = element.getAttribute("Type");
 					tableKeyFields = element.getAttribute("Fields");
@@ -35989,28 +36144,27 @@ public class Editor extends JFrame {
 					if (tableKeyType.equals("XK")) {
 						jButtonTableKeyFieldsEdit.setEnabled(true);
 						jTextFieldTableKeyType.setText(res.getString("Index"));
-						//jTextFieldTableKeyFields.setText(getIndexKeyNames(tableID, tableKeyFields, " > "));
 						jTextFieldTableKeyFields.setText(getFieldNames(tableID, tableKeyFields, " > ", true, true));
 					}
-					//
+
 					//Relationship List//
 					if (element.getAttribute("Type").equals("PK")) {
 						sequence = 1;
 						nodeList1 = domDocument.getElementsByTagName("Table");
 						sortingList = getSortedListModel(nodeList1, "ID");
 						for (int i = 0; i < sortingList.getSize(); i++) {
-							//
+
 							element1 = (org.w3c.dom.Element)sortingList.getElementAt(i);
 							nodeList2 = element1.getElementsByTagName("Refer");
 							for (int j = 0; j < nodeList2.getLength(); j++) {
 								element2 = (org.w3c.dom.Element)nodeList2.item(j);
-								//
+
 								if (element2.getAttribute("ToTable").equals(tableID)) {
-									//
+
 									if ((element.getAttribute("Type").equals("PK") && element2.getAttribute("ToKeyFields").equals("")) 
 											|| (element.getAttribute("Type").equals("PK") && element2.getAttribute("ToKeyFields").equals(element.getAttribute("Fields")))
 											|| (element.getAttribute("Type").equals("SK") && element2.getAttribute("ToKeyFields").equals(element.getAttribute("Fields")))) {
-										//
+
 										Object[] Cell = new Object[5];
 										Cell[0] = new TableRowNumber(sequence++, element1);
 										element3 = getSpecificPKElement(element1.getAttribute("ID"));
@@ -36034,6 +36188,7 @@ public class Editor extends JFrame {
 						}
 					}
 				}
+
 			} catch (Exception e1) {
 				processError(e1);
 			}
@@ -39037,15 +39192,6 @@ public class Editor extends JFrame {
 			}
 		}
 	}
-
-//	void jCheckBoxFunction200UpdateOnly_stateChanged(ChangeEvent e) {
-//		if (jCheckBoxFunction200UpdateOnly.isSelected()) {
-//			jCheckBoxFunction200ContinueAdd.setSelected(false);
-//			jCheckBoxFunction200ContinueAdd.setEnabled(false);
-//		} else {
-//			jCheckBoxFunction200ContinueAdd.setEnabled(true);
-//		}
-//	}
 	
 	String createScriptToCheckDelete(org.w3c.dom.Element tableElement) {
 		StringBuffer sbf = new StringBuffer();
@@ -41980,11 +42126,18 @@ public class Editor extends JFrame {
 
 					} else {
 						fieldValueList.clear();
-						for (int i=0; i < values.length; i++) {
-							fieldValueList.add(values[i]);
-						}
-						if (fieldIDList.size() > fieldValueList.size()) {
-							fieldValueList.add("");
+//						for (int i=0; i < values.length; i++) {
+//							fieldValueList.add(values[i]);
+//						}
+//						if (fieldIDList.size() > fieldValueList.size()) {
+//							fieldValueList.add("");
+//						}
+						for (int i=0; i < fieldIDList.size(); i++) {
+							if (values.length >= (i+1)) {
+								fieldValueList.add(values[i]);
+							} else {
+								fieldValueList.add("");
+							}
 						}
 
 						statementBuf = new StringBuffer();

@@ -125,6 +125,7 @@ public class DialogAssistList extends JDialog {
 		instanceAssistListArray.add("getVariant(variantID)");
 		instanceAssistListArray.add("setVariant(variantID, value)");
 		instanceAssistListArray.add("setStatusMessage(message)");
+		instanceAssistListArray.add("executeScript(text)");
 		Collections.sort(instanceAssistListArray);
 		sessionAssistListArray = new ArrayList<String>();
 		sessionAssistListArray.add("getDatabaseName()");
@@ -152,6 +153,7 @@ public class DialogAssistList extends JDialog {
 		sessionAssistListArray.add("createTableOperator(sql)");
 		sessionAssistListArray.add("createTableOperator(operation, tableID)");
 		sessionAssistListArray.add("commit()");
+		sessionAssistListArray.add("rollback()");
 		sessionAssistListArray.add("decodeBase64StringToByteArray(value)");
 		sessionAssistListArray.add("encodeByteArrayToBase64String(byteArray)");
 		sessionAssistListArray.add("getTableName(tableID)");
