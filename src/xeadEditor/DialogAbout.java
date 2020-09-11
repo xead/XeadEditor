@@ -48,15 +48,18 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "X-TEA Editor";
 	public static final String COPYRIGHT = "Copyright 2020 DBC Ltd.";
 	public static final String URL_DBC = "http://dbc.in.coocan.jp/";
-	public static final String FULL_VERSION  = "V1.R3.M30";
+	public static final String FULL_VERSION  = "V1.R3.M31";
+	//1.3.31
+	//・データのインポート機能でのデータと欄見出しとの関係を厳密化
+	//・sessionでrollback()のメソッドを使えるようにした
+	//・テーブルとフィールドの使途分析ロジックのバグ修正と強化
+	//・テーブルIDと機能IDの変更機能を組み込んだ
+	//
 	//1.3.30
 	//・instanceでexecuteScript(...)のメソッドを使えるようにした
 	//・更新履歴のラベル長を伸ばした
 	//・フィールドの使途検索のロジックを強化した
 	//・主キー定義の「Auto行番」のチェックボックスが効かないことのある問題を修正
-	//#データのインポート機能でのデータと欄見出しとの関係を厳密化
-	//#sessionでrollback()のメソッドを使えるようにした
-	//#フィールドの使途分析ロジックのバグ修正と強化
 	//
 	//1.3.29
 	//・検索・置換ダイアログの使い勝手を向上させた

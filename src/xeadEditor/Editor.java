@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2019 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2020 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -283,6 +283,7 @@ public class Editor extends JFrame {
 	private JMenuItem jMenuItemXETreeNodeCopy = new JMenuItem();
 	private JMenuItem jMenuItemXETreeNodePaste = new JMenuItem();
 	private JMenuItem jMenuItemXETreeNodeDelete = new JMenuItem();
+	private JMenuItem jMenuItemXETreeNodeRename = new JMenuItem();
 	/**
 	 * PopupMenu and MenuItems of Contents Pane Components
 	 */
@@ -2920,30 +2921,14 @@ public class Editor extends JFrame {
 				if (wrkStr != null && !wrkStr.equals("")) {
 					backupFolder = wrkStr;
 				}
-//				wrkStr = properties.getProperty("BrowsedFiles");
-//				if (wrkStr != null && !wrkStr.equals("")) {
-//					int count = 0;
-//					workTokenizer = new StringTokenizer(wrkStr, ";");
-//					while (workTokenizer.hasMoreTokens()) {
-//						JMenuItem item = new JMenuItem(workTokenizer.nextToken());
-//						item.addActionListener(new ActionListener() {
-//							@Override public void actionPerformed(ActionEvent e) {
-//								jMenuItemFileOpenBrowsedFiles_actionPerformed(e);
-//							}
-//							
-//						});
-//						jMenuFileOpenBrowsedFiles.add(item);
-//						count++;
-//						if (count >= 5) {
-//							break;
-//						}
-//					}
-//				} else {
-//					jMenuFileOpenBrowsedFiles.setEnabled(false);
-//				}
 			}
 		} catch (Exception e) {
 		}
+
+		/**
+		 * set font on JOptionPane
+		 */
+		javax.swing.UIManager.put("OptionPane.font", new Font(mainFontName, 0, MAIN_FONT_SIZE+2));
 
 		/**
 		 * set image resource to icons
@@ -3336,6 +3321,8 @@ public class Editor extends JFrame {
 		jMenuItemXETreeNodeCopy.addActionListener(new Editor_jMenuItemXETreeNodeCopy_actionAdapter(this));
 		jMenuItemXETreeNodeDelete.setText(res.getString("Delete"));
 		jMenuItemXETreeNodeDelete.addActionListener(new Editor_jMenuItemXETreeNodeDelete_actionAdapter(this));
+		jMenuItemXETreeNodeRename.setText(res.getString("Rename"));
+		jMenuItemXETreeNodeRename.addActionListener(new Editor_jMenuItemXETreeNodeRename_actionAdapter(this));
 
 		/**
 		 * PopupMenu for Contents Pane Processing
@@ -11925,9 +11912,11 @@ public class Editor extends JFrame {
 	
 	public boolean isTableScriptUsingFunction(org.w3c.dom.Element element, String functionID) {
 		String wrkStr = substringLinesWithTokenOfEOL(element.getAttribute("Text"), "\n");
-		wrkStr = removeCommentsFromScriptText(wrkStr).replace(" ", "");
-		if (wrkStr.contains("instance.callFunction('" + functionID + "')")
-				|| wrkStr.contains("instance.functionID=='" + functionID + "'")) {
+//		wrkStr = removeCommentsFromScriptText(wrkStr).replaceAll(" ", "");
+//		if (wrkStr.contains("instance.callFunction('" + functionID + "')")
+//				|| wrkStr.contains("instance.functionID=='" + functionID + "'")) {
+		wrkStr = removeCommentsFromScriptText(wrkStr);
+		if (wrkStr.contains("'" + functionID + "'")) {
 			return true;
 		} else {
 			return false;
@@ -11944,7 +11933,7 @@ public class Editor extends JFrame {
 			wrkStr = substringLinesWithTokenOfEOL(element.getAttribute("Script"), "\n");
 			wrkStr = removeCommentsFromScriptText(wrkStr).replace(" ", "");
 			if (wrkStr.contains("instance.callFunction('" + functionID + "')")
-					|| wrkStr.contains(".setPrompter('" + functionID + "',")) {
+					|| wrkStr.contains(".setPrompter('" + functionID + "'")) {
 				usage = res.getString("UsageLaunchedInScript");
 			}
 		}
@@ -15426,6 +15415,8 @@ public class Editor extends JFrame {
 			if (nodeType_.equals("Table")) {
 				jPopupMenuXETreeNode.add(jMenuItemXETreeNodeCopy);
 				jPopupMenuXETreeNode.addSeparator();
+				jPopupMenuXETreeNode.add(jMenuItemXETreeNodeRename);
+				jPopupMenuXETreeNode.addSeparator();
 				jPopupMenuXETreeNode.add(jMenuItemXETreeNodeDelete);
 			}
 			if (nodeType_.equals("FunctionList")) {
@@ -15439,6 +15430,8 @@ public class Editor extends JFrame {
 			}
 			if (nodeType_.equals("Function")) {
 				jPopupMenuXETreeNode.add(jMenuItemXETreeNodeCopy);
+				jPopupMenuXETreeNode.addSeparator();
+				jPopupMenuXETreeNode.add(jMenuItemXETreeNodeRename);
 				jPopupMenuXETreeNode.addSeparator();
 				jPopupMenuXETreeNode.add(jMenuItemXETreeNodeDelete);
 			}
@@ -15771,7 +15764,7 @@ public class Editor extends JFrame {
 								for (int i = 0; i < nodeList.getLength(); i++) {
 									workElement = (org.w3c.dom.Element)nodeList.item(i).cloneNode(false);
 									wrkStr = workElement.getAttribute("WithKeyFields");
-									wrkStr = wrkStr.replaceAll(currentID+".", answer+".");
+									wrkStr = wrkStr.replace(currentID+".", answer+".");
 									workElement.setAttribute("WithKeyFields", wrkStr);
 									newElement.appendChild(workElement);
 								}
@@ -15780,7 +15773,7 @@ public class Editor extends JFrame {
 								for (int i = 0; i < nodeList.getLength(); i++) {
 									workElement = (org.w3c.dom.Element)nodeList.item(i).cloneNode(false);
 									wrkStr = workElement.getAttribute("Text");
-									wrkStr = wrkStr.replaceAll(currentID+"_", answer+"_");
+									wrkStr = wrkStr.replace(currentID+"_", answer+"_");
 									workElement.setAttribute("Text", wrkStr);
 									newElement.appendChild(workElement);
 								}
@@ -15853,20 +15846,84 @@ public class Editor extends JFrame {
 			}
 		}
 
+		public void rename() {
+			org.w3c.dom.Element workElement;
+			boolean duplicated, ready = false;
+			String answer = currentMainTreeNode.getElement().getAttribute("ID");
+
+			if (nodeType_.equals("Table") && !currentMainTreeNode.getErrorStatus().equals("ER1")) {
+				JOptionPane.showMessageDialog(null, res.getString("ErrorMessage134"));
+
+			} else {
+				if (nodeType_.equals("Table") || nodeType_.equals("Function")) {
+					while (!ready) {
+						answer = JOptionPane.showInputDialog(null, res.getString("SpecifyNewID2"), answer);
+						if (answer == null || answer.equals("")) {
+							ready = true;
+
+						} else {
+							if (answer.length() > 10) {
+								JOptionPane.showMessageDialog(null, res.getString("ErrorMessage127"));
+
+							} else {
+								duplicated = false;
+								for (int i = 0; i < subsystemListNode.getChildCount(); i++) {
+									for (int j = 0; j < subsystemListNode.getChildAt(i).getChildAt(0).getChildCount(); j++) {
+										workElement = ((MainTreeNode)subsystemListNode.getChildAt(i).getChildAt(0).getChildAt(j)).getElement();
+										if (workElement.getAttribute("ID").equals(answer)) {
+											duplicated = true;
+											break;
+										}
+									}
+									if (!duplicated) {
+										for (int j = 0; j < subsystemListNode.getChildAt(i).getChildAt(1).getChildCount(); j++) {
+											workElement = ((MainTreeNode)subsystemListNode.getChildAt(i).getChildAt(1).getChildAt(j)).getElement();
+											if (workElement.getAttribute("ID").equals(answer)) {
+												duplicated = true;
+												break;
+											}
+										}
+									}
+									if (duplicated) {
+										break;
+									}
+								}
+								if (duplicated) {
+									JOptionPane.showMessageDialog(null, res.getString("ErrorMessage133"));
+
+								} else {
+									try{
+										setCursor(new Cursor(Cursor.WAIT_CURSOR));
+
+										if (nodeType_.equals("Table")) {
+											replaceTableIdWithinRelatedElements(currentMainTreeNode.getElement().getAttribute("ID"), answer);
+										}
+										if (nodeType_.equals("Function")) {
+											replaceFunctionIdWithinRelatedElements(currentMainTreeNode.getElement().getAttribute("ID"), answer);
+										}
+										currentMainTreeNode.getElement().setAttribute("ID", answer);
+
+										changeState.setChanged(true);
+										undoManager.resetLog();
+										MainTreeNode parentNode = (MainTreeNode)this.getParent();
+										parentNode.sortChildNodes();
+										jTreeMain.updateUI();
+										ready = true;
+
+									} finally {
+										setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+									}
+								}
+							}
+						}
+					}
+
+					this.activateContentsPane();
+				}
+			}
+		}
+
 		public void sortChildNodes() {
-//			TreeSet<MainTreeNode> treeSet = new TreeSet<MainTreeNode>(new NodeComparator());
-//			int childCount = this.getChildCount();
-//			MainTreeNode node;
-//			for (int i = 0; i < childCount; i++) {
-//				node = (MainTreeNode)this.getChildAt(i);
-//				treeSet.add(node);
-//			}
-//			this.removeAllChildren();
-//			Iterator<MainTreeNode> it = treeSet.iterator();
-//			while( it.hasNext() ){
-//				node = (MainTreeNode)it.next();
-//				this.add(node);
-//			}
 			ArrayList<MainTreeNode> list = new ArrayList<MainTreeNode>();
 			MainTreeNode node;
 			for (int i = 0; i < this.getChildCount(); i++) {
@@ -20101,7 +20158,7 @@ public class Editor extends JFrame {
 				XEditor_FieldSizeSpinnerEditor editor = (XEditor_FieldSizeSpinnerEditor)jSpinnerTableFieldSize.getEditor();
 				try {
 					editor.commitEdit();
-					fieldSize = Integer.parseInt(editor.getTextField().getText().replaceAll(",", ""));
+					fieldSize = Integer.parseInt(editor.getTextField().getText().replace(",", ""));
 				} catch (Exception e) {
 					fieldSize = Integer.parseInt(element.getAttribute("Size"));
 					e.printStackTrace();
@@ -26246,7 +26303,7 @@ public class Editor extends JFrame {
 				break;
 			} else {
 				pos2 = text.indexOf(")", pos1);
-				wrkStr = text.substring(pos1+9, pos2+1).replaceAll(" ", "");
+				wrkStr = text.substring(pos1+9, pos2+1).replace(" ", "");
 				if (!wrkStr.equals("")) {
 					list.add(wrkStr);
 				}
@@ -26329,7 +26386,7 @@ public class Editor extends JFrame {
 			wrkStr1 = wrkStr2;
 
 			isCommentRow = false;
-			if (wrkStr1.replaceAll("\t","").replaceAll(" ","").startsWith("//")) {
+			if (wrkStr1.replace("\t","").replace(" ","").startsWith("//")) {
 				isCommentRow = true;
 			}
 
@@ -26365,7 +26422,7 @@ public class Editor extends JFrame {
 				if (count > 0) {
 					countOfIndentsToBeAdded = countOfIndentsToBeAdded - count;
 				}
-				if (count == 0 && wrkStr1.replaceAll(" ", "").contains("}else{")) {
+				if (count == 0 && wrkStr1.replace(" ", "").contains("}else{")) {
 					countOfIndentsToBeAdded--;
 				}
 			}
@@ -26403,7 +26460,7 @@ public class Editor extends JFrame {
 				if (count > 0) {
 					countOfIndentsToBeAdded = countOfIndentsToBeAdded + count;
 				}
-				if (count == 0 && wrkStr1.replaceAll(" ", "").contains("}else{")) {
+				if (count == 0 && wrkStr1.replace(" ", "").contains("}else{")) {
 					countOfIndentsToBeAdded++;
 				}
 			}
@@ -28036,6 +28093,13 @@ public class Editor extends JFrame {
 				|| nodeType.equals("TableList")) {
 				currentMainTreeNode.pasteChildNode(pastingDomElement);
 			}
+		}
+	}
+
+	void jMenuItemXETreeNodeRename_actionPerformed(ActionEvent e) {
+		String nodeType = currentMainTreeNode.getType(); 
+		if (nodeType.equals("Table") || nodeType.equals("Function")) {
+			currentMainTreeNode.rename();
 		}
 	}
 
@@ -33680,7 +33744,7 @@ public class Editor extends JFrame {
 		}
 
 		if (script.contains("UPDATE " + tableID + " ")
-				|| script.contains(".CREATETABLEOPERATOR('UPDATE', '" + tableID + "'")) {
+				|| script.contains(".CREATETABLEOPERATOR('UPDATE','" + tableID + "'")) {
 			buf.append("U");
 		} else {
 			if (script.contains(".CREATETABLEEVALUATOR('" + tableID + "'")
@@ -39773,7 +39837,7 @@ public class Editor extends JFrame {
 			if (dialogEditPrimaryTableKey.request(functionElement, function100PrimaryTableID, function100TableKeys)) {
 				String newTableID = dialogEditPrimaryTableKey.getTableIDToBeChanged(); 
 				if (!newTableID.equals("")) {
-					replaceTableID(functionElement, newTableID);
+					replaceMainTableIdWithinFunction(functionElement, newTableID);
 				}
 				function100TableKeys = dialogEditPrimaryTableKey.getValidatedKeys();
 				if (function100TableKeys.equals("")) {
@@ -39800,7 +39864,7 @@ public class Editor extends JFrame {
 			if (dialogEditPrimaryTableKey.request(functionElement, function110PrimaryTableID, function110TableKeys)) {
 				String newTableID = dialogEditPrimaryTableKey.getTableIDToBeChanged(); 
 				if (!newTableID.equals("")) {
-					replaceTableID(functionElement, newTableID);
+					replaceMainTableIdWithinFunction(functionElement, newTableID);
 				}
 				function110TableKeys = dialogEditPrimaryTableKey.getValidatedKeys();
 				if (function110TableKeys.equals("")) {
@@ -39827,7 +39891,7 @@ public class Editor extends JFrame {
 			if (dialogEditPrimaryTableKey.request(functionElement, function200PrimaryTableID, function200TableKeys)) {
 				String newTableID = dialogEditPrimaryTableKey.getTableIDToBeChanged(); 
 				if (!newTableID.equals("")) {
-					replaceTableID(functionElement, newTableID);
+					replaceMainTableIdWithinFunction(functionElement, newTableID);
 				}
 				function200TableKeys = dialogEditPrimaryTableKey.getValidatedKeys();
 				if (function200TableKeys.equals("")) {
@@ -39854,7 +39918,7 @@ public class Editor extends JFrame {
 			if (dialogEditPrimaryTableKey.request(functionElement, function290PrimaryTableID, function290TableKeys)) {
 				String newTableID = dialogEditPrimaryTableKey.getTableIDToBeChanged(); 
 				if (!newTableID.equals("")) {
-					replaceTableID(functionElement, newTableID);
+					replaceMainTableIdWithinFunction(functionElement, newTableID);
 				}
 				function290TableKeys = dialogEditPrimaryTableKey.getValidatedKeys();
 				if (function290TableKeys.equals("")) {
@@ -39881,7 +39945,7 @@ public class Editor extends JFrame {
 			if (dialogEditPrimaryTableKey.request(functionElement, function300HeaderTableID, function300HeaderTableKeys)) {
 				String newTableID = dialogEditPrimaryTableKey.getTableIDToBeChanged(); 
 				if (!newTableID.equals("")) {
-					replaceTableID(functionElement, newTableID);
+					replaceMainTableIdWithinFunction(functionElement, newTableID);
 				}
 				function300HeaderTableKeys = dialogEditPrimaryTableKey.getValidatedKeys();
 				if (function300HeaderTableKeys.equals("")) {
@@ -39938,7 +40002,7 @@ public class Editor extends JFrame {
 			if (dialogEditPrimaryTableKey.request(functionElement, function310HeaderTableID, function310HeaderTableKeys)) {
 				String newTableID = dialogEditPrimaryTableKey.getTableIDToBeChanged(); 
 				if (!newTableID.equals("")) {
-					replaceTableID(functionElement, newTableID);
+					replaceMainTableIdWithinFunction(functionElement, newTableID);
 				}
 				function310HeaderTableKeys = dialogEditPrimaryTableKey.getValidatedKeys();
 				if (function310HeaderTableKeys.equals("")) {
@@ -39992,7 +40056,7 @@ public class Editor extends JFrame {
 			if (dialogEditPrimaryTableKey.request(functionElement, function390HeaderTableID, function390HeaderTableKeys)) {
 				String newTableID = dialogEditPrimaryTableKey.getTableIDToBeChanged(); 
 				if (!newTableID.equals("")) {
-					replaceTableID(functionElement, newTableID);
+					replaceMainTableIdWithinFunction(functionElement, newTableID);
 				}
 				function390HeaderTableKeys = dialogEditPrimaryTableKey.getValidatedKeys();
 				if (function390HeaderTableKeys.equals("")) {
@@ -40042,8 +40106,473 @@ public class Editor extends JFrame {
 			}
 		}
 	}
-	
-	void replaceTableID(org.w3c.dom.Element functionElement, String newTableID) {
+
+	void replaceTableIdWithinRelatedElements(String currTableID, String newTableID) {
+		org.w3c.dom.Element element, element1;
+		NodeList nodeList1, nodeList2;
+		String wrkStr, keyword, keyword2;
+
+	    // System Element //
+        keyword = "\'" + currTableID + "\'";
+		nodeList1 = domDocument.getElementsByTagName("System");
+		element1 = (org.w3c.dom.Element)nodeList1.item(0);
+		wrkStr = element1.getAttribute("LoginScript");
+    	if (wrkStr.contains(keyword)) {
+    		wrkStr = wrkStr.replace(keyword, "\'" + newTableID + "\'");
+    		element1.setAttribute("LoginScript", wrkStr);
+    	}
+		wrkStr = element1.getAttribute("ScriptFunctions");
+    	if (wrkStr.contains(keyword)) {
+    		wrkStr = wrkStr.replace(keyword, "\'" + newTableID + "\'");
+    		element1.setAttribute("ScriptFunctions", wrkStr);
+    	}
+
+	    // Table Elements //
+		nodeList1 = domDocument.getElementsByTagName("Table");
+	    for (int i = 0; i < nodeList1.getLength(); i++) {
+	        element = (org.w3c.dom.Element)nodeList1.item(i);
+
+	        keyword = ";" + currTableID + ".";
+	        nodeList2 = element.getElementsByTagName("Refer");
+	        for (int j = 0; j < nodeList2.getLength(); j++) {
+	        	element1 = (org.w3c.dom.Element)nodeList2.item(j);
+	        	if (element1.getAttribute("ToTable").equals(currTableID)) {
+	        		element1.setAttribute("ToTable", newTableID);
+	        	}
+	        	wrkStr = ";" + element1.getAttribute("WithKeyFields");
+	        	if (wrkStr.contains(keyword)) {
+	        		wrkStr = wrkStr.replace(keyword, ";" + newTableID + ".");
+	        		wrkStr = wrkStr.replaceFirst(";", "");
+	        		element1.setAttribute("WithKeyFields", wrkStr);
+	        	}
+	        }
+
+	        keyword = "\'" + currTableID + "\'";
+	        keyword2 = currTableID + "_";
+		    nodeList2 = element.getElementsByTagName("Script");
+		    for (int j = 0; j < nodeList2.getLength(); j++) {
+		    	element1 = (org.w3c.dom.Element)nodeList2.item(j);
+				wrkStr = element1.getAttribute("Text");
+	        	if (wrkStr.contains(keyword) || wrkStr.contains(keyword2)) {
+	        		wrkStr = wrkStr.replace(keyword, "\'" + newTableID + "\'");
+	        		wrkStr = wrkStr.replace(keyword2, newTableID + "_");
+	        		element1.setAttribute("Text", wrkStr);
+	        	}
+		    }
+	    }
+
+	    // Function Elements //
+		nodeList1 = domDocument.getElementsByTagName("Function");
+	    for (int i = 0; i < nodeList1.getLength(); i++) {
+	        element = (org.w3c.dom.Element)nodeList1.item(i);
+
+	        if (element.getAttribute("Type").equals("XF000")) { 
+	            keyword = "\'" + currTableID + "\'";
+	    		wrkStr = element.getAttribute("Script");
+	        	if (wrkStr.contains(keyword)) {
+	        		wrkStr = wrkStr.replace(keyword, "\'" + newTableID + "\'");
+	        		element.setAttribute("Script", wrkStr);
+	        	}
+	        }
+
+	        if (element.getAttribute("Type").equals("XF100") || element.getAttribute("Type").equals("XF110")) { 
+	        	if (element.getAttribute("PrimaryTable").equals(currTableID)) {
+	        		element.setAttribute("PrimaryTable", newTableID);
+	        	}
+	        	keyword = ";" + currTableID + ".";
+        		wrkStr = ";" + element.getAttribute("OrderBy");
+	        	if (wrkStr.contains(keyword)) {
+	        		wrkStr = wrkStr.replace(keyword, ";" + newTableID + ".");
+	        		wrkStr = wrkStr.replaceFirst(";", "");
+	        		element.setAttribute("OrderBy", wrkStr);
+	        	}
+	        	replaceTableIDWithinFunctionField(element, "Column", currTableID, newTableID);
+	            replaceTableIDWithinFunctionField(element, "Filter", currTableID, newTableID);
+	            if (element.getAttribute("Type").equals("XF110")) { 
+		        	if (element.getAttribute("BatchTable").equals(currTableID)) {
+		        		element.setAttribute("BatchTable", newTableID);
+		        	}
+		            replaceTableIDWithinFunctionField(element, "BatchField", currTableID, newTableID);
+		    	}
+	    	}
+
+	        if (element.getAttribute("Type").equals("XF200")) { 
+	        	if (element.getAttribute("PrimaryTable").equals(currTableID)) {
+	        		element.setAttribute("PrimaryTable", newTableID);
+	        	}
+	        	replaceTableIDWithinFunctionField(element, "Field", currTableID, newTableID);
+	        	nodeList2 = element.getElementsByTagName("Tab");
+	        	for (int j = 0; j < nodeList2.getLength(); j++) {
+	        		element1 = (org.w3c.dom.Element)nodeList2.item(j);
+	        		replaceTableIDWithinFunctionField(element1, "TabField", currTableID, newTableID);
+	        	}
+	    	}
+
+	        if (element.getAttribute("Type").equals("XF290")) { 
+	        	if (element.getAttribute("PrimaryTable").equals(currTableID)) {
+	        		element.setAttribute("PrimaryTable", newTableID);
+	        	}
+	        	keyword = "(" + currTableID + ".";
+	        	nodeList2 = element.getElementsByTagName("Phrase");
+	        	for (int j = 0; j < nodeList2.getLength(); j++) {
+	        		element1 = (org.w3c.dom.Element)nodeList2.item(j);
+	        		wrkStr = element1.getAttribute("Value");
+	        		if (wrkStr.contains(keyword)) {
+	        			wrkStr = wrkStr.replace(keyword, "(" + newTableID + ".");
+	        			element1.setAttribute("Value", wrkStr);
+	        		}
+	        	}
+	    	}
+
+	        if (element.getAttribute("Type").equals("XF300")) { 
+	        	if (element.getAttribute("HeaderTable").equals(currTableID)) {
+	        		element.setAttribute("HeaderTable", newTableID);
+	        	}
+	        	replaceTableIDWithinFunctionField(element, "Field", currTableID, newTableID);
+	        	if (element.getAttribute("StructureTable").equals(currTableID)) {
+	        		element.setAttribute("StructureTable", newTableID);
+	        	}
+	        	keyword = ";" + currTableID + ".";
+        		wrkStr = ";" + element.getAttribute("StructureNodeText");
+	        	if (wrkStr.contains(keyword)) {
+	        		wrkStr = wrkStr.replace(keyword, ";" + newTableID + ".");
+	        		wrkStr = wrkStr.replaceFirst(";", "");
+	        		element.setAttribute("StructureNodeText", wrkStr);
+	        	}
+	        	nodeList2 = element.getElementsByTagName("Detail");
+			    for (int j = 0; j < nodeList2.getLength(); j++) {
+			        element1 = (org.w3c.dom.Element)nodeList2.item(j);
+		        	if (element1.getAttribute("Table").equals(currTableID)) {
+		        		element1.setAttribute("Table", newTableID);
+		        	}
+		        	keyword = ";" + currTableID + ".";
+            		wrkStr = ";" + element1.getAttribute("OrderBy");
+    	        	if (wrkStr.contains(keyword)) {
+    	        		wrkStr = wrkStr.replace(keyword, ";" + newTableID + ".");
+    	        		wrkStr = wrkStr.replaceFirst(";", "");
+    	        		element1.setAttribute("OrderBy", wrkStr);
+    	        	}
+    	        	replaceTableIDWithinFunctionField(element1, "Column", currTableID, newTableID);
+    	        	replaceTableIDWithinFunctionField(element1, "Filter", currTableID, newTableID);
+			    }
+	    	}
+
+	        if (element.getAttribute("Type").equals("XF310")) { 
+	        	if (element.getAttribute("HeaderTable").equals(currTableID)) {
+	        		element.setAttribute("HeaderTable", newTableID);
+	        	}
+	        	if (element.getAttribute("DetailTable").equals(currTableID)) {
+	        		element.setAttribute("DetailTable", newTableID);
+	        	}
+	            keyword = ";" + currTableID + ".";
+        		wrkStr = ";" + element.getAttribute("DetailOrderBy");
+	        	if (wrkStr.contains(keyword)) {
+	        		wrkStr = wrkStr.replace(keyword, ";" + newTableID + ".");
+	        		wrkStr = wrkStr.replaceFirst(";", "");
+	        		element.setAttribute("DetailOrderBy", wrkStr);
+	        	}
+	        	replaceTableIDWithinFunctionField(element, "Field", currTableID, newTableID);
+	            replaceTableIDWithinFunctionField(element, "Column", currTableID, newTableID);
+	            replaceTableIDWithinFunctionField(element, "AddRowListColumn", currTableID, newTableID);
+	    	}
+
+	        if (element.getAttribute("Type").equals("XF390")) { 
+	        	if (element.getAttribute("HeaderTable").equals(currTableID)) {
+	        		element.setAttribute("HeaderTable", newTableID);
+	        	}
+        		keyword = ";" + currTableID + ".";
+        		wrkStr = ";" + element.getAttribute("DetailOrderBy");
+	        	if (wrkStr.contains(keyword)) {
+	        		wrkStr = wrkStr.replace(keyword, ";" + newTableID + ".");
+	        		wrkStr = wrkStr.replaceFirst(";", "");
+	        		element.setAttribute("DetailOrderBy", wrkStr);
+	        	}
+	        	keyword = "(" + currTableID + ".";
+	        	nodeList2 = element.getElementsByTagName("HeaderPhrase");
+        		for (int j = 0; j < nodeList2.getLength(); j++) {
+        			element1 = (org.w3c.dom.Element)nodeList2.item(j);
+        			wrkStr = element1.getAttribute("Value");
+        			if (wrkStr.contains(keyword)) {
+        				wrkStr = wrkStr.replace(keyword, "(" + newTableID + ".");
+        				element1.setAttribute("Value", wrkStr);
+        			}
+        		}
+	        	replaceTableIDWithinFunctionField(element, "Column", currTableID, newTableID);
+	        	if (element.getAttribute("DetailTable").equals(currTableID)) {
+	        		element.setAttribute("DetailTable", newTableID);
+	        	}
+	        	nodeList2 = element.getElementsByTagName("Detail");
+	        	if (nodeList2.getLength() == 0) {
+			        keyword = ";" + currTableID + ".";
+	        		wrkStr = ";" + element.getAttribute("OrderBy");
+		        	if (wrkStr.contains(keyword)) {
+		        		wrkStr = wrkStr.replace(keyword, ";" + newTableID + ".");
+		        		wrkStr = wrkStr.replaceFirst(";", "");
+		        		element.setAttribute("OrderBy", wrkStr);
+		        	}
+	        	} else {
+	        		for (int j = 0; j < nodeList2.getLength(); j++) {
+	        			element1 = (org.w3c.dom.Element)nodeList2.item(j);
+	        			if (element1.getAttribute("Table").equals(currTableID)) {
+	    	        		element1.setAttribute("Table", newTableID);
+	        			}
+	    		        keyword = ";" + currTableID + ".";
+	            		wrkStr = ";" + element1.getAttribute("OrderBy");
+	    	        	if (wrkStr.contains(keyword)) {
+	    	        		wrkStr = wrkStr.replace(keyword, ";" + newTableID + ".");
+	    	        		wrkStr = wrkStr.replaceFirst(";", "");
+	    	        		element1.setAttribute("OrderBy", wrkStr);
+	    	        	}
+	        		}
+	        	}
+	    	}
+	    }
+	}
+
+	void replaceTableIDWithinFunctionField(org.w3c.dom.Element functionElement, String tagName, String currTableID, String newTableID) {
+		org.w3c.dom.Element element;
+		String wrkStr;
+		
+		NodeList nodeList = functionElement.getElementsByTagName(tagName);
+		for (int i = 0; i < nodeList.getLength(); i++) {
+			element = (org.w3c.dom.Element)nodeList.item(i);
+
+			wrkStr = element.getAttribute("DataSource");
+			if (wrkStr.startsWith(currTableID + ".")) {
+				wrkStr = wrkStr.replace(currTableID + ".", newTableID + ".");
+				element.setAttribute("DataSource", wrkStr);
+			}
+
+			wrkStr = element.getAttribute("FieldOptions");
+			if (wrkStr.contains(currTableID + ".")) {
+				wrkStr = wrkStr.replace("(" + currTableID + ".", "(" + newTableID + ".");
+				wrkStr = wrkStr.replace(";" + currTableID + ".", ";" + newTableID + ".");
+				element.setAttribute("FieldOptions", wrkStr);
+			}
+		}
+	}
+
+	void replaceFunctionIdWithinRelatedElements(String currFunctionID, String newFunctionID) {
+		org.w3c.dom.Element element, element1, element2;
+		NodeList nodeList1, nodeList2;
+		String wrkStr, keyword;
+
+		// Menu Elements //
+		nodeList1 = domDocument.getElementsByTagName("Menu");
+	    for (int i = 0; i < nodeList1.getLength(); i++) {
+	        element1 = (org.w3c.dom.Element)nodeList1.item(i);
+			nodeList2 = element1.getElementsByTagName("Option");
+		    for (int j = 0; j < nodeList2.getLength(); j++) {
+		        element2 = (org.w3c.dom.Element)nodeList2.item(j);
+	        	if (element2.getAttribute("FunctionID").equals(currFunctionID)) {
+	        		element2.setAttribute("FunctionID", newFunctionID);
+	        		break;
+	        	}
+		    }
+	    }
+
+	    // Function Elements //
+	    nodeList1 = domDocument.getElementsByTagName("Function");
+		for (int i = 0; i < nodeList1.getLength(); i++) {
+			element = (org.w3c.dom.Element)nodeList1.item(i);
+
+			if (element.getAttribute("Type").equals("XF000")) {
+				keyword = "\'" + currFunctionID + "\'";
+				wrkStr = element.getAttribute("Script");
+				if (wrkStr.contains(keyword)) {
+					wrkStr = wrkStr.replace(keyword, "\'" + newFunctionID + "\'");
+					element.setAttribute("Script", wrkStr);
+				}
+			}
+
+			if (element.getAttribute("Type").equals("XF100")) { 
+				if (element.getAttribute("DetailFunction").equals(currFunctionID)) {
+					element.setAttribute("DetailFunction", newFunctionID);
+				}
+				keyword = "LINKED_CALL(" + currFunctionID + ")";
+				nodeList2 = element.getElementsByTagName("Column");
+				for (int j = 0; j < nodeList2.getLength(); j++) {
+					element1 = (org.w3c.dom.Element)nodeList2.item(j);
+					wrkStr = element1.getAttribute("FieldOptions");
+					if (wrkStr.contains(keyword)) {
+						wrkStr = wrkStr.replace(keyword, "LINKED_CALL(" + newFunctionID + ")");
+						element1.setAttribute("FieldOptions", wrkStr);
+					}
+				}
+				keyword = "CALL(" + currFunctionID + ")";
+				nodeList2 = element.getElementsByTagName("Button");
+				for (int j = 0; j < nodeList2.getLength(); j++) {
+					element1 = (org.w3c.dom.Element)nodeList2.item(j);
+					wrkStr = element1.getAttribute("Action");
+					if (wrkStr.contains(keyword)) {
+						wrkStr = wrkStr.replace(keyword, "CALL(" + newFunctionID + ")");
+						element1.setAttribute("Action", wrkStr);
+					}
+				}
+			}
+
+			if (element.getAttribute("Type").equals("XF110")) {
+				if (element.getAttribute("BatchRecordFunction").equals(currFunctionID)) {
+					element.setAttribute("BatchRecordFunction", newFunctionID);
+				}
+				keyword = "PROMPT_CALL(" + currFunctionID + ")";
+				nodeList2 = element.getElementsByTagName("Column");
+				for (int j = 0; j < nodeList2.getLength(); j++) {
+					element1 = (org.w3c.dom.Element)nodeList2.item(j);
+					wrkStr = element1.getAttribute("FieldOptions");
+					if (wrkStr.contains(keyword)) {
+						wrkStr = wrkStr.replace(keyword, "PROMPT_CALL(" + newFunctionID + ")");
+						element1.setAttribute("FieldOptions", wrkStr);
+					}
+				}
+				keyword = "PROMPT_CALL(" + currFunctionID + ")";
+				nodeList2 = element.getElementsByTagName("BatchField");
+				for (int j = 0; j < nodeList2.getLength(); j++) {
+					element1 = (org.w3c.dom.Element)nodeList2.item(j);
+					wrkStr = element1.getAttribute("FieldOptions");
+					if (wrkStr.contains(keyword)) {
+						wrkStr = wrkStr.replace(keyword, "PROMPT_CALL(" + newFunctionID + ")");
+						element1.setAttribute("FieldOptions", wrkStr);
+					}
+				}
+			}
+
+			if (element.getAttribute("Type").equals("XF100")
+					|| element.getAttribute("Type").equals("XF110") 
+					|| element.getAttribute("Type").equals("XF300")) { 
+				keyword = "PROMPT_CALL(" + currFunctionID + ")";
+				nodeList2 = element.getElementsByTagName("Filter");
+				for (int j = 0; j < nodeList2.getLength(); j++) {
+					element1 = (org.w3c.dom.Element)nodeList2.item(j);
+					wrkStr = element1.getAttribute("FieldOptions");
+					if (wrkStr.contains(keyword)) {
+						wrkStr = wrkStr.replace(keyword, "PROMPT_CALL(" + newFunctionID + ")");
+						element1.setAttribute("FieldOptions", wrkStr);
+					}
+				}
+			}
+
+			if (element.getAttribute("Type").equals("XF200")) { 
+				if (element.getAttribute("FunctionAfterInsert").equals(currFunctionID)) {
+					element.setAttribute("FunctionAfterInsert", newFunctionID);
+				}
+				keyword = "CALL(" + currFunctionID + ")";
+				nodeList2 = element.getElementsByTagName("Button");
+				for (int j = 0; j < nodeList2.getLength(); j++) {
+					element1 = (org.w3c.dom.Element)nodeList2.item(j);
+					wrkStr = element1.getAttribute("Action");
+					if (wrkStr.contains(keyword)) {
+						wrkStr = wrkStr.replace(keyword, "CALL(" + newFunctionID + ")");
+						element1.setAttribute("Action", wrkStr);
+					}
+				}
+				keyword = "PROMPT_CALL(" + currFunctionID + ")";
+				nodeList2 = element.getElementsByTagName("Field");
+				for (int j = 0; j < nodeList2.getLength(); j++) {
+					element1 = (org.w3c.dom.Element)nodeList2.item(j);
+					wrkStr = element1.getAttribute("FieldOptions");
+					if (wrkStr.contains(keyword)) {
+						wrkStr = wrkStr.replace(keyword, "PROMPT_CALL(" + newFunctionID + ")");
+						element1.setAttribute("FieldOptions", wrkStr);
+					}
+				}
+			}
+
+			if (element.getAttribute("Type").equals("XF300")) { 
+				if (element.getAttribute("HeaderFunction").equals(currFunctionID)) {
+					element.setAttribute("HeaderFunction", newFunctionID);
+				}
+				nodeList2 = element.getElementsByTagName("Detail");
+				for (int j = 0; j < nodeList2.getLength(); j++) {
+					element1 = (org.w3c.dom.Element)nodeList2.item(j);
+					if (element1.getAttribute("DetailFunction").equals(currFunctionID)) {
+						element1.setAttribute("DetailFunction", newFunctionID);
+					}
+				}
+				keyword = "CALL(" + currFunctionID + ")";
+				nodeList2 = element.getElementsByTagName("Button");
+				for (int j = 0; j < nodeList2.getLength(); j++) {
+					element1 = (org.w3c.dom.Element)nodeList2.item(j);
+					wrkStr = element1.getAttribute("Action");
+					if (wrkStr.contains(keyword)) {
+						wrkStr = wrkStr.replace(keyword, "CALL(" + newFunctionID + ")");
+						element1.setAttribute("Action", wrkStr);
+					}
+				}
+				keyword = "LINKED_CALL(" + currFunctionID + ")";
+				nodeList2 = element.getElementsByTagName("Field");
+				for (int j = 0; j < nodeList2.getLength(); j++) {
+					element1 = (org.w3c.dom.Element)nodeList2.item(j);
+					wrkStr = element1.getAttribute("FieldOptions");
+					if (wrkStr.contains(keyword)) {
+						wrkStr = wrkStr.replace(keyword, "LINKED_CALL(" + newFunctionID + ")");
+						element1.setAttribute("FieldOptions", wrkStr);
+					}
+				}
+				keyword = "LINKED_CALL(" + currFunctionID + ")";
+				nodeList2 = element.getElementsByTagName("Column");
+				for (int j = 0; j < nodeList2.getLength(); j++) {
+					element1 = (org.w3c.dom.Element)nodeList2.item(j);
+					wrkStr = element1.getAttribute("FieldOptions");
+					if (wrkStr.contains(keyword)) {
+						wrkStr = wrkStr.replace(keyword, "LINKED_CALL(" + newFunctionID + ")");
+						element1.setAttribute("FieldOptions", wrkStr);
+					}
+				}
+			}
+
+			if (element.getAttribute("Type").equals("XF310")) { 
+				keyword = "PROMPT_CALL(" + currFunctionID + ")";
+				nodeList2 = element.getElementsByTagName("Field");
+				for (int j = 0; j < nodeList2.getLength(); j++) {
+					element1 = (org.w3c.dom.Element)nodeList2.item(j);
+					wrkStr = element1.getAttribute("FieldOptions");
+					if (wrkStr.contains(keyword)) {
+						wrkStr = wrkStr.replace(keyword, "PROMPT_CALL(" + newFunctionID + ")");
+						element1.setAttribute("FieldOptions", wrkStr);
+					}
+				}
+				keyword = "PROMPT_CALL(" + currFunctionID + ")";
+				nodeList2 = element.getElementsByTagName("Column");
+				for (int j = 0; j < nodeList2.getLength(); j++) {
+					element1 = (org.w3c.dom.Element)nodeList2.item(j);
+					wrkStr = element1.getAttribute("FieldOptions");
+					if (wrkStr.contains(keyword)) {
+						wrkStr = wrkStr.replace(keyword, "PROMPT_CALL(" + newFunctionID + ")");
+						element1.setAttribute("FieldOptions", wrkStr);
+					}
+				}
+				keyword = "CALL_TO_ADD(" + currFunctionID + ")";
+				nodeList2 = element.getElementsByTagName("Button");
+				for (int j = 0; j < nodeList2.getLength(); j++) {
+					element1 = (org.w3c.dom.Element)nodeList2.item(j);
+					wrkStr = element1.getAttribute("Action");
+					if (wrkStr.contains(keyword)) {
+						wrkStr = wrkStr.replace(keyword, "CALL_TO_ADD(" + newFunctionID + ")");
+						element1.setAttribute("Action", wrkStr);
+					}
+				}
+			}
+		}
+
+	    // Table Elements //
+		keyword = "\'" + currFunctionID + "\'";
+	    nodeList1 = domDocument.getElementsByTagName("Table");
+		for (int i = 0; i < nodeList1.getLength(); i++) {
+			element = (org.w3c.dom.Element)nodeList1.item(i);
+		    nodeList2 = element.getElementsByTagName("Script");
+		    for (int j = 0; j < nodeList2.getLength(); j++) {
+		    	element1 = (org.w3c.dom.Element)nodeList2.item(j);
+				wrkStr = element1.getAttribute("Text");
+				if (wrkStr.contains(keyword)) {
+					wrkStr = wrkStr.replace(keyword, "\'" + newFunctionID + "\'");
+					element1.setAttribute("Text", wrkStr);
+				}
+		    }
+		}
+	}
+
+	void replaceMainTableIdWithinFunction(org.w3c.dom.Element functionElement, String newTableID) {
 		NodeList fieldList;
 		org.w3c.dom.Element element;
 		StringTokenizer tokenizer;
@@ -40053,8 +40582,7 @@ public class Editor extends JFrame {
 		int wrkInt;
 		boolean isDescendingOrder, isAscendingOrder;
 
-		if (functionElement.getAttribute("Type").equals("XF100")
-				|| functionElement.getAttribute("Type").equals("XF110")) {
+		if (functionElement.getAttribute("Type").equals("XF100") || functionElement.getAttribute("Type").equals("XF110")) {
 			originalTableID = functionElement.getAttribute("PrimaryTable");
 			dataSources = functionElement.getAttribute("OrderBy");
 			if (!dataSources.equals("")) {
@@ -40110,8 +40638,8 @@ public class Editor extends JFrame {
 				}
 				wrkStr = element.getAttribute("FieldOptions");
 				if (!wrkStr.equals("")) {
-					wrkStr = wrkStr.replaceAll("\\("+originalTableID+".", "\\("+newTableID+".");
-					wrkStr = wrkStr.replaceAll(";"+originalTableID+".", ";"+newTableID+".");
+					wrkStr = wrkStr.replace("("+originalTableID+".", "("+newTableID+".");
+					wrkStr = wrkStr.replace(";"+originalTableID+".", ";"+newTableID+".");
 					element.setAttribute("FieldOptions", wrkStr);
 				}
 			}
@@ -40127,8 +40655,8 @@ public class Editor extends JFrame {
 				}
 				wrkStr = element.getAttribute("FieldOptions");
 				if (!wrkStr.equals("")) {
-					wrkStr = wrkStr.replaceAll("\\("+originalTableID+".", "\\("+newTableID+".");
-					wrkStr = wrkStr.replaceAll(";"+originalTableID+".", ";"+newTableID+".");
+					wrkStr = wrkStr.replace("("+originalTableID+".", "("+newTableID+".");
+					wrkStr = wrkStr.replace(";"+originalTableID+".", ";"+newTableID+".");
 					element.setAttribute("FieldOptions", wrkStr);
 				}
 			}
@@ -40171,8 +40699,8 @@ public class Editor extends JFrame {
 				}
 				wrkStr = element.getAttribute("FieldOptions");
 				if (!wrkStr.equals("")) {
-					wrkStr = wrkStr.replaceAll("\\("+originalTableID+".", "\\("+newTableID+".");
-					wrkStr = wrkStr.replaceAll(";"+originalTableID+".", ";"+newTableID+".");
+					wrkStr = wrkStr.replace("("+originalTableID+".", "("+newTableID+".");
+					wrkStr = wrkStr.replace(";"+originalTableID+".", ";"+newTableID+".");
 					element.setAttribute("FieldOptions", wrkStr);
 				}
 			}
@@ -40185,7 +40713,7 @@ public class Editor extends JFrame {
 			for (int i = 0; i < phraseList.getLength(); i++) {
 				element = (org.w3c.dom.Element)phraseList.item(i);
 				phraseValue = element.getAttribute("Value");
-				element.setAttribute("Value", phraseValue.replaceAll("\\(" + originalTableID + ".", "\\(" + newTableID + "."));
+				element.setAttribute("Value", phraseValue.replace("(" + originalTableID + ".", "(" + newTableID + "."));
 			}
 			functionElement.setAttribute("PrimaryTable", newTableID);
 		}
@@ -40204,8 +40732,8 @@ public class Editor extends JFrame {
 				}
 				wrkStr = element.getAttribute("FieldOptions");
 				if (!wrkStr.equals("")) {
-					wrkStr = wrkStr.replaceAll("\\("+originalTableID+".", "\\("+newTableID+".");
-					wrkStr = wrkStr.replaceAll(";"+originalTableID+".", ";"+newTableID+".");
+					wrkStr = wrkStr.replace("("+originalTableID+".", "("+newTableID+".");
+					wrkStr = wrkStr.replace(";"+originalTableID+".", ";"+newTableID+".");
 					element.setAttribute("FieldOptions", wrkStr);
 				}
 			}
@@ -40226,8 +40754,8 @@ public class Editor extends JFrame {
 				}
 				wrkStr = element.getAttribute("FieldOptions");
 				if (!wrkStr.equals("")) {
-					wrkStr = wrkStr.replaceAll("\\("+originalTableID+".", "\\("+newTableID+".");
-					wrkStr = wrkStr.replaceAll(";"+originalTableID+".", ";"+newTableID+".");
+					wrkStr = wrkStr.replace("("+originalTableID+".", "("+newTableID+".");
+					wrkStr = wrkStr.replace(";"+originalTableID+".", ";"+newTableID+".");
 					element.setAttribute("FieldOptions", wrkStr);
 				}
 			}
@@ -40240,7 +40768,7 @@ public class Editor extends JFrame {
 			for (int i = 0; i < phraseList.getLength(); i++) {
 				element = (org.w3c.dom.Element)phraseList.item(i);
 				phraseValue = element.getAttribute("Value");
-				element.setAttribute("Value", phraseValue.replaceAll("\\(" + originalTableID + ".", "\\(" + newTableID + "."));
+				element.setAttribute("Value", phraseValue.replace("(" + originalTableID + ".", "(" + newTableID + "."));
 			}
 			functionElement.setAttribute("HeaderTable", newTableID);
 		}
@@ -48118,6 +48646,16 @@ class Editor_jMenuItemXETreeNodePaste_actionAdapter implements java.awt.event.Ac
 	}
 	public void actionPerformed(ActionEvent e) {
 		adaptee.jMenuItemXETreeNodePaste_actionPerformed(e);
+	}
+}
+
+class Editor_jMenuItemXETreeNodeRename_actionAdapter implements java.awt.event.ActionListener {
+	Editor adaptee;
+	Editor_jMenuItemXETreeNodeRename_actionAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jMenuItemXETreeNodeRename_actionPerformed(e);
 	}
 }
 

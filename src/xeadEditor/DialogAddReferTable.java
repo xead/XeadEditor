@@ -149,7 +149,7 @@ public class DialogAddReferTable extends JDialog {
 		jTextFieldWithKeyFields.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTextFieldWithKeyFields.setBounds(new Rectangle(140, 71, 690, 25));
 		//
-		jScrollPaneMessage.setBounds(new Rectangle(10, 102, 820, 70));
+		jScrollPaneMessage.setBounds(new Rectangle(10, 102, 820, 78));
 		jScrollPaneMessage.getViewport().add(jTextAreaMessage);
 		jTextAreaMessage.setFont(new java.awt.Font(frame_.mainFontName, 0, Editor.MAIN_FONT_SIZE));
 		jTextAreaMessage.setLineWrap(true);
@@ -194,7 +194,7 @@ public class DialogAddReferTable extends JDialog {
 		this.setTitle(res.getString("AddJoinTable"));
 		this.getContentPane().add(jPanelButtons,  BorderLayout.SOUTH);
 		this.setResizable(false);
-		this.setPreferredSize(new Dimension(845, 262));
+		this.setPreferredSize(new Dimension(850, 270));
 		this.getContentPane().add(panelMain,  BorderLayout.CENTER);
 		jPanelButtons.getRootPane().setDefaultButton(jButtonOK);
 		this.pack();
