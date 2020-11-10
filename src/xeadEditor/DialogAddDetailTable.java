@@ -296,7 +296,9 @@ public class DialogAddDetailTable extends JDialog {
 								break;
 							} else {
 								if (!elementHdr.getAttribute("Type").equals(elementDtl.getAttribute("Type")) || !elementHdr.getAttribute("Size").equals(elementDtl.getAttribute("Size")) || !elementHdr.getAttribute("Decimal").equals(elementDtl.getAttribute("Decimal"))) {
-									errorMessage = res.getString("ErrorMessage77");
+									errorMessage = res.getString("ErrorMessage77") + "\n"
+											+ elementHdr.getAttribute("ID") + "(" + elementHdr.getAttribute("Type") + elementHdr.getAttribute("Size") + ")"
+											+ ":" + elementDtl.getAttribute("ID") + "(" + elementDtl.getAttribute("Type") + elementDtl.getAttribute("Size") + ")";
 									break;
 								}
 							}

@@ -48,12 +48,19 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String PRODUCT_NAME = "X-TEA Editor";
 	public static final String COPYRIGHT = "Copyright 2020 DBC Ltd.";
 	public static final String URL_DBC = "http://dbc.in.coocan.jp/";
-	public static final String FULL_VERSION  = "V1.R3.M31";
+	public static final String FULL_VERSION  = "V1.R3.M32";
+	//1.3.32
+	//・リネームの前にノードをupdateFields()するようにした
+	//・XF300の明細テーブル追加時のメッセージを改善した
+	//・XF000のテーブルIDの置換ロジックを改善した
+	//・#データ保守ユーティリティでCUDした際のエラーハンドリング仕様を改善した
+	//・#ツールメニューに「区分値一覧表」を追加した
+	//
 	//1.3.31
 	//・データのインポート機能でのデータと欄見出しとの関係を厳密化
 	//・sessionでrollback()のメソッドを使えるようにした
 	//・テーブルとフィールドの使途分析ロジックのバグ修正と強化
-	//・テーブルIDと機能IDの変更機能を組み込んだ
+	//・テーブルIDと機能IDの変更（リネーム）機能を組み込んだ
 	//
 	//1.3.30
 	//・instanceでexecuteScript(...)のメソッドを使えるようにした

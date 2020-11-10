@@ -473,6 +473,8 @@ public class Res extends java.util.ListResourceBundle {
 		{ "FieldKana", "Kana" },
 		{ "FieldKanji", "Kanji" },
 		{ "FieldKubunID", "U.Def-Code" },
+		{ "FieldKubunValues", "Code values and descriptions" },
+		{ "FieldKubunValuesList", "CodeValuesList" },
 		{ "FieldMargin", "Margin" },
 		{ "FieldMonthSeq", "Fis.Month" },
 		{ "FieldName", "Field Name" },

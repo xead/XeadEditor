@@ -172,6 +172,7 @@ public class Editor extends JFrame {
 	private JMenuItem jMenuItemToolCheckAllModules = new JMenuItem();
 	private JMenuItem jMenuItemToolCheckFunctionsCalled = new JMenuItem();
 	private JMenuItem jMenuItemToolIdLabelMap = new JMenuItem();
+	private JMenuItem jMenuItemToolCodeValuesList = new JMenuItem();
 	private JMenuItem jMenuItemToolCallModeler = new JMenuItem();
 	private JMenu jMenuHelp = new JMenu();
 	private JMenuItem jMenuItemHelpHelp = new JMenuItem();
@@ -3188,6 +3189,8 @@ public class Editor extends JFrame {
 		jMenuItemToolCheckFunctionsCalled.addActionListener(new Editor_jMenuItemToolCheckFunctionsCalled_actionAdapter(this));
 		jMenuItemToolIdLabelMap.setText(res.getString("IdLabelMap"));
 		jMenuItemToolIdLabelMap.addActionListener(new Editor_jMenuItemToolIdLabelMap_actionAdapter(this));
+		jMenuItemToolCodeValuesList.setText(res.getString("FieldKubunValuesList"));
+		jMenuItemToolCodeValuesList.addActionListener(new Editor_jMenuItemToolCodeValuesList_actionAdapter(this));
 		jMenuItemToolCallModeler.setText(res.getString("CallModeler"));
 		jMenuItemToolCallModeler.addActionListener(new Editor_jMenuItemToolCallModeler_actionAdapter(this));
 		jMenuHelp.setText(res.getString("Help"));
@@ -3240,6 +3243,7 @@ public class Editor extends JFrame {
 		jMenuTool.add(jMenuItemToolSQL);
 		jMenuTool.add(jMenuItemToolCheckFunctionsCalled);
 		jMenuTool.add(jMenuItemToolIdLabelMap);
+		jMenuTool.add(jMenuItemToolCodeValuesList);
 		jMenuTool.add(jMenuItemToolCallModeler);
 		jMenuHelp.add(jMenuItemHelpAbout);
 		jMenuHelp.add(jMenuItemHelpHelp);
@@ -15895,6 +15899,8 @@ public class Editor extends JFrame {
 									try{
 										setCursor(new Cursor(Cursor.WAIT_CURSOR));
 
+										updateFields();
+
 										if (nodeType_.equals("Table")) {
 											replaceTableIdWithinRelatedElements(currentMainTreeNode.getElement().getAttribute("ID"), answer);
 										}
@@ -27860,6 +27866,31 @@ public class Editor extends JFrame {
 			dialogToListIdLabelMap.request();
 		}
 	}
+	
+	/**
+	 * [Tool|List Code Values List]
+	 * @param e :Action Event
+	 */
+	void jMenuItemToolCodeValuesList_actionPerformed(ActionEvent e) {
+		int rtn1 = 0;
+		currentMainTreeNode.updateFields();
+		if (changeState.isChanged()) {
+			Object[] bts = {res.getString("SaveChanges"), res.getString("BackToEdit")} ;
+			rtn1 = JOptionPane.showOptionDialog(this, res.getString("ScanMessage"),
+					res.getString("SaveChangesTitle"), JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, bts, bts[0]);
+			if (rtn1 == 0) {
+				jMenuItemFileSave_actionPerformed(null);
+			}
+		}
+		if (rtn1 == 0) {
+			try {
+				desktop.browse(getExcellKubunListURI());
+			} catch (IOException ex) {
+				jTextAreaTableDataMessages.setText(jTextAreaTableDataMessages.getText()+"\n"+ex.getMessage());
+			}
+		}
+	}
+
 	/**
 	 * [Tool|Check Call X-TEA Modeler]
 	 * @param e :Action Event
@@ -40171,6 +40202,8 @@ public class Editor extends JFrame {
 	    		wrkStr = element.getAttribute("Script");
 	        	if (wrkStr.contains(keyword)) {
 	        		wrkStr = wrkStr.replace(keyword, "\'" + newTableID + "\'");
+	        		wrkStr = wrkStr.replace("　" + currTableID + ".", "　" + newTableID + ".");
+	        		wrkStr = wrkStr.replace("　" + currTableID + ",", "　" + newTableID + ",");
 	        		element.setAttribute("Script", wrkStr);
 	        	}
 	        }
@@ -41747,6 +41780,225 @@ public class Editor extends JFrame {
 		textArea.requestFocus();
 	}
 
+	private URI getExcellKubunListURI() {
+		File xlsFile = null;
+		String xlsFileName = "";
+		FileOutputStream fileOutputStream = null;
+		ResultSet result = null;
+		Statement statement = null;
+		StringBuffer buf1, buf2;
+		Connection connection = null;
+		int count = 0;
+		String systemKubunTableID;
+		String tableID = "";
+		String kubunFieldID; 
+		NodeList tableList, fieldList;
+		org.w3c.dom.Element tableElement, fieldElement;
+		ArrayList<String> typeOptionList;
+
+		XSSFWorkbook workBook = new XSSFWorkbook();
+		XSSFSheet workSheet = workBook.createSheet(res.getString("FieldKubunValuesList"));
+		workSheet.setDefaultRowHeight( (short) 300);
+		Footer workSheetFooter = workSheet.getFooter();
+		workSheetFooter.setRight(res.getString("FieldKubunValuesList") + "  Page &P / &N");
+
+		XSSFFont font = workBook.createFont();
+		font.setFontName(mainFontName);
+		font.setFontHeightInPoints((short)11);
+
+		XSSFCellStyle style = workBook.createCellStyle();
+		style.setBorderBottom(XSSFCellStyle.BORDER_THIN);
+		style.setBorderLeft(XSSFCellStyle.BORDER_THIN);
+		style.setBorderRight(XSSFCellStyle.BORDER_THIN);
+		style.setBorderTop(XSSFCellStyle.BORDER_THIN);
+		style.setVerticalAlignment(XSSFCellStyle.VERTICAL_TOP);
+		style.setAlignment(XSSFCellStyle.ALIGN_LEFT);
+		style.setFont(font);
+
+		XSSFCellStyle styleWrap = workBook.createCellStyle();
+		styleWrap.setBorderBottom(XSSFCellStyle.BORDER_THIN);
+		styleWrap.setBorderLeft(XSSFCellStyle.BORDER_THIN);
+		styleWrap.setBorderRight(XSSFCellStyle.BORDER_THIN);
+		styleWrap.setBorderTop(XSSFCellStyle.BORDER_THIN);
+		styleWrap.setVerticalAlignment(XSSFCellStyle.VERTICAL_TOP);
+		styleWrap.setAlignment(XSSFCellStyle.ALIGN_LEFT);
+		styleWrap.setFont(font);
+		styleWrap.setWrapText(true);
+
+		int currentRowNumber = -1;
+
+		try {
+			setCursor(new Cursor(Cursor.WAIT_CURSOR));
+
+			File outputFolder = null;
+			String wrkStr = systemNode.getElement().getAttribute("OutputFolder"); 
+			if (wrkStr.equals("")) {
+				outputFolder = null;
+			} else {
+				if (wrkStr.contains("<CURRENT>")) {
+					wrkStr = wrkStr.replace("<CURRENT>", currentFileFolder);
+				}
+				outputFolder = new File(wrkStr);
+				if (!outputFolder.exists()) {
+					outputFolder = null;
+				}
+			}
+
+			xlsFile = File.createTempFile("XTeaEditor_" + res.getString("FieldKubunValuesList"), ".xlsx", outputFolder);
+			if (outputFolder == null) {
+				xlsFile.deleteOnExit();
+			}
+			xlsFileName = xlsFile.getPath();
+			fileOutputStream = new FileOutputStream(xlsFileName);
+
+			currentRowNumber++;
+			XSSFRow rowCaption = workSheet.createRow(currentRowNumber);
+			XSSFCell cell = rowCaption.createCell(0);
+			cell.setCellStyle(style);
+			cell.setCellValue(new XSSFRichTextString("No."));
+			workSheet.setColumnWidth(0, 1200);
+			cell = rowCaption.createCell(1);
+			cell.setCellStyle(style);
+			cell.setCellValue(new XSSFRichTextString(res.getString("TableID")));
+			workSheet.setColumnWidth(1, 5000);
+			cell = rowCaption.createCell(2);
+			cell.setCellStyle(style);
+			cell.setCellValue(new XSSFRichTextString(res.getString("TableName")));
+			workSheet.setColumnWidth(2, 6000);
+			cell = rowCaption.createCell(3);
+			cell.setCellStyle(style);
+			cell.setCellValue(new XSSFRichTextString(res.getString("FieldID")));
+			workSheet.setColumnWidth(3, 5500);
+			cell = rowCaption.createCell(4);
+			cell.setCellStyle(style);
+			cell.setCellValue(new XSSFRichTextString(res.getString("FieldName")));
+			workSheet.setColumnWidth(4, 5500);
+			cell = rowCaption.createCell(5);
+			cell.setCellStyle(style);
+			cell.setCellValue(new XSSFRichTextString(res.getString("FieldKubunID")));
+			workSheet.setColumnWidth(5, 5500);
+			cell = rowCaption.createCell(6);
+			cell.setCellStyle(style);
+			cell.setCellValue(new XSSFRichTextString(res.getString("FieldKubunValues")));
+			workSheet.setColumnWidth(6, 6000);
+
+			try {
+
+				systemKubunTableID = systemNode.getElement().getAttribute("UserVariantsTable");
+				MainTreeNode tableNode = getSpecificXETreeNode("Table", systemKubunTableID);
+				connection = databaseConnList.get(databaseIDList.indexOf(tableNode.getElement().getAttribute("DB")));
+				if (connection != null && !connection.isClosed()) {
+
+					NodeList elementList = domDocument.getElementsByTagName("System");
+					org.w3c.dom.Element systemElement = (org.w3c.dom.Element)elementList.item(0);
+					tableList = systemElement.getElementsByTagName("Table");
+					SortableDomElementListModel sortingList1 = getSortedListModel(tableList, "ID");
+				    for (int i = 0; i < sortingList1.getSize(); i++) {
+				        tableElement = (org.w3c.dom.Element)sortingList1.getElementAt(i);
+						if (tableElement.getAttribute("ModuleID").equals("")) {
+							tableID = tableElement.getAttribute("ID");
+						} else {
+							tableID = tableElement.getAttribute("ModuleID");
+						}
+						fieldList = tableElement.getElementsByTagName("Field");
+						SortableDomElementListModel sortingList2 = getSortedListModel(fieldList, "Order");
+					    for (int j = 0; j < sortingList2.getSize(); j++) {
+							fieldElement = (org.w3c.dom.Element)sortingList2.getElementAt(j);
+							typeOptionList = getOptionList(fieldElement.getAttribute("TypeOptions"));
+
+							kubunFieldID = getOptionValueWithKeyword(fieldElement.getAttribute("TypeOptions"), "KUBUN");
+							if (!kubunFieldID.equals("")) {
+								currentRowNumber++;
+								XSSFRow rowData = workSheet.createRow(currentRowNumber);
+								cell = rowData.createCell(0);
+								cell.setCellStyle(style);
+								cell.setCellValue(currentRowNumber);
+								cell = rowData.createCell(1);
+								cell.setCellStyle(style);
+								cell.setCellValue(new XSSFRichTextString(tableID));
+								cell = rowData.createCell(2);
+								cell.setCellStyle(style);
+								cell.setCellValue(new XSSFRichTextString(tableElement.getAttribute("Name")));
+								cell = rowData.createCell(3);
+								cell.setCellStyle(style);
+								if (typeOptionList.contains("VIRTUAL")) {
+									cell.setCellValue(new XSSFRichTextString("("+fieldElement.getAttribute("ID")+")"));
+								} else {
+									cell.setCellValue(new XSSFRichTextString(fieldElement.getAttribute("ID")));
+								}
+								cell = rowData.createCell(4);
+								cell.setCellStyle(style);
+								cell.setCellValue(new XSSFRichTextString(fieldElement.getAttribute("Name")));
+								cell = rowData.createCell(5);
+								cell.setCellStyle(style);
+								cell.setCellValue(new XSSFRichTextString(kubunFieldID));
+
+								count = 0;
+								buf1 = new StringBuffer();
+								buf2 = new StringBuffer();
+
+								buf1.append("select * from ");
+								buf1.append(systemKubunTableID);
+								buf1.append(" where IDUSERKUBUN = '");
+								buf1.append(kubunFieldID);
+								buf1.append("' order by SQLIST");
+								statement = connection.createStatement();
+								result = statement.executeQuery(buf1.toString());
+								while (result.next()) {
+									if (count > 0) {
+										buf2.append("\n");
+									}
+									buf2.append(result.getString("KBUSERKUBUN").trim());
+									buf2.append(":");
+									buf2.append(result.getString("TXUSERKUBUN").trim());
+									count++;
+								}
+								cell = rowData.createCell(6);
+								cell.setCellStyle(styleWrap);
+								cell.setCellValue(new XSSFRichTextString(buf2.toString()));
+								int height = count * 300;
+								rowData.setHeight((short)height);
+							}
+						}
+					}
+				}
+
+			} catch (SQLException ex) {
+				ex.printStackTrace();
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			} finally {
+				try {
+					if (result != null) {
+						result.close();
+					}
+					if (statement != null) {
+						statement.close();
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			workBook.write(fileOutputStream);
+			fileOutputStream.close();
+
+		} catch (Exception ex1) {
+			JOptionPane.showMessageDialog(null, res.getString("XLSErrorMessage"));
+			ex1.printStackTrace(exceptionStream);
+			try {
+				fileOutputStream.close();
+			} catch (Exception ex2) {
+				ex2.printStackTrace(exceptionStream);
+			}
+
+		} finally {
+			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+		}
+
+		return xlsFile.toURI();
+	}
+
 	private URI getExcellBookURI() {
 		File xlsFile = null;
 		String xlsFileName = "";
@@ -42368,7 +42620,7 @@ public class Editor extends JFrame {
 			}
 		} catch (SQLException e1) {
 			jTextAreaTableDataMessages.setText("SQLException : "+ e1.getMessage() + "\nSQL: " + sql);
-			validateConnectionToShowMessage(connection);
+			//validateConnectionToShowMessage(connection);
 		} finally {
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
@@ -42475,7 +42727,7 @@ public class Editor extends JFrame {
 			}
 		} catch (SQLException e1) {
 			jTextAreaTableDataMessages.setText("SQLException : "+ e1.getMessage() + "\nSQL: " + sql);
-			validateConnectionToShowMessage(connection);
+			//validateConnectionToShowMessage(connection);
 		} finally {
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
@@ -42545,7 +42797,7 @@ public class Editor extends JFrame {
 				jButtonTableDataSelect.doClick();
 			} catch (SQLException e1) {
 				jTextAreaTableDataMessages.setText("SQLException : "+ e1.getMessage() + "\nSQL: " + sql);
-				validateConnectionToShowMessage(connection);
+				//validateConnectionToShowMessage(connection);
 			} finally {
 				setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			}
@@ -42575,7 +42827,7 @@ public class Editor extends JFrame {
 			jTextAreaTableDataMessages.setText(res.getString("DataUtilityMessage7"));
 		} catch (SQLException e1) {
 			jTextAreaTableDataMessages.setText("SQLException : "+ e1.getMessage());
-			validateConnectionToShowMessage(connection);
+			//validateConnectionToShowMessage(connection);
 		} finally {
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
@@ -48556,6 +48808,16 @@ class Editor_jMenuItemToolIdLabelMap_actionAdapter implements java.awt.event.Act
 	}
 	public void actionPerformed(ActionEvent e) {
 		adaptee.jMenuItemToolIdLabelMap_actionPerformed(e);
+	}
+}
+
+class Editor_jMenuItemToolCodeValuesList_actionAdapter implements java.awt.event.ActionListener {
+	Editor adaptee;
+	Editor_jMenuItemToolCodeValuesList_actionAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jMenuItemToolCodeValuesList_actionPerformed(e);
 	}
 }
 
