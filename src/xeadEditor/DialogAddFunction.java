@@ -55,7 +55,7 @@ public class DialogAddFunction extends JDialog {
 	private JLabel jLabelID = new JLabel();
 	private LimitSizeTextField jTextFieldID = new LimitSizeTextField();
 	private JLabel jLabelType = new JLabel();
-	private JComboBox jComboBoxType = new JComboBox();
+	private JComboBox<ComboBoxItem> jComboBoxType = new JComboBox<ComboBoxItem>();
 	private JTextField jTextFieldType = new JTextField();
 	private Insets defaultMargin = null;
 	private JLabel jLabelName = new JLabel();

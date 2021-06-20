@@ -64,7 +64,7 @@ public class DialogImportModel extends JDialog {
 	private TableModelReadOnlyList tableModelElementListFrom = new TableModelReadOnlyList();
 	private JTable jTableElementListFrom = new JTable(tableModelElementListFrom);
 	private JLabel jLabelSubsystemFrom = new JLabel();
-	private JComboBox jComboBoxSubsystemFrom = new JComboBox();
+	private JComboBox<String> jComboBoxSubsystemFrom = new JComboBox<String>();
 	private JCheckBox jCheckBoxOverrideID = new JCheckBox();
 	private JScrollPane jScrollPaneMessage = new JScrollPane();
 	private JTextArea jTextAreaMessage = new JTextArea();

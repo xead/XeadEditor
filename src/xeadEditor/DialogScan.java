@@ -83,7 +83,7 @@ public class DialogScan extends JDialog {
 	private JCheckBox jCheckBoxSubsystem = new JCheckBox();
 	private JCheckBox jCheckBoxTable = new JCheckBox();
 	private JCheckBox jCheckBoxFunction = new JCheckBox();
-	private JComboBox jComboBoxSubsystems = new JComboBox();
+	private JComboBox<String> jComboBoxSubsystems = new JComboBox<String>();
 	private JCheckBox jCheckBoxAll = new JCheckBox();
 	private ArrayList<MainTreeNode> subsystemNodeList;
 	private TableModelScanResult tableModelScanResult = new TableModelScanResult();

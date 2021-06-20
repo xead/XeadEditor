@@ -84,9 +84,9 @@ public class DialogImport extends JDialog {
 	private JPanel jPanelImportFromTop = new JPanel();
 	private JPanel jPanelImportIntoTop = new JPanel();
 	private JLabel jLabelSubsystemFrom = new JLabel();
-	private JComboBox jComboBoxSubsystemFrom = new JComboBox();
+	private JComboBox<String> jComboBoxSubsystemFrom = new JComboBox<String>();
 	private JLabel jLabelSubsystemInto = new JLabel();
-	private JComboBox jComboBoxSubsystemInto = new JComboBox();
+	private JComboBox<String> jComboBoxSubsystemInto = new JComboBox<String>();
 	private JScrollPane jScrollPaneMessage = new JScrollPane();
 	private JTextArea jTextAreaMessage = new JTextArea();
 	private JLabel jLabelFileNameFrom = new JLabel();

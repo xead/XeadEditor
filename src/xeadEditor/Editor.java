@@ -51,6 +51,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.*;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.script.Compilable;
@@ -77,9 +78,10 @@ import org.apache.poi.xssf.usermodel.*;
 import org.apache.xerces.parsers.*;
 import org.w3c.dom.*;
 import org.xml.sax.*;
-
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
+//import com.sun.org.apache.xml.internal.serialize.OutputFormat;
+//import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
+import org.w3c.dom.bootstrap.DOMImplementationRegistry;
+import org.w3c.dom.ls.*;
 
 public class Editor extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -302,6 +304,7 @@ public class Editor extends JFrame {
 	private JMenuItem jMenuItemComponentToListTableData = new JMenuItem();
 	private JMenuItem jMenuItemComponentToListExcel = new JMenuItem();
 	private JMenuItem jMenuItemComponentToShowTips = new JMenuItem();
+	private JMenuItem jMenuItemComponentToRenameTableFieldID = new JMenuItem();
 	private JMenu jMenuComponentToImportLayout = new JMenu();
 	private JMenuItem jMenuItemComponentToCheckLayout = new JMenuItem();
 	private JMenuItem jMenuItemComponentToEditTableScript = new JMenuItem();
@@ -440,7 +443,7 @@ public class Editor extends JFrame {
 	private JLabel jLabelSystemDateFormat = new JLabel();
 	private JLabel jLabelSystemSmtpAdminEmail = new JLabel();
 	private JTextField jTextFieldSystemSmtpAdminEmail = new JTextField();
-	private JComboBox jComboBoxSystemDateFormat = new JComboBox();
+	private JComboBox<String> jComboBoxSystemDateFormat = new JComboBox<String>();
 	private ArrayList<String> listSystemDateFormat = new ArrayList<String>();
 	private JLabel jLabelSystemFont = new JLabel();
 	private JTextField jTextFieldSystemFont = new JTextField();
@@ -665,7 +668,7 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldTableID = new JTextField();
 	private Editor_KanjiTextField jTextFieldTableName = new Editor_KanjiTextField();
 	private JLabel jLabelTableDB = new JLabel();
-	private JComboBox jComboBoxTableDB = new JComboBox();
+	private JComboBox<String> jComboBoxTableDB = new JComboBox<String>();
 //	private JCheckBox jCheckBoxTableReferCheck = new JCheckBox();
 	private JLabel jLabelTableModuleID = new JLabel();
 	private JTextField jTextFieldTableModuleID = new JTextField();
@@ -711,13 +714,12 @@ public class Editor extends JFrame {
 	private Editor_KanjiTextField jTextFieldTableFieldColumnName = new Editor_KanjiTextField();
 	private JCheckBox jCheckBoxTableFieldPhysical = new JCheckBox();
 	private JLabel jLabelTableFieldType = new JLabel();
-	public JComboBox jComboBoxTableFieldType = new JComboBox();
+	public JComboBox<String> jComboBoxTableFieldType = new JComboBox<String>();
 	private JLabel jLabelTableFieldSize = new JLabel();
 	private SpinnerNumberModel spinnerNumberModelTableFieldSize = new SpinnerNumberModel(5, 1, 500, 1);
 	private JSpinner jSpinnerTableFieldSize = new JSpinner(spinnerNumberModelTableFieldSize);
 	private JCheckBox jCheckBoxTableFieldAcceptMinus = new JCheckBox();
-	private JComboBox jComboBoxTableFieldEditType = new JComboBox();
-	//private JLabel jLabelTableFieldDecimal = new JLabel();
+	private JComboBox<String> jComboBoxTableFieldEditType = new JComboBox<String>();
 	private SpinnerNumberModel spinnerNumberModelTableFieldDecimal = new SpinnerNumberModel(0, 0, 10, 1);
 	private JSpinner jSpinnerTableFieldDecimal = new JSpinner(spinnerNumberModelTableFieldDecimal);
 	private JCheckBox jCheckBoxTableFieldNullable = new JCheckBox();
@@ -788,7 +790,7 @@ public class Editor extends JFrame {
 	private JCheckBox jCheckBoxTableReferOptional = new JCheckBox();
 	private JLabel jLabelTableReferFields = new JLabel();
 	private DefaultListModel listModelTableReferFields = new DefaultListModel();
-	private JList jListTableReferFields = new JList(listModelTableReferFields);
+	private JList<String> jListTableReferFields = new JList<String>(listModelTableReferFields);
 	private JScrollPane jScrollPaneTableReferFields = new JScrollPane();
 	private boolean isJoinedByOtherTable = false;
 	//
@@ -810,7 +812,7 @@ public class Editor extends JFrame {
 	private JCheckBox jCheckBoxTableScriptEventPrimaryAC = new JCheckBox();
 	private JCheckBox jCheckBoxTableScriptEventPrimaryAU = new JCheckBox();
 	private JCheckBox jCheckBoxTableScriptEventPrimaryAD = new JCheckBox();
-	private JComboBox jComboBoxTableScriptEventRefer = new JComboBox();
+	private JComboBox<String> jComboBoxTableScriptEventRefer = new JComboBox<String>();
 	private ArrayList<String> listTableScriptEventRefer = new ArrayList<String>();
 	private JLabel jLabelTableScriptName = new JLabel();
 	private Editor_KanjiTextField jTextFieldTableScriptName = new Editor_KanjiTextField();
@@ -947,7 +949,7 @@ public class Editor extends JFrame {
 	public JTextArea jTextAreaFunction000Script = new JTextArea();
 	private javax.swing.undo.UndoManager jTextAreaFunction000ScriptUndoManager = new javax.swing.undo.UndoManager();
 	private JLabel jLabelFunction000JumpTo = new JLabel();
-	private JComboBox jComboBoxFunction000JumpTo = new JComboBox();
+	private JComboBox<String> jComboBoxFunction000JumpTo = new JComboBox<String>();
 	private ArrayList<Integer> jumpPositionList = new ArrayList<Integer>();
 	public JPanel jPanelFunction000ScriptEditTool = new JPanel();
 	private JLabel jLabelFunction000ScriptEditToolScan = new JLabel();
@@ -1089,7 +1091,7 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction100FilterMargin = new JLabel();
 	private JTextField jTextFieldFunction100FilterMargin = new JTextField();
 	private JLabel jLabelFunction100FilterEditableOptions = new JLabel();
-	private JComboBox jComboBoxFunction100FilterEditableOptions = new JComboBox();
+	private JComboBox<String> jComboBoxFunction100FilterEditableOptions = new JComboBox<String>();
 	private JLabel jLabelFunction100FilterOption = new JLabel();
 	private JRadioButton jRadioButtonFunction100FilterOptionEQ = new JRadioButton();
 	private JRadioButton jRadioButtonFunction100FilterOptionSCAN = new JRadioButton();
@@ -1173,7 +1175,7 @@ public class Editor extends JFrame {
 	private JSpinner jSpinnerFunction100ButtonKey = new JSpinner(spinnerNumberModelFunction100ButtonKey);
 	private JLabel jLabelFunction100ButtonCaption = new JLabel();
 	private Editor_KanjiTextField jTextFieldFunction100ButtonCaption = new Editor_KanjiTextField();
-	private JComboBox jComboBoxFunction100ButtonAction = new JComboBox();
+	private JComboBox<String> jComboBoxFunction100ButtonAction = new JComboBox<String>();
 	private JLabel jLabelFunction100ButtonAction = new JLabel();
 	private JLabel jLabelFunction100ButtonActionCallFunction = new JLabel();
 	private JTextField jTextFieldFunction100ButtonActionCallFunctionID = new JTextField();
@@ -1247,7 +1249,7 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction110FilterMargin = new JLabel();
 	private JTextField jTextFieldFunction110FilterMargin = new JTextField();
 	private JLabel jLabelFunction110FilterEditableOptions = new JLabel();
-	private JComboBox jComboBoxFunction110FilterEditableOptions = new JComboBox();
+	private JComboBox<String> jComboBoxFunction110FilterEditableOptions = new JComboBox<String>();
 	private JLabel jLabelFunction110FilterOption = new JLabel();
 	private JRadioButton jRadioButtonFunction110FilterOptionEQ = new JRadioButton();
 	private JRadioButton jRadioButtonFunction110FilterOptionSCAN = new JRadioButton();
@@ -1353,7 +1355,7 @@ public class Editor extends JFrame {
 	private JRadioButton jRadioButtonFunction110BatchFieldLayoutOptionHorizontal = new JRadioButton();
 	private ButtonGroup buttonGroupFunction110BatchFieldLayoutOption = new ButtonGroup();
 	private JLabel jLabelFunction110BatchFieldAlignment = new JLabel();
-	private JComboBox jComboBoxFunction110BatchFieldAlignment = new JComboBox();
+	private JComboBox<String> jComboBoxFunction110BatchFieldAlignment = new JComboBox<String>();
 	private JLabel jLabelFunction110BatchFieldWidth = new JLabel();
 	private JTextField jTextFieldFunction110BatchFieldWidth = new JTextField();
 	private JLabel jLabelFunction110BatchFieldRows = new JLabel();
@@ -1398,7 +1400,7 @@ public class Editor extends JFrame {
 	private JSpinner jSpinnerFunction110ButtonKey = new JSpinner(spinnerNumberModelFunction110ButtonKey);
 	private JLabel jLabelFunction110ButtonCaption = new JLabel();
 	private Editor_KanjiTextField jTextFieldFunction110ButtonCaption = new Editor_KanjiTextField();
-	private JComboBox jComboBoxFunction110ButtonAction = new JComboBox();
+	private JComboBox<String> jComboBoxFunction110ButtonAction = new JComboBox<String>();
 	private JLabel jLabelFunction110ButtonAction = new JLabel();
 	private JLabel jLabelFunction110ButtonPositionComment = new JLabel();
 	private JScrollPane jScrollPaneFunction110UsageList = new JScrollPane();
@@ -1473,7 +1475,7 @@ public class Editor extends JFrame {
 	private JRadioButton jRadioButtonFunction200FieldLayoutOptionHorizontal = new JRadioButton();
 	private ButtonGroup buttonGroupFunction200FieldLayoutOption = new ButtonGroup();
 	private JLabel jLabelFunction200FieldAlignment = new JLabel();
-	private JComboBox jComboBoxFunction200FieldAlignment = new JComboBox();
+	private JComboBox<String> jComboBoxFunction200FieldAlignment = new JComboBox<String>();
 	private JLabel jLabelFunction200FieldWidth = new JLabel();
 	private JTextField jTextFieldFunction200FieldWidth = new JTextField();
 	private JLabel jLabelFunction200FieldRows = new JLabel();
@@ -1534,7 +1536,7 @@ public class Editor extends JFrame {
 	private JRadioButton jRadioButtonFunction200TabFieldLayoutOptionHorizontal = new JRadioButton();
 	private ButtonGroup buttonGroupFunction200TabFieldLayoutOption = new ButtonGroup();
 	private JLabel jLabelFunction200TabFieldAlignment = new JLabel();
-	private JComboBox jComboBoxFunction200TabFieldAlignment = new JComboBox();
+	private JComboBox<String> jComboBoxFunction200TabFieldAlignment = new JComboBox<String>();
 	private JLabel jLabelFunction200TabFieldWidth = new JLabel();
 	private JTextField jTextFieldFunction200TabFieldWidth = new JTextField();
 	private JLabel jLabelFunction200TabFieldRows = new JLabel();
@@ -1578,7 +1580,7 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction200ButtonCaption = new JLabel();
 	private Editor_KanjiTextField jTextFieldFunction200ButtonCaption = new Editor_KanjiTextField();
 	private JLabel jLabelFunction200ButtonAction = new JLabel();
-	private JComboBox jComboBoxFunction200ButtonAction = new JComboBox();
+	private JComboBox<String> jComboBoxFunction200ButtonAction = new JComboBox<String>();
 	private JLabel jLabelFunction200ButtonActionCallFunction = new JLabel();
 	private JTextField jTextFieldFunction200ButtonActionCallFunctionID = new JTextField();
 	private JTextField jTextFieldFunction200ButtonActionCallFunctionName = new JTextField();
@@ -1606,9 +1608,9 @@ public class Editor extends JFrame {
 	private JButton jButtonFunction290TableKeyFieldsEdit = new JButton();
 	private org.w3c.dom.Element function290TableElement;
 	private JLabel jLabelFunction290PageSize = new JLabel();
-	private JComboBox jComboBoxFunction290PageSize = new JComboBox();
+	private JComboBox<String> jComboBoxFunction290PageSize = new JComboBox<String>();
 	private JLabel jLabelFunction290Direction = new JLabel();
-	private JComboBox jComboBoxFunction290Direction = new JComboBox();
+	private JComboBox<String> jComboBoxFunction290Direction = new JComboBox<String>();
 	private JLabel jLabelFunction290Margins = new JLabel();
 	private JTextField jTextFieldFunction290Margins = new JTextField();
 	private JCheckBox jCheckBoxFunction290WithPageNumber = new JCheckBox();
@@ -1624,9 +1626,9 @@ public class Editor extends JFrame {
 	private JScrollPane jScrollPaneFunction290PhraseDefinition = new JScrollPane();
 	private JPanel jPanelFunction290PhraseDefinition = new JPanel();
 	private JLabel jLabelFunction290PhraseBlockType = new JLabel();
-	private JComboBox jComboBoxFunction290PhraseBlockType = new JComboBox();
+	private JComboBox<String> jComboBoxFunction290PhraseBlockType = new JComboBox<String>();
 	private JLabel jLabelFunction290PhraseAlignment = new JLabel();
-	private JComboBox jComboBoxFunction290PhraseAlignment = new JComboBox();
+	private JComboBox<String> jComboBoxFunction290PhraseAlignment = new JComboBox<String>();
 	private JLabel jLabelFunction290PhraseMargin = new JLabel();
 	private JTextField jTextFieldFunction290PhraseMarginLeft = new JTextField();
 	private JTextField jTextFieldFunction290PhraseMarginRight = new JTextField();
@@ -1637,12 +1639,12 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction290PhraseValueKeywords = new JLabel();
 	private JTextArea jTextAreaFunction290PhraseValueKeywords = new JTextArea();
 	private JLabel jLabelFunction290PhraseFontName = new JLabel();
-	private JComboBox jComboBoxFunction290PhraseFontName = new JComboBox();
+	private JComboBox<String> jComboBoxFunction290PhraseFontName = new JComboBox<String>();
 	private JLabel jLabelFunction290PhraseFontSize = new JLabel();
 	private SpinnerNumberModel spinnerNumberModelFunction290PhraseFontSize = new SpinnerNumberModel(12, 8, 40, 1);
 	private JSpinner jSpinnerFunction290PhraseFontSize = new JSpinner(spinnerNumberModelFunction290PhraseFontSize);
 	private JLabel jLabelFunction290PhraseFontStyle = new JLabel();
-	private JComboBox jComboBoxFunction290PhraseFontStyle = new JComboBox();
+	private JComboBox<String> jComboBoxFunction290PhraseFontStyle = new JComboBox<String>();
 	private NodeList function290ReferList;
 	private JScrollPane jScrollPaneFunction290UsageList = new JScrollPane();
 	private TableModelReadOnlyList tableModelFunction290UsageList = new TableModelReadOnlyList();
@@ -1732,7 +1734,7 @@ public class Editor extends JFrame {
 	private JRadioButton jRadioButtonFunction300HeaderFieldLayoutOptionHorizontal = new JRadioButton();
 	private ButtonGroup buttonGroupFunction300HeaderFieldLayoutOption = new ButtonGroup();
 	private JLabel jLabelFunction300HeaderFieldAlignment = new JLabel();
-	private JComboBox jComboBoxFunction300HeaderFieldAlignment = new JComboBox();
+	private JComboBox<String> jComboBoxFunction300HeaderFieldAlignment = new JComboBox<String>();
 	private JLabel jLabelFunction300HeaderFieldWidth = new JLabel();
 	private JTextField jTextFieldFunction300HeaderFieldWidth = new JTextField();
 	private JLabel jLabelFunction300HeaderFieldRows = new JLabel();
@@ -1853,7 +1855,7 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction300DetailFilterMargin = new JLabel();
 	private JTextField jTextFieldFunction300DetailFilterMargin = new JTextField();
 	private JLabel jLabelFunction300DetailFilterEditableOptions = new JLabel();
-	private JComboBox jComboBoxFunction300DetailFilterEditableOptions = new JComboBox();
+	private JComboBox<String> jComboBoxFunction300DetailFilterEditableOptions = new JComboBox<String>();
 	private JLabel jLabelFunction300DetailFilterOption = new JLabel();
 	private JRadioButton jRadioButtonFunction300DetailFilterOptionEQ = new JRadioButton();
 	private JRadioButton jRadioButtonFunction300DetailFilterOptionSCAN = new JRadioButton();
@@ -1902,7 +1904,7 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction300DetailButtonCaption = new JLabel();
 	private Editor_KanjiTextField jTextFieldFunction300DetailButtonCaption = new Editor_KanjiTextField();
 	private JLabel jLabelFunction300DetailButtonAction = new JLabel();
-	private JComboBox jComboBoxFunction300DetailButtonAction = new JComboBox();
+	private JComboBox<String> jComboBoxFunction300DetailButtonAction = new JComboBox<String>();
 	private JLabel jLabelFunction300DetailButtonActionCallFunction = new JLabel();
 	private JTextField jTextFieldFunction300DetailButtonActionCallFunctionID = new JTextField();
 	private JTextField jTextFieldFunction300DetailButtonActionCallFunctionName = new JTextField();
@@ -1980,7 +1982,7 @@ public class Editor extends JFrame {
 	private JRadioButton jRadioButtonFunction310HeaderFieldLayoutOptionHorizontal = new JRadioButton();
 	private ButtonGroup buttonGroupFunction310HeaderFieldLayoutOption = new ButtonGroup();
 	private JLabel jLabelFunction310HeaderFieldAlignment = new JLabel();
-	private JComboBox jComboBoxFunction310HeaderFieldAlignment = new JComboBox();
+	private JComboBox<String> jComboBoxFunction310HeaderFieldAlignment = new JComboBox<String>();
 	private JLabel jLabelFunction310HeaderFieldWidth = new JLabel();
 	private JTextField jTextFieldFunction310HeaderFieldWidth = new JTextField();
 	private JLabel jLabelFunction310HeaderFieldRows = new JLabel();
@@ -2071,7 +2073,7 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction310ButtonCaption = new JLabel();
 	private Editor_KanjiTextField jTextFieldFunction310ButtonCaption = new Editor_KanjiTextField();
 	private JLabel jLabelFunction310ButtonAction = new JLabel();
-	private JComboBox jComboBoxFunction310ButtonAction = new JComboBox();
+	private JComboBox<String> jComboBoxFunction310ButtonAction = new JComboBox<String>();
 	private JLabel jLabelFunction310ButtonPositionComment = new JLabel();
 	private JLabel jLabelFunction310ButtonActionCallFunction = new JLabel();
 	private JTextField jTextFieldFunction310ButtonActionCallFunctionID = new JTextField();
@@ -2110,14 +2112,14 @@ public class Editor extends JFrame {
 	private JButton jButtonFunction390HeaderTableKeyFieldsEdit = new JButton();
 	private org.w3c.dom.Element function390HeaderTableElement;
 	private JLabel jLabelFunction390PageSize = new JLabel();
-	private JComboBox jComboBoxFunction390PageSize = new JComboBox();
+	private JComboBox<String> jComboBoxFunction390PageSize = new JComboBox<String>();
 	private JLabel jLabelFunction390Direction = new JLabel();
-	private JComboBox jComboBoxFunction390Direction = new JComboBox();
+	private JComboBox<String> jComboBoxFunction390Direction = new JComboBox<String>();
 	private JLabel jLabelFunction390Margins = new JLabel();
 	private JTextField jTextFieldFunction390Margins = new JTextField();
 	private JCheckBox jCheckBoxFunction390WithPageNumber = new JCheckBox();
 	private JLabel jLabelFunction390TableFontName = new JLabel();
-	private JComboBox jComboBoxFunction390TableFontName = new JComboBox();
+	private JComboBox<String> jComboBoxFunction390TableFontName = new JComboBox<String>();
 	private JLabel jLabelFunction390TableFontSize = new JLabel();
 	private SpinnerNumberModel spinnerNumberModelFunction390TableFontSize = new SpinnerNumberModel(12, 8, 40, 1);
 	private JSpinner jSpinnerFunction390TableFontSize = new JSpinner(spinnerNumberModelFunction390TableFontSize);
@@ -2143,9 +2145,9 @@ public class Editor extends JFrame {
 	private JScrollPane jScrollPaneFunction390HeaderPhraseDefinition = new JScrollPane();
 	private JPanel jPanelFunction390HeaderPhraseDefinition = new JPanel();
 	private JLabel jLabelFunction390HeaderPhraseBlockType = new JLabel();
-	private JComboBox jComboBoxFunction390HeaderPhraseBlockType = new JComboBox();
+	private JComboBox<String> jComboBoxFunction390HeaderPhraseBlockType = new JComboBox<String>();
 	private JLabel jLabelFunction390HeaderPhraseAlignment = new JLabel();
-	private JComboBox jComboBoxFunction390HeaderPhraseAlignment = new JComboBox();
+	private JComboBox<String> jComboBoxFunction390HeaderPhraseAlignment = new JComboBox<String>();
 	private JLabel jLabelFunction390HeaderPhraseMargin = new JLabel();
 	private JTextField jTextFieldFunction390HeaderPhraseMarginLeft = new JTextField();
 	private JTextField jTextFieldFunction390HeaderPhraseMarginRight = new JTextField();
@@ -2154,12 +2156,12 @@ public class Editor extends JFrame {
 	private JLabel jLabelFunction390HeaderPhraseValueKeywords = new JLabel();
 	private JTextArea jTextAreaFunction390HeaderPhraseValueKeywords = new JTextArea();
 	private JLabel jLabelFunction390HeaderPhraseFontName = new JLabel();
-	private JComboBox jComboBoxFunction390HeaderPhraseFontName = new JComboBox();
+	private JComboBox<String> jComboBoxFunction390HeaderPhraseFontName = new JComboBox<String>();
 	private JLabel jLabelFunction390HeaderPhraseFontSize = new JLabel();
 	private SpinnerNumberModel spinnerNumberModelFunction390HeaderPhraseFontSize = new SpinnerNumberModel(12, 8, 40, 1);
 	private JSpinner jSpinnerFunction390HeaderPhraseFontSize = new JSpinner(spinnerNumberModelFunction390HeaderPhraseFontSize);
 	private JLabel jLabelFunction390HeaderPhraseFontStyle = new JLabel();
-	private JComboBox jComboBoxFunction390HeaderPhraseFontStyle = new JComboBox();
+	private JComboBox<String> jComboBoxFunction390HeaderPhraseFontStyle = new JComboBox<String>();
 	private JLabel jLabelFunction390HeaderPhraseSpacingAfter = new JLabel();
 	private JTextField jTextFieldFunction390HeaderPhraseSpacingAfter = new JTextField();
 	//
@@ -2170,7 +2172,7 @@ public class Editor extends JFrame {
 	private SpinnerNumberModel spinnerNumberModelFunction390CaptionFontSize = new SpinnerNumberModel(12, 8, 40, 1);
 	private JSpinner jSpinnerFunction390CaptionFontSize = new JSpinner(spinnerNumberModelFunction390CaptionFontSize);
 	private JLabel jLabelFunction390CaptionFontStyle = new JLabel();
-	private JComboBox jComboBoxFunction390CaptionFontStyle = new JComboBox();
+	private JComboBox<String> jComboBoxFunction390CaptionFontStyle = new JComboBox<String>();
 	private JLabel jLabelFunction390DetailTableName = new JLabel();
 	private JTextField jTextFieldFunction390DetailTableName = new JTextField();
 	private JButton jButtonFunction390DetailTableKeyFieldsEdit = new JButton();
@@ -2208,7 +2210,7 @@ public class Editor extends JFrame {
 	private JTextField jTextFieldFunction390DetailFieldWidth = new JTextField();
 	private JLabel jLabelFunction390DetailFieldWidthPercentMark = new JLabel();
 	private JLabel jLabelFunction390DetailFieldAlignment = new JLabel();
-	private JComboBox jComboBoxFunction390DetailFieldAlignment = new JComboBox();
+	private JComboBox<String> jComboBoxFunction390DetailFieldAlignment = new JComboBox<String>();
 	private JLabel jLabelFunction390DetailFieldCaptionOption = new JLabel();
 	private JRadioButton jRadioButtonFunction390DetailFieldCaptionOptionName = new JRadioButton();
 	private JRadioButton jRadioButtonFunction390DetailFieldCaptionOptionValue = new JRadioButton();
@@ -2276,8 +2278,8 @@ public class Editor extends JFrame {
 			////////////////////////
 			String version = System.getProperty("java.version");
 			if (!version.startsWith("1.7.") && !version.startsWith("1.8.")) {
-				JOptionPane.showMessageDialog(null, res.getString("JavaVersionError1") + version + res.getString("JavaVersionError2"));
-				System.exit(0);
+				//JOptionPane.showMessageDialog(null, res.getString("JavaVersionError1") + version + res.getString("JavaVersionError2"));
+				//System.exit(0);
 			}
 
 			///////////////////////////////////////////
@@ -3272,6 +3274,7 @@ public class Editor extends JFrame {
 		jMenuItemComponentToListTableData.setText(res.getString("List"));
 		jMenuItemComponentToListExcel.setText(res.getString("DataOutput"));
 		jMenuItemComponentToShowTips.setText(res.getString("TipsToEdit"));
+		jMenuItemComponentToRenameTableFieldID.setText(res.getString("Rename"));
 		jMenuComponentToImportLayout.setText(res.getString("ImportLayout"));
 		jMenuItemComponentToCheckLayout.setText(res.getString("CheckLayout"));
 		jMenuItemComponentToEditTableScript.setText(res.getString("EditTableScript"));
@@ -3338,6 +3341,7 @@ public class Editor extends JFrame {
 		jMenuItemComponentToCopy.addActionListener(new Editor_jMenuItemComponentToCopy_actionAdapter(this));
 		jMenuItemComponentToPaste.addActionListener(new Editor_jMenuItemComponentToPaste_actionAdapter(this));
 		jMenuItemComponentToDelete.addActionListener(new Editor_jMenuItemComponentToDelete_actionAdapter(this));
+		jMenuItemComponentToRenameTableFieldID.addActionListener(new Editor_jMenuItemComponentToRenameTableFieldID_actionAdapter(this));
 		jMenuItemComponentToJump.addActionListener(new Editor_jMenuItemComponentToJump_actionAdapter(this));
 		jMenuItemComponentToListCsv.addActionListener(new Editor_jMenuItemComponentToListCsv_actionAdapter(this));
 		jMenuItemComponentToListTableData.addActionListener(new Editor_jMenuItemComponentToListTableData_actionAdapter(this));
@@ -4389,7 +4393,7 @@ public class Editor extends JFrame {
 		cellEditorLeft = new DefaultCellEditor(editFieldLeft);
 		cellEditorLeft.setClickCountToStart(1);
 		//
-		JComboBox jComboBox = new JComboBox();
+		JComboBox<String> jComboBox = new JComboBox<String>();
 		jComboBox.addItem("00");
 		jComboBox.addItem("01");
 		jComboBox.addItem("02");
@@ -4661,7 +4665,7 @@ public class Editor extends JFrame {
 		jPanelTableTop.add(jLabelTableUpdateCounter);
 		jPanelTableTop.add(jScrollPaneTableRemarks);
 		jPanelTableTop.add(jLabelTableRemarks);
-		//
+
 		jTabbedPaneTable.addChangeListener(new Editor_jTabbedPaneTable_changeAdapter(this));
 		jTabbedPaneTable.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jTabbedPaneTable.add(res.getString("Fields"), jSplitPaneTableField);
@@ -4676,7 +4680,7 @@ public class Editor extends JFrame {
 		jTabbedPaneTable.setIconAt(4, imageIconFunctionUsage);
 		jTabbedPaneTable.add(res.getString("Data"), jPanelTableData);
 		jTabbedPaneTable.setIconAt(5, imageIconTableEdit);
-		//
+
 		jScrollPaneTableFieldList.setBorder(null);
 		jScrollPaneTableFieldList.getViewport().add(jTableTableFieldList, null);
 		jScrollPaneTableFieldList.addMouseListener(new Editor_jScrollPaneTableFieldList_mouseAdapter(this));
@@ -4719,7 +4723,7 @@ public class Editor extends JFrame {
 		jTableTableFieldList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableTableFieldList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		//
+
 		jScrollPaneTableKeyList.setBorder(null);
 		jScrollPaneTableKeyList.getViewport().add(jTableTableKeyList, null);
 		jScrollPaneTableKeyList.addMouseListener(new Editor_jScrollPaneTableKeyList_mouseAdapter(this));
@@ -4749,7 +4753,7 @@ public class Editor extends JFrame {
 		jTableTableKeyList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableTableKeyList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		//
+
 		jScrollPaneTableReferList.setBorder(null);
 		jScrollPaneTableReferList.getViewport().add(jTableTableReferList, null);
 		jScrollPaneTableReferList.addMouseListener(new Editor_jScrollPaneTableReferList_mouseAdapter(this));
@@ -4793,7 +4797,7 @@ public class Editor extends JFrame {
 		jTableTableReferList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableTableReferList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		//
+
 		jScrollPaneTableScriptList.setBorder(null);
 		jScrollPaneTableScriptList.getViewport().add(jTableTableScriptList, null);
 		jScrollPaneTableScriptList.addMouseListener(new Editor_jScrollPaneTableScriptList_mouseAdapter(this));
@@ -4828,7 +4832,7 @@ public class Editor extends JFrame {
 		jTableTableScriptList.getTableHeader().setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		rendererTableHeader = (DefaultTableCellRenderer)jTableTableScriptList.getTableHeader().getDefaultRenderer();
 		rendererTableHeader.setHorizontalAlignment(SwingConstants.LEFT);
-		//
+
 		jScrollPaneTableUsageList.setBorder(null);
 		jScrollPaneTableUsageList.getViewport().add(jTableTableUsageList, null);
 		jTableTableUsageList.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
@@ -4872,11 +4876,11 @@ public class Editor extends JFrame {
 		jLabelTableFieldID.setText(res.getString("FieldID"));
 		jLabelTableFieldID.setBounds(new Rectangle(5, 9, 130, 28));
 		jTextFieldTableFieldID.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
-		jTextFieldTableFieldID.setBounds(new Rectangle(140, 9, 200, 28));
+		jTextFieldTableFieldID.setBounds(new Rectangle(140, 9, 220, 28));
 		jTextFieldTableFieldID.setEditable(false);
 		jCheckBoxTableFieldPhysical.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jCheckBoxTableFieldPhysical.setText(res.getString("PhysicalField"));
-		jCheckBoxTableFieldPhysical.setBounds(new Rectangle(342, 9, 158, 28));
+		jCheckBoxTableFieldPhysical.setBounds(new Rectangle(360, 9, 140, 28));
 		jLabelTableFieldType.setFont(new java.awt.Font(mainFontName, 0, MAIN_FONT_SIZE));
 		jLabelTableFieldType.setHorizontalAlignment(SwingConstants.RIGHT);
 		jLabelTableFieldType.setHorizontalTextPosition(SwingConstants.LEADING);
@@ -11616,19 +11620,22 @@ public class Editor extends JFrame {
 	
 	ArrayList<String> getOptionList(String options) {
 		ArrayList<String> typeOptionList = new ArrayList<String>();
+
+		int index = options.indexOf("VALUES(");
+		if (index > -1) {
+			int index2 = options.indexOf(")", index);
+			if (index2 > -1) {
+				String wrkStr = options.substring(index, index2+1);
+				typeOptionList.add(wrkStr);
+				options.replace(wrkStr+",", "").replace(wrkStr, "");
+			}
+		}
+
 		StringTokenizer workTokenizer = new StringTokenizer(options, ",");
 		while (workTokenizer.hasMoreTokens()) {
 			typeOptionList.add(workTokenizer.nextToken());
 		}
-		return typeOptionList;
-	}
-	
-	ArrayList<String> getOptionListWithSeparator(String options, String separator) {
-		ArrayList<String> typeOptionList = new ArrayList<String>();
-		StringTokenizer workTokenizer = new StringTokenizer(options, separator);
-		while (workTokenizer.hasMoreTokens()) {
-			typeOptionList.add(workTokenizer.nextToken());
-		}
+
 		return typeOptionList;
 	}
 	
@@ -11672,6 +11679,42 @@ public class Editor extends JFrame {
 			}
 		}
 		return value;
+	}
+	
+	String setOptionValueWithKeyword(String options, String keyword, String value) {
+		if (!keyword.equals("")) {
+			int pos1;
+			boolean contains = false;
+			String optionsProcessed = "";
+
+			ArrayList<String> typeOptionList = getOptionList(options);
+			for (int i = 0; i < typeOptionList.size(); i++) {
+				if (!optionsProcessed.equals("")) {
+					optionsProcessed = optionsProcessed + ",";
+				}
+
+				pos1 = typeOptionList.get(i).indexOf(keyword + "(");
+				if (pos1 == 0) {
+					contains = true;
+					optionsProcessed = optionsProcessed + keyword + "(" + value + ")";
+
+				} else {
+					optionsProcessed = optionsProcessed + typeOptionList.get(i);
+				}
+			}
+
+			if (!contains) {
+				if (!optionsProcessed.equals("")) {
+					optionsProcessed = optionsProcessed + ",";
+				}
+				optionsProcessed = optionsProcessed + keyword + "(" + value + ")";
+			}
+
+			return optionsProcessed;
+		
+		} else {
+			return options;
+		}
 	}
 	
 	String getIntegerFieldName(String tableID, String fieldID) {
@@ -11916,9 +11959,6 @@ public class Editor extends JFrame {
 	
 	public boolean isTableScriptUsingFunction(org.w3c.dom.Element element, String functionID) {
 		String wrkStr = substringLinesWithTokenOfEOL(element.getAttribute("Text"), "\n");
-//		wrkStr = removeCommentsFromScriptText(wrkStr).replaceAll(" ", "");
-//		if (wrkStr.contains("instance.callFunction('" + functionID + "')")
-//				|| wrkStr.contains("instance.functionID=='" + functionID + "'")) {
 		wrkStr = removeCommentsFromScriptText(wrkStr);
 		if (wrkStr.contains("'" + functionID + "'")) {
 			return true;
@@ -12977,13 +13017,47 @@ public class Editor extends JFrame {
 		//
 		return buf.toString();
 	}
+
+	private String replaceTableIdInOptions(String options, String tableID, String newTableID) {
+		int index = 0;
+		boolean isReplaced = false;
+		String wrkStr;
+		String tableExp = tableID + ".";
+		String newTableExp = newTableID + ".";
+
+		while (index != -1) {
+			index = options.indexOf(tableExp, index);
+			if (index == 0) {
+				options = newTableExp + options.substring(tableExp.length(), options.length());
+				isReplaced = true;
+			} else {
+				if (index != -1) {
+					wrkStr = options.substring(index-1, index);
+					for (int k = 0; k < SECTION_DIGIT.length; k++) {
+						if (wrkStr.equals(SECTION_DIGIT[k])) {
+							options = options.substring(0, index)
+								+ newTableExp + options.substring(index + tableExp.length(), options.length());
+							isReplaced = true;
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		if (isReplaced) {
+			return options;
+		} else {
+			return "";
+		}
+	}
 	
 	private boolean containsDataSourceInPhraseValue(String value, String tableID, String fieldID, NodeList referList) {
 		ArrayList<String> keywordList = new ArrayList<String>();
 		String wrkStr;
 		StringTokenizer workTokenizer;
 		boolean result = false;
-		//
+
 		int pos1 = value.indexOf("&", 0);
 		int pos2;
 		while (pos1 > -1) {
@@ -12996,24 +13070,12 @@ public class Editor extends JFrame {
 			}
 			pos1 = pos2;
 		}
-		//
+
 		for (int i = 0; i < keywordList.size(); i++) {
-			wrkStr = "";
-			//
+
 			if (keywordList.get(i).contains("&DataSource(")) {
 				pos1 = keywordList.get(i).indexOf(")", 0);
 				wrkStr = keywordList.get(i).substring(12, pos1);
-			}
-			if (keywordList.get(i).contains("&DataSourceImage(")) {
-				pos1 = keywordList.get(i).indexOf(")", 0);
-				wrkStr = keywordList.get(i).substring(17, pos1);
-			}
-			if (keywordList.get(i).contains("&Barcode(")) {
-				pos1 = keywordList.get(i).indexOf(")", 0);
-				wrkStr = keywordList.get(i).substring(9, pos1);
-			}
-			//
-			if (!wrkStr.equals("")) {
 				workTokenizer = new StringTokenizer(wrkStr, ";");
 				wrkStr = workTokenizer.nextToken().trim();
 				pos1 = wrkStr.indexOf(".");
@@ -13023,14 +13085,172 @@ public class Editor extends JFrame {
 					String fieldIDOfValue = wrkStr.substring(pos1+1, wrkStr.length());
 					if (tableIDOfValue.equals(tableID) && fieldIDOfValue.equals(fieldID)) {
 						result = true;
+						break;
+					}
+				}
+			}
+
+			if (keywordList.get(i).contains("&DataSourceImage(")) {
+				pos1 = keywordList.get(i).indexOf(")", 0);
+				wrkStr = keywordList.get(i).substring(17, pos1);
+				workTokenizer = new StringTokenizer(wrkStr, ";");
+				wrkStr = workTokenizer.nextToken().trim();
+				pos1 = wrkStr.indexOf(".");
+				if (pos1 > -1) {
+					String tableAlias = wrkStr.substring(0, pos1);
+					String tableIDOfValue = getTableIDOfTableAlias(tableAlias, referList, null);
+					String fieldIDOfValue = wrkStr.substring(pos1+1, wrkStr.length());
+					if (tableIDOfValue.equals(tableID) && fieldIDOfValue.equals(fieldID)) {
+						result = true;
+						break;
+					}
+				}
+			}
+
+			if (keywordList.get(i).contains("&Barcode(")) {
+				pos1 = keywordList.get(i).indexOf(")", 0);
+				wrkStr = keywordList.get(i).substring(9, pos1);
+				workTokenizer = new StringTokenizer(wrkStr, ";");
+				wrkStr = workTokenizer.nextToken().trim();
+				pos1 = wrkStr.indexOf(".");
+				if (pos1 > -1) {
+					String tableAlias = wrkStr.substring(0, pos1);
+					String tableIDOfValue = getTableIDOfTableAlias(tableAlias, referList, null);
+					String fieldIDOfValue = wrkStr.substring(pos1+1, wrkStr.length());
+					if (tableIDOfValue.equals(tableID) && fieldIDOfValue.equals(fieldID)) {
+						result = true;
+						break;
 					}
 				}
 			}
 		}
-		//
+
 		return result;
 	}
 
+	private String replaceTableFieldIdInOptions(String options, String tableID, String fieldID, String newFieldID) {
+		int index = 0;
+		boolean isReplaced = false;
+		String wrkStr;
+		String fieldExp = tableID + "." + fieldID;
+		String newFieldExp = tableID + "." + newFieldID;
+
+		while (index != -1) {
+			index = options.indexOf(fieldExp, index);
+			if (index == 0) {
+				options = newFieldExp + options.substring(fieldExp.length(), options.length());
+				isReplaced = true;
+			} else {
+				if (index != -1) {
+					wrkStr = options.substring(index-1, index);
+					for (int k = 0; k < SECTION_DIGIT.length; k++) {
+						if (wrkStr.equals(SECTION_DIGIT[k])) {
+							options = options.substring(0, index)
+								+ newFieldExp + options.substring(index + fieldExp.length(), options.length());
+							isReplaced = true;
+							break;
+						}
+					}
+				}
+			}
+		}
+
+		if (isReplaced) {
+			return options;
+		} else {
+			return "";
+		}
+	}
+	
+	private String replaceTableFieldIdInPhraseValue(String value, String tableID, String fieldID, String newFieldID, NodeList referList) {
+		ArrayList<String> keywordList = new ArrayList<String>();
+		String processedValue = "";
+		String wrkStr, keyword;
+		StringTokenizer workTokenizer;
+		boolean isReplaced = false;
+
+		int pos1 = value.indexOf("&", 0);
+		int pos2;
+		while (pos1 > -1) {
+			pos2 = value.indexOf("&", pos1+1);
+			if (pos2 == -1) {
+				keywordList.add(value.substring(pos1, value.length()).trim());
+				break;
+			} else {
+				keywordList.add(value.substring(pos1, pos2).trim());
+			}
+			pos1 = pos2;
+		}
+
+		for (int i = 0; i < keywordList.size(); i++) {
+			keyword = keywordList.get(i);
+
+			if (keyword.startsWith("&DataSource(")) {
+				pos1 = keyword.indexOf(")", 0);
+				wrkStr = keyword.substring(12, pos1);
+				if (!wrkStr.equals("")) {
+					workTokenizer = new StringTokenizer(wrkStr, ";");
+					wrkStr = workTokenizer.nextToken().trim();
+					pos1 = wrkStr.indexOf(".");
+					if (pos1 > -1) {
+						String tableAlias = wrkStr.substring(0, pos1);
+						String tableIDOfValue = getTableIDOfTableAlias(tableAlias, referList, null);
+						String fieldIDOfValue = wrkStr.substring(pos1+1, wrkStr.length());
+						if (tableIDOfValue.equals(tableID) && fieldIDOfValue.equals(fieldID)) {
+							isReplaced = true;
+							keyword = keyword.replace(tableID + "." + fieldID, tableID + "." + newFieldID);
+						}
+					}
+				}
+			}
+
+			if (keyword.contains("&DataSourceImage(")) {
+				pos1 = keyword.indexOf(")", 0);
+				wrkStr = keyword.substring(17, pos1);
+				if (!wrkStr.equals("")) {
+					workTokenizer = new StringTokenizer(wrkStr, ";");
+					wrkStr = workTokenizer.nextToken().trim();
+					pos1 = wrkStr.indexOf(".");
+					if (pos1 > -1) {
+						String tableAlias = wrkStr.substring(0, pos1);
+						String tableIDOfValue = getTableIDOfTableAlias(tableAlias, referList, null);
+						String fieldIDOfValue = wrkStr.substring(pos1+1, wrkStr.length());
+						if (tableIDOfValue.equals(tableID) && fieldIDOfValue.equals(fieldID)) {
+							isReplaced = true;
+							keyword = keyword.replace(tableID + "." + fieldID, tableID + "." + newFieldID);
+						}
+					}
+				}
+			}
+
+			if (keyword.contains("&Barcode(")) {
+				pos1 = keyword.indexOf(")", 0);
+				wrkStr = keyword.substring(9, pos1);
+				if (!wrkStr.equals("")) {
+					workTokenizer = new StringTokenizer(wrkStr, ";");
+					wrkStr = workTokenizer.nextToken().trim();
+					pos1 = wrkStr.indexOf(".");
+					if (pos1 > -1) {
+						String tableAlias = wrkStr.substring(0, pos1);
+						String tableIDOfValue = getTableIDOfTableAlias(tableAlias, referList, null);
+						String fieldIDOfValue = wrkStr.substring(pos1+1, wrkStr.length());
+						if (tableIDOfValue.equals(tableID) && fieldIDOfValue.equals(fieldID)) {
+							isReplaced = true;
+							keyword = keyword.replace(tableID + "." + fieldID, tableID + "." + newFieldID);
+						}
+					}
+				}
+			}
+			
+			processedValue = processedValue + keyword;
+		}
+		
+		if (isReplaced) {
+			return processedValue;
+		} else {
+			return "";
+		}
+	}
    
 	private String getDescriptionsOfColumnOptions(String options) {
 		String result = "";
@@ -13838,6 +14058,8 @@ public class Editor extends JFrame {
 	    	}
 	    	jPopupMenuComponent.add(jMenuItemComponentToCopy);
 	    	jPopupMenuComponent.add(jMenuItemComponentToListCsv);
+			jPopupMenuComponent.addSeparator();
+			jPopupMenuComponent.add(jMenuItemComponentToRenameTableFieldID);
 	    	jPopupMenuComponent.addSeparator();
 	    	jPopupMenuComponent.add(jMenuItemComponentToDelete);
 	    }
@@ -13926,22 +14148,12 @@ public class Editor extends JFrame {
 	    	componentType_jPopupMenuComponent = "TableDataList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToListTableData);
 	    	jPopupMenuComponent.add(jMenuItemComponentToListExcel);
-//	    	if (jTableTableDataList.getRowCount() > 0) {
-//	    		jMenuItemComponentToListExcel.setEnabled(true);
-//	    	} else {
-//	    		jMenuItemComponentToListExcel.setEnabled(false);
-//	    	}
 	    }
 	    //
 	    if (e.getComponent().equals(jTableTableDataList)) {
 	    	componentType_jPopupMenuComponent = "TableDataList";
 	    	jPopupMenuComponent.add(jMenuItemComponentToListTableData);
 	    	jPopupMenuComponent.add(jMenuItemComponentToListExcel);
-//	    	if (jTableTableDataList.getRowCount() > 0) {
-//	    		jMenuItemComponentToListExcel.setEnabled(true);
-//	    	} else {
-//	    		jMenuItemComponentToListExcel.setEnabled(false);
-//	    	}
 	    	jPopupMenuComponent.addSeparator();
 	    	jPopupMenuComponent.add(jMenuItemComponentToDelete);
 	    }
@@ -15854,8 +16066,9 @@ public class Editor extends JFrame {
 			org.w3c.dom.Element workElement;
 			boolean duplicated, ready = false;
 			String answer = currentMainTreeNode.getElement().getAttribute("ID");
+			String databaseName = getDatabaseName(currentMainTreeNode.getElement().getAttribute("DB"));
 
-			if (nodeType_.equals("Table") && !currentMainTreeNode.getErrorStatus().equals("ER1")) {
+			if (nodeType_.equals("Table") && !currentMainTreeNode.getErrorStatus().equals("ER1") && databaseName.contains("jdbc:ucanaccess")) {
 				JOptionPane.showMessageDialog(null, res.getString("ErrorMessage134"));
 
 			} else {
@@ -15902,6 +16115,17 @@ public class Editor extends JFrame {
 										updateFields();
 
 										if (nodeType_.equals("Table")) {
+											if (currentMainTreeNode.getElement().getAttribute("ModuleID").equals("") && !currentMainTreeNode.getErrorStatus().equals("ER1")) {
+												Connection connection = databaseConnList.get(databaseIDList.indexOf(domNode_.getAttribute("DB")));
+												if (connection != null && !connection.isClosed()) {
+													Statement statement = connection.createStatement();
+													if (databaseName.contains("jdbc:derby")) {
+														statement.executeUpdate("RENAME TABLE " + currentMainTreeNode.getElement().getAttribute("ID") + " TO " + answer);
+													} else {
+														statement.executeUpdate("ALTER TABLE " + currentMainTreeNode.getElement().getAttribute("ID") + " RENAME TO " + answer);
+													}
+												}
+											}
 											replaceTableIdWithinRelatedElements(currentMainTreeNode.getElement().getAttribute("ID"), answer);
 										}
 										if (nodeType_.equals("Function")) {
@@ -15916,6 +16140,8 @@ public class Editor extends JFrame {
 										jTreeMain.updateUI();
 										ready = true;
 
+									} catch (SQLException ex1) {
+										JOptionPane.showMessageDialog(null, ex1.getMessage());
 									} finally {
 										setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 									}
@@ -27993,15 +28219,23 @@ public class Editor extends JFrame {
 								}
 								backupFileName = currentFileName.replace(".xeaf", getStringValueOfDateTime("withTime") + ".xeaf");
 								backupFileName = backupFileName.replace(currentFileFolder, newFolder);
-
 								FileOutputStream fileOutputStream = new FileOutputStream(backupFileName);
-								OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, "UTF-8");
-								Writer writer = new BufferedWriter(outputStreamWriter);
-								OutputFormat outputFormat = new OutputFormat(domDocumentSaved);
-								outputFormat.setEncoding("UTF-8");
-								XMLSerializer xmlSerializer = new XMLSerializer(writer, outputFormat);
-								xmlSerializer.serialize(domDocumentSaved.getDocumentElement());
-								writer.close();
+//								OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, "UTF-8");
+//								Writer writer = new BufferedWriter(outputStreamWriter);
+//								OutputFormat outputFormat = new OutputFormat(domDocumentSaved);
+//								outputFormat.setEncoding("UTF-8");
+//								XMLSerializer xmlSerializer = new XMLSerializer(writer, outputFormat);
+//								xmlSerializer.serialize(domDocumentSaved.getDocumentElement());
+//								writer.close();
+								DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
+								DOMImplementationLS domImpLS = (DOMImplementationLS)registry.getDOMImplementation("LS 3.0");
+								LSOutput output = domImpLS.createLSOutput();
+						        output.setByteStream(fileOutputStream);
+								output.setEncoding("UTF-8");
+								LSSerializer serializer = domImpLS.createLSSerializer();
+								serializer.write(domDocumentSaved, output);
+								fileOutputStream.close();
+
 							} catch(Exception ex){
 								JOptionPane.showMessageDialog(this, res.getString("ErrorMessage129") + "\n" + backupFileName + "\n" + ex.getMessage());
 								ex.printStackTrace();
@@ -28009,14 +28243,24 @@ public class Editor extends JFrame {
 						}
 					}
 					arrangeOrderOfDomElement();
-					OutputFormat outputFormat = new OutputFormat(domDocument);
-					outputFormat.setEncoding("UTF-8");
+
+//					OutputFormat outputFormat = new OutputFormat(domDocument);
+//					outputFormat.setEncoding("UTF-8");
+//					FileOutputStream fileOutputStream = new FileOutputStream(currentFileName);
+//					OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, "UTF-8");
+//					Writer writer = new BufferedWriter(outputStreamWriter);
+//					XMLSerializer xmlSerializer = new XMLSerializer(writer, outputFormat);
+//					xmlSerializer.serialize(domDocument.getDocumentElement());
+//					writer.close();
 					FileOutputStream fileOutputStream = new FileOutputStream(currentFileName);
-					OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, "UTF-8");
-					Writer writer = new BufferedWriter(outputStreamWriter);
-					XMLSerializer xmlSerializer = new XMLSerializer(writer, outputFormat);
-					xmlSerializer.serialize(domDocument.getDocumentElement());
-					writer.close();
+					DOMImplementationRegistry registry = DOMImplementationRegistry.newInstance();
+					DOMImplementationLS domImpLS = (DOMImplementationLS)registry.getDOMImplementation("LS 3.0");
+					LSOutput output = domImpLS.createLSOutput();
+			        output.setByteStream(fileOutputStream);
+					output.setEncoding("UTF-8");
+					LSSerializer serializer = domImpLS.createLSSerializer();
+					serializer.write(domDocument, output);
+					fileOutputStream.close();
 
 					file = new File(currentFileName);
 					lastModifyTime = file.lastModified();
@@ -33797,136 +34041,425 @@ public class Editor extends JFrame {
 		return buf.toString();
 	}
 	
-	String searchTableFieldOperationsInScript(String script, String tableID, String fieldID) {
-		StringBuffer buf = new StringBuffer();
-		script = getCaseShiftValue(script, "Upper").replaceAll(", ", ",");
-		int index;
+	boolean containsTableFieldOperationsInScript(String script, String tableID, String fieldID) {
+		boolean isContain = false;
+		String wrkStr;
+		String operatorName = "";
+		boolean isToBreak = false;
+		int pos0, pos1, pos2, pos3, pos4, fromPosition;
+		Pattern p = Pattern.compile("[0-9a-zA-Z_]");
+		script = substringLinesWithTokenOfEOL(script, "\n");
 
-		index = script.indexOf(".CREATETABLEOPERATOR('INSERT','" + tableID + "'");
-		if (index == -1) {
-			index = script.indexOf(".CREATETABLEEVALUATOR('" + tableID + "'");
-			if (containsFieldUsage(script, fieldID, index, "INSERT")) {
-				buf.append("C");
-			}
-		} else {
-			if (containsFieldUsage(script, fieldID, index)) {
-				buf.append("C");
-			}
-		}
-		index = script.indexOf(".CREATETABLEOPERATOR('SELECT','" + tableID + "'");
-		if (index != -1) {
-			if (containsFieldUsage(script, fieldID, index)) {
-				buf.append("R");
-			}
-		}
-		index = script.indexOf(".CREATETABLEOPERATOR('UPDATE','" + tableID + "'");
-		if (index == -1) {
-			index = script.indexOf(".CREATETABLEEVALUATOR('" + tableID + "'");
-			if (containsFieldUsage(script, fieldID, index, "UPDATE")) {
-				buf.append("U");
-			}
-		} else {
-			if (containsFieldUsage(script, fieldID, index)) {
-				buf.append("U");
-			}
-		}
-		index = script.indexOf(".CREATETABLEOPERATOR('DELETE','" + tableID + "'");
-		if (index == -1) {
-			index = script.indexOf(".CREATETABLEEVALUATOR('" + tableID + "'");
-			if (containsFieldUsage(script, fieldID, index, "DELETE")) {
-				buf.append("D");
-			}
-		} else {
-			if (containsFieldUsage(script, fieldID, index)) {
-				buf.append("D");
-			}
-		}
-
-		return buf.toString();
-	}
-
-	boolean containsFieldUsage(String script, String fieldID, int index) {
-		return containsFieldUsage(script, fieldID, index, "");
-	}
-
-	boolean containsFieldUsage(String script, String fieldID, int index, String operation) {
-		boolean isContained = false;
-
-		int index0 = script.lastIndexOf("=", index);
-		if (index0 > 0) {
-
-			int index1 = script.lastIndexOf("\t", index0);
-			int wrkindex = script.lastIndexOf(";", index0);
-			if (index1 < wrkindex) {
-				index1 = wrkindex;
-			}
-			String variantName = script.substring(index1+1, index0-1).trim();
-			int indexFrom = index;
-
+		/////////////////////////////////////////////
+		// Search data-source-name usage in script //
+		/////////////////////////////////////////////
+		String datasourceName = tableID + "_" + fieldID + ".";
+		if (script.contains(datasourceName)) {
+			int index = 0;
 			for (;;) {
-				int offset = 14;
-				index0 = script.indexOf(variantName+".ADDKEYVALUE('", indexFrom);
-				if (index0 == -1) {
-					index0 = script.indexOf(variantName+".ADDVALUE('", indexFrom);
-					offset = 11;
+				index = script.indexOf(datasourceName, index);
+				if (index == 0) {
+					isContain = true;
+					break;
+				} else {
+					if (index > 0) {
+						wrkStr = script.substring(index-1, index);
+						for (int k = 0; k < SECTION_DIGIT.length; k++) {
+							if (wrkStr.equals(SECTION_DIGIT[k])) {
+								isContain = true;
+								break;
+							}
+						}
+						if (isContain) {
+							break;
+						}
+					} else {
+						break;
+					}
 				}
-				if (index0 == -1) {
-					index0 = script.indexOf(variantName+".SETVALUEOF('", indexFrom);
-					offset = 13;
-				}
-				if (index0 == -1) {
-					index0 = script.indexOf(variantName+".SETORDERBY('", indexFrom);
-					offset = 13;
-				}
-				if (index0 == -1) {
-					index0 = script.indexOf(variantName+".SETSELECTFIELDS('", indexFrom);
-					offset = 18;
-				}
-				if (index0 == -1) {
-					index0 = script.indexOf(variantName+".SETDISTINCTFIELDS('", indexFrom);
-					offset = 20;
-				}
-				if (index0 != -1) {
-					index1 = script.indexOf(")", index0);
-					if (index1 != -1) {
-						String fields = script.substring(index0 + variantName.length() + offset, index1);
-						fields = fields.replaceAll("'", "").replaceAll(" ", ",").replaceAll("\t", "");
-						fields = "," + fields + ",";
-						if (fields.contains(","+fieldID+",")) {
-							isContained = true;
+				index++;
+			}
+			if (isContain) {
+				return true;
+			}
+		}
+
+		////////////////////////////////////////////////
+		// Search field usage in TableOperator object //
+		////////////////////////////////////////////////
+		fromPosition = 0;
+		while (fromPosition < script.length()) {
+			pos1 = script.indexOf(".createTableOperator(", fromPosition);
+			if (pos1 == -1) {
+				break;
+
+			} else {
+				fromPosition = pos1+1;
+				pos2 = script.indexOf("'" + tableID + "'", pos1);
+				pos3 = script.indexOf(";", pos1);
+				if (pos2 > -1 && pos2 < pos3) {
+
+					operatorName = "";
+					pos1 = script.lastIndexOf("=", pos1);
+					while (pos1 > -1) {
+						Matcher m = p.matcher(script.substring(pos1-1, pos1));
+						if (m.find()) {
+							break;
+						}
+						pos1--;
+					}
+					pos0 = pos1;
+					if (pos0 != -1) {
+						isToBreak = false;
+						while (!isToBreak && pos0 >= 0) {
+							pos0--;
+							if (pos0 == -1) {
+								break;
+							} else {
+								wrkStr = script.substring(pos0, pos0+1);
+								for (int k = 0; k < SECTION_DIGIT.length; k++) {
+									if (wrkStr.equals(SECTION_DIGIT[k])) {
+										isToBreak = true;
+										break;
+									}
+								}
+							}
+						}
+						operatorName = script.substring(pos0+1, pos1);
+					}
+
+					if (!operatorName.equals("")) {
+						pos2 = script.indexOf(operatorName + ".addValue('"+fieldID+"'", pos1);
+						pos3 = script.indexOf(operatorName + ".setValueOf('"+fieldID+"'", pos1);
+						pos4 = script.indexOf(operatorName + ".getValueOf('"+fieldID+"'", pos1);
+						if (pos2 > -1 || pos3 > -1 || pos4 > -1) {
+							isContain = true;
+							break;
+						}
+						pos2 = script.indexOf(operatorName + ".addKeyValue(", pos1);
+						if (pos2 > -1) {
+							pos3 = script.indexOf("'"+fieldID+"'", pos2);
+							pos4 = script.indexOf(";", pos2);
+							if (pos3 > -1 && pos3 < pos4) {
+								isContain = true;
+								break;
+							}
 						}
 					}
 				}
-				if (index0 != -1 && !operation.equals("")) {
-					int index2 = script.indexOf(variantName+"." + operation + "()", index0);
-					if (index2 == -1) {
-						isContained = false;
+			}
+		}
+
+		////////////////////////////////////////////////
+		// Search field usage in TableEvaluator object //
+		////////////////////////////////////////////////
+		fromPosition = 0;
+		while (fromPosition < script.length()) {
+			pos1 = script.indexOf(".createTableEvaluator(", fromPosition);
+			if (pos1 == -1) {
+				break;
+
+			} else {
+				fromPosition = pos1+1;
+				pos2 = script.indexOf("'" + tableID + "'", pos1);
+				pos3 = script.indexOf(";", pos1);
+				if (pos2 > -1 && pos2 < pos3) {
+
+					operatorName = "";
+					pos1 = script.lastIndexOf("=", pos1);
+					while (pos1 > -1) {
+						Matcher m = p.matcher(script.substring(pos1-1, pos1));
+						if (m.find()) {
+							break;
+						}
+						pos1--;
 					}
-				}
-				if (isContained || index0 == -1) {
-					break;
-				} else {
-					indexFrom = index0 + variantName.length() + offset;
+					pos0 = pos1;
+					if (pos0 != -1) {
+						isToBreak = false;
+						while (!isToBreak && pos0 >= 0) {
+							pos0--;
+							if (pos0 == -1) {
+								break;
+							} else {
+								wrkStr = script.substring(pos0, pos0+1);
+								for (int k = 0; k < SECTION_DIGIT.length; k++) {
+									if (wrkStr.equals(SECTION_DIGIT[k])) {
+										isToBreak = true;
+										break;
+									}
+								}
+							}
+						}
+						operatorName = script.substring(pos0+1, pos1);
+					}
+
+					if (!operatorName.equals("")) {
+						pos2 = script.indexOf(operatorName + ".addValue('"+fieldID+"'", pos1);
+						pos3 = script.indexOf(operatorName + ".setValueOf('"+fieldID+"'", pos1);
+						pos4 = script.indexOf(operatorName + ".getValueOf('"+fieldID+"'", pos1);
+						if (pos2 > -1 || pos3 > -1 || pos4 > -1) {
+							isContain = true;
+							break;
+						}
+						pos2 = script.indexOf(operatorName + ".addKeyValue(", pos1);
+						if (pos2 > -1) {
+							pos3 = script.indexOf("'"+fieldID+"'", pos2);
+							pos4 = script.indexOf(";", pos2);
+							if (pos3 > -1 && pos3 < pos4) {
+								isContain = true;
+								break;
+							}
+						}
+					}
 				}
 			}
 		}
-		return isContained;
+
+		return isContain;
+	}
+	
+	String replaceTableOperationsInScript(String script, String tableExpInScript, String newTableExpInScript) {
+		String processedScript = script;
+		String wrkStr;
+		
+		/////////////////////////////////////////////
+		// Search table expression usage in script //
+		/////////////////////////////////////////////
+		int index = 0;
+		for (;;) {
+			index = processedScript.indexOf(tableExpInScript, index);
+			if (index == 0) {
+				processedScript = newTableExpInScript + processedScript.substring(tableExpInScript.length(), processedScript.length());
+			} else {
+				if (index > 0) {
+					wrkStr = processedScript.substring(index-1, index);
+					for (int k = 0; k < SECTION_DIGIT.length; k++) {
+						if (wrkStr.equals(SECTION_DIGIT[k])) {
+							processedScript = processedScript.substring(0, index)
+								+ newTableExpInScript
+								+ processedScript.substring(index + tableExpInScript.length(), processedScript.length());
+							break;
+						}
+					}
+				} else {
+					break;
+				}
+			}
+			index++;
+		}
+
+		if (processedScript.equals(script)) {
+			return "";
+		} else {
+			return processedScript;
+		}
+	}
+
+	String replaceTableFieldOperationsInScript(String script, String tableID, String fieldID, String newFieldID) {
+		String processedScript = script;
+		boolean isToBreak = false;
+		String wrkStr;
+		String operatorName = "";
+		Pattern p = Pattern.compile("[0-9a-zA-Z_]");
+		int pos0, pos1, pos2, pos3, fromPosition;
+
+		/////////////////////////////////////////////
+		// Search data-source-name usage in script //
+		/////////////////////////////////////////////
+		String fieldExpInScript = tableID + "_" + fieldID + ".";
+		String newFieldExpInScript = tableID + "_" + newFieldID + ".";
+		int index = 0;
+		for (;;) {
+			index = processedScript.indexOf(fieldExpInScript, index);
+			if (index == 0) {
+				processedScript = newFieldExpInScript + processedScript.substring(fieldExpInScript.length(), processedScript.length());
+			} else {
+				if (index > 0) {
+					wrkStr = processedScript.substring(index-1, index);
+					for (int k = 0; k < SECTION_DIGIT.length; k++) {
+						if (wrkStr.equals(SECTION_DIGIT[k])) {
+							processedScript = processedScript.substring(0, index)
+								+ newFieldExpInScript
+								+ processedScript.substring(index + fieldExpInScript.length(), processedScript.length());
+							break;
+						}
+					}
+				} else {
+					break;
+				}
+			}
+			index++;
+		}
+
+		////////////////////////////////////////////////
+		// Search field usage in TableOperator object //
+		////////////////////////////////////////////////
+		fromPosition = 0;
+		while (fromPosition < processedScript.length()) {
+			pos1 = processedScript.indexOf(".createTableOperator(", fromPosition);
+			if (pos1 == -1) {
+				break;
+
+			} else {
+				fromPosition = pos1+1;
+				operatorName = "";
+				pos2 = processedScript.indexOf(";", pos1);
+				if (pos2 != -1) {
+					pos3 = processedScript.indexOf("'" + tableID + "'", pos1);
+					if (pos3 != -1 && pos3 < pos2) {
+						pos1 = processedScript.lastIndexOf("=", pos1);
+						while (pos1 > -1) {
+							Matcher m = p.matcher(processedScript.substring(pos1-1, pos1));
+							if (m.find()) {
+								break;
+							}
+							pos1--;
+						}
+						pos0 = pos1;
+						if (pos0 != -1) {
+							isToBreak = false;
+							while (!isToBreak && pos0 >= 0) {
+								pos0--;
+								if (pos0 == -1) {
+									break;
+								} else {
+									wrkStr = processedScript.substring(pos0, pos0+1);
+									for (int k = 0; k < SECTION_DIGIT.length; k++) {
+										if (wrkStr.equals(SECTION_DIGIT[k])) {
+											isToBreak = true;
+											break;
+										}
+									}
+								}
+							}
+							operatorName = processedScript.substring(pos0+1, pos1);
+						}
+					}
+				}
+				if (!operatorName.equals("")) {
+					pos2 = processedScript.indexOf(operatorName + ".addValue('"+fieldID+"'", pos1);
+					if (pos2 > -1) {
+						wrkStr = processedScript.substring(pos2, processedScript.length());
+						wrkStr = wrkStr.replace(operatorName + ".addValue('"+fieldID+"'", operatorName + ".addValue('"+newFieldID+"'");
+						processedScript = processedScript.substring(0, pos2) + wrkStr;
+					}
+					pos2 = processedScript.indexOf(operatorName + ".setValueOf('"+fieldID+"'", pos1);
+					if (pos2 > -1) {
+						wrkStr = processedScript.substring(pos2, processedScript.length());
+						wrkStr = wrkStr.replace(operatorName + ".setValueOf('"+fieldID+"'", operatorName + ".setValueOf('"+newFieldID+"'");
+						processedScript = processedScript.substring(0, pos2) + wrkStr;
+					}
+					pos2 = processedScript.indexOf(operatorName + ".getValueOf('"+fieldID+"'", pos1);
+					if (pos2 > -1) {
+						wrkStr = processedScript.substring(pos2, processedScript.length());
+						wrkStr = wrkStr.replace(operatorName + ".getValueOf('"+fieldID+"'", operatorName + ".getValueOf('"+newFieldID+"'");
+						processedScript = processedScript.substring(0, pos2) + wrkStr;
+					}
+					pos2 = processedScript.indexOf(operatorName + ".addKeyValue('"+fieldID+"'", pos1);
+					if (pos2 > -1) {
+						wrkStr = processedScript.substring(pos2, processedScript.length());
+						wrkStr = wrkStr.replace(operatorName + ".addKeyValue('"+fieldID+"'", operatorName + ".addKeyValue('"+newFieldID+"'");
+						processedScript = processedScript.substring(0, pos2) + wrkStr;
+					}
+				}
+			}
+		}
+
+		/////////////////////////////////////////////////
+		// Search field usage in TableEvaluator object //
+		/////////////////////////////////////////////////
+		fromPosition = 0;
+		while (fromPosition < processedScript.length()) {
+			pos1 = processedScript.indexOf(".createTableEvaluator(", fromPosition);
+			if (pos1 == -1) {
+				break;
+
+			} else {
+				fromPosition = pos1+1;
+				operatorName = "";
+				pos2 = processedScript.indexOf(";", pos1);
+				if (pos2 != -1) {
+					pos3 = processedScript.indexOf("'" + tableID + "'", pos1);
+					if (pos3 != -1 && pos3 < pos2) {
+						pos1 = processedScript.lastIndexOf("=", pos1);
+						while (pos1 > -1) {
+							Matcher m = p.matcher(processedScript.substring(pos1-1, pos1));
+							if (m.find()) {
+								break;
+							}
+							pos1--;
+						}
+						pos0 = pos1;
+						if (pos0 != -1) {
+							isToBreak = false;
+							while (!isToBreak && pos0 >= 0) {
+								pos0--;
+								if (pos0 == -1) {
+									break;
+								} else {
+									wrkStr = processedScript.substring(pos0, pos0+1);
+									for (int k = 0; k < SECTION_DIGIT.length; k++) {
+										if (wrkStr.equals(SECTION_DIGIT[k])) {
+											isToBreak = true;
+											break;
+										}
+									}
+								}
+							}
+							operatorName = processedScript.substring(pos0+1, pos1);
+							JOptionPane.showMessageDialog(null, pos0 + "@" + pos1 + ":" + operatorName);
+						}
+					}
+				}
+				if (operatorName.equals("")) {
+					pos2 = processedScript.indexOf(operatorName + ".addValue('"+fieldID+"'", pos1);
+					if (pos2 > -1) {
+						wrkStr = processedScript.substring(pos2, processedScript.length());
+						wrkStr = wrkStr.replace(operatorName + ".addValue('"+fieldID+"'", operatorName + ".addValue('"+newFieldID+"'");
+						processedScript = processedScript.substring(0, pos2) + wrkStr;
+					}
+					pos2 = processedScript.indexOf(operatorName + ".setValueOf('"+fieldID+"'", pos1);
+					if (pos2 > -1) {
+						wrkStr = processedScript.substring(pos2, processedScript.length());
+						wrkStr = wrkStr.replace(operatorName + ".setValueOf('"+fieldID+"'", operatorName + ".setValueOf('"+newFieldID+"'");
+						processedScript = processedScript.substring(0, pos2) + wrkStr;
+					}
+					pos2 = processedScript.indexOf(operatorName + ".getValueOf('"+fieldID+"'", pos1);
+					if (pos2 > -1) {
+						wrkStr = processedScript.substring(pos2, processedScript.length());
+						wrkStr = wrkStr.replace(operatorName + ".getValueOf('"+fieldID+"'", operatorName + ".getValueOf('"+newFieldID+"'");
+						processedScript = processedScript.substring(0, pos2) + wrkStr;
+					}
+					pos2 = processedScript.indexOf(operatorName + ".addKeyValue('"+fieldID+"'", pos1);
+					if (pos2 > -1) {
+						wrkStr = processedScript.substring(pos2, processedScript.length());
+						wrkStr = wrkStr.replace(operatorName + ".addKeyValue('"+fieldID+"'", operatorName + ".addKeyValue('"+newFieldID+"'");
+						processedScript = processedScript.substring(0, pos2) + wrkStr;
+					}
+				}
+			}
+		}
+
+		if (processedScript.equals(script)) {
+			return "";
+		} else {
+			return processedScript;
+		}
 	}
 	
 	void setupTableFieldUsageList(String tableID, String fieldID) {
-		int pos1;
 		String wrkStr="";
-		String fieldExpInScript = tableID + "_" + fieldID + ".";
 		String targetTableID, targetFieldID;
 		String primaryTableID = "";
 		String subTableID = "";
 		org.w3c.dom.Element element1, element2, element3;
 		MainTreeNode workNode;
 		NodeList nodeList1, nodeList2, nodeList3;
-		NodeList referList1, referList2;
+		NodeList referList1, referList2, keyList1, keyList2;
 		StringTokenizer workTokenizer;
 		int countOfUsageRows = 0;
-		int index;
+		int pos1, pos2;
 
 		nodeList1 = domDocument.getElementsByTagName("Table");
 		sortingList = getSortedListModel(nodeList1, "ID");
@@ -33934,7 +34467,6 @@ public class Editor extends JFrame {
 			element1 = (org.w3c.dom.Element)sortingList.getElementAt(i);
 
 			if (element1.getAttribute("ID").equals(tableID)) {
-
 				nodeList2 = element1.getElementsByTagName("Key");
 			    for (int j = 0; j < nodeList2.getLength(); j++) {
 			        element2 = (org.w3c.dom.Element)nodeList2.item(j);
@@ -34021,17 +34553,7 @@ public class Editor extends JFrame {
 		    	element2 = (org.w3c.dom.Element)nodeList2.item(j);
 				wrkStr = substringLinesWithTokenOfEOL(element2.getAttribute("Text"), "\n");
 				wrkStr = removeCommentsFromScriptText(wrkStr);
-				index = wrkStr.indexOf(fieldExpInScript);
-				if (index > 0) {
-					wrkStr = wrkStr.substring(index-1, index);
-					for (int k = 0; k < SECTION_DIGIT.length; k++) {
-						if (wrkStr.equals(SECTION_DIGIT[k])) {
-							index = 0;
-							break;
-						}
-					}
-				}
-				if (index == 0) {
+	        	if (containsTableFieldOperationsInScript(wrkStr, tableID, fieldID)) {
 					countOfUsageRows++;
 					Object[] Cell = new Object[4];
 					Cell[0] = new TableRowNumber(countOfUsageRows, element1, element2, null);
@@ -34039,9 +34561,35 @@ public class Editor extends JFrame {
 					Cell[2] = "TABLE";
 					Cell[3] = res.getString("FieldUsageInScript1") + element2.getAttribute("Name") + res.getString("FieldUsageInScript2");
 					tableModelTableFieldUsageList.addRow(Cell);
-				}
+	        	}
 		    }
 		}
+
+		// System Element //
+		nodeList1 = domDocument.getElementsByTagName("System");
+		element1 = (org.w3c.dom.Element)nodeList1.item(0);
+    	wrkStr = substringLinesWithTokenOfEOL(element1.getAttribute("LoginScript"), "\n");
+    	wrkStr = removeCommentsFromScriptText(wrkStr);
+    	if (containsTableFieldOperationsInScript(wrkStr, tableID, fieldID)) {
+    		countOfUsageRows++;
+    		Object[] Cell = new Object[4];
+    		Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+    		Cell[1] = res.getString("LoginScript");
+    		Cell[2] = "SYSTEM";
+    		Cell[3] = res.getString("TableUsageInScript4") + wrkStr + res.getString("TableUsageInScript3");
+    		tableModelTableFieldUsageList.addRow(Cell);
+    	}
+    	wrkStr = substringLinesWithTokenOfEOL(element1.getAttribute("ScriptFunctions"), "\n");
+    	wrkStr = removeCommentsFromScriptText(wrkStr);
+    	if (containsTableFieldOperationsInScript(wrkStr, tableID, fieldID)) {
+    		countOfUsageRows++;
+    		Object[] Cell = new Object[4];
+    		Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+    		Cell[1] = res.getString("ScriptFunctions");
+    		Cell[2] = "SYSTEM";
+    		Cell[3] = res.getString("TableUsageInScript4") + wrkStr + res.getString("TableUsageInScript3");
+    		tableModelTableFieldUsageList.addRow(Cell);
+    	}
 
 		nodeList1 = domDocument.getElementsByTagName("Function");
 		sortingList = getSortedListModel(nodeList1, "ID");
@@ -34051,14 +34599,13 @@ public class Editor extends JFrame {
 	        if (element1.getAttribute("Type").equals("XF000")) { 
 	        	wrkStr = substringLinesWithTokenOfEOL(element1.getAttribute("Script"), "\n");
 	        	wrkStr = removeCommentsFromScriptText(wrkStr);
-	        	wrkStr = searchTableFieldOperationsInScript(wrkStr, tableID, fieldID);
-	        	if (!wrkStr.equals("")) {
+	        	if (containsTableFieldOperationsInScript(wrkStr, tableID, fieldID)) {
 	        		countOfUsageRows++;
 	        		Object[] Cell = new Object[4];
 	        		Cell[0] = new TableRowNumber(countOfUsageRows, element1);
 	        		Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
 	        		Cell[2] = element1.getAttribute("Type");
-	        		Cell[3] = res.getString("TableUsageInScript4") + wrkStr + res.getString("TableUsageInScript3");
+					Cell[3] = res.getString("FieldUsageInScript3");
 	        		tableModelTableFieldUsageList.addRow(Cell);
 	        	}
 	        }
@@ -34067,12 +34614,12 @@ public class Editor extends JFrame {
 				workNode = getSpecificXETreeNode("Table", element1.getAttribute("PrimaryTable"));
 				element2 = workNode.getElement();
 				referList1 = element2.getElementsByTagName("Refer");
+				keyList1 = element2.getElementsByTagName("Key");
 
 				if (element1.getAttribute("PrimaryTable").equals(tableID)) {
 					if (element1.getAttribute("KeyFields").equals("")) {
-						NodeList keyList = element2.getElementsByTagName("Key");
-						for (int j = 0; j < keyList.getLength(); j++) {
-							element2 = (org.w3c.dom.Element)keyList.item(j);
+						for (int j = 0; j < keyList1.getLength(); j++) {
+							element2 = (org.w3c.dom.Element)keyList1.item(j);
 							if (element2.getAttribute("Type").equals("PK")) {
 								workTokenizer = new StringTokenizer(element2.getAttribute("Fields"), ";" );
 								while (workTokenizer.hasMoreTokens()) {
@@ -34145,6 +34692,42 @@ public class Editor extends JFrame {
 						Cell[3] = res.getString("FilterOfDetailList");
 						tableModelTableFieldUsageList.addRow(Cell);
 						break;
+					}
+
+					workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "PROMPT_CALL_TO_PUT"), ";" );
+					while (workTokenizer.hasMoreTokens()) {
+						wrkStr = workTokenizer.nextToken();
+						pos1 = wrkStr.indexOf(".");
+						targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+						targetFieldID = wrkStr.substring(pos1+1);
+						if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+							countOfUsageRows++;
+							Object[] Cell = new Object[4];
+							Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+							Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+							Cell[2] = element1.getAttribute("Type");
+							Cell[3] = res.getString("PrompterFunctionExchange");
+							tableModelTableFieldUsageList.addRow(Cell);
+							break;
+						}
+					}
+
+					workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "PROMPT_CALL_TO_GET_TO"), ";" );
+					while (workTokenizer.hasMoreTokens()) {
+						wrkStr = workTokenizer.nextToken();
+						pos1 = wrkStr.indexOf(".");
+						targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+						targetFieldID = wrkStr.substring(pos1+1);
+						if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+							countOfUsageRows++;
+							Object[] Cell = new Object[4];
+							Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+							Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+							Cell[2] = element1.getAttribute("Type");
+							Cell[3] = res.getString("PrompterFunctionExchange");
+							tableModelTableFieldUsageList.addRow(Cell);
+							break;
+						}
 					}
 				}
 
@@ -34165,6 +34748,42 @@ public class Editor extends JFrame {
 						tableModelTableFieldUsageList.addRow(Cell);
 						break;
 					}
+
+					workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "PROMPT_CALL_TO_PUT"), ";" );
+					while (workTokenizer.hasMoreTokens()) {
+						wrkStr = workTokenizer.nextToken();
+						pos1 = wrkStr.indexOf(".");
+						targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+						targetFieldID = wrkStr.substring(pos1+1);
+						if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+							countOfUsageRows++;
+							Object[] Cell = new Object[4];
+							Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+							Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+							Cell[2] = element1.getAttribute("Type");
+							Cell[3] = res.getString("PrompterFunctionExchange");
+							tableModelTableFieldUsageList.addRow(Cell);
+							break;
+						}
+					}
+
+					workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "PROMPT_CALL_TO_GET_TO"), ";" );
+					while (workTokenizer.hasMoreTokens()) {
+						wrkStr = workTokenizer.nextToken();
+						pos1 = wrkStr.indexOf(".");
+						targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+						targetFieldID = wrkStr.substring(pos1+1);
+						if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+							countOfUsageRows++;
+							Object[] Cell = new Object[4];
+							Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+							Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+							Cell[2] = element1.getAttribute("Type");
+							Cell[3] = res.getString("PrompterFunctionExchange");
+							tableModelTableFieldUsageList.addRow(Cell);
+							break;
+						}
+					}
 				}
 			}
 
@@ -34173,12 +34792,12 @@ public class Editor extends JFrame {
 				workNode = getSpecificXETreeNode("Table", primaryTableID);
 				element2 = workNode.getElement();
 				referList1 = element2.getElementsByTagName("Refer");
+				keyList1 = element2.getElementsByTagName("Key");
 
 				if (primaryTableID.equals(tableID)) {
 					if (element1.getAttribute("KeyFields").equals("")) {
-						NodeList keyList = element2.getElementsByTagName("Key");
-						for (int j = 0; j < keyList.getLength(); j++) {
-							element2 = (org.w3c.dom.Element)keyList.item(j);
+						for (int j = 0; j < keyList1.getLength(); j++) {
+							element2 = (org.w3c.dom.Element)keyList1.item(j);
 							if (element2.getAttribute("Type").equals("PK")) {
 								workTokenizer = new StringTokenizer(element2.getAttribute("Fields"), ";" );
 								while (workTokenizer.hasMoreTokens()) {
@@ -34251,6 +34870,42 @@ public class Editor extends JFrame {
 						Cell[3] = res.getString("FilterOfDetailList");
 						tableModelTableFieldUsageList.addRow(Cell);
 						break;
+					}
+
+					workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "PROMPT_CALL_TO_PUT"), ";" );
+					while (workTokenizer.hasMoreTokens()) {
+						wrkStr = workTokenizer.nextToken();
+						pos1 = wrkStr.indexOf(".");
+						targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+						targetFieldID = wrkStr.substring(pos1+1);
+						if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+							countOfUsageRows++;
+							Object[] Cell = new Object[4];
+							Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+							Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+							Cell[2] = element1.getAttribute("Type");
+							Cell[3] = res.getString("PrompterFunctionExchange");
+							tableModelTableFieldUsageList.addRow(Cell);
+							break;
+						}
+					}
+
+					workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element2.getAttribute("FieldOptions"), "PROMPT_CALL_TO_GET_TO"), ";" );
+					while (workTokenizer.hasMoreTokens()) {
+						wrkStr = workTokenizer.nextToken();
+						pos1 = wrkStr.indexOf(".");
+						targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+						targetFieldID = wrkStr.substring(pos1+1);
+						if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+							countOfUsageRows++;
+							Object[] Cell = new Object[4];
+							Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+							Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+							Cell[2] = element1.getAttribute("Type");
+							Cell[3] = res.getString("PrompterFunctionExchange");
+							tableModelTableFieldUsageList.addRow(Cell);
+							break;
+						}
 					}
 				}
 
@@ -34414,12 +35069,12 @@ public class Editor extends JFrame {
 				workNode = getSpecificXETreeNode("Table", element1.getAttribute("PrimaryTable"));
 				element2 = workNode.getElement();
 				referList1 = element2.getElementsByTagName("Refer");
+				keyList1 = element2.getElementsByTagName("Key");
 
 				if (element1.getAttribute("PrimaryTable").equals(tableID)) {
 					if (element1.getAttribute("KeyFields").equals("")) {
-						NodeList keyList = element2.getElementsByTagName("Key");
-						for (int j = 0; j < keyList.getLength(); j++) {
-							element2 = (org.w3c.dom.Element)keyList.item(j);
+						for (int j = 0; j < keyList1.getLength(); j++) {
+							element2 = (org.w3c.dom.Element)keyList1.item(j);
 							if (element2.getAttribute("Type").equals("PK")) {
 								workTokenizer = new StringTokenizer(element2.getAttribute("Fields"), ";" );
 								while (workTokenizer.hasMoreTokens()) {
@@ -34592,12 +35247,12 @@ public class Editor extends JFrame {
 				workNode = getSpecificXETreeNode("Table", element1.getAttribute("HeaderTable"));
 				element2 = workNode.getElement();
 				referList1 = element2.getElementsByTagName("Refer");
+				keyList1 = element2.getElementsByTagName("Key");
 
 				if (element1.getAttribute("HeaderTable").equals(tableID)) {
 					if (element1.getAttribute("HeaderKeyFields").equals("")) {
-						NodeList keyList = element2.getElementsByTagName("Key");
-						for (int j = 0; j < keyList.getLength(); j++) {
-							element2 = (org.w3c.dom.Element)keyList.item(j);
+						for (int j = 0; j < keyList1.getLength(); j++) {
+							element2 = (org.w3c.dom.Element)keyList1.item(j);
 							if (element2.getAttribute("Type").equals("PK")) {
 								workTokenizer = new StringTokenizer(element2.getAttribute("Fields"), ";" );
 								while (workTokenizer.hasMoreTokens()) {
@@ -34651,7 +35306,7 @@ public class Editor extends JFrame {
 							wrkStr = workTokenizer.nextToken();
 							if (wrkStr.contains(".") && !wrkStr.contains("'")) {
 								pos1 = wrkStr.indexOf(".");
-								targetTableID = wrkStr.substring(0, pos1);
+								targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
 								targetFieldID = wrkStr.substring(pos1+1);
 								if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
 									countOfUsageRows++;
@@ -34770,7 +35425,7 @@ public class Editor extends JFrame {
 							wrkStr = workTokenizer.nextToken();
 							if (wrkStr.contains(".") && !wrkStr.contains("'")) {
 								pos1 = wrkStr.indexOf(".");
-								targetTableID = wrkStr.substring(0, pos1);
+								targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
 								targetFieldID = wrkStr.substring(pos1+1);
 								if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
 									countOfUsageRows++;
@@ -34793,11 +35448,12 @@ public class Editor extends JFrame {
 					workNode = getSpecificXETreeNode("Table", element2.getAttribute("Table"));
 					element3 = workNode.getElement();
 					referList2 = element3.getElementsByTagName("Refer");
+					keyList2 = element3.getElementsByTagName("Key");
+
 					if (element2.getAttribute("Table").equals(tableID)) {
 						if (element2.getAttribute("KeyFields").equals("")) {
-							NodeList keyList = element3.getElementsByTagName("Key");
-							for (int k = 0; k < keyList.getLength(); k++) {
-								element3 = (org.w3c.dom.Element)keyList.item(k);
+							for (int k = 0; k < keyList2.getLength(); k++) {
+								element3 = (org.w3c.dom.Element)keyList2.item(k);
 								if (element3.getAttribute("Type").equals("PK")) {
 									workTokenizer = new StringTokenizer(element2.getAttribute("Fields"), ";" );
 									while (workTokenizer.hasMoreTokens()) {
@@ -34871,6 +35527,42 @@ public class Editor extends JFrame {
 							tableModelTableFieldUsageList.addRow(Cell);
 							break;
 						}
+
+						workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element3.getAttribute("FieldOptions"), "PROMPT_CALL_TO_PUT"), ";" );
+						while (workTokenizer.hasMoreTokens()) {
+							wrkStr = workTokenizer.nextToken();
+							pos1 = wrkStr.indexOf(".");
+							targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+							targetFieldID = wrkStr.substring(pos1+1);
+							if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+								countOfUsageRows++;
+								Object[] Cell = new Object[4];
+								Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+								Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+								Cell[2] = element1.getAttribute("Type");
+								Cell[3] = res.getString("PrompterFunctionExchange");
+								tableModelTableFieldUsageList.addRow(Cell);
+								break;
+							}
+						}
+
+						workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element3.getAttribute("FieldOptions"), "PROMPT_CALL_TO_GET_TO"), ";" );
+						while (workTokenizer.hasMoreTokens()) {
+							wrkStr = workTokenizer.nextToken();
+							pos1 = wrkStr.indexOf(".");
+							targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+							targetFieldID = wrkStr.substring(pos1+1);
+							if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+								countOfUsageRows++;
+								Object[] Cell = new Object[4];
+								Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+								Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+								Cell[2] = element1.getAttribute("Type");
+								Cell[3] = res.getString("PrompterFunctionExchange");
+								tableModelTableFieldUsageList.addRow(Cell);
+								break;
+							}
+						}
 					}
 
 					nodeList3 = element2.getElementsByTagName("Column");
@@ -34890,6 +35582,42 @@ public class Editor extends JFrame {
 							tableModelTableFieldUsageList.addRow(Cell);
 							break;
 						}
+
+						workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element3.getAttribute("FieldOptions"), "PROMPT_CALL_TO_PUT"), ";" );
+						while (workTokenizer.hasMoreTokens()) {
+							wrkStr = workTokenizer.nextToken();
+							pos1 = wrkStr.indexOf(".");
+							targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+							targetFieldID = wrkStr.substring(pos1+1);
+							if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+								countOfUsageRows++;
+								Object[] Cell = new Object[4];
+								Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+								Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+								Cell[2] = element1.getAttribute("Type");
+								Cell[3] = res.getString("PrompterFunctionExchange");
+								tableModelTableFieldUsageList.addRow(Cell);
+								break;
+							}
+						}
+
+						workTokenizer = new StringTokenizer(getOptionValueWithKeyword(element3.getAttribute("FieldOptions"), "PROMPT_CALL_TO_GET_TO"), ";" );
+						while (workTokenizer.hasMoreTokens()) {
+							wrkStr = workTokenizer.nextToken();
+							pos1 = wrkStr.indexOf(".");
+							targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+							targetFieldID = wrkStr.substring(pos1+1);
+							if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+								countOfUsageRows++;
+								Object[] Cell = new Object[4];
+								Cell[0] = new TableRowNumber(countOfUsageRows, element1);
+								Cell[1] = element1.getAttribute("ID") + " " + element1.getAttribute("Name");
+								Cell[2] = element1.getAttribute("Type");
+								Cell[3] = res.getString("PrompterFunctionExchange");
+								tableModelTableFieldUsageList.addRow(Cell);
+								break;
+							}
+						}
 					}
 				}
 			}
@@ -34898,12 +35626,12 @@ public class Editor extends JFrame {
 				workNode = getSpecificXETreeNode("Table", element1.getAttribute("HeaderTable"));
 				element2 = workNode.getElement();
 				referList1 = element2.getElementsByTagName("Refer");
+				keyList1 = element2.getElementsByTagName("Key");
 
 				if (element1.getAttribute("HeaderTable").equals(tableID)) {
 					if (element1.getAttribute("HeaderKeyFields").equals("")) {
-						NodeList keyList = element2.getElementsByTagName("Key");
-						for (int j = 0; j < keyList.getLength(); j++) {
-							element2 = (org.w3c.dom.Element)keyList.item(j);
+						for (int j = 0; j < keyList1.getLength(); j++) {
+							element2 = (org.w3c.dom.Element)keyList1.item(j);
 							if (element2.getAttribute("Type").equals("PK")) {
 								workTokenizer = new StringTokenizer(element2.getAttribute("Fields"), ";" );
 								while (workTokenizer.hasMoreTokens()) {
@@ -34996,12 +35724,12 @@ public class Editor extends JFrame {
 				workNode = getSpecificXETreeNode("Table", element1.getAttribute("DetailTable"));
 				element2 = workNode.getElement();
 				referList2 = element2.getElementsByTagName("Refer");
+				keyList2 = element2.getElementsByTagName("Key");
 
 				if (element1.getAttribute("DetailTable").equals(tableID)) {
 					if (element1.getAttribute("DetailKeyFields").equals("")) {
-						NodeList keyList = element2.getElementsByTagName("Key");
-						for (int j = 0; j < keyList.getLength(); j++) {
-							element2 = (org.w3c.dom.Element)keyList.item(j);
+						for (int j = 0; j < keyList2.getLength(); j++) {
+							element2 = (org.w3c.dom.Element)keyList2.item(j);
 							if (element2.getAttribute("Type").equals("PK")) {
 								workTokenizer = new StringTokenizer(element2.getAttribute("Fields"), ";" );
 								while (workTokenizer.hasMoreTokens()) {
@@ -35065,7 +35793,7 @@ public class Editor extends JFrame {
 					if (pos1 >= 0) {
 						pos1 = element3.getAttribute("Action").indexOf("PUT_FROM(");
 						if (pos1 >= 0) {
-							int pos2 = element3.getAttribute("Action").indexOf(")", pos1);
+							pos2 = element3.getAttribute("Action").indexOf(")", pos1);
 							if (pos2 >= 0) {
 								wrkStr = element3.getAttribute("Action").substring(pos1 + 9, pos2);
 								workTokenizer = new StringTokenizer(wrkStr, ";" );
@@ -35089,7 +35817,7 @@ public class Editor extends JFrame {
 						}
 						pos1 = element3.getAttribute("Action").indexOf("PUT_TO(");
 						if (pos1 >= 0) {
-							int pos2 = element3.getAttribute("Action").indexOf(")", pos1);
+							pos2 = element3.getAttribute("Action").indexOf(")", pos1);
 							if (pos2 >= 0) {
 								wrkStr = element3.getAttribute("Action").substring(pos1 + 7, pos2);
 								workTokenizer = new StringTokenizer(wrkStr, ";" );
@@ -35113,7 +35841,7 @@ public class Editor extends JFrame {
 						}
 						pos1 = element3.getAttribute("Action").indexOf("GET_FROM(");
 						if (pos1 >= 0) {
-							int pos2 = element3.getAttribute("Action").indexOf(")", pos1);
+							pos2 = element3.getAttribute("Action").indexOf(")", pos1);
 							if (pos2 >= 0) {
 								wrkStr = element3.getAttribute("Action").substring(pos1 + 9, pos2);
 								workTokenizer = new StringTokenizer(wrkStr, ";" );
@@ -35137,7 +35865,7 @@ public class Editor extends JFrame {
 						}
 						pos1 = element3.getAttribute("Action").indexOf("GET_TO(");
 						if (pos1 >= 0) {
-							int pos2 = element3.getAttribute("Action").indexOf(")", pos1);
+							pos2 = element3.getAttribute("Action").indexOf(")", pos1);
 							if (pos2 >= 0) {
 								wrkStr = element3.getAttribute("Action").substring(pos1 + 7, pos2);
 								workTokenizer = new StringTokenizer(wrkStr, ";" );
@@ -35223,12 +35951,12 @@ public class Editor extends JFrame {
 				workNode = getSpecificXETreeNode("Table", element1.getAttribute("HeaderTable"));
 				element2 = workNode.getElement();
 				referList1 = element2.getElementsByTagName("Refer");
+				keyList1 = element2.getElementsByTagName("Key");
 
 				if (element1.getAttribute("HeaderTable").equals(tableID)) {
 					if (element1.getAttribute("HeaderKeyFields").equals("")) {
-						NodeList keyList = element2.getElementsByTagName("Key");
-						for (int j = 0; j < keyList.getLength(); j++) {
-							element2 = (org.w3c.dom.Element)keyList.item(j);
+						for (int j = 0; j < keyList1.getLength(); j++) {
+							element2 = (org.w3c.dom.Element)keyList1.item(j);
 							if (element2.getAttribute("Type").equals("PK")) {
 								workTokenizer = new StringTokenizer(element2.getAttribute("Fields"), ";" );
 								while (workTokenizer.hasMoreTokens()) {
@@ -35285,12 +36013,12 @@ public class Editor extends JFrame {
 					workNode = getSpecificXETreeNode("Table", element1.getAttribute("DetailTable"));
 					element2 = workNode.getElement();
 					referList2 = element2.getElementsByTagName("Refer");
+					keyList2 = element2.getElementsByTagName("Key");
 
 					if (element1.getAttribute("DetailTable").equals(tableID)) {
 						if (element1.getAttribute("DetailKeyFields").equals("")) {
-							NodeList keyList = element2.getElementsByTagName("Key");
-							for (int j = 0; j < keyList.getLength(); j++) {
-								element2 = (org.w3c.dom.Element)keyList.item(j);
+							for (int j = 0; j < keyList2.getLength(); j++) {
+								element2 = (org.w3c.dom.Element)keyList2.item(j);
 								if (element2.getAttribute("Type").equals("PK")) {
 									workTokenizer = new StringTokenizer(element2.getAttribute("Fields"), ";" );
 									while (workTokenizer.hasMoreTokens()) {
@@ -35309,7 +36037,7 @@ public class Editor extends JFrame {
 								}
 							}
 						} else {
-							workTokenizer = new StringTokenizer(element1.getAttribute("HeaderKeyFields"), ";" );
+							workTokenizer = new StringTokenizer(element1.getAttribute("DetailKeyFields"), ";" );
 							while (workTokenizer.hasMoreTokens()) {
 								if (workTokenizer.nextToken().equals(fieldID)) {
 									countOfUsageRows++;
@@ -35372,11 +36100,12 @@ public class Editor extends JFrame {
 						workNode = getSpecificXETreeNode("Table", element2.getAttribute("Table"));
 						element3 = workNode.getElement();
 						referList2 = element3.getElementsByTagName("Refer");
+						keyList2 = element3.getElementsByTagName("Key");
+
 						if (element2.getAttribute("Table").equals(tableID)) {
 							if (element2.getAttribute("KeyFields").equals("")) {
-								NodeList keyList = element3.getElementsByTagName("Key");
-								for (int k = 0; k < keyList.getLength(); k++) {
-									element3 = (org.w3c.dom.Element)keyList.item(k);
+								for (int k = 0; k < keyList2.getLength(); k++) {
+									element3 = (org.w3c.dom.Element)keyList2.item(k);
 									if (element3.getAttribute("Type").equals("PK")) {
 										workTokenizer = new StringTokenizer(element2.getAttribute("Fields"), ";" );
 										while (workTokenizer.hasMoreTokens()) {
@@ -37289,6 +38018,9 @@ public class Editor extends JFrame {
 	
 	void jTableKeyReleased(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_DELETE) {
+		//int onmask = 0;
+		//int offmask = (KeyEvent.CTRL_DOWN_MASK | KeyEvent.ALT_DOWN_MASK | KeyEvent.SHIFT_DOWN_MASK);
+		//if ((e.getModifiersEx() & (onmask | offmask) == onmask) && (e.getKeyCode() == KeyEvent.VK_DELETE)){
 		    if (e.getComponent().equals(jTableSystemSubDBList)) {
 		    	componentType_jPopupMenuComponent = "SystemSubDBList";
 		    }
@@ -40003,7 +40735,7 @@ public class Editor extends JFrame {
 			if (dialogEditDetailTableKey.request(functionElement, jTableFunction300DetailList.getSelectedRow(), function300DetailTableID, function300DetailTableHDRKeys, function300DetailTableKeys)) {
 				String newTableID = dialogEditDetailTableKey.getDetailTableIDToBeChanged(); 
 				if (!newTableID.equals("")) {
-					replaceDetailTableID(functionElement, jTableFunction300DetailList.getSelectedRow(), newTableID);
+					replaceDetailTableId(functionElement, jTableFunction300DetailList.getSelectedRow(), newTableID);
 				}
 				function300DetailTableHDRKeys = dialogEditDetailTableKey.getValidatedHeaderKeys(); 
 				function300DetailTableKeys = dialogEditDetailTableKey.getValidatedDetailKeys();
@@ -40060,7 +40792,7 @@ public class Editor extends JFrame {
 			if (dialogEditDetailTableKey.request(functionElement, 0, function310DetailTableID, function310HeaderTableKeys, function310DetailTableKeys)) {
 				String newTableID = dialogEditDetailTableKey.getDetailTableIDToBeChanged(); 
 				if (!newTableID.equals("")) {
-					replaceDetailTableID(functionElement, 0, newTableID);
+					replaceDetailTableId(functionElement, 0, newTableID);
 				}
 				function310DetailTableKeys = dialogEditDetailTableKey.getValidatedDetailKeys();
 				if (function310DetailTableKeys.equals("")) {
@@ -40114,7 +40846,7 @@ public class Editor extends JFrame {
 			if (dialogEditDetailTableKey.request(functionElement, 0, function390DetailTableID, function390HeaderTableKeys, function390DetailTableKeys)) {
 				String newTableID = dialogEditDetailTableKey.getDetailTableIDToBeChanged();
 				if (!newTableID.equals("")) {
-					replaceDetailTableID(functionElement, jTableFunction390DetailList.getSelectedRow(), newTableID);
+					replaceDetailTableId(functionElement, jTableFunction390DetailList.getSelectedRow(), newTableID);
 				}
 				function390DetailTableKeys = dialogEditDetailTableKey.getValidatedDetailKeys();
 				if (function390DetailTableKeys.equals("")) {
@@ -40138,26 +40870,1175 @@ public class Editor extends JFrame {
 		}
 	}
 
+	void replaceTableFieldIdWithinRelatedElements(String tableID, String fieldID, String newFieldID) {
+		org.w3c.dom.Element element1, element2, element3;
+		MainTreeNode workNode;
+		NodeList nodeList1, nodeList2, nodeList3;
+		NodeList referList1, referList2;
+		StringTokenizer workTokenizer, workTokenizer2;
+		String wrkStr, wrkStr2, wrkStr3, fields, keyword, keywordValue, scriptText, targetTableID, targetFieldID, primaryTableID, subTableID;
+		boolean isReplaced = false;
+		int pos1, pos2;
+
+		// Table Elements //
+		nodeList1 = domDocument.getElementsByTagName("Table");
+		sortingList = getSortedListModel(nodeList1, "ID");
+		for (int i = 0; i < sortingList.getSize(); i++) {
+			element1 = (org.w3c.dom.Element)sortingList.getElementAt(i);
+
+			if (element1.getAttribute("ID").equals(tableID)) {
+				nodeList2 = element1.getElementsByTagName("Key");
+			    for (int j = 0; j < nodeList2.getLength(); j++) {
+					fields = "";
+					isReplaced = false;
+			        element2 = (org.w3c.dom.Element)nodeList2.item(j);
+					workTokenizer = new StringTokenizer(element2.getAttribute("Fields"), ";");
+					while (workTokenizer.hasMoreTokens()) {
+						wrkStr = workTokenizer.nextToken();
+						if (wrkStr.equals(fieldID)) {
+							wrkStr = newFieldID;
+							isReplaced = true;
+						}
+						if (!fields.equals("")) {
+							fields = fields + ";";
+						}
+						fields = fields + wrkStr;
+					}
+					if (isReplaced) {
+						element2.setAttribute("Fields", fields);
+					}
+				}
+			}
+
+			nodeList2 = element1.getElementsByTagName("Refer");
+			for (int k = 0; k < nodeList2.getLength(); k++) {
+				element2 = (org.w3c.dom.Element)nodeList2.item(k);
+
+				if (element1.getAttribute("ID").equals(tableID)) {
+					fields = "";
+					isReplaced = false;
+					workTokenizer = new StringTokenizer(element2.getAttribute("WithKeyFields"), ";");
+					while (workTokenizer.hasMoreTokens()) {
+						wrkStr = workTokenizer.nextToken();
+						if (wrkStr.equals(tableID + "." + fieldID)) {
+							wrkStr = tableID + "." + newFieldID;
+							isReplaced = true;
+						}
+						if (!fields.equals("")) {
+							fields = fields + ";";
+						}
+						fields = fields + wrkStr;
+					}
+					if (isReplaced) {
+						element2.setAttribute("WithKeyFields", fields);
+					}
+				}
+
+				if (element2.getAttribute("ToTable").equals(tableID)) {
+					fields = "";
+					isReplaced = false;
+					workTokenizer = new StringTokenizer(element2.getAttribute("ToKeyFields"), ";");
+					while (workTokenizer.hasMoreTokens()) {
+						wrkStr = workTokenizer.nextToken();
+						if (wrkStr.equals(fieldID)) {
+							wrkStr = newFieldID;
+							isReplaced = true;
+						}
+						if (!fields.equals("")) {
+							fields = fields + ";";
+						}
+						fields = fields + wrkStr;
+					}
+					if (isReplaced) {
+						element2.setAttribute("ToKeyFields", fields);
+					}
+
+					fields = "";
+					isReplaced = false;
+					workTokenizer = new StringTokenizer(element2.getAttribute("Fields"), ";");
+					while (workTokenizer.hasMoreTokens()) {
+						wrkStr = workTokenizer.nextToken();
+						if (wrkStr.equals(fieldID)) {
+							isReplaced = true;
+							wrkStr = newFieldID;
+						}
+						if (!fields.equals("")) {
+							fields = fields + ";";
+						}
+						fields = fields + wrkStr;
+					}
+					if (isReplaced) {
+						element2.setAttribute("Fields", fields);
+					}
+				}
+			}
+
+		    nodeList2 = element1.getElementsByTagName("Script");
+		    for (int j = 0; j < nodeList2.getLength(); j++) {
+		    	element2 = (org.w3c.dom.Element)nodeList2.item(j);
+		    	scriptText = substringLinesWithTokenOfEOL(element2.getAttribute("Text"), "\n");
+		    	scriptText = replaceTableFieldOperationsInScript(scriptText, tableID, fieldID, newFieldID);
+		    	if (!scriptText.equals("")) {
+					element2.setAttribute("Text", concatLinesWithTokenOfEOL(scriptText));
+		    	}
+		    }
+		}
+
+		// System Element //
+		nodeList1 = domDocument.getElementsByTagName("System");
+		element1 = (org.w3c.dom.Element)nodeList1.item(0);
+    	scriptText = substringLinesWithTokenOfEOL(element1.getAttribute("LoginScript"), "\n");
+    	scriptText = replaceTableFieldOperationsInScript(scriptText, tableID, fieldID, newFieldID);
+    	if (!scriptText.equals("")) {
+    		element1.setAttribute("LoginScript", concatLinesWithTokenOfEOL(scriptText));
+    	}
+    	scriptText = substringLinesWithTokenOfEOL(element1.getAttribute("ScriptFunctions"), "\n");
+    	scriptText = replaceTableFieldOperationsInScript(scriptText, tableID, fieldID, newFieldID);
+    	if (!scriptText.equals("")) {
+    		element1.setAttribute("ScriptFunctions", concatLinesWithTokenOfEOL(scriptText));
+    	}
+
+		// Function Elements //
+		nodeList1 = domDocument.getElementsByTagName("Function");
+		sortingList = getSortedListModel(nodeList1, "ID");
+		for (int i = 0; i < sortingList.getSize(); i++) {
+			element1 = (org.w3c.dom.Element)sortingList.getElementAt(i);
+
+	        if (element1.getAttribute("Type").equals("XF000")) { 
+	        	scriptText = substringLinesWithTokenOfEOL(element1.getAttribute("Script"), "\n");
+	        	scriptText = replaceTableFieldOperationsInScript(scriptText, tableID, fieldID, newFieldID);
+	        	if (!scriptText.equals("")) {
+	        		element1.setAttribute("Script", concatLinesWithTokenOfEOL(scriptText));
+	        	}
+	        }
+
+			if (element1.getAttribute("Type").equals("XF100")) { 
+				workNode = getSpecificXETreeNode("Table", element1.getAttribute("PrimaryTable"));
+				element2 = workNode.getElement();
+				referList1 = element2.getElementsByTagName("Refer");
+
+				if (element1.getAttribute("PrimaryTable").equals(tableID)) {
+					if (!element1.getAttribute("KeyFields").equals("")) {
+						wrkStr = "";
+			    		isReplaced = false;
+						workTokenizer = new StringTokenizer(element1.getAttribute("KeyFields"), ";" );
+						while (workTokenizer.hasMoreTokens()) {
+							wrkStr2 = workTokenizer.nextToken();
+							if (!wrkStr.equals("")) {
+								wrkStr = wrkStr + ";";
+							}
+							if (wrkStr2.equals(fieldID)) {
+								isReplaced = true;
+								wrkStr = wrkStr + newFieldID;
+							} else {
+								wrkStr = wrkStr + wrkStr2;
+							}
+						}
+						if (isReplaced) {
+							element1.setAttribute("KeyFields", wrkStr);
+						}
+					}
+				}
+
+				if (!element1.getAttribute("OrderBy").equals("")) {
+					wrkStr = "";
+		    		isReplaced = false;
+					workTokenizer = new StringTokenizer(element1.getAttribute("OrderBy"), ";" );
+					while (workTokenizer.hasMoreTokens()) {
+						wrkStr2 = workTokenizer.nextToken();
+						if (!wrkStr.equals("")) {
+							wrkStr = wrkStr + ";";
+						}
+						pos1 = wrkStr2.indexOf(".");
+						targetTableID = getTableIDOfTableAlias(wrkStr2.substring(0, pos1), referList1, null); 
+						targetFieldID = wrkStr2.substring(pos1+1);
+						if (targetTableID.equals(tableID)) {
+							if (targetFieldID.equals(fieldID)) {
+								isReplaced = true;
+								wrkStr = wrkStr + newFieldID;
+							} else {
+								if (targetFieldID.equals(fieldID+"(A)")) {
+									isReplaced = true;
+									wrkStr = wrkStr + newFieldID+"(A)";
+								} else {
+									if (targetFieldID.equals(fieldID+"(D)")) {
+										isReplaced = true;
+										wrkStr = wrkStr + newFieldID+"(D)";
+									} else {
+										wrkStr = wrkStr + wrkStr2;
+									}
+								}
+							}
+						} else {
+							wrkStr = wrkStr + wrkStr2;
+						}
+					}
+					if (isReplaced) {
+						element1.setAttribute("OrderBy", wrkStr);
+					}
+				}
+
+				nodeList2 = element1.getElementsByTagName("Filter");
+				for (int j = 0; j < nodeList2.getLength(); j++) {
+					element2 = (org.w3c.dom.Element)nodeList2.item(j);
+					wrkStr = element2.getAttribute("DataSource");
+					pos1 = wrkStr.indexOf(".");
+					targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+					targetFieldID = wrkStr.substring(pos1+1);
+					if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+						element2.setAttribute("DataSource", wrkStr.substring(0, pos1+1) + newFieldID);
+					}
+					
+					wrkStr = replaceTableFieldIdInOptions(element2.getAttribute("FieldOptions"), tableID, fieldID, newFieldID);
+					if (!wrkStr.equals("")) {
+						element2.setAttribute("FieldOptions", wrkStr);
+					}
+				}
+
+				nodeList2 = element1.getElementsByTagName("Column");
+				for (int j = 0; j < nodeList2.getLength(); j++) {
+					element2 = (org.w3c.dom.Element)nodeList2.item(j);
+					wrkStr = element2.getAttribute("DataSource");
+					pos1 = wrkStr.indexOf(".");
+					targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+					targetFieldID = wrkStr.substring(pos1+1);
+					if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+						element2.setAttribute("DataSource", wrkStr.substring(0, pos1+1) + newFieldID);
+					}
+					
+					wrkStr = replaceTableFieldIdInOptions(element2.getAttribute("FieldOptions"), tableID, fieldID, newFieldID);
+					if (!wrkStr.equals("")) {
+						element2.setAttribute("FieldOptions", wrkStr);
+					}
+				}
+			}
+
+			if (element1.getAttribute("Type").equals("XF110")) { 
+				primaryTableID = element1.getAttribute("PrimaryTable");
+				workNode = getSpecificXETreeNode("Table", primaryTableID);
+				element2 = workNode.getElement();
+				referList1 = element2.getElementsByTagName("Refer");
+
+				if (primaryTableID.equals(tableID)) {
+					if (!element1.getAttribute("KeyFields").equals("")) {
+						wrkStr = "";
+			    		isReplaced = false;
+						workTokenizer = new StringTokenizer(element1.getAttribute("KeyFields"), ";" );
+						while (workTokenizer.hasMoreTokens()) {
+							wrkStr2 = workTokenizer.nextToken();
+							if (!wrkStr.equals("")) {
+								wrkStr = wrkStr + ";";
+							}
+							if (wrkStr2.equals(fieldID)) {
+								isReplaced = true;
+								wrkStr = wrkStr + newFieldID;
+							} else {
+								wrkStr = wrkStr + wrkStr2;
+							}
+						}
+						if (isReplaced) {
+							element1.setAttribute("KeyFields", wrkStr);
+						}
+					}
+				}
+
+				if (!element1.getAttribute("OrderBy").equals("")) {
+					wrkStr = "";
+		    		isReplaced = false;
+					workTokenizer = new StringTokenizer(element1.getAttribute("OrderBy"), ";" );
+					while (workTokenizer.hasMoreTokens()) {
+						wrkStr2 = workTokenizer.nextToken();
+						if (!wrkStr.equals("")) {
+							wrkStr = wrkStr + ";";
+						}
+						pos1 = wrkStr2.indexOf(".");
+						targetTableID = getTableIDOfTableAlias(wrkStr2.substring(0, pos1), referList1, null); 
+						targetFieldID = wrkStr2.substring(pos1+1);
+						if (targetTableID.equals(tableID)) {
+							if (targetFieldID.equals(fieldID)) {
+								isReplaced = true;
+								wrkStr = wrkStr + newFieldID;
+							} else {
+								if (targetFieldID.equals(fieldID+"(A)")) {
+									isReplaced = true;
+									wrkStr = wrkStr + newFieldID+"(A)";
+								} else {
+									if (targetFieldID.equals(fieldID+"(D)")) {
+										isReplaced = true;
+										wrkStr = wrkStr + newFieldID+"(D)";
+									} else {
+										wrkStr = wrkStr + wrkStr2;
+									}
+								}
+							}
+						} else {
+							wrkStr = wrkStr + wrkStr2;
+						}
+					}
+					if (isReplaced) {
+						element1.setAttribute("OrderBy", wrkStr);
+					}
+				}
+
+				nodeList2 = element1.getElementsByTagName("Filter");
+				for (int j = 0; j < nodeList2.getLength(); j++) {
+					element2 = (org.w3c.dom.Element)nodeList2.item(j);
+					wrkStr = element2.getAttribute("DataSource");
+					pos1 = wrkStr.indexOf(".");
+					targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+					targetFieldID = wrkStr.substring(pos1+1);
+					if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+						element2.setAttribute("DataSource", wrkStr.substring(0, pos1+1) + newFieldID);
+					}
+					
+					wrkStr = replaceTableFieldIdInOptions(element2.getAttribute("FieldOptions"), tableID, fieldID, newFieldID);
+					if (!wrkStr.equals("")) {
+						element2.setAttribute("FieldOptions", wrkStr);
+					}
+				}
+
+				nodeList2 = element1.getElementsByTagName("Column");
+				for (int j = 0; j < nodeList2.getLength(); j++) {
+					element2 = (org.w3c.dom.Element)nodeList2.item(j);
+					wrkStr = element2.getAttribute("DataSource");
+					pos1 = wrkStr.indexOf(".");
+					targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+					targetFieldID = wrkStr.substring(pos1+1);
+					if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+						element2.setAttribute("DataSource", wrkStr.substring(0, pos1+1) + newFieldID);
+					}
+					
+					wrkStr = replaceTableFieldIdInOptions(element2.getAttribute("FieldOptions"), tableID, fieldID, newFieldID);
+					if (!wrkStr.equals("")) {
+						element2.setAttribute("FieldOptions", wrkStr);
+					}
+				}
+
+				subTableID = element1.getAttribute("BatchTable");
+				if (!subTableID.equals("")) {
+					workNode = getSpecificXETreeNode("Table", subTableID);
+					element2 = workNode.getElement();
+					referList1 = element2.getElementsByTagName("Refer");
+					nodeList2 = element1.getElementsByTagName("BatchField");
+					for (int j = 0; j < nodeList2.getLength(); j++) {
+						element2 = (org.w3c.dom.Element)nodeList2.item(j);
+						wrkStr = element2.getAttribute("DataSource");
+						pos1 = wrkStr.indexOf(".");
+						targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+						targetFieldID = wrkStr.substring(pos1+1);
+						if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+							element2.setAttribute("DataSource", wrkStr.substring(0, pos1+1) + newFieldID);
+						}
+						
+						wrkStr = replaceTableFieldIdInOptions(element2.getAttribute("FieldOptions"), tableID, fieldID, newFieldID);
+						if (!wrkStr.equals("")) {
+							element2.setAttribute("FieldOptions", wrkStr);
+						}
+					}
+
+					if (!element1.getAttribute("BatchWithKeyFields").equals("")) {
+						wrkStr = "";
+			    		isReplaced = false;
+						workTokenizer = new StringTokenizer(element1.getAttribute("BatchWithKeyFields"), ";" );
+						while (workTokenizer.hasMoreTokens()) {
+							if (!wrkStr.equals("")) {
+								wrkStr = wrkStr + ";";
+							}
+							wrkStr2 = workTokenizer.nextToken();
+							pos1 = wrkStr2.indexOf(".");
+							targetTableID = getTableIDOfTableAlias(wrkStr2.substring(0, pos1), referList1, null); 
+							targetFieldID = wrkStr2.substring(pos1+1);
+							if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+								isReplaced = true;
+								wrkStr = wrkStr + wrkStr2.substring(0, pos1+1) + newFieldID;
+							} else {
+								wrkStr = wrkStr + wrkStr2;
+							}
+						}
+						if (isReplaced) {
+							element1.setAttribute("BatchWithKeyFields", wrkStr);
+						}
+					}
+
+					if (!element1.getAttribute("BatchKeyFields").equals("") && element1.getAttribute("BatchTable").equals(tableID)) {
+						wrkStr = "";
+			    		isReplaced = false;
+			    		workTokenizer = new StringTokenizer(element1.getAttribute("BatchKeyFields"), ";" );
+			    		while (workTokenizer.hasMoreTokens()) {
+			    			if (!wrkStr.equals("")) {
+			    				wrkStr = wrkStr + ";";
+			    			}
+			    			targetFieldID = workTokenizer.nextToken();
+			    			if (targetFieldID.equals(fieldID)) {
+			    				isReplaced = true;
+			    				wrkStr = wrkStr + newFieldID;
+			    			} else {
+			    				wrkStr = wrkStr + targetFieldID;
+			    			}
+			    		}
+			    		if (isReplaced) {
+			    			element1.setAttribute("BatchKeyFields", wrkStr);
+			    		}
+					}
+				}
+			}
+
+			if (element1.getAttribute("Type").equals("XF200") || element1.getAttribute("Type").equals("XF290")) { 
+				workNode = getSpecificXETreeNode("Table", element1.getAttribute("PrimaryTable"));
+				element2 = workNode.getElement();
+				referList1 = element2.getElementsByTagName("Refer");
+				
+				if (element1.getAttribute("PrimaryTable").equals(tableID)) {
+					if (!element1.getAttribute("KeyFields").equals("")) {
+						wrkStr = "";
+			    		isReplaced = false;
+						workTokenizer = new StringTokenizer(element1.getAttribute("KeyFields"), ";" );
+						while (workTokenizer.hasMoreTokens()) {
+							wrkStr2 = workTokenizer.nextToken();
+							if (!wrkStr.equals("")) {
+								wrkStr = wrkStr + ";";
+							}
+							if (wrkStr2.equals(fieldID)) {
+								isReplaced = true;
+								wrkStr = wrkStr + newFieldID;
+							} else {
+								wrkStr = wrkStr + wrkStr2;
+							}
+						}
+						if (isReplaced) {
+							element1.setAttribute("KeyFields", wrkStr);
+						}
+					}
+				}
+
+				if (element1.getAttribute("Type").equals("XF200")) { 
+
+					nodeList2 = element1.getElementsByTagName("Field");
+					for (int j = 0; j < nodeList2.getLength(); j++) {
+						element2 = (org.w3c.dom.Element)nodeList2.item(j);
+						wrkStr = element2.getAttribute("DataSource");
+						pos1 = wrkStr.indexOf(".");
+						targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+						targetFieldID = wrkStr.substring(pos1+1);
+						if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+							element2.setAttribute("DataSource", wrkStr.substring(0, pos1+1) + newFieldID);
+						}
+						
+						wrkStr = replaceTableFieldIdInOptions(element2.getAttribute("FieldOptions"), tableID, fieldID, newFieldID);
+						if (!wrkStr.equals("")) {
+							element2.setAttribute("FieldOptions", wrkStr);
+						}
+					}
+
+					nodeList3 = element1.getElementsByTagName("Tab");
+					for (int k = 0; k < nodeList3.getLength(); k++) {
+						element3 = (org.w3c.dom.Element)nodeList3.item(k);
+						nodeList2 = element3.getElementsByTagName("TabField");
+						for (int j = 0; j < nodeList2.getLength(); j++) {
+							element2 = (org.w3c.dom.Element)nodeList2.item(j);
+							wrkStr = element2.getAttribute("DataSource");
+							pos1 = wrkStr.indexOf(".");
+							targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+							targetFieldID = wrkStr.substring(pos1+1);
+							if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+								element2.setAttribute("DataSource", wrkStr.substring(0, pos1+1) + newFieldID);
+							}
+							
+							wrkStr = replaceTableFieldIdInOptions(element2.getAttribute("FieldOptions"), tableID, fieldID, newFieldID);
+							if (!wrkStr.equals("")) {
+								element2.setAttribute("FieldOptions", wrkStr);
+							}
+						}
+					}
+				}
+
+				if (element1.getAttribute("Type").equals("XF290")) { 
+					nodeList2 = element1.getElementsByTagName("Phrase");
+					for (int j = 0; j < nodeList2.getLength(); j++) {
+						element2 = (org.w3c.dom.Element)nodeList2.item(j);
+						wrkStr = element2.getAttribute("Value");
+						wrkStr = replaceTableFieldIdInPhraseValue(wrkStr, tableID, fieldID, newFieldID, referList1);
+						if (!wrkStr.equals("")) {
+							element2.setAttribute("Value", wrkStr);
+						}
+					}
+				}
+			}
+
+			if (element1.getAttribute("Type").equals("XF300")) { 
+				workNode = getSpecificXETreeNode("Table", element1.getAttribute("HeaderTable"));
+				element2 = workNode.getElement();
+				referList1 = element2.getElementsByTagName("Refer");
+
+				if (element1.getAttribute("HeaderTable").equals(tableID)) {
+					if (!element1.getAttribute("HeaderKeyFields").equals("")) {
+						wrkStr = "";
+			    		isReplaced = false;
+						workTokenizer = new StringTokenizer(element1.getAttribute("HeaderKeyFields"), ";" );
+						while (workTokenizer.hasMoreTokens()) {
+							wrkStr2 = workTokenizer.nextToken();
+							if (!wrkStr.equals("")) {
+								wrkStr = wrkStr + ";";
+							}
+							if (wrkStr2.equals(fieldID)) {
+								isReplaced = true;
+								wrkStr = wrkStr + newFieldID;
+							} else {
+								wrkStr = wrkStr + wrkStr2;
+							}
+						}
+						if (isReplaced) {
+							element1.setAttribute("HeaderKeyFields", wrkStr);
+						}
+					}
+
+					if (!element1.getAttribute("StructureRootText").equals("")) {
+						wrkStr = "";
+			    		isReplaced = false;
+						workTokenizer = new StringTokenizer(element1.getAttribute("StructureRootText"), ";" );
+						while (workTokenizer.hasMoreTokens()) {
+							wrkStr2 = workTokenizer.nextToken();
+							if (!wrkStr.equals("")) {
+								wrkStr = wrkStr + ";";
+							}
+							if (wrkStr2.equals(fieldID)) {
+								isReplaced = true;
+								wrkStr = wrkStr + newFieldID;
+							} else {
+								wrkStr = wrkStr + wrkStr2;
+							}
+						}
+						if (isReplaced) {
+							element1.setAttribute("StructureRootText", wrkStr);
+						}
+					}
+
+					if (!element1.getAttribute("StructureNodeText").equals("")) {
+						wrkStr = "";
+			    		isReplaced = false;
+						workTokenizer = new StringTokenizer(element1.getAttribute("StructureNodeText"), ";" );
+						while (workTokenizer.hasMoreTokens()) {
+							if (!wrkStr.equals("")) {
+								wrkStr = wrkStr + ";";
+							}
+							wrkStr2 = workTokenizer.nextToken();
+							if (wrkStr2.contains(".") && !wrkStr2.contains("'")) {
+								pos1 = wrkStr2.indexOf(".");
+								targetTableID = getTableIDOfTableAlias(wrkStr2.substring(0, pos1), referList1, null); 
+								targetFieldID = wrkStr2.substring(pos1+1);
+								if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+									isReplaced = true;
+									wrkStr = wrkStr + wrkStr2.substring(0, pos1+1) + newFieldID;
+								} else {
+									wrkStr = wrkStr + wrkStr2;
+								}
+							} else {
+								wrkStr = wrkStr + wrkStr2;
+							}
+						}
+						if (isReplaced) {
+							element1.setAttribute("StructureNodeText", wrkStr);
+						}
+					}
+
+					if (element1.getAttribute("StructureNodeIconsFieldID").equals(fieldID)) {
+						element1.setAttribute("StructureNodeIconsFieldID", newFieldID);
+					}
+				}
+
+				nodeList2 = element1.getElementsByTagName("Field");
+				for (int j = 0; j < nodeList2.getLength(); j++) {
+					element2 = (org.w3c.dom.Element)nodeList2.item(j);
+					wrkStr = element2.getAttribute("DataSource");
+					pos1 = wrkStr.indexOf(".");
+					targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+					targetFieldID = wrkStr.substring(pos1+1);
+					if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+						element2.setAttribute("DataSource", wrkStr.substring(0, pos1+1) + newFieldID);
+					}
+					
+					wrkStr = replaceTableFieldIdInOptions(element2.getAttribute("FieldOptions"), tableID, fieldID, newFieldID);
+					if (!wrkStr.equals("")) {
+						element2.setAttribute("FieldOptions", wrkStr);
+					}
+				}
+
+				if (element1.getAttribute("StructureTable").equals(tableID)) {
+					if (!element1.getAttribute("StructureUpperKeys").equals("")) {
+						wrkStr = "";
+			    		isReplaced = false;
+						workTokenizer = new StringTokenizer(element1.getAttribute("StructureUpperKeys"), ";" );
+						while (workTokenizer.hasMoreTokens()) {
+							wrkStr2 = workTokenizer.nextToken();
+							if (!wrkStr.equals("")) {
+								wrkStr = wrkStr + ";";
+							}
+							if (wrkStr2.equals(fieldID)) {
+								isReplaced = true;
+								wrkStr = wrkStr + newFieldID;
+							} else {
+								wrkStr = wrkStr + wrkStr2;
+							}
+						}
+						if (isReplaced) {
+							element1.setAttribute("StructureUpperKeys", wrkStr);
+						}
+					}
+
+					if (!element1.getAttribute("StructureChildKeys").equals("")) {
+						wrkStr = "";
+			    		isReplaced = false;
+						workTokenizer = new StringTokenizer(element1.getAttribute("StructureChildKeys"), ";" );
+						while (workTokenizer.hasMoreTokens()) {
+							wrkStr2 = workTokenizer.nextToken();
+							if (!wrkStr.equals("")) {
+								wrkStr = wrkStr + ";";
+							}
+							if (wrkStr2.equals(fieldID)) {
+								isReplaced = true;
+								wrkStr = wrkStr + newFieldID;
+							} else {
+								wrkStr = wrkStr + wrkStr2;
+							}
+						}
+						if (isReplaced) {
+							element1.setAttribute("StructureChildKeys", wrkStr);
+						}
+					}
+
+					if (!element1.getAttribute("StructureNodeText").equals("")) {
+						wrkStr = "";
+			    		isReplaced = false;
+						workTokenizer = new StringTokenizer(element1.getAttribute("StructureNodeText"), ";" );
+						while (workTokenizer.hasMoreTokens()) {
+							if (!wrkStr.equals("")) {
+								wrkStr = wrkStr + ";";
+							}
+							wrkStr2 = workTokenizer.nextToken();
+							if (wrkStr2.contains(".") && !wrkStr2.contains("'")) {
+								pos1 = wrkStr2.indexOf(".");
+								targetTableID = getTableIDOfTableAlias(wrkStr2.substring(0, pos1), referList1, null); 
+								targetFieldID = wrkStr2.substring(pos1+1);
+								if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+									isReplaced = true;
+									wrkStr = wrkStr + wrkStr2.substring(0, pos1+1) + newFieldID;
+								} else {
+									wrkStr = wrkStr + wrkStr2;
+								}
+							} else {
+								wrkStr = wrkStr + wrkStr2;
+							}
+						}
+						if (isReplaced) {
+							element1.setAttribute("StructureNodeText", wrkStr);
+						}
+					}
+				}
+
+				nodeList2 = element1.getElementsByTagName("Detail");
+				for (int j = 0; j < nodeList2.getLength(); j++) {
+					element2 = (org.w3c.dom.Element)nodeList2.item(j);
+					workNode = getSpecificXETreeNode("Table", element2.getAttribute("Table"));
+					element3 = workNode.getElement();
+					referList2 = element3.getElementsByTagName("Refer");
+
+					if (element2.getAttribute("Table").equals(tableID)) {
+						if (!element2.getAttribute("KeyFields").equals("")) {
+							wrkStr = "";
+				    		isReplaced = false;
+							workTokenizer = new StringTokenizer(element2.getAttribute("KeyFields"), ";" );
+							while (workTokenizer.hasMoreTokens()) {
+								wrkStr2 = workTokenizer.nextToken();
+								if (!wrkStr.equals("")) {
+									wrkStr = wrkStr + ";";
+								}
+								if (wrkStr2.equals(fieldID)) {
+									isReplaced = true;
+									wrkStr = wrkStr + newFieldID;
+								} else {
+									wrkStr = wrkStr + wrkStr2;
+								}
+							}
+							if (isReplaced) {
+								element2.setAttribute("KeyFields", wrkStr);
+							}
+						}
+					}
+
+					if (!element2.getAttribute("OrderBy").equals("")) {
+						wrkStr = "";
+			    		isReplaced = false;
+						workTokenizer = new StringTokenizer(element2.getAttribute("OrderBy"), ";" );
+						while (workTokenizer.hasMoreTokens()) {
+							wrkStr2 = workTokenizer.nextToken();
+							if (!wrkStr.equals("")) {
+								wrkStr = wrkStr + ";";
+							}
+							pos1 = wrkStr2.indexOf(".");
+							targetTableID = getTableIDOfTableAlias(wrkStr2.substring(0, pos1), referList1, referList2); 
+							targetFieldID = wrkStr2.substring(pos1+1);
+							if (targetTableID.equals(tableID)) {
+								if (targetFieldID.equals(fieldID)) {
+									isReplaced = true;
+									wrkStr = wrkStr + newFieldID;
+								} else {
+									if (targetFieldID.equals(fieldID+"(A)")) {
+										isReplaced = true;
+										wrkStr = wrkStr + newFieldID+"(A)";
+									} else {
+										if (targetFieldID.equals(fieldID+"(D)")) {
+											isReplaced = true;
+											wrkStr = wrkStr + newFieldID+"(D)";
+										} else {
+											wrkStr = wrkStr + wrkStr2;
+										}
+									}
+								}
+							} else {
+								wrkStr = wrkStr + wrkStr2;
+							}
+						}
+						if (isReplaced) {
+							element2.setAttribute("OrderBy", wrkStr);
+						}
+					}
+
+					nodeList3 = element2.getElementsByTagName("Filter");
+					for (int k = 0; k < nodeList3.getLength(); k++) {
+						element3 = (org.w3c.dom.Element)nodeList3.item(k);
+						wrkStr = element3.getAttribute("DataSource");
+						pos1 = wrkStr.indexOf(".");
+						targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, referList2); 
+						targetFieldID = wrkStr.substring(pos1+1);
+						if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+							element3.setAttribute("DataSource", wrkStr.substring(0, pos1+1) + newFieldID);
+						}
+						
+						wrkStr = replaceTableFieldIdInOptions(element3.getAttribute("FieldOptions"), tableID, fieldID, newFieldID);
+						if (!wrkStr.equals("")) {
+							element3.setAttribute("FieldOptions", wrkStr);
+						}
+					}
+
+					nodeList3 = element2.getElementsByTagName("Column");
+					for (int k = 0; k < nodeList3.getLength(); k++) {
+						element3 = (org.w3c.dom.Element)nodeList3.item(k);
+						wrkStr = element3.getAttribute("DataSource");
+						pos1 = wrkStr.indexOf(".");
+						targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, referList2); 
+						targetFieldID = wrkStr.substring(pos1+1);
+						if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+							element3.setAttribute("DataSource", wrkStr.substring(0, pos1+1) + newFieldID);
+						}
+						
+						wrkStr = replaceTableFieldIdInOptions(element3.getAttribute("FieldOptions"), tableID, fieldID, newFieldID);
+						if (!wrkStr.equals("")) {
+							element3.setAttribute("FieldOptions", wrkStr);
+						}
+					}
+				}
+			}
+
+			if (element1.getAttribute("Type").equals("XF310")) { 
+				workNode = getSpecificXETreeNode("Table", element1.getAttribute("HeaderTable"));
+				element2 = workNode.getElement();
+				referList1 = element2.getElementsByTagName("Refer");
+
+				if (element1.getAttribute("HeaderTable").equals(tableID)) {
+					if (!element1.getAttribute("HeaderKeyFields").equals("")) {
+						wrkStr = "";
+			    		isReplaced = false;
+						workTokenizer = new StringTokenizer(element1.getAttribute("HeaderKeyFields"), ";" );
+						while (workTokenizer.hasMoreTokens()) {
+							wrkStr2 = workTokenizer.nextToken();
+							if (!wrkStr.equals("")) {
+								wrkStr = wrkStr + ";";
+							}
+							if (wrkStr2.equals(fieldID)) {
+								isReplaced = true;
+								wrkStr = wrkStr + newFieldID;
+							} else {
+								wrkStr = wrkStr + wrkStr2;
+							}
+						}
+						if (isReplaced) {
+							element1.setAttribute("HeaderKeyFields", wrkStr);
+						}
+					}
+				}
+
+				nodeList2 = element1.getElementsByTagName("Field");
+				for (int j = 0; j < nodeList2.getLength(); j++) {
+					element2 = (org.w3c.dom.Element)nodeList2.item(j);
+
+					wrkStr = element2.getAttribute("DataSource");
+					pos1 = wrkStr.indexOf(".");
+					targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, null); 
+					targetFieldID = wrkStr.substring(pos1+1);
+					if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+						element2.setAttribute("DataSource", wrkStr.substring(0, pos1+1) + newFieldID);
+					}
+					
+					wrkStr = replaceTableFieldIdInOptions(element2.getAttribute("FieldOptions"), tableID, fieldID, newFieldID);
+					if (!wrkStr.equals("")) {
+						element2.setAttribute("FieldOptions", wrkStr);
+					}
+				}
+
+				workNode = getSpecificXETreeNode("Table", element1.getAttribute("DetailTable"));
+				element2 = workNode.getElement();
+				referList2 = element2.getElementsByTagName("Refer");
+
+				if (element1.getAttribute("DetailTable").equals(tableID)) {
+					if (!element1.getAttribute("DetailKeyFields").equals("")) {
+						wrkStr = "";
+			    		isReplaced = false;
+						workTokenizer = new StringTokenizer(element1.getAttribute("DetailKeyFields"), ";" );
+						while (workTokenizer.hasMoreTokens()) {
+							wrkStr2 = workTokenizer.nextToken();
+							if (!wrkStr.equals("")) {
+								wrkStr = wrkStr + ";";
+							}
+							if (wrkStr2.equals(fieldID)) {
+								isReplaced = true;
+								wrkStr = wrkStr + newFieldID;
+							} else {
+								wrkStr = wrkStr + wrkStr2;
+							}
+						}
+						if (isReplaced) {
+							element1.setAttribute("DetailKeyFields", wrkStr);
+						}
+					}
+				}
+
+				if (!element1.getAttribute("DetailOrderBy").equals("")) {
+					wrkStr = "";
+		    		isReplaced = false;
+					workTokenizer = new StringTokenizer(element1.getAttribute("DetailOrderBy"), ";" );
+					while (workTokenizer.hasMoreTokens()) {
+						wrkStr2 = workTokenizer.nextToken();
+						if (!wrkStr.equals("")) {
+							wrkStr = wrkStr + ";";
+						}
+						pos1 = wrkStr2.indexOf(".");
+						targetTableID = getTableIDOfTableAlias(wrkStr2.substring(0, pos1), referList1, referList2); 
+						targetFieldID = wrkStr2.substring(pos1+1);
+						if (targetTableID.equals(tableID)) {
+							if (targetFieldID.equals(fieldID)) {
+								isReplaced = true;
+								wrkStr = wrkStr + newFieldID;
+							} else {
+								if (targetFieldID.equals(fieldID+"(A)")) {
+									isReplaced = true;
+									wrkStr = wrkStr + newFieldID+"(A)";
+								} else {
+									if (targetFieldID.equals(fieldID+"(D)")) {
+										isReplaced = true;
+										wrkStr = wrkStr + newFieldID+"(D)";
+									} else {
+										wrkStr = wrkStr + wrkStr2;
+									}
+								}
+							}
+						} else {
+							wrkStr = wrkStr + wrkStr2;
+						}
+					}
+					if (isReplaced) {
+						element1.setAttribute("DetailOrderBy", wrkStr);
+					}
+				}
+
+				nodeList3 = element1.getElementsByTagName("Button");
+				for (int k = 0; k < nodeList3.getLength(); k++) {
+					element3 = (org.w3c.dom.Element)nodeList3.item(k);
+					if (element3.getAttribute("Action").contains("CALL_TO_ADD(")) {
+						wrkStr = "";
+			    		isReplaced = false;
+						workTokenizer = new StringTokenizer(element3.getAttribute("Action"), " " );
+						while (workTokenizer.hasMoreTokens()) {
+							if (!wrkStr.equals("")) {
+								wrkStr = wrkStr + " ";
+							}
+							wrkStr2 = workTokenizer.nextToken();
+							pos1 = wrkStr2.indexOf("(");
+							pos2 = wrkStr2.indexOf(")", pos1);
+							keyword = wrkStr2.substring(0, pos1);
+							keywordValue = wrkStr2.substring(pos1+1, pos2);
+							String processedValue = "";
+							workTokenizer2 = new StringTokenizer(keywordValue, ";" );
+							while (workTokenizer2.hasMoreTokens()) {
+								if (!processedValue.equals("")) {
+									processedValue = processedValue + ";";
+								}
+								wrkStr3 = workTokenizer2.nextToken();
+								pos1 = wrkStr3.indexOf(".");
+								if (pos1 > -1) {
+									targetTableID = getTableIDOfTableAlias(wrkStr3.substring(0, pos1), referList1, null); 
+									targetFieldID = wrkStr3.substring(pos1+1);
+									if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+										isReplaced = true;
+										processedValue = processedValue + wrkStr3.substring(0, pos1+1) + newFieldID;
+									} else {
+										processedValue = processedValue + wrkStr3;
+									}
+								} else {
+									processedValue = processedValue + wrkStr3;
+								}
+							}
+							wrkStr = wrkStr + keyword + "(" + processedValue + ")";
+						}
+						if (isReplaced) {
+							element3.setAttribute("Action", wrkStr);
+						}
+					}
+				}
+
+				nodeList3 = element1.getElementsByTagName("Column");
+				for (int k = 0; k < nodeList3.getLength(); k++) {
+					element3 = (org.w3c.dom.Element)nodeList3.item(k);
+					wrkStr = element3.getAttribute("DataSource");
+					pos1 = wrkStr.indexOf(".");
+					targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, referList2); 
+					targetFieldID = wrkStr.substring(pos1+1);
+					if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+						element3.setAttribute("DataSource", wrkStr.substring(0, pos1+1) + newFieldID);
+					}
+					
+					wrkStr = replaceTableFieldIdInOptions(element3.getAttribute("FieldOptions"), tableID, fieldID, newFieldID);
+					if (!wrkStr.equals("")) {
+						element3.setAttribute("FieldOptions", wrkStr);
+					}
+				}
+			}
+
+			if (element1.getAttribute("Type").equals("XF390")) { 
+				workNode = getSpecificXETreeNode("Table", element1.getAttribute("HeaderTable"));
+				element2 = workNode.getElement();
+				referList1 = element2.getElementsByTagName("Refer");
+
+				if (element1.getAttribute("HeaderTable").equals(tableID)) {
+					if (!element1.getAttribute("HeaderKeyFields").equals("")) {
+						wrkStr = "";
+			    		isReplaced = false;
+						workTokenizer = new StringTokenizer(element1.getAttribute("HeaderKeyFields"), ";" );
+						while (workTokenizer.hasMoreTokens()) {
+							wrkStr2 = workTokenizer.nextToken();
+							if (!wrkStr.equals("")) {
+								wrkStr = wrkStr + ";";
+							}
+							if (wrkStr2.equals(fieldID)) {
+								isReplaced = true;
+								wrkStr = wrkStr + newFieldID;
+							} else {
+								wrkStr = wrkStr + wrkStr2;
+							}
+						}
+						if (isReplaced) {
+							element1.setAttribute("HeaderKeyFields", wrkStr);
+						}
+					}
+				}
+
+				nodeList2 = element1.getElementsByTagName("HeaderPhrase");
+				for (int j = 0; j < nodeList2.getLength(); j++) {
+					element2 = (org.w3c.dom.Element)nodeList2.item(j);
+					wrkStr = element2.getAttribute("Value");
+					wrkStr = replaceTableFieldIdInPhraseValue(wrkStr, tableID, fieldID, newFieldID, referList1);
+					if (!wrkStr.equals("")) {
+						element2.setAttribute("Value", wrkStr);
+					}
+				}
+
+				nodeList2 = element1.getElementsByTagName("Detail");
+				if (nodeList2.getLength() == 0) {
+
+					workNode = getSpecificXETreeNode("Table", element1.getAttribute("DetailTable"));
+					element2 = workNode.getElement();
+					referList2 = element2.getElementsByTagName("Refer");
+
+					if (element1.getAttribute("DetailTable").equals(tableID)) {
+						if (!element1.getAttribute("DetailKeyFields").equals("")) {
+							wrkStr = "";
+				    		isReplaced = false;
+							workTokenizer = new StringTokenizer(element1.getAttribute("DetailKeyFields"), ";" );
+							while (workTokenizer.hasMoreTokens()) {
+								wrkStr2 = workTokenizer.nextToken();
+								if (!wrkStr.equals("")) {
+									wrkStr = wrkStr + ";";
+								}
+								if (wrkStr2.equals(fieldID)) {
+									isReplaced = true;
+									wrkStr = wrkStr + newFieldID;
+								} else {
+									wrkStr = wrkStr + wrkStr2;
+								}
+							}
+							if (isReplaced) {
+								element1.setAttribute("DetailKeyFields", wrkStr);
+							}
+						}
+					}
+
+					if (!element1.getAttribute("DetailOrderBy").equals("")) {
+						wrkStr = "";
+			    		isReplaced = false;
+						workTokenizer = new StringTokenizer(element1.getAttribute("DetailOrderBy"), ";" );
+						while (workTokenizer.hasMoreTokens()) {
+							wrkStr2 = workTokenizer.nextToken();
+							if (!wrkStr.equals("")) {
+								wrkStr = wrkStr + ";";
+							}
+							pos1 = wrkStr2.indexOf(".");
+							targetTableID = getTableIDOfTableAlias(wrkStr2.substring(0, pos1), referList1, referList2); 
+							targetFieldID = wrkStr2.substring(pos1+1);
+							if (targetTableID.equals(tableID)) {
+								if (targetFieldID.equals(fieldID)) {
+									isReplaced = true;
+									wrkStr = wrkStr + newFieldID;
+								} else {
+									if (targetFieldID.equals(fieldID+"(A)")) {
+										isReplaced = true;
+										wrkStr = wrkStr + newFieldID+"(A)";
+									} else {
+										if (targetFieldID.equals(fieldID+"(D)")) {
+											isReplaced = true;
+											wrkStr = wrkStr + newFieldID+"(D)";
+										} else {
+											wrkStr = wrkStr + wrkStr2;
+										}
+									}
+								}
+							} else {
+								wrkStr = wrkStr + wrkStr2;
+							}
+						}
+						if (isReplaced) {
+							element1.setAttribute("DetailOrderBy", wrkStr);
+						}
+					}
+
+					nodeList3 = element1.getElementsByTagName("Column");
+					for (int k = 0; k < nodeList3.getLength(); k++) {
+						element3 = (org.w3c.dom.Element)nodeList3.item(k);
+						wrkStr = element3.getAttribute("DataSource");
+						pos1 = wrkStr.indexOf(".");
+						targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, referList2); 
+						targetFieldID = wrkStr.substring(pos1+1);
+						if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+							element3.setAttribute("DataSource", wrkStr.substring(0, pos1+1) + newFieldID);
+						}
+					}
+
+				} else {
+					for (int j = 0; j < nodeList2.getLength(); j++) {
+						element2 = (org.w3c.dom.Element)nodeList2.item(j);
+						workNode = getSpecificXETreeNode("Table", element2.getAttribute("Table"));
+						element3 = workNode.getElement();
+						referList2 = element3.getElementsByTagName("Refer");
+
+						if (element2.getAttribute("Table").equals(tableID)) {
+							if (!element2.getAttribute("KeyFields").equals("")) {
+								wrkStr = "";
+					    		isReplaced = false;
+								workTokenizer = new StringTokenizer(element2.getAttribute("KeyFields"), ";" );
+								while (workTokenizer.hasMoreTokens()) {
+									wrkStr2 = workTokenizer.nextToken();
+									if (!wrkStr.equals("")) {
+										wrkStr = wrkStr + ";";
+									}
+									if (wrkStr2.equals(fieldID)) {
+										isReplaced = true;
+										wrkStr = wrkStr + newFieldID;
+									} else {
+										wrkStr = wrkStr + wrkStr2;
+									}
+								}
+								if (isReplaced) {
+									element2.setAttribute("KeyFields", wrkStr);
+								}
+							}
+						}
+
+						if (!element2.getAttribute("OrderBy").equals("")) {
+							wrkStr = "";
+				    		isReplaced = false;
+							workTokenizer = new StringTokenizer(element2.getAttribute("OrderBy"), ";" );
+							while (workTokenizer.hasMoreTokens()) {
+								wrkStr2 = workTokenizer.nextToken();
+								if (!wrkStr.equals("")) {
+									wrkStr = wrkStr + ";";
+								}
+								pos1 = wrkStr2.indexOf(".");
+								targetTableID = getTableIDOfTableAlias(wrkStr2.substring(0, pos1), referList1, referList2); 
+								targetFieldID = wrkStr2.substring(pos1+1);
+								if (targetTableID.equals(tableID)) {
+									if (targetFieldID.equals(fieldID)) {
+										isReplaced = true;
+										wrkStr = wrkStr + newFieldID;
+									} else {
+										if (targetFieldID.equals(fieldID+"(A)")) {
+											isReplaced = true;
+											wrkStr = wrkStr + newFieldID+"(A)";
+										} else {
+											if (targetFieldID.equals(fieldID+"(D)")) {
+												isReplaced = true;
+												wrkStr = wrkStr + newFieldID+"(D)";
+											} else {
+												wrkStr = wrkStr + wrkStr2;
+											}
+										}
+									}
+								} else {
+									wrkStr = wrkStr + wrkStr2;
+								}
+							}
+							if (isReplaced) {
+								element2.setAttribute("OrderBy", wrkStr);
+							}
+						}
+
+						nodeList3 = element2.getElementsByTagName("Column");
+						for (int k = 0; k < nodeList3.getLength(); k++) {
+							element3 = (org.w3c.dom.Element)nodeList3.item(k);
+							wrkStr = element3.getAttribute("DataSource");
+							pos1 = wrkStr.indexOf(".");
+							targetTableID = getTableIDOfTableAlias(wrkStr.substring(0, pos1), referList1, referList2); 
+							targetFieldID = wrkStr.substring(pos1+1);
+							if (targetTableID.equals(tableID) && targetFieldID.equals(fieldID)) {
+								element3.setAttribute("DataSource", wrkStr.substring(0, pos1+1) + newFieldID);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	void replaceTableIdWithinRelatedElements(String currTableID, String newTableID) {
 		org.w3c.dom.Element element, element1;
 		NodeList nodeList1, nodeList2;
-		String wrkStr, keyword, keyword2;
+		String wrkStr, wrkStr2, keyword;
 
-	    // System Element //
-        keyword = "\'" + currTableID + "\'";
+		// System Element //
 		nodeList1 = domDocument.getElementsByTagName("System");
 		element1 = (org.w3c.dom.Element)nodeList1.item(0);
-		wrkStr = element1.getAttribute("LoginScript");
-    	if (wrkStr.contains(keyword)) {
-    		wrkStr = wrkStr.replace(keyword, "\'" + newTableID + "\'");
-    		element1.setAttribute("LoginScript", wrkStr);
+		wrkStr = substringLinesWithTokenOfEOL(element1.getAttribute("LoginScript"), "\n");
+		if (wrkStr.contains("\'" + currTableID + "\'")) {
+			wrkStr2 = replaceTableOperationsInScript(wrkStr, "\'" + currTableID + "\'", "\'" + newTableID + "\'");
+			if (!wrkStr2.equals("")) {
+				element1.setAttribute("LoginScript", concatLinesWithTokenOfEOL(wrkStr2));
+			}
     	}
-		wrkStr = element1.getAttribute("ScriptFunctions");
-    	if (wrkStr.contains(keyword)) {
-    		wrkStr = wrkStr.replace(keyword, "\'" + newTableID + "\'");
-    		element1.setAttribute("ScriptFunctions", wrkStr);
+		wrkStr = substringLinesWithTokenOfEOL(element1.getAttribute("ScriptFunctions"), "\n");
+		if (wrkStr.contains("\'" + currTableID + "\'")) {
+			wrkStr2 = replaceTableOperationsInScript(wrkStr, "\'" + currTableID + "\'", "\'" + newTableID + "\'");
+			if (!wrkStr2.equals("")) {
+				element1.setAttribute("ScriptFunctions", concatLinesWithTokenOfEOL(wrkStr2));
+			}
     	}
-
+		
 	    // Table Elements //
 		nodeList1 = domDocument.getElementsByTagName("Table");
 	    for (int i = 0; i < nodeList1.getLength(); i++) {
@@ -40178,16 +42059,22 @@ public class Editor extends JFrame {
 	        	}
 	        }
 
-	        keyword = "\'" + currTableID + "\'";
-	        keyword2 = currTableID + "_";
 		    nodeList2 = element.getElementsByTagName("Script");
 		    for (int j = 0; j < nodeList2.getLength(); j++) {
 		    	element1 = (org.w3c.dom.Element)nodeList2.item(j);
-				wrkStr = element1.getAttribute("Text");
-	        	if (wrkStr.contains(keyword) || wrkStr.contains(keyword2)) {
-	        		wrkStr = wrkStr.replace(keyword, "\'" + newTableID + "\'");
-	        		wrkStr = wrkStr.replace(keyword2, newTableID + "_");
-	        		element1.setAttribute("Text", wrkStr);
+				wrkStr = substringLinesWithTokenOfEOL(element1.getAttribute("Text"), "\n");
+				if (wrkStr.contains(currTableID + "_")) {
+					wrkStr2 = replaceTableOperationsInScript(wrkStr, currTableID + "_", newTableID + "_");
+					if (!wrkStr2.equals("")) {
+						element1.setAttribute("Text", concatLinesWithTokenOfEOL(wrkStr2));
+						wrkStr = wrkStr2;
+					}
+	        	}
+				if (wrkStr.contains("\'" + currTableID + "\'")) {
+					wrkStr2 = replaceTableOperationsInScript(wrkStr, "\'" + currTableID + "\'", "\'" + newTableID + "\'");
+					if (!wrkStr2.equals("")) {
+						element1.setAttribute("Text", concatLinesWithTokenOfEOL(wrkStr2));
+					}
 	        	}
 		    }
 	    }
@@ -40198,13 +42085,12 @@ public class Editor extends JFrame {
 	        element = (org.w3c.dom.Element)nodeList1.item(i);
 
 	        if (element.getAttribute("Type").equals("XF000")) { 
-	            keyword = "\'" + currTableID + "\'";
-	    		wrkStr = element.getAttribute("Script");
-	        	if (wrkStr.contains(keyword)) {
-	        		wrkStr = wrkStr.replace(keyword, "\'" + newTableID + "\'");
-	        		wrkStr = wrkStr.replace("　" + currTableID + ".", "　" + newTableID + ".");
-	        		wrkStr = wrkStr.replace("　" + currTableID + ",", "　" + newTableID + ",");
-	        		element.setAttribute("Script", wrkStr);
+	    		wrkStr = substringLinesWithTokenOfEOL(element.getAttribute("Script"), "\n");
+				if (wrkStr.contains("\'" + currTableID + "\'")) {
+					wrkStr2 = replaceTableOperationsInScript(wrkStr, "\'" + currTableID + "\'", "\'" + newTableID + "\'");
+					if (!wrkStr2.equals("")) {
+						element.setAttribute("Script", concatLinesWithTokenOfEOL(wrkStr2));
+					}
 	        	}
 	        }
 
@@ -40219,13 +42105,13 @@ public class Editor extends JFrame {
 	        		wrkStr = wrkStr.replaceFirst(";", "");
 	        		element.setAttribute("OrderBy", wrkStr);
 	        	}
-	        	replaceTableIDWithinFunctionField(element, "Column", currTableID, newTableID);
-	            replaceTableIDWithinFunctionField(element, "Filter", currTableID, newTableID);
+	        	replaceTableIdWithinFunctionField(element, "Column", currTableID, newTableID);
+	            replaceTableIdWithinFunctionField(element, "Filter", currTableID, newTableID);
 	            if (element.getAttribute("Type").equals("XF110")) { 
 		        	if (element.getAttribute("BatchTable").equals(currTableID)) {
 		        		element.setAttribute("BatchTable", newTableID);
 		        	}
-		            replaceTableIDWithinFunctionField(element, "BatchField", currTableID, newTableID);
+		            replaceTableIdWithinFunctionField(element, "BatchField", currTableID, newTableID);
 		    	}
 	    	}
 
@@ -40233,11 +42119,11 @@ public class Editor extends JFrame {
 	        	if (element.getAttribute("PrimaryTable").equals(currTableID)) {
 	        		element.setAttribute("PrimaryTable", newTableID);
 	        	}
-	        	replaceTableIDWithinFunctionField(element, "Field", currTableID, newTableID);
+	        	replaceTableIdWithinFunctionField(element, "Field", currTableID, newTableID);
 	        	nodeList2 = element.getElementsByTagName("Tab");
 	        	for (int j = 0; j < nodeList2.getLength(); j++) {
 	        		element1 = (org.w3c.dom.Element)nodeList2.item(j);
-	        		replaceTableIDWithinFunctionField(element1, "TabField", currTableID, newTableID);
+	        		replaceTableIdWithinFunctionField(element1, "TabField", currTableID, newTableID);
 	        	}
 	    	}
 
@@ -40261,7 +42147,7 @@ public class Editor extends JFrame {
 	        	if (element.getAttribute("HeaderTable").equals(currTableID)) {
 	        		element.setAttribute("HeaderTable", newTableID);
 	        	}
-	        	replaceTableIDWithinFunctionField(element, "Field", currTableID, newTableID);
+	        	replaceTableIdWithinFunctionField(element, "Field", currTableID, newTableID);
 	        	if (element.getAttribute("StructureTable").equals(currTableID)) {
 	        		element.setAttribute("StructureTable", newTableID);
 	        	}
@@ -40285,8 +42171,8 @@ public class Editor extends JFrame {
     	        		wrkStr = wrkStr.replaceFirst(";", "");
     	        		element1.setAttribute("OrderBy", wrkStr);
     	        	}
-    	        	replaceTableIDWithinFunctionField(element1, "Column", currTableID, newTableID);
-    	        	replaceTableIDWithinFunctionField(element1, "Filter", currTableID, newTableID);
+    	        	replaceTableIdWithinFunctionField(element1, "Column", currTableID, newTableID);
+    	        	replaceTableIdWithinFunctionField(element1, "Filter", currTableID, newTableID);
 			    }
 	    	}
 
@@ -40304,9 +42190,9 @@ public class Editor extends JFrame {
 	        		wrkStr = wrkStr.replaceFirst(";", "");
 	        		element.setAttribute("DetailOrderBy", wrkStr);
 	        	}
-	        	replaceTableIDWithinFunctionField(element, "Field", currTableID, newTableID);
-	            replaceTableIDWithinFunctionField(element, "Column", currTableID, newTableID);
-	            replaceTableIDWithinFunctionField(element, "AddRowListColumn", currTableID, newTableID);
+	        	replaceTableIdWithinFunctionField(element, "Field", currTableID, newTableID);
+	            replaceTableIdWithinFunctionField(element, "Column", currTableID, newTableID);
+	            replaceTableIdWithinFunctionField(element, "AddRowListColumn", currTableID, newTableID);
 	    	}
 
 	        if (element.getAttribute("Type").equals("XF390")) { 
@@ -40330,7 +42216,7 @@ public class Editor extends JFrame {
         				element1.setAttribute("Value", wrkStr);
         			}
         		}
-	        	replaceTableIDWithinFunctionField(element, "Column", currTableID, newTableID);
+	        	replaceTableIdWithinFunctionField(element, "Column", currTableID, newTableID);
 	        	if (element.getAttribute("DetailTable").equals(currTableID)) {
 	        		element.setAttribute("DetailTable", newTableID);
 	        	}
@@ -40362,7 +42248,7 @@ public class Editor extends JFrame {
 	    }
 	}
 
-	void replaceTableIDWithinFunctionField(org.w3c.dom.Element functionElement, String tagName, String currTableID, String newTableID) {
+	void replaceTableIdWithinFunctionField(org.w3c.dom.Element functionElement, String tagName, String currTableID, String newTableID) {
 		org.w3c.dom.Element element;
 		String wrkStr;
 		
@@ -40377,9 +42263,8 @@ public class Editor extends JFrame {
 			}
 
 			wrkStr = element.getAttribute("FieldOptions");
-			if (wrkStr.contains(currTableID + ".")) {
-				wrkStr = wrkStr.replace("(" + currTableID + ".", "(" + newTableID + ".");
-				wrkStr = wrkStr.replace(";" + currTableID + ".", ";" + newTableID + ".");
+			wrkStr = replaceTableIdInOptions(wrkStr, currTableID, newTableID);
+			if (!wrkStr.equals("")) {
 				element.setAttribute("FieldOptions", wrkStr);
 			}
 		}
@@ -40807,7 +42692,7 @@ public class Editor extends JFrame {
 		}
 	}
 	
-	void replaceDetailTableID(org.w3c.dom.Element functionElement, int tabIndex, String newTableID) {
+	void replaceDetailTableId(org.w3c.dom.Element functionElement, int tabIndex, String newTableID) {
 		NodeList detailTableList, detailFieldList, detailFilterList;
 		org.w3c.dom.Element element1, element2;
 		String dataSource, tableID, fieldID, originalTableID, wrkStr;
@@ -41646,6 +43531,139 @@ public class Editor extends JFrame {
 		return value;
 	}
 	
+	void jMenuItemComponentToRenameTableFieldID_actionPerformed(ActionEvent e) {
+		org.w3c.dom.Element workElement;
+		boolean duplicated, ready = false;
+		String tableID = currentMainTreeNode.getElement().getAttribute("ID");
+		if (!currentMainTreeNode.getElement().getAttribute("ModuleID").equals("")) {
+			tableID = currentMainTreeNode.getElement().getAttribute("ModuleID");
+		}
+		String answer = jTextFieldTableFieldID.getText();
+		String databaseName = getDatabaseName(currentMainTreeNode.getElement().getAttribute("DB"));
+
+		if (currentMainTreeNode.getErrorStatus().equals("ER2")) {
+			JOptionPane.showMessageDialog(null, res.getString("ErrorMessage134"));
+		} else {
+
+			if (tableKeyFieldIDList.contains(jTextFieldTableFieldID.getText())) {
+				JOptionPane.showMessageDialog(null, res.getString("ErrorMessage135"));
+			} else {
+
+				while (!ready) {
+					answer = JOptionPane.showInputDialog(null, res.getString("SpecifyNewID2"), answer);
+					if (answer == null || answer.equals("")) {
+						ready = true;
+
+					} else {
+						duplicated = false;
+						NodeList nodeList = currentMainTreeNode.getElement().getElementsByTagName("Field");
+						for (int j = 0; j < nodeList.getLength(); j++) {
+							workElement = (org.w3c.dom.Element)nodeList.item(j);
+							if (workElement.getAttribute("ID").equals(answer)) {
+								duplicated = true;
+								break;
+							}
+						}
+						if (duplicated) {
+							JOptionPane.showMessageDialog(null, res.getString("ErrorMessage133"));
+
+						} else {
+							try{
+								setCursor(new Cursor(Cursor.WAIT_CURSOR));
+								currentMainTreeNode.updateFieldsForTableField();
+
+								if (currentMainTreeNode.getErrorStatus().equals("") && jCheckBoxTableFieldPhysical.isSelected()) {
+									Connection connection = databaseConnList.get(databaseIDList.indexOf(currentMainTreeNode.getElement().getAttribute("DB")));
+									if (connection != null && !connection.isClosed()) {
+										Statement statement = connection.createStatement();
+										if (databaseName.contains("jdbc:derby")) {
+											statement.executeUpdate("RENAME COLUMN " + tableID + "." + jTextFieldTableFieldID.getText() + " TO " + answer);
+										} else {
+											if (databaseName.contains("jdbc:sqlserver")) {
+												statement.executeUpdate("EXEC sp_rename '" + tableID + "." + jTextFieldTableFieldID.getText() + "', '" + answer + "', 'COLUMN';");
+											} else {
+												if (databaseName.contains("jdbc:mysql") || databaseName.contains("jdbc:mariadb")) {
+													TableRowNumber tableRowNumber = (TableRowNumber)tableModelTableFieldList.getValueAt(selectedRow_jTableTableFieldList, 0);
+													String dataType = getFieldDataTypeForMySQL(tableRowNumber.getElement());
+													statement.executeUpdate("ALTER TABLE " + tableID + " CHANGE COLUMN " + jTextFieldTableFieldID.getText() + " " + answer + " " + dataType);
+												} else {
+													statement.executeUpdate("ALTER TABLE " + tableID + " RENAME COLUMN " + jTextFieldTableFieldID.getText() + " TO " + answer);
+												}
+											}
+										}
+									}
+								}
+
+								replaceTableFieldIdWithinRelatedElements(tableID, jTextFieldTableFieldID.getText(), answer);
+								jTextFieldTableFieldID.setText(answer);
+								tableModelTableFieldList.setValueAt(answer, selectedRow_jTableTableFieldList, 1);
+								TableRowNumber tableRowNumber = (TableRowNumber)tableModelTableFieldList.getValueAt(selectedRow_jTableTableFieldList, 0);
+								tableRowNumber.getElement().setAttribute("ID", answer);
+
+								int selectedRow = jTableTableFieldList.getSelectedRow();
+								currentMainTreeNode.activateContentsPane();
+								jTableTableFieldList.setRowSelectionInterval(selectedRow, selectedRow);
+
+								changeState.setChanged(true);
+								undoManager.resetLog();
+								ready = true;
+
+							} catch (Exception ex1) {
+								JOptionPane.showMessageDialog(null, ex1.toString());
+								//ex1.printStackTrace();
+							} finally {
+								setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	String getFieldDataTypeForMySQL(org.w3c.dom.Element element) {
+		StringBuffer buf = new StringBuffer();
+		String dataType = element.getAttribute("Type");
+		if (dataType.equals("INTEGER")) {
+			dataType = "INT";
+		}
+		if (dataType.equals("DOUBLE PRECISION")) {
+			dataType = "FLOAT";
+		}
+		if (dataType.equals("LONG VARCHAR")) {
+			dataType = "LONGTEXT";
+		}
+		buf.append(dataType);
+		if (getBasicTypeOf(element.getAttribute("Type")).equals("STRING")) {
+			if (element.getAttribute("Type").equals("CHAR") || element.getAttribute("Type").equals("VARCHAR")) {
+				if (!element.getAttribute("Size").equals("0")) {
+					buf.append("(");
+					buf.append(element.getAttribute("Size"));
+					buf.append(")");
+				}
+			}
+		} else {
+			if (getBasicTypeOf(element.getAttribute("Type")).equals("INTEGER")) {
+				buf.append(" Default 0");
+			} else {
+				if (getBasicTypeOf(element.getAttribute("Type")).equals("FLOAT")) {
+					if (element.getAttribute("Type").equals("DECIMAL") || element.getAttribute("Type").equals("NUMERIC")) {
+						buf.append("(");
+						buf.append(element.getAttribute("Size"));
+						buf.append(",");
+						buf.append(element.getAttribute("Decimal"));
+						buf.append(")");
+					}
+					buf.append(" Default 0.0");
+				}
+			}
+		}
+		if (!element.getAttribute("Nullable").equals("T")) {
+			buf.append(" Not null");
+		}
+		return buf.toString();
+	}
+	
 	void jButtonTableFieldTypeOptionKUBUN_actionPerformed(ActionEvent e) {
 		String values = jTextAreaTableFieldTypeOptionKUBUN.getText();
 		if (values.equals("N/A")) {
@@ -41806,6 +43824,17 @@ public class Editor extends JFrame {
 		font.setFontName(mainFontName);
 		font.setFontHeightInPoints((short)11);
 
+		XSSFCellStyle styleHeader = workBook.createCellStyle();
+		styleHeader.setBorderBottom(XSSFCellStyle.BORDER_THIN);
+		styleHeader.setBorderLeft(XSSFCellStyle.BORDER_THIN);
+		styleHeader.setBorderRight(XSSFCellStyle.BORDER_THIN);
+		styleHeader.setBorderTop(XSSFCellStyle.BORDER_THIN);
+		styleHeader.setFillForegroundColor(new XSSFColor(Color.LIGHT_GRAY));
+		styleHeader.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
+		styleHeader.setVerticalAlignment(XSSFCellStyle.VERTICAL_TOP);
+		styleHeader.setAlignment(XSSFCellStyle.ALIGN_LEFT);
+		styleHeader.setFont(font);
+
 		XSSFCellStyle style = workBook.createCellStyle();
 		style.setBorderBottom(XSSFCellStyle.BORDER_THIN);
 		style.setBorderLeft(XSSFCellStyle.BORDER_THIN);
@@ -41854,31 +43883,31 @@ public class Editor extends JFrame {
 			currentRowNumber++;
 			XSSFRow rowCaption = workSheet.createRow(currentRowNumber);
 			XSSFCell cell = rowCaption.createCell(0);
-			cell.setCellStyle(style);
+			cell.setCellStyle(styleHeader);
 			cell.setCellValue(new XSSFRichTextString("No."));
 			workSheet.setColumnWidth(0, 1200);
 			cell = rowCaption.createCell(1);
-			cell.setCellStyle(style);
+			cell.setCellStyle(styleHeader);
 			cell.setCellValue(new XSSFRichTextString(res.getString("TableID")));
 			workSheet.setColumnWidth(1, 5000);
 			cell = rowCaption.createCell(2);
-			cell.setCellStyle(style);
+			cell.setCellStyle(styleHeader);
 			cell.setCellValue(new XSSFRichTextString(res.getString("TableName")));
 			workSheet.setColumnWidth(2, 6000);
 			cell = rowCaption.createCell(3);
-			cell.setCellStyle(style);
+			cell.setCellStyle(styleHeader);
 			cell.setCellValue(new XSSFRichTextString(res.getString("FieldID")));
 			workSheet.setColumnWidth(3, 5500);
 			cell = rowCaption.createCell(4);
-			cell.setCellStyle(style);
+			cell.setCellStyle(styleHeader);
 			cell.setCellValue(new XSSFRichTextString(res.getString("FieldName")));
 			workSheet.setColumnWidth(4, 5500);
 			cell = rowCaption.createCell(5);
-			cell.setCellStyle(style);
+			cell.setCellStyle(styleHeader);
 			cell.setCellValue(new XSSFRichTextString(res.getString("FieldKubunID")));
 			workSheet.setColumnWidth(5, 5500);
 			cell = rowCaption.createCell(6);
-			cell.setCellStyle(style);
+			cell.setCellStyle(styleHeader);
 			cell.setCellValue(new XSSFRichTextString(res.getString("FieldKubunValues")));
 			workSheet.setColumnWidth(6, 6000);
 
@@ -42020,6 +44049,8 @@ public class Editor extends JFrame {
 		styleHeader.setBorderLeft(XSSFCellStyle.BORDER_THIN);
 		styleHeader.setBorderRight(XSSFCellStyle.BORDER_THIN);
 		styleHeader.setBorderTop(XSSFCellStyle.BORDER_THIN);
+		styleHeader.setFillForegroundColor(new XSSFColor(Color.LIGHT_GRAY));
+		styleHeader.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
 		styleHeader.setAlignment(XSSFCellStyle.ALIGN_LEFT);
 		styleHeader.setFont(font);
 
@@ -42028,6 +44059,8 @@ public class Editor extends JFrame {
 		styleHeaderNumber.setBorderLeft(XSSFCellStyle.BORDER_THIN);
 		styleHeaderNumber.setBorderRight(XSSFCellStyle.BORDER_THIN);
 		styleHeaderNumber.setBorderTop(XSSFCellStyle.BORDER_THIN);
+		styleHeaderNumber.setFillForegroundColor(new XSSFColor(Color.LIGHT_GRAY));
+		styleHeaderNumber.setFillPattern(XSSFCellStyle.SOLID_FOREGROUND);
 		styleHeaderNumber.setAlignment(XSSFCellStyle.ALIGN_LEFT);
 		styleHeaderNumber.setFont(font);
 
@@ -44101,7 +46134,7 @@ class Editor_DialogBatchTableEdit extends JDialog {
 	private JLabel jLabelBatchKeyFields = new JLabel();
 	private JTextField jTextFieldPrimaryTableName = new JTextField();
 	private JTextField jTextFieldBatchWithKeyFields = new JTextField();
-	private JComboBox jComboBoxBatchTable = new JComboBox();
+	private JComboBox<String> jComboBoxBatchTable = new JComboBox<String>();
 	private JTextField jTextFieldBatchKeyFields = new JTextField();
 	private JTextArea jTextAreaMessage = new JTextArea();
 	private JPanel jPanelCenter = new JPanel();
@@ -49008,6 +51041,16 @@ class Editor_jMenuItemComponentToDelete_actionAdapter implements java.awt.event.
 	}
 	public void actionPerformed(ActionEvent e) {
 		adaptee.jMenuItemComponentToDelete_actionPerformed(e);
+	}
+}
+
+class Editor_jMenuItemComponentToRenameTableFieldID_actionAdapter implements java.awt.event.ActionListener {
+	Editor adaptee;
+	Editor_jMenuItemComponentToRenameTableFieldID_actionAdapter(Editor adaptee) {
+		this.adaptee = adaptee;
+	}
+	public void actionPerformed(ActionEvent e) {
+		adaptee.jMenuItemComponentToRenameTableFieldID_actionPerformed(e);
 	}
 }
 

@@ -32,9 +32,11 @@ package xeadEditor;
  */
 
 import java.awt.*;
+
 import javax.swing.*;
 
 import xeadEditor.Editor.MainTreeNode;
+
 import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -50,7 +52,7 @@ public class DialogCreateTable extends JDialog {
 	private JPanel jPanelStatement = new JPanel();
 	private JPanel jPanelMessage = new JPanel();
 	private JLabel jLabelSubsystem = new JLabel();
-	private JComboBox jComboBoxSubsystem = new JComboBox();
+	private JComboBox<String> jComboBoxSubsystem = new JComboBox<String>();
 	private JLabel jLabelTableName = new JLabel();
 	private Editor_KanjiTextField jTextFieldTableName = new Editor_KanjiTextField();
 	private JLabel jLabelStatement = new JLabel();

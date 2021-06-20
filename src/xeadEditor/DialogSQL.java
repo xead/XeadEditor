@@ -32,9 +32,11 @@ package xeadEditor;
  */
 
 import java.awt.*;
+
 import javax.swing.*;
 
 import org.w3c.dom.NodeList;
+
 import java.awt.event.*;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -57,7 +59,7 @@ public class DialogSQL extends JDialog {
 	private JPanel jPanelStatementTop = new JPanel();
 	private JPanel jPanelMessage = new JPanel();
 	private JLabel jLabelConnection = new JLabel();
-	private JComboBox jComboBoxConnection = new JComboBox();
+	private JComboBox<String> jComboBoxConnection = new JComboBox<String>();
 	private ArrayList<String> dbIDList = new ArrayList<String>();
 	private JScrollPane jScrollPaneStatement = new JScrollPane();
 	private JTextArea jTextAreaStatement = new JTextArea();

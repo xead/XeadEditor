@@ -93,7 +93,7 @@ public class DialogCheckTableModule extends JDialog {
 	private ArrayList<String> indexNotUniqueListToBeDropped = new ArrayList<String>();
 	private boolean isDifferentPK;
 	private boolean isWithoutModule;
-	private boolean isWithoutPK;
+	private boolean isWithoutPKDefined;
 	private org.w3c.dom.Element tableElement;
 	private Connection connection_;
 	private String updateCounterID;
@@ -243,7 +243,7 @@ public class DialogCheckTableModule extends JDialog {
 			indexNotUniqueListToBeDropped.clear();
 			isDifferentPK = false;
 			isWithoutModule = false;
-			isWithoutPK = true;
+			isWithoutPKDefined = true;
 
 			updateCounterID = tableElement.getAttribute("UpdateCounter");
 			if (updateCounterID.equals("")) {
@@ -256,7 +256,6 @@ public class DialogCheckTableModule extends JDialog {
 				moduleID = tableID;
 			}
 			if (databaseName.contains("jdbc:postgresql")) {
-				//tableID = frame_.getCaseShiftValue(tableID, "Lower");
 				moduleID = frame_.getCaseShiftValue(moduleID, "Lower");
 			}
 			ResultSet rs1 = connection_.getMetaData().getColumns(null, null, moduleID, null);
@@ -748,7 +747,7 @@ public class DialogCheckTableModule extends JDialog {
 				String moduleKeyFields;
 				int countOfKey = 0;
 				int countOfSK = 0;
-				boolean isWithoutPKDefined = true;
+				//boolean isWithoutPKDefined = true;
 				for (int i = 0; i < keyList.getLength(); i++) {
 					if (isShowProgress) {
 						frame_.jProgressBar.setValue(frame_.jProgressBar.getValue()+1);
@@ -804,10 +803,13 @@ public class DialogCheckTableModule extends JDialog {
 								wrkStr = wrkStr + ";" + pkFieldListOfModule.get(j);
 							}
 						}
-						if (count1 != count2) {
+						if (count1 != count2 || pkFieldListOfModule.size() == 0) {
 							pkFieldList.clear();
 							countOfErrors++;
 							isDifferentPK = true;
+							if (wrkStr.equals("")) {
+								wrkStr = "N/A";
+							}
 							buf.append("(" + countOfErrors + ") "+ res.getString("ModuleCheckMessage22") + moduleKeyFields + res.getString("ModuleCheckMessage23") + wrkStr + res.getString("ModuleCheckMessage24"));
 						}
 					}
@@ -966,11 +968,11 @@ public class DialogCheckTableModule extends JDialog {
 				for (int i = 0; i < keyList.getLength(); i++) {
 					element = (org.w3c.dom.Element)keyList.item(i);
 					if (element.getAttribute("Type").equals("PK") && !element.getAttribute("Fields").equals("")) {
-						isWithoutPK = false;
+						isWithoutPKDefined = false;
 						break;
 					}
 				}
-				if (isWithoutPK) {
+				if (isWithoutPKDefined) {
 					countOfErrors++;
 					buf.append("\n(" + countOfErrors + ") "+ res.getString("ModuleCheckMessage38"));
 				}
@@ -987,7 +989,7 @@ public class DialogCheckTableModule extends JDialog {
 			if (countOfErrors > 0) {
 				buf.append("\n");
 				if (isWithoutModule) {
-					if (!isWithoutPK) {
+					if (!isWithoutPKDefined) {
 						jButtonCreate.setEnabled(true);
 						buf.append(res.getString("ModuleCheckMessage32"));
 					}
@@ -1286,13 +1288,13 @@ public class DialogCheckTableModule extends JDialog {
 					} else {
 						buf.append(tableElement.getAttribute("ModuleID"));
 					}
-					if (databaseName.contains("jdbc:mysql")) {
+					if (databaseName.contains("jdbc:mysql") || databaseName.contains("jdbc:mariadb")) {
 						buf.append(" MODIFY COLUMN ");
 					} else {
 						buf.append(" ALTER COLUMN ");
 					}
 					buf.append(fieldListToBeNullable.get(i));
-					if (databaseName.contains("jdbc:mysql") || databaseName.contains("jdbc:sqlserver")) {
+					if (databaseName.contains("jdbc:mysql") || databaseName.contains("jdbc:mariadb") || databaseName.contains("jdbc:sqlserver")) {
 						buf.append(" ");
 						buf.append(fieldListToBeNullableDataType.get(i));
 					}
@@ -1319,13 +1321,13 @@ public class DialogCheckTableModule extends JDialog {
 					} else {
 						buf.append(tableElement.getAttribute("ModuleID"));
 					}
-					if (databaseName.contains("jdbc:mysql")) {
+					if (databaseName.contains("jdbc:mysql") || databaseName.contains("jdbc:mariadb")) {
 						buf.append(" MODIFY COLUMN ");
 					} else {
 						buf.append(" ALTER COLUMN ");
 					}
 					buf.append(fieldListToBeNotNull.get(i));
-					if (databaseName.contains("jdbc:mysql") || databaseName.contains("jdbc:sqlserver")) {
+					if (databaseName.contains("jdbc:mysql") || databaseName.contains("jdbc:mariadb") || databaseName.contains("jdbc:sqlserver")) {
 						buf.append(" ");
 						buf.append(fieldListToBeNotNullDataType.get(i));
 					}
@@ -2191,7 +2193,7 @@ public class DialogCheckTableModule extends JDialog {
 		}
 		buf.append(")\n)\n");
 
-		if (databaseName.contains("jdbc:mysql")) {
+		if (databaseName.contains("jdbc:mysql") || databaseName.contains("jdbc:mariadb")) {
 			String engines[] = {"MyISAM", "InnoDB"};
 		    int index = JOptionPane.showOptionDialog(this,
 		    	"Choose table engine type.", "MySQL ENGINE Option", 
@@ -2246,7 +2248,7 @@ public class DialogCheckTableModule extends JDialog {
 			}
 		}
 
-		if (dbDriverName.contains("jdbc:mysql")) {
+		if (dbDriverName.contains("jdbc:mysql") || dbDriverName.contains("jdbc:mariadb")) {
 			if (dataType.equals("INTEGER")) {
 				alternative = "INT";
 			}

@@ -1,7 +1,7 @@
 package xeadEditor;
 
 /*
- * Copyright (c) 2020 WATANABE kozo <qyf05466@nifty.com>,
+ * Copyright (c) 2021 WATANABE kozo <qyf05466@nifty.com>,
  * All rights reserved.
  *
  * This file is part of XEAD Editor.
@@ -46,15 +46,30 @@ public class DialogAbout extends JDialog implements ActionListener {
 	public static final String APPLICATION_NAME  = "X-TEA Editor 1.3";
 	public static final String FORMAT_VERSION  = "1.2";
 	public static final String PRODUCT_NAME = "X-TEA Editor";
-	public static final String COPYRIGHT = "Copyright 2020 DBC Ltd.";
+	public static final String COPYRIGHT = "Copyright 2021 DBC Ltd.";
 	public static final String URL_DBC = "http://dbc.in.coocan.jp/";
-	public static final String FULL_VERSION  = "V1.R3.M32";
+	public static final String FULL_VERSION  = "V1.R3.M34";
+	//1.3.34
+	//・フィールドIDの変更でテーブルスクリプト更新のバグを修正した
+	//・仮想フィールドのID変更に失敗する問題を修正した
+	//・MySQLのフィールドIDの変更に失敗する問題を修正した
+	//・getLastDateOfTheYearMonth(...)をsessionのメソッドとして追加した
+	//・getMonthsBetweenYearMonths(...)をsessionのメソッドとして追加した
+	//・Java11環境向けにJComboBoxとJListについて総称型に設定した
+	//・Java11環境向けにOutputFormatとXMLSerializerをLS系に置き換えた
+	//
+	//1.3.33
+	//・データ保守ユーティリティでCUDした際のエラーハンドリング仕様を改善した
+	//・ツールメニューに「区分値一覧表」を追加した
+	//・テーブルIDの変更処理を機能アップした
+	//・フィールドの使途要素分析を機能アップした
+	//・フィールドIDの変更（リネーム）機能を組み込んだた
+	//・フィールド属性オプションのリスト値でコンマを含む値を指定できるようにした
+	//
 	//1.3.32
 	//・リネームの前にノードをupdateFields()するようにした
 	//・XF300の明細テーブル追加時のメッセージを改善した
 	//・XF000のテーブルIDの置換ロジックを改善した
-	//・#データ保守ユーティリティでCUDした際のエラーハンドリング仕様を改善した
-	//・#ツールメニューに「区分値一覧表」を追加した
 	//
 	//1.3.31
 	//・データのインポート機能でのデータと欄見出しとの関係を厳密化

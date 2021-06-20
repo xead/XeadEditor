@@ -58,8 +58,8 @@ public class DialogAddFieldToFunction extends JDialog {
 	private JButton jButtonSelectAll = new JButton();
 	private JButton jButtonCancel = new JButton();
 	private Editor frame_;
-	private DefaultListModel listModelDataSource = new DefaultListModel();
-	private JList jListDataSource = new JList(listModelDataSource);
+	private DefaultListModel<JCheckBox> listModelDataSource = new DefaultListModel<JCheckBox>();
+	private JList<JCheckBox> jListDataSource = new JList<JCheckBox>(listModelDataSource);
 	private JScrollPane jScrollPaneDataSourceList = new JScrollPane();
 	private JPanel jPanelButtons = new JPanel();
 	private org.w3c.dom.Element objectElement_ = null;

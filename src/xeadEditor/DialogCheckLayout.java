@@ -2429,7 +2429,7 @@ class DialogCheckLayoutTextArea extends JScrollPane {
 class DialogCheckLayoutFYearBox extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JTextField jTextField = new JTextField();
-	private JComboBox jComboBoxYear = new JComboBox();
+	private JComboBox<String> jComboBoxYear = new JComboBox<String>();
     private String dateFormat = "";
     private String language = "";
 	
@@ -2474,7 +2474,7 @@ class DialogCheckLayoutFYearBox extends JPanel {
 class DialogCheckLayoutMSeqBox extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JTextField jTextField = new JTextField();
-	private JComboBox jComboBoxMSeq = new JComboBox();
+	private JComboBox<String> jComboBoxMSeq = new JComboBox<String>();
     private String language = "";
 	
 	public DialogCheckLayoutMSeqBox(boolean isEditable, DialogCheckLayout dialog){
@@ -2513,8 +2513,8 @@ class DialogCheckLayoutMSeqBox extends JPanel {
 class DialogCheckLayoutYMonthBox extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private JTextField jTextField = new JTextField();
-	private JComboBox jComboBoxYear = new JComboBox();
-	private JComboBox jComboBoxMonth = new JComboBox();
+	private JComboBox<String> jComboBoxYear = new JComboBox<String>();
+	private JComboBox<String> jComboBoxMonth = new JComboBox<String>();
     private String dateFormat = "";
     private String language = "";
 	

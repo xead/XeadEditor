@@ -275,8 +275,14 @@ public class DialogAddDetailTable extends JDialog {
 				if (countOfHeaderKeyFields >= workTokenizerDtl.countTokens()) {
 					errorMessage = res.getString("ErrorMessage74");
 				} else {
+					ArrayList<String> fieldIDList = new ArrayList<String>();
 					while (workTokenizerDtl.hasMoreTokens()) {
 						dataSourceDtl = workTokenizerDtl.nextToken();
+						if (fieldIDList.contains(dataSourceDtl)) {
+							errorMessage = res.getString("ErrorMessage77");
+						} else {
+							fieldIDList.add(dataSourceDtl);
+						}
 						elementDtl = frame_.getSpecificFieldElement(detailTableNode.getElement().getAttribute("ID"), dataSourceDtl);
 						if (elementDtl == null ) {
 							errorMessage = res.getString("ErrorMessage75") + dataSourceDtl + res.getString("ErrorMessage76");
